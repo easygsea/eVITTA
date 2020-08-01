@@ -1,0 +1,94 @@
+Pyridoxal phosphate%nutraceutical%DB00114	https://www.drugbank.ca/drugs/DB00114	AGXT2	GAD1	CBS	KYNU	SHMT1	NFS1	GOT1	OAT	ODC1	AADAT	ABAT	PNPO	SGPL1	TAT	CCBL1	SPTLC2	CSAD	HDC	AZIN2	SDS	GCAT	GLDC	GPT	PSAT1	ALAS1	AGXT	PDXP	SPTLC1	CTH	BCAT1	BCAT2	PROSC	GOT2	PYGB	PYGM	DDC	GIG18				ALAS1	GAD2	DDC	CCBL2	GADL1	SCLY	IGSF10	PHYKPL	GAD1	SHMT2	ALAS2	GPT2	MOCOS	SDSL		SRR	SEPSECS	SPTLC3	GAD65	TLH6
+Cyanocobalamin%nutraceutical%DB00115	https://www.drugbank.ca/drugs/DB00115	MTR	MUT	MTRR	MMAA	MMACHC	MTHFR
+Tetrahydrofolic acid%nutraceutical%DB00116	https://www.drugbank.ca/drugs/DB00116	MTHFD1	MTHFD2	AMT	ALDH1L1	MTR	FTCD	ATIC	SHMT1	SHMT2	MTHFR		MTFMT
+Histidine%nutraceutical%DB00117	https://www.drugbank.ca/drugs/DB00117	HDC	HARS	SLC38A3	HAL
+Ademetionine%nutraceutical%DB00118	https://www.drugbank.ca/drugs/DB00118	GNMT	AMD1	MAT2A	CBS	MAT1A	COMT	CMTR1	AS3MT
+Pyruvic acid%nutraceutical%DB00119	https://www.drugbank.ca/drugs/DB00119	SLC16A3	SLC16A2	AGXT2	SLC16A5	PKLR	SLC16A6	SLC16A7	PDHB	PKM	ABAT	SLC16A4	SLC16A8	SLC16A1	PC
+Phenylalanine%nutraceutical%DB00120	https://www.drugbank.ca/drugs/DB00120	TAT	SLC7A8	FARSA	PAH	FARS2	FARSB	TH
+Biotin%nutraceutical%DB00121	https://www.drugbank.ca/drugs/DB00121	PCCB	HLCS	MCCC2	ACACB	MCCC1	PC	PCCA	ACACA
+Choline%nutraceutical%DB00122	https://www.drugbank.ca/drugs/DB00122	PCYT1B	ACHE	PCYT1A	PLD2	BCHE	PLD1	PHOSPHO1	CHRNA7
+L-Lysine%nutraceutical%DB00123	https://www.drugbank.ca/drugs/DB00123	SLC7A1	SLC7A4	SLC7A3	SLC7A2	KARS
+Arginine%nutraceutical%DB00125	https://www.drugbank.ca/drugs/DB00125	NOS3	SLC7A3	AZIN2	ASL	NOS2	SLC7A1	ARG2	SLC7A4	ASS1
+Spermine%nutraceutical%DB00127	https://www.drugbank.ca/drugs/DB00127	SMS	SMOX	ODC1	CASR	ADRB1	ADRB2
+Aspartic acid%nutraceutical%DB00128	https://www.drugbank.ca/drugs/DB00128	RNASE1	LYZ	SLC25A13	GOT1	ASPA	ASNS	ASS1	ACY1	GOT2	DARS	SLC25A12	ASPH	PAICS	ADSS	SLC1A1	ASS	DARS2	ASRGL1	ADSSL1	ADSS
+Ornithine%nutraceutical%DB00129	https://www.drugbank.ca/drugs/DB00129	OAT	OTC	ARG1	OAZ1	SLC7A1	SLC7A2	SLC25A2	ARG2	SLC25A15	GATM
+L-Glutamine%nutraceutical%DB00130	https://www.drugbank.ca/drugs/DB00130	CTPS1	PPAT	GLUL
+Adenosine phosphate%nutraceutical%DB00131	https://www.drugbank.ca/drugs/DB00131	CREB1	PDE4B	PRKAB1	HINT1	PDE4D	ACSS2	PRKAA1	ADCY1	ACSL1	FBP1	ADK	PRKAA1	PRKAA2	PRKAB1	PRKAB2	PRKAG1	PRKAG2	PRKAG3
+alpha-Linolenic acid%nutraceutical%DB00132	https://www.drugbank.ca/drugs/DB00132	FADS1	FADS2	SLC8A1	TRPV1	PPARA	NR1H4	PPARD	PPARG	RXRA	ELOVL2	ELOVL5
+Serine%nutraceutical%DB00133	https://www.drugbank.ca/drugs/DB00133	CBS	SDS	SRR	SPTLC2	SPTLC1	SARS	AGXT
+Methionine%nutraceutical%DB00134	https://www.drugbank.ca/drugs/DB00134	MTRR	MTR	METAP2	BHMT	BHMT2
+Tyrosine%nutraceutical%DB00135	https://www.drugbank.ca/drugs/DB00135	TH	YARS2	YARS	TAT
+Calcitriol%nutraceutical%DB00136	https://www.drugbank.ca/drugs/DB00136	VDR	HOXA10
+Cystine%nutraceutical%DB00138	https://www.drugbank.ca/drugs/DB00138	SLC7A11	CTNS
+Succinic acid%nutraceutical%DB00139	https://www.drugbank.ca/drugs/DB00139	SUCNR1	ALDH5A1
+Riboflavin%nutraceutical%DB00140	https://www.drugbank.ca/drugs/DB00140	RFK	ribC	BLVRB
+N-Acetylglucosamine%nutraceutical%DB00141	https://www.drugbank.ca/drugs/DB00141	B4GALT1	B4GALT4	NAGK	NAGPA	NAGLU	RENBP
+Glutamic acid%nutraceutical%DB00142	https://www.drugbank.ca/drugs/DB00142	GRM1	GRM4	GRIK4	GRIK5	GRM7	GRM8	SLC1A7	OPLAH	PFAS	BCAT2	GRIN2D	GLS	GOT2	EPRS	ASNS	GLUL	GOT1	TAT	GPT	GGCX	SLC1A3	SLC1A2	SLC1A1	GCLC	SLC1A6	GLUD2	GMPS	BCAT1	ABAT	GRIN1	FPGS	ENPEP	GRIN2A	GRIN2B	GRIN2C	GIG18	EARS2	NADSYN1	NAGS	AADAT	GRIN3A	GPT2	AASS	GLS2	DNPEP	SLC7A11	CPQ	PSAT1	GLUD1	GRIK1	GRIA1	GCLM	FOLH1	GAD2	GAD1	FTCD	GRIA2	GRIA3	GRIA4	ALDH18A1	GRIK2	GRIK3
+Glutathione%nutraceutical%DB00143	https://www.drugbank.ca/drugs/DB00143	MGST3	HPGDS	GSTA1	GSTA2	MGST1	ESD	GGT1	GSTM2	GLRX	GPX4	GSTM5	GPX6	HAGH	GPX1	GPX7	MGST2	GSTO2	GLRX2	GLO1	LTC4S	GSR	GSS	GSTM1	GSTK1	GSTA3	GSTM3	GSTA4	GSTM4	GSTA5	GSTP1	GSTO1	GPX1	GPX2	GSTT1	GSTZ1	GPX5	GPX3	AKR1B1	MMP9	CYP3A4	GPX5	GPX1	GPX2	GPX3	GPX6	GPX7	GPX4	GPX8
+Phosphatidyl serine%nutraceutical%DB00144	https://www.drugbank.ca/drugs/DB00144	DGKG	DGKD	PTDSS2	SMPD4	SMPD3	ATP8A1	PRKCA	PTDSS1	PISD	SCARB1
+Glycine%nutraceutical%DB00145	https://www.drugbank.ca/drugs/DB00145	GCAT	ALAS1	ALAS2	GARS	GRIN2A	BAAT	GPR18	GSS	GRIN2C		GLYAT	SHMT2	GLYATL2	GLYATL1	AGXT2	PIPOX	GRIN3B	GLRA1	AGXT	GLRB	SHMT1	GLRA3	GLRA2	GNMT	GATM
+Calcifediol%nutraceutical%DB00146	https://www.drugbank.ca/drugs/DB00146	VDR
+Pyridoxal%nutraceutical%DB00147	https://www.drugbank.ca/drugs/DB00147	PDXK
+Creatine%nutraceutical%DB00148	https://www.drugbank.ca/drugs/DB00148	CKM	CKMT1A	CKB	CKMT2	SLC6A8	GAMT
+Leucine%nutraceutical%DB00149	https://www.drugbank.ca/drugs/DB00149	LARS2	BCAT2	BCAT1	LCMT2	LCMT1	LARS
+Tryptophan%nutraceutical%DB00150	https://www.drugbank.ca/drugs/DB00150	WARS2	trpS	WARS
+Cysteine%nutraceutical%DB00151	https://www.drugbank.ca/drugs/DB00151	GCLM	GCLC	GOT1	GOT2	CTH	CBS	CARS	MGMT	GSS	CARS2	CSAD	NFS1	CDO1
+Thiamine%nutraceutical%DB00152	https://www.drugbank.ca/drugs/DB00152	TPK1
+Ergocalciferol%nutraceutical%DB00153	https://www.drugbank.ca/drugs/DB00153	VDR	CACNG1	CACNG2	CACNG3	CACNG4	CACNG5	CACNG6	CACNG7	CACNG8	CACNA2D1	CACNA2D2	CACNA2D3	CACNA2D4	CACNA1C	CACNA1D	CACNA1F	CACNA1S	CACNB1	CACNB2	CACNB3	CACNB4	CACNA1B	CACNA1A	CACNA1E	CACNA1G	CACNA1H	CACNA1I
+Dihomo-gamma-linolenic acid%nutraceutical%DB00154	https://www.drugbank.ca/drugs/DB00154	PTGS1	PTGS2
+Citrulline%nutraceutical%DB00155	https://www.drugbank.ca/drugs/DB00155	ASS1	DDAH2	ASS	DDAH1	OTC	NOS1	NOS2	NOS3	PADI6	PADI1	PADI3	PADI2	PADI4
+Threonine%nutraceutical%DB00156	https://www.drugbank.ca/drugs/DB00156	TARS	TARS2
+NADH%nutraceutical%DB00157	https://www.drugbank.ca/drugs/DB00157	UGDH	ADH1A	SORD	ADH4	ADH1C	ADH1B	ADH7	GPD1	LDHAL6A	ADH5	AKR1B1	HSD17B10	MDH2	LDHA	ME2	HSD17B4	LDHAL6B	LDHC	LDHB	EHHADH	HADH	ME3	BDH1	MDH1	HIBADH	HSD17B3	HMGCR	ME1	PHGDH	HSD17B7	IDH3G	IDH3B	IDH3A	HSD17B1	HSD17B2	RDH5	H6PD	HSD17B8	AKR1C4	IMPDH2	AKR1C3	HPGD	TSTA3	AKR1C1	HSD11B1	HSD3B2	HSD3B1	IMPDH1	HADHA	ALDH2	HSD11B2	AKR1C2	NSDHL	ALDH3B2	ALDH6A1	ALDH3A1	ALDH1A1	GAPDHS	ALDH9A1	ALDH1A3	ALDH1B1	ALDH3B1	GAPDH	ALDH1A2	ALDH3A2	ALDH5A1	ALDH7A1	BLVRB	PYCR2	PYCR1	GLUD1	PDHB	PDHA2	PDHA1	BLVRA	ACADS	DHFR	OGDH	GLUD2	DHCR7	NQO2	MT-ND2	AASS	MT-ND3	NDUFS7	MTHFD1	MTHFD2	ALDH4A1	CYB5R3	NDUFA11	MT-ND4	QDPR	MT-ND1	NNT	NDUFA5	NDUFA9	MT-ND4L	NDUFA10	NDUFA7	NDUFA1	MT-ND6	MT-ND5	NDUFA4	NDUFA6	NDUFAB1	NDUFA2	NDUFA8	NDUFA3	NDUFB8	NDUFC2	NDUFB1	NDUFS1	NDUFB10	NDUFB4	NDUFB3	NDUFB2	NDUFB7	NDUFB9	NDUFS2	NDUFB5	NDUFC1	NDUFB6	NDUFV3	DLD	NDUFS3	GSR	NDUFA12	NDUFS5	NDUFS4	NDUFV1	NDUFV2	NDUFA13	CDO1	NDUFS6	NDUFA4L2	NDUFS8	CYP4A11	DLAT	AMT	MSMO1	HMOX1	HMOX2	CYP17A1	TYR
+Folic acid%nutraceutical%DB00158	https://www.drugbank.ca/drugs/DB00158	FOLR3	FOLR2	FOLR1
+Icosapent%nutraceutical%DB00159	https://www.drugbank.ca/drugs/DB00159	PTGS2	PTGS1	PPARG	PPARD	FADS1	ACSL4	FFAR1	SLC8A1	TRPV1	PPARA
+Alanine%nutraceutical%DB00160	https://www.drugbank.ca/drugs/DB00160	AGXT	ABAT	KYNU	AARS2	PHYKPL	GPT2	GPT	NFS1	SLC36A1	SLC7A8	AGXT2	AARS	SLC1A4
+Valine%nutraceutical%DB00161	https://www.drugbank.ca/drugs/DB00161	PCCB	BCAT1	VARS
+Vitamin A%nutraceutical%DB00162	https://www.drugbank.ca/drugs/DB00162	RDH12	DHRS3	ALDH1A3	RETSAT	RDH11	DHRS4	RDH14	RDH8	LRAT	RDH5	RDH13	ALDH1A2	ALDH1A1	APOD	PTGDS
+Vitamin E%nutraceutical%DB00163	https://www.drugbank.ca/drugs/DB00163	NR1I2	PRKCB	ALOX5	PRKCA	DGKA	PPP2CB	PPP2CA	SEC14L4	SEC14L3	SEC14L2
+Pyridoxine%nutraceutical%DB00165	https://www.drugbank.ca/drugs/DB00165	PDXK
+Lipoic acid%nutraceutical%DB00166	https://www.drugbank.ca/drugs/DB00166	LIPT1	LIAS	SLC5A6
+Isoleucine%nutraceutical%DB00167	https://www.drugbank.ca/drugs/DB00167	IARS2	ACADSB	BCAT1	BCAT2	IARS
+Aspartame%nutraceutical%DB00168	https://www.drugbank.ca/drugs/DB00168	TRPV1	TAS1R2	TAS1R3
+Cholecalciferol%nutraceutical%DB00169	https://www.drugbank.ca/drugs/DB00169	VDR
+Menadione%nutraceutical%DB00170	https://www.drugbank.ca/drugs/DB00170	GGCX	VKORC1	VKORC1L1	F2	F9	PROC	PROS1	NQO2	NQO1	BGLAP
+ATP%nutraceutical%DB00171	https://www.drugbank.ca/drugs/DB00171	ABL2	ABCB1	ABCG1	ABCC2	ABCA1	ACSS2	ALK	NAE1	PRKAA1	ARAF	ACVRL1	ACSL1	NT5C2	ASNA1	ABCC9	AKT1	ADRBK1	APAF1	ACSS1	ACVR1B	ACVR1	ABCB11	ASNS	CDK15	SLC25A4	ABCC8	ASS1	AFG3L2	ADRBK2	AMHR2	TNK2	ABL1	ADCY1	ABCC6	ABCC4	ABCC1	CFTR	PIK3CA	CSNK2A1	CSNK2B	P2RY11	PPP5C
+Proline%nutraceutical%DB00172	https://www.drugbank.ca/drugs/DB00172	P4HA2	PRODH	PPIH	PROSC	P4HA1	PPIB	PPIF	PPIC	PPIA	PPIG	P3H1	P5CR2	PARS2	P3H2	P3H3	PYCRL	L3HYPDH	PYCR1	EPRS	SLC6A14	SLC6A7	PYCR2
+Adenine%nutraceutical%DB00173	https://www.drugbank.ca/drugs/DB00173	APRT	mtnN	ACACB	ACP1	PECR	mutY	ptd	SRPK2	ruvB	MTAP	cobT
+Asparagine%nutraceutical%DB00174	https://www.drugbank.ca/drugs/DB00174	SLC1A5	ASRGL1	NARS2	ASNS	NARS	SLC38A1	SLC38A2	SLC38A3	SLC38A4
+Niacin%nutraceutical%DB00627	https://www.drugbank.ca/drugs/DB00627	HCAR3	HCAR2	QPRT	NNMT
+Inulin%nutraceutical%DB00638	https://www.drugbank.ca/drugs/DB00638	cft
+Tretinoin%nutraceutical%DB00755	https://www.drugbank.ca/drugs/DB00755	RXRB	RXRG	RARG	ALDH1A1	GPRC5A	ALDH1A2	RARRES1	RARA	RARB	LCN1	OBP2A	RBP4	PDK4	RXRA	CYP26A1	CYP26B1	CYP26C1	HPGDS
+Melatonin%nutraceutical%DB01065	https://www.drugbank.ca/drugs/DB01065	MTNR1A	MTNR1B	ESR1	RORB	CALM1	MPO	EPX	CALR	ASMT	NQO2
+Ephedra sinica root%nutraceutical%DB01363	https://www.drugbank.ca/drugs/DB01363	SLC6A3	SLC6A2	ADRA2A	ADRA2B	ADRA2C	MAOA	MAOB	ADRB1	ADRB2	ADRB3	SLC6A4	SLC18A2	SLC18A1
+Calcium%nutraceutical%DB01373	https://www.drugbank.ca/drugs/DB01373	CACNA1C	ATP2C1	TNNC2	TNNC1	SPTBN1	S100B	CAST	COMP	CALM1	AOC1	S100A13	ALPP	S100A8	S100A9	S100A2	CP	BMP4	MGP	PCDH19	PDCD6
+Magnesium cation%nutraceutical%DB01378	https://www.drugbank.ca/drugs/DB01378	ATP1A1
+Ginkgo biloba%nutraceutical%DB01381	https://www.drugbank.ca/drugs/DB01381	SLC6A2	PLA2G2A	GLRA1	GABRA1	GABRB2	GABRG2
+Ginseng%nutraceutical%DB01404	https://www.drugbank.ca/drugs/DB01404	IL6	PTGS2	AHR
+Alfacalcidol%nutraceutical%DB01436	https://www.drugbank.ca/drugs/DB01436	VDR	CYP27B1	RXRA
+Prasterone%nutraceutical%DB01708	https://www.drugbank.ca/drugs/DB01708	ESR2	ESR1	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D	GRIN3A	GRIN3B	AR	PPARA	SIGMAR1	NR1I2	NR1I3
+Pantothenic acid%nutraceutical%DB01783	https://www.drugbank.ca/drugs/DB01783	coaA
+Hyperforin%nutraceutical%DB01892	https://www.drugbank.ca/drugs/DB01892	PTGS1	NR1I2	ALOX5
+Taurine%nutraceutical%DB01956	https://www.drugbank.ca/drugs/DB01956	tauD	cbh	GLRA1	GRIN2B	GLRA2	GLRA3	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ	GABBR1
+Coenzyme A%nutraceutical%DB01992	https://www.drugbank.ca/drugs/DB01992	acs	DBI	frc	CRAT	caiB	pflB	glcB	mvaA	coaD	acpS	paiA	aacC1	lacA	HMGCR	fadR	KAT5	dapD	ACAT2	phbA	vatD	CS	fabH	frc		coaA	rimL	yvbK				fabH	mshD	KAT2A		KAT2B	menB	cit	aac	aac(6')-Ii	sfp		cysE	gltA	fcbC	glmU
+Oxitriptan%nutraceutical%DB02959	https://www.drugbank.ca/drugs/DB02959	trpS2
+Citric acid%nutraceutical%DB04272	https://www.drugbank.ca/drugs/DB04272	fumC	pgl	IL4I1	CTDSP1		HGS		ITEVIR	12	MDH2	purE	rplD	CPB1			bfrA	sspA	cit	rtcA	LSM6	PLEKHA1	fbpA	ftsY	nadD	nusB	C8G	nrdF	glnA1	glnA1	gltA		APRT	rmlA	blm		yfiH	rpiA	guaA	AKR1B1	ITPA	CS	17		pcaB	SRC	pdc	RNASE1	icd	RNASE3	penP	blaNDM-1
+5-methyltetrahydrofolic acid%nutraceutical%DB04789	https://www.drugbank.ca/drugs/DB04789	AMT
+Ginsenoside Rb1%nutraceutical%DB06749	https://www.drugbank.ca/drugs/DB06749	SLCO1B3
+Ginsenoside Rg1%nutraceutical%DB06750	https://www.drugbank.ca/drugs/DB06750	SLCO1B3
+Glycine betaine%nutraceutical%DB06756	https://www.drugbank.ca/drugs/DB06756	BCL2
+Manganese%nutraceutical%DB06757	https://www.drugbank.ca/drugs/DB06757	IDH3A	IDH3G	TAB1	ARG1	TF
+Serotonin%nutraceutical%DB08839	https://www.drugbank.ca/drugs/DB08839	SLC6A4	HTR2A	HTR3A	HTR3B	SLC18A2
+Oxogluric acid%nutraceutical%DB08845	https://www.drugbank.ca/drugs/DB08845	aspC
+Ubidecarenone%nutraceutical%DB09270	https://www.drugbank.ca/drugs/DB09270	NDUFV3	SDHA
+Chondroitin sulfate%nutraceutical%DB09301	https://www.drugbank.ca/drugs/DB09301	BDNF	GDNF	VEGFA	CCL2
+Vitamin D%nutraceutical%DB11094	https://www.drugbank.ca/drugs/DB11094	VDR	GC
+Castor oil%nutraceutical%DB11113	https://www.drugbank.ca/drugs/DB11113	PTGER3	PTGER4
+Omega-3 fatty acids%nutraceutical%DB11133	https://www.drugbank.ca/drugs/DB11133	PPARG	PPARA	SREBF1
+Clove oil%nutraceutical%DB11338	https://www.drugbank.ca/drugs/DB11338	VCAM1	CXCL10	COL1A1	CSF2RA
+Phosphocreatine%nutraceutical%DB13191	https://www.drugbank.ca/drugs/DB13191	GAMT	SLC6A8	CKM	CKMT1A	CKMT2	CKB
+Fish oil%nutraceutical%DB13961	https://www.drugbank.ca/drugs/DB13961	DGAT2	PTGS2	FFAR4	CACNA1C	CACNA1D	CACNA1F	CACNA1S	CACNB1	CACNB2	CACNB3	CACNB4	SCN1A	SCN10A	SCN11A	SCN2A	SCN3A	SCN4A	SCN5A	SCN7A	SCN8A	SCN9A	SCN1B	SCN2B	SCN3B	SCN4B	NFKB2	NFKB1	SREBF1	PPARA	PPARG	PPARD
+alpha-Tocopherol succinate%nutraceutical%DB14001	https://www.drugbank.ca/drugs/DB14001	SEC14L3	SEC14L2	NR1I2	PRKCB	ALOX5	PRKCA	DGKA	DGKB	DGKD	DGKE	DGKH	DGKG	DGKI	DGKK	DGKQ	DGKZ
+D-alpha-Tocopherol acetate%nutraceutical%DB14002	https://www.drugbank.ca/drugs/DB14002	SEC14L3	SEC14L2	NR1I2	PRKCB	ALOX5	PRKCA
+Choline salicylate%nutraceutical%DB14006	https://www.drugbank.ca/drugs/DB14006	PCYT1B	ACHE	PCYT1A	PLD2	BCHE	PLD1	CHRNA7
+Magnesium levulinate%nutraceutical%DB14514	https://www.drugbank.ca/drugs/DB14514	ATP1A1
+Magnesium lactate%nutraceutical%DB14515	https://www.drugbank.ca/drugs/DB14515	ATP1A1

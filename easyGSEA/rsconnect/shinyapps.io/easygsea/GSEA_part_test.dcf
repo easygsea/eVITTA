@@ -1,0 +1,12 @@
+name: GSEA_part_test
+title:
+username:
+account: easygsea
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2432163
+bundleId: 3253400
+url: https://easygsea.shinyapps.io/GSEA_part_test/
+when: 1591817142.81112
+asMultiple: FALSE
+asStatic: FALSE
