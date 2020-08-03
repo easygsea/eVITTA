@@ -16,7 +16,7 @@ output$vis_network <- renderVisNetwork({
         for(i in 1:N){
             
             # Long Running Task
-            Sys.sleep(.2)
+            Sys.sleep(.1)
             
             # Update progress
             incProgress(1/N)

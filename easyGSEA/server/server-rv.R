@@ -1,11 +1,24 @@
    rv <- reactiveValues(
         run_mode=NULL, #gsea glist
         
-        file_upload_status=NULL,db_status=NULL,rnk_or_deg=NULL,
+        db_status=NULL, # selected modify
+
+        file_upload_status=NULL, # uploaded reset
+        
+        data_head=NULL, # to temporily store input data
+        infile_confirm=NULL, # confirm, to see if user confirms file content to input
+        infile_check=NULL, # wrong_rnk, wrong_deg, unmatch, pass
+        
+        rnk_or_deg=NULL,
+        
+        total_genes=NULL,total_genes_after=NULL,
+        
         # sampleRNK_yes=NULL,sampleDE_yes=NULL,#sampleRNKfile=NULL,sampleDEfile=NULL,
         example_file=NULL,
-        infile_check=NULL,
-        infile_name=NULL,infile_path=NULL,rnkll=NULL,rnkgg=NULL,#deggg=NULL,
+        
+        
+        infile_name=NULL,infile_path=NULL,
+        rnkll=NULL,rnkgg=NULL,#deggg=NULL,
         
         sd_high = NULL,#rnkgg_scaled=NULL,
         
