@@ -81,11 +81,16 @@ species_names_go <- list(
   "Sus scrofa" = "sscrofa"
 )
 
-# ===================== Column names for DEG CSVs =====================
+# ===================== Column names & match for DEG/RNK =====================
 col_gene_names <- c("x","id","gene","symbol","genesymbol","gene_id","x1","genename","name")
 col_fc_names <- c("logfc","fc")
 col_p_names <- c("p","pval","pvalue","p.value")
 col_fdr_names <- c("fdr","padj","adj.p.val")
+col_rank_names <- c("rank","ranks","score")
+
+match_colnames <- function(dict = col_gene_names, col_names){
+  col_names[which(tolower(col_names) %in% dict)[1]]
+}
 
 # ===================== Example data for ORA run mode =====================
 # read in csv files

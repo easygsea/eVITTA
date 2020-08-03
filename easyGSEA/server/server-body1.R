@@ -1,4 +1,4 @@
-# feedbacks about inputs -------------
+# ----------- feedbacks about inputs -------------
 # feedback run mode
 output$feedback_runmode <- renderUI({
     HTML(
@@ -46,21 +46,131 @@ output$feedback_filename <- renderUI({
     HTML(
         "Your query file:<br/><b>",
         rv$infile_name,
-        "</b><br/>"
+        "</b><br/><br/>"
     )
 })
 
-# feedback file content
-# output$feedback_filecontent <- renderUI({
-#     req(is.null(rv$infile_name) == F)
-#     HTML(
-#         "Your query file:<br/><b>",
-#         rv$infile_name,
-#         "</b><br/>"
-#     )
-# })
+# --------------- feedback on input file content --------------
+output$feedback_filecontent <- renderTable({
+    req(rv$file_upload_status == "uploaded")
+    req(is.null(rv$infile_confirm) == T)
+    df = rv$data_head %>%
+        dplyr::top_n(2) %>%
+        dplyr::mutate_if(is.numeric, function(x) round(x,2))
+    
+    arow = rep("...",ncol(df))
+    
+    rbind(df,arow)
+        
+})
 
-# feedback on results ---------------------
+# colnames for DEG
+output$feedback_filecontent_deg <- renderUI({
+    req(rv$rnk_or_deg == "deg")
+    req(is.null(rv$infile_confirm) == T)
+    
+    fluidRow(
+        column(
+            width = 4,
+            radioButtons(
+                inputId = "gene_column",
+                label = "Gene column:",
+                choices = colnames(rv$data_head),
+                selected = match_colnames(col_gene_names,colnames(rv$data_head))
+            )
+        ),
+        column(
+            width = 4,
+            radioButtons(
+                inputId = "logfc_column",
+                label = "logFC column:",
+                choices = colnames(rv$data_head),
+                selected = match_colnames(col_fc_names,colnames(rv$data_head))
+            )
+        ),
+        column(
+            width = 4,
+            radioButtons(
+                inputId = "p_column",
+                label = "P column:",
+                choices = colnames(rv$data_head),
+                selected = match_colnames(col_p_names,colnames(rv$data_head))
+            )
+        )
+    )
+})
+
+# colnames for RNK
+output$feedback_filecontent_rnk <- renderUI({
+    req(rv$rnk_or_deg == "rnk")
+    req(is.null(rv$infile_confirm) == T)
+    
+    fluidRow(
+        column(
+            width = 6,
+            radioButtons(
+                inputId = "gene_column",
+                label = "Gene column:",
+                choices = colnames(rv$data_head),
+                selected = match_colnames(col_gene_names,colnames(rv$data_head))
+            )
+        ),
+        column(
+            width = 6,
+            radioButtons(
+                inputId = "rank_column",
+                label = "Rank column:",
+                choices = colnames(rv$data_head),
+                selected = match_colnames(col_rank_names,colnames(rv$data_head))
+            )
+        )
+    )
+})
+
+# confirm file content
+output$feedback_filecontent_confirm <- renderUI({
+    req(rv$file_upload_status == "uploaded")
+    req(is.null(rv$infile_confirm) == T)
+    bsButton(
+        "filecontent_confirm",
+        "Confirm",
+        style = "primary"
+    )
+})
+
+# --------------- feedback on converted RNK --------------
+output$feedback_converted_rnk <- renderUI({
+    req(is.null(rv$infile_check) == F)
+    if(rv$infile_check == "unmatch"){
+        "Please check if your selected species matches your query."
+    }else if(rv$infile_check == "wrong_rnk"){
+        "You probably uploaded a wrong RNK file. RNK should have 1st column as gene names and 2nd column as ranks (numeric). Please click on the help button to learn more and load our example RNK file for a try."
+    }else if(rv$infile_check == "wrong_deg"){
+        "You probably uploaded a wrong DEG file. DEG files should have at least a column with gene names, a column with logFC (numeric), and a column with P/FDR values (numeric). Please click on the help button to learn more and load our example DEG file for a try."
+    }else if(rv$infile_check == "pass"){
+        fluidRow(
+            column(
+                width = 12,
+                br(),
+                "Converted RNK for pre-ranked GSEA run:",
+                uiOutput("converted_rnk"),
+                paste0("Total number of genes: ",
+                       rv$total_genes_after, " / ",rv$total_genes),
+            )
+        )
+    }
+})
+
+# RNK table
+output$converted_rnk <- renderTable({
+    data.frame(GeneName=names(rv$rnkgg),Rank=rv$rnkgg,stringsAsFactors = F) %>%
+        dplyr::top_n(2) %>%
+        dplyr::mutate_if(is.numeric, function(x) as.character(x)) %>%
+        dplyr::add_row(GeneName="...",Rank="...")
+    
+})
+
+# ---------------- feedback on results ---------------------
 output$run_summary_gsea <- renderUI({
     req(is.null(rv$run)==F)
     if(rv$run == "success"){
@@ -131,18 +241,22 @@ output$run_summary_gsea <- renderUI({
                 width = 12,height = "670px",align = "left",
                 status = "primary", 
                 column(
-                    width = 5,
+                    width = 6,
                     h5("Hello!"),
                     uiOutput("feedback_runmode"),
                     uiOutput("feedback_species"),
                     uiOutput("feedback_dbs"),
                     uiOutput("feedback_rnk"),
                     uiOutput("feedback_filename"),
-                    uiOutput("feedback_filecontent")
+                    uiOutput("feedback_filecontent"),
+                    uiOutput("feedback_filecontent_deg"),
+                    uiOutput("feedback_filecontent_rnk"),
+                    uiOutput("feedback_filecontent_confirm"),
+                    uiOutput("feedback_converted_rnk")
                     
                 ),
                 column(
-                    width = 6, offset = 1,
+                    width = 6, #offset = 1,
                     uiOutput("run_summary_gsea")
                 )
             )
@@ -168,7 +282,8 @@ output$id_box <- renderUI({
 output$rnk_download <- downloadHandler(
     filename = function() {paste0(rv$rnkll,".rnk")},
     content = function(file) {
-        fwrite(t(as.matrix(rv$rnkgg)), file, sep="\t", 
+        df = data.frame(GeneName=names(rv$rnkgg),Rank=rv$rnkgg,stringsAsFactors = F)
+        fwrite(df, file, sep="\t", 
                # sep2=c("", ";", ""), 
                row.names = F, quote=F)
     })
