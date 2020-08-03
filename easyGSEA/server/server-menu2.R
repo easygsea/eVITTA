@@ -1735,143 +1735,152 @@ observeEvent(input$confirm_kegg_plot,{
             
             output$plot_words <- renderUI({})
         }else{
-            # get db categories
-            cats = unique(df$db)
-            max_table = length(cats)
-
-            # read in table content
-            lst <- list()
-            lst_words <- list()
-            for (i in 1:max_table) {
-                # get df == db
-                data <- df %>% 
-                    dplyr::filter(db == cats[i]) %>%
-                    dplyr::select(-db)
+            
+            withProgress(message = "Generating summary stats ...",{
+                for(N in 1:10){
+                    Sys.sleep(0.1)
+                    incProgress(1/N)
+                }
+                # get db categories
+                cats = unique(df$db)
+                max_table = length(cats)
                 
-                # save table data into lst
-                lst[[i]] <- data %>%
-                    mutate_if(is.numeric, function(x) round(x, digits=3))
+                # read in table content
+                lst <- list()
+                lst_words <- list()
+                for (i in 1:max_table) {
+                    # get df == db
+                    data <- df %>% 
+                        dplyr::filter(db == cats[i]) %>%
+                        dplyr::select(-db)
+                    
+                    # save table data into lst
+                    lst[[i]] <- data %>%
+                        mutate_if(is.numeric, function(x) round(x, digits=3))
+                    
+                    # create data for word freq count plots
+                    data <- data %>%
+                        dplyr::mutate(linenumber = row_number(),text = pathway) %>%
+                        dplyr::select(text,linenumber)
+                    
+                    data$text <- lapply(data$text,function(x) strsplit(x,"%")[[1]][1]) %>%
+                        lapply(.,function(x) regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]) %>%
+                        lapply(., function(x) gsub("_"," ",x)) %>%
+                        unlist(.)
+                    
+                    # tidy and count data
+                    
+                    data <- data %>%
+                        unnest_tokens(word, text) %>%
+                        dplyr::anti_join(stop_words) %>%
+                        dplyr::anti_join(useless_words) %>%
+                        dplyr::filter(is.na(as.numeric(word))) %>%
+                        dplyr::count(word,sort=TRUE)
+                    
+                    data <- data %>%
+                        dplyr::mutate(total = sum(n)) %>%
+                        dplyr::mutate(freq = n/total) %>%
+                        dplyr::arrange(desc(freq)) %>%
+                        dplyr::select(-total)
+                    
+                    lst_words[[i]] <- data
+                }
                 
-                # create data for word freq count plots
-                data <- data %>%
-                    dplyr::mutate(linenumber = row_number(),text = pathway) %>%
-                    dplyr::select(text,linenumber)
-                
-                data$text <- lapply(data$text,function(x) strsplit(x,"%")[[1]][1]) %>%
-                    lapply(.,function(x) regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]) %>%
-                    lapply(., function(x) gsub("_"," ",x)) %>%
-                    unlist(.)
-
-                # tidy and count data
-                
-                data <- data %>%
-                    unnest_tokens(word, text) %>%
-                    dplyr::anti_join(stop_words) %>%
-                    dplyr::anti_join(useless_words) %>%
-                    dplyr::filter(is.na(as.numeric(word))) %>%
-                    dplyr::count(word,sort=TRUE)
-                
-                data <- data %>%
-                    dplyr::mutate(total = sum(n)) %>%
-                    dplyr::mutate(freq = n/total) %>%
-                    dplyr::arrange(desc(freq)) %>%
-                    dplyr::select(-total)
-                
-                lst_words[[i]] <- data
-            }
-
-            # UI tables
-            output$ui_tables <- renderUI({
-                plot_output_list <- lapply(1:max_table, function(i) {
-                    tablename <- paste0("tablename", i)
-                    div(
-                        dataTableOutput(tablename,height = "300px"),
-                        tags$br()
-                    )
-                })
-                do.call(tagList, plot_output_list)
-            })
-
-            # render tables' contents
-            for (i in 1:max_table) {
-                local({
-                    my_i <- i
-                    tablename <- paste0("tablename", my_i)
-                    output[[tablename]] <- DT::renderDataTable({
-                        DT::datatable(lst[[my_i]],
-                                      extensions=c('Scroller','Buttons'),
-                                      options = list(
-                                          dom = 'Bfrtip',
-                                          buttons = c('copy', 'pdf', 'print','csv', 'excel'),
-                                          scrollY = "160px",
-                                          scroller = TRUE,
-                                          scrollX=TRUE           
-                                      )
+                # UI tables
+                output$ui_tables <- renderUI({
+                    plot_output_list <- lapply(1:max_table, function(i) {
+                        tablename <- paste0("tablename", i)
+                        div(
+                            dataTableOutput(tablename,height = "300px"),
+                            tags$br()
                         )
                     })
+                    do.call(tagList, plot_output_list)
                 })
-            }
-            
-            # word frequency bar plots ----------
-            output$plot_words <- renderUI({
-                plot_output_list <- lapply(1:max_table, function(i) {
-                    barname <- paste0("barname", i)
-                    div(
-                        plotlyOutput(barname,height = "300px",width = "100%"),
-                        tags$br()
-                    )
+                
+                # render tables' contents
+                for (i in 1:max_table) {
+                    local({
+                        my_i <- i
+                        tablename <- paste0("tablename", my_i)
+                        output[[tablename]] <- DT::renderDataTable({
+                            DT::datatable(lst[[my_i]],
+                                          extensions=c('Scroller','Buttons'),
+                                          options = list(
+                                              dom = 'Bfrtip',
+                                              buttons = c('copy', 'pdf', 'print','csv', 'excel'),
+                                              scrollY = "160px",
+                                              scroller = TRUE,
+                                              scrollX=TRUE           
+                                          )
+                            )
+                        })
+                    })
+                }
+                
+                # word frequency bar plots ----------
+                output$plot_words <- renderUI({
+                    plot_output_list <- lapply(1:max_table, function(i) {
+                        barname <- paste0("barname", i)
+                        div(
+                            plotlyOutput(barname,height = "300px",width = "100%"),
+                            tags$br()
+                        )
+                    })
+                    do.call(tagList, plot_output_list)
                 })
-                do.call(tagList, plot_output_list)
+                
+                # render word count bar plots
+                colors = brewer.pal(n = max_table, name = "Set2")
+                for (i in 1:max_table) {
+                    local({
+                        my_i <- i
+                        barname <- paste0("barname", my_i)
+                        output[[barname]] <- renderPlotly({
+                            tidy_data = lst_words[[my_i]] %>%
+                                mutate(word = factor(word, levels = rev(unique(word)))) %>%
+                                head(.,n=15)
+                            # top_n(10)
+                            
+                            # hover text
+                            text = lapply(tidy_data$word, function(x){
+                                x = as.character(droplevels(x))
+                                a = lst[[my_i]] %>%
+                                    dplyr::filter(str_detect(pathway,regex(x, ignore_case = TRUE))) %>%
+                                    dplyr::select(pathway) %>%
+                                    unlist(.) %>%
+                                    unname(.)
+                                if(length(a)>14){a = c(a[1:14],"... ...")}
+                                a = paste(a,collapse = "\n")
+                                return(a)
+                            })
+                            
+                            text = unlist(text)
+                            
+                            # y axis label
+                            if(rv$run_mode == "glist"){
+                                y_label = paste0("Word frequency (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
+                            }else if(rv$run_mode == "gsea"){
+                                if(direction == TRUE){
+                                    y_label = paste0("Word frequency for upregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
+                                }else if(direction == FALSE){
+                                    y_label = paste0("Word frequency for downregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
+                                }
+                            }
+                            
+                            p <- tidy_data %>%
+                                ggplot(aes(word, n, text=text)) +
+                                geom_col(show.legend = FALSE, fill = colors[my_i]) +
+                                labs(x = NULL, y = y_label) +
+                                coord_flip() +
+                                scale_x_reordered()
+                            
+                            ggplotly(p,tooltip=c("word","n","text"))
+                        })
+                    })
+                }
             })
             
-            # render word count bar plots
-            colors = brewer.pal(n = max_table, name = "Set2")
-            for (i in 1:max_table) {
-                local({
-                    my_i <- i
-                    barname <- paste0("barname", my_i)
-                    output[[barname]] <- renderPlotly({
-                        tidy_data = lst_words[[my_i]] %>%
-                            mutate(word = factor(word, levels = rev(unique(word)))) %>%
-                            head(.,n=15)
-                            # top_n(10)
-                        
-                        # hover text
-                        text = lapply(tidy_data$word, function(x){
-                            x = as.character(droplevels(x))
-                            a = lst[[my_i]] %>%
-                                dplyr::filter(str_detect(pathway,regex(x, ignore_case = TRUE))) %>%
-                                dplyr::select(pathway) %>%
-                                unlist(.) %>%
-                                unname(.)
-                            if(length(a)>14){a = c(a[1:14],"... ...")}
-                            a = paste(a,collapse = "\n")
-                            return(a)
-                        })
-                        
-                        text = unlist(text)
-                        
-                        # y axis label
-                        if(rv$run_mode == "glist"){
-                            y_label = paste0("Word frequency (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                        }else if(rv$run_mode == "gsea"){
-                            if(direction == TRUE){
-                                y_label = paste0("Word frequency for upregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                            }else if(direction == FALSE){
-                                y_label = paste0("Word frequency for downregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                            }
-                        }
-                        
-                        p <- tidy_data %>%
-                            ggplot(aes(word, n, text=text)) +
-                            geom_col(show.legend = FALSE, fill = colors[my_i]) +
-                            labs(x = NULL, y = y_label) +
-                            coord_flip() +
-                            scale_x_reordered()
-
-                        ggplotly(p,tooltip=c("word","n","text"))
-                    })
-                })
-            }
+            
         }
     })

@@ -1,15 +1,3 @@
-# debug --------------------------
-    # output$gs_debug <- renderPrint({paste(
-    #     "rv$db_status = ", rv$db_status, ", ",
-    #     "run = ", rv$run, ", ",
-    #     "msigdb db = ", list(input$selected_db), ", ",
-    #     "uploaded rnk = ", input$rnkfile$name, ", ",
-    #     "gmts size = ", length(rv$gmts), ", ",
-    #     "rnkgg size = ", length(rv$rnkgg), ", ",
-    #     "ES results size = ", nrow(rv$fgseagg)
-    # )
-    # })
-    
 # RNK help --------------
     observeEvent(input$q1,{
         showModal(modalDialog(
@@ -22,8 +10,7 @@
         ))
     })
     
-# UI select mode --------------
-
+#-------------- UI select mode of analysis ----------------
 output$ui_mode <- renderUI({
     box(
         title = NULL, background = "yellow", solidHeader = T, width = 12,
@@ -33,14 +20,7 @@ output$ui_mode <- renderUI({
             choices = run_modes,
             selected = "gsea"
         )
-        # selectInput(
-        #     "selected_mode",
-        #     "Mode of analysis",
-        #     choices = run_modes,
-        #     selected = "gsea"
-        # )
     )
-    
 })
 
 # UI select species ------------------
@@ -56,6 +36,7 @@ output$ui_mode <- renderUI({
             )
         )
     })
+    
     # disable selection when user confirms gmts; enables upon modify
     # this is to prevent accidentally messing up selections by changing species
     observe({
@@ -68,8 +49,8 @@ output$ui_mode <- renderUI({
         }
     })
 
-# UI select gmts -----------------------
-
+    #-------------- UI select GMTs ----------------
+    
     observe({
         req(nchar(input$selected_species)>0)
         req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
@@ -99,40 +80,21 @@ output$ui_mode <- renderUI({
         return(rv$v[[species]])
     })
     
-# UI select msigDB -----------------------
-    # output$item_msigdb <- renderUI({
-    #     req(input$selected_species=="hsa")
-    #     req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
-    #     
-    #     checkboxGroupInput(
-    #         'selected_db',
-    #         'MSigDB',
-    #         choices = msigdb_collections#,
-    #         # selected = c(
-    #         #     # "C2_CP:KEGG"
-    #         #     # ,"C2_CP:REACTOME","C2_CP:BIOCARTA","C2_CP:PID","C5_BP"
-    #         #     )
-    #     )
-    # })
     
     #-------------- button control of gmt selection ----------------
     
     # add / modify button
     observeEvent(input$add_db, {
         rv$db_status <- "selected"
-        
         rv$dbs = NULL
+        
         species<-input$selected_species
+        
         for(collection in sort(names(gmt_collections_paths[[species]]))){
             db_id = paste0(species,gsub(" ","_",collection))
-            # print(db_id)
             # db_name = input[[db_id]]
             rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% isolate(input[[db_id]]))])
         }
-        # if(species == "hsa"){
-        #     rv$dbs = c(rv$dbs,msigdb_collections[which(msigdb_collections %in% isolate(input$selected_db))])
-        # }
-        
     })
     
     observeEvent(input$add_db_modify, {
@@ -160,7 +122,6 @@ output$ui_mode <- renderUI({
     
     # reset button
     observeEvent(input$reset_db, {
-        # rv$db_status <- NULL
         species <- input$selected_species
         for(collection in sort(names(gmt_collections_paths[[species]]))){
             updateCheckboxGroupInput(session,
@@ -170,15 +131,6 @@ output$ui_mode <- renderUI({
                                      selected = gmt_collections_selected[[species]][[collection]]
             )
         }
-        # updateCheckboxGroupInput(session,
-        #                          'selected_db',
-        #                          'MSigDB',
-        #                          choices = msigdb_collections,
-        #                          selected = c(
-        #                              "C2_CP:KEGG"
-        #                              # ,"C2_CP:REACTOME","C2_CP:BIOCARTA","C2_CP:PID","C5_BP"
-        #                              )
-        # )
     })
     
     output$bs_reset_db <- renderUI({
@@ -191,11 +143,11 @@ output$ui_mode <- renderUI({
             type = "button")
     })
     
-# Upload & reset RNK -------------
+# ------------ Upload & reset RNK -------------
     # UI file input
     output$ui_rnk <- renderUI({
         req(input$selected_mode == "gsea")
-        req(rv$db_status == "selected")
+        # req(rv$db_status == "selected")
         # div(
         #     class = "btn-danger",
             fileInput("rnkfile",
@@ -213,6 +165,7 @@ output$ui_mode <- renderUI({
         # )
 
     })
+    
     # UI reset
     output$bs_file_reset <- renderUI({
         req(input$selected_mode == "gsea")
@@ -227,12 +180,13 @@ output$ui_mode <- renderUI({
     # reset RNK input widget
     observeEvent(input$reset, {
         rv$file_upload_status = "reset"
+        rv$infile_confirm = NULL
         rv$infile_name = NULL
         rv$infile_path = NULL
+        rv$rnk_or_deg = NULL
         # rv$run = NULL
         shinyjs::reset("rnkfile")
         shinyjs::enable("rnkfile")
-        removeNotification(id="wrong_rnk")
         rv$infile_check = NULL
         rv$example_file = NULL
     })
@@ -246,7 +200,7 @@ output$ui_mode <- renderUI({
     })
     
         
-# Upload and reset example RNK/DE --------------
+# ------------- Upload and reset example RNK/DE --------------
     observeEvent(input$loadExampleRNK,{
         rv$example_file = NULL
         if(input$selected_species == ""){
@@ -260,6 +214,7 @@ output$ui_mode <- renderUI({
             removeModal()
             rv$infile_check = NULL
             rv$example_file = "yes"
+            rv$file_upload_status = "uploaded"
         }
     })
     
@@ -276,11 +231,13 @@ output$ui_mode <- renderUI({
             removeModal()
             rv$infile_check = NULL
             rv$example_file = "yes"
+            rv$file_upload_status = "uploaded"
         }
     })
 
     
 #---------- Return RNK ---------
+    # check and store input file content into rv$data_head
     observe({
         req(is.null(rv$infile_name)==F)
         rv$infile_check=NULL
@@ -294,135 +251,66 @@ output$ui_mode <- renderUI({
             ranks <- read_delim(isolate(rv$infile_path), "\t" , escape_double = FALSE, trim_ws = TRUE)
             ranks = ranks[complete.cases(ranks), ]
         }
+        
+        # detect if RNK or DEG
         if(ncol(ranks)==2){
-            # set.col.type(ranks) = c("character", "numeric")
-            # ranks <- ranks[order(-ranks[[2]] ),] # sort by descending
-            if(is.character(ranks[[1]]) && is.numeric(ranks[[2]])){
+            rv$rnk_or_deg = "rnk"
+        }else if(ncol(ranks)>2){
+            rv$rnk_or_deg = "deg"
+        }else{
+            showNotification("You probably uploaded a wrong file. Please check",type = "error",duration = 3)
+        }
+        
+        # save had data into RV
+        rv$data_head = ranks
+    })
+    
+    # convert into ranks
+    observeEvent(input$filecontent_confirm,{
+        rv$infile_confirm = "confirm"
+        data = rv$data_head
+        
+        # total no of genes before conversion
+        rv$total_genes = nrow(data)
+        
+        # clear rv which was used to store input file data
+        rv$data_head = NULL
+        
+        if(ncol(data)==2){
+            if(is.numeric(data[[input$rank_column]])){
+                ranks <- setNames(data[[input$rank_column]], data[[input$gene_column]])
                 rv$infile_check = "pass"
-                ranks <- setNames(ranks[[2]], ranks[[1]])
                 rv$rnkgg = ranks
-                
-                # # convert IDs
-                # N = 1
-                # withProgress(message = "Checking input gene IDs...",{
-                #     
-                #     # for(i in 1:N){
-                #     Sys.sleep(.01)
-                #     incProgress(1)
-                #     # incProgress(1/N)
-                #     # }
-                #     
-                #     # gconvert to NCBI ACC #
-                #     results = gconvert(
-                #         names(ranks),
-                #         organism = species_names_go[input$selected_species][[1]],
-                #         target = "ENTREZGENE_ACC", # results$target is ACC, results$name is ACC name
-                #         numeric_ns = "",
-                #         mthreshold = Inf,
-                #         filter_na = TRUE
-                #     )
-                #     
-                #     test = results %>% filter(input == name)
-                #     perc = nrow(test)/nrow(results)
-                #     if(perc > 0.7){
-                #         # input is SYMBOL
-                #         rv$input_symbol = "yes"
-                #         ranks = ranks[names(ranks) %in% test$input]
-                #         
-                #         # load to rv
-                #         rv$rnkgg = ranks
-                #         rv$input_mat = test
-                #     }else{
-                #         # input is other type, rename rank list
-                #         test = distinct(results, input, .keep_all = TRUE)
-                #         ranks = ranks[names(ranks) %in% test$input]
-                #         names(ranks) = test$name[test$input %in% names(ranks)]
-                #         
-                #         # load to rv
-                #         rv$rnkgg = ranks
-                #         rv$input_mat = test
-                #     }
-                # })
             }else{
-                showNotification(id="wrong_rnk","You probably uploaded a wrong file.",type="error",duration=5)
+                rv$infile_check = "wrong_rnk"
             }
-        }else if(ncol(ranks)>2 && ncol(ranks)<20){
-            genes <- ranks[which(tolower(colnames(ranks)) %in% col_gene_names)][[1]]
-            logfc <- ranks[which(tolower(colnames(ranks)) %in% col_fc_names)][[1]]
-            pval <- ranks[which(tolower(colnames(ranks)) %in% col_p_names)][[1]] #%>% mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
-            pval[pval==0] = 0.00001
-            if(is.numeric(pval) && is.numeric(logfc) && is.character(genes)){
-                rv$infile_check = "pass"
+        }else if(ncol(data)>2){
+            genes <- data[[input$gene_column]]
+            logfc <- data[[input$logfc_column]]
+            pval <- data[[input$p_column]] #%>% mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
+            pval[pval==0] = 0.000000001
+            if(is.numeric(pval) && is.numeric(logfc)){
                 rank_values <- -log10(pval) * sign(logfc)
                 ranks <- setNames(rank_values,genes)
+                rv$infile_check = "pass"
                 rv$rnkgg <- ranks # add value to rv
-                # convert IDs
-                # N = 1
-                # withProgress(message = "Checking input gene IDs...",{
-                #     
-                #     # for(i in 1:N){
-                #     Sys.sleep(.01)
-                #     incProgress(1)
-                #     # incProgress(1/N)
-                #     # }
-                #     
-                #     # gconvert to NCBI ACC #
-                #     results = gconvert(
-                #         names(ranks),
-                #         organism = species_names_go[input$selected_species][[1]],
-                #         target = "ENTREZGENE_ACC", # results$target is ACC, results$name is ACC name
-                #         numeric_ns = "",
-                #         mthreshold = Inf,
-                #         filter_na = TRUE
-                #     )
-                #     
-                #     test = results %>% filter(input == name)
-                #     perc = nrow(test)/nrow(results)
-                #     if(perc > 0.7){
-                #         # input is SYMBOL
-                #         rv$input_symbol = "yes"
-                #         
-                #         # # only retain the ones have matches in gprofiler database
-                #         # ranks = ranks[names(ranks) %in% test$input]
-                #         # str(ranks)
-                #         
-                #         # # remove repetitive search entries
-                #         # test = distinct(test, input, .keep_all = FALSE)
-                #         # test = test %>% group_by(input) %>% filter(target == max(target)) # select largest
-                #         # str(test)
-                #         
-                #         # load to rv
-                #         rv$rnkgg = ranks
-                #         rv$input_mat = test
-                #     }else{
-                #         # input is other type, rename rank list
-                #         test = distinct(results, input, .keep_all = FALSE)
-                #         ranks = ranks[names(ranks) %in% test$input]
-                #         names(ranks) = test$name[test$input %in% names(ranks)]
-                #         
-                #         # load to rv
-                #         rv$rnkgg = ranks
-                #         rv$input_mat = test
-                #     }
-                # })
             }else{
-                showNotification(id="wrong_rnk","You probably uploaded a wrong file.",type="error",duration=5)
+                rv$infile_check = "wrong_deg"
             }
-        }else{
-            div(
-                # tags$style=(HTML(".shiny-notification {position:fixed;top: calc(50%);left: calc(50%);}")),
-                showNotification(id="wrong_rnk","You probably uploaded a wrong file.",type="error",duration=5)
-            )
         }
+        
+        # total no of genes before conversion
+        rv$total_genes_after = length(rv$rnkgg)
         
     })
     
-
-# UI GList : input gene lists ------------
+#====================================================#
+# ----------- GList mode: input gene lists ----------#
+#====================================================#
     output$ui_glist <- renderUI({
         req(input$selected_mode == "glist")
-        req(input$selected_species != "")
-        req(is.null(rv$dbs)==F)
+        # req(input$selected_species != "")
+        # req(is.null(rv$dbs)==F)
         div(
             textAreaInput(
                 inputId = "gene_list",
@@ -525,12 +413,16 @@ output$ui_mode <- renderUI({
         )
     })
     
-    # load example input
+    #----------- Example gene lists --------------
     observeEvent(input$load_example_glist,{
-        updateTextAreaInput(session,
-                            inputId = "gene_list",
-                            value = gsub(";","\n",glist_example[input$selected_species][[1]])
-        )
+        if(input$selected_species == ""){
+            showNotification("Please select your species of interest.",type="error",duration=2)
+        }else{
+            updateTextAreaInput(session,
+                                inputId = "gene_list",
+                                value = gsub(";","\n",glist_example[input$selected_species][[1]])
+            )
+        }
     })
     
     
@@ -633,8 +525,9 @@ output$ui_mode <- renderUI({
     #     )
     # })
     
-    # run GSEA!!! -----------------
-    
+    #===============================================#
+    #####               run GSEA!!!             #####
+    #===============================================#
     # runs upon the analysis name is provided.
     observeEvent(input$confirm1, {
         
@@ -823,7 +716,9 @@ output$ui_mode <- renderUI({
         })
     })
     
-    # run GList!!! -----------------
+    #===============================================#
+    #####               run GList!!!            #####
+    #===============================================#
     
     observeEvent(input$confirm2, {
         rv$run_mode = "glist"
@@ -951,61 +846,3 @@ output$ui_mode <- renderUI({
             incProgress(0.1)
         })
     })
-    #----------feedback of gmt and rnk selection (might be updated to popup?)---------
-    
-    # output$input_feedback <- renderUI({
-    #     req(input$selected_species != "")
-    #     req(is.null(rv$db_status)==FALSE)
-    #     fluidRow(
-    #         column(6,
-    #                if ((is.null(input$selected_db)==F) || (is.null(input$selected_db_ext)==F) ){ 
-    #                    box(
-    #                        title = NULL, background = "olive", solidHeader = TRUE, width=12,
-    #                        strong(paste0("Your selected databases:")),br(),
-    #                        "MSigDB databases: ",length(input$selected_db),br(),
-    #                        "External databases: ",length(input$selected_db_ext)
-    #                    )
-    #                }
-    #                else{
-    #                    box(
-    #                        title = NULL, background = "red", solidHeader = TRUE, width=12,
-    #                        strong("Please select one or more databases for analysis.")
-    #                    )
-    #                }
-    #                
-    #                ),
-    #         column(6,
-    #                if (is.null(rv$infile_name)==F){
-    #                    box(
-    #                        title = NULL, background = "olive", solidHeader = TRUE, width=12,
-    #                        strong(paste0("Your selected rnks:")),br(),
-    #                        rv$infile$name,br(),br()
-    #                    )
-    #                }
-    #                else {
-    #                    box(
-    #                        title = NULL, background = "red", solidHeader = TRUE, width=12,
-    #                        "Please upload an .rnk file for analysis.",br(),br(),br()
-    #                    )
-    #                }
-    #                )
-    #     )
-    # })
-    
-    # UI select gmts ----------------
-    
-    # external gmts (dynamically displays stuff in /gmts/)
-    # output$item_ext_db <- renderUI({
-    #     req(nchar(input$selected_species)>0)
-    #     req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
-    #     
-    #     species <- input$selected_species
-    #     checkboxGroupInput(
-    #         'selected_db_ext',
-    #         'External GMTs',
-    #         choices = ext_collections[[species]],
-    #         # selected = ext_collections[[species]]
-    #     )
-    # })
-    
-    
