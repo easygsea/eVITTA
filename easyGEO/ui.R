@@ -14,9 +14,11 @@ sidebar <- dashboardSidebar(
     sidebarMenu(id="menu1",
                 menuItem("Extract GEO Data", tabName="tab1", icon=icon("dashboard")),
                 
-                menuItem("Analyze Data", tabName="tab2", icon=icon("calculator")),
+                menuItem("Design Summary", tabName="tab2", icon=icon("pencil-ruler")),
                 
-                menuItem("Visualize Data", tabName="tab3", icon=icon("chart-area"))
+                menuItem("Analyze Data", tabName="tab3", icon=icon("calculator")),
+                
+                menuItem("Visualize Data", tabName="tab4", icon=icon("chart-area"))
                 
                 
     )
@@ -111,7 +113,41 @@ body <- dashboardBody(
                 )
         ),
         tabItem(tabName = "tab3",
-                h2("Tab 3")
+                fluidRow(
+                    column(6,
+                           
+                           box(title="Filter Data", width = 12, solidHeader=T, status = "primary",
+                               
+                               uiOutput("filter_design_ui"),
+                               
+                               
+                           ),
+                           box(title="Select Comparison", width = 12, solidHeader=T, status = "primary",
+                               "Which variable to analyze?",
+                               "Which 2 levels to compare?"
+                               
+                           ),
+                    ),
+                    column(6,
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "summary", height = "250px",
+                               tabPanel("Filtered Matrix", 
+                                        
+                                        DT::dataTableOutput("filtered_design_df")
+                                        
+                               )
+                           )
+                           
+                    )
+                    
+                    
+                )
+                
+
+        ),
+        tabItem(tabName = "tab4",
+                h2("Tab 4")
         )
     )
     

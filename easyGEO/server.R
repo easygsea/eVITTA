@@ -301,8 +301,8 @@ shinyServer(function(input, output) {
     
     # show design summary ui -----------
     
-    design_summary <- reactive({
-        
+    # variable summary (is a named list of named vectors in form of $var level:freq)
+    var_summary <- reactive({
         char_mat <- design_df()
         # get named list of named vectors
         var_summary <- vector(mode="list", length=ncol(char_mat))
@@ -310,7 +310,13 @@ shinyServer(function(input, output) {
             var_summary[[i]] <- table(char_mat[[colnames(char_mat)[[i]]]])
         }
         names(var_summary) <- colnames(char_mat)
+        var_summary
+    })
+    
+    # construct the text summary from variable summary
+    design_summary <- reactive({
         
+        var_summary <- var_summary()
         
         # get text
         textt <- vector(mode="list", length=length(var_summary))
@@ -374,6 +380,82 @@ shinyServer(function(input, output) {
             color = "purple"
         )
     })
+    
+    
+    
+    # filter design matrix ui -----------
+    
+    # ui for selecting variables and levels to filter by
+    output$filter_design_ui <- renderUI({
+        div(
+            selectInput("filter_vars", "Filter samples by variables:",
+                        multiple=T,
+                        choices= names(var_summary()),
+                        selected= names(var_summary()),
+                        width="100%"
+            ),
+            "Ignore samples with NA in selected variables? checkbox", br(),
+            uiOutput("filter_vars_levels")
+            
+        )
+        
+    })
+    
+    # generates dynamic ui for selection
+    observe({
+        req(length(var_summary()) >0)
+        
+        vs <- var_summary()
+        if (length(input$filter_vars)>0){
+            vs <- vs[input$filter_vars] # subset list to selected vars only
+            
+            v <- vector(mode="list", length=length(vs))
+            for (i in 1:length(vs)){
+                v[[i]] <- div(style="display: inline-block;vertical-align:top; width: 260px;",
+                              wellPanel(checkboxGroupInput(inputId = paste0("vs_",i), 
+                                                           label = names(vs)[[i]], 
+                                                           choices = names(vs[[i]]),
+                                                           selected = names(vs[[i]])
+                              )))
+            }
+            rv$v <- v
+        } else {
+            rv$v <- HTML("<div>Select one or more variables to filter by.</div>")
+        }
+        
+        
+        
+    })
+    
+    output$filter_vars_levels <- renderUI({
+        req(is.null(rv$v)==F)
+        rv$v
+        # print(rv$v)
+    })
+    
+    # show filtered design matrix -----------
+    
+    output$filtered_design_df <- DT::renderDataTable({
+        req(is.null(rv$gse_all)==F)
+        req(is.null(rv$plat_id)==F)
+        req(length(input$filter_vars)>0)
+        
+        df <- design_df() #dk why the header doesnt scroll? same as the other one
+        
+        # for (i in length(input$filter_vars)){
+        #     var <- input$filter_vars[[i]]
+        #     levels <- input[[paste0("vs_",i)]]
+        #     req(var)
+        #     print(var)
+        #     req(levels)
+        #     print(levels)
+        #     df <- df[df[[var]] %in% levels,]
+        # }
+        
+        df
+        
+    }, plugins="ellipsis",options=dt_options(30)
+    )
     
     
     ####---------------------- DEBUG 1 ---------------------------####
