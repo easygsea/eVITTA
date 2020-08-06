@@ -147,7 +147,8 @@ shinyServer(function(input, output) {
         df$Field <- tidy_field_col(df$Field)
         df
         
-    }, plugins="ellipsis",options=dt_options(80)
+    }, plugins="ellipsis",options=dt_options(80),
+    # fillContainer = T # add this to prevent header not scrolling with content
     )
     
     # show gsm metadata table -----------
@@ -161,7 +162,8 @@ shinyServer(function(input, output) {
         df$Field <- tidy_field_col(df$Field)
         df
         
-    }, plugins="ellipsis",options=dt_options(80)
+    }, plugins="ellipsis",options=dt_options(80),
+    # fillContainer = T # add this to prevent header not scrolling with content
     )
     
     # show summary of metadata -----------
@@ -257,7 +259,7 @@ shinyServer(function(input, output) {
         char_list <- data.frame(t(as.data.frame(pData(phenoData(gse()))) %>% select(contains("characteristics"))))
         char_list[char_list==""] <- NA
         char_list <- as.list(char_list)
-        print(char_list)
+        # print(char_list)
         
         # map list of characters into dataframe format (those not found = NA)
         char_list <- lapply(char_list, function(x){
@@ -281,21 +283,31 @@ shinyServer(function(input, output) {
         
         
         # fill NAs with string?? (optional)
-        # char_mat[is.na(char_mat)] <- "NA"
+        char_mat[is.na(char_mat)] <- "N/A"
+        char_mat[char_mat=="NA"] <- "N/A"
         
-        
+        # convert cols type. integers >> numeric, char >> factor
+        char_mat[] <- lapply(char_mat, function(x) 
+            if(is.integer(x) | is.numeric(x)) {
+                as.numeric(x) 
+            } else {
+                as.factor(x)
+            })
         char_mat # display this matrix to user
     })
     
     
-    output$design_df <- DT::renderDataTable({
-        req(is.null(rv$gse_all)==F)
-        req(is.null(rv$plat_id)==F)
-        
-        design_df()
-        
-    }, plugins="ellipsis",options=dt_options(30)
-    )
+    # output$design_df <- DT::renderDataTable({
+    #     req(is.null(rv$gse_all)==F)
+    #     req(is.null(rv$plat_id)==F)
+    #     
+    #     design_df()
+    #     
+    #     
+    # }, 
+    # plugins="ellipsis",options=dt_options(30, scrollX=T),
+    # fillContainer = T, # add this to prevent header not scrolling with content
+    # )
     
     
     
@@ -385,78 +397,183 @@ shinyServer(function(input, output) {
     
     # filter design matrix ui -----------
     
-    # ui for selecting variables and levels to filter by
-    output$filter_design_ui <- renderUI({
-        div(
-            selectInput("filter_vars", "Filter samples by variables:",
-                        multiple=T,
-                        choices= names(var_summary()),
-                        selected= names(var_summary()),
-                        width="100%"
-            ),
-            "Ignore samples with NA in selected variables? checkbox", br(),
-            uiOutput("filter_vars_levels")
-            
-        )
-        
-    })
+    # # ui for selecting variables and levels to filter by
+    # output$filter_design_ui <- renderUI({
+    #     div(
+    #         selectInput("filter_vars", "Filter samples by variables:",
+    #                     multiple=T,
+    #                     choices= names(var_summary()),
+    #                     selected= names(var_summary()),
+    #                     width="100%"
+    #         ),
+    #         # checkboxInput(
+    #         #     inputId= "filter_vars_na",
+    #         #     label = "Tolerate empty values?",
+    #         #     value = F),
+    #         uiOutput("filter_vars_levels")
+    #         
+    #     )
+    #     
+    # })
+    # 
+    # # generates dynamic ui for selection
+    # observe({
+    #     req(length(var_summary()) >0)
+    #     
+    #     vs <- var_summary()
+    #     if (length(input$filter_vars)>0){
+    #         vs <- vs[input$filter_vars] # subset list to selected vars only
+    #         
+    #         v <- vector(mode="list", length=length(vs))
+    #         for (i in 1:length(vs)){
+    #             v[[i]] <- div(style="display: inline-block;vertical-align:top; width: 260px;",
+    #                           wellPanel(checkboxGroupInput(inputId = paste0("vs_",i), 
+    #                                                        label = names(vs)[[i]], 
+    #                                                        choices = names(vs[[i]]),
+    #                                                        selected = names(vs[[i]])
+    #                           )))
+    #         }
+    #         rv$v <- v
+    #     } else {
+    #         rv$v <- HTML("<div>Select one or more variables to filter by.</div>")
+    #     }
+    #     
+    #     
+    #     
+    # })
+    # 
+    # output$filter_vars_levels <- renderUI({
+    #     req(is.null(rv$v)==F)
+    #     rv$v
+    #     # print(rv$v)
+    # })
+    # 
+    # # show filtered design matrix -----------
+    # 
+    # filtered_design_df <- reactive({
+    #     
+    #     df <- design_df()
+    #     tol <- input$filter_vars_na
+    #     # print(input$filter_vars)
+    #     
+    #     # for each specified, var, filter by specific levels
+    #     for (i in 1:length(input$filter_vars)){
+    #         var <- input$filter_vars[[i]]
+    #         levels <- input[[paste0("vs_",i)]]
+    #         # if(tol==T){
+    #         #     df <- df[(df[[var]] %in% levels | is.na(df[[var]])==T),]
+    #         # } else {
+    #         df <- df[(df[[var]] %in% levels),]
+    #         # }
+    #         
+    #     }
+    #     
+    #     df
+    # })
     
-    # generates dynamic ui for selection
-    observe({
-        req(length(var_summary()) >0)
-        
-        vs <- var_summary()
-        if (length(input$filter_vars)>0){
-            vs <- vs[input$filter_vars] # subset list to selected vars only
-            
-            v <- vector(mode="list", length=length(vs))
-            for (i in 1:length(vs)){
-                v[[i]] <- div(style="display: inline-block;vertical-align:top; width: 260px;",
-                              wellPanel(checkboxGroupInput(inputId = paste0("vs_",i), 
-                                                           label = names(vs)[[i]], 
-                                                           choices = names(vs[[i]]),
-                                                           selected = names(vs[[i]])
-                              )))
-            }
-            rv$v <- v
-        } else {
-            rv$v <- HTML("<div>Select one or more variables to filter by.</div>")
-        }
-        
-        
-        
-    })
-    
-    output$filter_vars_levels <- renderUI({
-        req(is.null(rv$v)==F)
-        rv$v
-        # print(rv$v)
-    })
-    
-    # show filtered design matrix -----------
+
     
     output$filtered_design_df <- DT::renderDataTable({
         req(is.null(rv$gse_all)==F)
         req(is.null(rv$plat_id)==F)
-        req(length(input$filter_vars)>0)
+        # req(length(input$filter_vars)>0)
         
-        df <- design_df() #dk why the header doesnt scroll? same as the other one
+        # filtered_design_df()
+        design_df()
         
-        # for (i in length(input$filter_vars)){
-        #     var <- input$filter_vars[[i]]
-        #     levels <- input[[paste0("vs_",i)]]
-        #     req(var)
-        #     print(var)
-        #     req(levels)
-        #     print(levels)
-        #     df <- df[df[[var]] %in% levels,]
-        # }
-        
-        df
-        
-    }, plugins="ellipsis",options=dt_options(30)
+    }, plugins="ellipsis",options=dt_options(30, scrollX=T),
+    # fillContainer = T # add this to prevent header not scrolling with content
+    # ,
+    filter = list(
+        position = 'top', clear = FALSE
+    )
     )
     
+    # select levels for analysis ui -----------
+    
+    filtered_design_df <- reactive({
+        
+        # get rows from dt filter and reconstitute filtered design df
+        filtered_rows <- input$filtered_design_df_rows_all
+        fddf <- design_df()[filtered_rows,]
+
+        
+        fddf
+    })
+    
+    output$select_params_ui <- renderUI({
+        
+        fddf <- filtered_design_df()
+        
+        print(head(fddf))
+        
+        
+        # filter only cols with >2 levels
+        fddf[] <- lapply(fddf, function(x){
+            if (length(unique(x))>=2){
+                return(x)
+            } else {return(NULL)}
+        })
+        
+        
+        
+        if (ncol(fddf)>0 & nrow(fddf)>0){
+            
+            # count how many levels are available for each factor and put in named vector
+            level_count <- unlist(lapply(fddf, function(x){
+                length(unique(x))
+            }))
+            names(level_count) <- colnames(fddf)
+            
+            # prepare the choices text
+            choices_text <- paste(names(level_count), " (", level_count, " levels)", sep="")
+            choices <- colnames(fddf)
+            names(choices) <- choices_text
+            
+            div(
+                radioButtons(
+                    inputId = "sp_select_Var",
+                    label = "Select variable:",
+                    choices = choices,
+                    inline=T
+                ),
+                uiOutput("sp_select_levels"),
+                uiOutput("sp_select_confirm")
+            )
+        } else {
+            HTML("No variables are available for selection. <br>(NOTE: at least one variable must have >2 levels)")
+        }
+
+        
+        
+        
+        
+        
+    })
+    
+    output$sp_select_levels <- renderUI({
+        
+        fddf <- filtered_design_df()
+        levels <- unique(fddf[[input$sp_select_Var]])
+        checkboxGroupInput(
+            inputId = "sp_select_levels",
+            label = "Select two levels to compare:",
+            choices = levels,
+            inline=T
+        )
+    })
+    
+    output$sp_select_confirm <- renderUI({
+        req(length(input$sp_select_levels)==2)
+        
+        actionButton("sp_confirm", "Run DEG analysis")
+    })
+    
+    
+    
+    
+    
+
     
     ####---------------------- DEBUG 1 ---------------------------####
     

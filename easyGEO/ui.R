@@ -83,29 +83,40 @@ body <- dashboardBody(
         tabItem(tabName = "tab2",
                 fluidRow(
                     
-                    
                     column(8,
                            
                            tabBox(
                                title = NULL, width = 12,
                                id = "design", height = "250px",
+                               
+                               tabPanel("Matrix", 
+                                        
+                                        # DT::dataTableOutput("design_df")
+                                        DT::dataTableOutput("filtered_design_df")
+                               ),
                                tabPanel("Study Design Summary", 
                                         
                                         uiOutput("design_summary_ui")
                                         
-                               ),
-                               tabPanel("Matrix", 
-                                        
-                                        DT::dataTableOutput("design_df")
                                )
                            ),
                     ),
                     column(4,
-                           
                            valueBoxOutput("design_variables", width=12),
                            valueBoxOutput("design_samples", width=12),
                            
-                    )
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "summary", height = "150px",
+                               tabPanel("Select levels", 
+                                        
+                                        uiOutput("select_params_ui")
+                                        
+                               )
+                           )
+                           
+                           )
+                    
                     
                     
                     
@@ -113,41 +124,56 @@ body <- dashboardBody(
                 )
         ),
         tabItem(tabName = "tab3",
-                fluidRow(
-                    column(6,
-                           
-                           box(title="Filter Data", width = 12, solidHeader=T, status = "primary",
-                               
-                               uiOutput("filter_design_ui"),
-                               
-                               
-                           ),
-                           box(title="Select Comparison", width = 12, solidHeader=T, status = "primary",
-                               "Which variable to analyze?",
-                               "Which 2 levels to compare?"
-                               
-                           ),
-                    ),
-                    column(6,
-                           tabBox(
-                               title = NULL, width = 12,
-                               id = "summary", height = "250px",
-                               tabPanel("Filtered Matrix", 
-                                        
-                                        DT::dataTableOutput("filtered_design_df")
-                                        
-                               )
-                           )
-                           
-                    )
-                    
-                    
-                )
+                # fluidRow(
+                #     # column(6,
+                #     #        
+                #     #        box(title="Filter Data", width = 12, solidHeader=T, status = "primary",
+                #     #            
+                #     #            uiOutput("filter_design_ui"),
+                #     #            
+                #     #            
+                #     #        ),
+                #     #        box(title="Select Comparison", width = 12, solidHeader=T, status = "primary",
+                #     #            "Which variable to analyze?",
+                #     #            "Which 2 levels to compare?"
+                #     #            
+                #     #        ),
+                #     # ),
+                #     
+                #            tabBox(
+                #                title = NULL, width = 12,
+                #                id = "summary", height = "150px",
+                #                tabPanel("Filtered Matrix", 
+                #                         
+                #                         
+                #                         
+                #                )
+                #            )
+                #            
+                #     
+                #     
+                # ),
+                # fluidRow(
+                #     
+                #            
+                #            
+                #     
+                # )
                 
 
         ),
         tabItem(tabName = "tab4",
-                h2("Tab 4")
+                h2("Tab 4"),
+                tabBox(
+                    title = NULL, width = 12,
+                    id = "summary", height = "250px",
+                    tabPanel("placeholder", 
+                             
+                             "placeholder"
+                             
+                    )
+                )
+                
         )
     )
     

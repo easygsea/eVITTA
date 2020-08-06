@@ -75,9 +75,10 @@ transform_vector <- function(vector, sep=": "){
 
 
 # apply options to datatable. example: options = dt_options(80,F,F,T,T,T,10)
-dt_options <- function(max_char, scrollX=F, scrollY=F, paging=T, searching=T, info=T, pageLength = 10){
+dt_options <- function(max_char, scrollX=F, scrollY=F, paging=T, searching=T, info=T, pageLength = 10, autoWidth=T){
   list(scrollX=scrollX, scrollY=scrollY, 
        paging=paging, searching=searching, info=info, pageLength = pageLength,
+       autoWidth = autoWidth,
        columnDefs = list(
          list(
            targets = "_all",
