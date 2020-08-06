@@ -85,9 +85,15 @@ body <- dashboardBody(
                     
                     column(8,
                            
+                           
                            tabBox(
                                title = NULL, width = 12,
-                               id = "design", height = "250px",
+                               id = "design",
+                               
+                               tabPanel("Filter Data", 
+                                        
+                                        uiOutput("filter_design_ui"),
+                               ),
                                
                                tabPanel("Matrix", 
                                         
@@ -105,59 +111,71 @@ body <- dashboardBody(
                            valueBoxOutput("design_variables", width=12),
                            valueBoxOutput("design_samples", width=12),
                            
+                           )
+                    
+                ),
+                fluidRow(
+                    column(6,
                            tabBox(
                                title = NULL, width = 12,
-                               id = "summary", height = "150px",
+                               id = "sp",
                                tabPanel("Select levels", 
                                         
                                         uiOutput("select_params_ui")
                                         
                                )
                            )
+                           ),
+                    column(6,
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "matrix",
+                               tabPanel("Data matrix", 
+                                        
+                                        uiOutput("data_matrix_ui")
+                                        
+                               )
+                           )
                            
                            )
-                    
-                    
-                    
-                    
                     
                 )
         ),
         tabItem(tabName = "tab3",
                 # fluidRow(
-                #     # column(6,
-                #     #        
-                #     #        box(title="Filter Data", width = 12, solidHeader=T, status = "primary",
-                #     #            
-                #     #            uiOutput("filter_design_ui"),
-                #     #            
-                #     #            
-                #     #        ),
-                #     #        box(title="Select Comparison", width = 12, solidHeader=T, status = "primary",
-                #     #            "Which variable to analyze?",
-                #     #            "Which 2 levels to compare?"
-                #     #            
-                #     #        ),
-                #     # ),
-                #     
+                #     column(6,
+                # 
+                #            box(title="Filter Data", width = 12, solidHeader=T, status = "primary",
+                # 
+                #                uiOutput("filter_design_ui"),
+                # 
+                # 
+                #            ),
+                #            box(title="Select Comparison", width = 12, solidHeader=T, status = "primary",
+                #                "Which variable to analyze?",
+                #                "Which 2 levels to compare?"
+                # 
+                #            ),
+                #     ),
+                # 
                 #            tabBox(
                 #                title = NULL, width = 12,
                 #                id = "summary", height = "150px",
-                #                tabPanel("Filtered Matrix", 
-                #                         
-                #                         
-                #                         
+                #                tabPanel("Filtered Matrix",
+                # 
+                # 
+                # 
                 #                )
                 #            )
-                #            
-                #     
-                #     
+                # 
+                # 
+                # 
                 # ),
                 # fluidRow(
-                #     
-                #            
-                #            
-                #     
+                # 
+                # 
+                # 
+                # 
                 # )
                 
 

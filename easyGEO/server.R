@@ -385,7 +385,7 @@ shinyServer(function(input, output) {
     })
     output$design_samples <- renderValueBox({
         valueBox(
-            paste0(nrow(design_df()), " samples"), 
+            paste0(nrow(filtered_design_df()), "/", nrow(design_df()), " samples"), 
             paste0(rownames(design_df())[[1]], " ... " ,
                    rownames(design_df())[[length(design_df())]]), 
             icon = icon("seedling"),
@@ -397,109 +397,105 @@ shinyServer(function(input, output) {
     
     # filter design matrix ui -----------
     
-    # # ui for selecting variables and levels to filter by
-    # output$filter_design_ui <- renderUI({
-    #     div(
-    #         selectInput("filter_vars", "Filter samples by variables:",
-    #                     multiple=T,
-    #                     choices= names(var_summary()),
-    #                     selected= names(var_summary()),
-    #                     width="100%"
-    #         ),
-    #         # checkboxInput(
-    #         #     inputId= "filter_vars_na",
-    #         #     label = "Tolerate empty values?",
-    #         #     value = F),
-    #         uiOutput("filter_vars_levels")
-    #         
-    #     )
-    #     
-    # })
-    # 
-    # # generates dynamic ui for selection
-    # observe({
-    #     req(length(var_summary()) >0)
-    #     
-    #     vs <- var_summary()
-    #     if (length(input$filter_vars)>0){
-    #         vs <- vs[input$filter_vars] # subset list to selected vars only
-    #         
-    #         v <- vector(mode="list", length=length(vs))
-    #         for (i in 1:length(vs)){
-    #             v[[i]] <- div(style="display: inline-block;vertical-align:top; width: 260px;",
-    #                           wellPanel(checkboxGroupInput(inputId = paste0("vs_",i), 
-    #                                                        label = names(vs)[[i]], 
-    #                                                        choices = names(vs[[i]]),
-    #                                                        selected = names(vs[[i]])
-    #                           )))
-    #         }
-    #         rv$v <- v
-    #     } else {
-    #         rv$v <- HTML("<div>Select one or more variables to filter by.</div>")
-    #     }
-    #     
-    #     
-    #     
-    # })
-    # 
-    # output$filter_vars_levels <- renderUI({
-    #     req(is.null(rv$v)==F)
-    #     rv$v
-    #     # print(rv$v)
-    # })
-    # 
-    # # show filtered design matrix -----------
-    # 
-    # filtered_design_df <- reactive({
-    #     
-    #     df <- design_df()
-    #     tol <- input$filter_vars_na
-    #     # print(input$filter_vars)
-    #     
-    #     # for each specified, var, filter by specific levels
-    #     for (i in 1:length(input$filter_vars)){
-    #         var <- input$filter_vars[[i]]
-    #         levels <- input[[paste0("vs_",i)]]
-    #         # if(tol==T){
-    #         #     df <- df[(df[[var]] %in% levels | is.na(df[[var]])==T),]
-    #         # } else {
-    #         df <- df[(df[[var]] %in% levels),]
-    #         # }
-    #         
-    #     }
-    #     
-    #     df
-    # })
+    # ui for selecting variables and levels to filter by
+    output$filter_design_ui <- renderUI({
+        div(
+            checkboxGroupInput("filter_vars", "Filter samples by variables:",
+                        choices= names(var_summary()),
+                        selected= names(var_summary()),
+                        inline=T
+            ),
+            uiOutput("filter_vars_levels")
+
+        )
+
+    })
+
+    # generates dynamic ui for selection
+    observe({
+        req(length(var_summary()) >0)
+
+        vs <- var_summary()
+        if (length(input$filter_vars)>0){
+            vs <- vs[input$filter_vars] # subset list to selected vars only
+
+            v <- vector(mode="list", length=length(vs))
+            for (i in 1:length(vs)){
+                v[[i]] <- div(style="display: inline-block;vertical-align:top; width: 190px;",
+                              box(title=names(vs)[[i]], width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=T,
+                                  checkboxGroupInput(inputId = paste0("vs_",i),
+                                                     label = NULL,
+                                                     choices = names(vs[[i]]),
+                                                     selected = names(vs[[i]])
+                              )
+                                  
+                              ))
+            }
+            rv$v <- v
+        } else {
+            rv$v <- HTML("<div>Select one or more variables to filter by.</div>")
+        }
+
+
+
+    })
+
+    output$filter_vars_levels <- renderUI({
+        req(is.null(rv$v)==F)
+        rv$v
+        # print(rv$v)
+    })
+
+    # show filtered design matrix -----------
+
+    filtered_design_df <- reactive({
+        req(length(input$filter_vars)>0)
+        df <- design_df()
+        # print(input$filter_vars)
+
+        # for each specified, var, filter by specific levels
+        for (i in 1:length(input$filter_vars)){
+            var <- input$filter_vars[[i]]
+            levels <- input[[paste0("vs_",i)]]
+
+            df <- df[(df[[var]] %in% levels),]
+
+
+        }
+
+        df
+    })
     
 
     
     output$filtered_design_df <- DT::renderDataTable({
         req(is.null(rv$gse_all)==F)
         req(is.null(rv$plat_id)==F)
-        # req(length(input$filter_vars)>0)
+        req(length(input$filter_vars)>0)
         
-        # filtered_design_df()
-        design_df()
+        filtered_design_df()
+        # design_df()
         
-    }, plugins="ellipsis",options=dt_options(30, scrollX=T),
-    # fillContainer = T # add this to prevent header not scrolling with content
+    }, plugins="ellipsis",options=dt_options(30, scrollX=T)
+    ,
+    fillContainer = T # add this to prevent header not scrolling with content
     # ,
-    filter = list(
-        position = 'top', clear = FALSE
-    )
+    # filter = list(
+    #     position = 'top', clear = FALSE
+    # )
     )
     
     # select levels for analysis ui -----------
     
-    filtered_design_df <- reactive({
-        
-        # get rows from dt filter and reconstitute filtered design df
-        filtered_rows <- input$filtered_design_df_rows_all
-        fddf <- design_df()[filtered_rows,]
-
-        
-        fddf
-    })
+    # filtered_design_df <- reactive({
+    #     
+    #     # get rows from dt filter and reconstitute filtered design df
+    #     filtered_rows <- input$filtered_design_df_rows_all
+    #     fddf <- design_df()[filtered_rows,]
+    # 
+    #     
+    #     fddf
+    # })
     
     output$select_params_ui <- renderUI({
         
@@ -543,12 +539,6 @@ shinyServer(function(input, output) {
         } else {
             HTML("No variables are available for selection. <br>(NOTE: at least one variable must have >2 levels)")
         }
-
-        
-        
-        
-        
-        
     })
     
     output$sp_select_levels <- renderUI({
@@ -571,7 +561,74 @@ shinyServer(function(input, output) {
     
     
     
+    # filter design matrix ui -----------
     
+    output$data_matrix_ui <- renderUI({
+        
+        # check supplementary data in GSE
+        gse_sup <- unlist(gse_meta_df()[grep("supplementary_file", gse_meta_df()$Field),"Value"])
+        gse_sup[gse_sup=="NONE"] <- NA # convert NONE to NA
+        gse_sup <- gse_sup[is.na(gse_sup)==F] # delete NA
+        gse_sup <- strsplit(gse_sup, "\n")[[1]]
+        print(gse_sup)
+
+        # check supplementary data in GSMs
+        
+        gsm_sup <- unlist(gsm_meta_df()[grep("supplementary_file", gsm_meta_df()$Field),"Value"])
+        gsm_sup[gsm_sup=="NONE"] <- NA # convert NONE to NA
+        gsm_sup <- gsm_sup[is.na(gsm_sup)==F] # delete NA
+        gsm_sup <- unlist(gsm_sup)
+        print(gsm_sup)
+        
+        
+        # detect where the data is
+        if (nrow(exprs(gse()))>0){
+            source = "table"
+            text <- "Detected data source: as datatable in GSMs"
+            where <- "table here"
+        } else if (length(gse_sup) > 0){
+            source = "gse_sup"
+            text <- "Detected data source: as supplementary file in GSE"
+            where <- paste0("GSE supplementary (",length(gse_sup),"): ", paste(gse_sup, collapse=", "))
+            rv$suplist <- gse_sup
+        } else if (length(gsm_sup) > 0){
+            source = "gsm_sup"
+            text <- "Detected data source: as supplementary files in GSMs"
+            where <- paste0("GSM supplementary (",length(gsm_sup),"): ", paste(gsm_sup, collapse=", "))
+            rv$suplist <- gsm_sup
+        } else {
+            source = "none"
+            text <- "Data source not detected!"
+            where <- ""
+        }
+        rv$sup_source <- source
+        
+        
+        div(
+            strong(text), br(), br(),
+            # where,
+            uiOutput("sup_links")
+        )
+
+    })
+    
+    
+    # generates url links
+    observe({
+        req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup")
+        
+        for (i in 1:length(rv$suplist)){
+            path = rv$suplist[[i]]
+            rv$s[[i]] <- div(style="display: inline-block;vertical-align:top; width: 280px;",
+                             tagList(basename(path), a("Download", href=path))
+                             )
+        }
+    })
+    
+    output$sup_links <- renderUI({
+        req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup")
+        rv$s
+    })
     
 
     
