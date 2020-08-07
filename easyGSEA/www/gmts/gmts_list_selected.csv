@@ -2,6 +2,7 @@
 "bta","03_Gene Ontology","Biological_Process20200805.gmt"
 "cel","01_WormCat (Holdorf et al. 2020)","WormCat_Category_2.gmt"
 "cel","02_Pathway","KEGG20200805.gmt;WikiPathways20200805.gmt;Reactome_Pathway20200805.gmt"
+"cel","03_Gene Ontology","Biological_Process20200805.gmt"
 "cfa","02_Pathway","KEGG20200805.gmt;WikiPathways20200805.gmt;Reactome_Pathway20200805.gmt"
 "cfa","03_Gene Ontology","Biological_Process20200805.gmt"
 "dre","02_Pathway","KEGG20200805.gmt;WikiPathways20200805.gmt;Reactome_Pathway20200805.gmt"
