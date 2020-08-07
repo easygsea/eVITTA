@@ -884,6 +884,7 @@
     #####         automatically convert gene IDs       ######
     #=======================================================#
     
+    # convert gene list
     convert_gene_id <- function(species, genes){
         # gconvert to NCBI ACC #
         results = gconvert(
@@ -912,6 +913,7 @@
                 genes_mat = distinct(results, input, .keep_all = TRUE)
                 genes_after = genes[tolower(genes) %in% tolower(genes_mat$input)]
                 genes_after = genes_mat$name[tolower(genes_mat$input) %in% tolower(genes_after)]
+                genes_after = unique(genes_after)
                 
                 # percent of genes maintained after conversion
                 g_perc = length(genes_after)/length(genes)
@@ -923,6 +925,7 @@
         return(lst)
     }
     
+    # convert ranks
     convert_rank_id <- function(species, ranks){
         genes_o = names(ranks)
         
