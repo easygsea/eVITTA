@@ -899,16 +899,16 @@
         if(is.null(results)){
             lst = NULL
         }else{
-            genes_mat = results %>% dplyr::filter(tolower(input) == tolower(name))
-            perc = nrow(genes_mat)/nrow(results)
-            
-            if(perc > 0.7){
-                # input is SYMBOL, no need to convert
-                g_perc = 1
-                lst = list(g_perc,genes,results)
-            }else if(perc == 0){
-                lst = NULL
-            }else{
+            # genes_mat = results %>% dplyr::filter(tolower(input) == tolower(name))
+            # perc = nrow(genes_mat)/nrow(results)
+            # 
+            # if(perc > 0.7){
+            #     # input is SYMBOL, no need to convert
+            #     g_perc = 1
+            #     lst = list(g_perc,genes,results)
+            # }else if(perc == 0){
+            #     lst = NULL
+            # }else{
                 # input is not SYMBOL, rename genes
                 genes_mat = distinct(results, input, .keep_all = TRUE)
                 genes_after = genes[tolower(genes) %in% tolower(genes_mat$input)]
@@ -918,8 +918,8 @@
                 # percent of genes maintained after conversion
                 g_perc = length(genes_after)/length(genes)
                 
-                lst = list(g_perc,genes_after,results)
-            }
+                lst = list(g_perc,genes_after,genes_mat)
+            # }
         }
         
         return(lst)
@@ -942,16 +942,16 @@
         if(is.null(results)){
             lst = NULL
         }else{
-            genes_mat = results %>% dplyr::filter(tolower(input) == tolower(name))
-            perc = nrow(genes_mat)/nrow(results)
-            
-            if(perc > 0.7){
-                # input is SYMBOL, no need to convert
-                g_perc = 1
-                lst = list(g_perc,ranks,results)
-            }else if(perc == 0){
-                lst = NULL
-            }else{
+            # genes_mat = results %>% dplyr::filter(tolower(input) == tolower(name))
+            # perc = nrow(genes_mat)/nrow(results)
+            # 
+            # if(perc > 0.7){
+            #     # input is SYMBOL, no need to convert
+            #     g_perc = 1
+            #     lst = list(g_perc,ranks,results)
+            # }else if(perc == 0){
+            #     lst = NULL
+            # }else{
                 # input is not SYMBOL, rename genes
                 genes_mat = distinct(results, input, .keep_all = TRUE)
                 ranks_after = ranks[tolower(genes_o) %in% tolower(genes_mat$input)]
@@ -960,8 +960,8 @@
                 # percent of genes maintained after conversion
                 g_perc = length(ranks_after)/length(ranks)
                 
-                lst = list(g_perc,ranks_after,results)
-            }
+                lst = list(g_perc,ranks_after,genes_mat)
+            # }
         }
         
         return(lst)

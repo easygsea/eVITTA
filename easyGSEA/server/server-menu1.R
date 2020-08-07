@@ -153,14 +153,14 @@ output$ui_mode <- renderUI({
             bsButton(
                 inputId = "add_db", 
                 label = "Confirm selection",
-                style = "success",
+                style = "primary",
                 type = "button")
         }
         else if (rv$db_status == "selected"){
             bsButton(
                 inputId = "add_db_modify", 
                 label = "Modify selection",
-                style = "info",
+                style = "default",
                 type = "button")
         }
         
@@ -219,9 +219,9 @@ output$ui_mode <- renderUI({
         req(input$selected_mode == "gsea")
         req(is.null(rv$infile_name)==F)
         bsButton(
-            inputId = 'reset',
-            label = 'Reset file',
-            style = "info",
+            inputId = "reset",
+            label = "Reset file",
+            style = "default",
             type = "button")
     })
     
@@ -418,20 +418,26 @@ output$ui_mode <- renderUI({
                     bsButton(
                         inputId = "gene_list_clear",
                         label = "Reset",
-                        style = "info"
+                        style = "default"
                     )
                 ),
                 column(
                     width = 3, #offset = 1,
-                    bsButton(
-                        inputId = "gene_list_add",
-                        label = "Submit",
-                        style = "success"
-                    )
+                    uiOutput("glist_add_button")
                 )
                 
             )
         )
+    })
+    
+    # Glist add button
+    output$glist_add_button <- renderUI({
+      req(is.null(rv$gene_lists))
+      bsButton(
+        inputId = "gene_list_add",
+        label = "Submit",
+        style = "primary"
+      )
     })
     
     #----------------read in GList-----------------
