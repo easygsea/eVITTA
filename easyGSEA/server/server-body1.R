@@ -262,7 +262,7 @@ output$feedback_converted_glist <- renderUI({
             abbreviate_vector(rv$gene_lists_after),
             " (n=<b>",
             length(rv$gene_lists_after),
-            " </b>)<br/><br/>",
+            "</b>)<br/><br/>",
             "Fewer than 50% of genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
             "<br/><br/>"
         )
@@ -274,7 +274,7 @@ output$feedback_converted_glist <- renderUI({
             abbreviate_vector(rv$gene_lists_after),
             " (n=<b>",
             length(rv$gene_lists_after),
-            " </b>)<br/><br/>"
+            "</b>)<br/><br/>"
        )
     }
 })
