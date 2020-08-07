@@ -912,7 +912,7 @@
                 # input is not SYMBOL, rename genes
                 genes_mat = distinct(results, input, .keep_all = TRUE)
                 genes_after = genes[tolower(genes) %in% tolower(genes_mat$input)]
-                genes_after = genes_mat$name[tolower(genes_mat$input) %in% tolower(genes_after)]
+                genes_after = genes_mat$name#[tolower(genes_mat$input) %in% tolower(genes_after)]
                 genes_after = unique(genes_after)
                 
                 # percent of genes maintained after conversion
@@ -955,8 +955,8 @@
                 # input is not SYMBOL, rename genes
                 genes_mat = distinct(results, input, .keep_all = TRUE)
                 ranks_after = ranks[tolower(genes_o) %in% tolower(genes_mat$input)]
-                names(ranks_after) = genes_mat$name[tolower(genes_mat$input) %in% tolower(names(ranks_after))]
-                               
+                names(ranks_after) = genes_mat$name#[tolower(genes_mat$input) %in% tolower(names(ranks_after))]
+                
                 # percent of genes maintained after conversion
                 g_perc = length(ranks_after)/length(ranks)
                 
