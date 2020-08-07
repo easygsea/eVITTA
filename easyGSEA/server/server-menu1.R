@@ -91,9 +91,10 @@ output$ui_mode <- renderUI({
         $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-up\\\"></span> Advanced database options ...");
       });
     });')),
-                actionButton("showdbs", "Advanced database options ...", 
+                bsButton("showdbs", "Advanced database options ...", 
                          icon = icon("collapse-down", lib = "glyphicon"),
                          style = "default",
+                         type = "toggle",
                          # class = "btn-primary btn-sm", 
                          `data-toggle`="collapse", 
                          `data-target` = "#showdbs_collapsible"
