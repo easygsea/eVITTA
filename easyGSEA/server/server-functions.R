@@ -846,3 +846,121 @@
         }
     }
     
+    #=======================================================#
+    #####         collapsible multicheckinputbox       ######
+    #=======================================================#
+    collapsibleAwesomeCheckboxGroupInput <- 
+        function(inputId, label, i, choices = NULL, selected = NULL,  
+                 status = "primary", width = NULL){
+            input <- awesomeCheckboxGroup(inputId, label, choices = choices, 
+                                          selected = selected, width = width,
+                                          status = status)
+            checkboxes <- input[[3]][[2]][[3]][[1]]
+            id_btn <- paste0(inputId, "_btn")
+            id_div <- paste0(inputId, "_collapsible")
+            btn <- actionButton(id_btn, "More...", 
+                                style = "margin-bottom: 12px",
+                                icon = icon("collapse-up", lib = "glyphicon"), 
+                                class = "btn-primary btn-sm", 
+                                `data-toggle`="collapse", 
+                                `data-target` = paste0("#", id_div))
+            collapsible <- div(id = id_div, class = "collapse")
+            collapsible$children <- checkboxes[(i+1):length(checkboxes)]
+            children <- c(checkboxes[1:i], list(btn), list(collapsible))
+            input[[3]][[2]][[3]][[1]] <- children
+            script <- sprintf('$(document).ready(function(){
+      $("#%s_collapsible").on("hide.bs.collapse", function(){
+        $("#%s_btn").html("<span class=\\\"glyphicon glyphicon-collapse-down\\\"></span> More...");
+      });
+      $("#%s_collapsible").on("show.bs.collapse", function(){
+        $("#%s_btn").html("<span class=\\\"glyphicon glyphicon-collapse-up\\\"></span> Less...");
+      });
+    });', inputId, inputId, inputId, inputId)
+            tagList(input, tags$script(HTML(script)))
+        }
+    
+    
+    #=======================================================#
+    #####         automatically convert gene IDs       ######
+    #=======================================================#
+    
+    convert_gene_id <- function(species, genes){
+        # gconvert to NCBI ACC #
+        results = gconvert(
+            genes,
+            organism = species_names_go[species][[1]],
+            target = "ENTREZGENE_ACC", # results$target is ACC, results$name is ACC symbol
+            numeric_ns = "",
+            mthreshold = Inf,
+            filter_na = TRUE
+        )
+
+        if(is.null(results)){
+            lst = NULL
+        }else{
+            genes_mat = results %>% dplyr::filter(tolower(input) == tolower(name))
+            perc = nrow(genes_mat)/nrow(results)
+            
+            if(perc > 0.7){
+                # input is SYMBOL, no need to convert
+                g_perc = 1
+                lst = list(g_perc,genes,results)
+            }else if(perc == 0){
+                lst = NULL
+            }else{
+                # input is not SYMBOL, rename genes
+                genes_mat = distinct(results, input, .keep_all = TRUE)
+                genes_after = genes[tolower(genes) %in% tolower(genes_mat$input)]
+                genes_after = genes_mat$name[tolower(genes_mat$input) %in% tolower(genes_after)]
+                
+                # percent of genes maintained after conversion
+                g_perc = length(genes_after)/length(genes)
+                
+                lst = list(g_perc,genes_after,results)
+            }
+        }
+        
+        return(lst)
+    }
+    
+    convert_rank_id <- function(species, ranks){
+        genes_o = names(ranks)
+        
+        # gconvert to NCBI ACC #
+        results = gconvert(
+            genes_o,
+            organism = species_names_go[species][[1]],
+            target = "ENTREZGENE_ACC", # results$target is ACC, results$name is ACC symbol
+            numeric_ns = "",
+            mthreshold = Inf,
+            filter_na = TRUE
+        )
+
+        if(is.null(results)){
+            lst = NULL
+        }else{
+            genes_mat = results %>% dplyr::filter(tolower(input) == tolower(name))
+            perc = nrow(genes_mat)/nrow(results)
+            
+            if(perc > 0.7){
+                # input is SYMBOL, no need to convert
+                g_perc = 1
+                lst = list(g_perc,ranks,results)
+            }else if(perc == 0){
+                lst = NULL
+            }else{
+                # input is not SYMBOL, rename genes
+                genes_mat = distinct(results, input, .keep_all = TRUE)
+                ranks_after = ranks[tolower(genes_o) %in% tolower(genes_mat$input)]
+                names(ranks_after) = genes_mat$name[tolower(genes_mat$input) %in% tolower(names(ranks_after))]
+                               
+                # percent of genes maintained after conversion
+                g_perc = length(ranks_after)/length(ranks)
+                
+                lst = list(g_perc,ranks_after,results)
+            }
+        }
+        
+        return(lst)
+    }
+

@@ -7,32 +7,38 @@ output$feedback_runmode <- renderUI({
         "</b><br/><br/>"
     )
 })
+
 # feedback species
 output$feedback_species <- renderUI({
-    req(nchar(input$selected_species)>0)
+    # req(nchar(input$selected_species)>0)
+    req(rv$db_status == "selected")
     HTML(
         "Your species of interest:&nbsp<br/><b><i>",
         species_translate(input$selected_species),
-        "</i></b><br/>"
+        "</i></b><br/><br/>"
     )
     
 })
 
-# feedback databases
-output$feedback_dbs <- renderUI({
-    req(rv$db_status == "selected")
-    # db_selected = names(ext_collections[[input$selected_species]])[which(ext_collections[[input$selected_species]] %in% input$selected_db_ext)]
-    # db_selected = c(db_selected,names(msigdb_collections)[which(msigdb_collections %in% input$selected_db)])
-    db_selected = names(rv$dbs)
-    HTML(
-        "<br/>You have selected databases:<br/><b>",
-        paste(db_selected,collapse = "; "),
-        "</b><br/><br/>"
-    )
-})
+# # feedback databases
+# output$feedback_dbs <- renderUI({
+#     req(rv$run == "success")
+#     # req(rv$db_status == "selected")
+#     db_selected = names(rv$dbs)
+#     HTML(
+#         "<br/>Selected databases:<br/><b>",
+#         paste(db_selected,collapse = "; "),
+#         "</b><br/><br/>"
+#     )
+# })
 
+#==========================================#
+#####      FEEDBACKS on GSEA run       #####
+#==========================================#
 # feedback example data
 output$feedback_rnk <- renderUI({
+    req(input$selected_mode == "gsea")
+    req(rv$db_status == "selected")
     req(is.null(rv$example_file) == F)
     req(is.null(rv$infile_name) == F)
     HTML(
@@ -42,6 +48,8 @@ output$feedback_rnk <- renderUI({
 
 # feedback file name
 output$feedback_filename <- renderUI({
+    req(input$selected_mode == "gsea")
+    req(rv$db_status == "selected")
     req(is.null(rv$infile_name) == F)
     HTML(
         "Your query file:<br/><b>",
@@ -52,6 +60,8 @@ output$feedback_filename <- renderUI({
 
 # --------------- feedback on input file content --------------
 output$feedback_filecontent <- renderTable({
+    req(input$selected_mode == "gsea")
+    req(rv$db_status == "selected")
     req(rv$file_upload_status == "uploaded")
     req(is.null(rv$infile_confirm) == T)
     df = rv$data_head %>%
@@ -66,6 +76,8 @@ output$feedback_filecontent <- renderTable({
 
 # colnames for DEG
 output$feedback_filecontent_deg <- renderUI({
+    req(input$selected_mode == "gsea")
+    req(rv$db_status == "selected")
     req(rv$rnk_or_deg == "deg")
     req(is.null(rv$infile_confirm) == T)
     
@@ -102,6 +114,8 @@ output$feedback_filecontent_deg <- renderUI({
 
 # colnames for RNK
 output$feedback_filecontent_rnk <- renderUI({
+    req(input$selected_mode == "gsea")
+    req(rv$db_status == "selected")
     req(rv$rnk_or_deg == "rnk")
     req(is.null(rv$infile_confirm) == T)
     
@@ -129,6 +143,8 @@ output$feedback_filecontent_rnk <- renderUI({
 
 # confirm file content
 output$feedback_filecontent_confirm <- renderUI({
+    req(input$selected_mode == "gsea")
+    req(rv$db_status == "selected")
     req(rv$file_upload_status == "uploaded")
     req(is.null(rv$infile_confirm) == T)
     bsButton(
@@ -140,7 +156,10 @@ output$feedback_filecontent_confirm <- renderUI({
 
 # --------------- feedback on converted RNK --------------
 output$feedback_converted_rnk <- renderUI({
+    req(input$selected_mode == "gsea")
+    req(rv$db_status == "selected")
     req(is.null(rv$infile_check) == F)
+    species = isolate(input$selected_species)
     if(rv$infile_check == "unmatch"){
         "Please check if your selected species matches your query."
     }else if(rv$infile_check == "wrong_rnk"){
@@ -148,21 +167,50 @@ output$feedback_converted_rnk <- renderUI({
     }else if(rv$infile_check == "wrong_deg"){
         "You probably uploaded a wrong DEG file. DEG files should have at least a column with gene names, a column with logFC (numeric), and a column with P/FDR values (numeric). Please click on the help button to learn more and load our example DEG file for a try."
     }else if(rv$infile_check == "pass"){
-        fluidRow(
-            column(
-                width = 12,
-                br(),
-                "Converted RNK for pre-ranked GSEA run:",
-                uiOutput("converted_rnk"),
-                paste0("Total number of genes: ",
-                       rv$total_genes_after, " / ",rv$total_genes),
+        if(rv$rnk_check == "none"){
+            fluidRow(
+                box(
+                    title = NULL, background = "teal",solidHeader = TRUE, width=12,
+                    "No ID detected in ",species_translate(species),"'s database. Please check if your input file is correct and/or if your selected species matches your query."
+                )
             )
-        )
+        }else if(rv$rnk_check == "low"){
+            fluidRow(
+                column(
+                    width = 12,
+                    br(),
+                    "Converted RNK for pre-ranked GSEA run:",
+                    uiOutput("converted_rnk"),
+                    paste0("Total number of genes: ",
+                           rv$total_genes_after, " / ",rv$total_genes),
+                ),
+                column(
+                    width = 12,
+                    box(
+                        title = NULL, background = "teal",solidHeader = TRUE, width=12,
+                        "Fewer than 50% of genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
+                    )
+                )
+            )
+        }else if(rv$rnk_check == "pass"){
+            fluidRow(
+                column(
+                    width = 12,
+                    br(),
+                    "Converted RNK for pre-ranked GSEA run:",
+                    uiOutput("converted_rnk"),
+                    paste0("Total number of genes: ",
+                           rv$total_genes_after, " / ",rv$total_genes),
+                )
+            )
+        }
     }
 })
 
 # RNK table
 output$converted_rnk <- renderTable({
+    req(input$selected_mode == "gsea")
+    req(rv$db_status == "selected")
     data.frame(GeneName=names(rv$rnkgg),Rank=rv$rnkgg,stringsAsFactors = F) %>%
         dplyr::top_n(2) %>%
         dplyr::mutate_if(is.numeric, function(x) as.character(x)) %>%
@@ -170,30 +218,115 @@ output$converted_rnk <- renderTable({
     
 })
 
-# ---------------- feedback on results ---------------------
+#==========================================#
+#####      FEEDBACKS on ORA run        #####
+#==========================================#
+# -------------- feedback on genes ------------
+output$feedback_glist <- renderUI({
+    req(input$selected_mode == "glist")
+    req(rv$db_status == "selected")
+    req(is.null(rv$glist_check) == F)
+
+    HTML(
+        "Your list: <b>",
+        rv$rnkll,
+        "</b><br/>",
+        abbreviate_vector(rv$gene_lists),
+        " (n=<b>",
+        length(rv$gene_lists),
+        "</b>)<br/><br/>"
+    )
+})
+
+#-------------feedbacks on converted genes------------
+output$feedback_converted_glist <- renderUI({
+    req(input$selected_mode == "glist")
+    req(rv$db_status == "selected")
+    req(is.null(rv$glist_check) == F)
+    species = isolate(input$selected_species)
+    
+    if(rv$glist_check == "none"){
+        fluidRow(
+            box(
+                title = NULL, background = "teal",solidHeader = TRUE, width=12,
+                "No ID detected in ",species_translate(species),"'s database. Please check if your gene list is correct and/or if your selected species matches your query."
+            )
+        )
+    }else if(rv$glist_check == "low"){
+        HTML(
+            "Converted list: <b>",
+            rv$rnkll,
+            "</b><br/>",
+            abbreviate_vector(rv$gene_lists_after),
+            " (n=<b>",
+            length(rv$gene_lists_after),
+            " </b>)<br/><br/>",
+            "Fewer than 50% of genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
+            "<br/><br/>"
+        )
+    }else if(rv$glist_check == "pass"){
+        HTML(
+            "Converted list: <b>",
+            rv$rnkll,
+            "</b><br/>",
+            abbreviate_vector(rv$gene_lists_after),
+            " (n=<b>",
+            length(rv$gene_lists_after),
+            " </b>)<br/><br/>"
+       )
+    }
+})
+
+# ---------------- feedback on GSEA/ORA results ---------------------
 output$run_summary_gsea <- renderUI({
     req(is.null(rv$run)==F)
+    req(rv$db_status == "selected")
+    db_selected = names(rv$dbs)
+    db_selected = paste(db_selected,collapse = "; ")
+    
     if(rv$run == "success"){
         if(rv$run_mode == "gsea"){
             fluidRow(
-                box(
-                    # style="text-align:center",
-                    width = 12, status = "warning",
+                # box(
+                #     # style="text-align:center",
+                #     width = 12, status = "warning",
                     # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
                     h5(tags$b("Summary Report")),
-                    br(),
+                    # br(),
                     p(paste0("Mode of analysis: ",names(run_modes[run_modes == rv$run_mode]))),
-                    br(),
+                    # br(),
                     tags$ul(
-                        tags$li(paste0("The dataset has ",length(rv$rnkgg)," genes.")),
-                        tags$li(paste0("Gene set size filters min=",rv$gmin," max=",rv$gmax," results in ",rv$gmts_length," / ",length(rv$gmts)," gene sets.")),
-                        tags$li(paste0("Number of permutation=",rv$gperm,".")),
-                        tags$li(paste0(rv$no_down_05," (down) ",rv$no_up_05," (up) "," gene sets are significantly enriched at P.adj < 0.05")),
-                        tags$li(paste0(rv$no_down_01," (down) ",rv$no_up_01," (up) "," gene sets are significantly enriched at P.adj < 0.01"))
+                        tags$li(HTML("Species: <b><i>",species_translate(input$selected_species),"</b></i>")),
+                        tags$li(HTML("Databases: <b>",db_selected,"</b>")),
+                        tags$li(HTML("Gene set size filters min=",rv$gmin," max=",rv$gmax," results in ",rv$gmts_length," / ",length(rv$gmts)," gene sets")),
+                        tags$li(HTML("Number of permutation=",rv$gperm)),
+                        tags$li(HTML("<b>",rv$no_down_05,"</b> (down) <b>",rv$no_up_05,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.05")),
+                        tags$li(HTML("<b>",rv$no_down_01,"</b> (down) <b>",rv$no_up_01,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.01"))
                     ),
                     br(),
-                    p("Navigate to Enrichment Results for details.")
-                )
+                    HTML("Navigate to <b>Enrichment Results</b> for details.")
+                # )
+            )
+        }else if(rv$run_mode == "glist"){
+            fluidRow(
+                # box(
+                #     # style="text-align:center",
+                #     width = 12, status = "warning",
+                    # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
+                    h5(tags$b("Summary Report")),
+                    # br(),
+                    p(paste0("Mode of analysis: ",names(run_modes[run_modes == rv$run_mode]))),
+                    # br(),
+                    tags$ul(
+                        tags$li(HTML("Species: <b><i>",species_translate(input$selected_species),"</b></i>")),
+                        tags$li(HTML("Databases: <b>",db_selected,"</b>")),
+                        tags$li(HTML("Gene set size filters min=",rv$gmin," max=",rv$gmax," results in ",rv$gmts_length," / ",length(rv$gmts)," gene sets")),
+                        tags$li(HTML("<b>",rv$no_up_05,"</b> gene sets are significantly enriched at P.adj < 0.05")),
+                        tags$li(HTML("<b>",rv$no_up_01,"</b> gene sets are significantly enriched at P.adj < 0.01"))
+                    ),
+                    br(),
+                    HTML("Navigate to <b>Enrichment Results</b> for details.")
+                # )
             )
         }
     }else if(rv$run == "failed"){
@@ -238,21 +371,24 @@ output$run_summary_gsea <- renderUI({
             style = "position: relative",
             box(
                 # title = "Welcome to easyGSEA",solidHeader=T,
-                width = 12,height = "670px",align = "left",
+                width = 12,align = "left", #height = "670px",
                 status = "primary", 
                 column(
                     width = 6,
                     h5("Hello!"),
                     uiOutput("feedback_runmode"),
                     uiOutput("feedback_species"),
-                    uiOutput("feedback_dbs"),
+                    # uiOutput("feedback_dbs"),
                     uiOutput("feedback_rnk"),
                     uiOutput("feedback_filename"),
                     uiOutput("feedback_filecontent"),
                     uiOutput("feedback_filecontent_deg"),
                     uiOutput("feedback_filecontent_rnk"),
                     uiOutput("feedback_filecontent_confirm"),
-                    uiOutput("feedback_converted_rnk")
+                    uiOutput("feedback_converted_rnk"),
+                    
+                    uiOutput("feedback_glist"),
+                    uiOutput("feedback_converted_glist")
                     
                 ),
                 column(
@@ -264,21 +400,63 @@ output$run_summary_gsea <- renderUI({
         
     })
 
-# UI ID conversion ----------
+# --------- UI ID conversion ----------
 output$id_box <- renderUI({
     req(input$summary_type=="id")
     div(
         style = "position: relative",
         box(
-            width = 12,height = "670px",align = "left",
-            status = "primary", 
-            downloadButton("rnk_download",
-                           label = "Download RNK (.rnk)"
+            width = 12,align = "left",#height = "670px",
+            status = "primary",
+            fluidRow(
+                column(
+                    width = 4,
+                    uiOutput("ui_mat_download")
+                ),
+                column(
+                    width = 4,
+                    uiOutput("ui_rnk_download")
+                )
             ),
+            br(),
+            dataTableOutput("id_conversion_table")
         )
     )
 })
 
+# UI ID conversion table
+# render ID conversion table
+output$id_conversion_table <- DT::renderDataTable({
+    rv$gene_lists_mat
+}, plugins="ellipsis",options=dt_options())
+
+# download ID conversion button
+output$ui_mat_download <- renderUI({
+    req(is.null(rv$gene_lists_mat) == F)
+    downloadButton("mat_download",
+                   label = "Download ID conversion table (.csv)"
+    )
+})
+
+# download ID conversion table
+output$mat_download <- downloadHandler(
+    filename = function() {paste0(rv$rnkll,"_id_conversion.csv")},
+    content = function(file) {
+        df = rv$gene_lists_mat
+        fwrite(df, file, sep=",", 
+               # sep2=c("", ";", ""), 
+               row.names = F, quote=T)
+    })
+
+# UI download RNK --------------
+output$ui_rnk_download <- renderUI({
+    req(is.null(rv$rnkgg) == F)
+    downloadButton("rnk_download",
+                   label = "Download RNK (.rnk)"
+    )
+})
+
+# download RNK table
 output$rnk_download <- downloadHandler(
     filename = function() {paste0(rv$rnkll,".rnk")},
     content = function(file) {

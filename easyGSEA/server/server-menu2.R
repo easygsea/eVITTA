@@ -1204,7 +1204,7 @@ observeEvent(input$confirm_kegg_plot,{
                                 yes = icon("check-square"),
                                 no = icon("square-o")
                             ),
-                            status = "warning",
+                            status = "primary",
                             direction = "horizontal"
                         )
                     ),
@@ -1223,7 +1223,7 @@ observeEvent(input$confirm_kegg_plot,{
         req(input$kegg_type == "native")
         box(
             title = "KEGG native view",
-            solidHeader = T, status = "warning",width="100%",height=500,
+            solidHeader = T, status = "primary",width="100%",height=500,
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
                 imageOutput("kegg_output_1")
@@ -1245,7 +1245,7 @@ observeEvent(input$confirm_kegg_plot,{
         req(input$kegg_type == "graphviz")
         box(
             title = "KEGG graphviz layout",
-            solidHeader = T, status = "warning",width="100%",height=500,
+            solidHeader = T, status = "primary",width="100%",height=500,
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
                 htmlOutput("kegg_output_2")
@@ -1350,7 +1350,7 @@ observeEvent(input$confirm_kegg_plot,{
         ))
     }, deleteFile = FALSE)
     
-    #download KEGG native
+    # download KEGG native
     output$download_kegg_1 <- downloadHandler(
         filename <- function() {
             paste0(rv$rnkll,"_",rv$es_term,".png")
@@ -1361,7 +1361,7 @@ observeEvent(input$confirm_kegg_plot,{
         contentType = "image/png"
     )
     
-    #pathview draw graphviz view
+    # pathview draw graphviz view
     output$kegg_output_2 <- renderUI({
         req(input$kegg_type == "graphviz")
         # req(is.null(rv$kegg_yes)==FALSE)
@@ -1435,7 +1435,7 @@ observeEvent(input$confirm_kegg_plot,{
     })
     
 
-    #download KEGG pdf
+    # download KEGG pdf
     output$download_kegg_2 <- downloadHandler(
         filename <- function() {
             paste0(rv$rnkll,"_",rv$es_term,".pdf")
@@ -1540,7 +1540,7 @@ observeEvent(input$confirm_kegg_plot,{
         req(rv$reactome_confirm == "yes")
         box(
             title = "Reactome Pathway Diagram",
-            solidHeader = T, status = "warning",width="100%",height=610,align = "center",
+            solidHeader = T, status = "primary",width="100%",height=610,align = "center",
             div(
                 id="diagramHolder",style = 'overflow-x: scroll',
                 tags$script(HTML(sprintf("onReactomeDiagramReady('%s','%s');",rv$reactome_id,rv$reactome_genes)))
@@ -1624,10 +1624,16 @@ observeEvent(input$confirm_kegg_plot,{
 
         }else if(rv$run_mode == "glist"){
             df = rv$fgseagg
-            wp_genes = df[df$pathway==rv$es_term,][[ncol(df)]]
+            wp_genes = df[df$pathway==rv$es_term,][[ncol(df)]][[1]]
             wp_genes = rv$gmts[rv$es_term][[1]][toupper(rv$gmts[rv$es_term][[1]]) %in% wp_genes]
+            
+            # replicate green colors to the # of genes
+            wp_colors = rep("green",length(wp_genes)) %>% paste(.,collapse = ",")
+            
+            # reformat genes into acceptable format
             wp_genes = paste(paste("&label[]=",wp_genes,sep=""),collapse = "")
-            rv$wp_src = sprintf("https://www.wikipathways.org/wpi/PathwayWidget.php?id=%s%s&colors=green",rv$wp_id,wp_genes)
+            
+            rv$wp_src = sprintf("https://www.wikipathways.org/wpi/PathwayWidget.php?id=%s%s&colors=%s",rv$wp_id,wp_genes,wp_colors)
         }
         
     })
@@ -1637,7 +1643,7 @@ observeEvent(input$confirm_kegg_plot,{
         req(rv$wp_confirm == "yes")
         box(
             title = "WikiPathways Diagram",
-            solidHeader = T, status = "warning",width="100%",height=610,align = "center",
+            solidHeader = T, status = "primary",width="100%",height=610,align = "center",
             div(
                 tags$iframe(src = rv$wp_src, width="100%", height="550px", style="overflow:hidden;")
             )

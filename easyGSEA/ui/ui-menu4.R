@@ -28,7 +28,7 @@ bodyDownload <- tabItem(tabName = "download",
                 )
             ),
             box(
-                title = "Gene Set Libraries",solidHeader = T,width = 12, status = "success",
+                title = "Gene Set Libraries",solidHeader = T,width = 12, status = "primary",
                 p("All our gene set libraries (.GMT) are available for download for further analysis and for tool development."),
                 p("Please acknowledge our work if you use one of our library files."),
                 uiOutput("ui_gmt_download")

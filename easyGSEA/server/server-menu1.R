@@ -12,15 +12,18 @@
     
 #-------------- UI select mode of analysis ----------------
 output$ui_mode <- renderUI({
+  fluidRow(
     box(
-        title = NULL, background = "yellow", solidHeader = T, width = 12,
-        radioButtons(
-            inputId = "selected_mode",
-            label = "Mode of analysis",
-            choices = run_modes,
-            selected = "gsea"
-        )
+      title = NULL, background = "yellow", solidHeader = T, width = 12,
+      radioButtons(
+        inputId = "selected_mode",
+        label = "Mode of analysis",
+        choices = run_modes,
+        selected = "glist"
+      )
     )
+  )
+    
 })
 
 # UI select species ------------------
@@ -76,14 +79,39 @@ output$ui_mode <- renderUI({
         req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
         
         species = input$selected_species
-
-        return(rv$v[[species]])
+        
+        fluidRow(
+            column(
+                width = 12,
+                tags$script(HTML('$(document).ready(function(){
+      $("#showdbs_collapsible").on("hide.bs.collapse", function(){
+        $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-down\\\"></span> Advanced database options ...");
+      });
+      $("#showdbs_collapsible").on("show.bs.collapse", function(){
+        $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-up\\\"></span> Advanced database options ...");
+      });
+    });')),
+                actionButton("showdbs", "Advanced database options ...", 
+                         icon = icon("collapse-down", lib = "glyphicon"),
+                         style = "default",
+                         # class = "btn-primary btn-sm", 
+                         `data-toggle`="collapse", 
+                         `data-target` = "#showdbs_collapsible"
+                         ),
+                br(),
+                conditionalPanel('input.showdbs % 2 == 1',
+                                 rv$v[[species]],
+                                 uiOutput("bs_reset_db")
+                ),
+                br()
+            )
+        )
     })
     
     
     #-------------- button control of gmt selection ----------------
     
-    # add / modify button
+    # write selected databases into RV
     observeEvent(input$add_db, {
         rv$db_status <- "selected"
         rv$dbs = NULL
@@ -97,10 +125,28 @@ output$ui_mode <- renderUI({
         }
     })
     
+    # reset species, at the same time reset rnk/glist
     observeEvent(input$add_db_modify, {
-        rv$db_status <- "modify"
+      rv$db_status <- "modify"
+      
+      # clear RVs
+      rv$run = NULL
+      rv$glist_check = NULL
+      rv$rnk_check = NULL
+      
+      # rest glist UIs
+      shinyjs::reset("gene_list")
+      shinyjs::enable("gene_list")
+      shinyjs::reset("glist_name")
+      shinyjs::enable("glist_name")
+      
+      # reset gsea UIs
+      shinyjs::reset("rnkfile")
+      shinyjs::enable("rnkfile")  
+        
     })
     
+    # add / modify button
     output$bs_add_db <- renderUI({
         req(input$selected_species != "")
         if ((is.null(rv$db_status)==TRUE) || (rv$db_status=="modify")){
@@ -122,6 +168,8 @@ output$ui_mode <- renderUI({
     
     # reset button
     observeEvent(input$reset_db, {
+        rv$run = NULL
+        
         species <- input$selected_species
         for(collection in sort(names(gmt_collections_paths[[species]]))){
             updateCheckboxGroupInput(session,
@@ -179,6 +227,7 @@ output$ui_mode <- renderUI({
     
     # reset RNK input widget
     observeEvent(input$reset, {
+        rv$run = NULL
         rv$file_upload_status = "reset"
         rv$infile_confirm = NULL
         rv$infile_name = NULL
@@ -280,7 +329,7 @@ output$ui_mode <- renderUI({
             if(is.numeric(data[[input$rank_column]])){
                 ranks <- setNames(data[[input$rank_column]], data[[input$gene_column]])
                 rv$infile_check = "pass"
-                rv$rnkgg = ranks
+                rv$rnkgg <- ranks 
             }else{
                 rv$infile_check = "wrong_rnk"
             }
@@ -293,19 +342,52 @@ output$ui_mode <- renderUI({
                 rank_values <- -log10(pval) * sign(logfc)
                 ranks <- setNames(rank_values,genes)
                 rv$infile_check = "pass"
-                rv$rnkgg <- ranks # add value to rv
+                rv$rnkgg <- ranks 
             }else{
                 rv$infile_check = "wrong_deg"
             }
         }
         
-        # total no of genes before conversion
-        rv$total_genes_after = length(rv$rnkgg)
-        
+        if(is.null(rv$rnkgg)==F){
+            # autodetect and convert into SYMBOL (if applicable) using gprofiler2
+            species = isolate(input$selected_species)
+            
+            withProgress(message = "Autodetecting and converting gene IDs...",{
+                Sys.sleep(0.1)
+                incProgress(1)
+                lst = convert_rank_id(species,rv$rnkgg)
+                
+                if(is.null(lst)){
+                  # no ID detected in database
+                  rv$rnk_check = "none"
+                  rv$rnkgg = NULL
+                }else{
+                  # check percentage of IDs found in database
+                  g_perc = lst[[1]]
+                  
+                  # if <30%, reports error
+                  if(g_perc < 0.5){
+                    rv$rnk_check = "low"
+                  }else{
+                    rv$rnk_check = "pass"
+                  }
+                  
+                  # convert ID and save converted IDs & conversion table into RVs
+                  rv$rnkgg = lst[[2]]
+                  rv$gene_lists_mat = lst[[3]]
+                  
+                  # count # of genes after conversion
+                  rv$total_genes_after = length(rv$rnkgg)
+                  
+                }
+            })
+            
+            
+        }
     })
     
 #====================================================#
-# ----------- GList mode: input gene lists ----------#
+######       GList mode: input gene lists       ######
 #====================================================#
     output$ui_glist <- renderUI({
         req(input$selected_mode == "glist")
@@ -314,69 +396,54 @@ output$ui_mode <- renderUI({
         div(
             textAreaInput(
                 inputId = "gene_list",
-                label = p("2. Input your gene list (",
+                label = p("2. Input your genes (",
                           tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
                           actionLink("load_example_glist", label = tags$u("example data")),
                           "):"
                           ),
-                placeholder = "Type to input..",
-                height = 150
+                placeholder = "Paste your genes here ...",
+                height = 120
             ),
             fluidRow(
                 column(
-                    width = 7,
-                    fileInput("glistfile","Or, upload a file",
-                              accept = c("text/csv",
-                                         "text/comma-separated-values,text/plain",
-                                         "text/plain"
-                                         )
-                              )
+                    width = 6,
+                    textInput(
+                        "glist_name",
+                        NULL,
+                        placeholder = 'Name your list ...'
+                    )
                 ),
                 column(
                     width = 2, #offset = 6,
-                    br(),
                     bsButton(
                         inputId = "gene_list_clear",
-                        label = "Clear",
+                        label = "Reset",
                         style = "info"
                     )
                 ),
                 column(
-                    br(),
-                    width = 2, #offset = 1,
+                    width = 3, #offset = 1,
                     bsButton(
                         inputId = "gene_list_add",
                         label = "Submit",
                         style = "success"
                     )
                 )
+                
             )
         )
     })
     
-    #----------------read in lists-----------------
-    # from a file
-    observeEvent(input$glistfile, {
-        # get file
-        infile <- input$glistfile
-        data <- read_csv(infile$datapath)
-        data = unique(data[[1]][data[[1]] != ""])
-        # print(str(data))
-        
-
-        # data <- lapply(data, function(x) toupper(unique(x[!is.na(x)])))
-        showNotification(paste0(infile$name," has ", length(data)," genes Click Add to confirm. Or Browse again for another file."),type="warning",duration=3)
-        
-        rv$data_glist = data
-        
-        rv$rnkll = strsplit(isolate(infile$name),"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1]
-    })
-    
+    #----------------read in GList-----------------
     # from input field
     observeEvent(input$gene_list_add,{
-        print(input$gene_list)
-        if(is.null(rv$data_glist)==T){
+        species = isolate(input$selected_species)  
+        # print(input$gene_list)
+        if(nchar(species)>2){
             if(input$gene_list != ""){
+                shinyjs::disable("gene_list")
+                shinyjs::disable("glist_name")
+                
                 genelist = as.character(input$gene_list)
                 genelist = gsub("\"","",genelist)
                 genelist = strsplit(genelist,"\n")
@@ -386,34 +453,78 @@ output$ui_mode <- renderUI({
                 genelist = unique(genelist)
                 
                 if(is.null(genelist)==F){
+                    # save original gene lists into RV
                     rv$gene_lists = genelist
-                    rv$rnkll = "unamed"
+                    
+                    # autodetect and convert into SYMBOL (if applicable) using gprofiler2
+                    withProgress(message = "Autodetecting and converting gene IDs...",{
+                        Sys.sleep(0.1)
+                        incProgress(1)
+                        lst = convert_gene_id(species,genelist)
+                        
+                        if(is.null(lst)){
+                            # no ID detected in database
+                            rv$glist_check = "none"
+                        }else{
+                            # check percentage of IDs found in database
+                            g_perc = lst[[1]]
+                            
+                            # if <30%, reports error
+                            if(g_perc < 0.5){
+                                rv$glist_check = "low"
+                            }else{
+                                rv$glist_check = "pass"
+                            }
+                            
+                            # convert ID and save converted IDs & conversion table into RVs
+                            rv$gene_lists_after = lst[[2]]
+                            rv$gene_lists_mat = lst[[3]]
+                            
+                        }
+                    })
+                    
+                    # name the analysis
+                    if(input$glist_name == ""){
+                        rv$rnkll = "unamed"
+                    }else{
+                        rv$rnkll = input$glist_name
+                    }
+                    
                 }
+            }else{
+                showNotification("Please input your query. Click example data for a trial run.",type="error",duration=3)
             }
         }else{
-            rv$gene_lists = rv$data_glist
+            showNotification("Please select species that matches your query.",type="error",duration=3)
         }
-                
+        # }else{
+        #     rv$gene_lists = rv$data_glist
+        # 
+        #     # successfully submitted
+        #     rv$glist_status = "submitted"
+        # }
     })
     
-    # disable file upload
-    observe({
-        req(is.null(rv$data_glist)==F)
-        shinyjs::disable("glistfile")
-    })
-    
-    # clear input
+    # clear GList input ------------------------------
     observeEvent(input$gene_list_clear, {
-        shinyjs::reset("glistfile")
-        shinyjs::enable("glistfile")
-        updateTextAreaInput(session,
-                            inputId = "gene_list",
-                            value = "",
-                            placeholder = "Type to input.."
-        )
+        rv$run = NULL
+        
+        rv$glist_check = NULL
+        rv$gene_lists = NULL
+        rv$gene_lists_after = NULL
+        
+        shinyjs::reset("gene_list")
+        shinyjs::enable("gene_list")
+        shinyjs::reset("glist_name")
+        shinyjs::enable("glist_name")
+        # updateTextAreaInput(session,
+        #                     inputId = "gene_list",
+        #                     value = "",
+        #                     placeholder = "Type to input.."
+        # )
     })
     
-    #----------- Example gene lists --------------
+    #----------- Example GList --------------
     observeEvent(input$load_example_glist,{
         if(input$selected_species == ""){
             showNotification("Please select your species of interest.",type="error",duration=2)
@@ -425,6 +536,7 @@ output$ui_mode <- renderUI({
         }
     })
     
+
     
 
 #---------- UI confirm & confirm modals ---------
@@ -432,14 +544,24 @@ output$ui_mode <- renderUI({
     observe({
         req(input$selected_mode == "gsea")
         rv$gene_lists = NULL
+        rv$gene_lists_after = NULL
     })
     
     # UI GSEA parameter
     output$ui_gsea_par <- renderUI({
-        req(is.null(rv$dbs)==F)
-        req(input$selected_species != "")
-        req((is.null(rv$infile_name)==F & is.null(rv$infile_check)==F)|(is.null(rv$gene_lists)==F))
+      req(rv$db_status == "selected")
+      
+      if(input$selected_mode == "gsea"){
+        req(is.null(rv$rnk_check)==F)
+        req(is.null(rv$rnkgg)==F)
         
+      }else if(input$selected_mode == "glist"){
+        req(is.null(rv$glist_check)==F)
+        req(is.null(rv$gene_lists_after)==F)
+        
+      }
+      
+      
         box(
             width = 12,
             shiny::HTML("<p style='font-style:italic'>Run parameters</p>"), #&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -458,72 +580,49 @@ output$ui_mode <- renderUI({
     
     # UI confirm GSEA
     output$run_GSEA <- renderUI({
-        req(input$selected_mode == "gsea")
-        req(is.null(rv$infile_name)==F)
-        req(is.null(rv$dbs)==F)
-        req(input$selected_species != "")
-        req(is.null(rv$infile_check)==F)
+      req(input$selected_mode == "gsea")
+      req(rv$db_status == "selected")
+      
+      if(input$selected_mode == "gsea"){
+        req(is.null(rv$rnk_check)==F)
+        req(is.null(rv$rnkgg)==F)
         
-        bsButton(inputId = "confirm1", 
-                 label = "RUN GSEA", 
-                 # block = TRUE,
-                 icon = icon("play-circle"), 
-                 style = "danger")
+      }else if(input$selected_mode == "glist"){
+        req(is.null(rv$glist_check)==F)
+        req(is.null(rv$gene_lists_after)==F)
+        
+      }
+        
+      bsButton(inputId = "confirm1", 
+               label = "RUN GSEA",
+               # block = TRUE,
+               icon = icon("play-circle"), 
+               style = "danger")
     })
     
     # UI confirm GList
     output$run_GList <- renderUI({
-        req(input$selected_mode == "glist")
-        req(is.null(rv$dbs)==F)
-        req(input$selected_species != "")
-        req(is.null(rv$gene_lists)==F)
+      req(input$selected_mode == "glist")
+      req(rv$db_status == "selected")
+      
+      if(input$selected_mode == "gsea"){
+        req(is.null(rv$rnk_check)==F)
+        req(is.null(rv$rnkgg)==F)
         
-        bsButton(inputId = "confirm2", 
-                 label = "RUN GLIST", 
-                 # block = TRUE,
-                 icon = icon("play-circle"), 
-                 style = "danger")
+      }else if(input$selected_mode == "glist"){
+        req(is.null(rv$glist_check)==F)
+        req(is.null(rv$gene_lists_after)==F)
+        
+      }
+      
+      bsButton(inputId = "confirm2", 
+               label = "RUN GLIST", 
+               # block = TRUE,
+               icon = icon("play-circle"), 
+               style = "danger")
+        
     })
-    
-    # modals: first confirm selection, then name analysis. gsea runs when new name is assigned.
-    # observeEvent(input$confirm1, {
-    #     rv$run = NULL
-    #     rv$fgseagg=NULL
-    #     rv$gmts=NULL
-    #     
-    #     # first modal
-    #     shinyalert(inputId = "confirm_inputs",
-    #                # showModal(modalDialog(
-    #                title = "Confirm input", 
-    #                text = paste0("Selected databases: ",tags$br(),
-    #                              "MSigDB (", length(input$selected_db),
-    #                              "), ",
-    #                              "External (", length(input$selected_db_ext),")",tags$br(),
-    #                              "Selected rnk: ",
-    #                              tags$br(),
-    #                              rv$infile_name
-    #                ),  # revise it using html
-    #                type = "info",
-    #                html = T,
-    #                showCancelButton = T,
-    #                confirmButtonText = "Confirm",
-    #                animation = T
-    #                
-    #                # second modal 
-    #                # callbackR = function(value){
-    #                #     shinyalert(inputId = "gs_newname",
-    #                #         title = "Enter analysis name:",
-    #                #         text = "This is a modal",
-    #                #         type = "input",
-    #                #         inputType = "text",
-    #                #         inputValue = "my_analysis",
-    #                #         inputPlaceholder = "my_analysis",
-    #                #         confirmButtonText = "Run!",
-    #                #         animation = T
-    #                #     )
-    #                # }
-    #     )
-    # })
+
     
     #===============================================#
     #####               run GSEA!!!             #####
@@ -553,66 +652,11 @@ output$ui_mode <- renderUI({
         rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
         rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
 
-        
-               
-   # observeEvent(input$confirm_inputs,{
-
-        # substitute in default name if no name provided.
-        # if(nchar(input$gs_newname)==0){
-        #     rv$newname <- "my_analysis"
-        # }
-        # else{
-        #     rv$newname <- input$gs_newname
-        # }
-
         rv$bar_pathway = rv$dbs
         rv$bubble_pathway = rv$dbs
         rv$volcano_pathway = rv$dbs
         
         species <- isolate(input$selected_species)
-        
-        # # convert IDs
-        # N = 1
-        # withProgress(message = "Checking input gene IDs...",{
-        # 
-        #     # for(i in 1:N){
-        #     Sys.sleep(.01)
-        #     incProgress(1)
-        #     # incProgress(1/N)
-        #     # }
-        # 
-        #     # gconvert to NCBI ACC #
-        #     ranks = rv$rnkgg
-        #     results = gconvert(
-        #         names(ranks),
-        #         organism = species_names_go[species][[1]],
-        #         target = "ENTREZGENE_ACC", # results$target is ACC, results$name is ACC name
-        #         numeric_ns = "",
-        #         mthreshold = Inf,
-        #         filter_na = TRUE
-        #     )
-        # 
-        #     test = results %>% filter(input == name)
-        #     perc = nrow(test)/nrow(results)
-        #     if(perc > 0.7){
-        #         # input is SYMBOL
-        #         rv$input_symbol = "yes"
-        #         ranks = ranks[names(ranks) %in% test$input]
-        # 
-        #         # load to rv
-        #         rv$rnkgg = ranks
-        #         rv$input_mat = test
-        #     }else{
-        #         # input is other type, rename rank list
-        #         test = distinct(results, input, .keep_all = TRUE)
-        #         ranks = ranks[names(ranks) %in% test$input]
-        #         names(ranks) = test$name[test$input %in% names(ranks)]
-        # 
-        #         # load to rv
-        #         rv$rnkgg = ranks
-        #         rv$input_mat = test
-        #     }
-        # })
         
         withProgress(message = "Running GSEA analysis...",value = 0.2, {
 
@@ -637,33 +681,6 @@ output$ui_mode <- renderUI({
                  }
                 
             }
-            
-            
-            # compile gmts from msigdb
-            # if(is.null(input$selected_db)==F){
-            #     for(cat_name in isolate(input$selected_db)) {
-            #         # define cat name and sub category name
-            #         cat = unlist(strsplit(cat_name, "_"))
-            #         subcat = cat[2]
-            #         cat = cat[1]
-            #         if(is.na(subcat)==TRUE){subcat=""}
-            #         
-            #         # subset database
-            #         # m_df_s = m_df[((m_df$gs_cat==cat)&(m_df$gs_subcat==subcat)),]
-            #         spc <- species_translate(input$selected_species)  # translate from abbreviation to full name
-            #         m_df_s = msigdbr(species = spc, category = cat, subcategory = subcat)
-            #         if(nrow(m_df_s)==0){next}
-            #         m_list = m_df_s %>% split(x = .$gene_symbol, f = .$gs_name)
-            #         
-            #         m_df_s = NULL
-            #         
-            #         # put all loaded gmts in a list
-            #         gmts = c(gmts,list(m_list))
-            #         # gmts = c(gmts,m_list)
-            #         catnames <- c(catnames, cat_name)
-            #         incProgress(0.1)
-            #     }
-            # }
             
             # save GMTs to rv
             rv$gmts = unlist(gmts,recursive = F)
@@ -698,10 +715,8 @@ output$ui_mode <- renderUI({
                 incProgress(0.2)
             }
             
-            # rv$fgseagg = rv$fgseagg[order(padj)]
-            # rv$fgseagg[["pathway"]] <- lapply(rv$fgseagg[["pathway"]], as.character)
-            # flatten list of gmts to single list, for future use
-            # rv$gmts = do.call(c, unlist(gmts,recursive = F))
+            
+            # count number of filtered GSs in GMTs
             l = unlist(lapply(rv$gmts, function(x){return(length(x)>=rv$gmin && length(x)<=rv$gmax)}))
             rv$gmts_length = sum(l)
             incProgress(0.1)
@@ -729,7 +744,7 @@ output$ui_mode <- renderUI({
         
         # read in parameters
         
-        genelist = toupper(rv$gene_lists)
+        genelist = toupper(rv$gene_lists_after)
         
         rv$run = NULL
         rv$fgseagg=NULL
@@ -773,37 +788,7 @@ output$ui_mode <- renderUI({
                 }
                 
             }
-            
-            # compile gmts from msigdb
-            # if(is.null(input$selected_db)==F){
-            #     for(cat_name in isolate(input$selected_db)) {
-            #         # define cat name and sub category name
-            #         cat = unlist(strsplit(cat_name, "_"))
-            #         subcat = cat[2]
-            #         cat = cat[1]
-            #         if(is.na(subcat)==TRUE){subcat=""}
-            #         
-            #         # subset database
-            #         # m_df_s = m_df[((m_df$gs_cat==cat)&(m_df$gs_subcat==subcat)),]
-            #         spc <- species_translate(input$selected_species)  # translate from abbreviation to full name
-            #         m_df_s = msigdbr(species = spc, category = cat, subcategory = subcat)
-            #         if(nrow(m_df_s)==0){next}
-            #         m_list = m_df_s %>% split(x = .$gene_symbol, f = .$gs_name)
-            # 
-            #         m_df_s = NULL
-            #         
-            #         # get all genes
-            #         a_genes = unname(unlist(m_list,recursive = T))
-            #         all_genes <- c(all_genes, list(a_genes))
-            #         
-            #         # put all loaded gmts in a list
-            #         gmts = c(gmts,list(m_list))
-            #         # gmts = c(gmts,m_list)
-            #         catnames <- c(catnames, cat_name)
-            #         incProgress(0.1)
-            #     }
-            # }
-            
+
             # save GMTs to rv
             rv$gmts = unlist(gmts,recursive = F)
 
@@ -822,17 +807,13 @@ output$ui_mode <- renderUI({
 
                 db <- rep(catnames[[i]], nrow(fgseaRes))
                 fgseaRes <- cbind(db,fgseaRes)
-                # print(str(head(fgseaRes)))
                 rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
-                # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
                 rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.01,na.rm=TRUE)
                 rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
-                # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
                 incProgress(0.2)
             }
-            # print(str(head(rv$fgseagg)))
-            # # flatten list of gmts to single list, for future use
-            # rv$gmts = do.call(c, unlist(gmts,recursive = F))
+            
+            # count number of filtered GSs in GMTs
             l = unlist(lapply(rv$gmts, function(x){return(length(x)>=rv$gmin && length(x)<=rv$gmax)}))
             rv$gmts_length = sum(l)
             incProgress(0.1)

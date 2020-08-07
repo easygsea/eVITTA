@@ -1,7 +1,11 @@
    rv <- reactiveValues(
         run_mode=NULL, #gsea glist
         
-        db_status=NULL, # selected modify
+        db_status=NULL, # selected
+        
+        #========================================#
+        #####      RVs for GSEA run          #####
+        #========================================#
 
         file_upload_status=NULL, # uploaded reset
         
@@ -10,6 +14,8 @@
         infile_check=NULL, # wrong_rnk, wrong_deg, unmatch, pass
         
         rnk_or_deg=NULL,
+        
+        rnk_check = NULL, #none, low, pass
         
         total_genes=NULL,total_genes_after=NULL,
         
@@ -20,13 +26,24 @@
         infile_name=NULL,infile_path=NULL,
         rnkll=NULL,rnkgg=NULL,#deggg=NULL,
         
+        #========================================#
+        #####       RVs for ORA run          #####
+        #========================================#
+        glist_check = NULL, #none, low, pass
+        
         sd_high = NULL,#rnkgg_scaled=NULL,
         
         data_glist=NULL,
-        gene_lists=NULL, # Glist mode
+        gene_lists=NULL, # vector that stores gene IDs input by user
+        gene_lists_after=NULL, #converted gene IDs
+        gene_lists_mat=NULL, # df for id conversion (GSEA and ORA share the same rv)
         
-        input_symbol=NULL, # check if input is SYMBOL, if, "yes"
-        input_mat=NULL, # df for id conversion
+        
+        # input_symbol=NULL, # check if input is SYMBOL, if, "yes"
+        
+        #========================================#
+        ##### RVs for shared GSEA & ORA runs #####
+        #========================================#
 
         # org_db=NULL,
         dbs=NULL,fgseagg=NULL,gmts=NULL,gmts_length=NULL,
@@ -60,7 +77,7 @@
         reactome_yes=NULL,reactome_confirm=NULL,reactome_id=NULL,reactome_genes=NULL,#reactome_genes=paste0("['",paste(c("MED15","FYN"),collapse = "','"),"']"),
         wp_yes = NULL,wp_confirm=NULL,wp_id=NULL,wp_src=NULL,
         
-        run=NULL,
+        run=NULL, #
         
         v=vector("list"), # dynamic UIs to display databases
         

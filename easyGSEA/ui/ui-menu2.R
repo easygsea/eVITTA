@@ -26,32 +26,36 @@ bodyResults <- tabItem(tabName = "kegg",
     fluidRow(
         column(
             width = 8,
-            uiOutput("manhattan_box"),
-            uiOutput("bar_box"),
-            uiOutput("bubble_box"),
-            uiOutput("volcano_box"),
-            uiOutput("kegg_feedback"),
-            uiOutput("reactome_feedback"),
-            uiOutput("wp_feedback")
+            fluidRow(
+                uiOutput("manhattan_box"),
+                uiOutput("bar_box"),
+                uiOutput("bubble_box"),
+                uiOutput("volcano_box"),
+                uiOutput("kegg_feedback"),
+                uiOutput("reactome_feedback"),
+                uiOutput("wp_feedback")
+            )
         ),
         column(
             width = 4,
-            box(
-                title = "Enrichment Statistics",status="primary",solidHeader = TRUE,
-                id = "gs_es_result",
-                style="font-size:75%",
-                width = NULL, height = "300px",
+            # fluidRow(
+                box(
+                    title = "Enrichment Statistics",status="primary",solidHeader = TRUE,
+                    id = "gs_es_result",
+                    style="font-size:75%",
+                    width = NULL, height = "300px",
+                    div(
+                        style = 'overflow-x: scroll', 
+                        DT::dataTableOutput("gs_stats_tl")
+                    )
+                ),
                 div(
-                    style = 'overflow-x: scroll', 
-                    DT::dataTableOutput("gs_stats_tl")
+                    style = "position: relative",
+                    uiOutput("ui_gsea_plots"),
+                    uiOutput("ui_gsea_plots_radio")
+                    
                 )
-            ),
-            div(
-                style = "position: relative",
-                uiOutput("ui_gsea_plots"),
-                uiOutput("ui_gsea_plots_radio")
-                
-            )
+            # )
         )
     ),
     uiOutput("kegg_panel_ui"),
