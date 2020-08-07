@@ -79,6 +79,7 @@ output$feedback_filecontent_deg <- renderUI({
     req(input$selected_mode == "gsea")
     req(rv$db_status == "selected")
     req(rv$rnk_or_deg == "deg")
+    req(rv$file_upload_status == "uploaded")
     req(is.null(rv$infile_confirm) == T)
     
     fluidRow(
@@ -117,6 +118,7 @@ output$feedback_filecontent_rnk <- renderUI({
     req(input$selected_mode == "gsea")
     req(rv$db_status == "selected")
     req(rv$rnk_or_deg == "rnk")
+    req(rv$file_upload_status == "uploaded")
     req(is.null(rv$infile_confirm) == T)
     
     fluidRow(

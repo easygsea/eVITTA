@@ -133,6 +133,14 @@ output$ui_mode <- renderUI({
       rv$run = NULL
       rv$glist_check = NULL
       rv$rnk_check = NULL
+      rv$infile_check = NULL
+      rv$example_file = NULL
+      rv$infile_confirm = NULL
+      rv$infile_name = NULL
+      rv$infile_path = NULL
+      rv$file_upload_status = NULL
+      rv$rnk_or_deg = NULL
+      rv$gene_lists_mat = NULL
       
       # rest glist UIs
       shinyjs::reset("gene_list")
@@ -227,17 +235,22 @@ output$ui_mode <- renderUI({
     
     # reset RNK input widget
     observeEvent(input$reset, {
-        rv$run = NULL
-        rv$file_upload_status = "reset"
-        rv$infile_confirm = NULL
-        rv$infile_name = NULL
-        rv$infile_path = NULL
-        rv$rnk_or_deg = NULL
-        # rv$run = NULL
-        shinyjs::reset("rnkfile")
-        shinyjs::enable("rnkfile")
-        rv$infile_check = NULL
-        rv$example_file = NULL
+      rv$file_upload_status = "reset"
+      
+      rv$run = NULL
+      rv$rnk_check = NULL
+      rv$infile_check = NULL
+      rv$example_file = NULL
+      rv$infile_confirm = NULL
+      rv$infile_name = NULL
+      rv$infile_path = NULL
+      rv$file_upload_status = NULL
+      rv$rnk_or_deg = NULL
+      rv$gene_lists_mat = NULL
+      
+      shinyjs::reset("rnkfile")
+      shinyjs::enable("rnkfile")
+              
     })
     
     # read in RNK file path name, disable widget
@@ -291,6 +304,9 @@ output$ui_mode <- renderUI({
         req(is.null(rv$infile_name)==F)
         rv$infile_check=NULL
         rv$input_symbol = NULL
+        rv$gene_lists_mat = NULL
+        rv$run = NULL
+        
         rv$rnkll <- strsplit(isolate(rv$infile_name),"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1] # add value to rv
         ranks <- read_delim(isolate(rv$infile_path), "," , escape_double = FALSE, trim_ws = TRUE)
         ranks = ranks[complete.cases(ranks), ]
@@ -432,7 +448,7 @@ output$ui_mode <- renderUI({
     
     # Glist add button
     output$glist_add_button <- renderUI({
-      req(is.null(rv$gene_lists))
+      req(is.null(rv$gene_lists)|is.null(rv$glist_check))
       bsButton(
         inputId = "gene_list_add",
         label = "Submit",
