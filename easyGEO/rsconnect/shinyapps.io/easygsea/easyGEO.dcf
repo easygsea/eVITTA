@@ -5,8 +5,8 @@ account: easygsea
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2625883
-bundleId: 3480941
+bundleId: 3485120
 url: https://easygsea.shinyapps.io/easyGEO/
-when: 1596690522.41613
+when: 1596768722.18227
 asMultiple: FALSE
 asStatic: FALSE
