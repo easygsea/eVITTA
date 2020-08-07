@@ -17,7 +17,7 @@ shinyServer(function(input, output) {
     rv <- reactiveValues(gse_all = NULL
     )
     
-    ####---------------------- BODY 1 ---------------------------####
+    ####---------------------- 1. LOAD FROM GEO  ---------------------------####
     
     # --------------- search GEO accession ---------------
     # currently checks if input exists
@@ -93,6 +93,7 @@ shinyServer(function(input, output) {
         
         plat <- isolate(input$plat)
         rv$plat_id <- match(plat, rv$platforms) 
+        rv$dmdf <- exprs(gse()) # initialize the count matrix (even if it's empty)
     })
     
     # --------------- show summary of the metadata ----------------
@@ -247,10 +248,10 @@ shinyServer(function(input, output) {
     
     
     
+    ####---------------------- 2. DESIGN SUMMARY  ---------------------------####
     
     
-    
-    # show design matrix table -----------
+    # get initial design matrix table -----------
     
     
     design_df <- reactive({
@@ -286,32 +287,21 @@ shinyServer(function(input, output) {
         char_mat[is.na(char_mat)] <- "N/A"
         char_mat[char_mat=="NA"] <- "N/A"
         
-        # convert cols type. integers >> numeric, char >> factor
-        char_mat[] <- lapply(char_mat, function(x) 
-            if(is.integer(x) | is.numeric(x)) {
-                as.numeric(x) 
-            } else {
+        # convert cols type. currently, all is converted to factor
+        # in the future: integers >> numeric, char >> factor
+        char_mat[] <- lapply(char_mat, function(x) {
+            # if(is.integer(x) | is.numeric(x)) {
+            #     as.numeric(x) 
+            # } else {
                 as.factor(x)
-            })
-        char_mat # display this matrix to user
+            # }
+        })
+        char_mat 
     })
     
     
-    # output$design_df <- DT::renderDataTable({
-    #     req(is.null(rv$gse_all)==F)
-    #     req(is.null(rv$plat_id)==F)
-    #     
-    #     design_df()
-    #     
-    #     
-    # }, 
-    # plugins="ellipsis",options=dt_options(30, scrollX=T),
-    # fillContainer = T, # add this to prevent header not scrolling with content
-    # )
     
-    
-    
-    # show design summary ui -----------
+    # summarize design -----------
     
     # variable summary (is a named list of named vectors in form of $var level:freq)
     var_summary <- reactive({
@@ -357,41 +347,7 @@ shinyServer(function(input, output) {
             
         )
     })
-    
-    output$design_variables <- renderInfoBox({
-        req(is.null(rv$gse_all)==F)
-        req(is.null(rv$plat_id)==F)
-        
-        infoBox(annotation(gse()), 
-                strong(paste0("Variables: ", ncol(design_df()))),
-                paste0(paste(colnames(design_df()), collapse=", ")), 
-                icon = icon("info-circle"))
-    })
-    output$design_samples <- renderInfoBox({
-        infoBox(annotation(gse()), 
-                strong(paste0("Samples: ", nrow(design_df()))),
-                paste0(rownames(design_df())[[1]], " ... " ,
-                       rownames(design_df())[[length(design_df())]]), 
-                icon = icon("info-circle"))
-    })
-    
-    output$design_variables <- renderValueBox({
-        valueBox(
-            paste0(ncol(design_df()), " variables"), 
-            paste0(paste(colnames(design_df()), collapse=", ")), 
-            icon = icon("microscope"),
-            color = "blue"
-        )
-    })
-    output$design_samples <- renderValueBox({
-        valueBox(
-            paste0(nrow(filtered_design_df()), "/", nrow(design_df()), " samples"), 
-            paste0(rownames(design_df())[[1]], " ... " ,
-                   rownames(design_df())[[length(design_df())]]), 
-            icon = icon("seedling"),
-            color = "purple"
-        )
-    })
+
     
     
     
@@ -450,10 +406,10 @@ shinyServer(function(input, output) {
 
     filtered_design_df <- reactive({
         req(length(input$filter_vars)>0)
+        
         df <- design_df()
         # print(input$filter_vars)
-
-        # for each specified, var, filter by specific levels
+        # for each specified var, filter by specified levels.
         for (i in 1:length(input$filter_vars)){
             var <- input$filter_vars[[i]]
             levels <- input[[paste0("vs_",i)]]
@@ -474,28 +430,212 @@ shinyServer(function(input, output) {
         req(length(input$filter_vars)>0)
         
         filtered_design_df()
-        # design_df()
         
     }, plugins="ellipsis",options=dt_options(30, scrollX=T)
     ,
-    fillContainer = T # add this to prevent header not scrolling with content
-    # ,
-    # filter = list(
-    #     position = 'top', clear = FALSE
-    # )
+    # fillContainer = T # add this to prevent header not scrolling with content
     )
     
-    # select levels for analysis ui -----------
     
-    # filtered_design_df <- reactive({
-    #     
-    #     # get rows from dt filter and reconstitute filtered design df
-    #     filtered_rows <- input$filtered_design_df_rows_all
-    #     fddf <- design_df()[filtered_rows,]
-    # 
-    #     
-    #     fddf
-    # })
+    
+    
+    # show summary valueboxes -----------
+    
+    output$design_variables <- renderValueBox({
+        valueBox(
+            paste0(ncol(design_df()), " variables"), 
+            paste0(paste(colnames(design_df()), collapse=", ")), 
+            icon = icon("microscope"),
+            color = "blue"
+        )
+    })
+    output$design_samples <- renderValueBox({
+        selected <- nrow(filtered_design_df())
+        total <- nrow(design_df())
+        valueBox(
+            paste0(selected, "/", total, " samples"), 
+            HTML(paste0("Selected: ", selected, " samples <br>", 
+                        "Total: ", total, " samples")), 
+            icon = icon("seedling"),
+            color = "purple"
+        )
+    })
+    
+    
+    ####---------------------- 3. DATA MATRIX  ---------------------------####
+    
+    
+    # detect source of data matrix -----------
+    
+    output$data_matrix_ui <- renderUI({
+        
+        # check supplementary data in GSE
+        gse_sup <- unlist(gse_meta_df()[grep("supplementary_file", gse_meta_df()$Field),"Value"])
+        gse_sup[gse_sup=="NONE"] <- NA # convert NONE to NA
+        gse_sup <- gse_sup[is.na(gse_sup)==F] # delete NA
+        gse_sup <- strsplit(gse_sup, "\n")[[1]]
+        print(gse_sup)
+
+        # check supplementary data in GSMs
+        
+        gsm_sup <- unlist(gsm_meta_df()[grep("supplementary_file", gsm_meta_df()$Field),"Value"])
+        gsm_sup[gsm_sup=="NONE"] <- NA # convert NONE to NA
+        gsm_sup <- gsm_sup[is.na(gsm_sup)==F] # delete NA
+        gsm_sup <- unlist(gsm_sup)
+        print(gsm_sup)
+        
+        
+        # detect where the data is
+        if (nrow(exprs(gse()))>0){
+            source = "table"
+            text <- "<strong>Detected data source: <br>as preloaded datatable.</strong> 
+                        <br>Datatable will be shown on the right."
+            where <- "table here"
+        } else if (length(gse_sup) > 0){
+            source = "gse_sup"
+            text <- "<strong>Detected data source: <br>as supplementary files in series record.</strong> 
+                        <br>Please download the processed data matching the currently selected platform."
+            where <- paste0("GSE supplementary (",length(gse_sup),"): ", paste(gse_sup, collapse=", "))
+            rv$suplist <- gse_sup
+        } else if (length(gsm_sup) > 0){
+            source = "gsm_sup"
+            text <- "<strong>Detected data source: <br>as supplementary files in samples record.</strong>
+                        <br>Please download the processed data matching the currently selected platform."
+            where <- paste0("GSM supplementary (",length(gsm_sup),"): ", paste(gsm_sup, collapse=", "))
+            rv$suplist <- gsm_sup
+        } else {
+            source = "none"
+            text <- "<strong>Data source not detected!</strong>
+                        <br>Please download the processed data matrix from the GEO page or the associated paper."
+            where <- ""
+        }
+        
+        # write the detected data source into rv
+        rv$sup_source <- source
+        
+        # output report and url links to the user
+        div(
+            HTML(text), br(), br(),
+            # where,
+            uiOutput("sup_links")
+        )
+
+    })
+    
+    
+    # generates url links
+    observe({
+        req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup")
+        
+        for (i in 1:length(rv$suplist)){
+            path = rv$suplist[[i]]
+            ftp = dirname(path)
+            rv$s[[i]] <- div(style="display: inline-block;vertical-align:top; width: 100%;",
+                             wellPanel(tagList(basename(path), br(),
+                                     a("Download", href=path), " / ",
+                                     a("FTP Folder", href=ftp),
+                                     )
+                             ))
+        }
+    })
+    
+    output$sup_links <- renderUI({
+        req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup")
+        rv$s
+    })
+    
+    
+    
+    # upload tidied matrix (only show if data in gse/gsm supplementary) -----------
+    
+    output$upload_matrix_ui <- renderUI({
+        req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup")
+        
+        tabBox(
+            title = NULL, width = 12,
+            id = "upload_matrix",
+            tabPanel("Upload tidied matrix", 
+                     
+                     "Upload tidied data matrix here",br(),
+                     "Also check for sample matching here",
+                     
+                     fileInput("file", "Upload tidied data matrix (CSV format):",
+                               accept = c(
+                                   "text/csv",
+                                   "text/comma-separated-values,text/plain",
+                                   ".csv")
+                     )
+                     
+            )
+        )
+    })
+    
+    # when file is uploaded, update state 
+    observeEvent(input$file, {
+        inFile <- input$file
+        indf <- read.csv(inFile$datapath, header=F)
+        indf_coln <- unname(unlist(indf[1,])) # colnames = first row
+        # print(indf_coln)
+        indf_rown <- unname(unlist(indf[,1])) # rownames = first col
+        # print(indf_rown)
+        indf <- indf[-1,-1]
+        # print(head(indf))
+        
+        # try to convert the indf headers into gsm format
+        pdata <- pData(phenoData(gse()))
+        indf_coln <- translate_sample_names(indf_coln,  # translating from
+                                                 pdata[c("title", "geo_accession")],  # translation df
+                                                 "geo_accession") # translating to
+        colnames(indf) <- indf_coln[-1]
+        
+        # print(head(indf))
+        
+        # then, match each column to rv$dmdf and update the values into it (now it errors out if gpl mismatch....)
+        rvdf <- rv$dmdf
+        dmdf <- data.frame(matrix(NA, nrow = nrow(indf), ncol = ncol(rvdf))) # initialize empty df
+        dmdf <- data.frame(lapply(colnames(rvdf), function(x){ # update values into dmdf (leaves NA if not found)
+            if (x %in% colnames(indf)){
+                dmdf[[x]] <- indf[[x]]
+            } else {return (rep(NA, length(x)))}
+        }))
+        colnames(dmdf) <- colnames(rvdf)
+        rownames(dmdf) <- indf_rown[-1] # update row names
+        print(head(dmdf))
+        
+        rv$dmdf <- dmdf
+    })
+    
+    
+    # show data matrix df -----------
+    
+    output$data_matrix_df <- DT::renderDataTable({
+        req(is.null(rv$gse_all)==F)
+        req(is.null(rv$plat_id)==F)
+        req(is.null(rv$dmdf)==F)
+        
+        df <- rv$dmdf
+        
+        # translate GSM column names to sample names on display
+        if (input$dmdf_show_coln == "Sample name"){
+            pdata <- pData(phenoData(gse()))
+            colnames(df) <- translate_sample_names(colnames(df),  # translating from
+                                                   pdata[c("title", "geo_accession")],  # translation df
+                                                   "title") # translating to
+        }
+
+        
+        df
+        
+    }, plugins="ellipsis",
+    options=dt_options(30, scrollX=T)
+    )
+    
+    
+    
+    
+    ####---------------------- 4.1. SELECT COMPARISON  ---------------------------####
+    
+    # select levels for analysis ui -----------
     
     output$select_params_ui <- renderUI({
         
@@ -561,75 +701,10 @@ shinyServer(function(input, output) {
     
     
     
-    # filter design matrix ui -----------
-    
-    output$data_matrix_ui <- renderUI({
-        
-        # check supplementary data in GSE
-        gse_sup <- unlist(gse_meta_df()[grep("supplementary_file", gse_meta_df()$Field),"Value"])
-        gse_sup[gse_sup=="NONE"] <- NA # convert NONE to NA
-        gse_sup <- gse_sup[is.na(gse_sup)==F] # delete NA
-        gse_sup <- strsplit(gse_sup, "\n")[[1]]
-        print(gse_sup)
-
-        # check supplementary data in GSMs
-        
-        gsm_sup <- unlist(gsm_meta_df()[grep("supplementary_file", gsm_meta_df()$Field),"Value"])
-        gsm_sup[gsm_sup=="NONE"] <- NA # convert NONE to NA
-        gsm_sup <- gsm_sup[is.na(gsm_sup)==F] # delete NA
-        gsm_sup <- unlist(gsm_sup)
-        print(gsm_sup)
-        
-        
-        # detect where the data is
-        if (nrow(exprs(gse()))>0){
-            source = "table"
-            text <- "Detected data source: as datatable in GSMs"
-            where <- "table here"
-        } else if (length(gse_sup) > 0){
-            source = "gse_sup"
-            text <- "Detected data source: as supplementary file in GSE"
-            where <- paste0("GSE supplementary (",length(gse_sup),"): ", paste(gse_sup, collapse=", "))
-            rv$suplist <- gse_sup
-        } else if (length(gsm_sup) > 0){
-            source = "gsm_sup"
-            text <- "Detected data source: as supplementary files in GSMs"
-            where <- paste0("GSM supplementary (",length(gsm_sup),"): ", paste(gsm_sup, collapse=", "))
-            rv$suplist <- gsm_sup
-        } else {
-            source = "none"
-            text <- "Data source not detected!"
-            where <- ""
-        }
-        rv$sup_source <- source
-        
-        
-        div(
-            strong(text), br(), br(),
-            # where,
-            uiOutput("sup_links")
-        )
-
-    })
+    ####---------------------- 4.2. CONFIRM DATA MATRIX  ---------------------------####
     
     
-    # generates url links
-    observe({
-        req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup")
-        
-        for (i in 1:length(rv$suplist)){
-            path = rv$suplist[[i]]
-            rv$s[[i]] <- div(style="display: inline-block;vertical-align:top; width: 280px;",
-                             tagList(basename(path), a("Download", href=path))
-                             )
-        }
-    })
-    
-    output$sup_links <- renderUI({
-        req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup")
-        rv$s
-    })
-    
+    ####---------------------- 4.3. RUN DEG ANALYSIS  ---------------------------####
 
     
     ####---------------------- DEBUG 1 ---------------------------####

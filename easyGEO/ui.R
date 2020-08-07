@@ -16,9 +16,11 @@ sidebar <- dashboardSidebar(
                 
                 menuItem("Design Summary", tabName="tab2", icon=icon("pencil-ruler")),
                 
-                menuItem("Analyze Data", tabName="tab3", icon=icon("calculator")),
+                menuItem("Data matrix", tabName="tab3", icon=icon("table")),
                 
-                menuItem("Visualize Data", tabName="tab4", icon=icon("chart-area"))
+                menuItem("Run DEG analysis", tabName="tab4", icon=icon("calculator")),
+                
+                menuItem("Visualize Results", tabName="tab5", icon=icon("chart-area"))
                 
                 
     )
@@ -88,17 +90,11 @@ body <- dashboardBody(
                            
                            tabBox(
                                title = NULL, width = 12,
-                               id = "design",
+                               id = "filter",
                                
                                tabPanel("Filter Data", 
                                         
                                         uiOutput("filter_design_ui"),
-                               ),
-                               
-                               tabPanel("Matrix", 
-                                        
-                                        # DT::dataTableOutput("design_df")
-                                        DT::dataTableOutput("filtered_design_df")
                                ),
                                tabPanel("Study Design Summary", 
                                         
@@ -106,82 +102,112 @@ body <- dashboardBody(
                                         
                                )
                            ),
+                           
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "filtered matrix",
+                               
+                               
+                               tabPanel("Filtered Matrix", 
+                                        
+                                        DT::dataTableOutput("filtered_design_df")
+                               )
+                           ),
                     ),
                     column(4,
                            valueBoxOutput("design_variables", width=12),
                            valueBoxOutput("design_samples", width=12),
                            
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "design_vis",
+                               
+                               
+                               tabPanel("Visualization", 
+                                        
+                                        "Some categorical heatmap/ sunburst visualization here"
+                               )
+                           ),
+                           
                            )
                     
                 ),
+
+        ),
+        tabItem(tabName = "tab3",
+                fluidRow(
+                    column(4,
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "download_matrix",
+                               tabPanel("Get data matrix", 
+                                        
+                                        uiOutput("data_matrix_ui")
+                                        
+                               )
+                           ),
+                           
+                           uiOutput("upload_matrix_ui")
+                           
+                    ),
+                    column(8,
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "data_matrix",
+                               tabPanel("Processed data matrix", 
+                                        
+                                        radioGroupButtons(
+                                            inputId = "dmdf_show_coln",
+                                            label = "Show column names as:", 
+                                            choices = c("GEO accession", "Sample name"),
+                                            selected = "GEO accession"
+                                        ),
+                                        
+                                        DT::dataTableOutput("data_matrix_df")
+                                        
+                               )
+                           )
+                           
+                    )
+                )
+                
+
+        ),
+        
+        
+        
+        tabItem(tabName = "tab4",
                 fluidRow(
                     column(6,
                            tabBox(
                                title = NULL, width = 12,
                                id = "sp",
-                               tabPanel("Select levels", 
+                               tabPanel("Select Comparison", 
                                         
                                         uiOutput("select_params_ui")
                                         
                                )
                            )
-                           ),
+                    ),
                     column(6,
                            tabBox(
                                title = NULL, width = 12,
-                               id = "matrix",
-                               tabPanel("Data matrix", 
+                               id = "sp",
+                               tabPanel("Confirm data matrix", 
                                         
-                                        uiOutput("data_matrix_ui")
+                                        "Make a report for the data matrix here"
                                         
                                )
                            )
-                           
-                           )
-                    
+                    )
                 )
-        ),
-        tabItem(tabName = "tab3",
-                # fluidRow(
-                #     column(6,
-                # 
-                #            box(title="Filter Data", width = 12, solidHeader=T, status = "primary",
-                # 
-                #                uiOutput("filter_design_ui"),
-                # 
-                # 
-                #            ),
-                #            box(title="Select Comparison", width = 12, solidHeader=T, status = "primary",
-                #                "Which variable to analyze?",
-                #                "Which 2 levels to compare?"
-                # 
-                #            ),
-                #     ),
-                # 
-                #            tabBox(
-                #                title = NULL, width = 12,
-                #                id = "summary", height = "150px",
-                #                tabPanel("Filtered Matrix",
-                # 
-                # 
-                # 
-                #                )
-                #            )
-                # 
-                # 
-                # 
-                # ),
-                # fluidRow(
-                # 
-                # 
-                # 
-                # 
-                # )
                 
-
+                
         ),
-        tabItem(tabName = "tab4",
-                h2("Tab 4"),
+        
+        
+        tabItem(tabName = "tab5",
+                h2("Tab 5"),
                 tabBox(
                     title = NULL, width = 12,
                     id = "summary", height = "250px",

@@ -86,3 +86,30 @@ dt_options <- function(max_char, scrollX=F, scrollY=F, paging=T, searching=T, in
          ))
   )
 }
+
+
+
+# translate vector of e.g. gsm ids, to sample names, etc, provided with the translation df.
+# anything not found is returned as is
+translate_sample_names <- function(original_vector, dict_df, output_type){
+  # try to match vector to every column in dict and get a score
+  matches <- sort(unlist(lapply(dict_df, function(x){
+    length(intersect(original_vector, x))
+  })), decreasing = T)
+  input_coln <- names(matches)[[1]] # this is the detected input column
+  
+  # translate according to dict df. if not found, preserve the original value
+  output_vector <- unlist(lapply(original_vector, function(x){
+    output_value <- dict_df[dict_df[[input_coln]]==x, output_type]
+    if (identical(output_value, character(0))) {
+      return (x)
+    } else {
+      return (output_value)
+    }
+  }))
+  output_vector
+}
+# example input: "GSM3610107" "GSM3610108" "GSM3610109" "GSM3610110" "GSM3610111" "test"
+# example output: "N2_AL_1"      "hlh-30_AL_1"  "N2_ARD_1"     "hlh-30_ARD_1" "N2_AL_2" "test"
+
+
