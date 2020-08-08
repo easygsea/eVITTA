@@ -9,21 +9,46 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     width = 12,align = "left",
                     status = "primary",
                     
-                    uiOutput("ui_mode"),
+                    # mode of analysis
+                    fluidRow(
+                        box(
+                            title = NULL, background = "yellow", solidHeader = T, width = 12,
+                            radioButtons(
+                                inputId = "selected_mode",
+                                label = "Mode of analysis",
+                                choices = run_modes,
+                                selected = "glist"
+                            )
+                        )
+                    ),
                     
-                    uiOutput("select_species"),
+                    # select species
+                    selectizeInput(
+                        "selected_species",
+                        "1. Select species that matches your input query:",
+                        choices = species_names,
+                        options = list(
+                            placeholder = 'Type to search ...',
+                            onInitialize = I('function() { this.setValue(""); }')
+                        )
+                    ),
+                    
+                    # database selection
                     uiOutput("test_db"),
                     
-                    # fluidRow(
-                    #     column(4,
+                    
                     uiOutput("bs_add_db"),
-                    # ),column(4,offset=2,
-                    # )),
                     
                     
+                    # UI select identifier
+                    radioButtons(
+                        "gene_identifier",
+                        "2. Gene identifier",
+                        choices = gene_identifiers,
+                        selected = "other",
+                        inline = TRUE
+                    ),
                     
-                    
-                    br(),
                     # GSEA UI - uploading RNK file
                     uiOutput("ui_rnk"),
                     uiOutput("bs_file_reset"),

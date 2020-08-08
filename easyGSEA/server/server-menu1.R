@@ -9,36 +9,8 @@
             footer = modalButton("Close")
         ))
     })
-    
-#-------------- UI select mode of analysis ----------------
-output$ui_mode <- renderUI({
-  fluidRow(
-    box(
-      title = NULL, background = "yellow", solidHeader = T, width = 12,
-      radioButtons(
-        inputId = "selected_mode",
-        label = "Mode of analysis",
-        choices = run_modes,
-        selected = "glist"
-      )
-    )
-  )
-    
-})
 
-# UI select species ------------------
-    
-    output$select_species <- renderUI({
-        selectizeInput(
-            "selected_species",
-            "1. Select species that matches your input query:",
-            choices = species_names,
-            options = list(
-                placeholder = 'Type to search ...',
-                onInitialize = I('function() { this.setValue(""); }')
-            )
-        )
-    })
+# UI select databases ------------------
     
     # disable selection when user confirms gmts; enables upon modify
     # this is to prevent accidentally messing up selections by changing species
@@ -159,18 +131,30 @@ output$ui_mode <- renderUI({
     output$bs_add_db <- renderUI({
         req(input$selected_species != "")
         if ((is.null(rv$db_status)==TRUE) || (rv$db_status=="modify")){
-            bsButton(
+          fluidRow(
+            column(
+              width = 12,
+              bsButton(
                 inputId = "add_db", 
                 label = "Confirm selection",
                 style = "primary",
-                type = "button")
+                type = "button"),
+              br(),br()
+              )
+          )
         }
         else if (rv$db_status == "selected"){
-            bsButton(
+          fluidRow(
+            column(
+              width = 12,
+              bsButton(
                 inputId = "add_db_modify", 
                 label = "Modify selection",
                 style = "default",
-                type = "button")
+                type = "button"),
+              br(),br()
+            )
+          )
         }
         
     })
@@ -208,7 +192,7 @@ output$ui_mode <- renderUI({
         # div(
         #     class = "btn-danger",
             fileInput("rnkfile",
-                      label = p("2. Upload RNK file:",
+                      label = p("3. Upload RNK file:",
                                 tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;margin-left: 160px;}"),
                                 bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                       buttonLabel = "Upload...",
@@ -366,38 +350,44 @@ output$ui_mode <- renderUI({
         }
         
         if(is.null(rv$rnkgg)==F){
+          if(input$gene_identifier=="other"){
             # autodetect and convert into SYMBOL (if applicable) using gprofiler2
             species = isolate(input$selected_species)
             
             withProgress(message = "Autodetecting and converting gene IDs...",{
-                Sys.sleep(0.1)
-                incProgress(1)
-                lst = convert_rank_id(species,rv$rnkgg)
+              Sys.sleep(0.1)
+              incProgress(1)
+              lst = convert_rank_id(species,rv$rnkgg)
+              
+              if(is.null(lst)){
+                # no ID detected in database
+                rv$rnk_check = "none"
+                rv$rnkgg = NULL
+              }else{
+                # check percentage of IDs found in database
+                g_perc = lst[[1]]
                 
-                if(is.null(lst)){
-                  # no ID detected in database
-                  rv$rnk_check = "none"
-                  rv$rnkgg = NULL
+                # if <30%, reports error
+                if(g_perc < 0.5){
+                  rv$rnk_check = "low"
                 }else{
-                  # check percentage of IDs found in database
-                  g_perc = lst[[1]]
-                  
-                  # if <30%, reports error
-                  if(g_perc < 0.5){
-                    rv$rnk_check = "low"
-                  }else{
-                    rv$rnk_check = "pass"
-                  }
-                  
-                  # convert ID and save converted IDs & conversion table into RVs
-                  rv$rnkgg = lst[[2]]
-                  rv$gene_lists_mat = lst[[3]]
-                  
-                  # count # of genes after conversion
-                  rv$total_genes_after = length(rv$rnkgg)
-                  
+                  rv$rnk_check = "pass"
                 }
+                
+                # convert ID and save converted IDs & conversion table into RVs
+                rv$rnkgg = lst[[2]]
+                rv$gene_lists_mat = lst[[3]]
+                
+                # count # of genes after conversion
+                rv$total_genes_after = length(rv$rnkgg)
+                
+              }
             })
+          }else{
+            rv$rnk_check = "pass"
+            rv$total_genes_after = length(rv$rnkgg)
+          }
+            
             
             
         }
@@ -413,7 +403,7 @@ output$ui_mode <- renderUI({
         div(
             textAreaInput(
                 inputId = "gene_list",
-                label = p("2. Input your genes (",
+                label = p("3. Input your genes (",
                           tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
                           actionLink("load_example_glist", label = tags$u("example data")),
                           "):"
@@ -479,40 +469,44 @@ output$ui_mode <- renderUI({
                     # save original gene lists into RV
                     rv$gene_lists = genelist
                     
-                    # autodetect and convert into SYMBOL (if applicable) using gprofiler2
-                    withProgress(message = "Autodetecting and converting gene IDs...",{
+                    # autodetect and convert into SYMBOL (if other/mixed identifier) using gprofiler2
+                    if(input$gene_identifier == "other"){
+                      withProgress(message = "Autodetecting and converting gene IDs...",{
                         Sys.sleep(0.1)
                         incProgress(1)
                         lst = convert_gene_id(species,genelist)
                         
                         if(is.null(lst)){
-                            # no ID detected in database
-                            rv$glist_check = "none"
+                          # no ID detected in database
+                          rv$glist_check = "none"
                         }else{
-                            # check percentage of IDs found in database
-                            g_perc = lst[[1]]
-                            
-                            # if <30%, reports error
-                            if(g_perc < 0.5){
-                                rv$glist_check = "low"
-                            }else{
-                                rv$glist_check = "pass"
-                            }
-                            
-                            # convert ID and save converted IDs & conversion table into RVs
-                            rv$gene_lists_after = lst[[2]]
-                            rv$gene_lists_mat = lst[[3]]
-                            
+                          # check percentage of IDs found in database
+                          g_perc = lst[[1]]
+                          
+                          # if <30%, reports error
+                          if(g_perc < 0.5){
+                            rv$glist_check = "low"
+                          }else{
+                            rv$glist_check = "pass"
+                          }
+                          
+                          # convert ID and save converted IDs & conversion table into RVs
+                          rv$gene_lists_after = lst[[2]]
+                          rv$gene_lists_mat = lst[[3]]
+                          
                         }
-                    })
-                    
+                      })
+                    }else{
+                      rv$gene_lists_after = rv$gene_lists
+                      rv$glist_check = "pass"
+                    }
+
                     # name the analysis
                     if(input$glist_name == ""){
                         rv$rnkll = "unamed"
                     }else{
                         rv$rnkll = input$glist_name
                     }
-                    
                 }
             }else{
                 showNotification("Please input your query. Click example data for a trial run.",type="error",duration=3)
