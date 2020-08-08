@@ -33,6 +33,13 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
+    
+    tags$head(tags$style(HTML('
+      .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
+      width:400px;
+      }
+      '))),
+    
 
     # verbatimTextOutput("debug0"),
     tabItems(
@@ -96,19 +103,26 @@ body <- dashboardBody(
                                         
                                         uiOutput("filter_design_ui"),
                                ),
-                               tabPanel("Study Design Summary", 
-                                        
+
+                               tabPanel("Study Design Summary",
+
                                         uiOutput("design_summary_ui")
-                                        
+
                                )
                            ),
                            
                            tabBox(
                                title = NULL, width = 12,
-                               id = "filtered matrix",
+                               id = "filtered design matrix",
                                
                                
-                               tabPanel("Filtered Matrix", 
+                               tabPanel("Filtered Design Matrix", 
+                                        radioGroupButtons(
+                                            inputId = "fddf_show_rown",
+                                            label = "Show column names as:", 
+                                            choices = c("GEO accession", "Sample name"),
+                                            selected = "GEO accession"
+                                        ),
                                         
                                         DT::dataTableOutput("filtered_design_df")
                                )
@@ -142,6 +156,8 @@ body <- dashboardBody(
                                id = "download_matrix",
                                tabPanel("Get data matrix", 
                                         
+                                        
+                                        
                                         uiOutput("data_matrix_ui")
                                         
                                )
@@ -156,12 +172,17 @@ body <- dashboardBody(
                                id = "data_matrix",
                                tabPanel("Processed data matrix", 
                                         
-                                        radioGroupButtons(
-                                            inputId = "dmdf_show_coln",
-                                            label = "Show column names as:", 
-                                            choices = c("GEO accession", "Sample name"),
-                                            selected = "GEO accession"
+                                        box(title=NULL, width = 6, solidHeader=T, status="primary",
+                                            radioGroupButtons(
+                                                inputId = "dmdf_show_coln",
+                                                label = "Show column names as:", 
+                                                choices = c("GEO accession", "Sample name"),
+                                                selected = "GEO accession"
+                                            ),
+                                            
                                         ),
+                                        
+                                        uiOutput("dmdf_filter_ui"),
                                         
                                         DT::dataTableOutput("data_matrix_df")
                                         
@@ -191,16 +212,17 @@ body <- dashboardBody(
                     ),
                     column(6,
                            tabBox(
-                               title = NULL, width = 12,
+                               title = NULL, width = 12, height = "150px",
                                id = "sp",
                                tabPanel("Confirm data matrix", 
                                         
-                                        "Make a report for the data matrix here"
+                                        uiOutput("confirm_matrix_ui")
                                         
                                )
                            )
                     )
-                )
+                ),
+                uiOutput("run_deg_ui")
                 
                 
         ),
@@ -229,7 +251,7 @@ body <- dashboardBody(
 
 # Put them together into a dashboardPage
 dashboardPage(
-    dashboardHeader(title = "easyGEO"),
+    dashboardHeader(title = "easyGEO", dropdownMenuOutput("dropdown_menu")),
     sidebar,
     body
 )

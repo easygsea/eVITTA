@@ -12,6 +12,7 @@ options(repos = BiocManager::repositories())
 
 
 # tabulate outputs of list function (for platform selection)
+# --------------------------------------------------------
 tabulate <- function(object, FUN){
   do.call(rbind, lapply(object, FUN))
 }
@@ -22,7 +23,12 @@ find_repeating_values <- function(df){
   as.list(df[1,])
 }
 
-# transform named list to dataframe for display
+# To transform named list to dataframe
+# ---------------------------------------------------------
+#   named_list_to_df(list, colnames)
+# example:
+#   named_list_to_df(gse_meta(), c("Field", "Value"))
+
 named_list_to_df <- function(list, colnames){
   df <- data.frame(cbind(as.character(names(list)),
                          as.character(unname(unlist(list)))
@@ -32,6 +38,7 @@ named_list_to_df <- function(list, colnames){
 }
 
 # tidy df "field" columns
+# ---------------------------------------------------------
 tidy_field_col <- function(vector){
   # replace underscores
   vector <- unlist(lapply(vector, function(x){
@@ -42,7 +49,11 @@ tidy_field_col <- function(vector){
   vector
 }
 
-# grep multiple patterns (provided in a vector)
+# To extract all matched elements from named list
+# --------------------------------------------------------
+#   grep_multiple(to_match, grep_from, order=F)
+# example:
+#   grep_multiple(c("title", "study_type", "sample_count", "organism", "summary"), isolate(all_fields())$Field, order=T)
 grep_multiple <- function(to_match, grep_from, order=F){
   if (order==F){
     matches <- unique(grep(paste(to_match,collapse="|"), 
@@ -57,6 +68,7 @@ grep_multiple <- function(to_match, grep_from, order=F){
 }
 
 # transform characteristics column into named vector
+# --------------------------------------------------------
 transform_vector <- function(vector, sep=": "){
   unlist(lapply(vector, function(x){
     if(is.na(x)==F){
@@ -74,7 +86,12 @@ transform_vector <- function(vector, sep=": "){
 
 
 
-# apply options to datatable. example: options = dt_options(80,F,F,T,T,T,10)
+# To apply options to datatable. only works with ellipsis enabled
+# ------------------------------------------------------------
+#   dt_options (max_char, scrollX=F, scrollY=F, paging=T, searching=T, info=T, pageLength = 10, autoWidth=T)
+# example: 
+#   renderDataTable({df}, plugins="ellipsis", options = dt_options(80,F,F,T,T,T,10))
+
 dt_options <- function(max_char, scrollX=F, scrollY=F, paging=T, searching=T, info=T, pageLength = 10, autoWidth=T){
   list(scrollX=scrollX, scrollY=scrollY, 
        paging=paging, searching=searching, info=info, pageLength = pageLength,
@@ -89,8 +106,16 @@ dt_options <- function(max_char, scrollX=F, scrollY=F, paging=T, searching=T, in
 
 
 
-# translate vector of e.g. gsm ids, to sample names, etc, provided with the translation df.
+# To translate between sample names and GSE accessions (or other information in phenoData)
+# ------------------------------------------------------------
+#   translate_sample_names(original_vector, dict_df, output_type)
+# 
+# example:
+#   input = c("GSM3610107", "GSM3610108", "GSM3610109", "GSM3610110", "GSM3610111", "test")
+# translate_sample_names(input,  rv$pdata[c("title", "geo_accession")],  "title")
+# > "N2_AL_1", "hlh-30_AL_1", "N2_ARD_1", "hlh-30_ARD_1", "N2_AL_2", "test"
 # anything not found is returned as is
+
 translate_sample_names <- function(original_vector, dict_df, output_type){
   # try to match vector to every column in dict and get a score
   matches <- sort(unlist(lapply(dict_df, function(x){
@@ -113,3 +138,51 @@ translate_sample_names <- function(original_vector, dict_df, output_type){
 # example output: "N2_AL_1"      "hlh-30_AL_1"  "N2_ARD_1"     "hlh-30_ARD_1" "N2_AL_2" "test"
 
 
+
+
+
+
+
+# Function to call in place of dropdownMenu
+# --------------------------------------------------------
+dropdownMenuCustom <-     function (..., type = c("messages", "notifications", "tasks"), 
+                                    badgeStatus = "primary", icon = NULL, .list = NULL, customSentence) 
+{
+  type <- match.arg(type)
+  if (!is.null(badgeStatus)) shinydashboard:::validateStatus(badgeStatus)
+  items <- c(list(...), .list)
+  lapply(items, shinydashboard:::tagAssert, type = "li")
+  dropdownClass <- paste0("dropdown ", type, "-menu")
+  if (is.null(icon)) {
+    icon <- switch(type, messages = shiny::icon("envelope"), 
+                   notifications = shiny::icon("warning"), tasks = shiny::icon("tasks"))
+  }
+  numItems <- length(items)
+  if (is.null(badgeStatus)) {
+    badge <- NULL
+  }
+  else {
+    badge <- span(class = paste0("label label-", badgeStatus), 
+                  numItems)
+  }
+  tags$li(
+    class = dropdownClass, 
+    a(
+      href = "#", 
+      class = "dropdown-toggle", 
+      `data-toggle` = "dropdown", 
+      icon, 
+      badge
+    ), 
+    tags$ul(
+      class = "dropdown-menu", 
+      tags$li(
+        class = "header", 
+        customSentence(numItems, type)
+      ), 
+      tags$li(
+        tags$ul(class = "menu", items)
+      )
+    )
+  )
+}
