@@ -14,9 +14,13 @@ sidebar <- dashboardSidebar(
     sidebarMenu(id="menu1",
                 menuItem("Extract GEO Data", tabName="tab1", icon=icon("dashboard")),
                 
-                menuItem("Analyze Data", tabName="tab2", icon=icon("calculator")),
+                menuItem("Design Summary", tabName="tab2", icon=icon("pencil-ruler")),
                 
-                menuItem("Visualize Data", tabName="tab3", icon=icon("chart-area"))
+                menuItem("Data matrix", tabName="tab3", icon=icon("table")),
+                
+                menuItem("Run DEG analysis", tabName="tab4", icon=icon("calculator")),
+                
+                menuItem("Visualize Results", tabName="tab5", icon=icon("chart-area"))
                 
                 
     )
@@ -29,6 +33,13 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
+    
+    tags$head(tags$style(HTML('
+      .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
+      width:400px;
+      }
+      '))),
+    
 
     # verbatimTextOutput("debug0"),
     tabItems(
@@ -81,37 +92,154 @@ body <- dashboardBody(
         tabItem(tabName = "tab2",
                 fluidRow(
                     
-                    
                     column(8,
+                           
                            
                            tabBox(
                                title = NULL, width = 12,
-                               id = "design", height = "250px",
-                               tabPanel("Study Design Summary", 
+                               id = "filter",
+                               
+                               tabPanel("Filter Data", 
                                         
-                                        uiOutput("design_summary_ui")
-                                        
+                                        uiOutput("filter_design_ui"),
                                ),
-                               tabPanel("Matrix", 
+
+                               tabPanel("Study Design Summary",
+
+                                        uiOutput("design_summary_ui")
+
+                               )
+                           ),
+                           
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "filtered design matrix",
+                               
+                               
+                               tabPanel("Filtered Design Matrix", 
+                                        radioGroupButtons(
+                                            inputId = "fddf_show_rown",
+                                            label = "Show column names as:", 
+                                            choices = c("GEO accession", "Sample name"),
+                                            selected = "GEO accession"
+                                        ),
                                         
-                                        DT::dataTableOutput("design_df")
+                                        DT::dataTableOutput("filtered_design_df")
                                )
                            ),
                     ),
                     column(4,
-                           
                            valueBoxOutput("design_variables", width=12),
                            valueBoxOutput("design_samples", width=12),
                            
-                    )
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "design_vis",
+                               
+                               
+                               tabPanel("Visualization", 
+                                        
+                                        "Some categorical heatmap/ sunburst visualization here"
+                               )
+                           ),
+                           
+                           )
                     
-                    
-                    
-                    
-                )
+                ),
+
         ),
         tabItem(tabName = "tab3",
-                h2("Tab 3")
+                fluidRow(
+                    column(4,
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "download_matrix",
+                               tabPanel("Get data matrix", 
+                                        
+                                        
+                                        
+                                        uiOutput("data_matrix_ui")
+                                        
+                               )
+                           ),
+                           
+                           uiOutput("upload_matrix_ui")
+                           
+                    ),
+                    column(8,
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "data_matrix",
+                               tabPanel("Processed data matrix", 
+                                        
+                                        box(title=NULL, width = 6, solidHeader=T, status="primary",
+                                            radioGroupButtons(
+                                                inputId = "dmdf_show_coln",
+                                                label = "Show column names as:", 
+                                                choices = c("GEO accession", "Sample name"),
+                                                selected = "GEO accession"
+                                            ),
+                                            
+                                        ),
+                                        
+                                        uiOutput("dmdf_filter_ui"),
+                                        
+                                        DT::dataTableOutput("data_matrix_df")
+                                        
+                               )
+                           )
+                           
+                    )
+                )
+                
+
+        ),
+        
+        
+        
+        tabItem(tabName = "tab4",
+                fluidRow(
+                    column(6,
+                           tabBox(
+                               title = NULL, width = 12,
+                               id = "sp",
+                               tabPanel("Select Comparison", 
+                                        
+                                        uiOutput("select_params_ui")
+                                        
+                               )
+                           )
+                    ),
+                    column(6,
+                           tabBox(
+                               title = NULL, width = 12, height = "150px",
+                               id = "sp",
+                               tabPanel("Confirm data matrix", 
+                                        
+                                        uiOutput("confirm_matrix_ui")
+                                        
+                               )
+                           )
+                    )
+                ),
+                uiOutput("run_deg_ui")
+                
+                
+        ),
+        
+        
+        tabItem(tabName = "tab5",
+                h2("Tab 5"),
+                tabBox(
+                    title = NULL, width = 12,
+                    id = "summary", height = "250px",
+                    tabPanel("placeholder", 
+                             
+                             "placeholder"
+                             
+                    )
+                )
+                
         )
     )
     
@@ -123,7 +251,7 @@ body <- dashboardBody(
 
 # Put them together into a dashboardPage
 dashboardPage(
-    dashboardHeader(title = "easyGEO"),
+    dashboardHeader(title = "easyGEO", dropdownMenuOutput("dropdown_menu")),
     sidebar,
     body
 )
