@@ -309,7 +309,7 @@ shinyServer(function(input, output, session) {
         req(is.null(rv$plat_id)==F)
         
         # tidy characteristics
-        char_list <- data.frame(t(data.frame(pData(phenoData(gse()))) %>% select(contains("characteristics"))))
+        char_list <- data.frame(t(data.frame(pData(phenoData(gse()))) %>% dplyr::select(contains("characteristics"))))
         char_list[char_list==""] <- NA
         char_list <- as.list(char_list)
         # print(char_list)
@@ -726,7 +726,7 @@ shinyServer(function(input, output, session) {
                                accept = c(
                                    "text/csv",
                                    "text/comma-separated-values,text/plain",
-                                   ".csv")
+                                   ".csv",".tsv",".txt",".tab")
                      ), 
                      
                      tags$hr(style="border-color: grey;"),
@@ -747,6 +747,10 @@ shinyServer(function(input, output, session) {
         inFile <- input$file
         indf <- read.csv(inFile$datapath, header=F, 
                          colClasses=c("character"))
+        if(ncol(indf)==1){
+            indf <- read.table(inFile$datapath, sep="\t",header=F, 
+                             colClasses=c("character"))
+        }
         indf_coln <- unname(unlist(indf[1,])) # colnames = first row
         # print(indf_coln)
         indf_rown <- unname(unlist(indf[,1])) # rownames = first col
@@ -853,7 +857,7 @@ shinyServer(function(input, output, session) {
         
         fddf <- rv$fddf
         
-        print(head(fddf))
+        # print(head(fddf))
         
         
         # filter only cols with >2 levels
@@ -878,6 +882,12 @@ shinyServer(function(input, output, session) {
             choices <- colnames(fddf)
             names(choices) <- choices_text
             
+            # autodetect if batch, na is none detected
+            batch_selected = choices[grepl("batch",choices)]
+            if(identical(batch_selected,character(0))){
+                batch_selected = "na"
+            }
+            
             div(
                 fluidRow(
                     column(6,
@@ -892,12 +902,13 @@ shinyServer(function(input, output, session) {
                                inputId = "sp_batch_col",
                                label = "Batch effect column:",
                                choices = c("Not applicable"="na", choices),
-                               selected= "na"
+                               selected= batch_selected#"na"
                            )
                     ),
                 ),
                 
                 uiOutput("sp_select_levels"),
+                uiOutput("sp_select_levels_rel"),
                 uiOutput("sp_select_confirm")
             )
         } else {
@@ -917,6 +928,26 @@ shinyServer(function(input, output, session) {
             label = "Select two levels to compare:",
             choices = levels,
             inline=T
+        )
+    })
+    
+    output$sp_select_levels_rel <- renderUI({
+        req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
+        
+        fluidRow(
+            column(
+                width = 12,
+                radioButtons(
+                    inputId = "sp_select_levels_base",
+                    label = "Select control level:",
+                    choices = input$sp_select_levels,
+                    selected = input$sp_select_levels[1],
+                    inline = T
+                ),
+                
+                # RUN button
+                actionButton("run_deg", "Run DEG analysis")
+            )
         )
     })
     
@@ -1005,9 +1036,124 @@ shinyServer(function(input, output, session) {
     ####---------------------- 4.3. RUN DEG ANALYSIS  ---------------------------####
     
     output$run_deg_ui <- renderUI({
-        req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
+        # req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
         
-        actionButton("run_deg", "Run DEG analysis")
+        tabBox(
+            width = 12, title = "DEG Analysis",
+            
+            tabPanel(
+                "DEG Table",
+                dataTableOutput("deg_table"),
+            ),
+            
+            tabPanel(
+                "Volcano Plot",
+                plotOutput("volcano_plot")
+            )
+        )
+    })
+    
+    # observe run_deg, perform limma analysis
+    observeEvent(input$run_deg,{
+        ## 1) create design matrix
+        # 1.1) batch effects
+        batch_var = input$sp_batch_col
+        batch = NULL
+        
+        if(batch_var!="na"){
+            batch = factor(p_df[[batch_var]])
+        }
+        
+        # 1.2) filter design matrix according to the selected two levels in selected variable
+        # original design matrix
+        p_df = rv$fddf
+        
+        # selected variable
+        c_var = input$sp_select_var
+        
+        # selected two levels
+        c_var_levels = input$sp_select_levels
+        
+        # filter design matrix according to selections
+        p_df = p_df %>% dplyr::filter(p_df[[c_var]] %in% c_var_levels)
+
+        # 1.3) create treatment factor
+        # selected variable - control level
+        c_level = input$sp_select_levels_base
+        
+        # treatment effects
+        treatment = factor(p_df[[c_var]])
+        treatment = relevel(treatment, ref = c_level)
+        
+        # 1.4) design matrix
+        if(is.null(batch)){
+            design1 <- model.matrix(~0+treatment)
+        }else{
+            design1 <- model.matrix(~batch+treatment)
+        }
+        
+        ## 2) filter count matrix according to variable selection
+        # filtered samples
+        samples = rownames(p_df)
+
+        # titles of filtered samples
+        samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
+
+        # original count matrix
+        m_df = filtered_data_df()
+        
+        # genes
+        genes = m_df$Name
+
+        # as numeric matrix
+        m_df = m_df %>% dplyr::select(one_of(samples)) %>% 
+            apply(., 2, as.numeric) %>%
+            as.matrix(.)
+        
+        # rename rownames
+        rownames(m_df) = genes
+        
+        ## 3) run edgeR and/or limma
+        # 3.1) determine if raw or normalized counts
+        raw_or_norm = input$data_type
+        
+        # 3.2) create dgelist
+        y <- DGEList(counts=m_df)
+        
+        # 3.3) filter and normalize if raw read counts, and run limma
+        if(raw_or_norm == "raw"){
+            # filter genes expressed in at least 3 of the samples
+            keep <- rowSums(cpm(y)>1) >= 3
+            y <- y[keep,,keep.lib.sizes=FALSE]
+
+            # normalize count data
+            y=calcNormFactors(y, method = "TMM")
+            
+            # voom on normalized data
+            v <- voom(y, design1, plot=F)
+        }else{
+            # # voom directly on counts, if data are very noisy, as would be used for microarray
+            v <- voom(counts, design1, plot=F, normalize="quantile")
+        }
+        
+        # 3.4) DEG analysis
+        fit <- lmFit(v, design1)
+        fit <- eBayes(fit,trend=TRUE, robust=TRUE)
+
+        # results
+        results <- decideTests(fit)
+        summary(results)
+        
+        # export DEG table
+        degs = topTable(fit, coef=ncol(fit),sort.by="P",number=Inf)
+
+        print(str(head(degs)))
+        
+
+        # write into RVs
+        rv$deg = degs
+        rv$deg_counts = y$counts
+        rv$deg_pdata = p_df
     })
     
     

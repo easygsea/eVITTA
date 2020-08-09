@@ -222,7 +222,14 @@ body <- dashboardBody(
                            )
                     )
                 ),
-                uiOutput("run_deg_ui")
+                fluidRow(
+                  column(
+                    width = 12,
+                    uiOutput("run_deg_ui")
+                    
+                  )
+                  
+                )
                 
                 
         ),
