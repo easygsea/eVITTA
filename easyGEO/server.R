@@ -13,12 +13,12 @@ shinyServer(function(input, output, session) {
     ####---------------------- HEADER DROPDOWN: SAMPLES SELECTED  ---------------------------####
     
     dropdown_report <- reactive({
-        # req(is.null(rv$gse_all)==F)
-        # req(is.null(rv$plat_id)==F)
-        # req(is.null(rv$samples)==F)
-        # req(is.null(rv$pdata)==F)
+        req(is.null(rv$gse_all)==F)
+        req(is.null(rv$plat_id)==F)
+        req(is.null(rv$samples)==F)
+        req(is.null(rv$pdata)==F)
         
-        if (is.null(rv$gse_all)==F & is.null(rv$plat_id)==F & is.null(rv$samples)==F & is.null(rv$pdata)==F){
+        # if (is.null(rv$gse_all)==F & is.null(rv$plat_id)==F & is.null(rv$samples)==F & is.null(rv$pdata)==F){
             
             to_show <- translate_sample_names(rv$samples,  # translating from
                                               rv$pdata[c("title", "geo_accession")],  # translation df
@@ -36,13 +36,13 @@ shinyServer(function(input, output, session) {
                            to_show_txt)
                 )
             }
-        } else {
-            customSentence <- function(numItems, type) {
-                shiny::HTML(
-                    paste0("<strong>No samples selected.</strong>")
-                )
-            }
-        }
+        # } else {
+        #     customSentence <- function(numItems, type) {
+        #         shiny::HTML(
+        #             paste0("<strong>No samples selected.</strong>")
+        #         )
+        #     }
+        # }
         
     })
     
