@@ -154,7 +154,7 @@ shinyServer(function(input, output, session) {
         
         # initialize fddf
         rv$fddf <- design_df() # initially unfiltered, will update when filter
-
+        
     })
     
     # --------------- show summary of the metadata ----------------
@@ -284,9 +284,9 @@ shinyServer(function(input, output, session) {
                         choices=choices,
                         selected= selected,
                         width="100%"
-                        ),
+            ),
             uiOutput("show_summary_ui")
-
+            
         )
         
     })
@@ -345,7 +345,7 @@ shinyServer(function(input, output, session) {
             # if(is.integer(x) | is.numeric(x)) {
             #     as.numeric(x) 
             # } else {
-                as.factor(x)
+            as.factor(x)
             # }
         })
         char_mat 
@@ -381,7 +381,7 @@ shinyServer(function(input, output, session) {
                 paste(
                     paste(names(var_summary[[i]]), " (", var_summary[[i]], ")", sep="")
                     , collapse=", ")
-                )
+            )
         }
         paste(textt, collapse="<br><br>")
     })
@@ -400,7 +400,7 @@ shinyServer(function(input, output, session) {
             
         )
     })
-
+    
     
     # --------------- set up filters ---------------
     
@@ -437,9 +437,9 @@ shinyServer(function(input, output, session) {
             uiOutput("fddf_filter_vars"),
             
             uiOutput("filter_vars_levels")
-
+            
         )
-
+        
     })
     
     ##### manual filter by samples -------------##
@@ -481,7 +481,7 @@ shinyServer(function(input, output, session) {
                            inline=T
         )
     })
-
+    
     # select levels
     observe({
         req(length(var_summary()) >0)
@@ -489,7 +489,7 @@ shinyServer(function(input, output, session) {
         vs <- var_summary()
         if (length(input$filter_vars)>0){
             vs <- vs[input$filter_vars] # subset list to selected vars only
-
+            
             v <- vector(mode="list", length=length(vs))
             for (i in 1:length(vs)){
                 v[[i]] <- div(style="display: inline-block;vertical-align:top; width: 190px;",
@@ -498,7 +498,7 @@ shinyServer(function(input, output, session) {
                                                      label = NULL,
                                                      choices = names(vs[[i]]),
                                                      selected = names(vs[[i]])
-                              )
+                                  )
                                   
                               ))
             }
@@ -506,11 +506,11 @@ shinyServer(function(input, output, session) {
         } else {
             rv$v <- HTML("<div>Select one or more variables to filter by.</div>")
         }
-
-
-
+        
+        
+        
     })
-
+    
     output$filter_vars_levels <- renderUI({
         req(is.null(rv$v)==F)
         req(input$fddf_filter_mode=="variables")
@@ -615,7 +615,7 @@ shinyServer(function(input, output, session) {
     # "gse_sup" = in gse as supplementary
     # "gsm_sup" = in gsm as supplementary (usually when this happens, gse_sup is also provided)
     # "none" = none of the above
-
+    
     
     
     output$data_matrix_ui <- renderUI({
@@ -626,7 +626,7 @@ shinyServer(function(input, output, session) {
         gse_sup <- gse_sup[is.na(gse_sup)==F] # delete NA
         gse_sup <- strsplit(gse_sup, "\n")[[1]]
         print(gse_sup)
-
+        
         # check supplementary data in GSMs
         
         gsm_sup <- unlist(gsm_meta_df()[grep("supplementary_file", gsm_meta_df()$Field),"Value"])
@@ -670,7 +670,7 @@ shinyServer(function(input, output, session) {
             # where,
             uiOutput("sup_links")
         )
-
+        
     })
     
     
@@ -683,9 +683,9 @@ shinyServer(function(input, output, session) {
             ftp = dirname(path)
             rv$s[[i]] <- div(style="display: inline-block;vertical-align:top; width: 100%;",
                              wellPanel(tagList(basename(path), br(),
-                                     a("Download", href=path), " / ",
-                                     a("FTP Folder", href=ftp),
-                                     )
+                                               a("Download", href=path), " / ",
+                                               a("FTP Folder", href=ftp),
+                             )
                              ))
         }
     })
@@ -699,19 +699,19 @@ shinyServer(function(input, output, session) {
     # --------------- upload tidied matrix (show conditionally) ---------------
     
     
-#     Full Count matrix is stored in rv$dmdf  (aka. data matrix df)
-#     
-#     DYNAMICS:
-#         - rv$dmdf is initialized from exprs(gse()) when user selects platform. 
-#     - if data is in supplementary, rv$dmdf will be initially empty (0 rows). 
-#     when users upload data, the app will populate rv$dmdf by matching column names (thus column order doesn't have to be the same). 
-# 	gene names will be populated into the "Name"column. 
-#     - if data is in the gse to begin with (e.g. GSE137355), it will be initialized into rv$dmdf upon platform selection.
-#     
-#     STRUCTURE:
-#     - First column is "Name", with all the gene names. (no case coercion atm).
-#     - data in the rest of the columns
-#     - internally, column names must be GSM accession numbers. this can be easily converted to sample names by translate_sample_names() function. 
+    #     Full Count matrix is stored in rv$dmdf  (aka. data matrix df)
+    #     
+    #     DYNAMICS:
+    #         - rv$dmdf is initialized from exprs(gse()) when user selects platform. 
+    #     - if data is in supplementary, rv$dmdf will be initially empty (0 rows). 
+    #     when users upload data, the app will populate rv$dmdf by matching column names (thus column order doesn't have to be the same). 
+    # 	gene names will be populated into the "Name"column. 
+    #     - if data is in the gse to begin with (e.g. GSE137355), it will be initialized into rv$dmdf upon platform selection.
+    #     
+    #     STRUCTURE:
+    #     - First column is "Name", with all the gene names. (no case coercion atm).
+    #     - data in the rest of the columns
+    #     - internally, column names must be GSM accession numbers. this can be easily converted to sample names by translate_sample_names() function. 
     
     
     output$upload_matrix_ui <- renderUI({
@@ -757,7 +757,7 @@ shinyServer(function(input, output, session) {
         # try to convert the indf headers into gsm format
         indf_coln <- translate_sample_names(indf_coln,  # translating from
                                             rv$pdata[c("title", "geo_accession")],  # translation df
-                                                 "geo_accession") # translating to
+                                            "geo_accession") # translating to
         colnames(indf) <- indf_coln[-1]
         
         # print(head(indf))
@@ -801,7 +801,7 @@ shinyServer(function(input, output, session) {
         if (input$dmdf_filter == "Filtered"){
             df <- filtered_data_df()
         }
-
+        
         # translate GSM column names to sample names on display
         if (input$dmdf_show_coln == "Sample name"){
             
@@ -809,7 +809,7 @@ shinyServer(function(input, output, session) {
                                                    rv$pdata[c("title", "geo_accession")],  # translation df
                                                    "title") # translating to
         }
-
+        
         
         df
         
@@ -905,8 +905,8 @@ shinyServer(function(input, output, session) {
         }
     })
     
-
-
+    
+    
     
     output$sp_select_levels <- renderUI({
         
@@ -935,7 +935,7 @@ shinyServer(function(input, output, session) {
                 label = "Type of data provided:",
                 choices = c("Raw counts"="raw", "Normalized counts"="normalized"),
                 inline=T
-                )
+            )
         )
         
     })
@@ -1056,9 +1056,9 @@ shinyServer(function(input, output, session) {
     
     
     
-
     
-
+    
+    
     
     
     
@@ -1067,7 +1067,7 @@ shinyServer(function(input, output, session) {
     output$debug0 <- renderPrint({
         paste("rv$platforms = ", rv$platforms, ", "
               ,"rv$plat_id = ", rv$plat_id, ", "
-              )
+        )
     })
-
+    
 })
