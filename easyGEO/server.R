@@ -306,6 +306,7 @@ shinyServer(function(input, output, session) {
     
     design_df <- reactive({
         req(is.null(rv$gse_all)==F)
+        req(is.null(gse())==F)
         req(is.null(rv$plat_id)==F)
         
         # tidy characteristics
