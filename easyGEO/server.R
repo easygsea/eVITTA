@@ -17,9 +17,9 @@ shinyServer(function(input, output, session) {
         # req(is.null(rv$plat_id)==F)
         # req(is.null(rv$samples)==F)
         # req(is.null(rv$pdata)==F)
-        
+
         if (is.null(rv$gse_all)==F & is.null(rv$plat_id)==F & is.null(rv$samples)==F & is.null(rv$pdata)==F){
-            
+
             to_show <- translate_sample_names(rv$samples,  # translating from
                                               rv$pdata[c("title", "geo_accession")],  # translation df
                                               "title") # translating to
@@ -28,11 +28,11 @@ shinyServer(function(input, output, session) {
             } else {
                 to_show_txt <- paste(to_show, collapse= ", ")
             }
-            
-            
+
+
             customSentence <- function(numItems, type) {
                 shiny::HTML(
-                    paste0("<strong>Samples selected (", length(to_show),"): </strong><br>", 
+                    paste0("<strong>Samples selected (", length(to_show),"): </strong><br>",
                            to_show_txt)
                 )
             }
@@ -43,12 +43,12 @@ shinyServer(function(input, output, session) {
                 )
             }
         }
-        
+
     })
-    
+
     # actually render the dropdownMenu
     output$dropdown_menu <- renderMenu({
-        
+
         dropdownMenuCustom(type = "tasks",
                            customSentence = dropdown_report()
         )
@@ -305,9 +305,11 @@ shinyServer(function(input, output, session) {
     # get full design matrix table -----------#
     
     design_df <- reactive({
+        req(is.null(rv$gse_all)==F)
+        req(is.null(rv$plat_id)==F)
         
         # tidy characteristics
-        char_list <- data.frame(t(as.data.frame(pData(phenoData(gse()))) %>% select(contains("characteristics"))))
+        char_list <- data.frame(t(data.frame(pData(phenoData(gse()))) %>% select(contains("characteristics"))))
         char_list[char_list==""] <- NA
         char_list <- as.list(char_list)
         # print(char_list)
@@ -579,6 +581,8 @@ shinyServer(function(input, output, session) {
     
     # show summary valueboxes
     output$design_variables <- renderValueBox({
+        req(is.null(design_df())==F)
+        
         valueBox(
             paste0(ncol(design_df()), " variables"), 
             paste0(paste(colnames(design_df()), collapse=", ")), 
@@ -587,6 +591,9 @@ shinyServer(function(input, output, session) {
         )
     })
     output$design_samples <- renderValueBox({
+        req(is.null(filtered_design_df())==F)
+        req(is.null(design_df())==F)
+        
         selected <- nrow(filtered_design_df())
         total <- nrow(design_df())
         valueBox(
