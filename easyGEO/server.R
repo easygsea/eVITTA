@@ -23,6 +23,7 @@ shinyServer(function(input, output, session) {
         volcano_up=15, volcano_down=15, # top # of genes to label in volcano & heatmap
 
         h_log="yes",h_zscore="yes", # transformation of count data, yes or no
+        h_y_name = "title", # heatmap's samples label by accession or title
         
         gene_lists=NULL, # user input gene list
         gene_lists_v=NULL # gene list for volcano and heatmap
@@ -752,7 +753,7 @@ shinyServer(function(input, output, session) {
                      tags$hr(style="border-color: grey;"),
                      
                      strong("Note on uploading data matrix:"),br(),
-                     "1) the data should be in comma-delimited format (i.e. csv),",br(),
+                     "1) the data should be in comma- or tab-delimited format (csv, tsv, tab, txt),",br(),
                      "2) first row of matrix should be sample names; must match either the GEO accession or sample names,",br(),
                      "3) first column of matrix should be gene names; no duplicates are allowed,", br(),
                      "4) IMPORTANT FOR EXCEL USERS: to prevent excel auto-formatting gene names into dates, 
@@ -1100,7 +1101,7 @@ shinyServer(function(input, output, session) {
         )
     })
     
-    # observe run_deg, perform limma analysis
+    # -------------- observe run_deg, perform limma analysis ---------
     observeEvent(input$run_deg,{
         rv$gene_lists = NULL
         rv$deg = NULL
@@ -1152,9 +1153,9 @@ shinyServer(function(input, output, session) {
             
             # original count matrix
             m_df = filtered_data_df()
-            
+
             # genes
-            genes = m_df$Name
+            genes = m_df$Name %>% toupper(.)
             
             # as numeric matrix
             m_df = m_df %>% dplyr::select(one_of(samples)) %>% 
@@ -1183,8 +1184,11 @@ shinyServer(function(input, output, session) {
                 # voom on normalized data
                 v <- voom(y, design1, plot=F)
             }else{
+                keep <- rowSums(y$counts>1) >= 3
+                y <- y[keep,,keep.lib.sizes=FALSE]
+                
                 # # voom directly on counts, if data are very noisy, as would be used for microarray
-                v <- voom(counts, design1, plot=F, normalize="quantile")
+                v <- voom(y, design1, plot=F, normalize="quantile")
             }
             
             # 3.4) DEG analysis
@@ -1197,14 +1201,18 @@ shinyServer(function(input, output, session) {
             
             # export DEG table
             degs = topTable(fit, coef=ncol(fit),sort.by="P",number=Inf)
-            
-            # write into RVs
             rv$deg = degs
-            rownames(rv$deg) = toupper(rownames(rv$deg))
             
-            rv$deg_counts = y$counts
+            # export count table
+            if(raw_or_norm == "raw"){
+                rv$deg_counts = cpm(y)
+            }else{
+                rv$deg_counts = y$counts
+            }
             
+            # export pData
             rv$deg_pdata = p_df
+            print(head(rv$deg_pdata))
         })
     })
     
@@ -1326,7 +1334,6 @@ shinyServer(function(input, output, session) {
                 abbreviate_vector(rv$gene_lists), " (n=<b>",
                 length(rv$gene_lists),"</b>)</br></br>"
             )
-            print(rv$gene_lists_v)
             if(is.null(rv$gene_lists_v) || length(rv$gene_lists_v)<1){
                 box_color = "red"
                 msg = paste0(input_genes,
@@ -1453,6 +1460,13 @@ shinyServer(function(input, output, session) {
                 )
             ),
             tags$hr(style="border-color: grey;"),
+            radioGroupButtons(
+                inputId = "h_y_name",
+                label = "Label samples by:", 
+                choices = list("GEO accession"="accession", "Sample name"="title"),
+                selected = rv$h_y_name
+            ),
+            tags$hr(style="border-color: grey;"),
             # options to extract matrix
             radioGroupButtons(
                 "h_label_opt",
@@ -1516,7 +1530,6 @@ shinyServer(function(input, output, session) {
                 abbreviate_vector(rv$gene_lists), " (n=<b>",
                 length(rv$gene_lists),"</b>)</br></br>"
             )
-            print(rv$gene_lists_v)
             if(is.null(rv$gene_lists_v) || length(rv$gene_lists_v)<1){
                 box_color = "red"
                 msg = paste0(input_genes,
@@ -1549,9 +1562,16 @@ shinyServer(function(input, output, session) {
         rv$plot_q = input$h_q_cutoff
         rv$plot_logfc = input$h_logfc_cutoff
         
+        # count data transformation
+        rv$h_log = input$h_log
+        rv$h_zscore = input$h_zscore
+        
+        # genes label by
+        rv$h_y_name = input$h_y_name
+        
         # options: threshold top manual
         rv$plot_label = input$h_label_opt
-        
+
         # if top
         if(input$h_label_opt == "top"){
             rv$volcano_up = input$n_up_h
@@ -1581,7 +1601,13 @@ shinyServer(function(input, output, session) {
     })
         
     # -------------- heatmap: plot ---------------
-    
+    output$heatmap_plot <- renderPlotly({
+        req(rv$deg)
+        
+        withProgress(message = "Updating heatmap ...", value = 0.5,{
+            hm_plot()
+        })
+    })
     ####-------------------00: FUNCTIONS: plots -----------------####
     # input table for volcano plots
     volcano_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
@@ -1613,11 +1639,14 @@ shinyServer(function(input, output, session) {
             theme_minimal() +
             theme(legend.position = "none",
                   plot.title = element_text(size = rel(1.5), hjust = 0.5),
-                  axis.title = element_text(size = rel(1.25)))
+                  axis.title = element_text(size = rel(1.5))
+                  )
         
         if(text=="yes"){
             fig <- fig +
-                geom_text_repel(data = df[which(df$threshold==TRUE),],aes(x=logFC,y=-log(df[which(df$threshold==TRUE),][["adj.P.Val"]]),label=genelabels))
+                geom_text_repel(data = df[which(df$threshold==TRUE),],size=5,
+                                aes(x=logFC,y=-log(df[which(df$threshold==TRUE),][["adj.P.Val"]]),label=genelabels)
+                                )
         }
         
         return(fig)
@@ -1699,6 +1728,123 @@ shinyServer(function(input, output, session) {
         return(fig)
     }
     
+    # filtered DEG table for heatmaps
+    hm_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
+        # filter table according to q & logFC
+        df = df %>%
+            dplyr::filter(adj.P.Val < q_cutoff, abs(logFC)>=logfc_cutoff)
+        
+        # genes
+        genes = rownames(df)
+        
+        #  mutate 0 to a small value
+        df = df %>%
+            mutate_if(is.numeric,  ~replace(., . == 0, 0.0000000001))
+        
+        # add rownames
+        rownames(df) = genes
+        
+        # order df according to logFC & FDR
+        df = df[order(-df[["logFC"]],df[["adj.P.Val"]]),] 
+        
+        return(df)
+    }
+    
+    # filtered count table for heatmaps
+    hm_count <- function(df = hm_df(),counts = rv$deg_counts){
+        genes = rownames(df)
+        counts = data.frame(counts[match(genes,rownames(counts)),],stringsAsFactors = F)
+
+        if(rv$h_y_name == "title"){
+            samples = colnames(counts) %>%
+                translate_sample_names(.,  rv$pdata[c("title", "geo_accession")],  "title")
+            
+            colnames(counts) = samples
+        }
+        
+        if(rv$plot_label == "top"){
+            # top up regulated genes
+            genes_up = df %>%
+                head(.,n=rv$volcano_up) %>%
+                rownames(.)
+            
+            # top down regulated genes
+            genes_down = df[order(df[["logFC"]],df[["adj.P.Val"]]),] %>%
+                head(.,n=rv$volcano_down) %>%
+                rownames(.)
+
+            # combine genes
+            genes = c(genes_up,genes_down)
+            
+            # filter counts
+            counts = counts[rownames(counts) %in% genes,]
+
+        }else if(rv$plot_label == "manual"){
+            # filter counts
+            counts = counts[rownames(counts) %in% rv$gene_lists_v,]
+        }
+        
+        return(counts)
+    }
+    
+    # function to plot heatmaps
+    hm_plot <- function(counts=hm_count(),df = hm_df()){
+        if(is.null(counts) | nrow(counts)<1){
+            return(NULL)
+        }else{
+            samples = colnames(counts)
+            titlex = "Expression"
+            
+            # if applicable, log2 transform count matrix
+            if(rv$h_log == "yes"){
+                counts = log2(counts+1)
+                
+                titlex = "Log2(expression+1)"
+            }
+            
+            # if applicable, z-score transform count matrix
+            if(rv$h_zscore == "yes"){
+                counts = t(apply(counts,1,scale))
+                colnames(counts) = samples
+                
+                titlex = "Z-score-transformed log2(expression+1)"
+                
+            }
+            
+            # make matrix for plot
+            dat <- expand.grid(y = rownames(counts), x = colnames(counts))
+            dat$z <- unlist(as.data.frame(counts),recursive = T)
+            
+            # genes and their logFC & FDR info
+            genes = rownames(counts)
+            df = df[match(genes,rownames(df)),]
+            logFCs = rep(signif(df[["logFC"]],digits = 3),ncol(counts))
+            FDRs = rep(signif(df[["adj.P.Val"]],digits = 3),ncol(counts))
+            
+            # combine into text
+            textx = paste0("logFC: ",logFCs,"<br>adj.P.Val: ",FDRs)
+            
+
+            fig <- plot_ly() %>%
+                add_trace(data = dat, x = ~x, y = ~y, z = ~z, type = "heatmap",
+                          colorscale  = cscale_zscore,zauto = T, zmid= 0, colorbar = list(title = list(text=titlex, side = "right")),
+                          text = textx,
+                          hovertemplate = paste('Gene: <b>%{y}</b><br><br>',
+                                                'Sample: %{x}<br>',
+                                                'Value: %{z:.3f}<br><br>',
+                                                '%{text}'
+                          )
+                )
+            
+            fig <- fig %>% layout(
+                xaxis = list(title = "", showticklabels = T),
+                yaxis = list(title = "", showticklabels = F)
+                # ,margin = list(l=200)
+            )
+            return(fig)
+            
+        }
+    }
     
     
     ###### ---------------- NOTES FOR JEAN ---------------- ######

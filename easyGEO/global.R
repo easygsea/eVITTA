@@ -30,6 +30,21 @@ abbreviate_vector <- function(x,no=3){
   return(x)
 }
 
+# -------------- color scales -------------
+# -3 to 3 colorscale adapted from cscale + cscale_bu2. evenly distributed.
+cscale_zscore <- list(c(0, "rgb(8,81,156)"), # -0.001 = cornflower,
+                      list(0.1, "rgb(49,130,189)"), # -0.01 = darker blue
+                      list(0.2, "rgb(107,174,214)"), # -0.05 = blue
+                      list(0.3, "rgb(158,202,225)"), # -0.1 = light blue
+                      list(0.4, "rgb(198,219,239)"), # -0.25 = pale blue
+                      list(0.5, "rgb(255, 255, 255)"), # 0 = white
+                      list(0.6, "rgb(254,224,144)"), # 0.25 = light yellow
+                      list(0.7, "rgb(253,174,97)"), # 0.1 = yellow
+                      list(0.8, "rgb(244,109,67)"), # 0.05 = orange
+                      list(0.9, "rgb(215,48,39)"), # 0.01 = red
+                      list(1, "rgb(165,0,38)") # 0.001 = dark red
+)
+
 # tabulate outputs of list function (for platform selection)
 # --------------------------------------------------------
 tabulate <- function(object, FUN){
