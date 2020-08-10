@@ -9,10 +9,12 @@ shinyServer(function(input, output, session) {
     rv <- reactiveValues(
         gse_all = NULL,
         
+        # # filtered data for DEG run
         deg = NULL, # DEG table
         deg_counts = NULL, # normalized count table
         deg_pdata = NULL, # pData for DEG run
         
+        # # parameters for DEG visualizations
         plot_q=0.05, # adj.P.Val threshold for visualizations
         plot_logfc=1, # logfc threshold for visualization
         
@@ -26,7 +28,9 @@ shinyServer(function(input, output, session) {
         h_y_name = "title", # heatmap's samples label by accession or title
         
         gene_lists=NULL, # user input gene list
-        gene_lists_v=NULL # gene list for volcano and heatmap
+        gene_lists_v=NULL, # gene list for volcano and heatmap
+        
+        v_success=NULL,h_success=NULL,a_success=NULL # show download plot button if success
         
     )
     
@@ -1265,11 +1269,15 @@ shinyServer(function(input, output, session) {
             uiOutput("v_interactive"),
             
             br(),
-            bsButton(
-                "volcano_confirm",
-                tags$b("Replot!"),
-                style = "primary"
+            splitLayout(
+                bsButton(
+                    "volcano_confirm",
+                    tags$b("Visualize!"),
+                    style = "primary"
+                ),
+                uiOutput("ui_v_download")
             )
+            
         )
         
     })
@@ -1278,17 +1286,20 @@ shinyServer(function(input, output, session) {
     output$v_static <- renderUI({
         req(input$volcano_mode == "static")
         
-        div(
-            # if static, options to label genes
-            radioGroupButtons(
-                "v_label_opt",
-                "Options to label genes",
-                choices = label_options,
-                selected = rv$plot_label
-            ),
-            uiOutput("v_top"),
-            uiOutput("v_manual"),
-            uiOutput("v_box")
+        fluidRow(
+            column(
+                width = 12,
+                # if static, options to label genes
+                radioGroupButtons(
+                    "v_label_opt",
+                    "Options to label genes",
+                    choices = label_options,
+                    selected = rv$plot_label
+                ),
+                uiOutput("v_top"),
+                uiOutput("v_manual"),
+                uiOutput("v_box")
+            )
         )
     })
 
@@ -1327,7 +1338,7 @@ shinyServer(function(input, output, session) {
         
         if(is.null(rv$gene_lists)){
             box_color = "teal"
-            msg = "Please input your genes and click <b>Replot!</b> to update your list."
+            msg = "Please input your genes and click <b>Visualize!</b> to update your list."
         }else{
             input_genes = paste0(
                 "Your input: ",
@@ -1353,15 +1364,19 @@ shinyServer(function(input, output, session) {
             }
         }
         
-        box(
-            title = NULL, background = box_color, solidHeader = TRUE, width=12,
-            HTML(msg)
+        fluidRow(
+            box(
+                title = NULL, background = box_color, solidHeader = TRUE, width=12,
+                HTML(msg)
+            )
         )
     })
     
     # -------------- volcano: update parameters ---------------
-    # update volcano parameters when "Replot!" clicked
+    # update volcano parameters when "Visualize!" clicked
     observeEvent(input$volcano_confirm,{
+        rv$v_success = NULL
+        
         # update thresholds and volcano mode
         rv$plot_q = input$v_q_cutoff
         rv$plot_logfc = input$v_logfc_cutoff
@@ -1404,9 +1419,9 @@ shinyServer(function(input, output, session) {
     # --------------volcano: plot---------------
     output$ui_volcano <- renderUI({
         if(rv$v_mode=="static"){
-            plotOutput("v_plot_s",width = "100%",height = "650px")
+            plotOutput("v_plot_s",width = "100%",height = "750px")
         }else if(rv$v_mode=="interactive"){
-            plotlyOutput("v_plot_i",width = "100%",height = "650px")
+            plotlyOutput("v_plot_i",width = "100%",height = "750px")
         }
     })
     
@@ -1425,6 +1440,17 @@ shinyServer(function(input, output, session) {
             volcano_plotly()
         })
     })
+    
+    # --------------volcano: download---------------
+    output$ui_v_download <- renderUI({
+        req(rv$v_success == "yes")
+        
+        downloadButton("v_download","Download plot")
+    })
+    
+    # output$v_download <- downloadHandler(
+    #     
+    # )
     
     #---------------heatmap: parameters------------------
     # volcano parameters UI
@@ -1479,11 +1505,15 @@ shinyServer(function(input, output, session) {
             uiOutput("h_box"),
             
             br(),
-            bsButton(
-                "h_confirm",
-                tags$b("Replot!"),
-                style = "primary"
+            splitLayout(
+                bsButton(
+                    "h_confirm",
+                    tags$b("Visualize!"),
+                    style = "primary"
+                ),
+                uiOutput("ui_h_download")
             )
+            
         )
         
     })
@@ -1523,7 +1553,7 @@ shinyServer(function(input, output, session) {
         
         if(is.null(rv$gene_lists)){
             box_color = "teal"
-            msg = "Please input your genes and click <b>Replot!</b> to update your list."
+            msg = "Please input your genes and click <b>Visualize!</b> to update your list."
         }else{
             input_genes = paste0(
                 "Your input: ",
@@ -1549,15 +1579,19 @@ shinyServer(function(input, output, session) {
             }
         }
         
-        box(
-            title = NULL, background = box_color, solidHeader = TRUE, width=12,
-            HTML(msg)
+        fluidRow(
+            box(
+                title = NULL, background = box_color, solidHeader = TRUE, width=12,
+                HTML(msg)
+            )
         )
     })
 
     # -------------- heatmap: update parameters ---------------
-    # update heatmap parameters when "Replot!" clicked
+    # update heatmap parameters when "Visualize!" clicked
     observeEvent(input$h_confirm,{
+        rv$h_success = NULL
+        
         # update thresholds and volcano mode
         rv$plot_q = input$h_q_cutoff
         rv$plot_logfc = input$h_logfc_cutoff
@@ -1608,6 +1642,54 @@ shinyServer(function(input, output, session) {
             hm_plot()
         })
     })
+    
+    # --------------heatmap: download---------------
+    output$ui_h_download <- renderUI({
+        req(rv$h_success == "yes")
+        
+        downloadButton("h_download","Download plot")
+    })
+    
+    # output$h_download <- downloadHandler(
+    #     
+    # )
+    
+    #---------------one gene: parameters------------------
+    output$aplot_parameters <- renderUI({
+        wellPanel(
+            selectizeInput(
+                "aplot_genes",
+                "Select your gene of interest:",
+                choices = rownames(rv$deg),
+                options = list(
+                    placeholder = 'Type to search ...',
+                    onInitialize = I('function() { this.setValue(""); }')
+                )
+            ),
+            br(),
+            splitLayout(
+                bsButton(
+                    "agene_confirm",
+                    tags$b("Visualize!"),
+                    style = "primary"
+                ),
+                uiOutput("ui_a_download")
+            )
+            
+        )
+    })
+    
+    # --------------one gene: download---------------
+    output$ui_a_download <- renderUI({
+        req(rv$a_success == "yes")
+        
+        downloadButton("a_download","Download plot")
+    })
+    
+    # output$a_download <- downloadHandler(
+    #     
+    # )
+    
     ####-------------------00: FUNCTIONS: plots -----------------####
     # input table for volcano plots
     volcano_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
@@ -1657,6 +1739,8 @@ shinyServer(function(input, output, session) {
         # plot by threshold
         if(rv$plot_label == "threshold"){
             fig <- volcano_basic(df,q_cutoff,logfc_cutoff,text="no")
+            
+            rv$v_success = "yes"
             return(fig)
             
         # plot by top genes
@@ -1683,6 +1767,8 @@ shinyServer(function(input, output, session) {
             df_ordered$threshold = df_ordered$genelabels != ""
             
             fig <- volcano_basic(df_ordered,q_cutoff,logfc_cutoff,text="yes")
+            
+            rv$v_success = "yes"
             return(fig)
             
         # plot by manual selection of genes    
@@ -1699,6 +1785,8 @@ shinyServer(function(input, output, session) {
                 df$genelabels[which(df$threshold==TRUE)] = rownames(df)[which(df$threshold==TRUE)]
                 
                 fig <- volcano_basic(df,q_cutoff,logfc_cutoff,text="yes")
+                
+                rv$v_success = "yes"
                 return(fig)
             }
         }
@@ -1725,6 +1813,7 @@ shinyServer(function(input, output, session) {
         
         fig <- ggplotly(fig,tooltip = "text")
                         
+        rv$v_success = "yes"
         return(fig)
     }
     
@@ -1841,6 +1930,8 @@ shinyServer(function(input, output, session) {
                 yaxis = list(title = "", showticklabels = F)
                 # ,margin = list(l=200)
             )
+            
+            rv$h_success = "yes"
             return(fig)
             
         }
