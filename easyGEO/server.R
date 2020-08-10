@@ -9,10 +9,11 @@ shinyServer(function(input, output, session) {
     rv <- reactiveValues(
         gse_all = NULL,
         
-        # # filtered data for DEG run
+        # # filtered data from DEG run
         deg = NULL, # DEG table
         deg_counts = NULL, # normalized count table
         deg_pdata = NULL, # pData for DEG run
+        c_var = NULL, c_level = NULL, t_level = NULL, samples_c = NULL, samples_t = NULL,
         
         # # parameters for DEG visualizations
         plot_q=0.05, # adj.P.Val threshold for visualizations
@@ -875,6 +876,30 @@ shinyServer(function(input, output, session) {
     
     
     ####---------------------- 4.1. SELECT COMPARISON  ---------------------------####
+    # -------------- filtered variables and labels -----------------
+    # filtered DEG pdata according to selected variable & its selected two levels
+    deg_pdata <- function(p_df=rv$fddf,c_var=input$sp_select_var,c_var_levels=input$sp_select_levels){
+        # filter design matrix according to selections
+        p_df %>% dplyr::filter(p_df[[c_var]] %in% c_var_levels)
+    }
+    
+    # samples in control group
+    samples_c <- function(p_df=deg_pdata(),c_var=input$sp_select_var,c_level = input$sp_select_levels_base){
+        p_df %>% dplyr::filter(p_df[[c_var]] %in% c_level) %>%
+            rownames(.)
+    }
+    
+    # treatment level
+    t_level <- function(c_level = input$sp_select_levels_base,c_var_levels=input$sp_select_levels){
+        # selected variable - experimental level
+        c_var_levels[!c_var_levels %in% c_level]
+    }
+    
+    # samples in treatment group
+    samples_t <- function(p_df=deg_pdata(),c_var=input$sp_select_var){
+        p_df %>% dplyr::filter(p_df[[c_var]] %in% t_level()) %>%
+            rownames(.)
+    }
     
     # --------------- select variables and levels ---------------
     
@@ -891,8 +916,6 @@ shinyServer(function(input, output, session) {
                 return(x)
             } else {return(NULL)}
         })
-        
-        
         
         if (ncol(fddf)>0 & nrow(fddf)>0){
             
@@ -934,7 +957,7 @@ shinyServer(function(input, output, session) {
                 
                 uiOutput("sp_select_levels"),
                 uiOutput("sp_select_levels_rel"),
-                uiOutput("sp_select_confirm")
+                uiOutput("sp_select_levels_rel_fb")
             )
         } else {
             HTML("No variables are available for selection. <br>(NOTE: at least one variable must have >2 levels)")
@@ -955,15 +978,9 @@ shinyServer(function(input, output, session) {
         )
     })
     
-    # UI feedbacks on selected levels, select base level, and RUN DEG button
+    # UI select base level
     output$sp_select_levels_rel <- renderUI({
-        req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
-        
-        # design summary
-        vs = var_summary()
-        
-        groups = c("control","treatment")
-        names(groups) = c("Control group", "Experimental group")
+        req(length(input$sp_select_levels)==2 & input$sp_select_var != input$sp_batch_col)
         
         fluidRow(
             column(
@@ -975,36 +992,77 @@ shinyServer(function(input, output, session) {
                     choices = input$sp_select_levels,
                     selected = input$sp_select_levels[1],
                     inline = T
-                ),
-                
-                # feedbacks on selected levels
-                # tagList(
-                #     column(
-                #         width = 6,
-                #         box(title=names(vs), width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=T,
-                #             # checkboxGroupInput(inputId = paste0("vs_",i),
-                #             #                    label = NULL,
-                #             #                    choices = names(vs[[i]]),
-                #             #                    selected = names(vs[[i]])
-                #             # )
-                #             
-                #         )
-                #     )
-                # ),
-                # div(style="display: inline-block;vertical-align:top; width: 190px;",
-                #     
-                # ),
-
-                
-                # RUN DEG button
-                actionButton("run_deg", "Run DEG analysis")
-            )
+                )
+           )
         )
     })
     
+    # ------------- feedbacks on selected levels ---------------
+    output$sp_select_levels_rel_fb <- renderUI({
+        req(length(input$sp_select_levels)==2 & input$sp_select_var != input$sp_batch_col)
+        
+        # control level name
+        c_level = input$sp_select_levels_base
+        
+        # samples in control group
+        t_level = t_level()
+        samples_c = samples_c()
+        samples_c_n = length(samples_c)
+        
+        # samples in treatment group
+        samples_t = samples_t()
+        samples_t_n = length(samples_t)
+        
+        textx = paste0(c_level," (",samples_c_n," samples) vs. ",
+                       t_level," (",samples_t_n," samples)")
+        
+        
+        fluidRow(
+            box(title=textx, width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=T,
+                radioGroupButtons(
+                    "names_toggle",
+                    "Show sample names as",
+                    choices = list("GEO accession"="accession","Sample name"="title"),
+                    selected = "title"
+                ),
+                uiOutput("ui_samples_fb")
+            )
+        )
+        
+    })
     
-    # UI feedbacks on selected groups
-    
+    output$ui_samples_fb <- renderUI({
+        # control level name
+        c_level = input$sp_select_levels_base
+        
+        # samples in control group
+        t_level = t_level()
+        samples_c = samples_c()
+
+        # samples in treatment group
+        samples_t = samples_t()
+        
+        if(input$names_toggle == "title"){
+            titles_c = translate_sample_names(samples_c,  rv$pdata[c("title", "geo_accession")],  "title")
+            titles_t = translate_sample_names(samples_t,  rv$pdata[c("title", "geo_accession")],  "title")
+            
+            names(samples_c) = titles_c
+            names(samples_t) = titles_t
+        }
+
+        splitLayout(
+            checkboxGroupInput(inputId = "samples_c_deg",
+                               label = c_level,
+                               choices = samples_c,
+                               selected = samples_c
+            ),
+            checkboxGroupInput(inputId = "samples_t_deg",
+                               label = t_level,
+                               choices = samples_t,
+                               selected = samples_t
+            )
+        )
+    })
     
     
     ####---------------------- 4.2. CONFIRM DATA MATRIX  ---------------------------####
@@ -1086,6 +1144,15 @@ shinyServer(function(input, output, session) {
     
     
     ####---------------------- 4.3. RUN DEG ANALYSIS  ---------------------------####
+    output$confirm_run <- renderUI({
+        req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
+        
+        # RUN DEG button
+        bsButton("run_deg", "Run DEG analysis",
+                 icon = icon("play-circle"), 
+                 size = "large",
+                 style = "success")
+    })
     
     output$run_deg_ui <- renderUI({
         # req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
@@ -1104,123 +1171,150 @@ shinyServer(function(input, output, session) {
             )
         )
     })
-    
-    # -------------- observe run_deg, perform limma analysis ---------
+
+    # -------------- observe run_deg, perform DEG analysis ---------
     observeEvent(input$run_deg,{
         rv$gene_lists = NULL
         rv$deg = NULL
         
-        withProgress(message = "Running DEG analysis. Please wait a minute...", value = 0.5, {
-            ## 1) create design matrix
-            # 1.1) batch effects
-            batch_var = input$sp_batch_col
-            batch = NULL
-            
-            if(batch_var!="na"){
-                batch = factor(p_df[[batch_var]])
-            }
-            
-            # 1.2) filter design matrix according to the selected two levels in selected variable
-            # original design matrix
-            p_df = rv$fddf
-            
-            # selected variable
-            c_var = input$sp_select_var
-            
-            # selected two levels
-            c_var_levels = input$sp_select_levels
-            
-            # filter design matrix according to selections
-            p_df = p_df %>% dplyr::filter(p_df[[c_var]] %in% c_var_levels)
-            
-            # 1.3) create treatment factor
-            # selected variable - control level
-            c_level = input$sp_select_levels_base
-            
-            # treatment effects
-            treatment = factor(p_df[[c_var]])
-            treatment = relevel(treatment, ref = c_level)
-            
-            # 1.4) design matrix
-            if(is.null(batch)){
-                design1 <- model.matrix(~0+treatment)
-            }else{
-                design1 <- model.matrix(~batch+treatment)
-            }
-            
-            ## 2) filter count matrix according to variable selection
-            # filtered samples
-            samples = rownames(p_df)
-            
-            # titles of filtered samples
-            samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
-            
-            # original count matrix
-            m_df = filtered_data_df()
-
-            # genes
-            genes = m_df$Name %>% toupper(.)
-            
-            # as numeric matrix
-            m_df = m_df %>% dplyr::select(one_of(samples)) %>% 
-                apply(., 2, as.numeric) %>%
-                as.matrix(.)
-            
-            # rename rownames
-            rownames(m_df) = genes
-            
-            ## 3) run edgeR and/or limma
-            # 3.1) determine if raw or normalized counts
-            raw_or_norm = input$data_type
-            
-            # 3.2) create dgelist
-            y <- DGEList(counts=m_df)
-            
-            # 3.3) filter and normalize if raw read counts, and run limma
-            if(raw_or_norm == "raw"){
-                # filter genes expressed in at least 3 of the samples
-                keep <- rowSums(cpm(y)>1) >= 3
-                y <- y[keep,,keep.lib.sizes=FALSE]
+        if(is.null(samples_c) && is.null(samples_t)){
+            showNotification("Select at least 1 control and 1 experimental samples.", type = "error", duration=4)
+        }else if(is.null(samples_c)){
+            showNotification("Select at least 1 control sample.", type = "error", duration=4)
+        }else if(is.null(samples_t)){
+            showNotification("Select at least 1 experimental sample.", type = "error", duration=4)
+        }else{
+            withProgress(message = "Running DEG analysis. Please wait a minute...", value = 0.5, {
+                ## 1) create design matrix
+                # 1.1) batch effects
+                batch_var = input$sp_batch_col
+                batch = NULL
                 
-                # normalize count data
-                y=calcNormFactors(y, method = "TMM")
+                if(batch_var!="na"){
+                    batch = factor(p_df[[batch_var]])
+                }
                 
-                # voom on normalized data
-                v <- voom(y, design1, plot=F)
-            }else{
-                keep <- rowSums(y$counts>1) >= 3
-                y <- y[keep,,keep.lib.sizes=FALSE]
+                # 1.2) filter design matrix according to the selected two levels in selected variable
+                # original design matrix
+                p_df = rv$fddf
                 
-                # # voom directly on counts, if data are very noisy, as would be used for microarray
-                v <- voom(y, design1, plot=F, normalize="quantile")
-            }
-            
-            # 3.4) DEG analysis
-            fit <- lmFit(v, design1)
-            fit <- eBayes(fit,trend=TRUE, robust=TRUE)
-            
-            # results
-            results <- decideTests(fit)
-            summary(results)
-            
-            # export DEG table
-            degs = topTable(fit, coef=ncol(fit),sort.by="P",number=Inf)
-            rv$deg = degs
-            
-            # export count table
-            if(raw_or_norm == "raw"){
-                rv$deg_counts = cpm(y)
-            }else{
-                rv$deg_counts = y$counts
-            }
-            
-            # export pData
-            rv$deg_pdata = p_df
-            print(head(rv$deg_pdata))
-        })
+                # selected variable
+                c_var = input$sp_select_var
+                
+                # selected two levels
+                c_var_levels = input$sp_select_levels
+                
+                # selected variable - control level
+                c_level = input$sp_select_levels_base
+                
+                # selected variable - experimental level
+                t_level = c_var_levels[!c_var_levels %in% c_level]
+                
+                # selected samples
+                samples_c = input$samples_c_deg
+                samples_t = input$samples_t_deg
+                min_n = min(length(samples_c),length(samples_t))
+                
+                # filter design matrix according to selections
+                p_df1 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_c)
+                p_df2 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_t)
+                p_df = rbind(p_df1,p_df2)
+                
+                
+                # 1.3) create treatment factor
+                # treatment effects
+                treatment = factor(p_df[[c_var]])
+                treatment = relevel(treatment, ref = c_level)
+                
+                # 1.4) design matrix
+                if(is.null(batch)){
+                    design1 <- model.matrix(~0+treatment)
+                }else{
+                    design1 <- model.matrix(~batch+treatment)
+                }
+                
+                ## 2) filter count matrix according to variable selection
+                # filtered samples
+                samples = rownames(p_df)
+                
+                # titles of filtered samples
+                samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
+                
+                # original count matrix
+                m_df = filtered_data_df()
+                
+                # genes
+                genes = m_df$Name %>% toupper(.)
+                
+                # as numeric matrix
+                m_df = m_df %>% dplyr::select(one_of(samples))
+                setcolorder(m_df, as.character(samples))
+                m_df = m_df %>% 
+                    apply(., 2, as.numeric) %>%
+                    as.matrix(.)
+                
+                # rename rownames
+                rownames(m_df) = genes
+                
+                ## 3) run edgeR and/or limma
+                # 3.1) determine if raw or normalized counts
+                raw_or_norm = input$data_type
+                
+                # 3.2) create dgelist
+                y <- DGEList(counts=m_df)
+                
+                # 3.3) filter and normalize if raw read counts, and run limma
+                if(raw_or_norm == "raw"){
+                    # filter genes expressed in at least 3 of the samples
+                    keep <- rowSums(cpm(y)>1) >= min_n
+                    y <- y[keep,,keep.lib.sizes=FALSE]
+                    
+                    # normalize count data
+                    y=calcNormFactors(y, method = "TMM")
+                    
+                    # voom on normalized data
+                    v <- voom(y, design1, plot=F)
+                }else{
+                    keep <- rowSums(y$counts>1) >= min_n
+                    y <- y[keep,,keep.lib.sizes=FALSE]
+                    
+                    # # voom directly on counts, if data are very noisy, as would be used for microarray
+                    v <- voom(y, design1, plot=F, normalize="quantile")
+                }
+                
+                # 3.4) DEG analysis
+                fit <- lmFit(v, design1)
+                fit <- eBayes(fit,trend=TRUE, robust=TRUE)
+                
+                # results
+                results <- decideTests(fit)
+                summary(results)
+                
+                # export DEG table
+                degs = topTable(fit, coef=ncol(fit),sort.by="P",number=Inf)
+                rv$deg = degs
+                
+                # export count table
+                if(raw_or_norm == "raw"){
+                    rv$deg_counts = cpm(y)
+                }else{
+                    rv$deg_counts = y$counts
+                }
+                
+                # export other data
+                rv$c_var = c_var
+                rv$c_level = c_level
+                rv$t_level = t_level
+                rv$samples_c = samples_c
+                rv$samples_t = samples_t
+                
+                rv$deg_pdata = p_df
+            })
+        }
+        
     })
     
-    # -------------show DEG Table, download------------
+    # -------------render DEG Table, download------------
     output$deg_table <- DT::renderDataTable({
         req(is.null(rv$deg)==F)
         
@@ -1235,7 +1329,7 @@ shinyServer(function(input, output, session) {
         }
     )
     
-    ####---------------------- 4.4. VISUALIZE DEG RESULTS  ---------------------------####
+    ####---------------------- 5. VISUALIZE DEG RESULTS  ---------------------------####
     #---------------volcano: parameters------------------
     # volcano parameters UI
     output$vplot_parameters <- renderUI({
@@ -1382,8 +1476,11 @@ shinyServer(function(input, output, session) {
         rv$plot_logfc = input$v_logfc_cutoff
         rv$v_mode = input$volcano_mode
         
+        # if interactive
+        if(input$volcano_mode == "interactive"){
+            rv$plot_label = "top"
         # if static
-        if(input$volcano_mode == "static"){
+        }else if(input$volcano_mode == "static"){
             rv$plot_label = input$v_label_opt
             
             # if top

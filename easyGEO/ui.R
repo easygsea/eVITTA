@@ -222,6 +222,13 @@ body <- dashboardBody(
                            )
                     )
                 ),
+                
+                column(
+                  width = 12, 
+                  uiOutput("confirm_run"),
+                  br()
+                ),
+                
                 fluidRow(
                   column(
                     width = 12,
