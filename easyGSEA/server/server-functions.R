@@ -353,7 +353,7 @@
         }else{
             df = rv$fgseagg %>% 
                 dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
+                mutate_if(is.numeric,  ~replace(., . == 0, 0.0000000001))
             
             y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
             

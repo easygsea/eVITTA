@@ -1,6 +1,7 @@
 library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
+library(shinyBS)
 library(GEOquery)
 library(tidyverse)
 library(shinyjs)
@@ -8,11 +9,26 @@ library(DT)
 library(limma)
 library(edgeR)
 library(ggrepel)
+library(plotly)
 library(BiocManager)
 options(repos = BiocManager::repositories())
 
+# slider cutoffs for p/q
+cutoff_slider = c(0.0001,0.0005,0.001,0.005,0.01,0.05,0.1,0.25,0.3,0.5,1)
 
+# labeling options
+label_options = list("By thresholds"="threshold","By top #"="top","By manual input"="manual")
 
+# function to extract the first no of elements and attach "... ..." to an R vector
+abbreviate_vector <- function(x,no=3){
+  if(length(x)>no){
+    x = paste(x[1:no],collapse = ", ") %>%
+      paste0(.," ... ...")
+  }else{
+    x = paste(x,collapse = ", ")
+  }
+  return(x)
+}
 
 # tabulate outputs of list function (for platform selection)
 # --------------------------------------------------------

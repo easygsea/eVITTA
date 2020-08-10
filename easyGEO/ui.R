@@ -236,14 +236,37 @@ body <- dashboardBody(
         
         
         tabItem(tabName = "tab5",
-                h2("Tab 5"),
                 tabBox(
-                    title = NULL, width = 12,
-                    id = "summary", height = "250px",
-                    tabPanel("placeholder", 
-                             
-                             "placeholder"
-                             
+                    title = "DEG Visualization", width = 12,
+                    id = "visDEG", height = "750px",
+                    
+                    tabPanel(
+                      "Volcano plot",
+                      column(
+                        width = 8,
+                        uiOutput("ui_volcano")
+                      ),
+                      column(
+                        width = 4,
+                        uiOutput("vplot_parameters")
+                      )
+                    ),
+                    
+                    tabPanel(
+                      "Heatmap",
+                      column(
+                        width = 8,
+                        plotlyOutput("heatmap_plot",width = "100%", height = "650px")
+                      ),
+                      column(
+                        width = 4,
+                        uiOutput("hplot_parameters")
+                      )
+                    ),
+                    
+                    tabPanel(
+                      "Explore a gene",
+                      plotOutput("box_genes")
                     )
                 )
                 
