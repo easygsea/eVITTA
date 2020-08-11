@@ -3,10 +3,36 @@ options(shiny.maxRequestSize=30*1024^2) # sets max upload size to 30 mb
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
-    
+    waiter_hide() # will hide *on_load waiter
     ####---------------------- REACTIVE VALUES---------------------------####
     
-    rv <- reactiveValues(gse_all = NULL
+    rv <- reactiveValues(
+        gse_all = NULL,
+        
+        # # filtered data from DEG run
+        deg = NULL, # DEG table
+        deg_counts = NULL, # normalized count table
+        deg_pdata = NULL, # pData for DEG run
+        c_var = NULL, c_level = NULL, t_level = NULL, samples_c = NULL, samples_t = NULL,
+        
+        # # parameters for DEG visualizations
+        plot_q=0.05, # adj.P.Val threshold for visualizations
+        plot_logfc=1, # logfc threshold for visualization
+        
+        v_mode = "static", # or "interactive"
+        
+        plot_label="top", # options to label/extract genes, other options: threshold manual
+        
+        volcano_up=15, volcano_down=15, # top # of genes to label in volcano & heatmap
+
+        h_log="yes",h_zscore="yes",a_log="yes", # transformation of count data, yes or no
+        h_y_name = "title", # heatmap's samples label by accession or title
+        
+        gene_lists=NULL, # user input gene list
+        gene_lists_v=NULL, # gene list for volcano and heatmap
+        
+        v_success=NULL,h_success=NULL,a_success=NULL # show download plot button if success
+        
     )
     
     
@@ -98,7 +124,7 @@ shinyServer(function(input, output, session) {
         rv$platforms <- NULL
         rv$plat_id <- NULL
         
-        withProgress(message = 'Getting data. Please wait a minute...', value = 0.5, {
+        withProgress(message = 'Getting data. Please wait a minute...', value = 1, {
             
             rv$geo_accession <- isolate(input$geo_accession)
             rv$gse_all <- getGEO(input$geo_accession, GSEMatrix=T) 
@@ -310,7 +336,7 @@ shinyServer(function(input, output, session) {
         req(is.null(rv$plat_id)==F)
         
         # tidy characteristics
-        char_list <- data.frame(t(data.frame(pData(phenoData(gse()))) %>% select(contains("characteristics"))))
+        char_list <- data.frame(t(data.frame(pData(phenoData(gse()))) %>% dplyr::select(contains("characteristics"))))
         char_list[char_list==""] <- NA
         char_list <- as.list(char_list)
         # print(char_list)
@@ -723,17 +749,17 @@ shinyServer(function(input, output, session) {
             id = "upload_matrix",
             tabPanel("Upload tidied matrix", 
                      
-                     fileInput("file", "Upload tidied data matrix (CSV format):",
+                     fileInput("file", "Upload tidied data matrix (CSV/TSV format):",
                                accept = c(
                                    "text/csv",
                                    "text/comma-separated-values,text/plain",
-                                   ".csv")
+                                   ".csv",".tsv",".txt",".tab")
                      ), 
                      
                      tags$hr(style="border-color: grey;"),
                      
                      strong("Note on uploading data matrix:"),br(),
-                     "1) the data should be in comma-delimited format (i.e. csv),",br(),
+                     "1) the data should be in comma- or tab-delimited format (csv, tsv, tab, txt),",br(),
                      "2) first row of matrix should be sample names; must match either the GEO accession or sample names,",br(),
                      "3) first column of matrix should be gene names; no duplicates are allowed,", br(),
                      "4) IMPORTANT FOR EXCEL USERS: to prevent excel auto-formatting gene names into dates, 
@@ -748,6 +774,10 @@ shinyServer(function(input, output, session) {
         inFile <- input$file
         indf <- read.csv(inFile$datapath, header=F, 
                          colClasses=c("character"))
+        if(ncol(indf)==1){
+            indf <- read.table(inFile$datapath, sep="\t",header=F, 
+                             colClasses=c("character"))
+        }
         indf_coln <- unname(unlist(indf[1,])) # colnames = first row
         # print(indf_coln)
         indf_rown <- unname(unlist(indf[,1])) # rownames = first col
@@ -847,6 +877,30 @@ shinyServer(function(input, output, session) {
     
     
     ####---------------------- 4.1. SELECT COMPARISON  ---------------------------####
+    # -------------- filtered variables and labels -----------------
+    # filtered DEG pdata according to selected variable & its selected two levels
+    deg_pdata <- function(p_df=rv$fddf,c_var=input$sp_select_var,c_var_levels=input$sp_select_levels){
+        # filter design matrix according to selections
+        p_df %>% dplyr::filter(p_df[[c_var]] %in% c_var_levels)
+    }
+    
+    # samples in control group
+    samples_c <- function(p_df=deg_pdata(),c_var=input$sp_select_var,c_level = input$sp_select_levels_base){
+        p_df %>% dplyr::filter(p_df[[c_var]] %in% c_level) %>%
+            rownames(.)
+    }
+    
+    # treatment level
+    t_level <- function(c_level = input$sp_select_levels_base,c_var_levels=input$sp_select_levels){
+        # selected variable - experimental level
+        c_var_levels[!c_var_levels %in% c_level]
+    }
+    
+    # samples in treatment group
+    samples_t <- function(p_df=deg_pdata(),c_var=input$sp_select_var){
+        p_df %>% dplyr::filter(p_df[[c_var]] %in% t_level()) %>%
+            rownames(.)
+    }
     
     # --------------- select variables and levels ---------------
     
@@ -854,7 +908,7 @@ shinyServer(function(input, output, session) {
         
         fddf <- rv$fddf
         
-        print(head(fddf))
+        # print(head(fddf))
         
         
         # filter only cols with >2 levels
@@ -863,8 +917,6 @@ shinyServer(function(input, output, session) {
                 return(x)
             } else {return(NULL)}
         })
-        
-        
         
         if (ncol(fddf)>0 & nrow(fddf)>0){
             
@@ -878,6 +930,12 @@ shinyServer(function(input, output, session) {
             choices_text <- paste(names(level_count), " (", level_count, " levels)", sep="")
             choices <- colnames(fddf)
             names(choices) <- choices_text
+            
+            # autodetect if batch, na is none detected
+            batch_selected = choices[grepl("batch",choices)]
+            if(identical(batch_selected,character(0))){
+                batch_selected = "na"
+            }
             
             div(
                 fluidRow(
@@ -893,13 +951,14 @@ shinyServer(function(input, output, session) {
                                inputId = "sp_batch_col",
                                label = "Batch effect column:",
                                choices = c("Not applicable"="na", choices),
-                               selected= "na"
+                               selected= batch_selected#"na"
                            )
                     ),
                 ),
                 
                 uiOutput("sp_select_levels"),
-                uiOutput("sp_select_confirm")
+                uiOutput("sp_select_levels_rel"),
+                uiOutput("sp_select_levels_rel_fb")
             )
         } else {
             HTML("No variables are available for selection. <br>(NOTE: at least one variable must have >2 levels)")
@@ -907,8 +966,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    
-    
+    # UI select levels
     output$sp_select_levels <- renderUI({
         
         fddf <- rv$fddf
@@ -921,8 +979,91 @@ shinyServer(function(input, output, session) {
         )
     })
     
+    # UI select base level
+    output$sp_select_levels_rel <- renderUI({
+        req(length(input$sp_select_levels)==2 & input$sp_select_var != input$sp_batch_col)
+        
+        fluidRow(
+            column(
+                width = 12,
+                # select base level
+                radioButtons(
+                    inputId = "sp_select_levels_base",
+                    label = "Select control level:",
+                    choices = input$sp_select_levels,
+                    selected = input$sp_select_levels[1],
+                    inline = T
+                )
+           )
+        )
+    })
     
+    # ------------- feedbacks on selected levels ---------------
+    output$sp_select_levels_rel_fb <- renderUI({
+        req(length(input$sp_select_levels)==2 & input$sp_select_var != input$sp_batch_col)
+        
+        # control level name
+        c_level = input$sp_select_levels_base
+        
+        # samples in control group
+        t_level = t_level()
+        samples_c = samples_c()
+        samples_c_n = length(samples_c)
+        
+        # samples in treatment group
+        samples_t = samples_t()
+        samples_t_n = length(samples_t)
+        
+        textx = paste0(c_level," (",samples_c_n," samples) vs. ",
+                       t_level," (",samples_t_n," samples)")
+        
+        
+        fluidRow(
+            box(title=textx, width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=T,
+                radioGroupButtons(
+                    "names_toggle",
+                    "Show sample names as",
+                    choices = list("GEO accession"="accession","Sample name"="title"),
+                    selected = "title"
+                ),
+                uiOutput("ui_samples_fb")
+            )
+        )
+        
+    })
     
+    output$ui_samples_fb <- renderUI({
+        # control level name
+        c_level = input$sp_select_levels_base
+        
+        # samples in control group
+        t_level = t_level()
+        samples_c = samples_c()
+
+        # samples in treatment group
+        samples_t = samples_t()
+        
+        if(input$names_toggle == "title"){
+            titles_c = translate_sample_names(samples_c,  rv$pdata[c("title", "geo_accession")],  "title")
+            titles_t = translate_sample_names(samples_t,  rv$pdata[c("title", "geo_accession")],  "title")
+            
+            names(samples_c) = titles_c
+            names(samples_t) = titles_t
+        }
+
+        splitLayout(
+            checkboxGroupInput(inputId = "samples_c_deg",
+                               label = c_level,
+                               choices = samples_c,
+                               selected = samples_c
+            ),
+            checkboxGroupInput(inputId = "samples_t_deg",
+                               label = t_level,
+                               choices = samples_t,
+                               selected = samples_t
+            )
+        )
+    })
     
     
     ####---------------------- 4.2. CONFIRM DATA MATRIX  ---------------------------####
@@ -1004,18 +1145,1043 @@ shinyServer(function(input, output, session) {
     
     
     ####---------------------- 4.3. RUN DEG ANALYSIS  ---------------------------####
-    
-    output$run_deg_ui <- renderUI({
+    output$confirm_run <- renderUI({
         req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
         
-        actionButton("run_deg", "Run DEG analysis")
+        # RUN DEG button
+        bsButton("run_deg", "Run DEG analysis",
+                 icon = icon("play-circle"), 
+                 size = "large",
+                 style = "primary")
+    })
+    
+    output$run_deg_ui <- renderUI({
+        # req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
+        req(is.null(rv$deg)==F)
+        
+        tabBox(
+            width = 12, title = "DEG Analysis",
+            
+            
+            tabPanel(
+                "DEG Table",
+                h4(HTML("Download and proceed to <b>easyGSEA</b> for gene set enrichment analysis and/or <b>easyVizR</b> for multiple comparisons")),
+                
+                downloadButton("deg_table_download",label = "Download DEG table (.csv)"),
+                br(),br(),
+                dataTableOutput("deg_table"),
+            )
+        )
+    })
+
+    # -------------- observe run_deg, perform DEG analysis ---------
+    observeEvent(input$run_deg,{
+        rv$gene_lists = NULL
+        rv$deg = NULL
+        
+        # selected samples
+        samples_c = input$samples_c_deg
+        samples_t = input$samples_t_deg
+        total_n = length(samples_c) + length(samples_t)
+        min_n = min(length(samples_c),length(samples_t))
+        
+        msg = paste0("Running DEG analysis on ",total_n," samples. Please wait a minute...")
+
+        if(is.null(samples_c) && is.null(samples_t)){
+            samples_c = samples_c()
+            samples_t = samples_t()
+            total_n = length(samples_c) + length(samples_t)
+            msg = paste0("No filtering/selection. Running DEG analysis on ",total_n," samples. Please wait a minute...")
+        }else if(is.null(samples_c)){
+            showNotification("Select at least 1 control sample.", type = "error", duration=4)
+            next
+        }else if(is.null(samples_t)){
+            showNotification("Select at least 1 experimental sample.", type = "error", duration=4)
+            next
+        }
+        
+        withProgress(message = msg, value = 1, {
+            ## 1) create design matrix
+            # 1.1) batch effects
+            batch_var = input$sp_batch_col
+            batch = NULL
+            
+            if(batch_var!="na"){
+                batch = factor(p_df[[batch_var]])
+            }
+            
+            # 1.2) filter design matrix according to the selected two levels in selected variable
+            # original design matrix
+            p_df = rv$fddf
+            
+            # selected variable
+            c_var = input$sp_select_var
+            
+            # selected two levels
+            c_var_levels = input$sp_select_levels
+            
+            # selected variable - control level
+            c_level = input$sp_select_levels_base
+            
+            # selected variable - experimental level
+            t_level = c_var_levels[!c_var_levels %in% c_level]
+            
+            # filter design matrix according to selections
+            p_df1 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_c)
+            p_df2 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_t)
+            p_df = rbind(p_df1,p_df2)
+            
+            
+            # 1.3) create treatment factor
+            # treatment effects
+            treatment = factor(p_df[[c_var]])
+            treatment = relevel(treatment, ref = c_level)
+            
+            # 1.4) design matrix
+            if(is.null(batch)){
+                design1 <- model.matrix(~0+treatment)
+            }else{
+                design1 <- model.matrix(~batch+treatment)
+            }
+            
+            ## 2) filter count matrix according to variable selection
+            # filtered samples
+            samples = rownames(p_df)
+            
+            # titles of filtered samples
+            samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
+            
+            # original count matrix
+            m_df = filtered_data_df()
+            
+            # genes
+            genes = m_df$Name %>% toupper(.)
+            
+            # as numeric matrix
+            m_df = m_df %>% dplyr::select(one_of(samples))
+            setcolorder(m_df, as.character(samples))
+            m_df = m_df %>% 
+                apply(., 2, as.numeric) %>%
+                as.matrix(.)
+            
+            # rename rownames
+            rownames(m_df) = genes
+            
+            ## 3) run edgeR and/or limma
+            # 3.1) determine if raw or normalized counts
+            raw_or_norm = input$data_type
+            
+            # 3.2) create dgelist
+            y <- DGEList(counts=m_df)
+            
+            # 3.3) filter and normalize if raw read counts, and run limma
+            if(raw_or_norm == "raw"){
+                # filter genes expressed in at least 3 of the samples
+                keep <- rowSums(cpm(y)>1) >= min_n
+                y <- y[keep,,keep.lib.sizes=FALSE]
+                
+                # normalize count data
+                y=calcNormFactors(y, method = "TMM")
+                
+                # voom on normalized data
+                v <- voom(y, design1, plot=F)
+            }else{
+                keep <- rowSums(y$counts>1) >= min_n
+                y <- y[keep,,keep.lib.sizes=FALSE]
+                
+                # # voom directly on counts, if data are very noisy, as would be used for microarray
+                v <- voom(y, design1, plot=F, normalize="quantile")
+            }
+            
+            # 3.4) DEG analysis
+            fit <- lmFit(v, design1)
+            fit <- eBayes(fit,trend=TRUE, robust=TRUE)
+            
+            # results
+            results <- decideTests(fit)
+            summary(results)
+            
+            # export DEG table
+            degs = topTable(fit, coef=ncol(fit),sort.by="P",number=Inf)
+            rv$deg = degs
+            
+            # export count table
+            if(raw_or_norm == "raw"){
+                rv$deg_counts = cpm(y)
+            }else{
+                rv$deg_counts = y$counts
+            }
+            
+            # export other data
+            rv$c_var = c_var
+            rv$c_level = c_level
+            rv$t_level = t_level
+            rv$samples_c = samples_c
+            rv$samples_t = samples_t
+            
+            rv$deg_pdata = p_df
+        })
+        
+    })
+    
+    # -------------render DEG Table, download------------
+    output$deg_table <- DT::renderDataTable({
+        req(is.null(rv$deg)==F)
+        
+        rv$deg
+    })
+    
+    # download DEG table
+    output$deg_table_download <- downloadHandler(
+        filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,".csv")},
+        content = function(file) {
+            write.csv(rv$deg, file)
+        }
+    )
+    
+    ####---------------------- 5. VISUALIZE DEG RESULTS  ---------------------------####
+    #---------------volcano: parameters------------------
+    # volcano parameters UI
+    output$vplot_parameters <- renderUI({
+        wellPanel(
+            # adj.P.Val cutoff
+            sliderTextInput(
+                inputId = "v_q_cutoff",
+                label = "Threshold of adj.P.Val",
+                choices = cutoff_slider,
+                selected = rv$plot_q, grid=T, force_edges=T,
+                width = "90%"
+            ),
+            # |logFC| cutoff
+            numericInput(
+                "v_logfc_cutoff",
+                "Threshold of |logFC|",
+                rv$plot_logfc,min=0
+            ),
+            
+            tags$hr(style="border-color: grey;"),
+            
+            # mode of volcano
+            radioGroupButtons(
+                "volcano_mode",
+                "Mode of volcano plot",
+                choices = list("Static"="static","Interactive"="interactive"),
+                selected = rv$v_mode
+            ),
+            # static/interactive UIs
+            uiOutput("v_static"),
+            uiOutput("v_interactive"),
+            
+            br(),
+            splitLayout(
+                bsButton(
+                    "volcano_confirm",
+                    tags$b("Visualize!"),
+                    style = "primary"
+                ),
+                uiOutput("ui_v_download")
+            )
+            
+        )
+        
+    })
+    
+    # UI, static volcano
+    output$v_static <- renderUI({
+        req(input$volcano_mode == "static")
+        
+        fluidRow(
+            column(
+                width = 12,
+                # if static, options to label genes
+                radioGroupButtons(
+                    "v_label_opt",
+                    "Options to label genes",
+                    choices = label_options,
+                    selected = rv$plot_label
+                ),
+                uiOutput("v_top"),
+                uiOutput("v_manual"),
+                uiOutput("v_box")
+            )
+        )
+    })
+
+    
+    # UI if to label top genes in volcano
+    output$v_top <- renderUI({
+        req(input$v_label_opt == "top")
+        
+        splitLayout(
+            numericInput("n_up_volcano",
+                         "# of top up",
+                         rv$volcano_up, min=1,
+                         width = "90%"),
+            numericInput("n_down_volcano",
+                         "# of top down",
+                         rv$volcano_down, min=1,
+                         width = "90%")
+        )
+    })
+    
+    # UI if manual selection of genes
+    output$v_manual <- renderUI({
+        req(input$v_label_opt == "manual")
+        
+        textAreaInput(
+            inputId = "v_gene_list",
+            label = "Input your genes",
+            placeholder = "Paste your genes here ...",
+            height = 80
+        )
+    })
+    
+    # UI feedbacks on manual selection of genes
+    output$v_box <- renderUI({
+        req(input$v_label_opt == "manual")
+        
+        if(is.null(rv$gene_lists)){
+            box_color = "teal"
+            msg = "Please input your genes and click <b>Visualize!</b> to update your list."
+        }else{
+            input_genes = paste0(
+                "Your input: ",
+                abbreviate_vector(rv$gene_lists), " (n=<b>",
+                length(rv$gene_lists),"</b>)</br></br>"
+            )
+            if(is.null(rv$gene_lists_v) || length(rv$gene_lists_v)<1){
+                box_color = "red"
+                msg = paste0(input_genes,
+                    "No gene found in DEG table. Please check your input."
+                    )
+            }else{
+                output_genes = paste0(
+                    "Genes found: ",
+                    abbreviate_vector(rv$gene_lists_v), " (n=<b>",
+                    length(rv$gene_lists_v),"</b>)"
+                )
+                
+                box_color = "green"
+                msg = paste0(
+                    input_genes,
+                    output_genes)
+            }
+        }
+        
+        fluidRow(
+            box(
+                title = NULL, background = box_color, solidHeader = TRUE, width=12,
+                HTML(msg)
+            )
+        )
+    })
+    
+    # -------------- volcano: update parameters ---------------
+    # update volcano parameters when "Visualize!" clicked
+    observeEvent(input$volcano_confirm,{
+        rv$v_success = NULL
+        
+        # update thresholds and volcano mode
+        rv$plot_q = input$v_q_cutoff
+        rv$plot_logfc = input$v_logfc_cutoff
+        rv$v_mode = input$volcano_mode
+        
+        # if interactive
+        if(input$volcano_mode == "interactive"){
+            rv$plot_label = "top"
+        # if static
+        }else if(input$volcano_mode == "static"){
+            rv$plot_label = input$v_label_opt
+            
+            # if top
+            if(input$v_label_opt == "top"){
+                rv$volcano_up = input$n_up_volcano
+                rv$volcano_down = input$n_down_volcano
+                
+            # if manual
+            }else if(input$v_label_opt == "manual"){
+                if(input$v_gene_list != ""){
+                    # read in gene list
+                    genelist = as.character(input$v_gene_list)
+                    genelist = gsub("\"","",genelist)
+                    genelist = strsplit(genelist,"\n")
+                    genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*,\\s*')))
+                    genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*;\\s*')))
+                    genelist = unlist(strsplit(genelist," "))
+                    genelist = toupper(unique(genelist))
+                    
+                    if(is.null(genelist)==F){
+                        # save original gene lists into RV
+                        rv$gene_lists = genelist
+                        
+                        # save genes found in DEG table into RV
+                        rv$gene_lists_v = genelist[genelist %in% rownames(rv$deg)]
+                    }
+                }
+            }
+
+        }
+    })
+    
+    # --------------volcano: plot---------------
+    output$ui_volcano <- renderUI({
+        if(rv$v_mode=="static"){
+            plotOutput("v_plot_s",width = "100%",height = "700px")
+        }else if(rv$v_mode=="interactive"){
+            plotlyOutput("v_plot_i",width = "100%",height = "700px")
+        }
+    })
+    
+    output$v_plot_s <- renderPlot({
+        req(rv$deg)
+        req(rv$v_mode == "static")
+        
+        withProgress(message = "Updating static volcano plot...", value = 1,{
+            volcano_ggplot()
+        })
+    })
+    
+    output$v_plot_i <- renderPlotly({
+        req(rv$deg)
+        req(rv$v_mode == "interactive")
+        
+        withProgress(message = "Updating interactive volcano plot...", value = 1, {
+            volcano_plotly()
+        })
+    })
+    
+    # --------------volcano: download---------------
+    output$ui_v_download <- renderUI({
+        req(rv$v_success == "yes")
+        
+        downloadButton("v_download","Download plot")
+    })
+    
+    output$v_download <- downloadHandler(
+        filename = function() {
+            if(rv$v_mode == "static"){
+                paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_volcano.pdf")
+            }else if(rv$v_mode == "interactive"){
+                paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_volcano.html")
+                
+            }
+        },
+        content = function(file) {
+            if(rv$v_mode == "static"){
+                ggsave(file,volcano_ggplot(), device = "pdf", width = 10, height = 10, dpi = 300, units = "in")
+            }else if(rv$v_mode == "interactive"){
+                saveWidget(as_widget(volcano_plotly()), file, selfcontained = TRUE)
+            }
+        }
+    )
+    
+    #---------------heatmap: parameters------------------
+    # volcano parameters UI
+    output$hplot_parameters <- renderUI({
+        wellPanel(
+            # adj.P.Val cutoff
+            sliderTextInput(
+                inputId = "h_q_cutoff",
+                label = "Threshold of adj.P.Val",
+                choices = cutoff_slider,
+                selected = rv$plot_q, grid=T, force_edges=T,
+                width = "90%"
+            ),
+            # |logFC| cutoff
+            numericInput(
+                "h_logfc_cutoff",
+                "Threshold of |logFC|",
+                rv$plot_logfc,min=0
+            ),
+            # transform count data
+            splitLayout(
+                radioGroupButtons(
+                    "h_log",
+                    "Log2 transformation",
+                    choices = list("Yes"="yes","No"="no"),
+                    selected = rv$h_log
+                ),
+                radioGroupButtons(
+                    "h_zscore",
+                    "Z-score transformation",
+                    choices = list("Yes"="yes","No"="no"),
+                    selected = rv$h_zscore
+                )
+            ),
+            tags$hr(style="border-color: grey;"),
+            radioGroupButtons(
+                inputId = "h_y_name",
+                label = "Label samples by:", 
+                choices = list("GEO accession"="accession", "Sample name"="title"),
+                selected = rv$h_y_name
+            ),
+            tags$hr(style="border-color: grey;"),
+            # options to extract matrix
+            radioGroupButtons(
+                "h_label_opt",
+                "Options to extract genes",
+                choices = label_options,
+                selected = rv$plot_label
+            ),
+            uiOutput("h_top"),
+            uiOutput("h_manual"),
+            uiOutput("h_box"),
+            
+            br(),
+            splitLayout(
+                bsButton(
+                    "h_confirm",
+                    tags$b("Visualize!"),
+                    style = "primary"
+                ),
+                uiOutput("ui_h_download")
+            )
+            
+        )
+        
     })
     
     
+    # UI if to label top genes in heatmap
+    output$h_top <- renderUI({
+        req(input$h_label_opt == "top")
+        
+        splitLayout(
+            numericInput("n_up_h",
+                         "# of top up",
+                         rv$volcano_up, min=1,
+                         width = "90%"),
+            numericInput("n_down_h",
+                         "# of top down",
+                         rv$volcano_down, min=1,
+                         width = "90%")
+        )
+    })
     
+    # UI if manual selection of genes
+    output$h_manual <- renderUI({
+        req(input$h_label_opt == "manual")
+        
+        textAreaInput(
+            inputId = "h_gene_list",
+            label = "Input your genes",
+            placeholder = "Paste your genes here ...",
+            height = 80
+        )
+    })
     
+    # UI feedbacks on manual selection of genes
+    output$h_box <- renderUI({
+        req(input$h_label_opt == "manual")
+        
+        if(is.null(rv$gene_lists)){
+            box_color = "teal"
+            msg = "Please input your genes and click <b>Visualize!</b> to update your list."
+        }else{
+            input_genes = paste0(
+                "Your input: ",
+                abbreviate_vector(rv$gene_lists), " (n=<b>",
+                length(rv$gene_lists),"</b>)</br></br>"
+            )
+            if(is.null(rv$gene_lists_v) || length(rv$gene_lists_v)<1){
+                box_color = "red"
+                msg = paste0(input_genes,
+                             "No gene found in DEG table. Please check your input."
+                )
+            }else{
+                output_genes = paste0(
+                    "Genes found: ",
+                    abbreviate_vector(rv$gene_lists_v), " (n=<b>",
+                    length(rv$gene_lists_v),"</b>)"
+                )
+                
+                box_color = "green"
+                msg = paste0(
+                    input_genes,
+                    output_genes)
+            }
+        }
+        
+        fluidRow(
+            box(
+                title = NULL, background = box_color, solidHeader = TRUE, width=12,
+                HTML(msg)
+            )
+        )
+    })
+
+    # -------------- heatmap: update parameters ---------------
+    # update heatmap parameters when "Visualize!" clicked
+    observeEvent(input$h_confirm,{
+        rv$h_success = NULL
+        
+        # update thresholds and volcano mode
+        rv$plot_q = input$h_q_cutoff
+        rv$plot_logfc = input$h_logfc_cutoff
+        
+        # count data transformation
+        rv$h_log = input$h_log
+        rv$h_zscore = input$h_zscore
+        
+        # genes label by
+        rv$h_y_name = input$h_y_name
+        
+        # options: threshold top manual
+        rv$plot_label = input$h_label_opt
+
+        # if top
+        if(input$h_label_opt == "top"){
+            rv$volcano_up = input$n_up_h
+            rv$volcano_down = input$n_down_h
+            
+        # if manual
+        }else if(input$h_label_opt == "manual"){
+            if(input$h_gene_list != ""){
+                # read in gene list
+                genelist = as.character(input$h_gene_list)
+                genelist = gsub("\"","",genelist)
+                genelist = strsplit(genelist,"\n")
+                genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*,\\s*')))
+                genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*;\\s*')))
+                genelist = unlist(strsplit(genelist," "))
+                genelist = toupper(unique(genelist))
+                
+                if(is.null(genelist)==F){
+                    # save original gene lists into RV
+                    rv$gene_lists = genelist
+                    
+                    # save genes found in DEG table into RV
+                    rv$gene_lists_v = genelist[genelist %in% rownames(rv$deg)]
+                }
+            }
+        }
+    })
+        
+    # -------------- heatmap: plot ---------------
+    output$heatmap_plot <- renderPlotly({
+        req(rv$deg)
+        
+        withProgress(message = "Updating heatmap ...", value = 1,{
+            hm_plot()
+        })
+    })
     
+    # --------------heatmap: download---------------
+    output$ui_h_download <- renderUI({
+        req(rv$h_success == "yes")
+        
+        downloadButton("h_download","Download plot")
+    })
     
+    output$h_download <- downloadHandler(
+        filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_hm.html")},
+        content = function(file) {
+            saveWidget(as_widget(hm_plot()), file, selfcontained = TRUE)
+        }
+    )
+    
+    #---------------one gene: parameters------------------
+    output$aplot_parameters <- renderUI({
+        withProgress(message = "Loading genes for visualization...",value = 1,{
+            wellPanel(
+                selectizeInput(
+                    "aplot_genes",
+                    "Select your gene of interest:",
+                    choices = rownames(rv$deg),
+                    options = list(
+                        placeholder = 'Type to search ...',
+                        onInitialize = I('function() { this.setValue(""); }')
+                    )
+                ),
+                br(),
+                # transform count data
+                radioGroupButtons(
+                    "a_log",
+                    "Log2 transformation",
+                    choices = list("Yes"="yes","No"="no"),
+                    selected = rv$a_log
+                ),
+                br(),
+                splitLayout(
+                    bsButton(
+                        "agene_confirm",
+                        tags$b("Visualize!"),
+                        style = "primary"
+                    ),
+                    uiOutput("ui_a_download")
+                )
+                
+            )
+        })
+        
+    })
+    
+    #---------------one gene: update parameters------------------
+    observeEvent(input$agene_confirm,{
+        rv$a_success = NULL
+        
+        rv$a_gene = input$aplot_genes
+        rv$a_log = input$a_log
+        
+    })
+    
+    #---------------one genes: plot----------------
+    output$ui_aplot <- renderPlot({
+        req(rv$deg_counts)
+        req(rv$a_gene)
+        
+        y_label = "Expression level"
+        
+        if(rv$a_log == "yes"){
+            y_label = "Log2(expression+1)"
+        }
+        
+        rv$y_label = y_label
+        
+        if(input$a_type == "violin"){
+            violin_plt(y_label)
+        }else if(input$a_type == "box"){
+            box_plt(y_label)
+        }
+    })
+    
+    # --------------one gene: download---------------
+    output$ui_a_download <- renderUI({
+        req(rv$a_success == "yes")
+        
+        downloadButton("a_download","Download plot")
+    })
+    
+    output$a_download <- downloadHandler(
+        filename = function() {
+            if(input$a_type == "violin"){
+                paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_violin.pdf")
+            }else if(input$a_type == "box"){
+                paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_box.pdf")
+            }
+        },
+        content = function(file) {
+            if(input$a_type == "violin"){
+                ggsave(file,violin_plt(rv$y_label), device = "pdf", width = 10, height = 10, dpi = 300, units = "in")
+            }else if(input$a_type == "box"){
+                ggsave(file,box_plt(rv$y_label), device = "pdf", width = 10, height = 10, dpi = 300, units = "in")
+            }
+        }
+    )
+    
+    ####-------------------00: FUNCTIONS: plots -----------------####
+    # input table for volcano plots
+    volcano_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
+        # genes
+        genes = rownames(df)
+        
+        # mutate 0 to a small value
+        df = df %>%
+            mutate_if(is.numeric,  ~replace(., . == 0, 0.0000000001))
+        
+        # threshold by q & logfc cutoffs
+        threshold_OE <- df[["adj.P.Val"]] < q_cutoff & abs(df$logFC)>=logfc_cutoff
+        df$threshold <- threshold_OE
+        
+        # add rownames
+        rownames(df) = genes
+        
+        return(df)
+    }
+    
+    # basic function to plot static volcano
+    volcano_basic <- function(df,q_cutoff,logfc_cutoff,text="no"){
+        fig <- ggplot(df) +
+            geom_point(aes(x=logFC,y=-log(.data[["adj.P.Val"]]),colour=threshold)) +
+            scale_colour_manual(values = c("grey","red")) +
+            xlab("logFC") + ylab(paste0("-log10(adj.P.Val)")) +
+            geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype="dotted") +
+            geom_hline(yintercept=-log(q_cutoff), linetype="dotted") +
+            theme_minimal() +
+            theme(legend.position="none",
+                  plot.title = element_text(size = rel(1.5), hjust = 0.5),
+                  axis.title = element_text(size = rel(1.5)),
+                  axis.text = element_text(size = rel(1.25))
+            )
+        
+        if(text=="yes"){
+            fig <- fig +
+                geom_text_repel(data = df[which(df$threshold==TRUE),],size=5,
+                                aes(x=logFC,y=-log(df[which(df$threshold==TRUE),][["adj.P.Val"]]),label=genelabels)
+                                )
+        }
+        
+        return(fig)
+    }
+    
+    # basic function to plot different modes of volcano
+    volcano_ggplot <- function(df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
+        # plot by threshold
+        if(rv$plot_label == "threshold"){
+            fig <- volcano_basic(df,q_cutoff,logfc_cutoff,text="no")
+            
+            rv$v_success = "yes"
+            return(fig)
+            
+        # plot by top genes
+        }else if(rv$plot_label == "top"){
+            no_down = rv$volcano_down
+            no_up = rv$volcano_up
+            
+            # order df by top down regulations
+            df_ordered = df[order(df[["logFC"]],df[["adj.P.Val"]]),]
+            y_genes = rownames(df_ordered)
+            labels_down = rev(y_genes[1:no_down])
+            
+            # order df by top up regulations
+            df_ordered = df[order(-df[["logFC"]],df[["adj.P.Val"]]),]
+            y_genes = rownames(df_ordered)
+            labels_up = y_genes[1:no_up]
+            
+            # calculate # not labeled
+            no_unlabel = nrow(df_ordered) - no_down - no_up
+            
+            # create genelabels
+            df_ordered$genelabels = c(labels_up,rep("",no_unlabel),labels_down)
+            
+            df_ordered$threshold = df_ordered$genelabels != ""
+            
+            fig <- volcano_basic(df_ordered,q_cutoff,logfc_cutoff,text="yes")
+            
+            rv$v_success = "yes"
+            return(fig)
+            
+        # plot by manual selection of genes    
+        }else if(rv$plot_label == "manual"){
+            in_genes = rv$gene_lists_v
+            
+            if(is.null(in_genes)==F && length(in_genes)>0){
+                # re-threshold
+                threshold_OE = rownames(df) %in% in_genes
+                df$threshold <- threshold_OE
+                
+                # add gene labels
+                df$genelabels = ""
+                df$genelabels[which(df$threshold==TRUE)] = rownames(df)[which(df$threshold==TRUE)]
+                
+                fig <- volcano_basic(df,q_cutoff,logfc_cutoff,text="yes")
+                
+                rv$v_success = "yes"
+                return(fig)
+            }
+        }
+        
+    }
+    
+    volcano_plotly <- function(df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
+        
+        fig <- ggplot(df) +
+            geom_point(aes(x=logFC,y=-log(.data[["adj.P.Val"]]),colour=threshold,
+                           text=paste0(
+                               "<b>",rownames(df),"</b>\n",
+                               "logFC=",signif(.data[["logFC"]],digits=3),"\n",
+                               "adj.P.Val=",signif(.data[["adj.P.Val"]],digits=3)
+                               ))) +
+            scale_colour_manual(values = c("grey","red")) +
+            xlab("logFC") + ylab(paste0("-log10(adj.P.Val)")) +
+            geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype="dotted") +
+            geom_hline(yintercept=-log(q_cutoff), linetype="dotted") +
+            theme_minimal() +
+            theme(legend.position = "none",
+                  plot.title = element_text(size = rel(1.5), hjust = 0.5),
+                  axis.title = element_text(size = rel(1.25)))
+        
+        fig <- ggplotly(fig,tooltip = "text")
+                        
+        rv$v_success = "yes"
+        return(fig)
+    }
+    
+    # filtered DEG table for heatmaps
+    hm_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
+        # filter table according to q & logFC
+        df = df %>%
+            dplyr::filter(adj.P.Val < q_cutoff, abs(logFC)>=logfc_cutoff)
+        
+        # genes
+        genes = rownames(df)
+        
+        #  mutate 0 to a small value
+        df = df %>%
+            mutate_if(is.numeric,  ~replace(., . == 0, 0.0000000001))
+        
+        # add rownames
+        rownames(df) = genes
+        
+        # order df according to logFC & FDR
+        df = df[order(-df[["logFC"]],df[["adj.P.Val"]]),] 
+        
+        return(df)
+    }
+    
+    # filtered count table for heatmaps
+    hm_count <- function(df = hm_df(),counts = rv$deg_counts){
+        genes = rownames(df)
+        counts = data.frame(counts[match(genes,rownames(counts)),],stringsAsFactors = F)
+
+        if(rv$h_y_name == "title"){
+            samples = colnames(counts) %>%
+                translate_sample_names(.,  rv$pdata[c("title", "geo_accession")],  "title")
+            
+            colnames(counts) = samples
+        }
+        
+        if(rv$plot_label == "top"){
+            # top up regulated genes
+            genes_up = df %>%
+                head(.,n=rv$volcano_up) %>%
+                rownames(.)
+            
+            # top down regulated genes
+            genes_down = df[order(df[["logFC"]],df[["adj.P.Val"]]),] %>%
+                head(.,n=rv$volcano_down) %>%
+                rownames(.)
+
+            # combine genes
+            genes = c(genes_up,genes_down)
+            
+            # filter counts
+            counts = counts[rownames(counts) %in% genes,]
+
+        }else if(rv$plot_label == "manual"){
+            # filter counts
+            counts = counts[rownames(counts) %in% rv$gene_lists_v,]
+        }
+        
+        return(counts)
+    }
+    
+    # function to plot heatmaps
+    hm_plot <- function(counts=hm_count(),df = hm_df()){
+        if(is.null(counts) | nrow(counts)<1){
+            return(NULL)
+        }else{
+            samples = colnames(counts)
+            titlex = "Expression"
+            
+            # if applicable, log2 transform count matrix
+            if(rv$h_log == "yes"){
+                counts = log2(counts+1)
+                
+                titlex = "Log2(expression+1)"
+            }
+            
+            # if applicable, z-score transform count matrix
+            if(rv$h_zscore == "yes"){
+                counts = t(apply(counts,1,scale))
+                colnames(counts) = samples
+                
+                titlex = "Z-score-transformed log2(expression+1)"
+                
+            }
+            
+            # make matrix for plot
+            dat <- expand.grid(y = rownames(counts), x = colnames(counts))
+            dat$z <- unlist(as.data.frame(counts),recursive = T)
+            
+            # genes and their logFC & FDR info
+            genes = rownames(counts)
+            df = df[match(genes,rownames(df)),]
+            logFCs = rep(signif(df[["logFC"]],digits = 3),ncol(counts))
+            FDRs = rep(signif(df[["adj.P.Val"]],digits = 3),ncol(counts))
+            
+            # combine into text
+            textx = paste0("logFC: ",logFCs,"<br>adj.P.Val: ",FDRs)
+            
+
+            fig <- plot_ly() %>%
+                add_trace(data = dat, x = ~x, y = ~y, z = ~z, type = "heatmap",
+                          colorscale  = cscale_zscore,zauto = T, zmid= 0, colorbar = list(title = list(text=titlex, side = "right")),
+                          text = textx,
+                          hovertemplate = paste('Gene: <b>%{y}</b><br><br>',
+                                                'Sample: %{x}<br>',
+                                                'Value: %{z:.3f}<br><br>',
+                                                '%{text}'
+                          )
+                )
+            
+            fig <- fig %>% layout(
+                xaxis = list(title = "", showticklabels = T),
+                yaxis = list(title = "", showticklabels = F)
+                # ,margin = list(l=200)
+            )
+            
+            rv$h_success = "yes"
+            return(fig)
+            
+        }
+    }
+    
+    # data for violin/box plot
+    vb_data <- function(gene=rv$a_gene,counts = rv$deg_counts){
+        counts = as.data.frame(counts) %>% dplyr::filter(rownames(counts)==rv$a_gene)
+        
+        # if applicable, log2 transform counts
+        if(rv$a_log == "yes"){
+            counts = log2(counts+1)
+        }
+        
+        counts_c = counts %>% dplyr::select(one_of(rv$samples_c)) %>% unlist(.)
+        counts_t = counts %>% dplyr::select(one_of(rv$samples_t)) %>% unlist(.)
+
+        r1 <- data.frame(x=c(rep(rv$c_level,length(rv$samples_c))),y=counts_c);row.names(r1) <- NULL
+        r2 <- data.frame(x=c(rep(rv$t_level,length(rv$samples_t))),y=counts_t);row.names(r2) <- NULL
+        
+        rr <- rbind(r1,r2)
+        
+        return(rr)
+    }
+    
+    # violin plot
+    data_summary <- function(x,k=1.5) {
+        m <- mean(x)
+        ymin <- m - k * sd(x)
+        ymax <- m + k * sd(x)
+        return(c(y=m,ymin=ymin,ymax=ymax))
+    }
+    
+    violin_plt <- function(y_label){
+        rr=vb_data()
+        
+        p <- ggplot(rr,aes(x=x,y=y,color=x)) +
+            geom_violin(trim=FALSE) +
+            scale_color_manual(values=c("blue","orange")) +
+            stat_summary(fun.data=data_summary,geom="pointrange", color="grey") +
+            geom_jitter(height = 0, width = 0.1) +
+            labs(title=rv$a_gene,y=y_label,x="") +
+            theme_classic() +
+            theme(legend.position="none",
+                   plot.title = element_text(size = rel(1.5), hjust = 0.5),
+                   axis.title = element_text(size = rel(1.5)),
+                   axis.text = element_text(size = rel(1.5))
+            )
+        
+        rv$a_success = "yes"
+        return(p)
+    }
+    
+    # box plot
+    box_plt <- function(y_label){
+        rr=vb_data()
+        
+        p<-ggplot(rr,aes(x=x,y=y)) + 
+            geom_boxplot(color=c("blue","orange")) +
+            labs(title=rv$a_gene,y=y_label,x="") +
+            theme_classic() +
+            theme(legend.position="none",
+                  plot.title = element_text(size = rel(1.5), hjust = 0.5),
+                  axis.title = element_text(size = rel(1.5)),
+                  axis.text = element_text(size = rel(1.5))
+            )
+        
+        rv$a_success = "yes"
+        return(p)
+    }
     
     ###### ---------------- NOTES FOR JEAN ---------------- ######
     
@@ -1053,14 +2219,6 @@ shinyServer(function(input, output, session) {
     #     - gse object for current platform: gse()
     # - summary of variables and levels: var_summary()
     # (is a named list of named vectors in form of $var level=freq)
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     ####---------------------- DEBUG 1 ---------------------------####

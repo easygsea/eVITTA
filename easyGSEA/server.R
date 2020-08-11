@@ -1,6 +1,8 @@
 # options(shiny.maxRequestSize=30*1024^2)
 
 server <- function(input, output, session) {
+    waiter_hide() # will hide *on_load waiter
+    
     # addClass(selector = "body", class = "sidebar-collapse")
     runjs("$('#rnkfile').parent().removeClass('btn-default').addClass('btn-danger');")
     

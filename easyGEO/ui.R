@@ -32,7 +32,11 @@ sidebar <- dashboardSidebar(
     
 )
 
+loadMsg = "easyGEO"
+
 body <- dashboardBody(
+  use_waiter(), # dependencies
+  waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else 
     
     tags$head(tags$style(HTML('
       .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
@@ -222,21 +226,71 @@ body <- dashboardBody(
                            )
                     )
                 ),
-                uiOutput("run_deg_ui")
+                
+                column(
+                  width = 12, 
+                  uiOutput("confirm_run"),
+                  br()
+                ),
+                
+                fluidRow(
+                  column(
+                    width = 12,
+                    uiOutput("run_deg_ui")
+                    
+                  )
+                  
+                )
                 
                 
         ),
         
         
         tabItem(tabName = "tab5",
-                h2("Tab 5"),
                 tabBox(
-                    title = NULL, width = 12,
-                    id = "summary", height = "250px",
-                    tabPanel("placeholder", 
-                             
-                             "placeholder"
-                             
+                    title = "DEG Visualization", width = 12,
+                    id = "visDEG", height = "760px",
+                    
+                    tabPanel(
+                      "Volcano plot",
+                      column(
+                        width = 8,
+                        uiOutput("ui_volcano")
+                      ),
+                      column(
+                        width = 4,
+                        uiOutput("vplot_parameters")
+                      )
+                    ),
+                    
+                    tabPanel(
+                      "Heatmap",
+                      column(
+                        width = 8,
+                        plotlyOutput("heatmap_plot",width = "100%", height = "700px")
+                      ),
+                      column(
+                        width = 4,
+                        uiOutput("hplot_parameters")
+                      )
+                    ),
+                    
+                    tabPanel(
+                      "Explore a gene",
+                      column(
+                        width = 8,
+                        radioGroupButtons(
+                          "a_type",
+                          NULL,
+                          choices = list("Violin plot"="violin","Box plot"="box")
+                        ),
+                        plotOutput("ui_aplot",width = "100%", height = "650px")
+                      ),
+                      column(
+                        width = 4,
+                        uiOutput("aplot_parameters")
+                      )
+                      
                     )
                 )
                 
@@ -250,8 +304,11 @@ body <- dashboardBody(
 )
 
 # Put them together into a dashboardPage
-dashboardPage(
+shinyUI(
+  dashboardPage(
+    title="easyGEO - GEO expression analysis & visualization",
     dashboardHeader(title = "easyGEO", dropdownMenuOutput("dropdown_menu")),
     sidebar,
     body
+  )
 )

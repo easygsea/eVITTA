@@ -19,6 +19,8 @@ library(RColorBrewer)
 library(plotly)
 library(htmltools)
 library(AnnotationDbi)
+library(waiter)
+
 
 options(repos = BiocManager::repositories())
 
