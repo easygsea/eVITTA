@@ -1014,8 +1014,10 @@ shinyServer(function(input, output, session) {
         samples_t = samples_t()
         samples_t_n = length(samples_t)
         
-        textx = paste0(c_level," (",samples_c_n," samples) vs. ",
-                       t_level," (",samples_t_n," samples)")
+        textx = paste0("Review samples: ",
+            c_level," (n=",samples_c_n,") vs. ",
+            t_level," (n=",samples_t_n,")"
+        )
         
         
         fluidRow(
@@ -1145,6 +1147,7 @@ shinyServer(function(input, output, session) {
     
     
     ####---------------------- 4.3. RUN DEG ANALYSIS  ---------------------------####
+    # ------------ UI: DEG run & table -----------
     output$confirm_run <- renderUI({
         req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
         
@@ -1156,7 +1159,6 @@ shinyServer(function(input, output, session) {
     })
     
     output$run_deg_ui <- renderUI({
-        # req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
         req(is.null(rv$deg)==F)
         
         tabBox(
@@ -1165,11 +1167,52 @@ shinyServer(function(input, output, session) {
             
             tabPanel(
                 "DEG Table",
-                h4(HTML("Download and proceed to <b>easyGSEA</b> for gene set enrichment analysis and/or <b>easyVizR</b> for multiple comparisons")),
-                
-                downloadButton("deg_table_download",label = "Download DEG table (.csv)"),
-                br(),br(),
-                dataTableOutput("deg_table"),
+                fluidRow(
+                    column(
+                        width = 12,
+                        h4(HTML("Download entire DEG table and proceed to <b>easyGSEA</b> for gene set enrichment analysis and/or <b>easyVizR</b> for multiple comparisons.")),
+                        
+                    )
+                ),
+                fluidRow(
+                    column(
+                        width = 8,
+                        
+                        br(),
+                        dataTableOutput("deg_table")
+                    ),
+                    column(
+                        width = 4,
+                        br(),
+                        wellPanel(
+                            downloadButton("deg_table_download",label = "Download entire DEG table (.csv)"),
+                            tags$hr(style="border-color: grey;"),
+                            
+                            h4("Filter DEG table"),
+                            
+                            # adj.P.Val cutoff
+                            sliderTextInput(
+                                inputId = "tl_q",
+                                label = "Threshold of adj.P.Val",
+                                choices = cutoff_slider,
+                                selected = rv$plot_q, grid=T, force_edges=T
+                            ),
+                            # |logFC| cutoff
+                            numericInput(
+                                "tl_logfc",
+                                "Threshold of |logFC|",
+                                rv$plot_logfc,min=0
+                            ),
+                            uiOutput("tl_summary"),
+                            # download table
+                            downloadButton("tl_table","Download filtered table"),
+                            br(),br(),
+                            # download list
+                            downloadButton("tl_list","Download filtered gene list")
+                            
+                        )
+                    )
+                )
             )
         )
     })
@@ -1325,7 +1368,17 @@ shinyServer(function(input, output, session) {
     output$deg_table <- DT::renderDataTable({
         req(is.null(rv$deg)==F)
         
-        rv$deg
+        df = filter_df()
+        
+        genes = rownames(df)
+        
+        df = df %>% 
+            dplyr::mutate_at(c("logFC","AveExpr","t","B"),function(x) round(x, digits = 1)) %>%
+            dplyr::mutate_at(c("P.Value","adj.P.Val"),function(x) scientific(x, digits = 2))
+        
+        rownames(df) = genes
+        
+        df
     })
     
     # download DEG table
@@ -1333,6 +1386,40 @@ shinyServer(function(input, output, session) {
         filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,".csv")},
         content = function(file) {
             write.csv(rv$deg, file)
+        }
+    )
+    
+    # -------------filter DEG Table, download------------
+    output$tl_summary <- renderUI({
+        df = filter_df()
+        n_after = nrow(df)
+        n_total = nrow(rv$deg)
+        
+        fluidRow(
+            box(
+                background = "teal", width = 12,
+                HTML(
+                    "No. of genes before filtering = <b>",n_total,"</b></br>",
+                    "No. of genes after filtering = <b>",n_after,"</b>",
+                )
+            )
+        )
+        
+    })
+    
+    # download DEG table
+    output$tl_table <- downloadHandler(
+        filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_logFC",input$tl_logfc,"_q",input$tl_q,".csv")},
+        content = function(file) {
+            write.csv(filter_df(), file)
+        }
+    )
+    
+    # download DEG list
+    output$tl_list <- downloadHandler(
+        filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_logFC",input$tl_logfc,"_q",input$tl_q,".txt")},
+        content = function(file) {
+            fwrite(list(rownames(filter_df())), file)
         }
     )
     
@@ -1791,6 +1878,8 @@ shinyServer(function(input, output, session) {
                     )
                 ),
                 br(),
+                tableOutput("a_stats"),
+                br(),
                 splitLayout(
                     # transform count data
                     radioGroupButtons(
@@ -1833,6 +1922,18 @@ shinyServer(function(input, output, session) {
     })
     
     #---------------one genes: plot----------------
+    # gene stats in table
+    output$a_stats <- renderTable({
+        req(rv$a_gene)
+        
+        cols = c("logFC","P.Value","adj.P.Val")
+        
+        rv$deg %>% dplyr::filter(rownames(.) == rv$a_gene) %>%
+            dplyr::select(one_of(cols)) %>%
+            dplyr::mutate_at(c("P.Value","adj.P.Val"), function(x) scientific(x, digits=3))
+    })
+    
+    # violin/box plot
     output$ui_aplot <- renderPlot({
         req(rv$deg_counts)
         req(rv$a_gene)
@@ -1877,6 +1978,12 @@ shinyServer(function(input, output, session) {
     )
     
     ####-------------------00: FUNCTIONS: plots -----------------####
+    # basic function to filter DEG table
+    filter_df <- function(df = rv$deg,q_cutoff=input$tl_q,logfc_cutoff=input$tl_logfc){
+        # filter table according to q & logFC
+        df %>%
+            dplyr::filter(adj.P.Val < q_cutoff, abs(logFC)>=logfc_cutoff)
+    }
     # input table for volcano plots
     volcano_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
         # genes
@@ -2141,6 +2248,8 @@ shinyServer(function(input, output, session) {
         r2 <- data.frame(x=c(rep(rv$t_level,length(rv$samples_t))),y=counts_t);row.names(r2) <- NULL
         
         rr <- rbind(r1,r2)
+        
+        rr$x = factor(rr$x,levels=c(rv$c_level,rv$t_level))
         
         return(rr)
     }

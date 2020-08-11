@@ -14,6 +14,7 @@ library(plotly)
 library(BiocManager)
 library(waiter)
 library(statmod)
+library(scales)
 options(repos = BiocManager::repositories())
 
 # slider cutoffs for p/q
