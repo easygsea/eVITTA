@@ -16,6 +16,7 @@ sidebar <- dashboardSidebar(
     )
 )
 
+loadMsg = "easyGSEA - gene set enrichment analysis, interpretation & visualization"
 
 shinyUI(
     dashboardPage(
@@ -25,6 +26,9 @@ shinyUI(
         # skin = "black",
         sidebar,
         dashboardBody(
+            use_waiter(), # dependencies
+            waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else 
+            
             tags$head(
                 HTML("<script type='text/javascript' language='javascript' src='https://reactome.org/DiagramJs/diagram/diagram.nocache.js'></script>"),
                 tags$script(src = "reactome.js")

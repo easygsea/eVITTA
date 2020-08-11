@@ -3,7 +3,7 @@ options(shiny.maxRequestSize=30*1024^2) # sets max upload size to 30 mb
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
-    
+    waiter_hide() # will hide *on_load waiter
     ####---------------------- REACTIVE VALUES---------------------------####
     
     rv <- reactiveValues(
@@ -25,7 +25,7 @@ shinyServer(function(input, output, session) {
         
         volcano_up=15, volcano_down=15, # top # of genes to label in volcano & heatmap
 
-        h_log="yes",h_zscore="yes", # transformation of count data, yes or no
+        h_log="yes",h_zscore="yes",a_log="yes", # transformation of count data, yes or no
         h_y_name = "title", # heatmap's samples label by accession or title
         
         gene_lists=NULL, # user input gene list
@@ -124,7 +124,7 @@ shinyServer(function(input, output, session) {
         rv$platforms <- NULL
         rv$plat_id <- NULL
         
-        withProgress(message = 'Getting data. Please wait a minute...', value = 0.5, {
+        withProgress(message = 'Getting data. Please wait a minute...', value = 1, {
             
             rv$geo_accession <- isolate(input$geo_accession)
             rv$gse_all <- getGEO(input$geo_accession, GSEMatrix=T) 
@@ -748,7 +748,7 @@ shinyServer(function(input, output, session) {
             id = "upload_matrix",
             tabPanel("Upload tidied matrix", 
                      
-                     fileInput("file", "Upload tidied data matrix (CSV format):",
+                     fileInput("file", "Upload tidied data matrix (CSV/TSV format):",
                                accept = c(
                                    "text/csv",
                                    "text/comma-separated-values,text/plain",
@@ -1151,11 +1151,12 @@ shinyServer(function(input, output, session) {
         bsButton("run_deg", "Run DEG analysis",
                  icon = icon("play-circle"), 
                  size = "large",
-                 style = "success")
+                 style = "primary")
     })
     
     output$run_deg_ui <- renderUI({
         # req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
+        req(is.null(rv$deg)==F)
         
         tabBox(
             width = 12, title = "DEG Analysis",
@@ -1177,140 +1178,148 @@ shinyServer(function(input, output, session) {
         rv$gene_lists = NULL
         rv$deg = NULL
         
+        # selected samples
+        samples_c = input$samples_c_deg
+        samples_t = input$samples_t_deg
+        total_n = length(samples_c) + length(samples_t)
+        min_n = min(length(samples_c),length(samples_t))
+        
+        msg = paste0("Running DEG analysis on ",total_n," samples. Please wait a minute...")
+
         if(is.null(samples_c) && is.null(samples_t)){
-            showNotification("Select at least 1 control and 1 experimental samples.", type = "error", duration=4)
+            samples_c = samples_c()
+            samples_t = samples_t()
+            total_n = length(samples_c) + length(samples_t)
+            msg = paste0("No filtering/selection. Running DEG analysis on ",total_n," samples. Please wait a minute...")
         }else if(is.null(samples_c)){
             showNotification("Select at least 1 control sample.", type = "error", duration=4)
+            next
         }else if(is.null(samples_t)){
             showNotification("Select at least 1 experimental sample.", type = "error", duration=4)
-        }else{
-            withProgress(message = "Running DEG analysis. Please wait a minute...", value = 0.5, {
-                ## 1) create design matrix
-                # 1.1) batch effects
-                batch_var = input$sp_batch_col
-                batch = NULL
-                
-                if(batch_var!="na"){
-                    batch = factor(p_df[[batch_var]])
-                }
-                
-                # 1.2) filter design matrix according to the selected two levels in selected variable
-                # original design matrix
-                p_df = rv$fddf
-                
-                # selected variable
-                c_var = input$sp_select_var
-                
-                # selected two levels
-                c_var_levels = input$sp_select_levels
-                
-                # selected variable - control level
-                c_level = input$sp_select_levels_base
-                
-                # selected variable - experimental level
-                t_level = c_var_levels[!c_var_levels %in% c_level]
-                
-                # selected samples
-                samples_c = input$samples_c_deg
-                samples_t = input$samples_t_deg
-                min_n = min(length(samples_c),length(samples_t))
-                
-                # filter design matrix according to selections
-                p_df1 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_c)
-                p_df2 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_t)
-                p_df = rbind(p_df1,p_df2)
-                
-                
-                # 1.3) create treatment factor
-                # treatment effects
-                treatment = factor(p_df[[c_var]])
-                treatment = relevel(treatment, ref = c_level)
-                
-                # 1.4) design matrix
-                if(is.null(batch)){
-                    design1 <- model.matrix(~0+treatment)
-                }else{
-                    design1 <- model.matrix(~batch+treatment)
-                }
-                
-                ## 2) filter count matrix according to variable selection
-                # filtered samples
-                samples = rownames(p_df)
-                
-                # titles of filtered samples
-                samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
-                
-                # original count matrix
-                m_df = filtered_data_df()
-                
-                # genes
-                genes = m_df$Name %>% toupper(.)
-                
-                # as numeric matrix
-                m_df = m_df %>% dplyr::select(one_of(samples))
-                setcolorder(m_df, as.character(samples))
-                m_df = m_df %>% 
-                    apply(., 2, as.numeric) %>%
-                    as.matrix(.)
-                
-                # rename rownames
-                rownames(m_df) = genes
-                
-                ## 3) run edgeR and/or limma
-                # 3.1) determine if raw or normalized counts
-                raw_or_norm = input$data_type
-                
-                # 3.2) create dgelist
-                y <- DGEList(counts=m_df)
-                
-                # 3.3) filter and normalize if raw read counts, and run limma
-                if(raw_or_norm == "raw"){
-                    # filter genes expressed in at least 3 of the samples
-                    keep <- rowSums(cpm(y)>1) >= min_n
-                    y <- y[keep,,keep.lib.sizes=FALSE]
-                    
-                    # normalize count data
-                    y=calcNormFactors(y, method = "TMM")
-                    
-                    # voom on normalized data
-                    v <- voom(y, design1, plot=F)
-                }else{
-                    keep <- rowSums(y$counts>1) >= min_n
-                    y <- y[keep,,keep.lib.sizes=FALSE]
-                    
-                    # # voom directly on counts, if data are very noisy, as would be used for microarray
-                    v <- voom(y, design1, plot=F, normalize="quantile")
-                }
-                
-                # 3.4) DEG analysis
-                fit <- lmFit(v, design1)
-                fit <- eBayes(fit,trend=TRUE, robust=TRUE)
-                
-                # results
-                results <- decideTests(fit)
-                summary(results)
-                
-                # export DEG table
-                degs = topTable(fit, coef=ncol(fit),sort.by="P",number=Inf)
-                rv$deg = degs
-                
-                # export count table
-                if(raw_or_norm == "raw"){
-                    rv$deg_counts = cpm(y)
-                }else{
-                    rv$deg_counts = y$counts
-                }
-                
-                # export other data
-                rv$c_var = c_var
-                rv$c_level = c_level
-                rv$t_level = t_level
-                rv$samples_c = samples_c
-                rv$samples_t = samples_t
-                
-                rv$deg_pdata = p_df
-            })
+            next
         }
+        
+        withProgress(message = msg, value = 1, {
+            ## 1) create design matrix
+            # 1.1) batch effects
+            batch_var = input$sp_batch_col
+            batch = NULL
+            
+            if(batch_var!="na"){
+                batch = factor(p_df[[batch_var]])
+            }
+            
+            # 1.2) filter design matrix according to the selected two levels in selected variable
+            # original design matrix
+            p_df = rv$fddf
+            
+            # selected variable
+            c_var = input$sp_select_var
+            
+            # selected two levels
+            c_var_levels = input$sp_select_levels
+            
+            # selected variable - control level
+            c_level = input$sp_select_levels_base
+            
+            # selected variable - experimental level
+            t_level = c_var_levels[!c_var_levels %in% c_level]
+            
+            # filter design matrix according to selections
+            p_df1 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_c)
+            p_df2 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_t)
+            p_df = rbind(p_df1,p_df2)
+            
+            
+            # 1.3) create treatment factor
+            # treatment effects
+            treatment = factor(p_df[[c_var]])
+            treatment = relevel(treatment, ref = c_level)
+            
+            # 1.4) design matrix
+            if(is.null(batch)){
+                design1 <- model.matrix(~0+treatment)
+            }else{
+                design1 <- model.matrix(~batch+treatment)
+            }
+            
+            ## 2) filter count matrix according to variable selection
+            # filtered samples
+            samples = rownames(p_df)
+            
+            # titles of filtered samples
+            samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
+            
+            # original count matrix
+            m_df = filtered_data_df()
+            
+            # genes
+            genes = m_df$Name %>% toupper(.)
+            
+            # as numeric matrix
+            m_df = m_df %>% dplyr::select(one_of(samples))
+            setcolorder(m_df, as.character(samples))
+            m_df = m_df %>% 
+                apply(., 2, as.numeric) %>%
+                as.matrix(.)
+            
+            # rename rownames
+            rownames(m_df) = genes
+            
+            ## 3) run edgeR and/or limma
+            # 3.1) determine if raw or normalized counts
+            raw_or_norm = input$data_type
+            
+            # 3.2) create dgelist
+            y <- DGEList(counts=m_df)
+            
+            # 3.3) filter and normalize if raw read counts, and run limma
+            if(raw_or_norm == "raw"){
+                # filter genes expressed in at least 3 of the samples
+                keep <- rowSums(cpm(y)>1) >= min_n
+                y <- y[keep,,keep.lib.sizes=FALSE]
+                
+                # normalize count data
+                y=calcNormFactors(y, method = "TMM")
+                
+                # voom on normalized data
+                v <- voom(y, design1, plot=F)
+            }else{
+                keep <- rowSums(y$counts>1) >= min_n
+                y <- y[keep,,keep.lib.sizes=FALSE]
+                
+                # # voom directly on counts, if data are very noisy, as would be used for microarray
+                v <- voom(y, design1, plot=F, normalize="quantile")
+            }
+            
+            # 3.4) DEG analysis
+            fit <- lmFit(v, design1)
+            fit <- eBayes(fit,trend=TRUE, robust=TRUE)
+            
+            # results
+            results <- decideTests(fit)
+            summary(results)
+            
+            # export DEG table
+            degs = topTable(fit, coef=ncol(fit),sort.by="P",number=Inf)
+            rv$deg = degs
+            
+            # export count table
+            if(raw_or_norm == "raw"){
+                rv$deg_counts = cpm(y)
+            }else{
+                rv$deg_counts = y$counts
+            }
+            
+            # export other data
+            rv$c_var = c_var
+            rv$c_level = c_level
+            rv$t_level = t_level
+            rv$samples_c = samples_c
+            rv$samples_t = samples_t
+            
+            rv$deg_pdata = p_df
+        })
         
     })
     
@@ -1323,7 +1332,7 @@ shinyServer(function(input, output, session) {
     
     # download DEG table
     output$deg_table_download <- downloadHandler(
-        filename = function() {paste0(rv$geo_accession,"_limma.csv")},
+        filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,".csv")},
         content = function(file) {
             write.csv(rv$deg, file)
         }
@@ -1516,9 +1525,9 @@ shinyServer(function(input, output, session) {
     # --------------volcano: plot---------------
     output$ui_volcano <- renderUI({
         if(rv$v_mode=="static"){
-            plotOutput("v_plot_s",width = "100%",height = "750px")
+            plotOutput("v_plot_s",width = "100%",height = "700px")
         }else if(rv$v_mode=="interactive"){
-            plotlyOutput("v_plot_i",width = "100%",height = "750px")
+            plotlyOutput("v_plot_i",width = "100%",height = "700px")
         }
     })
     
@@ -1526,14 +1535,16 @@ shinyServer(function(input, output, session) {
         req(rv$deg)
         req(rv$v_mode == "static")
         
-        volcano_ggplot()
+        withProgress(message = "Updating static volcano plot...", value = 1,{
+            volcano_ggplot()
+        })
     })
     
     output$v_plot_i <- renderPlotly({
         req(rv$deg)
         req(rv$v_mode == "interactive")
         
-        withProgress(message = "Updating interactive volcano plot...", value = 0.5, {
+        withProgress(message = "Updating interactive volcano plot...", value = 1, {
             volcano_plotly()
         })
     })
@@ -1545,9 +1556,23 @@ shinyServer(function(input, output, session) {
         downloadButton("v_download","Download plot")
     })
     
-    # output$v_download <- downloadHandler(
-    #     
-    # )
+    output$v_download <- downloadHandler(
+        filename = function() {
+            if(rv$v_mode == "static"){
+                paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_volcano.pdf")
+            }else if(rv$v_mode == "interactive"){
+                paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_volcano.html")
+                
+            }
+        },
+        content = function(file) {
+            if(rv$v_mode == "static"){
+                ggsave(file,volcano_ggplot(), device = "pdf", width = 10, height = 10, dpi = 300, units = "in")
+            }else if(rv$v_mode == "interactive"){
+                saveWidget(as_widget(volcano_plotly()), file, selfcontained = TRUE)
+            }
+        }
+    )
     
     #---------------heatmap: parameters------------------
     # volcano parameters UI
@@ -1735,7 +1760,7 @@ shinyServer(function(input, output, session) {
     output$heatmap_plot <- renderPlotly({
         req(rv$deg)
         
-        withProgress(message = "Updating heatmap ...", value = 0.5,{
+        withProgress(message = "Updating heatmap ...", value = 1,{
             hm_plot()
         })
     })
@@ -1747,33 +1772,76 @@ shinyServer(function(input, output, session) {
         downloadButton("h_download","Download plot")
     })
     
-    # output$h_download <- downloadHandler(
-    #     
-    # )
+    output$h_download <- downloadHandler(
+        filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_hm.html")},
+        content = function(file) {
+            saveWidget(as_widget(hm_plot()), file, selfcontained = TRUE)
+        }
+    )
     
     #---------------one gene: parameters------------------
     output$aplot_parameters <- renderUI({
-        wellPanel(
-            selectizeInput(
-                "aplot_genes",
-                "Select your gene of interest:",
-                choices = rownames(rv$deg),
-                options = list(
-                    placeholder = 'Type to search ...',
-                    onInitialize = I('function() { this.setValue(""); }')
-                )
-            ),
-            br(),
-            splitLayout(
-                bsButton(
-                    "agene_confirm",
-                    tags$b("Visualize!"),
-                    style = "primary"
+        withProgress(message = "Loading genes for visualization...",value = 1,{
+            wellPanel(
+                selectizeInput(
+                    "aplot_genes",
+                    "Select your gene of interest:",
+                    choices = rownames(rv$deg),
+                    options = list(
+                        placeholder = 'Type to search ...',
+                        onInitialize = I('function() { this.setValue(""); }')
+                    )
                 ),
-                uiOutput("ui_a_download")
+                br(),
+                # transform count data
+                radioGroupButtons(
+                    "a_log",
+                    "Log2 transformation",
+                    choices = list("Yes"="yes","No"="no"),
+                    selected = rv$a_log
+                ),
+                br(),
+                splitLayout(
+                    bsButton(
+                        "agene_confirm",
+                        tags$b("Visualize!"),
+                        style = "primary"
+                    ),
+                    uiOutput("ui_a_download")
+                )
+                
             )
-            
-        )
+        })
+        
+    })
+    
+    #---------------one gene: update parameters------------------
+    observeEvent(input$agene_confirm,{
+        rv$a_success = NULL
+        
+        rv$a_gene = input$aplot_genes
+        rv$a_log = input$a_log
+        
+    })
+    
+    #---------------one genes: plot----------------
+    output$ui_aplot <- renderPlot({
+        req(rv$deg_counts)
+        req(rv$a_gene)
+        
+        y_label = "Expression level"
+        
+        if(rv$a_log == "yes"){
+            y_label = "Log2(expression+1)"
+        }
+        
+        rv$y_label = y_label
+        
+        if(input$a_type == "violin"){
+            violin_plt(y_label)
+        }else if(input$a_type == "box"){
+            box_plt(y_label)
+        }
     })
     
     # --------------one gene: download---------------
@@ -1783,9 +1851,22 @@ shinyServer(function(input, output, session) {
         downloadButton("a_download","Download plot")
     })
     
-    # output$a_download <- downloadHandler(
-    #     
-    # )
+    output$a_download <- downloadHandler(
+        filename = function() {
+            if(input$a_type == "violin"){
+                paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_violin.pdf")
+            }else if(input$a_type == "box"){
+                paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,"_box.pdf")
+            }
+        },
+        content = function(file) {
+            if(input$a_type == "violin"){
+                ggsave(file,violin_plt(rv$y_label), device = "pdf", width = 10, height = 10, dpi = 300, units = "in")
+            }else if(input$a_type == "box"){
+                ggsave(file,box_plt(rv$y_label), device = "pdf", width = 10, height = 10, dpi = 300, units = "in")
+            }
+        }
+    )
     
     ####-------------------00: FUNCTIONS: plots -----------------####
     # input table for volcano plots
@@ -1816,10 +1897,11 @@ shinyServer(function(input, output, session) {
             geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype="dotted") +
             geom_hline(yintercept=-log(q_cutoff), linetype="dotted") +
             theme_minimal() +
-            theme(legend.position = "none",
+            theme(legend.position="none",
                   plot.title = element_text(size = rel(1.5), hjust = 0.5),
-                  axis.title = element_text(size = rel(1.5))
-                  )
+                  axis.title = element_text(size = rel(1.5)),
+                  axis.text = element_text(size = rel(1.25))
+            )
         
         if(text=="yes"){
             fig <- fig +
@@ -2034,6 +2116,71 @@ shinyServer(function(input, output, session) {
         }
     }
     
+    # data for violin/box plot
+    vb_data <- function(gene=rv$a_gene,counts = rv$deg_counts){
+        counts = as.data.frame(counts) %>% dplyr::filter(rownames(counts)==rv$a_gene)
+        
+        # if applicable, log2 transform counts
+        if(rv$a_log == "yes"){
+            counts = log2(counts+1)
+        }
+        
+        counts_c = counts %>% dplyr::select(one_of(rv$samples_c)) %>% unlist(.)
+        counts_t = counts %>% dplyr::select(one_of(rv$samples_t)) %>% unlist(.)
+
+        r1 <- data.frame(x=c(rep(rv$c_level,length(rv$samples_c))),y=counts_c);row.names(r1) <- NULL
+        r2 <- data.frame(x=c(rep(rv$t_level,length(rv$samples_t))),y=counts_t);row.names(r2) <- NULL
+        
+        rr <- rbind(r1,r2)
+        
+        return(rr)
+    }
+    
+    # violin plot
+    data_summary <- function(x,k=1.5) {
+        m <- mean(x)
+        ymin <- m - k * sd(x)
+        ymax <- m + k * sd(x)
+        return(c(y=m,ymin=ymin,ymax=ymax))
+    }
+    
+    violin_plt <- function(y_label){
+        rr=vb_data()
+        
+        p <- ggplot(rr,aes(x=x,y=y,color=x)) +
+            geom_violin(trim=FALSE) +
+            scale_color_manual(values=c("blue","orange")) +
+            stat_summary(fun.data=data_summary,geom="pointrange", color="grey") +
+            geom_jitter(height = 0, width = 0.1) +
+            labs(title=rv$a_gene,y=y_label,x="") +
+            theme_classic() +
+            theme(legend.position="none",
+                   plot.title = element_text(size = rel(1.5), hjust = 0.5),
+                   axis.title = element_text(size = rel(1.5)),
+                   axis.text = element_text(size = rel(1.5))
+            )
+        
+        rv$a_success = "yes"
+        return(p)
+    }
+    
+    # box plot
+    box_plt <- function(y_label){
+        rr=vb_data()
+        
+        p<-ggplot(rr,aes(x=x,y=y)) + 
+            geom_boxplot(color=c("blue","orange")) +
+            labs(title=rv$a_gene,y=y_label,x="") +
+            theme_classic() +
+            theme(legend.position="none",
+                  plot.title = element_text(size = rel(1.5), hjust = 0.5),
+                  axis.title = element_text(size = rel(1.5)),
+                  axis.text = element_text(size = rel(1.5))
+            )
+        
+        rv$a_success = "yes"
+        return(p)
+    }
     
     ###### ---------------- NOTES FOR JEAN ---------------- ######
     

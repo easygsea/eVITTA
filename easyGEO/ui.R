@@ -32,7 +32,11 @@ sidebar <- dashboardSidebar(
     
 )
 
+loadMsg = "easyGEO"
+
 body <- dashboardBody(
+  use_waiter(), # dependencies
+  waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else 
     
     tags$head(tags$style(HTML('
       .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
@@ -245,7 +249,7 @@ body <- dashboardBody(
         tabItem(tabName = "tab5",
                 tabBox(
                     title = "DEG Visualization", width = 12,
-                    id = "visDEG", height = "850px",
+                    id = "visDEG", height = "760px",
                     
                     tabPanel(
                       "Volcano plot",
@@ -263,7 +267,7 @@ body <- dashboardBody(
                       "Heatmap",
                       column(
                         width = 8,
-                        plotlyOutput("heatmap_plot",width = "100%", height = "750px")
+                        plotlyOutput("heatmap_plot",width = "100%", height = "700px")
                       ),
                       column(
                         width = 4,
@@ -275,7 +279,12 @@ body <- dashboardBody(
                       "Explore a gene",
                       column(
                         width = 8,
-                        plotOutput("ui_aplot",width = "100%", height = "750px")
+                        radioGroupButtons(
+                          "a_type",
+                          NULL,
+                          choices = list("Violin plot"="violin","Box plot"="box")
+                        ),
+                        plotOutput("ui_aplot",width = "100%", height = "650px")
                       ),
                       column(
                         width = 4,
@@ -295,8 +304,11 @@ body <- dashboardBody(
 )
 
 # Put them together into a dashboardPage
-dashboardPage(
+shinyUI(
+  dashboardPage(
+    title="easyGEO - GEO expression analysis & visualization",
     dashboardHeader(title = "easyGEO", dropdownMenuOutput("dropdown_menu")),
     sidebar,
     body
+  )
 )
