@@ -9,13 +9,13 @@ shinyServer(function(input, output, session) {
     rv <- reactiveValues(
         gse_all = NULL,
         
-        # # filtered data from DEG run
+        # ========= filtered data from DEG run ======== #
         deg = NULL, # DEG table
         deg_counts = NULL, # normalized count table
         deg_pdata = NULL, # pData for DEG run
         c_var = NULL, c_level = NULL, t_level = NULL, samples_c = NULL, samples_t = NULL,
         
-        # # parameters for DEG visualizations
+        # ========= parameters for DEG visualizations ======== #
         plot_q=0.05, # adj.P.Val threshold for visualizations
         plot_logfc=1, # logfc threshold for visualization
         
@@ -24,6 +24,7 @@ shinyServer(function(input, output, session) {
         plot_label="top", # options to label/extract genes, other options: threshold manual
         
         volcano_up=15, volcano_down=15, # top # of genes to label in volcano & heatmap
+        a_k=1.5,# no of sd to show in violin jitter
 
         h_log="yes",h_zscore="yes",a_log="yes", # transformation of count data, yes or no
         h_y_name = "title", # heatmap's samples label by accession or title
@@ -1018,7 +1019,7 @@ shinyServer(function(input, output, session) {
         
         
         fluidRow(
-            box(title=textx, width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=T,
+            box(title=textx, width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=F,
                 radioGroupButtons(
                     "names_toggle",
                     "Show sample names as",
@@ -1181,16 +1182,13 @@ shinyServer(function(input, output, session) {
         # selected samples
         samples_c = input$samples_c_deg
         samples_t = input$samples_t_deg
-        total_n = length(samples_c) + length(samples_t)
         min_n = min(length(samples_c),length(samples_t))
         
-        msg = paste0("Running DEG analysis on ",total_n," samples. Please wait a minute...")
+        msg = paste0("Running DEG analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. Please wait a minute...")
 
         if(is.null(samples_c) && is.null(samples_t)){
-            samples_c = samples_c()
-            samples_t = samples_t()
-            total_n = length(samples_c) + length(samples_t)
-            msg = paste0("No filtering/selection. Running DEG analysis on ",total_n," samples. Please wait a minute...")
+            showNotification("Select at least 1 control and 1 experimental samples.", type = "error", duration=4)
+            next
         }else if(is.null(samples_c)){
             showNotification("Select at least 1 control sample.", type = "error", duration=4)
             next
@@ -1286,7 +1284,7 @@ shinyServer(function(input, output, session) {
                 v <- voom(y, design1, plot=F)
             }else{
                 keep <- rowSums(y$counts>1) >= min_n
-                y <- y[keep,,keep.lib.sizes=FALSE]
+                y <- y[keep,,keep.lib.sizes=TRUE]
                 
                 # # voom directly on counts, if data are very noisy, as would be used for microarray
                 v <- voom(y, design1, plot=F, normalize="quantile")
@@ -1793,13 +1791,22 @@ shinyServer(function(input, output, session) {
                     )
                 ),
                 br(),
-                # transform count data
-                radioGroupButtons(
-                    "a_log",
-                    "Log2 transformation",
-                    choices = list("Yes"="yes","No"="no"),
-                    selected = rv$a_log
+                splitLayout(
+                    # transform count data
+                    radioGroupButtons(
+                        "a_log",
+                        "Log2 transformation",
+                        choices = list("Yes"="yes","No"="no"),
+                        selected = rv$a_log
+                    ),
+                    # no of sd in violin gitter
+                    numericInput(
+                        "a_sd_n",
+                        "If violin, # of s.d.",
+                        value = rv$a_k, min = 0.1, step = 0.1
+                    )
                 ),
+                
                 br(),
                 splitLayout(
                     bsButton(
@@ -1822,6 +1829,7 @@ shinyServer(function(input, output, session) {
         rv$a_gene = input$aplot_genes
         rv$a_log = input$a_log
         
+        rv$a_k = input$a_sd_n
     })
     
     #---------------one genes: plot----------------
@@ -2013,7 +2021,8 @@ shinyServer(function(input, output, session) {
         rownames(df) = genes
         
         # order df according to logFC & FDR
-        df = df[order(-df[["logFC"]],df[["adj.P.Val"]]),] 
+        # df = df[order(-df[["logFC"]],df[["adj.P.Val"]]),] 
+        df = df %>% dplyr::arrange(logFC)
         
         return(df)
     }
@@ -2032,7 +2041,7 @@ shinyServer(function(input, output, session) {
         
         if(rv$plot_label == "top"){
             # top up regulated genes
-            genes_up = df %>%
+            genes_up = df[order(-df[["logFC"]],df[["adj.P.Val"]]),] %>%
                 head(.,n=rv$volcano_up) %>%
                 rownames(.)
             
@@ -2137,7 +2146,7 @@ shinyServer(function(input, output, session) {
     }
     
     # violin plot
-    data_summary <- function(x,k=1.5) {
+    data_summary <- function(x,k=rv$a_k) {
         m <- mean(x)
         ymin <- m - k * sd(x)
         ymax <- m + k * sd(x)

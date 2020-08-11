@@ -13,6 +13,7 @@ library(ggrepel)
 library(plotly)
 library(BiocManager)
 library(waiter)
+library(statmod)
 options(repos = BiocManager::repositories())
 
 # slider cutoffs for p/q
