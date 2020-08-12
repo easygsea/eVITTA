@@ -19,84 +19,66 @@ server <- function(input, output, session) {
     
     
     ####---------------------- HELP ---------------------------####
+    # there must be an intro for each page, i.e. pre-render (n0), first page (n1), second page (n2)
     
-    observeEvent(input$help, {
+    observeEvent(input$help_organize, {
         print(input$tabs)
         req(input$tabs == "Upload files")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-            steps = data.frame(element = c(NA, "#step1","#step1b","#step2"),
-                               intro = c("In this view you can upload and delete files.",
-                                         
-                                         "Here you can upload a single file. <br><br> 
-                                         Please note that files must contain at least 4 columns: 
-                                         Gene, statistic (i.e. logFC or ES), PValue, and FDR. <br><br>
-                                         After uploading, you can specify the essential columns.",
-                                         
-                                         "Here you can upload a folder containing multiple files in csv format.<br><br>
-                                         After uploading, you can specify the essential columns. <br><br>
-                                         (Note that all files must contain all specified columns, named in the same manner; 
-                                         incorrectly formatted files will be omitted.)",
-                                         
-                                         "Here you can view loaded files, and delete unneeded files to free up space."))
-        ))
+            steps = intros$upload)
+        )
 
     })
     
-    observeEvent(input$help2, {
+    observeEvent(input$help_x_pre, {
         print(input$tabs)
         req(input$tabs == "Single Dataset")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                steps = data.frame(element = c(NA, "#stepb1","#stepb2","#stepb3","#stepb4"),
-                                   intro = c("In this view you can make visualizations for a single dataset.",
-                                             
-                                             "Select a dataset from loaded data.",
-                                             
-                                             "Here you can choose to view full dataset, or only a user-specified list.",
-                                             
-                                             "Click this button to generate visualizations in the dashboard.",
-                                             
-                                             "Visualizations will be shown in individual panels. 
-                                             Select options from bottom left corner to customize graphs."))
+                steps = intros$x0
         ))
 
     })
     
-    observeEvent(input$help3, {
+    observeEvent(input$help_x_post, {
         print(input$tabs)
-        req(input$tabs == "Two Datasets")
+        req(input$tabs == "Single Dataset")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-            steps = data.frame(element = c(NA, "#stepc1","#stepc2","#stepc3","#stepc4"),
-                               intro = c("In this view you can make visualizations for two selected datasets.",
-                                         
-                                         "Select two datasets: first one will be X, second one will be Y.",
-                                         
-                                         "Data must have enough shared columns and rows. 
-                                         You can see the amount of shared columns and rows here.",
-                                         
-                                         "Click this button to generate visualizations in the dashboard.",
-                                         
-                                         "Visualizations will be shown in individual panels. 
-                                         Select options from bottom left corner to customize graphs."))
+                                                  steps = intros$x1
         ))
         
     })
     
-    observeEvent(input$help4, {
+    
+    observeEvent(input$help_xy_pre, {
         print(input$tabs)
+        req(input$tabs == "Two Datasets")
+        rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+            steps = intros$xy0
+        ))
+    })
+    
+    observeEvent(input$help_xy_post, {
+        print(input$tabs)
+        req(input$tabs == "Two Datasets")
+        rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                                  steps = intros$xy1
+        ))
+    })
+    
+    
+    observeEvent(input$help_n_pre, {
         req(input$tabs == "Multiple Datasets")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-            steps = data.frame(element = c(NA, "#stepd1","#stepd2","#stepd3","#stepd4"),
-                               intro = c("In this view you can make visualizations for multiple (n>=2) datasets.",
-                                         
-                                         "Select two or more datasets from loaded data.",
-                                         
-                                         "Data must have enough shared columns and rows. 
-                                         You can see that information here.",
-                                         "Click this button to generate visualizations in the dashboard.",
-                                         
-                                         "Visualizations will be shown in individual panels. 
-                                         Select options from bottom left corner to customize graphs."))
-        ))
+                                                  steps = intros$n0)
+        )
+        
+    })
+    
+    observeEvent(input$help_n_post, {
+        req(input$tabs == "Multiple Datasets")
+        rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                                  steps = intros$n1)
+        )
         
     })
     
@@ -879,6 +861,22 @@ server <- function(input, output, session) {
     
     ####----------------------Main Tabs---------------------------####
     
+    output$x_header <- renderUI({
+        req(is.null(rv$mode)==T)
+        fluidRow(
+            column(12, align="right",
+                   div(style="display:inline-block",
+                       
+                       actionBttn(
+                           inputId = "help_x_pre", label=NULL, 
+                           icon = icon("question"), style="material-circle", color="primary"
+                       ),
+                   )
+            )
+        )
+    })
+    
+    
     output$single_panels <- renderUI({
         if(is.null(rv$mode)==T){
             div(
@@ -891,167 +889,209 @@ server <- function(input, output, session) {
         
         else if (rv$mode == "All genes"){
             div(
-                box(
-                    title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = TRUE,
-                    plotlyOutput("p1_fs_volcano",
-                                 width = "100%",height = "400px"),
-                    
-                    div(style = "position: absolute; left: 1em; bottom: 1em",
-                        dropdown(
-                            sliderTextInput("fs_volcano_p",
-                                            label = "Select P threshold:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=0.05, grid=T, force_edges=T),
-                            sliderInput("fs_volcano_Stat",
-                                        label = "Select |Stat| threshold:",
-                                        min=0, max=5, step=0.1, value=0)
-                            
-                            ,
-                            size = "xs",
-                            icon = icon("gear", class = "opt"),
-                            up = TRUE, width=300
-                        )
-                    ),
-                    div(style = "position: absolute; left: 4em; bottom: 1em",
-                        dropdown(
-                            downloadButton("x_vol_dl", "Download plot")
-                            ,
-                            size = "xs",
-                            icon = icon("download", class = "opt"),
-                            up = TRUE
-                        )
+                fluidRow(
+                    column(12, align="right",
+                           div(style="display:inline-block",
+                               
+                               actionBttn(
+                                   inputId = "help_x_post", label=NULL, 
+                                   icon = icon("question"), style="material-circle", color="primary"
+                               ),
+                           )
                     )
                 ),
-                box(
-                    title = span( icon("chart-area"), "Bar"), status = "warning", solidHeader = TRUE, width=6,
-                    
-                    "Bar plot is only available for gene list mode."
-                ),
-                box(
-                    title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE,
-                    dataTableOutput("single_tbl", width = "100%",height="100%"),
-                    
-                    div(style = "position: absolute; left: 1em; bottom: 1em",
-                        dropdown(
-                            sliderTextInput("df_x_p",
-                                            label = "Select P cutoff:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=0.05, grid=T, force_edges=T),
-                            sliderTextInput("df_x_q",
-                                            label = "Select P cutoff:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=1, grid=T, force_edges=T),
-                            sliderInput("df_x_Stat", "Select |Stat| cutoff:", min = 0, max = 5,
-                                        value = 0, step = 0.25)
-                            ,
-                            size = "xs",
-                            icon = icon("cut", class = "opt"),
-                            up = TRUE, width=300
-                        )
-                    ),
-                    div(style = "position: absolute; left: 4em; bottom: 1em;",
-                        dropdown(
-                            downloadButton("downloaddf","Download table"),
-                            downloadButton("downloadrnk","Download RNK")
-                            ,
-                            size = "xs",
-                            icon = icon("download", class = "opt"),
-                            up = TRUE
-                        )
-                    ),
+                fluidRow(
+                    column(6,
+                           box(
+                               title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = TRUE, width=12,
+                               plotlyOutput("p1_fs_volcano",
+                                            width = "100%",height = "400px"),
+                               
+                               div(style = "position: absolute; left: 1em; bottom: 1em",
+                                   dropdown(
+                                       sliderTextInput("fs_volcano_p",
+                                                       label = "Select P threshold:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=0.05, grid=T, force_edges=T),
+                                       sliderInput("fs_volcano_Stat",
+                                                   label = "Select |Stat| threshold:",
+                                                   min=0, max=5, step=0.1, value=0)
+                                       
+                                       ,
+                                       size = "xs",
+                                       icon = icon("gear", class = "opt"),
+                                       up = TRUE, width=300
+                                   )
+                               ),
+                               div(style = "position: absolute; left: 4em; bottom: 1em",
+                                   dropdown(
+                                       downloadButton("x_vol_dl", "Download plot")
+                                       ,
+                                       size = "xs",
+                                       icon = icon("download", class = "opt"),
+                                       up = TRUE
+                                   )
+                               )
+                           ),
+                           
+                           ),
+                    column(6,
+                           box(
+                               title = span( icon("chart-area"), "Bar"), status = "warning", solidHeader = TRUE, width=12,
+                               
+                               "Bar plot is only available for gene list mode."
+                           ),
+                           box(
+                               title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
+                               dataTableOutput("single_tbl", width = "100%",height="100%"),
+                               
+                               div(style = "position: absolute; left: 1em; bottom: 1em",
+                                   dropdown(
+                                       sliderTextInput("df_x_p",
+                                                       label = "Select P cutoff:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=0.05, grid=T, force_edges=T),
+                                       sliderTextInput("df_x_q",
+                                                       label = "Select P cutoff:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=1, grid=T, force_edges=T),
+                                       sliderInput("df_x_Stat", "Select |Stat| cutoff:", min = 0, max = 5,
+                                                   value = 0, step = 0.25)
+                                       ,
+                                       size = "xs",
+                                       icon = icon("cut", class = "opt"),
+                                       up = TRUE, width=300
+                                   )
+                               ),
+                               div(style = "position: absolute; left: 4em; bottom: 1em;",
+                                   dropdown(
+                                       downloadButton("downloaddf","Download table"),
+                                       downloadButton("downloadrnk","Download RNK")
+                                       ,
+                                       size = "xs",
+                                       icon = icon("download", class = "opt"),
+                                       up = TRUE
+                                   )
+                               ),
+                           
+                           
+                           )
+                )
+                
+                
                 )
             )
         }
         else if (rv$mode == "List of genes"){
             div(
-                box(
-                    title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = TRUE,
-                    plotlyOutput("p1_gl_volcano",
-                                 width = "100%",height = "400px"),
-                    
-                    div(style = "position: absolute; left: 1em; bottom: 1em",
-                        dropdown(
-                            sliderTextInput("gl_volcano_p",
-                                            label = "Select P threshold:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=0.05, grid=T, force_edges=T),
-                            sliderInput("gl_volcano_Stat",
-                                        label = "Select |Stat| threshold:",
-                                        min=0, max=5, step=0.1, value=0)
-                            
-                            ,
-                            size = "xs",
-                            icon = icon("gear", class = "opt"),
-                            up = TRUE, width=300
-                        )
+                fluidRow(
+                    column(12, align="right",
+                           div(style="display:inline-block",
+                               
+                               actionBttn(
+                                   inputId = "help_x_post", label=NULL, 
+                                   icon = icon("question"), style="material-circle", color="primary"
+                               ),
+                           )
                     )
                 ),
-                box(
-                    title = span( icon("chart-area"), "Bar"), status = "primary", solidHeader = TRUE,
-                    uiOutput("gl_bar_fig"),
-                    div(style = "position: absolute; left: 1em; bottom: 1em",
-                        dropdown(
-                            radioButtons(
-                                inputId = "p1_bar_data",
-                                label = "Data to plot in bar graph:",
-                                choices = rv$gl_cols, #can select any column except gene name
-                                selected = rv$gl_cols[[1]]
-                            ),
-                            radioButtons(
-                                inputId = "p1_bar_sig",
-                                label = "Color by significance:",
-                                choices = c("PValue","FDR"),
-                                selected = "PValue"
-                            )
-                            
-                            ,
-                            size = "xs",
-                            icon = icon("gear", class = "opt"),
-                            up = TRUE, width=200
-                        )
-                    ),
-                    div(style = "position: absolute; left: 4em; bottom: 1em",
-                        dropdown(
-                            downloadButton("x_bar_dl", "Download plot")
-                            ,
-                            size = "xs",
-                            icon = icon("download", class = "opt"),
-                            up = TRUE
-                        )
-                    )
-                ),
-                box(
-                    title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE,
-                    dataTableOutput("single_gl_tbl", width = "100%",height="100%"),
-                    
-                    div(style = "position: absolute; left: 1em; bottom: 1em",
-                        dropdown(
-                            sliderTextInput("df_gl_p",
-                                            label = "Select P cutoff:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=1, grid=T, force_edges=T),
-                            sliderTextInput("df_gl_q",
-                                            label = "Select P cutoff:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=1, grid=T, force_edges=T),
-                            sliderInput("df_gl_Stat", "Select |Stat| cutoff:", min = 0, max = 5,
-                                        value = 0, step = 0.25)
-                            ,
-                            size = "xs",
-                            icon = icon("cut", class = "opt"),
-                            up = TRUE, width=300
-                        )
-                    ),
-                    div(style = "position: absolute; left: 4em; bottom: 1em;",
-                        dropdown(
-                            downloadButton("downloadgldf","Download table"),
-                            downloadButton("downloadrnk","Download RNK")
-                            ,
-                            size = "xs",
-                            icon = icon("download", class = "opt"),
-                            up = TRUE
-                        )
-                    ),
+                fluidRow(
+                    column(6,
+                           box(
+                               title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = TRUE, width=12,
+                               plotlyOutput("p1_gl_volcano",
+                                            width = "100%",height = "400px"),
+                               
+                               div(style = "position: absolute; left: 1em; bottom: 1em",
+                                   dropdown(
+                                       sliderTextInput("gl_volcano_p",
+                                                       label = "Select P threshold:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=0.05, grid=T, force_edges=T),
+                                       sliderInput("gl_volcano_Stat",
+                                                   label = "Select |Stat| threshold:",
+                                                   min=0, max=5, step=0.1, value=0)
+                                       
+                                       ,
+                                       size = "xs",
+                                       icon = icon("gear", class = "opt"),
+                                       up = TRUE, width=300
+                                   )
+                               )
+                           ),
+                           ),
+                    column(6,
+                           box(
+                               title = span( icon("chart-area"), "Bar"), status = "primary", solidHeader = TRUE, width=12,
+                               uiOutput("gl_bar_fig"),
+                               div(style = "position: absolute; left: 1em; bottom: 1em",
+                                   dropdown(
+                                       radioButtons(
+                                           inputId = "p1_bar_data",
+                                           label = "Data to plot in bar graph:",
+                                           choices = rv$gl_cols, #can select any column except gene name
+                                           selected = rv$gl_cols[[1]]
+                                       ),
+                                       radioButtons(
+                                           inputId = "p1_bar_sig",
+                                           label = "Color by significance:",
+                                           choices = c("PValue","FDR"),
+                                           selected = "PValue"
+                                       )
+                                       
+                                       ,
+                                       size = "xs",
+                                       icon = icon("gear", class = "opt"),
+                                       up = TRUE, width=200
+                                   )
+                               ),
+                               div(style = "position: absolute; left: 4em; bottom: 1em",
+                                   dropdown(
+                                       downloadButton("x_bar_dl", "Download plot")
+                                       ,
+                                       size = "xs",
+                                       icon = icon("download", class = "opt"),
+                                       up = TRUE
+                                   )
+                               )
+                           ),
+                           box(
+                               title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
+                               dataTableOutput("single_gl_tbl", width = "100%",height="100%"),
+                               
+                               div(style = "position: absolute; left: 1em; bottom: 1em",
+                                   dropdown(
+                                       sliderTextInput("df_gl_p",
+                                                       label = "Select P cutoff:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=1, grid=T, force_edges=T),
+                                       sliderTextInput("df_gl_q",
+                                                       label = "Select P cutoff:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=1, grid=T, force_edges=T),
+                                       sliderInput("df_gl_Stat", "Select |Stat| cutoff:", min = 0, max = 5,
+                                                   value = 0, step = 0.25)
+                                       ,
+                                       size = "xs",
+                                       icon = icon("cut", class = "opt"),
+                                       up = TRUE, width=300
+                                   )
+                               ),
+                               div(style = "position: absolute; left: 4em; bottom: 1em;",
+                                   dropdown(
+                                       downloadButton("downloadgldf","Download table"),
+                                       downloadButton("downloadrnk","Download RNK")
+                                       ,
+                                       size = "xs",
+                                       icon = icon("download", class = "opt"),
+                                       up = TRUE
+                                   )
+                               ),
+                           
+                           )
+                )
+                
+                
                 )
             )
         }
@@ -1539,10 +1579,9 @@ server <- function(input, output, session) {
     })
     output$xy_thresh <- renderUI({
         req(rv$xy_colormode =="Two colors")
-        sliderTextInput("xy_thresh",
-                        label = "Select threshold:",
-                        choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                        selected=0.05, grid=T, force_edges=T)
+        
+        numericInput("xy_thresh", 
+                     "Threshold:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")
     })
     
     
@@ -1696,6 +1735,22 @@ server <- function(input, output, session) {
     
     ####----------------------Main Tabs---------------------------####
     
+    output$xy_header <- renderUI({
+        req(is.null(rv$df_xy)==T)
+        fluidRow(
+            column(12, align="right",
+                   div(style="display:inline-block",
+                       
+                       actionBttn(
+                           inputId = "help_xy_pre", label=NULL, 
+                           icon = icon("question"), style="material-circle", color="primary"
+                       ),
+                   )
+            )
+        )
+        
+    })
+    
     
     output$xy_panels <- renderUI({
 
@@ -1707,6 +1762,17 @@ server <- function(input, output, session) {
         }
         else{
         div(
+            fluidRow(
+                column(12, align="right",
+                       div(style="display:inline-block",
+                           
+                           actionBttn(
+                               inputId = "help_xy_post", label=NULL, 
+                               icon = icon("question"), style="material-circle", color="primary"
+                           ),
+                       )
+                )
+            ),
             box(
                 title = span( icon("chart-area"), "Scatter"), status = "primary", solidHeader = TRUE, width=8,
                 
@@ -1715,17 +1781,13 @@ server <- function(input, output, session) {
                 ,
                 div(style = "position: absolute; left: 1em; bottom: 1em",
                     dropdown(
-                        sliderTextInput("xy_sc_p",
-                                        label = "Select P cutoff:",
-                                        choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                        selected=0.25, grid=T, force_edges=T),
-                        sliderTextInput("xy_sc_q",
-                                        label = "Select FDR cutoff:",
-                                        choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                        selected=1, grid=T, force_edges=T),
-                        sliderInput("xy_sc_Stat",
-                                    label = "Select |Stat| cutoff:",
-                                    min=0, max=5, step=0.1, value=0),
+                        numericInput("xy_sc_p", 
+                                     "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),
+                        numericInput("xy_sc_q", 
+                                     "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px"),
+                        numericInput("xy_sc_Stat", 
+                                     "|Stat| filter:", value = 0, min = 0, max = 10, step=0.01, width="100px"),
+
                         radioGroupButtons("xy_sc_logic",
                                           label = "Cutoff mode:",
                                           choices=c("Either", "Both"),
@@ -1733,7 +1795,7 @@ server <- function(input, output, session) {
                         ,
                         size = "xs",
                         icon = icon("cut", class = "opt"),
-                        up = TRUE, width=300
+                        up = TRUE, width=200
                     )
                 ),
                 div(style = "position: absolute; left: 4em; bottom: 1em",
@@ -1748,7 +1810,7 @@ server <- function(input, output, session) {
                         ,
                         size = "xs",
                         icon = icon("gear", class = "opt"),
-                        up = TRUE, width=200
+                        up = TRUE, width=230
                     )
                 ),
                 div(style = "position: absolute; left: 7em; bottom: 1em",
@@ -1906,6 +1968,7 @@ server <- function(input, output, session) {
     observeEvent(input$heatmap_sortby,{rv$heatmap_sortby<-input$heatmap_sortby})
     
     observe({
+        req(is.null(rv$nx_n)==F)
         if(is.null(input$n_basic_cutby)==F){ rv$n_basic_cutby <- input$n_basic_cutby }
         
         if(is.null(input$n_hm_cutmode)==F){ rv$n_hm_cutmode <- input$n_hm_cutmode }
@@ -1937,10 +2000,17 @@ server <- function(input, output, session) {
         if(is.null(input$n_upset_sortby)==F){ rv$n_upset_sortby <- input$n_upset_sortby }
         if(is.null(input$n_upset_showempty)==F){ rv$n_upset_showempty <- input$n_upset_showempty }
         
-        if(is.null(input$subana_mode)==F){ rv$subana_mode <- input$subana_mode }
-        
         if(is.null(input$n_ui_showpanel)==F){ rv$n_ui_showpanel <- input$n_ui_showpanel }
         
+        for (i in 1:length(rv$nx_n)){
+            if(is.null(input[[paste0("nic_p_",i)]])==F){ rv[[paste0("nic_p_",i)]] <- input[[paste0("nic_p_",i)]] }
+            if(is.null(input[[paste0("nic_q_",i)]])==F){ rv[[paste0("nic_q_",i)]] <- input[[paste0("nic_q_",i)]] }
+            if(is.null(input[[paste0("nic_Stat_",i)]])==F){ rv[[paste0("nic_Stat_",i)]] <- input[[paste0("nic_Stat_",i)]] }
+            if(is.null(input[[paste0("nic_sign_",i)]])==F){ rv[[paste0("nic_sign_",i)]] <- input[[paste0("nic_sign_",i)]] }
+            if(is.null(input[[paste0("nic_apply_",i)]])==F){ rv[[paste0("nic_apply_",i)]] <- input[[paste0("nic_apply_",i)]] }
+            if(is.null(input[[paste0("nic_na_",i)]])==F){ rv[[paste0("nic_na_",i)]] <- input[[paste0("nic_na_",i)]] }
+        }
+
         # if(is.null(input$n_igl)==F){ rv$n_igl <- input$n_igl }
     })
     
@@ -2049,9 +2119,16 @@ server <- function(input, output, session) {
             rv$n_upset_sortby <- "freq"
             rv$n_upset_showempty <- FALSE
             
+            # initialize filters
+            for (i in 1:length(rv$nx_n)){
+                rv[[paste0("nic_p_",i)]] <- 0.05
+                rv[[paste0("nic_q_",i)]] <- 1
+                rv[[paste0("nic_Stat_",i)]] <- 0
+                rv[[paste0("nic_sign_",i)]] <- "All"
+                rv[[paste0("nic_apply_",i)]] <- T
+                rv[[paste0("nic_na_",i)]] <- T
+            }
             
-            updateSwitchInput(session, "subana_mode", value = F)
-            rv$subana_mode <- F
             
             
             if (length(rv$nx_i) <= 5){rv$n_venn_status <- "ok"}
@@ -2168,7 +2245,21 @@ server <- function(input, output, session) {
     ####----------------------Main Tabs---------------------------####
     
     
-    
+    output$n_header <- renderUI({
+        req(is.null(rv$df_n)==T)
+        fluidRow(
+            column(12, align="right",
+                   div(style="display:inline-block",
+                       
+                       actionBttn(
+                           inputId = "help_n_pre", label=NULL, 
+                           icon = icon("question"), style="material-circle", color="primary"
+                       ),
+                   )
+            )
+        )
+        
+    })
     
     
     
@@ -2181,27 +2272,50 @@ server <- function(input, output, session) {
         }
         else{
         div(
-            box(
-                width = 12, status = "primary",solidHeader = F, collapsible=T,
-                title = span(icon("gear"),"Customize Filters"),
-                uiOutput("ui_n_gls_opt"),
-                
+            fluidRow(
+                column(6,
+                       radioGroupButtons("n_ui_showpanel",
+                                         choices=c("Main", "Intersection", "Correlation"),
+                                         selected="Main", status="primary",
+                                         checkIcon = list(
+                                             yes = tags$i(class = "fa fa-check-square", 
+                                                          style = "color: white"),
+                                             no = tags$i(class = "fa fa-square-o", 
+                                                         style = "color: white"))
+                       ),
+                ),
+                column(6, align = "right",
+                       div(style="display:inline-block",
+                           dropdown(
+                               
+                               tags$h3("Customize Filters"),
+                               
+                               uiOutput("ui_n_gls_opt"),
+                               
+                               style = "material-circle", icon = icon("gear"),
+                               status = "primary", width = "900px",
+                               right=T,
+                               animate = animateOptions(
+                                   enter = "slideInRight",
+                                   exit = "fadeOutRight", duration = 0.5
+                               ),
+                           ),
+                       ),
+                       div(style="display:inline-block",
+                        
+                           actionBttn(
+                               inputId = "help_n_post", label=NULL, 
+                               icon = icon("question"), style="material-circle", color="primary"
+                           ),
+                           )
+                       
+                       )
             ),
             
-            column(12,
-                   radioGroupButtons("n_ui_showpanel",
-                                     choices=c("Main", "Intersection"),
-                                     selected="Main", status="primary",
-                                     checkIcon = list(
-                                         yes = tags$i(class = "fa fa-check-square", 
-                                                      style = "color: white"),
-                                         no = tags$i(class = "fa fa-square-o", 
-                                                     style = "color: white"))
-                   ),
-            ),
             
             uiOutput("n_ui_basic"),
-            uiOutput("n_ui_intersect")
+            uiOutput("n_ui_intersect"),
+            uiOutput("n_ui_correlation")
 
             
         )   
@@ -2215,80 +2329,6 @@ server <- function(input, output, session) {
         req(rv$n_ui_showpanel == "Main")
         div(
             
-            # box(
-            #     width = 12, status = "primary",solidHeader = F, collapsible = TRUE,
-            #     title = span(icon("gear"),"Customize filters"),
-            #     column(3,
-            #            # radioGroupButtons("n_tbl_cutmode",
-            #            #                   label="Cutoff by dataset(s):",
-            #            #                   choices=c("All", "Single"), 
-            #            #                   selected = "All", size="s", justified = TRUE
-            #            #                   ),
-            #            checkboxGroupInput(
-            #                inputId = "n_basic_cutby",
-            #                label= "Apply cutoffs to dataset(s):",
-            #                choices = rv$nx_n,
-            #                selected = rv$nx_n
-            #            ),
-            #            materialSwitch(
-            #                inputId = "n_tbl_showna", label = "Tolerate NAs in selected?", status="primary",
-            #                value = T
-            #            ),
-            #            
-            #            # shiny::HTML("<span style='color: gray'>(only applies to selected columns)</span>")
-            #     ),
-            #     column(6,
-            #            column(6,
-            #                   # sliderTextInput("n_p",
-            #                   #                 label = "Select P cutoff:",
-            #                   #                 choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-            #                   #                 selected=1, grid=T, force_edges=T),
-            #                   # sliderTextInput("n_Stat",
-            #                   #                 label = "Select |Stat| cutoff:",
-            #                   #                 choices= rv$n_stat_scale,
-            #                   #                 selected=rv$n_stat_scale[[1]], grid=T, force_edges=T)
-            #                   numericInput(
-            #                       inputId = "n_p",
-            #                       label = "P cutoff:",
-            #                       value = 1, step=0.01)
-            #                   ,
-            #                   numericInput(
-            #                       inputId = "n_Stat",
-            #                       label = "|Stat| cutoff:",
-            #                       value = 0, step=0.1)
-            #            ),
-            #            column(6,
-            #                   # sliderTextInput("n_q",
-            #                   #                 label = "Select FDR cutoff:",
-            #                   #                 choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-            #                   #                 selected=1, grid=T, force_edges=T),
-            #                   numericInput(
-            #                       inputId = "n_q",
-            #                       label = "FDR cutoff:",
-            #                       value = 1, step=0.01)
-            #                   ,
-            #                   
-            #                   radioGroupButtons("n_sign",
-            #                                     label = "Filter Stat by:",
-            #                                     choices=c("All", "Positive", "Negative"),
-            #                                     selected="All",size="s")
-            #            )
-            #            
-            #            
-            #     ),
-            #     column(3,
-            #            
-            #            textAreaInput("n_igl", "View list of terms:", "", placeholder="Gene1\nGene2"),
-            #            uiOutput("n_igl_nm"),
-            #            actionButton("n_igl_update", "Update view"),
-            #            actionButton("n_igl_reset", "Reset"),
-            #            
-            #     ),
-            #     
-            #     
-            #     
-            #     
-            # ),
             
             #----------------- heatmap --------------------
             box(
@@ -2414,18 +2454,7 @@ server <- function(input, output, session) {
         
         
         div(
-            
-            # fluidRow(
-            #     # column(12,
-            #     #        h3("Intersection analysis"),
-            #     #        tags$hr(style="border-color: grey;")
-            #     # )
-            #     
-            #     
-            # ),
-            
-            
-            
+
             
             #----------------- venn --------------------
             
@@ -2601,9 +2630,35 @@ server <- function(input, output, session) {
     })
     
     
+    
+    output$n_ui_correlation <- renderUI({
+        req(rv$n_ui_showpanel == "Correlation")
+        div(
+            
+            
+           box(title = span( icon("chart-area"), "Correlation Heatmap"), status = "primary", solidHeader = TRUE, width=12,
+               "Correlation heatmap here"
+               
+               )
+                   
+            
+            
+            
+        )
+    })
+    
+    
 
     
     ####================= MULTIPLE VISUALIZATIONS =====================####
+    
+    
+    ####-------------------- Correlation ------------------------####
+    
+    
+    
+    
+    
     
     
     ####-------------------- Intersect options ------------------------####
@@ -2646,22 +2701,22 @@ server <- function(input, output, session) {
         req(nrow(rv$df_n)>0)
         
         rv$global_nic[[1]] <- div(style="display: inline-block;vertical-align:top; width: 280px",
-                           box(title = NULL, status="primary", solidHeader = TRUE, width=12, height="320px",
+                           box(title = NULL, status="primary", solidHeader = TRUE, width=12, height="320px", align = "left",
                                strong("Global settings"),
                                # tags$hr(style="border-color: grey;"),
                                fluidRow(
-                                   column(6,
+                                   column(6, align = "left",
                                           numericInput("nic_p", 
                                                        "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
-                                   column(6,
+                                   column(6, align = "left",
                                           numericInput("nic_Stat", 
                                                        "|Stat| filter:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
                                ),
                                fluidRow(
-                                   column(6,
+                                   column(6, align = "left",
                                           numericInput("nic_q", 
                                                        "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
-                                   column(6,
+                                   column(6, align = "left",
                                           radioGroupButtons("nic_sign", 
                                                             label = "Filter by sign:",
                                                             choices=c("All"="All", "+"="Positive", "-"="Negative"),
@@ -2670,12 +2725,12 @@ server <- function(input, output, session) {
                                    
                                ),
                                fluidRow(
-                                   column(4,offset=1,
+                                   column(4,offset=1, align = "left",
                                           checkboxInput(
                                               inputId= "nic_apply",
                                               label = "Apply",
                                               value = T)),
-                                   column(7,
+                                   column(7, align = "left",
                                           checkboxInput(
                                               inputId= "nic_na",
                                               label = "Show NAs",
@@ -2690,22 +2745,22 @@ server <- function(input, output, session) {
         )
         for (i in 1:length(rv$nx_n)){
             rv$nic[[i]] <- div(style="display: inline-block;vertical-align:top; width: 280px;",
-                             wellPanel(
+                             wellPanel( align = "left",
                                  rv$nx_n[[i]], 
                                  tags$hr(style="border-color: grey;"),
                                  fluidRow(
-                                     column(6,
+                                     column(6, align = "left",
                                         numericInput(inputId = paste0("nic_p_",i), 
                                                      "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
-                                 column(6,
+                                 column(6, align = "left",
                                         numericInput(paste0("nic_Stat_",i), 
                                                      "|Stat| filter:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
                                  ),
                                  fluidRow(
-                                     column(6,
+                                     column(6, align = "left",
                                         numericInput(inputId = paste0("nic_q_",i), 
                                                      "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
-                                 column(6,
+                                 column(6, align = "left",
                                         radioGroupButtons(inputId = paste0("nic_sign_",i), 
                                                           label = "Filter by sign:",
                                                           choices=c("All"="All", "+"="Positive", "-"="Negative"),
@@ -2714,12 +2769,12 @@ server <- function(input, output, session) {
                                  
                                  ),
                                  fluidRow(
-                                     column(4,offset=1,
+                                     column(4,offset=1, align = "left",
                                             checkboxInput(
                                                 inputId= paste0("nic_apply_",i),
                                                 label = "Apply",
                                                 value = T)),
-                                     column(7,
+                                     column(7, align = "left",
                                             checkboxInput(
                                                 inputId= paste0("nic_na_",i),
                                                 label = "Show NAs",
@@ -2796,17 +2851,17 @@ server <- function(input, output, session) {
         
         # using advanced settings
         for (i in 1:length(rv$nx_n)){
-            req(input[[paste0("nic_p_",i)]])
-            req(input[[paste0("nic_q_",i)]])
-            req(input[[paste0("nic_Stat_",i)]])
-            req(input[[paste0("nic_sign_",i)]])
+            req(rv[[paste0("nic_p_",i)]])
+            req(rv[[paste0("nic_q_",i)]])
+            req(rv[[paste0("nic_Stat_",i)]])
+            req(rv[[paste0("nic_sign_",i)]])
             
             n <- rv$nx_n[[i]]
             ss <- df
-            ss <- ss[ss[[paste0("PValue","_", n)]]<=input[[paste0("nic_p_",i)]], ] # filter by p
-            ss <- ss[ss[[paste0("FDR","_", n)]]<=input[[paste0("nic_q_",i)]], ] # filter by q
-            ss <- ss[abs(ss[[paste0("Stat","_", n)]])>=input[[paste0("nic_Stat_",i)]], ] # filter by stat
-            ss <- filter_by_sign(ss, paste0("Stat","_", n), input[[paste0("nic_sign_",i)]], tolerate=T) # filter by stat sign
+            ss <- ss[ss[[paste0("PValue","_", n)]]<=rv[[paste0("nic_p_",i)]], ] # filter by p
+            ss <- ss[ss[[paste0("FDR","_", n)]]<=rv[[paste0("nic_q_",i)]], ] # filter by q
+            ss <- ss[abs(ss[[paste0("Stat","_", n)]])>=rv[[paste0("nic_Stat_",i)]], ] # filter by stat
+            ss <- filter_by_sign(ss, paste0("Stat","_", n), rv[[paste0("nic_sign_",i)]], tolerate=T) # filter by stat sign
 
             gl <- as.character(na.omit(ss$Name)) # format
             gls[[n]] <- gl # write into list as named vector
@@ -3225,16 +3280,16 @@ server <- function(input, output, session) {
         
         # using advanced settings
         for (i in 1:length(rv$nx_n)){
-            req(input[[paste0("nic_p_",i)]])
-            req(input[[paste0("nic_q_",i)]])
-            req(input[[paste0("nic_Stat_",i)]])
-            req(input[[paste0("nic_sign_",i)]])
-            req(is.null(input[[paste0("nic_na_",i)]])==F)
-            req(is.null(input[[paste0("nic_apply_",i)]])==F)
+            req(rv[[paste0("nic_p_",i)]])
+            req(rv[[paste0("nic_q_",i)]])
+            req(rv[[paste0("nic_Stat_",i)]])
+            req(rv[[paste0("nic_sign_",i)]])
+            req(is.null(rv[[paste0("nic_na_",i)]])==F)
+            req(is.null(rv[[paste0("nic_apply_",i)]])==F)
             
             
-            tol = input[[paste0("nic_na_",i)]]
-            apply = input[[paste0("nic_apply_",i)]]
+            tol = rv[[paste0("nic_na_",i)]]
+            apply = rv[[paste0("nic_apply_",i)]]
             
             if (apply==T){
                 # get the col names
@@ -3245,13 +3300,13 @@ server <- function(input, output, session) {
                 
                 # filter by sign
                 df <- filter_by_sign(df, statn, 
-                                     input[[paste0("nic_sign_",i)]], 
+                                     rv[[paste0("nic_sign_",i)]], 
                                      tolerate=tol)
                 # filter by cutoffs
                 df <- apply_single_cutoff(df, n, 
-                                          input[[paste0("nic_p_",i)]],
-                                          input[[paste0("nic_q_",i)]], 
-                                          input[[paste0("nic_Stat_",i)]], 
+                                          rv[[paste0("nic_p_",i)]],
+                                          rv[[paste0("nic_q_",i)]], 
+                                          rv[[paste0("nic_Stat_",i)]], 
                                           tolerate=tol)
                 
             }

@@ -18,13 +18,19 @@ body1 <- dashboardBody(
         #### Organize files body----------------------------------------
         
         tabItem(tabName = "sb_organize",
-                h2("Organize Files"),
-                tags$hr(style="border-color: grey;"),
-                # verbatimTextOutput("debug0"),
-                
-                div(style = "position:absolute;right:1em;top:1em", 
-                    actionButton("help", "Help"),
+
+                fluidRow(
+                    column(12, align="right",
+                           div(style="display:inline-block",
+
+                               actionBttn(
+                                   inputId = "help_organize", label=NULL,
+                                   icon = icon("question"), style="material-circle", color="primary"
+                               ),
+                           )
+                    ),
                 ),
+                
                 
                 
                 fluidRow(
@@ -90,16 +96,16 @@ body1 <- dashboardBody(
                         )
                     ),
 
-                    column(width = 6,
+                    column(6,
                            
-                    box(width=12,
-                        title = span( icon("tasks"), "Manage Datasets"), status = "primary", solidHeader = TRUE,
-                        id = "tab2",
-                        tabPanel("Loaded files", 
-                                 div(id="step2", uiOutput("delete_deg")),
-                                 uiOutput("delete_deg_confirm"),
-                                 )
-                    )
+                        box(width=12,
+                            title = span( icon("tasks"), "Manage Datasets"), status = "primary", solidHeader = TRUE,
+                            id = "tab2",
+                            tabPanel("Loaded files", 
+                                     div(id="step2", uiOutput("delete_deg")),
+                                     uiOutput("delete_deg_confirm"),
+                                     )
+                        )
                     )
                     
                 )
@@ -205,13 +211,8 @@ sidebar2 <- dashboardSidebar(
     )
 )
 body2 <- dashboardBody(
-    h2("Single dataset"),
-    tags$hr(style="border-color: grey;"),
-    verbatimTextOutput("odataset"),
-    
-    div(style = "position:absolute;right:1em;top:1em", 
-        actionButton("help2", "Help"),
-    ),
+    # verbatimTextOutput("odataset"),
+
     
     fluidRow(
         div(
@@ -220,6 +221,7 @@ body2 <- dashboardBody(
                 width = 12,
                 
                 div(id="stepb4",style="height:400px",
+                    uiOutput("x_header"),
                     uiOutput("single_panels")
                 )
 
@@ -247,12 +249,7 @@ sidebar3 <- dashboardSidebar(
     )
 )
 body3 <- dashboardBody(
-    h2("Two datasets"),
-    tags$hr(style="border-color: grey;"),
     
-    div(style = "position:absolute;right:1em;top:1em", 
-        actionButton("help3", "Help"),
-    ),
     
     # verbatimTextOutput("debugxy"),
     
@@ -263,6 +260,7 @@ body3 <- dashboardBody(
                 width = 12,
                 
                 div(id="stepc4", style="height:400px",
+                    uiOutput("xy_header"),
                     uiOutput("xy_panels")
                     )
                 
@@ -277,8 +275,6 @@ sidebar4 <- dashboardSidebar(
     sidebarMenu(id="n_sb",
                 div(id="stepd1", uiOutput("select_df_p2")),
                 div(id="stepd2", style="height:60px",
-                    # textOutput("n_shared_cols"),
-                    # textOutput("n_shared_rows")
                     uiOutput("n_shared")
                     ),
                 
@@ -291,14 +287,6 @@ sidebar4 <- dashboardSidebar(
     )
 )
 body4 <- dashboardBody(
-    h2("Multiple datasets"),
-    tags$hr(style="border-color: grey;"),
-    
-    div(style = "position:absolute;right:1em;top:1em", 
-        actionButton("help4", "Help"),
-    ),
-    
-    # verbatimTextOutput("debug2"),
     
     fluidRow(
         div(
@@ -306,6 +294,7 @@ body4 <- dashboardBody(
             column(
                 width = 12,
                 div(id="stepd4", style="height:400px",
+                    uiOutput("n_header"),
                     uiOutput("n_panels")
                     )
                 

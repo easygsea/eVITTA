@@ -183,9 +183,9 @@ q_alias <- c("(?i)qv(?-i)al.*","(?i)q(?-i).(?i)v(?-i)al.*",
 
 # list filenames
 ll <- c("Sample_Hibshman_lite.csv"
-        # , "up_hif-1hypoxia_vs_normoxia.csv", "up_N2hypoxia_vs_normoxia.csv", "up_nhr-49hypoxia_vs_normoxia.csv"
-        # , "t_efk1starved_vs_fed_vsN2_KEGG.csv", "t_N2starved_vs_fed_KEGG.csv"
-        # , "z_efk1starved_vs_fed.csv", "z_N2starved_vs_fed.csv","z_zip2starved_vs_fed.csv"
+        , "up_hif-1hypoxia_vs_normoxia.csv", "up_N2hypoxia_vs_normoxia.csv", "up_nhr-49hypoxia_vs_normoxia.csv"
+        , "t_efk1starved_vs_fed_vsN2_KEGG.csv", "t_N2starved_vs_fed_KEGG.csv"
+        , "z_efk1starved_vs_fed.csv", "z_N2starved_vs_fed.csv","z_zip2starved_vs_fed.csv"
         )
 # list paths
 pl <- paste0(getwd(),"/inc/", ll, sep = '')
@@ -199,11 +199,24 @@ ll <- lapply(ll, tidy_filename, list())
 
 
 tt <- list("logFC"
-           # , "logFC", "logFC", "logFC"
-           # , "ES", "ES"
-           # , "logFC", "logFC"
+           , "logFC", "logFC", "logFC"
+           , "ES", "ES"
+           , "logFC", "logFC"
            )
 
+
+# --------------- Initialize introjs -------------------
+intropath <- paste0(getwd(), "/intro/")
+filepaths <- list.files(intropath, full.names=T)
+intros <- lapply(filepaths, function(x){
+  df <- data.frame(read.csv(x, header=T, sep="\t"))
+  df$element <- sub("^", "#", df$element)
+  df[df=="#"] <- NA
+  df
+})
+names(intros) <- tools::file_path_sans_ext(list.files(intropath, full.names=F))
+rownames(intros) <- NULL
+intros
 
 
 # ===================================================== global.R END ============

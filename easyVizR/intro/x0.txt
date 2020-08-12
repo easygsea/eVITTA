@@ -1,0 +1,6 @@
+element	intro
+	In this view you can make visualizations for a single dataset.
+stepb1	Select a dataset from loaded data.
+stepb2	"Here you can choose to view full dataset, or only a user-specified list."
+stepb3	Click this button to generate visualizations in the dashboard.
+stepb4	Visualizations will be shown in individual panels. Select options from bottom left corner to customize graphs.
