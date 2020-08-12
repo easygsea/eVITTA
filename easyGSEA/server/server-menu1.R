@@ -409,7 +409,7 @@
                           "):"
                           ),
                 placeholder = "Paste your genes here ...",
-                height = 120
+                height = 110
             ),
             fluidRow(
                 column(
@@ -578,16 +578,17 @@
         
       }
       
-      
+      fluidRow(
         box(
             width = 12,
-            shiny::HTML("<p style='font-style:italic'>Run parameters</p>"), #&nbsp&nbsp&nbsp&nbsp&nbsp
+            shiny::HTML("<p style='font-style:italic'>Run parameters</p>"),
             splitLayout(
                 numericInput("mymin", "Min:",15),
-                numericInput("mymax", "Max:",500),
+                numericInput("mymax", "Max:",200),
                 uiOutput("ui_nperm")
             )
         )
+      )
     })
 
     output$ui_nperm <- renderUI({

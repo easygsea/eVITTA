@@ -2,7 +2,7 @@
 # feedback run mode
 output$feedback_runmode <- renderUI({
     HTML(
-        "Mode of analysis:&nbsp<b>",
+        "Mode of analysis:</br><b>",
         species_translate(input$selected_mode,run_modes),
         "</b><br/><br/>"
     )
@@ -289,9 +289,9 @@ output$run_summary_gsea <- renderUI({
     if(rv$run == "success"){
         if(rv$run_mode == "gsea"){
             fluidRow(
-                # box(
-                #     # style="text-align:center",
-                #     width = 12, status = "warning",
+                box(
+                    # style="text-align:center",
+                    width = 12, status = "warning",
                     # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
                     h5(tags$b("Summary Report")),
                     # br(),
@@ -307,13 +307,13 @@ output$run_summary_gsea <- renderUI({
                     ),
                     br(),
                     HTML("Navigate to <b>Enrichment Results</b> for details.")
-                # )
+                )
             )
         }else if(rv$run_mode == "glist"){
             fluidRow(
-                # box(
-                #     # style="text-align:center",
-                #     width = 12, status = "warning",
+                wellPanel(
+                    # style="text-align:center",
+                    # width = 12, status = "warning",
                     # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
                     h5(tags$b("Summary Report")),
                     # br(),
@@ -328,7 +328,7 @@ output$run_summary_gsea <- renderUI({
                     ),
                     br(),
                     HTML("Navigate to <b>Enrichment Results</b> for details.")
-                # )
+                )
             )
         }
     }else if(rv$run == "failed"){
@@ -366,18 +366,19 @@ output$run_summary_gsea <- renderUI({
     
 # UI summary ----------------
     output$summary_box <- renderUI({
-        req(input$summary_type=="summary"||is.null(rv$run)||rv$run != "success")
+        # req(input$summary_type=="summary"||is.null(rv$run)||rv$run != "success")
         # req(input$plot_type!="bar");req(input$plot_type!="bubble");req(input$plot_type!="volcano");
-        req(input$summary_type!="id")
-        div(
-            style = "position: relative",
-            box(
-                # title = "Welcome to easyGSEA",solidHeader=T,
-                width = 12,align = "left", #height = "670px",
-                status = "primary", 
+        # req(input$summary_type!="id")
+        fluidPage(
+            # style = "position: relative",
+            fluidRow(
+                # # title = "Welcome to easyGSEA",solidHeader=T,
+                # width = 12,align = "left", #height = "670px",
+                # status = "primary", 
                 column(
                     width = 6,
-                    h5("Hello!"),
+                    # h5("Hello!"),
+                    br(),
                     uiOutput("feedback_runmode"),
                     uiOutput("feedback_species"),
                     # uiOutput("feedback_dbs"),
@@ -395,6 +396,7 @@ output$run_summary_gsea <- renderUI({
                 ),
                 column(
                     width = 6, #offset = 1,
+                    br(),
                     uiOutput("run_summary_gsea")
                 )
             )
@@ -404,10 +406,10 @@ output$run_summary_gsea <- renderUI({
 
 # --------- UI ID conversion ----------
 output$id_box <- renderUI({
-    req(input$summary_type=="id")
-    div(
-        style = "position: relative",
-        box(
+    # req(input$summary_type=="id")
+    fluidPage(
+        # style = "position: relative",
+        fluidRow(
             width = 12,align = "left",#height = "670px",
             status = "primary",
             fluidRow(

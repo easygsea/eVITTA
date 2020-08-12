@@ -5,7 +5,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
             width = 4,
             # fluidRow(
                 box(
-                    title = "Welcome to easyGSEA", solidHeader = T,
+                    title = "RUN Analysis", solidHeader = T,
                     width = 12,align = "left",
                     status = "primary",
                     
@@ -57,9 +57,9 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     uiOutput("ui_glist"),
                     
                     
-                    br(),
+                    # br(),
                     uiOutput("ui_gsea_par"),
-                    br(),
+                    # br(),
                     fluidRow(
                         column(
                             width = 4, offset = 6,
@@ -72,17 +72,28 @@ bodyGSEA <- tabItem(tabName = "gsea",
         ),
         column(
             width = 8,
-            fluidRow(
-                column(
-                    width = 8,
-                    uiOutput("radio_buttons")
+            tabBox(
+                title = "Welcome to easyGSEA", width = 12, 
+                tabPanel(
+                    "Summary",
+                    uiOutput("summary_box")
+                ),
+                tabPanel(
+                    "ID conversion",
+                    uiOutput("id_box")
                 )
-                
-            ),
-            fluidRow(
-                uiOutput("summary_box"),
-                uiOutput("id_box")
             )
+            # fluidRow(
+            #     column(
+            #         width = 8,
+            #         uiOutput("radio_buttons")
+            #     )
+            #     
+            # ),
+            # fluidRow(
+            #     uiOutput("summary_box"),
+            #     uiOutput("id_box")
+            # )
             
         )
     )

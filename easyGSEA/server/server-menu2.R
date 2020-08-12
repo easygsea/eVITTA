@@ -1639,20 +1639,24 @@ observeEvent(input$confirm_kegg_plot,{
 # UI manhattan tables & words ---------------
     output$ui_manhattan_table <- renderUI({
         fluidRow(
-            box(
-                width = 12, status = "primary",title = "Significant regulations",solidHeader = T,
-                uiOutput("ui_gsea_toggle"),
-                br(),
-                fluidRow(
-                    column(
-                        width = 6,
-                        uiOutput("ui_tables")
-                    ),
-                    column(
-                        width = 6,
-                        uiOutput("plot_words")
+            tabBox(
+                width = 12, title = "Significant Enrichment",
+                tabPanel(
+                    "Table summary",
+                    uiOutput("ui_gsea_toggle"),
+                    br(),
+                    fluidRow(
+                        column(
+                            width = 6,
+                            uiOutput("ui_tables")
+                        ),
+                        column(
+                            width = 6,
+                            uiOutput("plot_words")
+                        )
                     )
                 )
+                
             )
         )
     })
@@ -1697,29 +1701,7 @@ observeEvent(input$confirm_kegg_plot,{
         req(input$plot_type=="manhattan")
         req(input$p_or_q_manhattan)
         
-        # retrieve data
-        df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
-        pq = input$p_or_q_manhattan
-        cutoff = input$cutoff_manhattan
-        
-        # filter by cutoff
-        df = df %>% dplyr::filter(df[[pq]]<cutoff)
-        
-        # if gsea, further filter by direction of change
-        if(rv$run_mode == "gsea"){
-            # up or down
-            direction <- input$tables_switch
-            req(is.null(direction)==F)
-            
-            # determine if values above threshold
-            if(direction == TRUE){
-                df = df %>% dplyr::filter(ES>0)
-                direction_label = "up"
-            }else{
-                df = df %>% dplyr::filter(ES<0)
-                direction_label = "down"
-            }
-        }
+        df = filter_df_mh()
 
         if(nrow(df)<1){
             output$ui_tables <- renderUI({
@@ -1878,3 +1860,33 @@ observeEvent(input$confirm_kegg_plot,{
             
         }
     })
+    
+    # ------------- 00 FUNCTIONS: text mining -------------
+    
+    filter_df_mh <- function(){
+        # retrieve data
+        df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
+        pq = input$p_or_q_manhattan
+        cutoff = input$cutoff_manhattan
+        
+        # filter by cutoff
+        df = df %>% dplyr::filter(df[[pq]]<cutoff)
+        
+        # if gsea, further filter by direction of change
+        if(rv$run_mode == "gsea"){
+            # up or down
+            direction <- input$tables_switch
+            req(is.null(direction)==F)
+            
+            # determine if values above threshold
+            if(direction == TRUE){
+                df = df %>% dplyr::filter(ES>0)
+                direction_label = "up"
+            }else{
+                df = df %>% dplyr::filter(ES<0)
+                direction_label = "down"
+            }
+        }
+        
+        return(df)
+    }

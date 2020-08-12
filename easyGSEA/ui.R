@@ -43,17 +43,17 @@ shinyUI(
                 bodyNetwork,
                 bodyDownload,
                 bodyHelp
-            ),
-            tags$footer(HTML("<b>Taubert Lab</b> | BC Children's Hospital Research Institute | Centre for Molecular Medicine and Therapeutics | University of British Columbia. 2019-2020. All Rights Reserved."),
-                        align = "left", style = "
-              position:absolute;
-              bottom:0;
-              width:100%;
-              height:30px;
-              color: white;
-              padding: 5px;
-              background-color: #3179ae;
-              z-index: 1000;")
+            )
+            # tags$footer(HTML("<b>Taubert Lab</b> | BC Children's Hospital Research Institute | Centre for Molecular Medicine and Therapeutics | University of British Columbia. 2019-2020. All Rights Reserved."),
+            #             align = "left", style = "
+            #   position:absolute;
+            #   bottom:0;
+            #   width:100%;
+            #   height:30px;
+            #   color: white;
+            #   padding: 5px;
+            #   background-color: #3179ae;
+            #   z-index: 1000;")
             
         )
         
