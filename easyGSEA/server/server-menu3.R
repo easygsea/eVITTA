@@ -12,16 +12,7 @@ output$vis_error <- renderUI({
 output$vis_network <- renderVisNetwork({
     req(is.null(rv$fgseagg)==F)
     # N = 10
-    withProgress(message = 'Generating plots ...', {
-        # for(i in 1:N){
-            
-            # Long Running Task
-            Sys.sleep(.1)
-        incProgress(1)
-            
-            # Update progress
-            # incProgress(1/N)
-        # }
+    withProgress(message = 'Generating plots ...',value = 1, {
         rv$vis = vis()
         return(rv$vis)
     })

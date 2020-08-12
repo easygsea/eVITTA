@@ -138,9 +138,7 @@ output$plot_manhattan <- renderPlotly({
     req(rv$run == "success")
     req(input$plot_type=="manhattan")
     
-    withProgress(message = "Updating Manhattan plot ...",{
-        Sys.sleep(.01)
-        incProgress(1)
+    withProgress(message = "Updating Manhattan plot ...",value = 1,{
         p_man()
     })
 
@@ -290,9 +288,7 @@ output$p1_fs_volcano <- renderPlotly({
     req(rv$run_mode == "gsea")
     req(is.null(rv$volcano_pathway)==F)
 
-    withProgress(message = "Updating continuous volcano plot ...",{
-        Sys.sleep(.1)
-        incProgress(1)
+    withProgress(message = "Updating continuous volcano plot ...",value = 1,{
         rv$p_volcano = volcano_plot()
         return(rv$p_volcano)
     })
@@ -308,9 +304,7 @@ output$p2_fs_volcano <- renderPlotly({
     req(is.null(rv$volcano_pathway)==F)
     
     
-    withProgress(message = "Updating discrete volcano plot ...",{
-        Sys.sleep(.1)
-        incProgress(1)
+    withProgress(message = "Updating discrete volcano plot ...",value = 1,{
         rv$p_volcano = volcano_plot2()
         return(rv$p_volcano)
     })
@@ -326,9 +320,7 @@ output$p3_fs_volcano <- renderPlot({
     req(is.null(rv$volcano_pathway)==F)
     
     
-    withProgress(message = "Updating labelled volcano plot ...",{
-        Sys.sleep(.1)
-        incProgress(1)
+    withProgress(message = "Updating labelled volcano plot ...",value = 1,{
         rv$p_volcano = volcano_plot3()
         return(rv$p_volcano)
     })
@@ -1278,11 +1270,7 @@ observeEvent(input$confirm_kegg_plot,{
         
         if(is.null(rv$kegg_status) == T){
             N = 10
-            withProgress(message = paste0("Generating KEGG native view for ",rv$es_term,"..."),{
-                for(i in 1:N){
-                    Sys.sleep(.1)
-                    incProgress(1/N)
-                }
+            withProgress(message = paste0("Generating KEGG native view for ",rv$es_term,"..."),value = 1,{
                 # read in ranks
                 if(rv$run_mode == "gsea"){
                     ranks = rv$rnkgg
@@ -1369,11 +1357,8 @@ observeEvent(input$confirm_kegg_plot,{
         
         if(is.null(rv$kegg_status_g)==T){
             N = 10
-            withProgress(message = paste0("Generating KEGG graphviz view for ",rv$es_term,"..."),{
-                for(i in 1:N){
-                    Sys.sleep(.1)
-                    incProgress(1/N)
-                }
+            withProgress(message = paste0("Generating KEGG graphviz view for ",rv$es_term,"..."),value = 1,{
+                
                 # read in ranks
                 if(rv$run_mode == "gsea"){
                     ranks = rv$rnkgg
@@ -1654,20 +1639,24 @@ observeEvent(input$confirm_kegg_plot,{
 # UI manhattan tables & words ---------------
     output$ui_manhattan_table <- renderUI({
         fluidRow(
-            box(
-                width = 12, status = "primary",title = "Significant regulations",solidHeader = T,
-                uiOutput("ui_gsea_toggle"),
-                br(),
-                fluidRow(
-                    column(
-                        width = 6,
-                        uiOutput("ui_tables")
-                    ),
-                    column(
-                        width = 6,
-                        uiOutput("plot_words")
+            tabBox(
+                width = 12, title = "Significant Enrichment",
+                tabPanel(
+                    "Table summary",
+                    uiOutput("ui_gsea_toggle"),
+                    br(),
+                    fluidRow(
+                        column(
+                            width = 6,
+                            uiOutput("ui_tables")
+                        ),
+                        column(
+                            width = 6,
+                            uiOutput("plot_words")
+                        )
                     )
                 )
+                
             )
         )
     })
@@ -1686,15 +1675,21 @@ observeEvent(input$confirm_kegg_plot,{
             ),
             column(
                 width = 10,
-                switchInput(
-                    inputId = "tables_switch",
-                    value = FALSE,
-                    onLabel = "Up",
-                    offLabel = "Down",
-                    onStatus = "danger",
-                    offStatus = "primary",
-                    width = "100%"
+                radioGroupButtons(
+                    "tables_switch",
+                    NULL,
+                    choices = list("Up"=TRUE,"Down"=FALSE),
+                    selected = FALSE
                 )
+                # switchInput(
+                #     inputId = "tables_switch",
+                #     value = FALSE,
+                #     onLabel = "Up",
+                #     offLabel = "Down",
+                #     onStatus = "danger",
+                #     offStatus = "primary",
+                #     width = "100%"
+                # )
             )
         )
     })
@@ -1706,29 +1701,7 @@ observeEvent(input$confirm_kegg_plot,{
         req(input$plot_type=="manhattan")
         req(input$p_or_q_manhattan)
         
-        # retrieve data
-        df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
-        pq = input$p_or_q_manhattan
-        cutoff = input$cutoff_manhattan
-        
-        # filter by cutoff
-        df = df %>% dplyr::filter(df[[pq]]<cutoff)
-        
-        # if gsea, further filter by direction of change
-        if(rv$run_mode == "gsea"){
-            # up or down
-            direction <- input$tables_switch
-            req(is.null(direction)==F)
-            
-            # determine if values above threshold
-            if(direction == TRUE){
-                df = df %>% dplyr::filter(ES>0)
-                direction_label = "up"
-            }else{
-                df = df %>% dplyr::filter(ES<0)
-                direction_label = "down"
-            }
-        }
+        df = filter_df_mh()
 
         if(nrow(df)<1){
             output$ui_tables <- renderUI({
@@ -1742,11 +1715,8 @@ observeEvent(input$confirm_kegg_plot,{
             output$plot_words <- renderUI({})
         }else{
             
-            withProgress(message = "Generating summary stats ...",{
-                for(N in 1:10){
-                    Sys.sleep(0.1)
-                    incProgress(1/N)
-                }
+            withProgress(message = "Generating summary stats ...", value = 1,{
+                
                 # get db categories
                 cats = unique(df$db)
                 max_table = length(cats)
@@ -1890,3 +1860,33 @@ observeEvent(input$confirm_kegg_plot,{
             
         }
     })
+    
+    # ------------- 00 FUNCTIONS: text mining -------------
+    
+    filter_df_mh <- function(){
+        # retrieve data
+        df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
+        pq = input$p_or_q_manhattan
+        cutoff = input$cutoff_manhattan
+        
+        # filter by cutoff
+        df = df %>% dplyr::filter(df[[pq]]<cutoff)
+        
+        # if gsea, further filter by direction of change
+        if(rv$run_mode == "gsea"){
+            # up or down
+            direction <- input$tables_switch
+            req(is.null(direction)==F)
+            
+            # determine if values above threshold
+            if(direction == TRUE){
+                df = df %>% dplyr::filter(ES>0)
+                direction_label = "up"
+            }else{
+                df = df %>% dplyr::filter(ES<0)
+                direction_label = "down"
+            }
+        }
+        
+        return(df)
+    }
