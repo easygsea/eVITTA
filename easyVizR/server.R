@@ -1399,14 +1399,10 @@ server <- function(input, output, session) {
         req(is.null(input$selected_x)==F)
         req(is.null(input$selected_y)==F)
         
-        # observe shared columns
-        xcols <- colnames(rv$gg[[match(input$selected_x,rv$ll)]][-1])
-        ycols <- colnames(rv$gg[[match(input$selected_y,rv$ll)]][-1])
-        rv$xy_sharedcols <- intersect(xcols, ycols)
-        
-        xrows <- rv$gg[[match(input$selected_x,rv$ll)]]$Name
-        yrows <- rv$gg[[match(input$selected_y,rv$ll)]]$Name
-        rv$xy_sharedrows <- intersect(xrows, yrows)
+        selected <- c(input$selected_x, input$selected_y)
+        observed <- detect_shared_dimensions(selected, rv$gg, rv$ll, input_mode="names")
+        rv$xy_sharedcols <- observed$shared_cols
+        rv$xy_sharedrows <- observed$shared_rows
     })
     
     
@@ -1418,15 +1414,24 @@ server <- function(input, output, session) {
         rv$df_xy <- NULL
         withProgress(message = 'Updating data...', value = 0, {
             
-            df_x <- isolate(rv$gg[[match(input$selected_x, rv$ll)]])
-            incProgress(0.2)
-            df_y <- isolate(rv$gg[[match(input$selected_y, rv$ll)]])
-            incProgress(0.2)
-            df_xy <- merge(df_x,df_y, by = "Name")
-            incProgress(0.2)
+            # df_x <- isolate(rv$gg[[match(input$selected_x, rv$ll)]])
+            # incProgress(0.2)
+            # df_y <- isolate(rv$gg[[match(input$selected_y, rv$ll)]])
+            # incProgress(0.2)
+            # df_xy <- merge(df_x,df_y, by = "Name")
+            # incProgress(0.2)
+            selected <- c(input$selected_x, input$selected_y)
+            df_xy <- build_df_n(selected, rv$gg, rv$ll, input_mode="names")
             
             # initialize cor line
-            rv$fit_xy <- lm(Stat.x ~ Stat.y, df_xy)
+            statx <- paste0("`Stat_", selected[[1]],"`") # back ticks to escape possible illegal punctuation
+            staty <- paste0("`Stat_", selected[[2]],"`")
+            lm_fun <- paste(statx, staty, sep = " ~ ")
+            print(lm_fun)
+            print(head(df_xy))
+            rv$fit_xy <- lm(as.formula(lm_fun), data = df_xy)
+            
+            
             
             # initialize params
             rv$xyx_i <- isolate(match(input$selected_x, rv$ll))
@@ -1451,7 +1456,7 @@ server <- function(input, output, session) {
             incProgress(0.2)
         })
         rv$df_xy <- df_xy
-        #print(head(rv$df_xy))
+        print(head(rv$df_xy))
         
     })
     
@@ -1508,6 +1513,7 @@ server <- function(input, output, session) {
     output$xy_confirm <- renderUI({
         req(rv$xy_sharedcols>=1)
         req(rv$xy_sharedrows>=1)
+        req(input$selected_x != input$selected_y)
         
         actionButton("xy_confirm", "Visualize!")
     })
@@ -1517,28 +1523,71 @@ server <- function(input, output, session) {
     
     ####================= TWO WAY VISUALIZATIONS =====================####
     
+    
+    filtered_df_xy <- reactive({
+        req(is.null(rv$df_xy)==F)
+        req(is.null(rv$selected_x)==F)
+        req(is.null(rv$selected_y)==F)
+        
+        df_xy <- rv$df_xy
+        selected <- c(rv$selected_x, rv$selected_y)
+        for (i in selected){
+            df_xy <- apply_single_cutoff(df_xy, i, rv$xy_p, rv$xy_q, rv$xy_Stat, tolerate=F)
+        }
+        
+        df_xy
+    })
+    
     ####--------------- table -------------------####
     
     # show df_xy table
     output$xy_tbl <- DT::renderDataTable({
         req(rv$df_xy)
         
-        df_xy <- rv$df_xy
-        # cutoffs:
-        df_xy <- df_xy %>% filter(PValue.x < rv$xy_p & PValue.y < rv$xy_p)
-        df_xy <- df_xy %>% filter(FDR.x < rv$xy_q & FDR.y < rv$xy_q)
-        df_xy <- df_xy %>% filter(abs(Stat.x) > rv$xy_Stat & abs(Stat.y) > rv$xy_Stat)
+        
+        df <- filtered_df_xy()
+        
+        
+        rv$df_xy_fullcols <- colnames(df)
+        
+        # to abbreviate the long column names...take first 5 letters
+        char_limit <- 56 / length(colnames(df))
+        # print(char_limit)
+        colnames(df) <- sapply(names(df), function(x){
+            if (nchar(x)>char_limit)
+            {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
+            else{return (x)}
+        })
+        
         
         # to replace the stat col names 
-        colnames(df_xy) <- gsub("Stat", rv$tt[[rv$xyx_i]], colnames(df_xy))
+        colnames(df) <- gsub("Stat", rv$tt[[rv$xyx_i]], colnames(df))
 
         # to round everything down to 3 decimals
-        df_xy[-1] <- df_xy[-1] %>% mutate_if(is.numeric, ~round(., 3))
+        df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., 3))
         
         
-        print(head(df_xy))
-        df_xy
-    }, options= list(scrollX=T)
+        # print(head(df))
+        df
+        
+    }, plugins = "ellipsis",
+    options = list(scrollX=TRUE, 
+                   columnDefs = list(
+                       list(
+                           targets = 1,
+                           render = JS("$.fn.dataTable.render.ellipsis( 17, true )")
+                       ),
+                       list(
+                           targets = "_all",
+                           render = JS("$.fn.dataTable.render.ellipsis( 6, true )")
+                       )
+                   ),
+                   headerCallback= JS("function(thead, data, start, end, display){",
+                                      sprintf("  var tooltips = [%s];", toString(paste0("'", rv$df_xy_fullcols, "'"))),
+                                      "  for(var i = 1; i <= tooltips.length; i++){",
+                                      "    $('th:eq('+i+')',thead).attr('title', tooltips[i-1]);",
+                                      "  }",
+                                      "}"))
     )
     
     # download table
@@ -1546,11 +1595,7 @@ server <- function(input, output, session) {
         filename = function() {paste0("data-",Sys.Date(),"-",input$selected_x,"_vs_",input$selected_y,".csv")},
         content = function(file) {
             
-            df_xy <- rv$df_xy
-            df_xy <- df_xy %>% filter(PValue.x < rv$xy_p & PValue.y < rv$xy_p)
-            df_xy <- df_xy %>% filter(FDR.x < rv$xy_q & FDR.y < rv$xy_q)
-            df_xy <- df_xy %>% filter(abs(Stat.x) > rv$xy_Stat & abs(Stat.y) > rv$xy_Stat)
-            output_file <- df_xy
+            output_file <- filtered_df_xy()
             
             write.csv(output_file, file, 
                       row.names = FALSE, quote=T)})
@@ -1587,29 +1632,46 @@ server <- function(input, output, session) {
     
     # plotly scatter
     xy_sc_plt <- reactive({
-        withProgress(message = 'Making graph...', value = 0, {
+        req(is.null(rv$df_xy)==F)
+        req(is.null(rv$selected_x)==F)
+        req(is.null(rv$selected_y)==F)
+        
+        # withProgress(message = 'Making graph...', value = 0, {
             print(dim(rv$df_xy[[1]]))
             
             df_p <- rv$df_xy
             
-            xsig <- paste0(rv$xy_sig,".x")
-            ysig <- paste0(rv$xy_sig,".y")
-            
+            selected <- c(rv$selected_x, rv$selected_y)
+            xsig <- paste(rv$xy_sig, selected[[1]], sep="_")
+            ysig <- paste(rv$xy_sig, selected[[2]], sep="_")
+            xstat <- paste("Stat", selected[[1]], sep="_")
+            ystat <- paste("Stat", selected[[2]], sep="_")
+            xp <- paste("PValue", selected[[1]], sep="_")
+            yp <- paste("PValue", selected[[2]], sep="_")
+            xq <- paste("FDR", selected[[1]], sep="_")
+            yq <- paste("FDR", selected[[2]], sep="_")
             
             
             
             df_p[df_p==0]<-0.00001 # replace 0 with 0.001
             # cutoffs
+            x_filtered <- apply_single_cutoff(df_p, selected[[1]], p=rv$xy_sc_p, q=rv$xy_sc_q, stat=rv$xy_sc_Stat, tolerate=F)
+            y_filtered <- apply_single_cutoff(df_p, selected[[2]], p=rv$xy_sc_p, q=rv$xy_sc_q, stat=rv$xy_sc_Stat, tolerate=F)
+            print(head(x_filtered))
             if (rv$xy_sc_logic == "Both"){
-                df_p <- df_p %>% filter(PValue.x < rv$xy_sc_p & PValue.y < rv$xy_sc_p)
-                df_p <- df_p %>% filter(FDR.x < rv$xy_sc_q & FDR.y < rv$xy_sc_q)
-                df_p <- df_p %>% filter(abs(Stat.x) > rv$xy_sc_Stat & abs(Stat.y) > rv$xy_sc_Stat)
+                df_p <- df_p[df_p$Name %in% intersect(x_filtered$Name, y_filtered$Name), ]
+                # df_p <- df_p %>% filter(PValue.x < rv$xy_sc_p & PValue.y < rv$xy_sc_p)
+                # df_p <- df_p %>% filter(FDR.x < rv$xy_sc_q & FDR.y < rv$xy_sc_q)
+                # df_p <- df_p %>% filter(abs(Stat.x) > rv$xy_sc_Stat & abs(Stat.y) > rv$xy_sc_Stat)
             } else if (rv$xy_sc_logic == "Either"){
-                df_p <- df_p %>% filter(PValue.x < rv$xy_sc_p | PValue.y < rv$xy_sc_p)
-                df_p <- df_p %>% filter(FDR.x < rv$xy_sc_q | FDR.y < rv$xy_sc_q)
-                df_p <- df_p %>% filter(abs(Stat.x) > rv$xy_sc_Stat | abs(Stat.y) > rv$xy_sc_Stat)
+                # df_p <- df_p %>% filter(PValue.x < rv$xy_sc_p | PValue.y < rv$xy_sc_p)
+                # df_p <- df_p %>% filter(FDR.x < rv$xy_sc_q | FDR.y < rv$xy_sc_q)
+                # df_p <- df_p %>% filter(abs(Stat.x) > rv$xy_sc_Stat | abs(Stat.y) > rv$xy_sc_Stat)
+                df_p <- df_p[df_p$Name %in% union(x_filtered$Name, y_filtered$Name), ]
             }
             
+            df_p <- remove_nas(df_p) # when using Either mode, NA might slip by. 
+            # need to delete NA rows before graphing, although those can show up in table.
             
             req(nrow(df_p)>0)
             
@@ -1651,8 +1713,8 @@ server <- function(input, output, session) {
             }
             
             incProgress(0.2)
-            
-            rv$fit_xy <- lm(Stat.x ~ Stat.y, df_p)
+            lm_fun <- paste0("`", xstat, "` ~ `", ystat, "`")
+            rv$fit_xy <- lm(lm_fun, data = df_p)
             
             print(head(df_p))
             
@@ -1660,19 +1722,19 @@ server <- function(input, output, session) {
             
             fig <- plot_ly(
                 data = df_p, 
-                x = df_p$Stat.x,
-                y = df_p$Stat.y,
+                x = df_p[[xstat]],
+                y = df_p[[ystat]],
                 type = 'scatter',
                 mode = 'markers', 
                 marker = marker_settings,
                 hoverinfo="text",
                 text=c(paste(df_p$Name, 
-                             "<br>",rv$tt[[rv$xyx_i]],"(x):", round(df_p$Stat.x, 3),
-                             "<br>p(x):", round(df_p$PValue.x, 3),
-                             ", q(x):", round(df_p$FDR.x, 3),
-                             "<br>",rv$tt[[rv$xyy_i]],"(y):", round(df_p$Stat.y, 3),
-                             "<br>p(y):", round(df_p$PValue.y, 3),
-                             ", q(y):", round(df_p$FDR.y, 3)
+                             "<br>",rv$tt[[rv$xyx_i]],"(x):", round(df_p[[xstat]], 3),
+                             "<br>p(x):", round(df_p[[xp]], 3),
+                             ", q(x):", round(df_p[[xq]], 3),
+                             "<br>",rv$tt[[rv$xyy_i]],"(y):", round(df_p[[ystat]], 3),
+                             "<br>p(y):", round(df_p[[yp]], 3),
+                             ", q(y):", round(df_p[[yq]], 3)
                 ))
             )
             fig <- fig %>% layout(title = paste0(rv$selected_x, " vs ", rv$selected_y, " (n=",nrow(df_p),")"),
@@ -1680,7 +1742,7 @@ server <- function(input, output, session) {
                                   xaxis = list(zeroline = T, title=paste0(rv$tt[[rv$xyy_i]],"_",rv$selected_x))
             )
             
-        })
+        # })
         return(fig)
     })
     
@@ -1880,81 +1942,7 @@ server <- function(input, output, session) {
     #======================================================================#
     ####                        MULTIPLE WAY                            ####
     #======================================================================#
-    # tolerate: ignore na values
-    apply_n_cutoffs <- function(df, p, q, stat, tolerate=F){
-        if (tolerate ==T){
-            naval <- 123456
-            df[is.na(df)] <- -naval
-            df <- df %>% mutate(m = do.call(pmax, dplyr::select(df, contains("PValue_")))) %>%
-                filter(m < p)
-            df <- df %>% mutate(m = do.call(pmax, dplyr::select(df, contains("FDR_")))) %>%
-                filter(m < q)
-            df[df==-naval] <- naval
-            df <- df %>% mutate(m = do.call(pmin, abs(dplyr::select(df, contains("Stat"))))) %>%
-                filter(m > stat)
-            df <- df[1:(length(df)-1)] # delete last helper column
-            df[df==naval] <- NA
-        }
-        else if (tolerate ==F){
-            df <- df %>% mutate(m = do.call(pmax, dplyr::select(df, contains("PValue_")))) %>%
-                filter(m < p)
-            df <- df %>% mutate(m = do.call(pmax, dplyr::select(df, contains("FDR_")))) %>%
-                filter(m < q)
-            df <- df %>% mutate(m = do.call(pmin, abs(dplyr::select(df, contains("Stat"))))) %>%
-                filter(m > stat)
-            df <- df[1:(length(df)-1)] # delete last helper column
-        }
-        
-
-        
-        return(df)
-    }
     
-    apply_single_cutoff <- function(df, colname, p, q, stat, tolerate=F){
-        pcol <- paste0("PValue_",colname)
-        qcol <- paste0("FDR_",colname)
-        statcol <- paste0("Stat_",colname)
-        
-        # first, filter while ignoring na in the selected col.
-        df <- df %>% filter(!!sym(pcol) <= p | is.na(!!sym(pcol)))
-        df <- df %>% filter(!!sym(qcol) <= q | is.na(!!sym(qcol)))
-        df <- df %>% filter(abs(!!sym(statcol)) >= stat | is.na(!!sym(statcol)))
-        
-        # if no na allowed, get rid of nas in the selected col.
-        if (tolerate==F){
-            df <- df[is.na(df[,pcol])==F,]
-            df <- df[is.na(df[,qcol])==F,]
-            df <- df[is.na(df[,statcol])==F,]
-        }
-        return(df)
-    }
-    
-    # filter column by sign.
-    # df: the df you want filtered; colname: substring of choice e.g. "Stat",
-    # sign: "All", "Positive" or "Negative"
-    filter_by_sign <- function(df, colname, sign, tolerate=F){
-        naval <- 123456
-        
-        if (sign == "Positive"){
-            if (tolerate ==T){
-                df[is.na(df)] <- naval
-            } 
-            df <- df %>% mutate(m = do.call(pmin, dplyr::select(df, contains(colname)))) %>%
-                filter(m > 0)
-            df <- df[1:(length(df)-1)] # delete last helper column
-            if (tolerate ==T){df[df==naval] <- NA} 
-        }
-        else if (sign == "Negative"){
-            if (tolerate ==T){
-                df[is.na(df)] <- -naval
-            }
-            df <- df %>% mutate(m = do.call(pmax, dplyr::select(df, contains(colname)))) %>%
-                filter(m < 0)
-            df <- df[1:(length(df)-1)] # delete last helper column
-            if (tolerate ==T){df[df==-naval] <- NA}
-        }
-        return(df)
-    }
     
     
     ####---------------------- Events ---------------------------####
@@ -2024,17 +2012,9 @@ server <- function(input, output, session) {
     observe({
         if (length(rv$heatmap_i)>=2){
             try({
-                # observe shared columns
-                colns <- lapply(rv$heatmap_i, function(x){
-                    colnames(rv$gg[[x]][-1]) # exclude genename column
-                })
-                rv$n_sharedcols <- Reduce(intersect, colns)
-                
-                # observe shared rows
-                rowns <- lapply(rv$heatmap_i, function(x){
-                    rv$gg[[x]]$Name 
-                })
-                rv$n_sharedrows <- Reduce(intersect, rowns)
+                observed <- detect_shared_dimensions(rv$heatmap_i, rv$gg, rv$ll, input_mode="indices")
+                rv$n_sharedcols <- observed$shared_cols
+                rv$n_sharedrows <- observed$shared_rows
             })
             
         }
@@ -2053,24 +2033,9 @@ server <- function(input, output, session) {
         
         withProgress(message = 'Updating data...', value = 0, {
             
+            df_n <- build_df_n(input$heatmap_dfs, rv$gg, rv$ll, input_mode = "names")
             
-            # make list of dfs 
-            data <- lapply(rv$heatmap_i, function(x){
-                Stat<-rv$gg[[x]]
-                return (Stat)
-            }) 
-            incProgress(0.2)
-            
-            # annotate the non-name columns in each df in list with filename
-            data <- lapply(seq_along(data), function(x, y){
-                colnames(data[[x]])[-1] <- paste(colnames(data[[x]])[-1],y[[x]], sep="_")
-                return (data[[x]])}
-                , y=input$heatmap_dfs)
-            incProgress(0.2)
-            
-            # merge list of dfs on gene
-            plotdata <- Reduce(function(x,y) merge(x,y, by = "Name", all=T), data) 
-            incProgress(0.2)
+            incProgress(0.5)
             
             # initialize params
             rv$nx_i <- isolate(rv$heatmap_i)
@@ -2143,13 +2108,12 @@ server <- function(input, output, session) {
             incProgress(0.2)
             print(tt)
             
-            #plotdata <- remove_nas(plotdata)
         
         })
-        rv$df_n <- plotdata
+        rv$df_n <- df_n
         
         # find max stat and generate scale
-        statmax <- max(dplyr::select(plotdata, contains("Stat_")), na.rm=TRUE)
+        statmax <- max(dplyr::select(df_n, contains("Stat_")), na.rm=TRUE)
         rv$n_stat_scale <- round(generate_scale(statmax, 10),2)
         
         shinyjs::enable("n_use_data")
