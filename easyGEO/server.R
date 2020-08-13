@@ -1611,9 +1611,9 @@ shinyServer(function(input, output, session) {
     # --------------volcano: plot---------------
     output$ui_volcano <- renderUI({
         if(rv$v_mode=="static"){
-            plotOutput("v_plot_s",width = "100%",height = "700px")
+            plotOutput("v_plot_s",width = "100%",height = "650px")
         }else if(rv$v_mode=="interactive"){
-            plotlyOutput("v_plot_i",width = "100%",height = "700px")
+            plotlyOutput("v_plot_i",width = "100%",height = "650px")
         }
     })
     

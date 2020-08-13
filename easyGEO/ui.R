@@ -267,7 +267,7 @@ body <- dashboardBody(
                       "Heatmap",
                       column(
                         width = 8,
-                        plotlyOutput("heatmap_plot",width = "100%", height = "700px")
+                        plotlyOutput("heatmap_plot",width = "100%", height = "650px")
                       ),
                       column(
                         width = 4,
@@ -284,7 +284,7 @@ body <- dashboardBody(
                           NULL,
                           choices = list("Violin plot"="violin","Box plot"="box")
                         ),
-                        plotOutput("ui_aplot",width = "100%", height = "650px")
+                        plotOutput("ui_aplot",width = "100%", height = "600px")
                       ),
                       column(
                         width = 4,
