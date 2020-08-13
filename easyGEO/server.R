@@ -1280,7 +1280,7 @@ shinyServer(function(input, output, session) {
             
             # 1.4) design matrix
             if(is.null(batch)){
-                design1 <- model.matrix(~0+treatment)
+                design1 <- model.matrix(~treatment)
             }else{
                 design1 <- model.matrix(~batch+treatment)
             }
@@ -2149,12 +2149,12 @@ shinyServer(function(input, output, session) {
         
         if(rv$plot_label == "top"){
             # top up regulated genes
-            genes_up = df[order(-df[["logFC"]],df[["adj.P.Val"]]),] %>%
+            genes_up = df %>% dplyr::arrange(desc(logFC)) %>% #df[order(-df[["logFC"]],df[["adj.P.Val"]]),]
                 head(.,n=rv$volcano_up) %>%
                 rownames(.)
             
             # top down regulated genes
-            genes_down = df[order(df[["logFC"]],df[["adj.P.Val"]]),] %>%
+            genes_down = df %>% dplyr::arrange(logFC) %>% #df[order(df[["logFC"]],df[["adj.P.Val"]]),]
                 head(.,n=rv$volcano_down) %>%
                 rownames(.)
 
@@ -2162,11 +2162,11 @@ shinyServer(function(input, output, session) {
             genes = c(genes_up,genes_down)
             
             # filter counts
-            counts = counts[rownames(counts) %in% genes,]
+            counts = counts[match(genes,rownames(counts)),]
 
         }else if(rv$plot_label == "manual"){
             # filter counts
-            counts = counts[rownames(counts) %in% rv$gene_lists_v,]
+            counts = counts[match(rv$gene_lists_v,rownames(counts)),]
         }
         
         return(counts)
