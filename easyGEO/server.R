@@ -1,5 +1,5 @@
 
-options(shiny.maxRequestSize=30*1024^2) # sets max upload size to 30 mb
+options(shiny.maxRequestSize=50*1024^2) # sets max upload size to 50 mb
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
@@ -775,10 +775,19 @@ shinyServer(function(input, output, session) {
         inFile <- input$file
         indf <- read.csv(inFile$datapath, header=F, 
                          colClasses=c("character"))
+        
+        # read in TAB delimited
         if(ncol(indf)==1){
             indf <- read.table(inFile$datapath, sep="\t",header=F, 
                              colClasses=c("character"))
         }
+
+        # read in space delimited
+        if(ncol(indf)==1){
+            indf <- read.table(inFile$datapath, sep=" ",header=F, 
+                               colClasses=c("character"))
+        }
+        
         indf_coln <- unname(unlist(indf[1,])) # colnames = first row
         # print(indf_coln)
         indf_rown <- unname(unlist(indf[,1])) # rownames = first col
@@ -1247,14 +1256,14 @@ shinyServer(function(input, output, session) {
             batch_var = input$sp_batch_col
             batch = NULL
             
-            if(batch_var!="na"){
-                batch = factor(p_df[[batch_var]])
-            }
-            
-            # 1.2) filter design matrix according to the selected two levels in selected variable
             # original design matrix
             p_df = rv$fddf
             
+            if(batch_var!="na"){
+                batch = factor(p_df[[batch_var]])
+            }
+
+            # 1.2) filter design matrix according to the selected two levels in selected variable
             # selected variable
             c_var = input$sp_select_var
             

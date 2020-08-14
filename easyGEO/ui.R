@@ -249,7 +249,7 @@ body <- dashboardBody(
         tabItem(tabName = "tab5",
                 tabBox(
                     title = "DEG Visualization", width = 12,
-                    id = "visDEG", height = "760px",
+                    id = "visDEG", height = "720px",
                     
                     tabPanel(
                       "Volcano plot",

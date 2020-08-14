@@ -1678,8 +1678,8 @@ observeEvent(input$confirm_kegg_plot,{
                 radioGroupButtons(
                     "tables_switch",
                     NULL,
-                    choices = list("Up"=TRUE,"Down"=FALSE),
-                    selected = FALSE
+                    choices = list("Up"="up","Down"="down"),
+                    selected = "down"
                 )
                 # switchInput(
                 #     inputId = "tables_switch",
@@ -1700,13 +1700,29 @@ observeEvent(input$confirm_kegg_plot,{
         req(rv$run == "success")
         req(input$plot_type=="manhattan")
         req(input$p_or_q_manhattan)
+        req(input$tables_switch)
         
         df = filter_df_mh()
+        
+        # if gsea, further filter by direction of change
+        if(rv$run_mode == "gsea"){
+            # up or down
+            direction <- input$tables_switch
+            print(direction)
+            # filter by cutoff
+            if(direction == "up"){
+                df = df %>% dplyr::filter(ES > 0)
+                
+            }else if(direction == "down"){
+                df = df %>% dplyr::filter(ES < 0)
+                
+            }
+        }
 
         if(nrow(df)<1){
             output$ui_tables <- renderUI({
                 if(rv$run_mode == "gsea"){
-                    paste0("No significant ",direction_label,"regulation found at ",pq," threshold ", cutoff)
+                    paste0("No significant ",direction,"regulation found at ",pq," threshold ", cutoff)
                 }else{
                     paste0("No significant regulation found at ",pq," threshold ", cutoff)
                 }
@@ -1837,9 +1853,9 @@ observeEvent(input$confirm_kegg_plot,{
                             if(rv$run_mode == "glist"){
                                 y_label = paste0("Word frequency (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
                             }else if(rv$run_mode == "gsea"){
-                                if(direction == TRUE){
+                                if(direction == "up"){
                                     y_label = paste0("Word frequency for upregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                                }else if(direction == FALSE){
+                                }else if(direction == "down"){
                                     y_label = paste0("Word frequency for downregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
                                 }
                             }
@@ -1871,22 +1887,6 @@ observeEvent(input$confirm_kegg_plot,{
         
         # filter by cutoff
         df = df %>% dplyr::filter(df[[pq]]<cutoff)
-        
-        # if gsea, further filter by direction of change
-        if(rv$run_mode == "gsea"){
-            # up or down
-            direction <- input$tables_switch
-            req(is.null(direction)==F)
-            
-            # determine if values above threshold
-            if(direction == TRUE){
-                df = df %>% dplyr::filter(ES>0)
-                direction_label = "up"
-            }else{
-                df = df %>% dplyr::filter(ES<0)
-                direction_label = "down"
-            }
-        }
-        
+
         return(df)
     }

@@ -289,9 +289,9 @@ output$run_summary_gsea <- renderUI({
     if(rv$run == "success"){
         if(rv$run_mode == "gsea"){
             fluidRow(
-                box(
+                wellPanel(
                     # style="text-align:center",
-                    width = 12, status = "warning",
+                    # width = 12, status = "warning",
                     # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
                     h5(tags$b("Summary Report")),
                     # br(),
