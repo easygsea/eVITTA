@@ -19,18 +19,18 @@ body1 <- dashboardBody(
         
         tabItem(tabName = "sb_organize",
 
-                fluidRow(
-                    column(12, align="right",
-                           div(style="display:inline-block",
-
-                               actionBttn(
-                                   inputId = "help_organize", label=NULL,
-                                   icon = icon("question"), style="material-circle", color="primary"
-                               ),
-                           )
-                    ),
-                ),
                 
+                
+                fixedPanel(
+                    div(
+                        actionBttn(
+                            inputId = "help_organize", label=NULL,
+                            icon = icon("question"), style="material-circle", color="primary", size="lg"
+                        ),
+                    ),
+                    right = 30,
+                    bottom = 30
+                ),
                 
                 
                 fluidRow(
@@ -111,6 +111,8 @@ body1 <- dashboardBody(
                 )
                 
         )
+        
+
         # ,
         # #### single body----------------------------------------
         # 
@@ -193,6 +195,7 @@ body1 <- dashboardBody(
         #         
         #         
         # )
+
     ),
 )
 
@@ -228,46 +231,59 @@ body2 <- dashboardBody(
             )
         )
     )
+    ,
+    fixedPanel(
+        uiOutput("x_floating_buttons"),
+        right = 30,
+        bottom = 30
+    )
 )
 
-# ====================== Two way ======================
-sidebar3 <- dashboardSidebar(
-    width = 300,
-    sidebarMenu(id="xy_sb",
-                
-                div(id="stepc1",
-                    uiOutput("select_x"),
-                    uiOutput("select_y")
-                ),
-                div(id="stepc2", style="height:60px",
-                    uiOutput("xy_shared")
-                ),
-                div(id="stepc3", 
-                uiOutput("xy_confirm")
-                )
-                
-    )
-)
-body3 <- dashboardBody(
-    
-    
-    # verbatimTextOutput("debugxy"),
-    
-    fluidRow(
-        div(
-            id = "xy_main_panel",
-            column(
-                width = 12,
-                
-                div(id="stepc4", style="height:400px",
-                    uiOutput("xy_header"),
-                    uiOutput("xy_panels")
-                    )
-                
-            )
-        )
-    )
-)
+# # ====================== Two way ======================
+# sidebar3 <- dashboardSidebar(
+#     width = 300,
+#     sidebarMenu(id="xy_sb",
+#                 
+#                 div(id="stepc1",
+#                     uiOutput("select_x"),
+#                     uiOutput("select_y")
+#                 ),
+#                 div(id="stepc2", style="height:60px",
+#                     uiOutput("xy_shared")
+#                 ),
+#                 div(id="stepc3", 
+#                 uiOutput("xy_confirm")
+#                 )
+#                 
+#     )
+# )
+# body3 <- dashboardBody(
+#     
+#     
+#     # verbatimTextOutput("debugxy"),
+#     
+#     fluidRow(
+#         div(
+#             id = "xy_main_panel",
+#             column(
+#                 width = 12,
+#                 
+#                 div(id="stepc4", style="height:400px",
+#                     uiOutput("xy_header"),
+#                     uiOutput("xy_panels")
+#                     )
+#                 
+#             )
+#         )
+#     )
+#     ,
+#     fixedPanel(
+#         uiOutput("xy_floating_buttons"),
+#         right = 30,
+#         bottom = 30
+#     )
+# 
+# )
 
 # ====================== Multiple way ======================
 sidebar4 <- dashboardSidebar(
@@ -301,6 +317,13 @@ body4 <- dashboardBody(
             )
         )
     )
+    ,
+    fixedPanel(
+        uiOutput("n_floating_buttons"),
+        right = 30,
+        bottom = 30
+    )
+    
 )
 
 
@@ -338,13 +361,13 @@ ui <- fluidPage(rintrojs::introjsUI(), useShinyjs(),
                    sidebar2,
                    body2
                )),
-               tabPanel("Two Datasets",dashboardPage(
-                   # dashboardHeader(title = "Enrichment Plots",titleWidth = 300),
-                   dashboardHeader(disable = TRUE),
-                   skin = "black",
-                   sidebar3,
-                   body3
-               )),
+               # tabPanel("Two Datasets",dashboardPage(
+               #     # dashboardHeader(title = "Enrichment Plots",titleWidth = 300),
+               #     dashboardHeader(disable = TRUE),
+               #     skin = "black",
+               #     sidebar3,
+               #     body3
+               # )),
                tabPanel("Multiple Datasets",dashboardPage(
                    # dashboardHeader(title = "Enrichment Plots",titleWidth = 300),
                    dashboardHeader(disable = TRUE),
