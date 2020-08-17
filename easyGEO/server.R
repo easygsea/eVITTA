@@ -2141,6 +2141,11 @@ shinyServer(function(input, output, session) {
         # df = df[order(-df[["logFC"]],df[["adj.P.Val"]]),] 
         df = df %>% dplyr::arrange(logFC)
         
+        # original table if manual selection of genes
+        if(rv$plot_label == "manual"){
+            df = rv$deg %>% dplyr::arrange(logFC)
+        }
+        
         return(df)
     }
     
