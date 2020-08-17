@@ -186,12 +186,9 @@ output$feedback_converted_rnk <- renderUI({
                     paste0("Total number of genes: ",
                            rv$total_genes_after, " / ",rv$total_genes),
                 ),
-                column(
-                    width = 12,
-                    box(
-                        title = NULL, background = "teal",solidHeader = TRUE, width=12,
-                        "Fewer than 50% of genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
-                    )
+                box(
+                    title = NULL, background = "red",solidHeader = TRUE, width=12,
+                    "Fewer than 50% of genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
                 )
             )
         }else if(rv$rnk_check == "pass"){
@@ -250,21 +247,29 @@ output$feedback_converted_glist <- renderUI({
     if(rv$glist_check == "none"){
         fluidRow(
             box(
-                title = NULL, background = "teal",solidHeader = TRUE, width=12,
+                title = NULL, background = "red",solidHeader = TRUE, width=12,
                 "No ID detected in ",species_translate(species),"'s database. Please check if your gene list is correct and/or if your selected species matches your query."
             )
         )
     }else if(rv$glist_check == "low"){
-        HTML(
-            "Converted list: <b>",
-            rv$rnkll,
-            "</b><br/>",
-            abbreviate_vector(rv$gene_lists_after),
-            " (n=<b>",
-            length(rv$gene_lists_after),
-            "</b>)<br/><br/>",
-            "Fewer than 50% of genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
-            "<br/><br/>"
+        fluidRow(
+            column(
+                width = 12,
+                HTML(
+                    "Converted list: <b>",
+                    rv$rnkll,
+                    "</b><br/>",
+                    abbreviate_vector(rv$gene_lists_after),
+                    " (n=<b>",
+                    length(rv$gene_lists_after),
+                    "</b>)<br/><br/>"
+                )
+            ),
+            box(
+                title = NULL, background = "red",solidHeader = TRUE, width=12,
+                "Fewer than 50% of genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
+            ),
+            br(),br()
         )
     }else if(rv$glist_check == "pass"){
         HTML(

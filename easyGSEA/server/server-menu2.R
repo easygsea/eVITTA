@@ -1700,15 +1700,16 @@ observeEvent(input$confirm_kegg_plot,{
         req(rv$run == "success")
         req(input$plot_type=="manhattan")
         req(input$p_or_q_manhattan)
-        req(input$tables_switch)
         
         df = filter_df_mh()
         
         # if gsea, further filter by direction of change
         if(rv$run_mode == "gsea"){
+            req(input$tables_switch)
+            
             # up or down
             direction <- input$tables_switch
-            print(direction)
+            
             # filter by cutoff
             if(direction == "up"){
                 df = df %>% dplyr::filter(ES > 0)
@@ -1718,7 +1719,7 @@ observeEvent(input$confirm_kegg_plot,{
                 
             }
         }
-
+        
         if(nrow(df)<1){
             output$ui_tables <- renderUI({
                 if(rv$run_mode == "gsea"){

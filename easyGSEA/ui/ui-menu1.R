@@ -17,7 +17,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                                 inputId = "selected_mode",
                                 label = "Mode of analysis",
                                 choices = run_modes,
-                                selected = "glist"
+                                selected = "gsea"
                             )
                         )
                     ),

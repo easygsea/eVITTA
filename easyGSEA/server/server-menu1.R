@@ -253,6 +253,14 @@
         if(input$selected_species == ""){
             showNotification("Please select your species of interest.",type="error",duration=2)
         }else{
+          updateRadioButtons(
+            session,
+            "gene_identifier",
+            "2. Gene identifier",
+            choices = gene_identifiers,
+            selected = "symbol",
+            inline = TRUE
+          )
             sampleRNK_file <- paste0(getwd(),"/inc/",input$selected_species,".rnk")
             rv$infile_name = paste0(input$selected_species,".rnk")
             rv$infile_path = sampleRNK_file
@@ -270,6 +278,14 @@
         if(input$selected_species == ""){
             showNotification("Please select your species of interest.",type="error",duration=2)
         }else{
+          updateRadioButtons(
+            session,
+            "gene_identifier",
+            "2. Gene identifier",
+            choices = gene_identifiers,
+            selected = "symbol",
+            inline = TRUE
+          )
             sampleDE_file <- paste0(getwd(),"/inc/",input$selected_species,".csv")
             rv$infile_name = paste0(input$selected_species,".csv")
             rv$infile_path = sampleDE_file

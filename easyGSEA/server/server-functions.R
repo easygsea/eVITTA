@@ -467,8 +467,12 @@
                     scale_y_discrete(labels = y_pathway)
 
                 
+                yh = nrow(df) * 100
+                if(yh<=600){yh=600}
                 
-                fig <- ggplotly(fig,tooltip = "text",
+                fig <- ggplotly(fig,
+                                height = yh,
+                                tooltip = "text",
                                 source = "bar_plot_click"
                 ) %>%
                     event_register("plotly_click")
