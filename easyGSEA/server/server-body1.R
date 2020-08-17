@@ -65,7 +65,7 @@ output$feedback_filecontent <- renderTable({
     req(rv$file_upload_status == "uploaded")
     req(is.null(rv$infile_confirm) == T)
     df = rv$data_head %>%
-        dplyr::top_n(2) %>%
+        head(.,n=2) %>%
         dplyr::mutate_if(is.numeric, function(x) round(x,2))
     
     arow = rep("...",ncol(df))
@@ -428,12 +428,22 @@ output$id_box <- renderUI({
                 )
             ),
             br(),
+            uiOutput("id_none"),
             dataTableOutput("id_conversion_table")
         )
     )
 })
 
 # UI ID conversion table
+# box to display if no ID conversion
+output$id_none <- renderUI({
+    req(is.null(rv$gene_lists_mat))
+    
+    wellPanel(
+        "ID conversion table available when applicable."
+    )
+})
+
 # render ID conversion table
 output$id_conversion_table <- DT::renderDataTable({
     rv$gene_lists_mat
