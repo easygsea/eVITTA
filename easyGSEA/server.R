@@ -12,8 +12,9 @@ server <- function(input, output, session) {
     source("server/server-functions.R", local = TRUE)
     source("server/server-menu1.R", local = TRUE)
     source("server/server-body1.R", local = TRUE)
-
-    source("server/server-menu2.R", local = TRUE)
-    source("server/server-menu3.R", local = TRUE)
-    source("server/server-menu4.R", local = TRUE)
+    
+    source("server/server-summary.R", local = TRUE)
+    source("server/server-network.R", local = TRUE)
+    source("server/server-vis.R", local = TRUE)
+    source("server/server-download.R", local = TRUE)
 }

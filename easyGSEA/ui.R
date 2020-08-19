@@ -1,16 +1,18 @@
-source("ui/ui-menu1.R")
-source("ui/ui-menu2.R")
-source("ui/ui-menu3.R")
-source("ui/ui-menu4.R")
-source("ui/ui-menu5.R")
+source("ui/ui-run.R")
+source("ui/ui-summary.R")
+source("ui/ui-vis.R")
+source("ui/ui-network.R")
+source("ui/ui-download.R")
+source("ui/ui-help.R")
 
 
 sidebar <- dashboardSidebar(
     sidebarMenu(
         menuItem("Run Analysis", tabName = "gsea", icon = icon("play")), #code-branch align-left
-        menuItem("Enrichment Results", tabName = "kegg", icon = icon("table")), #fingerprint
+        menuItem("Enrichment Results", tabName = "summary", icon = icon("table")),
         menuItem("Enrichment Network", tabName = "network", icon = icon("project-diagram")),
-        menuItem("Download Results", tabName = "download", icon = icon("download")),
+        menuItem("Visualization & Exploration", tabName = "kegg", icon = icon("bar-chart")), #fingerprint
+        menuItem("Download", tabName = "download", icon = icon("download")),
         menuItem("Help", tabName = "help", icon = icon("info-circle"))
         
     )
@@ -26,6 +28,7 @@ shinyUI(
         # skin = "black",
         sidebar,
         dashboardBody(
+            # theme = shinytheme("flatly"),
             use_waiter(), # dependencies
             waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else 
             
@@ -39,8 +42,9 @@ shinyUI(
             
             tabItems(
                 bodyGSEA,
-                bodyResults,
+                bodySummary,
                 bodyNetwork,
+                bodyResults,
                 bodyDownload,
                 bodyHelp
             )

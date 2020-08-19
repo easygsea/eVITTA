@@ -211,11 +211,15 @@
     output$bs_file_reset <- renderUI({
         req(input$selected_mode == "gsea")
         req(is.null(rv$infile_name)==F)
-        bsButton(
+        div(
+          bsButton(
             inputId = "reset",
             label = "Reset file",
             style = "default",
-            type = "button")
+            type = "button"),
+          br(),br()
+        )
+        
     })
     
     # reset RNK input widget
@@ -594,15 +598,16 @@
         
       }
       
-      fluidRow(
-        box(
-            width = 12,
+      column(
+        width = 12,
+        wellPanel(
             shiny::HTML("<p style='font-style:italic'>Run parameters</p>"),
             splitLayout(
                 numericInput("mymin", "Min:",15),
                 numericInput("mymax", "Max:",200),
                 uiOutput("ui_nperm")
             )
+            ,style = "background:#e6f4fc;"
         )
       )
     })

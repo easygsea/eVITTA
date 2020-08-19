@@ -295,6 +295,7 @@ output$run_summary_gsea <- renderUI({
         if(rv$run_mode == "gsea"){
             fluidRow(
                 wellPanel(
+                    style = "background:#e6f4fc;",
                     # style="text-align:center",
                     # width = 12, status = "warning",
                     # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
@@ -317,6 +318,8 @@ output$run_summary_gsea <- renderUI({
         }else if(rv$run_mode == "glist"){
             fluidRow(
                 wellPanel(
+                    style = "background:#e6f4fc;",
+                    
                     # style="text-align:center",
                     # width = 12, status = "warning",
                     # h5(tags$b(paste0("\"",rv$rnkll,"\""))),

@@ -1636,258 +1636,28 @@ observeEvent(input$confirm_kegg_plot,{
         
     })
     
-# UI manhattan tables & words ---------------
-    output$ui_manhattan_table <- renderUI({
-        fluidRow(
-            tabBox(
-                width = 12, title = "Significant Enrichment",
-                tabPanel(
-                    "Table summary",
-                    uiOutput("ui_gsea_toggle"),
-                    br(),
-                    fluidRow(
-                        column(
-                            width = 6,
-                            uiOutput("ui_tables")
-                        ),
-                        column(
-                            width = 6,
-                            uiOutput("plot_words")
-                        )
-                    )
-                )
-                
-            )
-        )
-    })
-    
-    # UI switch button
-    output$ui_gsea_toggle <- renderUI({
-        req(rv$run_mode=="gsea")
-        req(rv$run == "success")
-        req(input$plot_type=="manhattan")
-        req(input$p_or_q_manhattan)
-        
-        fluidRow(
-            column(
-                width = 2,
-                h4(tags$b("Direction of change"))
-            ),
-            column(
-                width = 10,
-                radioGroupButtons(
-                    "tables_switch",
-                    NULL,
-                    choices = list("Up"="up","Down"="down"),
-                    selected = "down"
-                )
-                # switchInput(
-                #     inputId = "tables_switch",
-                #     value = FALSE,
-                #     onLabel = "Up",
-                #     offLabel = "Down",
-                #     onStatus = "danger",
-                #     offStatus = "primary",
-                #     width = "100%"
-                # )
-            )
-        )
-    })
-    
-    
-    # dynamically render manhattan tables & word bars -----------------
-    observe({
-        req(rv$run == "success")
-        req(input$plot_type=="manhattan")
-        req(input$p_or_q_manhattan)
-        
-        df = filter_df_mh()
-        
-        # if gsea, further filter by direction of change
-        if(rv$run_mode == "gsea"){
-            req(input$tables_switch)
-            
-            # up or down
-            direction <- input$tables_switch
-            
-            # filter by cutoff
-            if(direction == "up"){
-                df = df %>% dplyr::filter(ES > 0)
-                
-            }else if(direction == "down"){
-                df = df %>% dplyr::filter(ES < 0)
-                
-            }
-        }
-        
-        if(nrow(df)<1){
-            output$ui_tables <- renderUI({
-                if(rv$run_mode == "gsea"){
-                    paste0("No significant ",direction,"regulation found at ",pq," threshold ", cutoff)
-                }else{
-                    paste0("No significant regulation found at ",pq," threshold ", cutoff)
-                }
-            })
-            
-            output$plot_words <- renderUI({})
-        }else{
-            
-            withProgress(message = "Generating summary stats ...", value = 1,{
-                
-                # get db categories
-                cats = unique(df$db)
-                max_table = length(cats)
-                
-                # read in table content
-                lst <- list()
-                lst_words <- list()
-                for (i in 1:max_table) {
-                    # get df == db
-                    data <- df %>% 
-                        dplyr::filter(db == cats[i]) %>%
-                        dplyr::select(-db)
-                    
-                    # save table data into lst
-                    lst[[i]] <- data %>%
-                        mutate_if(is.numeric, function(x) round(x, digits=3))
-                    
-                    # create data for word freq count plots
-                    data <- data %>%
-                        dplyr::mutate(linenumber = row_number(),text = pathway) %>%
-                        dplyr::select(text,linenumber)
-                    
-                    data$text <- lapply(data$text,function(x) strsplit(x,"%")[[1]][1]) %>%
-                        lapply(.,function(x) regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]) %>%
-                        lapply(., function(x) gsub("_"," ",x)) %>%
-                        unlist(.)
-                    
-                    # tidy and count data
-                    
-                    data <- data %>%
-                        unnest_tokens(word, text) %>%
-                        dplyr::anti_join(stop_words) %>%
-                        dplyr::anti_join(useless_words) %>%
-                        dplyr::filter(is.na(as.numeric(word))) %>%
-                        dplyr::count(word,sort=TRUE)
-                    
-                    data <- data %>%
-                        dplyr::mutate(total = sum(n)) %>%
-                        dplyr::mutate(freq = n/total) %>%
-                        dplyr::arrange(desc(freq)) %>%
-                        dplyr::select(-total)
-                    
-                    lst_words[[i]] <- data
-                }
-                
-                # UI tables
-                output$ui_tables <- renderUI({
-                    plot_output_list <- lapply(1:max_table, function(i) {
-                        tablename <- paste0("tablename", i)
-                        div(
-                            dataTableOutput(tablename,height = "300px"),
-                            tags$br()
-                        )
-                    })
-                    do.call(tagList, plot_output_list)
-                })
-                
-                # render tables' contents
-                for (i in 1:max_table) {
-                    local({
-                        my_i <- i
-                        tablename <- paste0("tablename", my_i)
-                        output[[tablename]] <- DT::renderDataTable({
-                            DT::datatable(lst[[my_i]],
-                                          extensions=c('Scroller','Buttons'),
-                                          options = list(
-                                              dom = 'Bfrtip',
-                                              buttons = c('copy', 'pdf', 'print','csv', 'excel'),
-                                              scrollY = "160px",
-                                              scroller = TRUE,
-                                              scrollX=TRUE           
-                                          )
-                            )
-                        })
-                    })
-                }
-                
-                # word frequency bar plots ----------
-                output$plot_words <- renderUI({
-                    plot_output_list <- lapply(1:max_table, function(i) {
-                        barname <- paste0("barname", i)
-                        div(
-                            plotlyOutput(barname,height = "300px",width = "100%"),
-                            tags$br()
-                        )
-                    })
-                    do.call(tagList, plot_output_list)
-                })
-                
-                # render word count bar plots
-                colors = brewer.pal(n = max_table, name = "Set2")
-                for (i in 1:max_table) {
-                    local({
-                        my_i <- i
-                        barname <- paste0("barname", my_i)
-                        output[[barname]] <- renderPlotly({
-                            tidy_data = lst_words[[my_i]] %>%
-                                mutate(word = factor(word, levels = rev(unique(word)))) %>%
-                                head(.,n=15)
-                            # top_n(10)
-                            
-                            # hover text
-                            text = lapply(tidy_data$word, function(x){
-                                x = as.character(droplevels(x))
-                                a = lst[[my_i]] %>%
-                                    dplyr::filter(str_detect(pathway,regex(x, ignore_case = TRUE))) %>%
-                                    dplyr::select(pathway) %>%
-                                    unlist(.) %>%
-                                    unname(.)
-                                if(length(a)>14){a = c(a[1:14],"... ...")}
-                                a = paste(a,collapse = "\n")
-                                return(a)
-                            })
-                            
-                            text = unlist(text)
-                            
-                            # y axis label
-                            if(rv$run_mode == "glist"){
-                                y_label = paste0("Word frequency (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                            }else if(rv$run_mode == "gsea"){
-                                if(direction == "up"){
-                                    y_label = paste0("Word frequency for upregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                                }else if(direction == "down"){
-                                    y_label = paste0("Word frequency for downregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                                }
-                            }
-                            
-                            p <- tidy_data %>%
-                                ggplot(aes(word, n, text=text)) +
-                                geom_col(show.legend = FALSE, fill = colors[my_i]) +
-                                labs(x = NULL, y = y_label) +
-                                coord_flip() +
-                                scale_x_reordered()
-                            
-                            ggplotly(p,tooltip=c("word","n","text"))
-                        })
-                    })
-                }
-            })
-            
-            
-        }
-    })
-    
-    # ------------- 00 FUNCTIONS: text mining -------------
-    
-    filter_df_mh <- function(){
-        # retrieve data
-        df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
-        pq = input$p_or_q_manhattan
-        cutoff = input$cutoff_manhattan
-        
-        # filter by cutoff
-        df = df %>% dplyr::filter(df[[pq]]<cutoff)
-
-        return(df)
-    }
+# # UI manhattan tables & words ---------------
+#     output$ui_manhattan_table <- renderUI({
+#         fluidRow(
+#             tabBox(
+#                 width = 12, title = "Significant Enrichment",
+#                 tabPanel(
+#                     "Table summary",
+#                     uiOutput("ui_gsea_toggle"),
+#                     br(),
+#                     fluidRow(
+#                         column(
+#                             width = 6,
+#                             uiOutput("ui_tables")
+#                         ),
+#                         column(
+#                             width = 6,
+#                             uiOutput("plot_words")
+#                         )
+#                     )
+#                 )
+#                 
+#             )
+#         )
+#     })
+#     

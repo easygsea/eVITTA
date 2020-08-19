@@ -60,7 +60,7 @@ bodyResults <- tabItem(tabName = "kegg",
     ),
     uiOutput("kegg_panel_ui"),
     uiOutput("ui_reactome"),
-    uiOutput("ui_wp"),
-    uiOutput("ui_manhattan_table")
+    uiOutput("ui_wp")
+    # uiOutput("ui_manhattan_table")
 )
 
