@@ -328,7 +328,7 @@
         }else if(ncol(ranks)>2){
             rv$rnk_or_deg = "deg"
         }else{
-            showNotification("You probably uploaded a wrong file. Please check",type = "error",duration = 3)
+            showNotification("You uploaded a file with < 2 columns. Please click the help button for accepted file formats.",type = "error",duration = 3)
         }
         
         # save had data into RV
@@ -761,7 +761,7 @@
             incProgress(0.1)
             
             # determine if success or warnings
-            if(is.null(rv$fgseagg)==FALSE){
+            if(nrow(rv$fgseagg)>0){
                 rv$run = "success"
             } else {
                 rv$run = "failed"

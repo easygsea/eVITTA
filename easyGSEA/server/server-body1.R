@@ -163,17 +163,26 @@ output$feedback_converted_rnk <- renderUI({
     req(is.null(rv$infile_check) == F)
     species = isolate(input$selected_species)
     if(rv$infile_check == "unmatch"){
-        "Please check if your selected species matches your query."
+        box(
+            background = "red", width=12,
+            "Please check if your selected species matches your query."
+        )
     }else if(rv$infile_check == "wrong_rnk"){
-        "You probably uploaded a wrong RNK file. RNK should have 1st column as gene names and 2nd column as ranks (numeric). Please click on the help button to learn more and load our example RNK file for a try."
+        box(
+            background = "red", width=12,
+            "You probably uploaded a wrong RNK file. RNK should have 1st column as gene names and 2nd column as ranks (numeric). Please click on the help button to learn more and load our example RNK file for a try."
+        )
     }else if(rv$infile_check == "wrong_deg"){
-        "You probably uploaded a wrong DEG file. DEG files should have at least a column with gene names, a column with logFC (numeric), and a column with P/FDR values (numeric). Please click on the help button to learn more and load our example DEG file for a try."
+        box(
+            background = "red", width=12,
+            "You probably uploaded a wrong DEG file. DEG files should have at least a column with gene names, a column with logFC (numeric), and a column with P/FDR values (numeric). Please click on the help button to learn more and load our example DEG file for a try."
+        )
     }else if(rv$infile_check == "pass"){
         if(rv$rnk_check == "none"){
             fluidRow(
                 box(
-                    title = NULL, background = "teal",solidHeader = TRUE, width=12,
-                    "No ID detected in ",species_translate(species),"'s database. Please check if your input file is correct and/or if your selected species matches your query."
+                    background = "red", width=12,
+                    "No ID detected in ",species_translate(species),"'s database. Please check if your query file is correct and/or if your selected species matches your query."
                 )
             )
         }else if(rv$rnk_check == "low"){
@@ -187,8 +196,8 @@ output$feedback_converted_rnk <- renderUI({
                            rv$total_genes_after, " / ",rv$total_genes),
                 ),
                 box(
-                    title = NULL, background = "red",solidHeader = TRUE, width=12,
-                    "Fewer than 50% of genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
+                    background = "red", width=12,
+                    "Fewer than 50% of your query genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
                 )
             )
         }else if(rv$rnk_check == "pass"){
@@ -210,11 +219,16 @@ output$feedback_converted_rnk <- renderUI({
 output$converted_rnk <- renderTable({
     req(input$selected_mode == "gsea")
     req(rv$db_status == "selected")
-    data.frame(GeneName=names(rv$rnkgg),Rank=rv$rnkgg,stringsAsFactors = F) %>%
+    df = data.frame(GeneName=names(rv$rnkgg),Rank=rv$rnkgg,stringsAsFactors = F) %>%
         dplyr::top_n(2) %>%
-        dplyr::mutate_if(is.numeric, function(x) as.character(x)) %>%
-        dplyr::add_row(GeneName="...",Rank="...")
+        dplyr::mutate_if(is.numeric, function(x) as.character(x))
     
+    if(nrow(df)>1){
+        df = df %>%
+            dplyr::add_row(GeneName="...",Rank="...")
+    }
+    
+    df
 })
 
 #==========================================#
@@ -247,7 +261,7 @@ output$feedback_converted_glist <- renderUI({
     if(rv$glist_check == "none"){
         fluidRow(
             box(
-                title = NULL, background = "red",solidHeader = TRUE, width=12,
+                background = "red", width=12,
                 "No ID detected in ",species_translate(species),"'s database. Please check if your gene list is correct and/or if your selected species matches your query."
             )
         )
@@ -266,7 +280,7 @@ output$feedback_converted_glist <- renderUI({
                 )
             ),
             box(
-                title = NULL, background = "red",solidHeader = TRUE, width=12,
+                background = "red", width=12,
                 "Fewer than 50% of genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
             ),
             br(),br()
@@ -295,7 +309,7 @@ output$run_summary_gsea <- renderUI({
         if(rv$run_mode == "gsea"){
             fluidRow(
                 wellPanel(
-                    style = "background:#e6f4fc;",
+                    style = "background:#e6f4fc",
                     # style="text-align:center",
                     # width = 12, status = "warning",
                     # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
@@ -312,14 +326,13 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("<b>",rv$no_down_01,"</b> (down) <b>",rv$no_up_01,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.01"))
                     ),
                     br(),
-                    HTML("Navigate to <b>Enrichment Results</b> for details.")
+                    HTML("Navigate to <b>Enrichment Summary</b> for details.")
                 )
             )
         }else if(rv$run_mode == "glist"){
             fluidRow(
                 wellPanel(
-                    style = "background:#e6f4fc;",
-                    
+                    style = "background:#e6f4fc",
                     # style="text-align:center",
                     # width = 12, status = "warning",
                     # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
@@ -335,14 +348,15 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("<b>",rv$no_up_01,"</b> gene sets are significantly enriched at P.adj < 0.01"))
                     ),
                     br(),
-                    HTML("Navigate to <b>Enrichment Results</b> for details.")
+                    HTML("Navigate to <b>Enrichment Summary</b> for details.")
                 )
             )
         }
     }else if(rv$run == "failed"){
         fluidRow(
-            div(
-                p(paste0("No enrichment results for ",rv$rnkll,". Please check if species matches or adjust parameters accordingly."))
+            box(
+                background = "red", width = 12,
+                HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if species matches your query or adjust parameters accordingly.")
             )
         )
     }

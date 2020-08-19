@@ -10,7 +10,7 @@ server <- function(input, output, session) {
     
     source("server/server-rv.R", local = TRUE)
     source("server/server-functions.R", local = TRUE)
-    source("server/server-menu1.R", local = TRUE)
+    source("server/server-run.R", local = TRUE)
     source("server/server-body1.R", local = TRUE)
     
     source("server/server-summary.R", local = TRUE)

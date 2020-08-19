@@ -9,7 +9,7 @@ source("ui/ui-help.R")
 sidebar <- dashboardSidebar(
     sidebarMenu(
         menuItem("Run Analysis", tabName = "gsea", icon = icon("play")), #code-branch align-left
-        menuItem("Enrichment Results", tabName = "summary", icon = icon("table")),
+        menuItem("Enrichment Summary", tabName = "summary", icon = icon("table")),
         menuItem("Enrichment Network", tabName = "network", icon = icon("project-diagram")),
         menuItem("Visualization & Exploration", tabName = "kegg", icon = icon("bar-chart")), #fingerprint
         menuItem("Download", tabName = "download", icon = icon("download")),

@@ -10,9 +10,10 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     status = "primary",
                     
                     # mode of analysis
-                    fluidRow(
-                        box(
-                            title = NULL, background = "yellow", solidHeader = T, width = 12,
+                    column(width = 12,
+                        wellPanel(
+                            style = "background:#ffffe6;",
+                            # title = NULL, background = "yellow", solidHeader = T, width = 12,
                             radioButtons(
                                 inputId = "selected_mode",
                                 label = "Mode of analysis",
