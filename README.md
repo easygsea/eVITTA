@@ -1,4 +1,4 @@
-# Darwin
+# eVITTA
 
 Tool for visualization and interpretation of RNA-seq datasets.
 

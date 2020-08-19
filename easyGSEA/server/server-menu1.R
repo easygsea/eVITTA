@@ -103,7 +103,7 @@
       rv$db_status <- "modify"
       
       # clear RVs
-      rv$run = NULL
+      # rv$run = NULL
       rv$glist_check = NULL
       rv$rnk_check = NULL
       rv$infile_check = NULL
@@ -222,7 +222,7 @@
     observeEvent(input$reset, {
       rv$file_upload_status = "reset"
       
-      rv$run = NULL
+      # rv$run = NULL
       rv$rnk_check = NULL
       rv$infile_check = NULL
       rv$example_file = NULL

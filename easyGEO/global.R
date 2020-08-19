@@ -17,6 +17,10 @@ library(statmod)
 library(scales)
 options(repos = BiocManager::repositories())
 
+# accepted study types
+accepted_study_types <- c("Expression profiling by high throughput sequencing", "Expression profiling by array")
+
+
 # slider cutoffs for p/q
 cutoff_slider = c(0.0001,0.0005,0.001,0.005,0.01,0.05,0.1,0.25,0.3,0.5,1)
 
@@ -108,17 +112,34 @@ grep_multiple <- function(to_match, grep_from, order=F){
 # transform characteristics column into named vector
 # --------------------------------------------------------
 transform_vector <- function(vector, sep=": "){
-  unlist(lapply(vector, function(x){
+  ot = unlist(lapply(vector, function(x){
     if(is.na(x)==F){
 
       ss <- strsplit(x, sep)[[1]]
-      out <- ss[[2]]
+      out <- paste(ss[-1],collapse=": ")
       names(out) <- ss[[1]]
-
-
+      
       return(out)
     }
   }))
+  
+  # check for duplicate variable names; if duplicated, add (1) (2) to the end
+  if(length(unique(names(ot)))== length(names(ot))){
+    ot
+  } else {
+    names(ot) <- rename_duplicates(names(ot), "_", "")
+    ot
+  }
+  
+}
+
+# function to rename duplicate entries in a vector
+# --------------------------------------------------------
+# example:???rename_duplicates(c("a","a","a"), "_", "")
+# > a_1 a_2 a_3
+
+rename_duplicates <- function(vector, left, right){
+  ave(as.character(vector), vector, FUN=function(x) if (length(x)>1) paste0(x[1], left, seq_along(x), right) else x[1])
 }
 
 

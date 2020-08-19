@@ -19,84 +19,66 @@ server <- function(input, output, session) {
     
     
     ####---------------------- HELP ---------------------------####
+    # there must be an intro for each page, i.e. pre-render (n0), first page (n1), second page (n2)
     
-    observeEvent(input$help, {
+    observeEvent(input$help_organize, {
         print(input$tabs)
         req(input$tabs == "Upload files")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-            steps = data.frame(element = c(NA, "#step1","#step1b","#step2"),
-                               intro = c("In this view you can upload and delete files.",
-                                         
-                                         "Here you can upload a single file. <br><br> 
-                                         Please note that files must contain at least 4 columns: 
-                                         Gene, statistic (i.e. logFC or ES), PValue, and FDR. <br><br>
-                                         After uploading, you can specify the essential columns.",
-                                         
-                                         "Here you can upload a folder containing multiple files in csv format.<br><br>
-                                         After uploading, you can specify the essential columns. <br><br>
-                                         (Note that all files must contain all specified columns, named in the same manner; 
-                                         incorrectly formatted files will be omitted.)",
-                                         
-                                         "Here you can view loaded files, and delete unneeded files to free up space."))
-        ))
+            steps = intros$upload)
+        )
 
     })
     
-    observeEvent(input$help2, {
+    observeEvent(input$help_x_pre, {
         print(input$tabs)
         req(input$tabs == "Single Dataset")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                steps = data.frame(element = c(NA, "#stepb1","#stepb2","#stepb3","#stepb4"),
-                                   intro = c("In this view you can make visualizations for a single dataset.",
-                                             
-                                             "Select a dataset from loaded data.",
-                                             
-                                             "Here you can choose to view full dataset, or only a user-specified list.",
-                                             
-                                             "Click this button to generate visualizations in the dashboard.",
-                                             
-                                             "Visualizations will be shown in individual panels. 
-                                             Select options from bottom left corner to customize graphs."))
+                steps = intros$x0
         ))
 
     })
     
-    observeEvent(input$help3, {
+    observeEvent(input$help_x_post, {
         print(input$tabs)
-        req(input$tabs == "Two Datasets")
+        req(input$tabs == "Single Dataset")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-            steps = data.frame(element = c(NA, "#stepc1","#stepc2","#stepc3","#stepc4"),
-                               intro = c("In this view you can make visualizations for two selected datasets.",
-                                         
-                                         "Select two datasets: first one will be X, second one will be Y.",
-                                         
-                                         "Data must have enough shared columns and rows. 
-                                         You can see the amount of shared columns and rows here.",
-                                         
-                                         "Click this button to generate visualizations in the dashboard.",
-                                         
-                                         "Visualizations will be shown in individual panels. 
-                                         Select options from bottom left corner to customize graphs."))
+                                                  steps = intros$x1
         ))
         
     })
     
-    observeEvent(input$help4, {
+    
+    observeEvent(input$help_xy_pre, {
         print(input$tabs)
+        req(input$tabs == "Two Datasets")
+        rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+            steps = intros$xy0
+        ))
+    })
+    
+    observeEvent(input$help_xy_post, {
+        print(input$tabs)
+        req(input$tabs == "Two Datasets")
+        rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                                  steps = intros$xy1
+        ))
+    })
+    
+    
+    observeEvent(input$help_n_pre, {
         req(input$tabs == "Multiple Datasets")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-            steps = data.frame(element = c(NA, "#stepd1","#stepd2","#stepd3","#stepd4"),
-                               intro = c("In this view you can make visualizations for multiple (n>=2) datasets.",
-                                         
-                                         "Select two or more datasets from loaded data.",
-                                         
-                                         "Data must have enough shared columns and rows. 
-                                         You can see that information here.",
-                                         "Click this button to generate visualizations in the dashboard.",
-                                         
-                                         "Visualizations will be shown in individual panels. 
-                                         Select options from bottom left corner to customize graphs."))
-        ))
+                                                  steps = intros$n0)
+        )
+        
+    })
+    
+    observeEvent(input$help_n_post, {
+        req(input$tabs == "Multiple Datasets")
+        rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                                  steps = intros$n1)
+        )
         
     })
     
@@ -879,179 +861,233 @@ server <- function(input, output, session) {
     
     ####----------------------Main Tabs---------------------------####
     
+    output$x_floating_buttons <- renderUI({
+        if (is.null(rv$mode)==T){
+            div(style="margin-top:10px",
+                
+                actionBttn(
+                    inputId = "help_x_pre", label=NULL, 
+                    icon = icon("question"), style="material-circle", color="primary", size="lg"
+                ),
+            )
+        } else {
+            div(style="margin-top:10px",
+                
+                actionBttn(
+                    inputId = "help_x_post", label=NULL, 
+                    icon = icon("question"), style="material-circle", color="primary", size="lg"
+                ),
+            )
+        }
+    })
+    
+    
     output$single_panels <- renderUI({
         if(is.null(rv$mode)==T){
             div(
-            box(
-                title = span( icon("exclamation"), "Notification"), status = "warning", width=8,
-                "No data selected."
-            )
+                box(
+                    title = span( icon("exclamation"), "Notification"), status = "warning", width=8,
+                    "No data selected."
+                )
+
             )
         }
         
         else if (rv$mode == "All genes"){
             div(
-                box(
-                    title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = TRUE,
-                    plotlyOutput("p1_fs_volcano",
-                                 width = "100%",height = "400px"),
-                    
-                    div(style = "position: absolute; left: 1em; bottom: 1em",
-                        dropdown(
-                            sliderTextInput("fs_volcano_p",
-                                            label = "Select P threshold:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=0.05, grid=T, force_edges=T),
-                            sliderInput("fs_volcano_Stat",
-                                        label = "Select |Stat| threshold:",
-                                        min=0, max=5, step=0.1, value=0)
-                            
-                            ,
-                            size = "xs",
-                            icon = icon("gear", class = "opt"),
-                            up = TRUE, width=300
-                        )
-                    ),
-                    div(style = "position: absolute; left: 4em; bottom: 1em",
-                        dropdown(
-                            downloadButton("x_vol_dl", "Download plot")
-                            ,
-                            size = "xs",
-                            icon = icon("download", class = "opt"),
-                            up = TRUE
-                        )
-                    )
-                ),
-                box(
-                    title = span( icon("chart-area"), "Bar"), status = "warning", solidHeader = TRUE, width=6,
-                    
-                    "Bar plot is only available for gene list mode."
-                ),
-                box(
-                    title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE,
-                    dataTableOutput("single_tbl", width = "100%",height="100%"),
-                    
-                    div(style = "position: absolute; left: 1em; bottom: 1em",
-                        dropdown(
-                            sliderTextInput("df_x_p",
-                                            label = "Select P cutoff:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=0.05, grid=T, force_edges=T),
-                            sliderTextInput("df_x_q",
-                                            label = "Select P cutoff:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=1, grid=T, force_edges=T),
-                            sliderInput("df_x_Stat", "Select |Stat| cutoff:", min = 0, max = 5,
-                                        value = 0, step = 0.25)
-                            ,
-                            size = "xs",
-                            icon = icon("cut", class = "opt"),
-                            up = TRUE, width=300
-                        )
-                    ),
-                    div(style = "position: absolute; left: 4em; bottom: 1em;",
-                        dropdown(
-                            downloadButton("downloaddf","Download table"),
-                            downloadButton("downloadrnk","Download RNK")
-                            ,
-                            size = "xs",
-                            icon = icon("download", class = "opt"),
-                            up = TRUE
-                        )
-                    ),
+                
+                fluidRow(
+                    column(6,
+                           box(
+                               title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = TRUE, width=12,
+                               plotlyOutput("p1_fs_volcano",
+                                            width = "100%",height = "400px"),
+                               
+                               div(style = "position: absolute; left: 1em; bottom: 1em",
+                                   dropdown(
+                                       sliderTextInput("fs_volcano_p",
+                                                       label = "Select P threshold:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=0.05, grid=T, force_edges=T),
+                                       sliderInput("fs_volcano_Stat",
+                                                   label = "Select |Stat| threshold:",
+                                                   min=0, max=5, step=0.1, value=0)
+                                       
+                                       ,
+                                       size = "xs",
+                                       icon = icon("gear", class = "opt"),
+                                       up = TRUE, width=300
+                                   )
+                               ),
+                               div(style = "position: absolute; left: 4em; bottom: 1em",
+                                   dropdown(
+                                       downloadButton("x_vol_dl", "Download plot")
+                                       ,
+                                       size = "xs",
+                                       icon = icon("download", class = "opt"),
+                                       up = TRUE
+                                   )
+                               )
+                           ),
+                           
+                           ),
+                    column(6,
+                           box(
+                               title = span( icon("chart-area"), "Bar"), status = "warning", solidHeader = TRUE, width=12,
+                               
+                               "Bar plot is only available for gene list mode."
+                           ),
+                           box(
+                               title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
+                               dataTableOutput("single_tbl", width = "100%",height="100%"),
+                               
+                               div(style = "position: absolute; left: 1em; bottom: 1em",
+                                   dropdown(
+                                       sliderTextInput("df_x_p",
+                                                       label = "Select P cutoff:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=0.05, grid=T, force_edges=T),
+                                       sliderTextInput("df_x_q",
+                                                       label = "Select P cutoff:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=1, grid=T, force_edges=T),
+                                       sliderInput("df_x_Stat", "Select |Stat| cutoff:", min = 0, max = 5,
+                                                   value = 0, step = 0.25)
+                                       ,
+                                       size = "xs",
+                                       icon = icon("cut", class = "opt"),
+                                       up = TRUE, width=300
+                                   )
+                               ),
+                               div(style = "position: absolute; left: 4em; bottom: 1em;",
+                                   dropdown(
+                                       downloadButton("downloaddf","Download table"),
+                                       downloadButton("downloadrnk","Download RNK")
+                                       ,
+                                       size = "xs",
+                                       icon = icon("download", class = "opt"),
+                                       up = TRUE
+                                   )
+                               ),
+                           
+                           
+                           )
+                )
+                
+                
                 )
             )
         }
         else if (rv$mode == "List of genes"){
             div(
-                box(
-                    title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = TRUE,
-                    plotlyOutput("p1_gl_volcano",
-                                 width = "100%",height = "400px"),
-                    
-                    div(style = "position: absolute; left: 1em; bottom: 1em",
-                        dropdown(
-                            sliderTextInput("gl_volcano_p",
-                                            label = "Select P threshold:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=0.05, grid=T, force_edges=T),
-                            sliderInput("gl_volcano_Stat",
-                                        label = "Select |Stat| threshold:",
-                                        min=0, max=5, step=0.1, value=0)
-                            
-                            ,
-                            size = "xs",
-                            icon = icon("gear", class = "opt"),
-                            up = TRUE, width=300
-                        )
+                fluidRow(
+                    column(12, align="right",
+                           div(style="display:inline-block",
+                               
+                               actionBttn(
+                                   inputId = "help_x_post", label=NULL, 
+                                   icon = icon("question"), style="material-circle", color="primary"
+                               ),
+                           )
                     )
                 ),
-                box(
-                    title = span( icon("chart-area"), "Bar"), status = "primary", solidHeader = TRUE,
-                    uiOutput("gl_bar_fig"),
-                    div(style = "position: absolute; left: 1em; bottom: 1em",
-                        dropdown(
-                            radioButtons(
-                                inputId = "p1_bar_data",
-                                label = "Data to plot in bar graph:",
-                                choices = rv$gl_cols, #can select any column except gene name
-                                selected = rv$gl_cols[[1]]
-                            ),
-                            radioButtons(
-                                inputId = "p1_bar_sig",
-                                label = "Color by significance:",
-                                choices = c("PValue","FDR"),
-                                selected = "PValue"
-                            )
-                            
-                            ,
-                            size = "xs",
-                            icon = icon("gear", class = "opt"),
-                            up = TRUE, width=200
-                        )
-                    ),
-                    div(style = "position: absolute; left: 4em; bottom: 1em",
-                        dropdown(
-                            downloadButton("x_bar_dl", "Download plot")
-                            ,
-                            size = "xs",
-                            icon = icon("download", class = "opt"),
-                            up = TRUE
-                        )
-                    )
-                ),
-                box(
-                    title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE,
-                    dataTableOutput("single_gl_tbl", width = "100%",height="100%"),
-                    
-                    div(style = "position: absolute; left: 1em; bottom: 1em",
-                        dropdown(
-                            sliderTextInput("df_gl_p",
-                                            label = "Select P cutoff:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=1, grid=T, force_edges=T),
-                            sliderTextInput("df_gl_q",
-                                            label = "Select P cutoff:",
-                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                            selected=1, grid=T, force_edges=T),
-                            sliderInput("df_gl_Stat", "Select |Stat| cutoff:", min = 0, max = 5,
-                                        value = 0, step = 0.25)
-                            ,
-                            size = "xs",
-                            icon = icon("cut", class = "opt"),
-                            up = TRUE, width=300
-                        )
-                    ),
-                    div(style = "position: absolute; left: 4em; bottom: 1em;",
-                        dropdown(
-                            downloadButton("downloadgldf","Download table"),
-                            downloadButton("downloadrnk","Download RNK")
-                            ,
-                            size = "xs",
-                            icon = icon("download", class = "opt"),
-                            up = TRUE
-                        )
-                    ),
+                fluidRow(
+                    column(6,
+                           box(
+                               title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = TRUE, width=12,
+                               plotlyOutput("p1_gl_volcano",
+                                            width = "100%",height = "400px"),
+                               
+                               div(style = "position: absolute; left: 1em; bottom: 1em",
+                                   dropdown(
+                                       sliderTextInput("gl_volcano_p",
+                                                       label = "Select P threshold:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=0.05, grid=T, force_edges=T),
+                                       sliderInput("gl_volcano_Stat",
+                                                   label = "Select |Stat| threshold:",
+                                                   min=0, max=5, step=0.1, value=0)
+                                       
+                                       ,
+                                       size = "xs",
+                                       icon = icon("gear", class = "opt"),
+                                       up = TRUE, width=300
+                                   )
+                               )
+                           ),
+                           ),
+                    column(6,
+                           box(
+                               title = span( icon("chart-area"), "Bar"), status = "primary", solidHeader = TRUE, width=12,
+                               uiOutput("gl_bar_fig"),
+                               div(style = "position: absolute; left: 1em; bottom: 1em",
+                                   dropdown(
+                                       radioButtons(
+                                           inputId = "p1_bar_data",
+                                           label = "Data to plot in bar graph:",
+                                           choices = rv$gl_cols, #can select any column except gene name
+                                           selected = rv$gl_cols[[1]]
+                                       ),
+                                       radioButtons(
+                                           inputId = "p1_bar_sig",
+                                           label = "Color by significance:",
+                                           choices = c("PValue","FDR"),
+                                           selected = "PValue"
+                                       )
+                                       
+                                       ,
+                                       size = "xs",
+                                       icon = icon("gear", class = "opt"),
+                                       up = TRUE, width=200
+                                   )
+                               ),
+                               div(style = "position: absolute; left: 4em; bottom: 1em",
+                                   dropdown(
+                                       downloadButton("x_bar_dl", "Download plot")
+                                       ,
+                                       size = "xs",
+                                       icon = icon("download", class = "opt"),
+                                       up = TRUE
+                                   )
+                               )
+                           ),
+                           box(
+                               title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
+                               dataTableOutput("single_gl_tbl", width = "100%",height="100%"),
+                               
+                               div(style = "position: absolute; left: 1em; bottom: 1em",
+                                   dropdown(
+                                       sliderTextInput("df_gl_p",
+                                                       label = "Select P cutoff:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=1, grid=T, force_edges=T),
+                                       sliderTextInput("df_gl_q",
+                                                       label = "Select P cutoff:",
+                                                       choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                                       selected=1, grid=T, force_edges=T),
+                                       sliderInput("df_gl_Stat", "Select |Stat| cutoff:", min = 0, max = 5,
+                                                   value = 0, step = 0.25)
+                                       ,
+                                       size = "xs",
+                                       icon = icon("cut", class = "opt"),
+                                       up = TRUE, width=300
+                                   )
+                               ),
+                               div(style = "position: absolute; left: 4em; bottom: 1em;",
+                                   dropdown(
+                                       downloadButton("downloadgldf","Download table"),
+                                       downloadButton("downloadrnk","Download RNK")
+                                       ,
+                                       size = "xs",
+                                       icon = icon("download", class = "opt"),
+                                       up = TRUE
+                                   )
+                               ),
+                           
+                           )
+                )
+                
+                
                 )
             )
         }
@@ -1359,14 +1395,10 @@ server <- function(input, output, session) {
         req(is.null(input$selected_x)==F)
         req(is.null(input$selected_y)==F)
         
-        # observe shared columns
-        xcols <- colnames(rv$gg[[match(input$selected_x,rv$ll)]][-1])
-        ycols <- colnames(rv$gg[[match(input$selected_y,rv$ll)]][-1])
-        rv$xy_sharedcols <- intersect(xcols, ycols)
-        
-        xrows <- rv$gg[[match(input$selected_x,rv$ll)]]$Name
-        yrows <- rv$gg[[match(input$selected_y,rv$ll)]]$Name
-        rv$xy_sharedrows <- intersect(xrows, yrows)
+        selected <- c(input$selected_x, input$selected_y)
+        observed <- detect_shared_dimensions(selected, rv$gg, rv$ll, input_mode="names")
+        rv$xy_sharedcols <- observed$shared_cols
+        rv$xy_sharedrows <- observed$shared_rows
     })
     
     
@@ -1378,15 +1410,24 @@ server <- function(input, output, session) {
         rv$df_xy <- NULL
         withProgress(message = 'Updating data...', value = 0, {
             
-            df_x <- isolate(rv$gg[[match(input$selected_x, rv$ll)]])
-            incProgress(0.2)
-            df_y <- isolate(rv$gg[[match(input$selected_y, rv$ll)]])
-            incProgress(0.2)
-            df_xy <- merge(df_x,df_y, by = "Name")
-            incProgress(0.2)
+            # df_x <- isolate(rv$gg[[match(input$selected_x, rv$ll)]])
+            # incProgress(0.2)
+            # df_y <- isolate(rv$gg[[match(input$selected_y, rv$ll)]])
+            # incProgress(0.2)
+            # df_xy <- merge(df_x,df_y, by = "Name")
+            # incProgress(0.2)
+            selected <- c(input$selected_x, input$selected_y)
+            df_xy <- build_df_n(selected, rv$gg, rv$ll, input_mode="names")
             
             # initialize cor line
-            rv$fit_xy <- lm(Stat.x ~ Stat.y, df_xy)
+            statx <- paste0("`Stat_", selected[[1]],"`") # back ticks to escape possible illegal punctuation
+            staty <- paste0("`Stat_", selected[[2]],"`")
+            lm_fun <- paste(statx, staty, sep = " ~ ")
+            print(lm_fun)
+            print(head(df_xy))
+            rv$fit_xy <- lm(as.formula(lm_fun), data = df_xy)
+            
+            
             
             # initialize params
             rv$xyx_i <- isolate(match(input$selected_x, rv$ll))
@@ -1411,7 +1452,7 @@ server <- function(input, output, session) {
             incProgress(0.2)
         })
         rv$df_xy <- df_xy
-        #print(head(rv$df_xy))
+        print(head(rv$df_xy))
         
     })
     
@@ -1468,8 +1509,185 @@ server <- function(input, output, session) {
     output$xy_confirm <- renderUI({
         req(rv$xy_sharedcols>=1)
         req(rv$xy_sharedrows>=1)
+        req(input$selected_x != input$selected_y)
         
         actionButton("xy_confirm", "Visualize!")
+    })
+    
+    
+    ####----------------------Main Tabs---------------------------####
+    
+    
+    output$xy_floating_buttons <- renderUI({
+        if (is.null(rv$df_xy)==T){
+            div(style="margin-top:10px",
+                
+                actionBttn(
+                    inputId = "help_xy_pre", label=NULL,
+                    icon = icon("question"), style="material-circle", color="primary", size="lg"
+                ),
+            )
+        } else {
+            div(style="margin-top:10px",
+                
+                actionBttn(
+                    inputId = "help_xy_post", label=NULL, 
+                    icon = icon("question"), style="material-circle", color="primary", size="lg"
+                ),
+            )
+        }
+    })
+    
+    
+    output$xy_panels <- renderUI({
+        
+        if(is.null(rv$df_xy)==T){
+            box(
+                title = span( icon("exclamation"), "Notification"), status = "warning", width=8,
+                "No data selected."
+            )
+        }
+        else{
+            
+            
+            
+            
+            div(
+            #     fluidRow(
+            #         column(6,
+            #                radioGroupButtons("dummy",
+            #                                  choices=c("Main", "Intersection", "Correlation"),
+            #                                  selected="Main", status="primary",
+            #                                  checkIcon = list(
+            #                                      yes = tags$i(class = "fa fa-check-square", 
+            #                                                   style = "color: white"),
+            #                                      no = tags$i(class = "fa fa-square-o", 
+            #                                                  style = "color: white"))
+            #                ),
+            #         ),
+            #         column(6, align= "right",
+            #                
+            #                
+            #                dropdown(align="right",
+            #                         
+            #                         tags$h3("Customize Filters"),
+            #                         
+            #                         uiOutput("dummy2"),
+            #                         
+            #                         style = "material-circle", icon = icon("gear"),
+            #                         status = "default", width = "800px",
+            #                         right=T, 
+            #                         animate = animateOptions(
+            #                             enter = "slideInRight",
+            #                             exit = "fadeOutRight", duration = 0.5
+            #                         ),
+            #                ),
+            #                
+            #                
+            #                
+            #         )
+            #     ),
+                
+                box(
+                    title = span( icon("chart-area"), "Scatter"), status = "primary", solidHeader = TRUE, width=8,
+                    
+                    plotlyOutput("df_xy_scatter",
+                                 width = "100%",height = "600px")
+                    ,
+                    div(style = "position: absolute; left: 1em; bottom: 1em",
+                        dropdown(
+                            numericInput("xy_sc_p", 
+                                         "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),
+                            numericInput("xy_sc_q", 
+                                         "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px"),
+                            numericInput("xy_sc_Stat", 
+                                         "|Stat| filter:", value = 0, min = 0, max = 10, step=0.01, width="100px"),
+                            
+                            radioGroupButtons("xy_sc_logic",
+                                              label = "Cutoff mode:",
+                                              choices=c("Either", "Both"),
+                                              selected="Both",size="s")
+                            , 
+                            size = "xs",
+                            icon = icon("cut", class = "opt"),
+                            up = TRUE, width=200
+                        )
+                    ),
+                    div(style = "position: absolute; left: 4em; bottom: 1em",
+                        dropdown(
+                            uiOutput("xy_colormode"),
+                            uiOutput("xy_sig"),
+                            uiOutput("xy_thresh"),
+                            numericInput(
+                                inputId = "xy_sc_size",
+                                label = "Dot size:",
+                                value = 3, step=0.5, width="100px")
+                            ,
+                            size = "xs",
+                            icon = icon("gear", class = "opt"),
+                            up = TRUE, width=230
+                        )
+                    ),
+                    div(style = "position: absolute; left: 7em; bottom: 1em",
+                        dropdown(
+                            downloadButton("scatter_xy_dl", "Download plot")
+                            ,
+                            size = "xs",
+                            icon = icon("download", class = "opt"),
+                            up = TRUE
+                        )
+                    )
+                    
+                    
+                ),
+                box(
+                    title = span( icon("calculator"), "Correlation"), status = "primary", solidHeader = TRUE, width=4
+                    ,
+                    
+                    uiOutput("xy_corline"),br(),
+                    verbatimTextOutput("xy_cor_summary")
+                    
+                ),
+                box(
+                    title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
+                    
+                    dataTableOutput("xy_tbl", width = "100%",height="100%") 
+                    ,
+                    div(style = "position: absolute; left: 1em; bottom: 1em",
+                        dropdown(
+                            sliderTextInput("xy_p",
+                                            label = "Select P cutoff:",
+                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                            selected=0.25, grid=T, force_edges=T),
+                            sliderTextInput("xy_q",
+                                            label = "Select FDR cutoff:",
+                                            choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                            selected=1, grid=T, force_edges=T),
+                            sliderInput("xy_Stat",
+                                        label = "Select |Stat| cutoff:",
+                                        min=0, max=5, step=0.1, value=0),
+                            "Note: This will be applied to all columns."
+                            ,
+                            size = "xs",
+                            icon = icon("cut", class = "opt"),
+                            up = TRUE, width=300
+                        )
+                    ),
+                    div(style = "position: absolute; left: 4em; bottom: 1em",
+                        dropdown(
+                            downloadButton("xy_tbl_dl",
+                                           label = "Download Table")
+                            ,
+                            size = "xs",
+                            icon = icon("download", class = "opt"),
+                            up = TRUE
+                        )
+                    )
+                    
+                    
+                )
+            )
+        }
     })
     
     
@@ -1477,28 +1695,71 @@ server <- function(input, output, session) {
     
     ####================= TWO WAY VISUALIZATIONS =====================####
     
+    
+    filtered_df_xy <- reactive({
+        req(is.null(rv$df_xy)==F)
+        req(is.null(rv$selected_x)==F)
+        req(is.null(rv$selected_y)==F)
+        
+        df_xy <- rv$df_xy
+        selected <- c(rv$selected_x, rv$selected_y)
+        for (i in selected){
+            df_xy <- apply_single_cutoff(df_xy, i, rv$xy_p, rv$xy_q, rv$xy_Stat, tolerate=F)
+        }
+        
+        df_xy
+    })
+    
     ####--------------- table -------------------####
     
     # show df_xy table
     output$xy_tbl <- DT::renderDataTable({
         req(rv$df_xy)
         
-        df_xy <- rv$df_xy
-        # cutoffs:
-        df_xy <- df_xy %>% filter(PValue.x < rv$xy_p & PValue.y < rv$xy_p)
-        df_xy <- df_xy %>% filter(FDR.x < rv$xy_q & FDR.y < rv$xy_q)
-        df_xy <- df_xy %>% filter(abs(Stat.x) > rv$xy_Stat & abs(Stat.y) > rv$xy_Stat)
+        
+        df <- filtered_df_xy()
+        
+        
+        rv$df_xy_fullcols <- colnames(df)
+        
+        # to abbreviate the long column names...take first 5 letters
+        char_limit <- 56 / length(colnames(df))
+        # print(char_limit)
+        colnames(df) <- sapply(names(df), function(x){
+            if (nchar(x)>char_limit)
+            {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
+            else{return (x)}
+        })
+        
         
         # to replace the stat col names 
-        colnames(df_xy) <- gsub("Stat", rv$tt[[rv$xyx_i]], colnames(df_xy))
+        colnames(df) <- gsub("Stat", rv$tt[[rv$xyx_i]], colnames(df))
 
         # to round everything down to 3 decimals
-        df_xy[-1] <- df_xy[-1] %>% mutate_if(is.numeric, ~round(., 3))
+        df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., 3))
         
         
-        print(head(df_xy))
-        df_xy
-    }, options= list(scrollX=T)
+        # print(head(df))
+        df
+        
+    }, plugins = "ellipsis",
+    options = list(scrollX=TRUE, 
+                   columnDefs = list(
+                       list(
+                           targets = 1,
+                           render = JS("$.fn.dataTable.render.ellipsis( 17, true )")
+                       ),
+                       list(
+                           targets = "_all",
+                           render = JS("$.fn.dataTable.render.ellipsis( 6, true )")
+                       )
+                   ),
+                   headerCallback= JS("function(thead, data, start, end, display){",
+                                      sprintf("  var tooltips = [%s];", toString(paste0("'", rv$df_xy_fullcols, "'"))),
+                                      "  for(var i = 1; i <= tooltips.length; i++){",
+                                      "    $('th:eq('+i+')',thead).attr('title', tooltips[i-1]);",
+                                      "  }",
+                                      "}"))
     )
     
     # download table
@@ -1506,11 +1767,7 @@ server <- function(input, output, session) {
         filename = function() {paste0("data-",Sys.Date(),"-",input$selected_x,"_vs_",input$selected_y,".csv")},
         content = function(file) {
             
-            df_xy <- rv$df_xy
-            df_xy <- df_xy %>% filter(PValue.x < rv$xy_p & PValue.y < rv$xy_p)
-            df_xy <- df_xy %>% filter(FDR.x < rv$xy_q & FDR.y < rv$xy_q)
-            df_xy <- df_xy %>% filter(abs(Stat.x) > rv$xy_Stat & abs(Stat.y) > rv$xy_Stat)
-            output_file <- df_xy
+            output_file <- filtered_df_xy()
             
             write.csv(output_file, file, 
                       row.names = FALSE, quote=T)})
@@ -1539,38 +1796,54 @@ server <- function(input, output, session) {
     })
     output$xy_thresh <- renderUI({
         req(rv$xy_colormode =="Two colors")
-        sliderTextInput("xy_thresh",
-                        label = "Select threshold:",
-                        choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                        selected=0.05, grid=T, force_edges=T)
+        
+        numericInput("xy_thresh", 
+                     "Threshold:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")
     })
     
     
     # plotly scatter
     xy_sc_plt <- reactive({
+        req(is.null(rv$df_xy)==F)
+        req(is.null(rv$selected_x)==F)
+        req(is.null(rv$selected_y)==F)
+        
         withProgress(message = 'Making graph...', value = 0, {
             print(dim(rv$df_xy[[1]]))
             
             df_p <- rv$df_xy
             
-            xsig <- paste0(rv$xy_sig,".x")
-            ysig <- paste0(rv$xy_sig,".y")
-            
+            selected <- c(rv$selected_x, rv$selected_y)
+            xsig <- paste(rv$xy_sig, selected[[1]], sep="_")
+            ysig <- paste(rv$xy_sig, selected[[2]], sep="_")
+            xstat <- paste("Stat", selected[[1]], sep="_")
+            ystat <- paste("Stat", selected[[2]], sep="_")
+            xp <- paste("PValue", selected[[1]], sep="_")
+            yp <- paste("PValue", selected[[2]], sep="_")
+            xq <- paste("FDR", selected[[1]], sep="_")
+            yq <- paste("FDR", selected[[2]], sep="_")
             
             
             
             df_p[df_p==0]<-0.00001 # replace 0 with 0.001
             # cutoffs
+            x_filtered <- apply_single_cutoff(df_p, selected[[1]], p=rv$xy_sc_p, q=rv$xy_sc_q, stat=rv$xy_sc_Stat, tolerate=F)
+            y_filtered <- apply_single_cutoff(df_p, selected[[2]], p=rv$xy_sc_p, q=rv$xy_sc_q, stat=rv$xy_sc_Stat, tolerate=F)
+            print(head(x_filtered))
             if (rv$xy_sc_logic == "Both"){
-                df_p <- df_p %>% filter(PValue.x < rv$xy_sc_p & PValue.y < rv$xy_sc_p)
-                df_p <- df_p %>% filter(FDR.x < rv$xy_sc_q & FDR.y < rv$xy_sc_q)
-                df_p <- df_p %>% filter(abs(Stat.x) > rv$xy_sc_Stat & abs(Stat.y) > rv$xy_sc_Stat)
+                df_p <- df_p[df_p$Name %in% intersect(x_filtered$Name, y_filtered$Name), ]
+                # df_p <- df_p %>% filter(PValue.x < rv$xy_sc_p & PValue.y < rv$xy_sc_p)
+                # df_p <- df_p %>% filter(FDR.x < rv$xy_sc_q & FDR.y < rv$xy_sc_q)
+                # df_p <- df_p %>% filter(abs(Stat.x) > rv$xy_sc_Stat & abs(Stat.y) > rv$xy_sc_Stat)
             } else if (rv$xy_sc_logic == "Either"){
-                df_p <- df_p %>% filter(PValue.x < rv$xy_sc_p | PValue.y < rv$xy_sc_p)
-                df_p <- df_p %>% filter(FDR.x < rv$xy_sc_q | FDR.y < rv$xy_sc_q)
-                df_p <- df_p %>% filter(abs(Stat.x) > rv$xy_sc_Stat | abs(Stat.y) > rv$xy_sc_Stat)
+                # df_p <- df_p %>% filter(PValue.x < rv$xy_sc_p | PValue.y < rv$xy_sc_p)
+                # df_p <- df_p %>% filter(FDR.x < rv$xy_sc_q | FDR.y < rv$xy_sc_q)
+                # df_p <- df_p %>% filter(abs(Stat.x) > rv$xy_sc_Stat | abs(Stat.y) > rv$xy_sc_Stat)
+                df_p <- df_p[df_p$Name %in% union(x_filtered$Name, y_filtered$Name), ]
             }
             
+            df_p <- remove_nas(df_p) # when using Either mode, NA might slip by. 
+            # need to delete NA rows before graphing, although those can show up in table.
             
             req(nrow(df_p)>0)
             
@@ -1612,8 +1885,8 @@ server <- function(input, output, session) {
             }
             
             incProgress(0.2)
-            
-            rv$fit_xy <- lm(Stat.x ~ Stat.y, df_p)
+            lm_fun <- paste0("`", xstat, "` ~ `", ystat, "`")
+            rv$fit_xy <- lm(lm_fun, data = df_p)
             
             print(head(df_p))
             
@@ -1621,19 +1894,19 @@ server <- function(input, output, session) {
             
             fig <- plot_ly(
                 data = df_p, 
-                x = df_p$Stat.x,
-                y = df_p$Stat.y,
+                x = df_p[[xstat]],
+                y = df_p[[ystat]],
                 type = 'scatter',
                 mode = 'markers', 
                 marker = marker_settings,
                 hoverinfo="text",
                 text=c(paste(df_p$Name, 
-                             "<br>",rv$tt[[rv$xyx_i]],"(x):", round(df_p$Stat.x, 3),
-                             "<br>p(x):", round(df_p$PValue.x, 3),
-                             ", q(x):", round(df_p$FDR.x, 3),
-                             "<br>",rv$tt[[rv$xyy_i]],"(y):", round(df_p$Stat.y, 3),
-                             "<br>p(y):", round(df_p$PValue.y, 3),
-                             ", q(y):", round(df_p$FDR.y, 3)
+                             "<br>",rv$tt[[rv$xyx_i]],"(x):", round(df_p[[xstat]], 3),
+                             "<br>p(x):", round(df_p[[xp]], 3),
+                             ", q(x):", round(df_p[[xq]], 3),
+                             "<br>",rv$tt[[rv$xyy_i]],"(y):", round(df_p[[ystat]], 3),
+                             "<br>p(y):", round(df_p[[yp]], 3),
+                             ", q(y):", round(df_p[[yq]], 3)
                 ))
             )
             fig <- fig %>% layout(title = paste0(rv$selected_x, " vs ", rv$selected_y, " (n=",nrow(df_p),")"),
@@ -1694,205 +1967,14 @@ server <- function(input, output, session) {
     
     
     
-    ####----------------------Main Tabs---------------------------####
     
-    
-    output$xy_panels <- renderUI({
-
-        if(is.null(rv$df_xy)==T){
-            box(
-                title = span( icon("exclamation"), "Notification"), status = "warning", width=8,
-                "No data selected."
-            )
-        }
-        else{
-        div(
-            box(
-                title = span( icon("chart-area"), "Scatter"), status = "primary", solidHeader = TRUE, width=8,
-                
-                plotlyOutput("df_xy_scatter",
-                             width = "100%",height = "600px")
-                ,
-                div(style = "position: absolute; left: 1em; bottom: 1em",
-                    dropdown(
-                        sliderTextInput("xy_sc_p",
-                                        label = "Select P cutoff:",
-                                        choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                        selected=0.25, grid=T, force_edges=T),
-                        sliderTextInput("xy_sc_q",
-                                        label = "Select FDR cutoff:",
-                                        choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                        selected=1, grid=T, force_edges=T),
-                        sliderInput("xy_sc_Stat",
-                                    label = "Select |Stat| cutoff:",
-                                    min=0, max=5, step=0.1, value=0),
-                        radioGroupButtons("xy_sc_logic",
-                                          label = "Cutoff mode:",
-                                          choices=c("Either", "Both"),
-                                          selected="Both",size="s")
-                        ,
-                        size = "xs",
-                        icon = icon("cut", class = "opt"),
-                        up = TRUE, width=300
-                    )
-                ),
-                div(style = "position: absolute; left: 4em; bottom: 1em",
-                    dropdown(
-                        uiOutput("xy_colormode"),
-                        uiOutput("xy_sig"),
-                        uiOutput("xy_thresh"),
-                        numericInput(
-                            inputId = "xy_sc_size",
-                            label = "Dot size:",
-                            value = 3, step=0.5, width="100px")
-                        ,
-                        size = "xs",
-                        icon = icon("gear", class = "opt"),
-                        up = TRUE, width=200
-                    )
-                ),
-                div(style = "position: absolute; left: 7em; bottom: 1em",
-                    dropdown(
-                        downloadButton("scatter_xy_dl", "Download plot")
-                        ,
-                        size = "xs",
-                        icon = icon("download", class = "opt"),
-                        up = TRUE
-                    )
-                )
-                
-                
-            ),
-            box(
-                title = span( icon("calculator"), "Correlation"), status = "primary", solidHeader = TRUE, width=4
-                ,
-
-                uiOutput("xy_corline"),br(),
-                verbatimTextOutput("xy_cor_summary")
-
-            ),
-            box(
-                title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
-                
-                dataTableOutput("xy_tbl", width = "100%",height="100%") 
-                ,
-                div(style = "position: absolute; left: 1em; bottom: 1em",
-                    dropdown(
-                        sliderTextInput("xy_p",
-                                        label = "Select P cutoff:",
-                                        choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                        selected=0.25, grid=T, force_edges=T),
-                        sliderTextInput("xy_q",
-                                        label = "Select FDR cutoff:",
-                                        choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                        selected=1, grid=T, force_edges=T),
-                        sliderInput("xy_Stat",
-                                    label = "Select |Stat| cutoff:",
-                                    min=0, max=5, step=0.1, value=0),
-                        "Note: This will be applied to all columns."
-                        ,
-                        size = "xs",
-                        icon = icon("cut", class = "opt"),
-                        up = TRUE, width=300
-                    )
-                ),
-                div(style = "position: absolute; left: 4em; bottom: 1em",
-                    dropdown(
-                        downloadButton("xy_tbl_dl",
-                                       label = "Download Table")
-                        ,
-                        size = "xs",
-                        icon = icon("download", class = "opt"),
-                        up = TRUE
-                    )
-                )
-                
-                
-            )
-        )
-        }
-    })
     
     
     
     #======================================================================#
     ####                        MULTIPLE WAY                            ####
     #======================================================================#
-    # tolerate: ignore na values
-    apply_n_cutoffs <- function(df, p, q, stat, tolerate=F){
-        if (tolerate ==T){
-            naval <- 123456
-            df[is.na(df)] <- -naval
-            df <- df %>% mutate(m = do.call(pmax, dplyr::select(df, contains("PValue_")))) %>%
-                filter(m < p)
-            df <- df %>% mutate(m = do.call(pmax, dplyr::select(df, contains("FDR_")))) %>%
-                filter(m < q)
-            df[df==-naval] <- naval
-            df <- df %>% mutate(m = do.call(pmin, abs(dplyr::select(df, contains("Stat"))))) %>%
-                filter(m > stat)
-            df <- df[1:(length(df)-1)] # delete last helper column
-            df[df==naval] <- NA
-        }
-        else if (tolerate ==F){
-            df <- df %>% mutate(m = do.call(pmax, dplyr::select(df, contains("PValue_")))) %>%
-                filter(m < p)
-            df <- df %>% mutate(m = do.call(pmax, dplyr::select(df, contains("FDR_")))) %>%
-                filter(m < q)
-            df <- df %>% mutate(m = do.call(pmin, abs(dplyr::select(df, contains("Stat"))))) %>%
-                filter(m > stat)
-            df <- df[1:(length(df)-1)] # delete last helper column
-        }
-        
-
-        
-        return(df)
-    }
     
-    apply_single_cutoff <- function(df, colname, p, q, stat, tolerate=F){
-        pcol <- paste0("PValue_",colname)
-        qcol <- paste0("FDR_",colname)
-        statcol <- paste0("Stat_",colname)
-        
-        # first, filter while ignoring na in the selected col.
-        df <- df %>% filter(!!sym(pcol) <= p | is.na(!!sym(pcol)))
-        df <- df %>% filter(!!sym(qcol) <= q | is.na(!!sym(qcol)))
-        df <- df %>% filter(abs(!!sym(statcol)) >= stat | is.na(!!sym(statcol)))
-        
-        # if no na allowed, get rid of nas in the selected col.
-        if (tolerate==F){
-            df <- df[is.na(df[,pcol])==F,]
-            df <- df[is.na(df[,qcol])==F,]
-            df <- df[is.na(df[,statcol])==F,]
-        }
-        return(df)
-    }
-    
-    # filter column by sign.
-    # df: the df you want filtered; colname: substring of choice e.g. "Stat",
-    # sign: "All", "Positive" or "Negative"
-    filter_by_sign <- function(df, colname, sign, tolerate=F){
-        naval <- 123456
-        
-        if (sign == "Positive"){
-            if (tolerate ==T){
-                df[is.na(df)] <- naval
-            } 
-            df <- df %>% mutate(m = do.call(pmin, dplyr::select(df, contains(colname)))) %>%
-                filter(m > 0)
-            df <- df[1:(length(df)-1)] # delete last helper column
-            if (tolerate ==T){df[df==naval] <- NA} 
-        }
-        else if (sign == "Negative"){
-            if (tolerate ==T){
-                df[is.na(df)] <- -naval
-            }
-            df <- df %>% mutate(m = do.call(pmax, dplyr::select(df, contains(colname)))) %>%
-                filter(m < 0)
-            df <- df[1:(length(df)-1)] # delete last helper column
-            if (tolerate ==T){df[df==-naval] <- NA}
-        }
-        return(df)
-    }
     
     
     ####---------------------- Events ---------------------------####
@@ -1906,6 +1988,7 @@ server <- function(input, output, session) {
     observeEvent(input$heatmap_sortby,{rv$heatmap_sortby<-input$heatmap_sortby})
     
     observe({
+        req(is.null(rv$nx_n)==F)
         if(is.null(input$n_basic_cutby)==F){ rv$n_basic_cutby <- input$n_basic_cutby }
         
         if(is.null(input$n_hm_cutmode)==F){ rv$n_hm_cutmode <- input$n_hm_cutmode }
@@ -1937,9 +2020,27 @@ server <- function(input, output, session) {
         if(is.null(input$n_upset_sortby)==F){ rv$n_upset_sortby <- input$n_upset_sortby }
         if(is.null(input$n_upset_showempty)==F){ rv$n_upset_showempty <- input$n_upset_showempty }
         
-        if(is.null(input$subana_mode)==F){ rv$subana_mode <- input$subana_mode }
-        
         if(is.null(input$n_ui_showpanel)==F){ rv$n_ui_showpanel <- input$n_ui_showpanel }
+        
+        
+        for (i in 1:length(rv$nx_n)){
+            if(is.null(input[[paste0("nic_p_",i)]])==F){ rv[[paste0("nic_p_",i)]] <- input[[paste0("nic_p_",i)]] }
+            if(is.null(input[[paste0("nic_q_",i)]])==F){ rv[[paste0("nic_q_",i)]] <- input[[paste0("nic_q_",i)]] }
+            if(is.null(input[[paste0("nic_Stat_",i)]])==F){ rv[[paste0("nic_Stat_",i)]] <- input[[paste0("nic_Stat_",i)]] }
+            if(is.null(input[[paste0("nic_sign_",i)]])==F){ rv[[paste0("nic_sign_",i)]] <- input[[paste0("nic_sign_",i)]] }
+            if(is.null(input[[paste0("nic_apply_",i)]])==F){ rv[[paste0("nic_apply_",i)]] <- input[[paste0("nic_apply_",i)]] }
+            if(is.null(input[[paste0("nic_na_",i)]])==F){ rv[[paste0("nic_na_",i)]] <- input[[paste0("nic_na_",i)]] }
+        }
+        
+        if(is.null(input$nxy_selected_x)==F){ rv$nxy_selected_x <- input$nxy_selected_x }
+        if(is.null(input$nxy_selected_y)==F){ rv$nxy_selected_y <- input$nxy_selected_y }
+        if(is.null(input$nxy_selected_z)==F){ rv$nxy_selected_z <- input$nxy_selected_z }
+        if(is.null(input$nxy_colormode)==F){rv$nxy_colormode <- input$nxy_colormode}
+        if(is.null(input$nxy_sig)==F){rv$nxy_sig <- input$nxy_sig}
+        if(is.null(input$nxy_thresh)==F){rv$nxy_thresh <- input$nxy_thresh}
+        if(is.null(input$nxy_sc_size)==F){rv$nxy_sc_size <- input$nxy_sc_size}
+        if(is.null(input$nxy_sc_logic)==F){rv$nxy_sc_logic <- input$nxy_sc_logic}
+        if(is.null(input$nxyz_sc_logic)==F){rv$nxy_sc_logic <- input$nxyz_sc_logic} # put xyz logic into xy
         
         # if(is.null(input$n_igl)==F){ rv$n_igl <- input$n_igl }
     })
@@ -1954,17 +2055,9 @@ server <- function(input, output, session) {
     observe({
         if (length(rv$heatmap_i)>=2){
             try({
-                # observe shared columns
-                colns <- lapply(rv$heatmap_i, function(x){
-                    colnames(rv$gg[[x]][-1]) # exclude genename column
-                })
-                rv$n_sharedcols <- Reduce(intersect, colns)
-                
-                # observe shared rows
-                rowns <- lapply(rv$heatmap_i, function(x){
-                    rv$gg[[x]]$Name 
-                })
-                rv$n_sharedrows <- Reduce(intersect, rowns)
+                observed <- detect_shared_dimensions(rv$heatmap_i, rv$gg, rv$ll, input_mode="indices")
+                rv$n_sharedcols <- observed$shared_cols
+                rv$n_sharedrows <- observed$shared_rows
             })
             
         }
@@ -1983,30 +2076,15 @@ server <- function(input, output, session) {
         
         withProgress(message = 'Updating data...', value = 0, {
             
+            df_n <- build_df_n(input$heatmap_dfs, rv$gg, rv$ll, input_mode = "names")
             
-            # make list of dfs 
-            data <- lapply(rv$heatmap_i, function(x){
-                Stat<-rv$gg[[x]]
-                return (Stat)
-            }) 
-            incProgress(0.2)
-            
-            # annotate the non-name columns in each df in list with filename
-            data <- lapply(seq_along(data), function(x, y){
-                colnames(data[[x]])[-1] <- paste(colnames(data[[x]])[-1],y[[x]], sep="_")
-                return (data[[x]])}
-                , y=input$heatmap_dfs)
-            incProgress(0.2)
-            
-            # merge list of dfs on gene
-            plotdata <- Reduce(function(x,y) merge(x,y, by = "Name", all=T), data) 
-            incProgress(0.2)
+            incProgress(0.5)
             
             # initialize params
             rv$nx_i <- isolate(rv$heatmap_i)
             rv$nx_n <- isolate(input$heatmap_dfs)
             
-            rv$n_ui_showpanel <- "Main"
+            rv$n_ui_showpanel <- "Heatmap"
             
             rv$n_igl <- ""
             
@@ -2049,9 +2127,26 @@ server <- function(input, output, session) {
             rv$n_upset_sortby <- "freq"
             rv$n_upset_showempty <- FALSE
             
+            # initialize filters
+            for (i in 1:length(rv$nx_n)){
+                rv[[paste0("nic_p_",i)]] <- 0.05
+                rv[[paste0("nic_q_",i)]] <- 1
+                rv[[paste0("nic_Stat_",i)]] <- 0
+                rv[[paste0("nic_sign_",i)]] <- "All"
+                rv[[paste0("nic_apply_",i)]] <- T
+                rv[[paste0("nic_na_",i)]] <- T
+            }
             
-            updateSwitchInput(session, "subana_mode", value = F)
-            rv$subana_mode <- F
+            # initialize scatter
+            rv$nxy_selected_x <- rv$nx_n[[1]]
+            rv$nxy_selected_y <- rv$nx_n[[2]]
+            rv$nxy_selected_z <- "None"
+            rv$nxy_colormode <- "None"
+            rv$nxy_sig <- "PValue"
+            rv$nxy_thresh <- 0.01
+            rv$nxy_sc_size <- 3
+            rv$nxy_sc_logic <- "Both"
+            rv$nxyz_sc_logic <- "Both"
             
             
             if (length(rv$nx_i) <= 5){rv$n_venn_status <- "ok"}
@@ -2066,13 +2161,12 @@ server <- function(input, output, session) {
             incProgress(0.2)
             print(tt)
             
-            #plotdata <- remove_nas(plotdata)
         
         })
-        rv$df_n <- plotdata
+        rv$df_n <- df_n
         
         # find max stat and generate scale
-        statmax <- max(dplyr::select(plotdata, contains("Stat_")), na.rm=TRUE)
+        statmax <- max(dplyr::select(df_n, contains("Stat_")), na.rm=TRUE)
         rv$n_stat_scale <- round(generate_scale(statmax, 10),2)
         
         shinyjs::enable("n_use_data")
@@ -2167,8 +2261,29 @@ server <- function(input, output, session) {
     
     ####----------------------Main Tabs---------------------------####
     
-    
-    
+    output$n_floating_buttons <- renderUI({
+        
+        if (is.null(rv$df_n)==T){
+            div(style="margin-top:10px",
+                actionBttn(
+                    inputId = "help_n_pre", label=NULL, 
+                    icon = icon("question"), style="material-circle", color="primary", size="lg"
+                ),
+            )
+        } else {
+            div(style="margin-top:10px",
+                actionBttn(
+                    inputId = "help_n_post", label=NULL,
+                    icon = icon("question"), style="material-circle", color="primary", size="lg"
+                ),
+            )
+
+            
+        }
+        
+        
+    })
+        
     
     
     
@@ -2181,27 +2296,45 @@ server <- function(input, output, session) {
         }
         else{
         div(
-            box(
-                width = 12, status = "primary",solidHeader = F, collapsible=T,
-                title = span(icon("gear"),"Customize Filters"),
-                uiOutput("ui_n_gls_opt"),
-                
+            fluidRow(
+                column(6,
+                       radioGroupButtons("n_ui_showpanel",
+                                         choices=c("Heatmap", "Intersection", "Scatter"),
+                                         selected="Heatmap", status="primary",
+                                         checkIcon = list(
+                                             yes = tags$i(class = "fa fa-check-square", 
+                                                          style = "color: white"),
+                                             no = tags$i(class = "fa fa-square-o", 
+                                                         style = "color: white"))
+                       ),
+                ),
+                column(6, align= "right",
+
+                           
+                           dropdown(align="right",
+                               
+                               tags$h3("Customize Filters"),
+                               
+                               uiOutput("ui_n_gls_opt"),
+                               
+                               style = "material-circle", icon = icon("gear"),
+                               status = "default", width = "800px",
+                               right=T, 
+                               animate = animateOptions(
+                                   enter = "slideInRight",
+                                   exit = "fadeOutRight", duration = 0.5
+                               ),
+                           ),
+
+                       
+                       
+                       )
             ),
             
-            column(12,
-                   radioGroupButtons("n_ui_showpanel",
-                                     choices=c("Main", "Intersection"),
-                                     selected="Main", status="primary",
-                                     checkIcon = list(
-                                         yes = tags$i(class = "fa fa-check-square", 
-                                                      style = "color: white"),
-                                         no = tags$i(class = "fa fa-square-o", 
-                                                     style = "color: white"))
-                   ),
-            ),
             
             uiOutput("n_ui_basic"),
-            uiOutput("n_ui_intersect")
+            uiOutput("n_ui_intersect"),
+            uiOutput("n_ui_correlation")
 
             
         )   
@@ -2212,96 +2345,19 @@ server <- function(input, output, session) {
     #----------------- basic analysis --------------------
     
     output$n_ui_basic <- renderUI({
-        req(rv$n_ui_showpanel == "Main")
+        req(rv$n_ui_showpanel == "Heatmap")
         div(
             
-            # box(
-            #     width = 12, status = "primary",solidHeader = F, collapsible = TRUE,
-            #     title = span(icon("gear"),"Customize filters"),
-            #     column(3,
-            #            # radioGroupButtons("n_tbl_cutmode",
-            #            #                   label="Cutoff by dataset(s):",
-            #            #                   choices=c("All", "Single"), 
-            #            #                   selected = "All", size="s", justified = TRUE
-            #            #                   ),
-            #            checkboxGroupInput(
-            #                inputId = "n_basic_cutby",
-            #                label= "Apply cutoffs to dataset(s):",
-            #                choices = rv$nx_n,
-            #                selected = rv$nx_n
-            #            ),
-            #            materialSwitch(
-            #                inputId = "n_tbl_showna", label = "Tolerate NAs in selected?", status="primary",
-            #                value = T
-            #            ),
-            #            
-            #            # shiny::HTML("<span style='color: gray'>(only applies to selected columns)</span>")
-            #     ),
-            #     column(6,
-            #            column(6,
-            #                   # sliderTextInput("n_p",
-            #                   #                 label = "Select P cutoff:",
-            #                   #                 choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-            #                   #                 selected=1, grid=T, force_edges=T),
-            #                   # sliderTextInput("n_Stat",
-            #                   #                 label = "Select |Stat| cutoff:",
-            #                   #                 choices= rv$n_stat_scale,
-            #                   #                 selected=rv$n_stat_scale[[1]], grid=T, force_edges=T)
-            #                   numericInput(
-            #                       inputId = "n_p",
-            #                       label = "P cutoff:",
-            #                       value = 1, step=0.01)
-            #                   ,
-            #                   numericInput(
-            #                       inputId = "n_Stat",
-            #                       label = "|Stat| cutoff:",
-            #                       value = 0, step=0.1)
-            #            ),
-            #            column(6,
-            #                   # sliderTextInput("n_q",
-            #                   #                 label = "Select FDR cutoff:",
-            #                   #                 choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-            #                   #                 selected=1, grid=T, force_edges=T),
-            #                   numericInput(
-            #                       inputId = "n_q",
-            #                       label = "FDR cutoff:",
-            #                       value = 1, step=0.01)
-            #                   ,
-            #                   
-            #                   radioGroupButtons("n_sign",
-            #                                     label = "Filter Stat by:",
-            #                                     choices=c("All", "Positive", "Negative"),
-            #                                     selected="All",size="s")
-            #            )
-            #            
-            #            
-            #     ),
-            #     column(3,
-            #            
-            #            textAreaInput("n_igl", "View list of terms:", "", placeholder="Gene1\nGene2"),
-            #            uiOutput("n_igl_nm"),
-            #            actionButton("n_igl_update", "Update view"),
-            #            actionButton("n_igl_reset", "Reset"),
-            #            
-            #     ),
-            #     
-            #     
-            #     
-            #     
-            # ),
             
             #----------------- heatmap --------------------
             box(
-                title = span( icon("chart-area"), "Heatmap"), status = "primary", solidHeader = TRUE, width=6,
+                title = span( icon("chart-area"), "Heatmap"), status = "primary", solidHeader = TRUE, width=8,
                 
                 uiOutput("n_heatmap"), 
 
                 div(style = "position: absolute; left: 1em; bottom: 1em",
                     dropdown(
-                        # materialSwitch(
-                        #     inputId = "n_hm_showna", label = "Show rows with NA?", status="primary",
-                        #     value = T
-                        # ),
+
                         uiOutput("select_sortby_p2"),
                         uiOutput("n_to_plot"),
                         
@@ -2326,65 +2382,65 @@ server <- function(input, output, session) {
             
             #----------------- 3ds --------------------
             
-            conditionalPanel("output.n_3ds_status == 'ok'",
-                             box(
-                                 title = span( icon("chart-area"), "3D Scatter"), status = "primary", solidHeader = TRUE, width=6,
-                                 plotlyOutput("df_n_3ds",
-                                              width = "100%",height = "600px"),
-                                 
-
-                                 div(style = "position: absolute; left: 1em; bottom: 1em",
-                                     dropdown(
-                                         "Color threshold options:",
-                                         sliderTextInput("n_3ds_p",
-                                                         label = "Select P threshold:",
-                                                         choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                                         selected=0.05, grid=T, force_edges=T),
-                                         sliderTextInput("n_3ds_q",
-                                                         label = "Select FDR threshold:",
-                                                         choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                                                         selected=1, grid=T, force_edges=T),
-                                         sliderTextInput("n_3ds_Stat",
-                                                         label = "Select |Stat| threshold:",
-                                                         choices= c(0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5),
-                                                         selected=0, grid=T, force_edges=T),
-                                         "Note: This will be applied to all columns.",
-                                         
-                                         
-                                         size = "xs",
-                                         icon = icon("gear", class = "opt"),
-                                         up = TRUE, width=300
-                                     )
-                                 ),
-                                 div(style = "position: absolute; left: 4em; bottom: 1em",
-                                     dropdown(
-                                         strong("Summary:"),
-                                         dataTableOutput("n_3ds_prop_tbl"),
-                                         
-                                         
-                                         size = "xs",
-                                         icon = icon("table", class = "opt"),
-                                         up = TRUE, width=300
-                                     )
-                                 ),
-                                 div(style = "position: absolute; left: 7em; bottom: 1em",
-                                     dropdown(
-                                         downloadButton("n_3ds_dl", "Download plot"),
-                                         downloadButton("download_3ds_df", "Download summary")
-                                         ,
-                                         size = "xs",
-                                         icon = icon("download", class = "opt"),
-                                         up = TRUE
-                                     )
-                                 )
-                                 
-                                 
-                                 
-                             )
-            ),
-            conditionalPanel("output.n_3ds_status == 'no'",
-                             uiOutput("n_3ds_placeholder")
-            ),
+            # conditionalPanel("output.n_3ds_status == 'ok'",
+            #                  box(
+            #                      title = span( icon("chart-area"), "3D Scatter"), status = "primary", solidHeader = TRUE, width=6,
+            #                      plotlyOutput("df_n_3ds",
+            #                                   width = "100%",height = "600px"),
+            #                      
+            # 
+            #                      div(style = "position: absolute; left: 1em; bottom: 1em",
+            #                          dropdown(
+            #                              "Color threshold options:",
+            #                              sliderTextInput("n_3ds_p",
+            #                                              label = "Select P threshold:",
+            #                                              choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+            #                                              selected=0.05, grid=T, force_edges=T),
+            #                              sliderTextInput("n_3ds_q",
+            #                                              label = "Select FDR threshold:",
+            #                                              choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+            #                                              selected=1, grid=T, force_edges=T),
+            #                              sliderTextInput("n_3ds_Stat",
+            #                                              label = "Select |Stat| threshold:",
+            #                                              choices= c(0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5),
+            #                                              selected=0, grid=T, force_edges=T),
+            #                              "Note: This will be applied to all columns.",
+            #                              
+            #                              
+            #                              size = "xs",
+            #                              icon = icon("gear", class = "opt"),
+            #                              up = TRUE, width=300
+            #                          )
+            #                      ),
+            #                      div(style = "position: absolute; left: 4em; bottom: 1em",
+            #                          dropdown(
+            #                              strong("Summary:"),
+            #                              dataTableOutput("n_3ds_prop_tbl"),
+            #                              
+            #                              
+            #                              size = "xs",
+            #                              icon = icon("table", class = "opt"),
+            #                              up = TRUE, width=300
+            #                          )
+            #                      ),
+            #                      div(style = "position: absolute; left: 7em; bottom: 1em",
+            #                          dropdown(
+            #                              downloadButton("n_3ds_dl", "Download plot"),
+            #                              downloadButton("download_3ds_df", "Download summary")
+            #                              ,
+            #                              size = "xs",
+            #                              icon = icon("download", class = "opt"),
+            #                              up = TRUE
+            #                          )
+            #                      )
+            #                      
+            #                      
+            #                      
+            #                  )
+            # ),
+            # conditionalPanel("output.n_3ds_status == 'no'",
+            #                  uiOutput("n_3ds_placeholder")
+            # ),
             
             
             #----------------- table --------------------
@@ -2414,18 +2470,7 @@ server <- function(input, output, session) {
         
         
         div(
-            
-            # fluidRow(
-            #     # column(12,
-            #     #        h3("Intersection analysis"),
-            #     #        tags$hr(style="border-color: grey;")
-            #     # )
-            #     
-            #     
-            # ),
-            
-            
-            
+
             
             #----------------- venn --------------------
             
@@ -2482,41 +2527,45 @@ server <- function(input, output, session) {
             
             
             #----------------- upset --------------------
-            
-            box(
-                title = span( icon("chart-area"), "UpSet Plot"), status = "primary", solidHeader = TRUE, width=6,
-                
-                plotOutput("df_n_upset", width = "100%"),
-                
-                div(style = "position: absolute; left: 1em; bottom: 1em",
-                    dropdown(
-                        selectInput(
-                            inputId = "n_upset_sortby",
-                            label = "Order by:",
-                            choices = c("Frequency"="freq", "Degree"="degree"),
-                            selected = "freq"),
-                        materialSwitch(
-                            inputId = "n_upset_showempty", label = "Show empty intersections?", status="primary",
-                            value = FALSE
-                        ),
-                        
-                        size = "xs",
-                        icon = icon("gear", class = "opt"),
-                        up = TRUE, width=300
-                    )
+            conditionalPanel("output.n_venn_status == 'ok'",
+                box(
+                    title = span( icon("chart-area"), "UpSet Plot"), status = "primary", solidHeader = TRUE, width=6,
                     
-                ),
-                div(style = "position: absolute; left: 4em; bottom: 1em",
-                    dropdown(
-                        downloadButton("n_upset_dl", "Download plot"),
+                    plotOutput("df_n_upset", width = "100%"),
+                    
+                    div(style = "position: absolute; left: 1em; bottom: 1em",
+                        dropdown(
+                            selectInput(
+                                inputId = "n_upset_sortby",
+                                label = "Order by:",
+                                choices = c("Frequency"="freq", "Degree"="degree"),
+                                selected = "freq"),
+                            materialSwitch(
+                                inputId = "n_upset_showempty", label = "Show empty intersections?", status="primary",
+                                value = FALSE
+                            ),
+                            
+                            size = "xs",
+                            icon = icon("gear", class = "opt"),
+                            up = TRUE, width=300
+                        )
                         
-                        size = "xs",
-                        icon = icon("download", class = "opt"),
-                        up = TRUE, width=300
+                    ),
+                    div(style = "position: absolute; left: 4em; bottom: 1em",
+                        dropdown(
+                            downloadButton("n_upset_dl", "Download plot"),
+                            
+                            size = "xs",
+                            icon = icon("download", class = "opt"),
+                            up = TRUE, width=300
+                        )
+                        
                     )
                     
                 )
-                
+            ),
+            conditionalPanel("output.n_venn_status == 'no'",
+                             uiOutput("n_upset_placeholder")
             ),
             
             #----------------- Intersect table--------------------
@@ -2590,23 +2639,231 @@ server <- function(input, output, session) {
     output$n_venn_placeholder <- renderUI({
         box(
             title = span( icon("chart-area"), "Venn Diagram"), status = "warning", solidHeader = TRUE, width=6,
-            paste0("Venn diagram is only available for 4 or less datasets. You have selected ", length(rv$nx_i)," datasets.")
+            paste0("Venn diagram is only available for 5 or less datasets. You have selected ", length(rv$nx_i)," datasets.")
         )
     })
-    output$n_3ds_placeholder <- renderUI({
+    output$n_upset_placeholder <- renderUI({
         box(
-            title = span( icon("chart-area"), "3D Scatter"), status = "warning", solidHeader = TRUE, width=6,
-            paste0("3D Scatter is only available for 3 datasets. You have selected ", length(rv$nx_i)," datasets.")
+            title = span( icon("chart-area"), "UpSet Plot"), status = "warning", solidHeader = TRUE, width=6,
+            paste0("UpSet plot is only available for 5 or less datasets. You have selected ", length(rv$nx_i)," datasets.")
         )
     })
     
     
+    
+    output$n_ui_correlation <- renderUI({
+        req(rv$n_ui_showpanel == "Scatter")
+        div(
+            fluidRow(
+                
+                column(4,
+                       box(
+                           title = NULL, status = "primary", solidHeader = F, width=12,
+                           selectInput(
+                               inputId = "nxy_selected_x",
+                               label = "Selected x:",
+                               choices = rv$nx_n,
+                               selected = rv$nx_n[[1]]
+                           ),
+                           selectInput(
+                               inputId = "nxy_selected_y",
+                               label = "Selected y:",
+                               choices = rv$nx_n,
+                               selected = rv$nx_n[[2]]
+                           ),
+                           selectInput(
+                               inputId = "nxy_selected_z",
+                               label = "Selected z (optional):",
+                               choices = c("None", rv$nx_n),
+                               selected = "None"
+                           ),
+                           
+                       ),
+                       uiOutput("nxy_sc_cor_panel")
+                       
+                ),
+                
+                column(8,
+                       uiOutput("nxy_3ds_panel"),
+                       uiOutput("nxy_sc_panel")
+                       
+                       
+                ),
+                
+            ),
+            
+            fluidRow(
+                column(12,
+                       box(
+                           title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
+                           
+                           dataTableOutput("df_nxy_tbl", width = "100%",height="100%") 
+                           ,
+                           
+                           div(style = "position: absolute; left: 1em; bottom: 1em",
+                               dropdown(
+                                   downloadButton("download_nxy_df",
+                                                  label = "Download Table")
+                                   ,
+                                   size = "xs",
+                                   icon = icon("download", class = "opt"),
+                                   up = TRUE
+                               )
+                           )
+                           
+                           
+                       )
+                       
+                )
+                
+            )
+            
+                   
+            
+            
+            
+        )
+    })
+    output$nxy_sc_panel <- renderUI({
+        req(rv$nxy_selected_z =="None")
+        
+        box(
+            title = span( icon("chart-area"), "Scatter"), status = "primary", solidHeader = TRUE, width=12,
+            
+            plotlyOutput("df_nxy_scatter",
+                         width = "100%",height = "600px")
+            ,
+            div(style = "position: absolute; left: 1em; bottom: 1em",
+                dropdown(
+                    
+                    radioGroupButtons("nxy_sc_logic",
+                                      label = "Cutoff mode:",
+                                      choices=c("OR" ="Either", "AND" = "Both"),
+                                      selected="Both",size="s")
+                    , 
+                    uiOutput("nxy_logic_caption"),
+                    size = "xs",
+                    icon = icon("cut", class = "opt"),
+                    up = TRUE, width=200
+                )
+            ),
+            div(style = "position: absolute; left: 4em; bottom: 1em",
+                dropdown(
+                    uiOutput("nxy_colormode"),
+                    uiOutput("nxy_sig"),
+                    uiOutput("nxy_thresh"),
+                    numericInput(
+                        inputId = "nxy_sc_size",
+                        label = "Dot size:",
+                        value = 3, step=0.5, width="100px")
+                    ,
+                    size = "xs",
+                    icon = icon("gear", class = "opt"),
+                    up = TRUE, width=230
+                )
+            ),
+            div(style = "position: absolute; left: 7em; bottom: 1em",
+                dropdown(
+                    downloadButton("scatter_nxy_dl", "Download plot")
+                    ,
+                    size = "xs",
+                    icon = icon("download", class = "opt"),
+                    up = TRUE
+                )
+            )
+            
+            
+        )
+    })
+    
+    output$nxy_sc_cor_panel <- renderUI({
+        req(rv$nxy_selected_z =="None")
+        
+        box(
+            title = span( icon("calculator"), "Correlation"), status = "primary", solidHeader = TRUE, width=12,
+            
+            uiOutput("nxy_corline"),br(),
+            verbatimTextOutput("nxy_cor_summary")
+            
+        )
+    })
+    
+    output$nxy_3ds_panel <- renderUI({
+        req(is.null(rv$nxy_selected_z)==F)
+        req(rv$nxy_selected_z !="None")
+        
+        box(
+            title = span( icon("chart-area"), "3D Scatter"), status = "primary", solidHeader = TRUE, width=12,
+            plotlyOutput("df_n_3ds",
+                         width = "100%",height = "600px"),
+            
+            div(style = "position: absolute; left: 1em; bottom: 1em",
+                dropdown(
+                    
+                    radioGroupButtons("nxyz_sc_logic",
+                                      label = "Cutoff mode:",
+                                      choices=c("OR" ="Either", "AND" = "Both"),
+                                      selected="Both",size="s")
+                    , 
+                    uiOutput("nxyz_logic_caption"),
+                    size = "xs",
+                    icon = icon("cut", class = "opt"),
+                    up = TRUE, width=200
+                )
+            ),
+            div(style = "position: absolute; left: 4em; bottom: 1em",
+                dropdown(
+                    "Color threshold options:",
+                    sliderTextInput("n_3ds_p",
+                                    label = "Select P threshold:",
+                                    choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                    selected=0.05, grid=T, force_edges=T),
+                    sliderTextInput("n_3ds_q",
+                                    label = "Select FDR threshold:",
+                                    choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
+                                    selected=1, grid=T, force_edges=T),
+                    sliderTextInput("n_3ds_Stat",
+                                    label = "Select |Stat| threshold:",
+                                    choices= c(0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5),
+                                    selected=0, grid=T, force_edges=T),
+                    "Note: This will be applied to all columns.",
+                    
+                    
+                    size = "xs",
+                    icon = icon("gear", class = "opt"),
+                    up = TRUE, width=300
+                )
+            ),
+            div(style = "position: absolute; left: 7em; bottom: 1em",
+                dropdown(
+                    strong("Summary:"),
+                    dataTableOutput("n_3ds_prop_tbl"),
+                    
+                    
+                    size = "xs",
+                    icon = icon("table", class = "opt"),
+                    up = TRUE, width=300
+                )
+            ),
+            div(style = "position: absolute; left: 10em; bottom: 1em",
+                dropdown(
+                    downloadButton("n_3ds_dl", "Download plot"),
+                    downloadButton("download_3ds_df", "Download summary")
+                    ,
+                    size = "xs",
+                    icon = icon("download", class = "opt"),
+                    up = TRUE
+                )
+            )
+            
+            
+            
+        )
+    })
 
     
-    ####================= MULTIPLE VISUALIZATIONS =====================####
+    ####================= MULTIPLE FILTERING MENU =====================####
     
-    
-    ####-------------------- Intersect options ------------------------####
     # generates dynamic ui for selection
     
     output$ui_n_gls_opt <- renderUI({
@@ -2644,107 +2901,240 @@ server <- function(input, output, session) {
     
     observe({
         req(nrow(rv$df_n)>0)
-        
-        rv$global_nic[[1]] <- div(style="display: inline-block;vertical-align:top; width: 280px",
-                           box(title = NULL, status="primary", solidHeader = TRUE, width=12, height="320px",
-                               strong("Global settings"),
-                               # tags$hr(style="border-color: grey;"),
-                               fluidRow(
-                                   column(6,
-                                          numericInput("nic_p", 
-                                                       "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
-                                   column(6,
-                                          numericInput("nic_Stat", 
-                                                       "|Stat| filter:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
-                               ),
-                               fluidRow(
-                                   column(6,
-                                          numericInput("nic_q", 
-                                                       "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
-                                   column(6,
-                                          radioGroupButtons("nic_sign", 
-                                                            label = "Filter by sign:",
-                                                            choices=c("All"="All", "+"="Positive", "-"="Negative"),
-                                                            selected="All",size="s",direction = "horizontal"),
-                                   ),
-                                   
-                               ),
-                               fluidRow(
-                                   column(4,offset=1,
-                                          checkboxInput(
-                                              inputId= "nic_apply",
-                                              label = "Apply",
-                                              value = T)),
-                                   column(7,
-                                          checkboxInput(
-                                              inputId= "nic_na",
-                                              label = "Show NAs",
-                                              value = T, ))
-                                   
-                               ),
-                               actionButton("nic_applytoall", "Apply to all"),
-                               actionButton("nic_resetall", "Reset all"),
-                               
-                        style = "padding: 15px;")
-                    
+
+        rv$global_nic[[1]] <- div(style="display: inline-block;vertical-align:top; width: 250px;",
+                                  wellPanel( align = "left",
+
+                                      tags$head(
+                                          tags$style(HTML(paste0("
+                                      #nic_p {height: 40px;}
+                                      #nic_q {height: 40px;}
+                                      #nic_Stat {height: 40px;}
+                                      #nic_sign {height: 40px;}
+                                      #nic_applytoall {height: 40px; line-height: 10px;}
+                                      #nic_resetall {height: 40px;line-height: 10px;}
+                                    ")))
+                                      ),
+                                      fluidRow(
+                                          column(6, align = "left", 
+                                                 numericInput("nic_p", 
+                                                              "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
+                                          column(6, align = "left",
+                                                 numericInput("nic_Stat", 
+                                                              "|Stat| filter:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
+                                      ),
+                                      fluidRow(
+                                          column(6, align = "left",
+                                                 numericInput("nic_q", 
+                                                              "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
+                                          column(6, align = "left",
+                                                 radioGroupButtons("nic_sign", 
+                                                                   label = "Filter by sign:",
+                                                                   choices=c("All"="All", "+"="Positive", "-"="Negative"),
+                                                                   selected="All",size="s",direction = "horizontal"),
+                                          ),
+                                          
+                                      ),
+                                      fluidRow(
+                                          column(4,offset=1, align = "left",
+                                                 checkboxInput(
+                                                     inputId= "nic_apply",
+                                                     label = "Apply",
+                                                     value = T)),
+                                          column(7, align = "left",
+                                                 checkboxInput(
+                                                     inputId= "nic_na",
+                                                     label = "Show NAs",
+                                                     value = T, ))
+                                          
+                                      ),
+                                      actionButton("nic_applytoall", "Apply to all"),
+                                      actionButton("nic_resetall", "Reset all"),
+                                      
+                                      style = "padding: 15px;")
+                                  
         )
         for (i in 1:length(rv$nx_n)){
-            rv$nic[[i]] <- div(style="display: inline-block;vertical-align:top; width: 280px;",
-                             wellPanel(
-                                 rv$nx_n[[i]], 
-                                 tags$hr(style="border-color: grey;"),
-                                 fluidRow(
-                                     column(6,
-                                        numericInput(inputId = paste0("nic_p_",i), 
-                                                     "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
-                                 column(6,
-                                        numericInput(paste0("nic_Stat_",i), 
-                                                     "|Stat| filter:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
-                                 ),
-                                 fluidRow(
-                                     column(6,
-                                        numericInput(inputId = paste0("nic_q_",i), 
-                                                     "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
-                                 column(6,
-                                        radioGroupButtons(inputId = paste0("nic_sign_",i), 
-                                                          label = "Filter by sign:",
-                                                          choices=c("All"="All", "+"="Positive", "-"="Negative"),
-                                                          selected="All",size="s",direction = "horizontal"),
-                                        ),
-                                 
-                                 ),
-                                 fluidRow(
-                                     column(4,offset=1,
-                                            checkboxInput(
-                                                inputId= paste0("nic_apply_",i),
-                                                label = "Apply",
-                                                value = T)),
-                                     column(7,
-                                            checkboxInput(
-                                                inputId= paste0("nic_na_",i),
-                                                label = "Show NAs",
-                                                value = T, ))
-                                     
-                                 )
-                             ,style = "padding: 15px;")
-                             )
+            rv$nic[[i]] <- div(style="display: inline-block;vertical-align:top; width: 250px;",
+                               tags$head(
+                                   tags$style(HTML(paste0("
+                                      #nic_p_",i," {height: 40px;}
+                                      #nic_q_",i," {height: 40px;}
+                                      #nic_Stat_",i," {height: 40px;}
+                                      #nic_sign_",i," {height: 40px;}
+                                    ")))
+                                   ),
+                               wellPanel( align = "left",
+                                          rv$nx_n[[i]], 
+                                          tags$hr(style="border-color: grey; margin:10px;"),
+                                          fluidRow(
+                                              column(6, align = "left", 
+                                                     numericInput(inputId = paste0("nic_p_",i), 
+                                                                  "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
+                                              column(6, align = "left",
+                                                     numericInput(paste0("nic_Stat_",i), 
+                                                                  "|Stat| filter:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
+                                          ),
+                                          fluidRow(
+                                              column(6, align = "left",
+                                                     numericInput(inputId = paste0("nic_q_",i), 
+                                                                  "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
+                                              column(6, align = "left",
+                                                     radioGroupButtons(inputId = paste0("nic_sign_",i), 
+                                                                       label = "Filter by sign:",
+                                                                       choices=c("All"="All", "+"="Positive", "-"="Negative"),
+                                                                       selected="All",size="s",direction = "horizontal"),
+                                              ),
+                                              
+                                          ),
+                                          fluidRow(
+                                              column(4,offset=1, align = "left",
+                                                     checkboxInput(
+                                                         inputId= paste0("nic_apply_",i),
+                                                         label = "Apply",
+                                                         value = T)),
+                                              column(7, align = "left",
+                                                     checkboxInput(
+                                                         inputId= paste0("nic_na_",i),
+                                                         label = "Show NAs",
+                                                         value = T, ))
+                                              
+                                          )
+                                          ,style = "padding: 15px;background:#e6f4fc;")
+            )
         }
     })
     
+    
+    
+    
+    ####================= MULTIPLE - INTERSECT =====================####
 
     
-    
-    
-    
-    ####-------------------- view intersections ------------------------####
 
+    
+    ####### -------------- Processing for all intersection related analysis. ---------------
+    # 1. generate gene lists (gls) according to individual cutoffs
+    n_ins_gls <- reactive({
+        # req(length(rv$nx_n)<=5) # too many datasets may eat up memory
+        req(nrow(rv$df_n)>0)
+        req(length(rv$s)>0)
+        req(length(rv$s)==length(rv$nx_i))
+        
+        df <- rv$df_n
+        
+        gls <- vector(mode="list") # initialize gls as empty list
+        
+        
+        # using advanced settings
+        for (i in 1:length(rv$nx_n)){
+            req(rv[[paste0("nic_p_",i)]])
+            req(rv[[paste0("nic_q_",i)]])
+            req(rv[[paste0("nic_Stat_",i)]])
+            req(rv[[paste0("nic_sign_",i)]])
+            
+            n <- rv$nx_n[[i]]
+            ss <- df
+            ss <- ss[ss[[paste0("PValue","_", n)]]<=rv[[paste0("nic_p_",i)]], ] # filter by p
+            ss <- ss[ss[[paste0("FDR","_", n)]]<=rv[[paste0("nic_q_",i)]], ] # filter by q
+            ss <- ss[abs(ss[[paste0("Stat","_", n)]])>=rv[[paste0("nic_Stat_",i)]], ] # filter by stat
+            ss <- filter_by_sign(ss, paste0("Stat","_", n), rv[[paste0("nic_sign_",i)]], tolerate=T) # filter by stat sign
+
+            gl <- as.character(na.omit(ss$Name)) # format
+            gls[[n]] <- gl # write into list as named vector
+        }
+        
+        return(gls)
+    })
+    
+    
+    # 2. turns gls into matrix
+    n_ins_glm <- reactive({
+        req(nrow(rv$df_n)>0)
+        req(length(n_ins_gls())>0)
+
+        df <- rv$df_n
+        
+        gls <- n_ins_gls()
+        xx <- lapply(seq_along(names(gls)),function(x){
+            unique(unlist(gls)) %in% gls[[names(gls)[[x]]]]
+        })
+        names(xx) <- names(gls)
+        
+        # turn into df
+        glm <- data.frame(xx, row.names = unique(unlist(gls)))
+        
+        glm
+    })
+    
+    # 3. filters gls matrix by criteria
+    n_ins_ss <- reactive({ 
+        req(nrow(rv$df_n)>0)
+        req(nrow(n_ins_glm())>0)
+        
+        df <- rv$df_n
+        
+        
+        glm <- n_ins_glm()
+        
+        # get subset of genes based on t/f table
+        subset <- glm[apply(glm,1,function(x) {
+            match_skipna(x,rv$ins_criteria)
+        }),] 
+        subset
+
+    })
+    
+    # 4. turns ss into filtered gl
+    n_ins_fgl <- reactive({
+        subset <- n_ins_ss()
+        genelist <- rownames(subset) # these are gene list
+        genelist
+        
+    })
+    
+    # 5. subsets full df based on ss and filtered gl
+    n_ins_df <- reactive({
+        req(length(rv$ins_criteria)>0)
+        req(length(rv$ins_criteria)==length(rv$nx_i))
+
+        df <- rv$df_n # full df to subset
+        genelist <- n_ins_fgl() # list of genes to show in table
+        
+        if(rv$n_ins_view == "Full"){
+            df <- df[df$Name %in% genelist,] # extract the rows from full df
+        }
+        else if (rv$n_ins_view == "Minimized"){
+            xx <- dplyr::select(df, contains(c("Name","Stat", rv$n_ins_plot)))
+            print(head(xx))
+            df <- xx[xx$Name %in% genelist,]
+        }
+        else if (rv$n_ins_view == "T/F Matrix"){
+            df <- as.data.frame(n_ins_ss())
+            
+            # turn row names into identifying column
+            df <- cbind(rownames(df),df)
+            colnames(df)[[1]] <- "Name"
+        }
+        
+        # tidy row names
+        if (nrow(df)>0){rownames(df) <- seq(1,nrow(df),1)}
+        
+        # to replace the stat col names
+        colnames(df) <- gsub("Stat", rv$tt[[rv$nx_i[[1]]]], colnames(df))
+        
+        df
+    })
+    
+    ####-------------------- intersection viewing options for table ------------------------####
+    
     # generates dynamic ui for selection
     observe({
         req(nrow(rv$df_n)>0)
         
         for (i in 1:length(rv$nx_n)){
             rv$s[[i]] <- div(style="display: inline-block;vertical-align:top; width: 280px;",
-                radioGroupButtons(inputId = paste0("ins_",i),
+                             radioGroupButtons(inputId = paste0("ins_",i),
                                                label = rv$nx_n[[i]], size="s",
                                                choices = c("True", "False", "Ignore"),
                                                selected ="Ignore",
@@ -2781,135 +3171,12 @@ server <- function(input, output, session) {
         rv$ins_criteria <- criteria
     })
     
-    ####### -------------- Processing for all intersection related analysis. ---------------
-    # 1. generate gene lists (gls) according to individual cutoffs
-    n_ins_gls <- reactive({
-        req(length(rv$nx_n)<=5)
-        req(nrow(rv$df_n)>0)
-        req(length(rv$s)>0)
-        req(length(rv$s)==length(rv$nx_i))
-        
-        df <- rv$df_n
-        
-        gls <- vector(mode="list") # initialize gls as empty list
-        
-        
-        # using advanced settings
-        for (i in 1:length(rv$nx_n)){
-            req(input[[paste0("nic_p_",i)]])
-            req(input[[paste0("nic_q_",i)]])
-            req(input[[paste0("nic_Stat_",i)]])
-            req(input[[paste0("nic_sign_",i)]])
-            
-            n <- rv$nx_n[[i]]
-            ss <- df
-            ss <- ss[ss[[paste0("PValue","_", n)]]<=input[[paste0("nic_p_",i)]], ] # filter by p
-            ss <- ss[ss[[paste0("FDR","_", n)]]<=input[[paste0("nic_q_",i)]], ] # filter by q
-            ss <- ss[abs(ss[[paste0("Stat","_", n)]])>=input[[paste0("nic_Stat_",i)]], ] # filter by stat
-            ss <- filter_by_sign(ss, paste0("Stat","_", n), input[[paste0("nic_sign_",i)]], tolerate=T) # filter by stat sign
-
-            gl <- as.character(na.omit(ss$Name)) # format
-            gls[[n]] <- gl # write into list as named vector
-        }
-        
-        return(gls)
-    })
-    
-    
-    # 2. turns gls into matrix
-    n_ins_glm <- reactive({
-        req(nrow(rv$df_n)>0)
-        req(length(n_ins_gls())>0)
-
-        df <- rv$df_n
-        
-        gls <- n_ins_gls()
-        xx <- lapply(seq_along(names(gls)),function(x){
-            unique(unlist(gls)) %in% gls[[names(gls)[[x]]]]
-        })
-        names(xx) <- names(gls)
-        
-        # turn into df
-        glm <- data.frame(xx, row.names = unique(unlist(gls)))
-        
-        glm
-    })
-    
-    # 3. filters gls matrix by criteria
-    n_ins_ss <- reactive({ 
-        req(nrow(rv$df_n)>0)
-        req(nrow(n_ins_glm())>0)
-        
-        df <- rv$df_n
-        
-        # # apply stat filters to selected data only # is this appropriate here????
-        # for (i in 1:length(rv$ins_criteria)){
-        #     if (is.na(rv$ins_criteria[[i]])==F){
-        #         df <- filter_by_sign(rv$df_n, paste0("Stat_",names(rv$ins_criteria)[[i]]),
-        #                              rv$n_ins_sign, tolerate=T)
-        #     }
-        # }
-        # 
-        # # get t/f table
-        # subset <- df %>% dplyr::select(contains(rv$n_ins_plot)) < rv$n_ins_thresh  # turn df into t/f
-        # subset[is.na(subset)] <- FALSE # support for na values
-        # rownames(subset) <- df$Name
-        
-        glm <- n_ins_glm()
-        
-        # get subset of genes based on t/f table
-        subset <- glm[apply(glm,1,function(x) {
-            match_skipna(x,rv$ins_criteria)
-        }),] 
-        subset
-
-    })
-    
-    # 4. turns ss into filtered gl
-    n_ins_fgl <- reactive({
-        subset <- n_ins_ss()
-        genelist <- rownames(subset) # these are gene list
-        genelist
-    })
-    
-    # 5. subsets full df based on ss and filtered gl
-    n_ins_df <- reactive({
-        req(length(rv$ins_criteria)>0)
-        req(length(rv$ins_criteria)==length(rv$nx_i))
-
-        df <- rv$df_n # full df to subset
-        genelist <- n_ins_fgl() # list of genes to show in table
-        
-        if(rv$n_ins_view == "Full"){
-            df <- df[df$Name %in% genelist,] # extract the rows from full df
-        }
-        else if (rv$n_ins_view == "Minimized"){
-            xx <- dplyr::select(df, contains(c("Name","Stat", rv$n_ins_plot)))
-            print(head(xx))
-            df <- xx[xx$Name %in% genelist,]
-        }
-        else if (rv$n_ins_view == "T/F Matrix"){
-            df <- as.data.frame(n_ins_ss())
-            
-            # turn row names into identifying column
-            df <- cbind(rownames(df),df)
-            colnames(df)[[1]] <- "Name"
-        }
-        
-        # tidy row names
-        if (nrow(df)>0){rownames(df) <- seq(1,nrow(df),1)}
-        
-        # to replace the stat col names
-        colnames(df) <- gsub("Stat", rv$tt[[rv$nx_i[[1]]]], colnames(df))
-        
-        df
-    })
     
     ####-------------------- view intersections table ------------------------####
     
     # show intersection preview table
     output$n_ins_tbl <- DT::renderDataTable({
-        req(rv$df_n)
+        req(is.null(rv$df_n)==F)
         req(length(rv$ins_criteria)>0)
         
         df <- n_ins_df()
@@ -3172,6 +3439,9 @@ server <- function(input, output, session) {
         
     })
     
+    
+    ####================= MULTIPLE - BASIC =====================####
+    
     ####-------------------- Processing for all basic visualizations. ------------------------####
     
     # 1. cut first by input genelist (if any)
@@ -3225,16 +3495,16 @@ server <- function(input, output, session) {
         
         # using advanced settings
         for (i in 1:length(rv$nx_n)){
-            req(input[[paste0("nic_p_",i)]])
-            req(input[[paste0("nic_q_",i)]])
-            req(input[[paste0("nic_Stat_",i)]])
-            req(input[[paste0("nic_sign_",i)]])
-            req(is.null(input[[paste0("nic_na_",i)]])==F)
-            req(is.null(input[[paste0("nic_apply_",i)]])==F)
+            req(rv[[paste0("nic_p_",i)]])
+            req(rv[[paste0("nic_q_",i)]])
+            req(rv[[paste0("nic_Stat_",i)]])
+            req(rv[[paste0("nic_sign_",i)]])
+            req(is.null(rv[[paste0("nic_na_",i)]])==F)
+            req(is.null(rv[[paste0("nic_apply_",i)]])==F)
             
             
-            tol = input[[paste0("nic_na_",i)]]
-            apply = input[[paste0("nic_apply_",i)]]
+            tol = rv[[paste0("nic_na_",i)]]
+            apply = rv[[paste0("nic_apply_",i)]]
             
             if (apply==T){
                 # get the col names
@@ -3245,13 +3515,13 @@ server <- function(input, output, session) {
                 
                 # filter by sign
                 df <- filter_by_sign(df, statn, 
-                                     input[[paste0("nic_sign_",i)]], 
+                                     rv[[paste0("nic_sign_",i)]], 
                                      tolerate=tol)
                 # filter by cutoffs
                 df <- apply_single_cutoff(df, n, 
-                                          input[[paste0("nic_p_",i)]],
-                                          input[[paste0("nic_q_",i)]], 
-                                          input[[paste0("nic_Stat_",i)]], 
+                                          rv[[paste0("nic_p_",i)]],
+                                          rv[[paste0("nic_q_",i)]], 
+                                          rv[[paste0("nic_Stat_",i)]], 
                                           tolerate=tol)
                 
             }
@@ -3279,114 +3549,7 @@ server <- function(input, output, session) {
     })
     
     
-    ####-------------------- 3D scatter ------------------------####
-
     
-    # main graph
-    n_3ds_plt <- reactive({
-
-        withProgress(message = 'Making 3D Scatter...', value = 0, {
-            
-            df <- n_basic_df()
-            df <- remove_nas(df)
-            
-            # attain columns max/min values for cutoff and coloring (automatically filters out NA)
-            df <- df %>% mutate(mp = do.call(pmax, dplyr::select(df, contains("PValue")))) 
-            df <- df %>% mutate(mq = do.call(pmax, dplyr::select(df, contains("FDR")))) 
-            df <- df %>% mutate(msmin = do.call(pmin, dplyr::select(df, contains("Stat")))) %>% 
-                mutate(msmax = do.call(pmax, dplyr::select(df, contains("Stat")))) 
-            
-            incProgress(0.2)
-            
-            # # apply cutoffs
-            # df <- df %>% filter(mp < rv$n_p) %>% filter(mq < rv$n_q)
-            
-            # assign color by certain criteria
-            df$color <- ifelse(df$mp < rv$n_3ds_p & df$mq < rv$n_3ds_q & df$msmin > rv$n_3ds_Stat, "red", "gray")
-            df$color <- ifelse(df$mp < rv$n_3ds_p & df$mq < rv$n_3ds_q & df$msmax < -rv$n_3ds_Stat, "blue",df$color)
-            df$color <- as.factor(df$color)
-            #print(head(df))
-            
-            incProgress(0.2)
-            
-            # get col names
-            statcols <- colnames(df[1 ,grepl("Stat", colnames(df))])
-            pcols <- colnames(df[1 ,grepl("PValue", colnames(df))])
-            qcols <- colnames(df[1 ,grepl("FDR", colnames(df))])
-            #print(statcols)
-            
-            incProgress(0.2)
-            
-            fig <- plot_ly(df, x = df[[statcols[[1]]]], y = df[[statcols[[2]]]], z = df[[statcols[[3]]]], marker = list(color = df$color, size=2),
-                           hoverinfo="text",
-                           text=c(paste(df$Name, 
-                                        "<br>logFC(x):", round(df[[statcols[[1]]]], 3),
-                                        "<br>p=", round(df[[pcols[[1]]]], 3),", q=", round(df[[qcols[[1]]]], 3),
-                                        "<br>logFC(y):", round(df[[statcols[[2]]]], 3),
-                                        "<br>p=", round(df[[pcols[[2]]]], 3),", q=", round(df[[qcols[[2]]]], 3),
-                                        "<br>logFC(z):", round(df[[statcols[[3]]]], 3),
-                                        "<br>p=", round(df[[pcols[[3]]]], 3),", q=", round(df[[qcols[[3]]]], 3)
-                           )))
-            
-            incProgress(0.2)
-            
-            # generate properties table
-            summary <- c("total"=nrow(df), table(df$color))
-            summary_df <- t(data.frame(as.list(summary)))
-            summary_df <- data.frame(summary_df)
-            # add genes to the table
-            unicl <- unique(df$color)
-            gene_cats <- lapply(unicl, function(x){
-                gl <- df[which(df$color==x),][["Name"]]
-                paste(gl, collapse=" ")
-            })
-            gene_cats <- c(paste(df$Name, collapse=" "),gene_cats)
-            summary_df$genes <- unlist(gene_cats)
-            colnames(summary_df) <- c("n","Names")
-            rv$n_3ds_prop <- summary_df
-            
-            fig <- fig %>% add_markers()
-            fig <- fig %>% layout(title = paste0('3D Scatter, n=',nrow(df)),
-                                  scene = list(xaxis = list(title = paste0(statcols[[1]])),
-                                               yaxis = list(title = paste0(statcols[[2]])),
-                                               zaxis = list(title = paste0(statcols[[3]]))))
-            
-        })
-        fig
-    })
-    
-    output$df_n_3ds <- renderPlotly({
-        req(rv$df_n)
-        req(rv$n_3ds_status=="ok")
-        
-        n_3ds_plt()
-    })
-    
-    n_3ds_prop_df <- reactive({ rv$n_3ds_prop })
-    # summary table
-    output$n_3ds_prop_tbl <- DT::renderDataTable({
-        n_3ds_prop_df()
-    }, plugins="ellipsis",
-    options=list(scrollX=T, scrollY=T, paging = FALSE, searching = FALSE, info=FALSE,
-                 columnDefs = list(
-                     list(
-                         targets = "_all",
-                         render = JS("$.fn.dataTable.render.ellipsis( 36, false )")
-                     ))
-    ))
-
-    # download plotly html graph
-    output$n_3ds_dl <- downloadHandler(
-        filename = function() {paste("scatter-multiple-", Sys.Date(), ".html", sep = "")},
-        content = function(file) {saveWidget(as_widget(n_3ds_plt()), file, selfcontained = TRUE)})
-    
-    # download summary table
-    output$download_3ds_df <- downloadHandler(
-        filename = function() {
-            paste("summary-scatter-multiple-", Sys.Date(), ".csv", sep="")},
-        content = function(file) {
-            write.csv(n_3ds_prop_df(), file, 
-                      row.names = T, quote=TRUE)})
     
     
     ####-------------------- table ------------------------####
@@ -3770,6 +3933,479 @@ server <- function(input, output, session) {
     rownames= FALSE
     )
     
+    
+    ####================= MULTIPLE - SCATTER =====================####
+    
+    
+    # redo cutoffs using either or modes (this is substitute for n_basic_df())
+    n_nxy_df <- reactive({
+        req(nrow(rv$df_n)>0)
+        req(length(rv$s)>0)
+        req(length(rv$s)==length(rv$nx_i))
+        req(is.null(rv$nxy_selected_x)==F)
+        req(is.null(rv$nxy_selected_y)==F)
+        req(is.null(rv$nxy_selected_z)==F)
+        req(is.null(rv$nxy_sc_logic)==F)
+        
+        df <- n_basic_igl()
+        
+        if (rv$nxy_selected_z=="None"){
+            selected <- c(rv$nxy_selected_x, rv$nxy_selected_y)
+        } else {
+            selected <- c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z)
+        }
+        
+        
+        
+        # cut out only selected datasets
+        df <- dplyr::select(df, contains(c("Name", selected)))
+        
+        # get rid of rows with all NA
+        df <- df[complete.cases(df[ , -1]),]
+        
+        
+        
+        cuts <- vector(mode="list", length=length(selected))
+        for (n in 1:length(selected)){
+            xi <- match(selected[[n]], rv$nx_n) # get the index from name
+            
+            # try to apply cutoff
+            if (rv[[paste0("nic_apply_",xi)]]==T){
+                x_filtered <- apply_single_cutoff(df, selected[[n]], p=rv[[paste0("nic_p_",xi)]], q=rv[[paste0("nic_q_",xi)]], stat=rv[[paste0("nic_Stat_",xi)]], 
+                                                  tolerate=rv[[paste0("nic_na_",xi)]])
+                x_filtered <- filter_by_sign(x_filtered, paste0("nic_Stat_",xi), 
+                                             rv[[paste0("nic_sign_",xi)]], 
+                                             tolerate=rv[[paste0("nic_na_",xi)]])
+            } else {
+                x_filtered <- df
+            }
+            
+            cuts[[n]] <- x_filtered$Name
+        }
+        
+        if (rv$nxy_sc_logic == "Both"){
+            df <- df[df$Name %in% Reduce(intersect, cuts), ]
+        } else if (rv$nxy_sc_logic == "Either"){
+            df <- df[df$Name %in% Reduce(union, cuts), ]
+        }
+        
+        
+        # # cutoffs
+        # if (rv[[paste0("nic_apply_",xi)]]==T){
+        #     x_filtered <- apply_single_cutoff(df, selected[[1]], p=rv[[paste0("nic_p_",xi)]], q=rv[[paste0("nic_q_",xi)]], stat=rv[[paste0("nic_Stat_",xi)]], 
+        #                                       tolerate=rv[[paste0("nic_na_",xi)]])
+        #     x_filtered <- filter_by_sign(x_filtered, paste0("nic_Stat_",xi), 
+        #                          rv[[paste0("nic_sign_",xi)]], 
+        #                          tolerate=rv[[paste0("nic_na_",xi)]])
+        # } else {
+        #     x_filtered <- df
+        # }
+        # if (rv[[paste0("nic_apply_",yi)]]==T){
+        #     y_filtered <- apply_single_cutoff(df, selected[[2]], p=rv[[paste0("nic_p_",yi)]], q=rv[[paste0("nic_q_",yi)]], stat=rv[[paste0("nic_Stat_",yi)]], 
+        #                                       tolerate=rv[[paste0("nic_na_",yi)]])
+        #     y_filtered <- filter_by_sign(y_filtered, paste0("nic_Stat_",yi), 
+        #                                  rv[[paste0("nic_sign_",yi)]], 
+        #                                  tolerate=rv[[paste0("nic_na_",yi)]])
+        # } else {
+        #     y_filtered <- df
+        # }
+        
+
+        # if (rv$nxy_sc_logic == "Both"){
+        #     df <- df[df$Name %in% intersect(x_filtered$Name, y_filtered$Name), ]
+        # } else if (rv$nxy_sc_logic == "Either"){
+        #     df <- df[df$Name %in% union(x_filtered$Name, y_filtered$Name), ]
+        # }
+        
+        
+
+        
+        df
+
+    })
+    
+    
+    output$nxy_logic_caption <- renderUI({
+        if (rv$nxy_sc_logic == "Both"){
+            HTML("<strong>AND</strong>: shows entries that satisfy the filters in <strong>ALL</strong> of the selected datasets.")
+        } else if (rv$nxy_sc_logic == "Either"){
+            HTML("<strong>OR</strong>: shows entries that satisfy the filters in <strong>ANY</strong> of the selected datasets.")
+        }
+    })
+    output$nxyz_logic_caption <- renderUI({
+        if (rv$nxy_sc_logic == "Both"){
+            HTML("<strong>AND</strong>: shows entries that satisfy the filters in <strong>ALL</strong> of the selected datasets.")
+        } else if (rv$nxy_sc_logic == "Either"){
+            HTML("<strong>OR</strong>: shows entries that satisfy the filters in <strong>ANY</strong> of the selected datasets.")
+        }
+    })
+    
+    ####-------------------- table ------------------------####
+    
+    
+    # display table
+    output$df_nxy_tbl <- DT::renderDataTable({
+        
+        df <- n_nxy_df()
+        
+        # tidy row names
+        if (nrow(df)>0){rownames(df) <- seq(1,nrow(df),1)}
+        
+        # to replace the stat col names
+        colnames(df) <- gsub("Stat", rv$tt[[rv$nx_i[[1]]]], colnames(df))
+        
+        
+        rv$df_nxy_fullcols <- colnames(df)
+        
+        # to abbreviate the long column names...take first 5 letters
+        char_limit <- 56 / length(colnames(df))
+        # print(char_limit)
+        colnames(df) <- sapply(names(df), function(x){
+            if (nchar(x)>char_limit)
+            {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
+            else{return (x)}
+        })
+        
+        # to round everything down to 3 decimals
+        df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., 3))
+        
+        
+        df
+        
+        
+    }, plugins = "ellipsis",
+    options = list(scrollX=TRUE, 
+                   columnDefs = list(
+                       list(
+                           targets = 1,
+                           render = JS("$.fn.dataTable.render.ellipsis( 17, true )")
+                       ),
+                       list(
+                           targets = "_all",
+                           render = JS("$.fn.dataTable.render.ellipsis( 6, true )")
+                       )
+                   ),
+                   headerCallback= JS("function(thead, data, start, end, display){",
+                                      sprintf("  var tooltips = [%s];", toString(paste0("'", rv$df_nxy_fullcols, "'"))),
+                                      "  for(var i = 1; i <= tooltips.length; i++){",
+                                      "    $('th:eq('+i+')',thead).attr('title', tooltips[i-1]);",
+                                      "  }",
+                                      "}")))
+    
+    
+    
+    # download current df
+    output$download_nxy_df <- downloadHandler(
+        filename = function() {
+            paste("data", "-", "multiple", "-", Sys.Date(), ".csv", sep="")},
+        content = function(file) {
+            write.csv(n_nxy_df(), file, 
+                      row.names = F, quote=TRUE)})
+    
+    
+    
+    ####--------------- scatter plot -------------------####
+    
+    
+    
+    # color mode
+    output$nxy_colormode <- renderUI({
+        req(is.null(n_nxy_df())==F)
+        radioButtons(
+            inputId = "nxy_colormode",
+            label = "Represent significance by:",
+            choices = c("None", "Two colors", "Color and size"))
+    })
+    output$nxy_sig <- renderUI({
+        req(is.null(n_nxy_df())==F)
+        req(rv$nxy_colormode !="None")
+        radioButtons(
+            inputId = "nxy_sig",
+            label = "Significance:",
+            choices = c("PValue", "FDR"),
+            selected="PValue")
+    })
+    output$nxy_thresh <- renderUI({
+        req(rv$nxy_colormode =="Two colors")
+        
+        numericInput("nxy_thresh", 
+                     "Threshold:", value = 0.01, min = 0, max = 1, step=0.001, width="100px")
+    })
+    
+    
+    # plotly scatter
+    nxy_sc_plt <- reactive({
+        req(is.null(n_nxy_df())==F)
+        req(is.null(rv$nxy_selected_x)==F)
+        req(is.null(rv$nxy_selected_y)==F)
+        
+        withProgress(message = 'Making graph...', value = 0, {
+        
+        df_p <- n_nxy_df()
+        print(head(df_p))
+        
+        selected <- c(rv$nxy_selected_x, rv$nxy_selected_y)
+        xsig <- paste(rv$nxy_sig, selected[[1]], sep="_")
+        ysig <- paste(rv$nxy_sig, selected[[2]], sep="_")
+        xstat <- paste("Stat", selected[[1]], sep="_")
+        ystat <- paste("Stat", selected[[2]], sep="_")
+        xp <- paste("PValue", selected[[1]], sep="_")
+        yp <- paste("PValue", selected[[2]], sep="_")
+        xq <- paste("FDR", selected[[1]], sep="_")
+        yq <- paste("FDR", selected[[2]], sep="_")
+        
+        
+        
+        df_p[df_p==0]<-0.00001 # replace 0 with 0.001
+        df_p <- remove_nas(df_p)
+        
+        req(nrow(df_p)>0)
+        
+        incProgress(0.2)
+        
+        # initialize marker settings as none
+        df_p$color <- "black"
+        df_p$color <- as.factor(df_p$color)
+        df_p$size <- rv$nxy_sc_size+2 # initialized to 5
+        marker_settings <- list(
+            color= df_p$color, size= df_p$size, 
+            line = list(color = 'white', width = 0))
+        
+        incProgress(0.2)
+        
+        if (rv$nxy_colormode== "Two colors"){ # is this a good idea????
+            #print(head(df_p))
+            
+            df_p$color <- as.character(df_p$color)
+            if (rv$nxy_sc_logic == "Both"){
+                df_p$color[which(df_p[[xsig]] < rv$nxy_thresh & df_p[[ysig]] < rv$nxy_thresh)] <- "red"
+            } else if (rv$nxy_sc_logic == "Either"){
+                df_p$color[which(df_p[[xsig]] < rv$nxy_thresh | df_p[[ysig]] < rv$nxy_thresh)] <- "red"
+            }
+            
+            df_p$color <- as.factor(df_p$color)
+            
+            df_p$size <- rv$nxy_sc_size+2 # initialized to 5
+            marker_settings <- list(
+                color= df_p$color, size= df_p$size, 
+                line = list(color = 'white', width = 1))
+        }
+        else if (rv$nxy_colormode== "Color and size"){
+            df_p[df_p==0]<-0.00001 # replace 0 with 0.001
+            df_p$color <- -log10(as.numeric(df_p[[xsig]]))
+            df_p$color <- as.numeric(df_p$color)
+            df_p$size <- -log10(as.numeric(df_p[[ysig]]))* (rv$nxy_sc_size-1) + 3 # initialized to 2+3
+            #print(head(df_p))
+            marker_settings <- list(
+                color= df_p$color, size= df_p$size,
+                opacity=.7, line = list(color = 'white', width = 1),
+                colorscale=cscale, cauto=F, cmin=0, cmax=3,
+                colorbar=list(title=paste0('-log10(',rv$nxy_sig,'(x))')))
+        }
+        
+        incProgress(0.2)
+        lm_fun <- paste0("`", xstat, "` ~ `", ystat, "`")
+        rv$fit_nxy <- lm(lm_fun, data = df_p)
+        
+        print(head(df_p))
+        
+        
+        
+        fig <- plot_ly(
+            data = df_p, 
+            x = df_p[[xstat]],
+            y = df_p[[ystat]],
+            type = 'scatter',
+            mode = 'markers', 
+            marker = marker_settings,
+            hoverinfo="text",
+            text=c(paste(df_p$Name, 
+                         "<br>Stat(x):", round(df_p[[xstat]], 3),
+                         "<br>p(x):", round(df_p[[xp]], 3),
+                         ", q(x):", round(df_p[[xq]], 3),
+                         "<br>Stat(y):", round(df_p[[ystat]], 3),
+                         "<br>p(y):", round(df_p[[yp]], 3),
+                         ", q(y):", round(df_p[[yq]], 3)
+            ))
+        )
+        fig <- fig %>% layout(title = paste0(rv$nxy_selected_x, " vs ", rv$nxy_selected_x, " (n=",nrow(df_p),")"),
+                              yaxis = list(zeroline = T, title=paste0("Stat_",rv$nxy_selected_y)),
+                              xaxis = list(zeroline = T, title=paste0("Stat_",rv$nxy_selected_x))
+        )
+        
+        })
+        return(fig)
+    })
+    
+    
+    output$df_nxy_scatter <- renderPlotly({
+        req(is.null(n_nxy_df())==F)
+        req(is.null(rv$nxy_colormode)==F)
+        req(nrow(n_nxy_df()) > 0)
+        
+        nxy_sc_plt()
+    })
+    
+    
+    
+    # download plotly html graph
+    output$scatter_nxy_dl <- downloadHandler(
+        filename = function() {paste("scatter-multiple-xy-", Sys.Date(), ".html", sep = "")},
+        content = function(file) {saveWidget(as_widget(nxy_sc_plt()), file, selfcontained = TRUE)})
+    
+    
+    
+    ####--------------- correlation -------------------####
+    
+    
+    # correlation line
+    output$nxy_corline <- renderUI({
+        req(is.null(rv$fit_nxy)==F)
+        req(is.null(nxy_sc_plt())==F)
+        
+        if (length(coef(rv$fit_nxy))>1){
+            intercept = format(round(coef(rv$fit_nxy)[[1]], 2), nsmall = 2)
+            slope = format(round(coef(rv$fit_nxy)[[2]], 2), nsmall = 2)
+            r2= format(round(summary(rv$fit_nxy)$r.squared, 2), nsmall = 2)
+            box(
+                title = NULL, background = "aqua", solidHeader = TRUE, width=12,
+                strong("Correlation line:"),br(),
+                column( 12,align="center" ,
+                        paste0("y = ", slope,"x + ",intercept), br(),
+                        paste0("(R^2 = ", r2,")")
+                )
+                
+            )
+        } else {
+            box(
+                title = NULL, background = "yellow", solidHeader = TRUE, width=12,
+                strong("Your selection is invalid.")
+                
+            )
+        }
+        
+    })
+    output$nxy_cor_summary <- renderPrint({
+        req(is.null(n_nxy_df())==F)
+        summary(rv$fit_nxy)
+    })
+    
+    
+    
+    
+    ####-------------------- 3D scatter ------------------------####
+    
+    
+    # main graph
+    n_3ds_plt <- reactive({
+        req(nrow(n_nxy_df())>0)
+        req(is.null(rv$nxy_selected_x)==F)
+        req(is.null(rv$nxy_selected_y)==F)
+        req(is.null(rv$nxy_selected_z)==F)
+        req(rv$nxy_selected_z!="None")
+        
+        withProgress(message = 'Making 3D Scatter...', value = 0, {
+            
+            df <- n_nxy_df()
+            df <- remove_nas(df)
+            
+            selected <- c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z)
+            
+            # attain columns max/min values for cutoff and coloring (automatically filters out NA)
+            df <- df %>% mutate(mp = do.call(pmax, dplyr::select(df, contains("PValue")))) 
+            df <- df %>% mutate(mq = do.call(pmax, dplyr::select(df, contains("FDR")))) 
+            df <- df %>% mutate(msmin = do.call(pmin, dplyr::select(df, contains("Stat")))) %>% 
+                mutate(msmax = do.call(pmax, dplyr::select(df, contains("Stat")))) 
+            
+            incProgress(0.2)
+            
+            # assign color by certain criteria
+            df$color <- ifelse(df$mp < rv$n_3ds_p & df$mq < rv$n_3ds_q & df$msmin > rv$n_3ds_Stat, "red", "gray")
+            df$color <- ifelse(df$mp < rv$n_3ds_p & df$mq < rv$n_3ds_q & df$msmax < -rv$n_3ds_Stat, "blue",df$color)
+            df$color <- as.factor(df$color)
+            #print(head(df))
+            
+            incProgress(0.2)
+            
+            # get col names
+            statcols <- paste("Stat_", selected, sep="")
+            pcols <- paste("PValue_", selected, sep="")
+            qcols <- paste("FDR_", selected, sep="")
+            # print(statcols)
+            
+            incProgress(0.2)
+            
+            fig <- plot_ly(df, x = df[[statcols[[1]]]], y = df[[statcols[[2]]]], z = df[[statcols[[3]]]], marker = list(color = df$color, size=2),
+                           hoverinfo="text",
+                           text=c(paste(df$Name, 
+                                        "<br>logFC(x):", round(df[[statcols[[1]]]], 3),
+                                        "<br>p=", round(df[[pcols[[1]]]], 3),", q=", round(df[[qcols[[1]]]], 3),
+                                        "<br>logFC(y):", round(df[[statcols[[2]]]], 3),
+                                        "<br>p=", round(df[[pcols[[2]]]], 3),", q=", round(df[[qcols[[2]]]], 3),
+                                        "<br>logFC(z):", round(df[[statcols[[3]]]], 3),
+                                        "<br>p=", round(df[[pcols[[3]]]], 3),", q=", round(df[[qcols[[3]]]], 3)
+                           )))
+            
+            incProgress(0.2)
+            
+            # generate properties table
+            summary <- c("total"=nrow(df), table(df$color))
+            summary_df <- t(data.frame(as.list(summary)))
+            summary_df <- data.frame(summary_df)
+            # add genes to the table
+            unicl <- unique(df$color)
+            gene_cats <- lapply(unicl, function(x){
+                gl <- df[which(df$color==x),][["Name"]]
+                paste(gl, collapse=" ")
+            })
+            gene_cats <- c(paste(df$Name, collapse=" "),gene_cats)
+            summary_df$genes <- unlist(gene_cats)
+            colnames(summary_df) <- c("n","Names")
+            rv$n_3ds_prop <- summary_df
+            
+            fig <- fig %>% add_markers()
+            fig <- fig %>% layout(title = paste0('3D Scatter, n=',nrow(df)),
+                                  scene = list(xaxis = list(title = paste0(statcols[[1]])),
+                                               yaxis = list(title = paste0(statcols[[2]])),
+                                               zaxis = list(title = paste0(statcols[[3]]))))
+            
+        })
+        fig
+    })
+    
+    output$df_n_3ds <- renderPlotly({
+        req(rv$df_n)
+        req(is.null(n_nxy_df())==F)
+        # req(rv$n_3ds_status=="ok")
+        
+        n_3ds_plt()
+    })
+    
+    n_3ds_prop_df <- reactive({ rv$n_3ds_prop })
+    # summary table
+    output$n_3ds_prop_tbl <- DT::renderDataTable({
+        n_3ds_prop_df()
+    }, plugins="ellipsis",
+    options=list(scrollX=T, scrollY=T, paging = FALSE, searching = FALSE, info=FALSE,
+                 columnDefs = list(
+                     list(
+                         targets = "_all",
+                         render = JS("$.fn.dataTable.render.ellipsis( 36, false )")
+                     ))
+    ))
+    
+    # download plotly html graph
+    output$n_3ds_dl <- downloadHandler(
+        filename = function() {paste("scatter-multiple-", Sys.Date(), ".html", sep = "")},
+        content = function(file) {saveWidget(as_widget(n_3ds_plt()), file, selfcontained = TRUE)})
+    
+    # download summary table
+    output$download_3ds_df <- downloadHandler(
+        filename = function() {
+            paste("summary-scatter-multiple-", Sys.Date(), ".csv", sep="")},
+        content = function(file) {
+            write.csv(n_3ds_prop_df(), file, 
+                      row.names = T, quote=TRUE)})
     
 
     

@@ -151,10 +151,81 @@ shinyServer(function(input, output, session) {
                 label = "Platforms available:",
                 choices = rv$platforms
             ),
-            actionButton("geo_platform", "Select")
+            uiOutput("study_type_feedback"),
+            uiOutput("select_geo_platform")
+            
         )
         
     })
+    
+    # detect study type during platform selection
+    study_type <- reactive({
+        req(is.null(rv$gse_all)==F)
+        req(length(rv$platforms)>0)
+        req(is.null(input$plat)==F)
+
+        gse_temp <- rv$gse_all[[match(input$plat, rv$platforms) ]]
+        print(gse_temp)
+        
+        # get channel count
+        gsm_meta_temp <- find_repeating_values(pData(phenoData(gse_temp)))
+        channel_count <- gsm_meta_temp$channel_count
+        
+        # get study type
+        gse_meta_temp <- notes(experimentData(gse_temp))
+        type <- gse_meta_temp$type
+        
+        return(list("type" = type, "channel_count" = channel_count))
+    })
+    
+    output$study_type_feedback <- renderUI({
+        req(is.null(rv$gse_all)==F)
+        req(length(rv$platforms)>0)
+        req(is.null(input$plat)==F)
+        
+        study_type <- study_type()$type
+        channel_count <- study_type()$channel_count
+        
+        errors = 0
+        msgs = vector()
+        if (study_type %in% accepted_study_types == F){
+            errors = errors +1
+            msgs <- c(msgs, 
+                         paste0("<strong>CAUTION: </strong>You have selected a study of type: <strong>",study_type, "</strong>, which is not currently supported. <br>
+                                Please continue at your own risk.")
+                      )
+            box_color = "yellow"
+        } 
+        if (channel_count != 1) {
+            errors = errors +1
+            msgs <- c(msgs, 
+                         paste0("<strong>CAUTION: </strong>Dataset has <strong>",channel_count, "</strong> channels, which is not currently supported.<br>
+                                Only data in the first channel will be read.")
+                      )
+            box_color = "yellow"
+        }
+        
+        msg <- paste(msgs, collapse="<br>")
+        if(errors>0){
+            fluidRow(
+                box(
+                    title = NULL, background = box_color, solidHeader = TRUE, width=12,
+                    HTML(msg)
+                )
+            )
+        } else {return(NULL)}
+        
+        
+    })
+    
+    output$select_geo_platform <- renderUI({
+        # req(
+        #     # study_type()$type %in% accepted_study_types & 
+        #         study_type()$channel_count == 1)
+        
+        actionButton("geo_platform", "Select")
+    })
+    
     
     observeEvent(input$geo_platform, {
         
@@ -197,21 +268,30 @@ shinyServer(function(input, output, session) {
     
     # get full gse metadata as list. call using gse_meta()
     gse_meta <- reactive({
+        req(is.null(gse())==F)
+        
         notes(experimentData(gse()))
     })
     
     # get full gse metadata as dataframe. call using gse_meta_df()
     gse_meta_df <- reactive({
+        req(is.null(gse_meta())==F)
+        
         named_list_to_df(gse_meta(), c("Field", "Value"))
     })
     
     # GSM metadata -----------
     gse_samples <- reactive({
+        req(is.null(gse())==F)
+        
         sampleNames(phenoData(gse()))
     })
     
     # get metadata shared among all GSMs as list. 
     gsm_meta <- reactive({
+        req(is.null(gse())==F)
+        req(is.null(gse_samples())==F)
+        
         vals <- find_repeating_values(pData(phenoData(gse())))
         c("samples" = paste(gse_samples(), collapse=" "), # add sample info to the phenodata list
           "sample_count" = length(gse_samples()),
@@ -220,6 +300,8 @@ shinyServer(function(input, output, session) {
     
     # get metadata shared among all GSMs as df. 
     gsm_meta_df <- reactive({
+        req(is.null(gse_meta())==F)
+        
         named_list_to_df(gsm_meta(), c("Field", "Value"))
     })
     
@@ -346,6 +428,9 @@ shinyServer(function(input, output, session) {
         char_list <- lapply(char_list, function(x){
             transform_vector(x, ": ")
         })
+        # print(char_list)
+        
+        
         # char_list
         chars <- names(table(unlist(lapply(char_list, names))))
         # chars
@@ -358,9 +443,9 @@ shinyServer(function(input, output, session) {
         # ls
         char_mat <- data.frame(t(data.frame(ls)))
         
-        # get rid of single factor columns
-        to_keep <- function(x) any(is.numeric(x), length(unique(x)) > 1)
-        char_mat <- Filter(to_keep, char_mat)
+        # # get rid of single factor columns # well... we still need them to show user
+        # to_keep <- function(x) any(is.numeric(x), length(unique(x)) > 1)
+        # char_mat <- Filter(to_keep, char_mat)
         
         
         # fill NAs with string?? (optional)
@@ -915,6 +1000,7 @@ shinyServer(function(input, output, session) {
     # --------------- select variables and levels ---------------
     
     output$select_params_ui <- renderUI({
+        req(is.null(rv$fddf)==F)
         
         fddf <- rv$fddf
         
@@ -971,7 +1057,15 @@ shinyServer(function(input, output, session) {
                 uiOutput("sp_select_levels_rel_fb")
             )
         } else {
-            HTML("No variables are available for selection. <br>(NOTE: at least one variable must have >2 levels)")
+            msg = HTML("<strong>No variables are available for selection.</strong><br>
+                       (NOTE: at least one variable must have >2 levels)")
+            box_color = "red"
+            fluidRow(
+                box(
+                    title = NULL, background = box_color, solidHeader = TRUE, width=12,
+                    HTML(msg)
+                )
+            )
         }
     })
     
@@ -1095,6 +1189,7 @@ shinyServer(function(input, output, session) {
     })
     
     output$confirm_matrix_feedback <- renderUI({
+        req(is.null(rv$dmdf)==F)
         
         errors = 0
         msg = vector()
@@ -1144,11 +1239,13 @@ shinyServer(function(input, output, session) {
             rv$matrix_ready = T
         }
         
-        
-        box(
-            title = NULL, background = box_color, solidHeader = TRUE, width=12,
-            HTML(msg)
+        fluidRow(
+            box(
+                title = NULL, background = box_color, solidHeader = TRUE, width=12,
+                HTML(msg)
+            )
         )
+        
         
     })
     

@@ -121,14 +121,23 @@ body <- dashboardBody(
                                
                                
                                tabPanel("Filtered Design Matrix", 
-                                        radioGroupButtons(
-                                            inputId = "fddf_show_rown",
-                                            label = "Show column names as:", 
-                                            choices = c("GEO accession", "Sample name"),
-                                            selected = "GEO accession"
-                                        ),
+                                        fluidRow(
+                                          column(12,
+                                                 box(title=NULL, width = 6, solidHeader=T, status="primary",
+                                                   radioGroupButtons(
+                                                     inputId = "fddf_show_rown",
+                                                     label = "Show column names as:", 
+                                                     choices = c("GEO accession", "Sample name"),
+                                                     selected = "GEO accession"
+                                                   )
+                                                 ),
+                                                 
+                                                 DT::dataTableOutput("filtered_design_df")
+                                                 
+                                                 )
+                                          
+                                        )
                                         
-                                        DT::dataTableOutput("filtered_design_df")
                                )
                            ),
                     ),
@@ -175,20 +184,27 @@ body <- dashboardBody(
                                title = NULL, width = 12,
                                id = "data_matrix",
                                tabPanel("Processed data matrix", 
+                                        fluidRow(
+                                          column(12,
+                                                 box(title=NULL, width = 6, solidHeader=T, status="primary",
+                                                     radioGroupButtons(
+                                                       inputId = "dmdf_show_coln",
+                                                       label = "Show column names as:", 
+                                                       choices = c("GEO accession", "Sample name"),
+                                                       selected = "GEO accession"
+                                                     ),
+                                                     
+                                                 ),
+                                                 
+                                                 uiOutput("dmdf_filter_ui"),
+                                                 
+                                                 DT::dataTableOutput("data_matrix_df")
+                                                 
+                                                 )
+                                          
+                                          
+                                        )
                                         
-                                        box(title=NULL, width = 6, solidHeader=T, status="primary",
-                                            radioGroupButtons(
-                                                inputId = "dmdf_show_coln",
-                                                label = "Show column names as:", 
-                                                choices = c("GEO accession", "Sample name"),
-                                                selected = "GEO accession"
-                                            ),
-                                            
-                                        ),
-                                        
-                                        uiOutput("dmdf_filter_ui"),
-                                        
-                                        DT::dataTableOutput("data_matrix_df")
                                         
                                )
                            )

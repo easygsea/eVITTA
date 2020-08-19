@@ -1,0 +1,6 @@
+element	intro
+	In this view you can make visualizations for two selected datasets.
+stepc1	"Select two datasets: first one will be X, second one will be Y."
+stepc2	Data must have enough shared columns and rows. You can see the amount of shared columns and rows here.
+stepc3	Click this button to generate visualizations in the dashboard.
+stepc4	Visualizations will be shown in individual panels. Select options from bottom left corner to customize graphs.
