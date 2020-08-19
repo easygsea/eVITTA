@@ -2,12 +2,15 @@
 bodySummary <- tabItem(tabName = "summary",
     fluidRow(
       column(
-        width = 12,
+        width = 8,
+        uiOutput("ui_gsea_toggle")
+      ),
+      column(
+        width = 4,align = "right",
         uiOutput("summary_cutoffs")
       )
     ),
     br(),
-    uiOutput("ui_gsea_toggle"),
     fluidRow(
       box(
         title = "Table Summary", solidHeader = T, width = 6, status = "primary",

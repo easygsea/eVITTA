@@ -4,12 +4,12 @@
 # -------- P or P.adj thresholds: UI -----------
 output$summary_cutoffs <- renderUI({
     dropdown(
-        style = "material-circle", icon = icon("gear"),
+        style = "material-circle", icon = icon("gear"),align = "left",
         status = "default", width = "850px",
-        # right=T, 
+        right=T,
         animate = animateOptions(
-            enter = "slideInLeft",
-            exit = "fadeOutLeft", duration = 0.5
+            enter = "slideInRight",
+            exit = "fadeOutRight", duration = 0.5
         ),
         fluidRow(
             column(
@@ -64,6 +64,7 @@ output$ui_gsea_toggle <- renderUI({
                 NULL,
                 choices = list("Upregulation"="up","Downregulation"="down"),
                 selected = "up",
+                size = "lg",
                 checkIcon = list(
                     yes = icon("check-square"),
                     no = icon("square-o")
@@ -179,9 +180,9 @@ observe({
             output$ui_tables <- renderUI({
                 plot_output_list <- lapply(1:max_table, function(i) {
                     tablename <- paste0("tablename", i)
-                    div(
-                        dataTableOutput(tablename,height = "300px"),
-                        tags$br()
+                    column(width = 12,
+                        tags$br(),
+                        dataTableOutput(tablename,height = "300px")
                     )
                 })
                 do.call(tagList, plot_output_list)
@@ -211,8 +212,11 @@ observe({
             output$plot_words <- renderUI({
                 plot_output_list <- lapply(1:max_table, function(i) {
                     barname <- paste0("barname", i)
-                    div(
-                        plotlyOutput(barname,height = "300px",width = "100%"),
+                    column(width = 12,
+                        div(
+                            style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
+                            plotlyOutput(barname,height = "300px",width = "100%"),
+                        ),
                         tags$br()
                     )
                 })
@@ -228,8 +232,9 @@ observe({
                     output[[barname]] <- renderPlotly({
                         tidy_data = lst_words[[my_i]] %>%
                             mutate(word = factor(word, levels = rev(unique(word)))) %>%
-                            head(.,n=15)
-                        # top_n(10)
+                            top_n(15)
+                            # head(.,n=15)
+                        
                         
                         # hover text
                         text = lapply(tidy_data$word, function(x){
@@ -246,25 +251,41 @@ observe({
                         
                         text = unlist(text)
                         
-                        # y axis label
-                        if(rv$run_mode == "glist"){
-                            y_label = paste0("Word frequency (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                        }else if(rv$run_mode == "gsea"){
-                            if(direction == "up"){
-                                y_label = paste0("Word frequency for upregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                            }else if(direction == "down"){
-                                y_label = paste0("Word frequency for downregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                            }
-                        }
+                        # # y axis label
+                        # if(rv$run_mode == "glist"){
+                        #     y_label = paste0("Word frequency (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
+                        # }else if(rv$run_mode == "gsea"){
+                        #     if(direction == "up"){
+                        #         y_label = paste0("Word frequency for upregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
+                        #     }else if(direction == "down"){
+                        #         y_label = paste0("Word frequency for downregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
+                        #     }
+                        # }
+                        y_label = names(rv$dbs)[rv$dbs==cats[my_i]]
                         
                         p <- tidy_data %>%
                             ggplot(aes(word, n, text=text)) +
                             geom_col(show.legend = FALSE, fill = colors[my_i]) +
-                            labs(x = NULL, y = y_label) +
+                            labs(x = NULL, y = NULL, title = y_label) +
                             coord_flip() +
-                            scale_x_reordered()
+                            scale_x_reordered() +
+                            theme(
+                                plot.title = element_text(size = 10,face = "bold",vjust=0) #hjust = 0.5
+                            )
                         
-                        ggplotly(p,tooltip=c("word","n","text"))
+                        # adjust plot height
+                        lth = nrow(tidy_data) * 18 + 50
+                        if(lth<300){lth=300}
+                        
+                        ggplotly(p, height = lth,
+                                 # margin=dict(
+                                 #     l=250,
+                                 #     r=0,
+                                 #     b=0,
+                                 #     t=50,
+                                 #     pad=0
+                                 # ),
+                                 tooltip=c("word","n","text"))
                     })
                 })
             }

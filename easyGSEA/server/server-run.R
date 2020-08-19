@@ -598,16 +598,18 @@
         
       }
       
-      column(
-        width = 12,
-        wellPanel(
+      fluidRow(
+        column(
+          width = 12,
+          wellPanel(
             shiny::HTML("<p style='font-style:italic'>Run parameters</p>"),
             splitLayout(
-                numericInput("mymin", "Min:",15),
-                numericInput("mymax", "Max:",200),
-                uiOutput("ui_nperm")
+              numericInput("mymin", "Min:",15),
+              numericInput("mymax", "Max:",200),
+              uiOutput("ui_nperm")
             )
             ,style = "background:#e6f4fc;"
+          )
         )
       )
     })
