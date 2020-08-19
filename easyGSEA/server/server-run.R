@@ -839,8 +839,13 @@
                 # uppercase genes
                 m_list = lapply(gmts[[i]], function(x) toupper(x))
                 
+                # genes present in the database
+                in_genes = genelist[genelist %in% all_genes[[i]]]
+                
+                if(identical(in_genes,character(0))){incProgress(0.2);next}
+                
                 fgseaRes <- fora(pathways = m_list,
-                                  genes    = genelist[genelist %in% all_genes[[i]]],
+                                  genes    = in_genes,
                                   universe = all_genes[[i]],
                                   minSize  = rv$gmin,
                                   maxSize  = rv$gmax
@@ -861,7 +866,7 @@
             incProgress(0.1)
             
             # determine if success or warnings
-            if(is.null(rv$fgseagg)==FALSE){
+            if(is.null(rv$fgseagg)==F && nrow(rv$fgseagg)>0){
                 rv$run = "success"
             } else {
                 rv$run = "failed"

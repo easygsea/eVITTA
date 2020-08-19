@@ -66,7 +66,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     # br(),
                     fluidRow(
                         column(
-                            width = 4, offset = 6,
+                            width = 12, align = "right",
                             uiOutput("run_GSEA"),
                             uiOutput("run_GList")
                         )

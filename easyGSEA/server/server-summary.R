@@ -63,7 +63,7 @@ output$ui_gsea_toggle <- renderUI({
                 "tables_switch",
                 NULL,
                 choices = list("Upregulation"="up","Downregulation"="down"),
-                selected = "up",
+                selected = rv$tables_switch,
                 size = "lg",
                 checkIcon = list(
                     yes = icon("check-square"),
@@ -96,8 +96,10 @@ observe({
     if(rv$run_mode == "gsea"){
         req(input$tables_switch)
         
+        rv$tables_switch = input$tables_switch
+        
         # up or down
-        direction <- input$tables_switch
+        direction <- rv$tables_switch
         
         # filter by cutoff
         if(direction == "up"){

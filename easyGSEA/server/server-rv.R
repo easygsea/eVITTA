@@ -26,6 +26,8 @@
         infile_name=NULL,infile_path=NULL,
         rnkll=NULL,rnkgg=NULL,#deggg=NULL,
         
+        tables_switch="up",
+        
         #========================================#
         #####       RVs for ORA run          #####
         #========================================#
