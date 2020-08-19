@@ -112,9 +112,11 @@ observe({
     # feedbacks on no significant enrichment
     no_sig = function(){
         if(rv$run_mode == "gsea"){
-            paste0("No significant ",direction,"regulation found at pval < ",rv$vis_p," & q < ", rv$vis_q)
+            HTML("No significant ",direction,"regulation found at pval < ",rv$vis_p," & q < ", rv$vis_q,
+                 ". Please adjust thresholds by clicking the top-right gear button.")
         }else{
-            paste0("No significant regulation found at pval < ",rv$vis_p," & q < ", rv$vis_q)
+            HTML("No significant regulation found at pval < ",rv$vis_p," & q < ", rv$vis_q,
+                 ". Please adjust thresholds by clicking the top-right gear button.")
         }
     }
     

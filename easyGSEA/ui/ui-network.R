@@ -2,7 +2,7 @@
 bodyNetwork <- tabItem(tabName = "network",
     fluidRow(
       column(
-        width = 4, offset = 8, align = "right",
+        width = 12,align = "right",
         uiOutput("ui_vis_gear")
       )
     ),

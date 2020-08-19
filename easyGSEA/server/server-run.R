@@ -420,41 +420,42 @@
         req(input$selected_mode == "glist")
         # req(input$selected_species != "")
         # req(is.null(rv$dbs)==F)
-        div(
-            textAreaInput(
-                inputId = "gene_list",
-                label = p("3. Input your genes (",
-                          tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
-                          actionLink("load_example_glist", label = tags$u("example data")),
-                          "):"
-                          ),
-                placeholder = "Paste your genes here ...",
-                height = 110
+      fluidRow(
+        column(
+          width = 12,
+          textAreaInput(
+            inputId = "gene_list",
+            label = p("3. Input your genes (",
+                      tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
+                      actionLink("load_example_glist", label = tags$u("example data")),
+                      "):"
             ),
-            fluidRow(
-                column(
-                    width = 6,
-                    textInput(
-                        "glist_name",
-                        NULL,
-                        placeholder = 'Name your list ...'
-                    )
-                ),
-                column(
-                    width = 2, #offset = 6,
-                    bsButton(
-                        inputId = "gene_list_clear",
-                        label = "Reset",
-                        style = "default"
-                    )
-                ),
-                column(
-                    width = 3, #offset = 1,
-                    uiOutput("glist_add_button")
-                )
-                
-            )
+            placeholder = "Paste your genes here ...",
+            height = 110
+          )
+        ),
+        column(
+          width = 6,
+          textInput(
+            "glist_name",
+            NULL,
+            placeholder = 'Name your list ...'
+          )
+        ),
+        column(
+          width = 2, #offset = 6,
+          bsButton(
+            inputId = "gene_list_clear",
+            label = "Reset",
+            style = "default"
+          )
+        ),
+        column(
+          width = 4, align="right",
+          uiOutput("glist_add_button")
         )
+        
+      )
     })
     
     # Glist add button
@@ -544,7 +545,7 @@
     
     # clear GList input ------------------------------
     observeEvent(input$gene_list_clear, {
-        rv$run = NULL
+        # rv$run = NULL
         
         rv$glist_check = NULL
         rv$gene_lists = NULL

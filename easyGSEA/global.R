@@ -37,6 +37,10 @@ run_modes = list("Pre-ranked GSEA"="gsea","Gene List (Overrepresentation Analysi
 # gene identifiers
 gene_identifiers = list("SYMBOL"="symbol","Other/Mixed" = "other")
 
+# wellpanel background colors
+bcol1 = "#e6f4fc"
+bcol2 = "#ffffe6"
+
 # ===================== FUNCTIONS =====================
 # function to abbreviate strings
 abbreviate_string <- function(x){

@@ -50,7 +50,7 @@
         gmin=NULL,gmax=NULL,gperm=NULL,
         no_up_01=0,no_down_01=0,no_up_05=0,no_down_05=0,
         
-        bar_q_cutoff=1, volcano_cutoff=.005, # bar cutoff synchronized with bubble; bubble_q_cutoff=1, 
+        bar_q_cutoff=.05, volcano_cutoff=.005, # bar cutoff synchronized with bubble; bubble_q_cutoff=1, 
         bar_p_cutoff=.005, #bar cutoff synchronized with bubble; bubble_p_cutoff=.005,
         bar_up=10, bubble_up=10,
         bar_down=10, bubble_down=10,
@@ -84,7 +84,7 @@
         # hc_edges = NULL,
         vis=NULL,
         vis_status=NULL, #success if plotted, failed if df nrow==0
-        vis_k=0.5,vis_p=0.005,vis_q=1,vis_pq="pval",
+        vis_k=0.5,vis_p=.005,vis_q=.05,vis_pq="pval",
         percent_method="jaccard",# or   combined overlap
         percent_cutoff = 0.25, # or 0.5 for overlap
         

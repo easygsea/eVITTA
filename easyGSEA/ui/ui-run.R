@@ -13,7 +13,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     fluidRow(
                         column(width = 12,
                                wellPanel(
-                                   style = "background:#ffffe6;",
+                                   style = paste0("background:",bcol1),
                                    # title = NULL, background = "yellow", solidHeader = T, width = 12,
                                    radioButtons(
                                        inputId = "selected_mode",

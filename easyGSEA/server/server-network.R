@@ -2,10 +2,11 @@
 output$vis_error <- renderUI({
     req(rv$vis_status == "failed")
     HTML(
-        "No significant term found at P value threshold ",
+        "No significant enrichment found at pval < ",
         rv$vis_p,
-        ", P.adj threshold ",
-        rv$vis_q
+        " & q < ",
+        rv$vis_q,
+        ". Please adjust thresholds by clicking the top-right gear button."
     )
 
 })
@@ -62,19 +63,19 @@ observeEvent(input$q_vis_edge_threshold,{
 
 #  ============UI vis parameter =============
 output$ui_vis_gear <- renderUI({
-    div(
-        align = "left",
+    # div(
+    #     align = "left",
     #     style = "position: absolute; right: 4.5em; top: 3em;",
         dropdown(
             # size = "xs",up = FALSE,right = TRUE,width = "850px",
             # circle = TRUE, tooltip = TRUE, label = "Advanced parameters for creating a network",
             # icon = icon("gear", class = "opt"),
-            style = "material-circle", icon = icon("gear"),
+            style = "material-circle", icon = icon("gear"),align = "left",
             status = "default", width = "850px",
-            # right=T, 
+            right=T,
             animate = animateOptions(
-                enter = "slideInLeft",
-                exit = "fadeOutLeft", duration = 0.5
+                enter = "slideInRight",
+                exit = "fadeOutRight", duration = 0.5
             ),
             div(
                 align = "center",
@@ -153,6 +154,6 @@ output$ui_vis_gear <- renderUI({
             
             
         )
-    )
+    # )
     
 })
