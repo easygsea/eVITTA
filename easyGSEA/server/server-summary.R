@@ -133,7 +133,7 @@ observe({
     }else{
         
         withProgress(message = "Generating summary stats ...", value = 1,{
-            
+            Sys.sleep(1)
             # get db categories
             cats = unique(df$db)
             max_table = length(cats)

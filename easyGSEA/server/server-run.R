@@ -55,21 +55,21 @@
         fluidRow(
             column(
                 width = 12,
-                tags$script(HTML('$(document).ready(function(){
-      $("#showdbs_collapsible").on("hide.bs.collapse", function(){
-        $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-down\\\"></span> Advanced database options ...");
-      });
-      $("#showdbs_collapsible").on("show.bs.collapse", function(){
-        $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-up\\\"></span> Advanced database options ...");
-      });
-    });')),
+    #             tags$script(HTML('$(document).ready(function(){
+    #   $("#showdbs_collapsible").on("hide.bs.collapse", function(){
+    #     $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-down\\\"></span> Advanced database options ...");
+    #   });
+    #   $("#showdbs_collapsible").on("show.bs.collapse", function(){
+    #     $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-up\\\"></span> Advanced database options ...");
+    #   });
+    # });')),
                 bsButton("showdbs", "Advanced database options ...", 
                          icon = icon("collapse-down", lib = "glyphicon"),
                          style = "default",
-                         type = "toggle",
-                         # class = "btn-primary btn-sm", 
-                         `data-toggle`="collapse", 
-                         `data-target` = "#showdbs_collapsible"
+                         type = "toggle"
+                         # #, class = "btn-primary btn-sm"
+                         # ,`data-toggle`="collapse"
+                         # ,`data-target` = "#showdbs_collapsible"
                          ),
                 br(),
                 conditionalPanel('input.showdbs % 2 == 1',
