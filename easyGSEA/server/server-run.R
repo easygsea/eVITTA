@@ -524,7 +524,7 @@
 
                     # name the analysis
                     if(input$glist_name == ""){
-                        rv$rnkll = "unamed"
+                        rv$rnkll = "unnamed"
                     }else{
                         rv$rnkll = input$glist_name
                     }

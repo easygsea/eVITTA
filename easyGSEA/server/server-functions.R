@@ -97,7 +97,7 @@
             df = df %>% 
               dplyr::filter(db %in% pathways) %>% 
               mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-              dplyr::arrange(df[[pq]])
+              dplyr::arrange(padj)
             
             if(cutoff_p < 1){
                 df = df %>% dplyr::filter(pval < cutoff_p)
@@ -172,7 +172,7 @@
             df = df %>% 
                 dplyr::filter(db %in% pathways) %>% 
                 mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-              dplyr::arrange(df[[pq]])
+              dplyr::arrange(padj)
             
             if(cutoff_p < 1){
                 df = df %>% dplyr::filter(pval < cutoff_p)
@@ -612,7 +612,7 @@
             df = rv$fgseagg %>% 
                 dplyr::filter(db %in% pathways) %>% 
                 mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-              dplyr::arrange(df[[pq]])
+              dplyr::arrange(padj)
             
             if(cutoff_p < 1){
                 df = df %>% dplyr::filter(pval<cutoff_p)
@@ -680,7 +680,7 @@
             df = rv$fgseagg %>% 
                 dplyr::filter(db %in% pathways) %>% 
                 mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-              dplyr::arrange(df[[pq]])
+              dplyr::arrange(padj)
             
             if(cutoff_p < 1){
                 df = df[which(df[["pval"]]<cutoff_p),]
