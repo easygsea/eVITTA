@@ -156,6 +156,7 @@
                                 tooltip = "text",
                                 source = "bar_plot_click"
                 ) %>%
+                  # layout(legend=list(colorbar=list(side="right"))) %>%
                     event_register("plotly_click")
                 
                 return(fig)
