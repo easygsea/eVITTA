@@ -5,10 +5,11 @@ bodyResults <- tabItem(tabName = "kegg",
             width = 6,
             radioGroupButtons(
                 inputId = "plot_type",
-                choiceNames = list(span(icon("braille"),"Manhattan plot"),span(icon("chart-bar"),"Bar plot"),span(icon("first-order-alt"),"Bubble plot"),span(icon("fire-alt"),"Volcano plot")), #,
-                choiceValues = list("manhattan","bar", "bubble","volcano"), #,
-                selected = "manhattan",
+                choiceNames = list(span(icon("chart-bar"),"Bar plot"),span(icon("first-order-alt"),"Bubble plot"),span(icon("file-word"),"Keywords"),span(icon("braille"),"Manhattan plot"),span(icon("fire-alt"),"Volcano plot")), #,
+                choiceValues = list("bar", "bubble","word","manhattan","volcano"), #,
+                selected = "bar",
                 status = "primary",
+                size = "normal",
                 direction = "horizontal"
             )
         ),
@@ -31,6 +32,7 @@ bodyResults <- tabItem(tabName = "kegg",
                 uiOutput("bar_box"),
                 uiOutput("bubble_box"),
                 uiOutput("volcano_box"),
+                uiOutput("word_box"),
                 uiOutput("kegg_feedback"),
                 uiOutput("reactome_feedback"),
                 uiOutput("wp_feedback")

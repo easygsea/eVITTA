@@ -59,7 +59,7 @@
         bar_pq="pval", volcano_pq="pval", #bar pq synchronized with bubble; bubble_pq="padj", 
         bar_pathway=NULL, bubble_pathway=NULL, volcano_pathway=NULL,
         bar_pathway_list=NULL,bubble_pathway_list=NULL,volcano_pathway_list=NULL,manhattan_pathway_list=NULL,
-        bar_abb="n",bubble_abb="n",bar_abb_n=40,bubble_abb_n=40,
+        bar_abb="y",bubble_abb="y",bar_abb_n=40,bubble_abb_n=40,
         
         bubble_zmin=2.5,bubble_zmax=9.5,
         
@@ -68,6 +68,8 @@
         volcano_name=NULL,
         
         p_volcano=NULL,
+        
+        n_word = 10, # no of words with top frequency
         
         k=1.5,
         

@@ -348,6 +348,46 @@ output$ui_volcano_glist <- renderUI({
     p("No volcano plot available for gene list overrepresentation analysis.")
 })
 
+# keyword plot --------------
+observeEvent(input$word_confirm,{
+    rv$bar_pathway = input$pathway_to_plot_word
+    rv$bar_p_cutoff = input$cutoff_word_p
+    rv$bar_q_cutoff = input$cutoff_word_q
+    rv$n_word = input$n_word
+})
+
+# if no significant terms found
+output$plot_word_none <- renderUI({
+    req(rv$run == "success")
+    req(input$plot_type=="word")
+    
+    if(is.null(word_plot())){
+        HTML(
+            "No significant term found at P value threshold ",
+            rv$bar_p_cutoff,
+            ", P.adj threshold ",
+            rv$bar_q_cutoff
+        )
+    }
+})
+
+# word plot
+output$plot_word <- renderPlotly({
+    req(rv$run == "success")
+    req(input$plot_type=="word")
+    req(is.null(rv$bar_pathway)==F)
+    
+    withProgress(message = "Generating word frequency chart..,", value = 1,{
+        word_plot()
+    })
+})
+
+# bar download
+output$download_word <- downloadHandler(
+    filename = function() {paste0("keyword_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".html")},
+    content = function(file) {saveWidget(as_widget(word_plot()), file, selfcontained = TRUE)}
+)
+
 # UI manhattan -----------
 output$manhattan_box <- renderUI({
     req(input$plot_type=="manhattan")
@@ -423,7 +463,7 @@ output$bar_box <- renderUI({
                 style = "position: absolute; left: 1em; bottom: 1em;",
                 dropdown(
                     selectizeInput("pathway_to_plot_bar",
-                                   "Select term(s) to plot",
+                                   "Select database(s) to plot",
                                    choices = rv$dbs,
                                    selected = rv$bar_pathway,
                                    multiple = TRUE),
@@ -533,7 +573,7 @@ output$bubble_box <- renderUI({
                 style = "position: absolute; left: 1em; bottom: 1em;",
                 dropdown(
                     selectizeInput("pathway_to_plot_bubble",
-                                   "Select term(s) to plot",
+                                   "Select database(s) to plot",
                                    choices = rv$dbs,
                                    selected = rv$bar_pathway,
                                    multiple = TRUE),
@@ -648,7 +688,7 @@ output$volcano_box <- renderUI({
                     style = "position: absolute; left: 1em; bottom: 1em;",
                     dropdown(
                         selectizeInput("pathway_to_plot_volcano",
-                                       "Select term(s) to plot",
+                                       "Select database(s) to plot",
                                        choices = rv$dbs,
                                        selected = rv$volcano_pathway,
                                        multiple = TRUE),
@@ -758,6 +798,72 @@ output$ui_volcano_cutoff <- renderUI({
 #     )
 # })
 
+
+# UI bubble --------------------
+output$word_box <- renderUI({
+    req(input$plot_type=="word")
+    div(
+        style = "position: relative",
+        box(
+            width = 12,height = "621px",align = "center",
+            status = "primary", 
+            div(
+                style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
+                uiOutput("plot_word_none"),
+                plotlyOutput("plot_word", width = "100%",height = "600px")
+            ),
+            div(
+                align = "left",
+                style = "position: absolute; left: 1em; bottom: 1em;",
+                dropdown(
+                    selectizeInput("pathway_to_plot_word",
+                                   "Select database(s) to plot",
+                                   choices = rv$dbs,
+                                   selected = rv$bar_pathway,
+                                   multiple = TRUE),
+                    splitLayout(
+                        sliderTextInput("cutoff_word_p",
+                                        label = "Adjust P.adj threshold:",
+                                        choices= cutoff_slider,
+                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
+                        ),
+                        sliderTextInput("cutoff_word_q",
+                                        label = "Adjust P.adj threshold:",
+                                        choices= cutoff_slider,
+                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
+                        )
+                    ),
+                    numericInput("n_word",
+                                 "# of top words",
+                                 rv$n_word, min=1,
+                                 width = "50%"
+                    ),
+                    fluidRow(
+                        column(
+                            width = 12, align = "right",
+                            br(),br(),
+                            bsButton("word_confirm",tags$b("Replot!"),style = "danger")
+                        )
+                    )
+                    ,
+                    size = "xs",
+                    icon = icon("gear", class = "opt"),
+                    up = TRUE,width = "410px"
+                )
+            ),
+            div(
+                style = "position: absolute; left: 4.5em; bottom: 1em;",
+                dropdown(
+                    downloadButton(outputId = "download_word", label = "Download plot"),
+                    size = "xs",
+                    icon = icon("download", class = "opt"),
+                    up = TRUE
+                )
+            )
+        )
+    )
+})
+
 # GSEA table --------------------
 output$gs_stats_tl <- DT::renderDataTable({
     # req(input$selected_es_term != "")
@@ -776,17 +882,18 @@ output$gs_stats_tl <- DT::renderDataTable({
     rownames(df) = r_names
     colnames(df) = c_names
     
-    
-    return(df)
-    
-    # DT::datatable(df,
-    #               # extensions=c('Scroller'),
-    # )
-},options = list(pageLength = 4,
-    # scrollY = "160px",
-    # scroller = TRUE,
-    scrollX=TRUE
-))
+
+    DT::datatable(df,
+                  extensions=c('Scroller','Buttons'),
+                  options = list(
+                      # sDom  = '<"top">lrt<"bottom">ip',
+                      dom = 'Bfrtip',
+                      buttons = c('copy', 'pdf', 'csv'), #, 'excel', 'print'
+                      scrollY = "155px",
+                      scroller = TRUE,
+                      scrollX=TRUE           
+                  ))
+})
 
 # Enrichment plot ---------------------------
 

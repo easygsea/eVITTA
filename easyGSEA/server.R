@@ -13,8 +13,8 @@ server <- function(input, output, session) {
     source("server/server-run.R", local = TRUE)
     source("server/server-body1.R", local = TRUE)
     
-    source("server/server-summary.R", local = TRUE)
-    source("server/server-network.R", local = TRUE)
     source("server/server-vis.R", local = TRUE)
+    # source("server/server-summary.R", local = TRUE)
+    source("server/server-network.R", local = TRUE)
     source("server/server-download.R", local = TRUE)
 }

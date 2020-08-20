@@ -64,8 +64,16 @@ output$selected_es_tables <- DT::renderDataTable({
     df = filter_df()
     df <- df %>%
         mutate_if(is.numeric, function(x) round(x, digits=3))
-    return(df)
-    },options = list(pageLength = 1, scrollX=TRUE)
+    
+    DT::datatable(df,
+                  extensions=c('Scroller'),
+                  options = list(
+                      scrollY = "155px",
+                      scroller = TRUE,
+                      scrollX=TRUE           
+                  ))
+    
+    }
 )
 
 output$gs_tbl_dl <- downloadHandler(

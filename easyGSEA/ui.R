@@ -1,7 +1,7 @@
 source("ui/ui-run.R")
-source("ui/ui-summary.R")
 source("ui/ui-vis.R")
 source("ui/ui-network.R")
+# source("ui/ui-summary.R")
 source("ui/ui-download.R")
 source("ui/ui-help.R")
 
@@ -9,9 +9,9 @@ source("ui/ui-help.R")
 sidebar <- dashboardSidebar(
     sidebarMenu(
         menuItem("Run Analysis", tabName = "gsea", icon = icon("play")), #code-branch align-left
-        menuItem("Enrichment Summary", tabName = "summary", icon = icon("table")),
+        menuItem("Enrichment Results", tabName = "kegg", icon = icon("bar-chart")), #fingerprint
         menuItem("Enrichment Network", tabName = "network", icon = icon("project-diagram")),
-        menuItem("Visualization & Exploration", tabName = "kegg", icon = icon("bar-chart")), #fingerprint
+        # menuItem("Enrichment Summary", tabName = "summary", icon = icon("table")),
         menuItem("Download", tabName = "download", icon = icon("download")),
         menuItem("Help", tabName = "help", icon = icon("info-circle"))
         
@@ -42,9 +42,9 @@ shinyUI(
             
             tabItems(
                 bodyGSEA,
-                bodySummary,
-                bodyNetwork,
                 bodyResults,
+                bodyNetwork,
+                # bodySummary,
                 bodyDownload,
                 bodyHelp
             )
