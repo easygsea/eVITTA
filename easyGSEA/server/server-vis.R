@@ -14,6 +14,7 @@ sig_none <- reactive({
         ". Please adjust thresholds by clicking the bottom-right gear button."
     )
 })
+
 # manhattan plot --------------
 observeEvent(input$manhattan_confirm,{
     rv$volcano_pq = input$p_or_q_manhattan
@@ -200,8 +201,11 @@ output$plot_bar <- renderPlotly({
     req(rv$run == "success")
     req(input$plot_type=="bar")
     req(is.null(rv$bar_pathway)==F)
+    
+    withProgress(message = "Updating bar plot ...",value = 1,{
+        p_bar()
+    })
 
-    p_bar()
 })
 
 # bar download
@@ -250,8 +254,9 @@ output$plot_bubble <- renderPlotly({
     req(input$plot_type=="bubble")
     req(is.null(rv$bar_pathway)==F)
 
-    
-    p_bubble()
+    withProgress(message = "Updating bubble plot ...",value = 1,{
+        p_bubble()
+    })
 })
 
 # bubble download
@@ -887,7 +892,7 @@ output$gs_stats_tl <- DT::renderDataTable({
                       # sDom  = '<"top">lrt<"bottom">ip',
                       dom = 'Bfrtip',
                       buttons = c('copy', 'pdf', 'csv'), #, 'excel', 'print'
-                      scrollY = "155px",
+                      scrollY = "128px",
                       scroller = TRUE,
                       scrollX=TRUE           
                   ))
@@ -991,13 +996,12 @@ output$ui_es <- renderUI({
                 style = 'overflow-x: scroll;font-size:75%', 
                 DT::dataTableOutput("gs_stats_tl")
             ),
-            tags$hr(style="border-color: grey; margin:20px;"),
+            tags$hr(style="border-color: grey; margin:22px;"),
             div(
                 style = "position: relative",
                 uiOutput("ui_gsea_plots_radio"),
                 br(),
                 uiOutput("ui_gsea_plots"),
-                
             )
         )
         

@@ -41,11 +41,8 @@ bodyResults <- tabItem(tabName = "kegg",
                             uiOutput("es_plot_term_confirm")
                         )
                     ),
-                    
                     uiOutput("ui_es")
                 )
-                
-                
             )
         )
     ),
