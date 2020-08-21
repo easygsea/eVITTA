@@ -1,6 +1,19 @@
 #=============================================================# 
 ######                 ENRICHMENT RESULTS              ########
 #=============================================================#
+# feedbacks on no significant enrichment
+sig_none <- reactive({
+    req(rv$bar_p_cutoff)
+    req(rv$bar_q_cutoff)
+    
+    HTML(
+        "No significant term found at pval < ",
+        rv$bar_p_cutoff,
+        "& padj < ",
+        rv$bar_q_cutoff,
+        ". Please adjust thresholds by clicking the bottom-right gear button."
+    )
+})
 # manhattan plot --------------
 observeEvent(input$manhattan_confirm,{
     rv$volcano_pq = input$p_or_q_manhattan
@@ -170,12 +183,7 @@ output$plot_bar_none <- renderUI({
     req(input$plot_type=="bar")
     
     if(is.null(p_bar())){
-        HTML(
-            "No significant term found at P value threshold ",
-            rv$bar_p_cutoff,
-            ", P.adj threshold ",
-            rv$bar_q_cutoff
-        )
+        sig_none()
     }
 })
 
@@ -225,12 +233,7 @@ output$plot_bubble_none <- renderUI({
     req(input$plot_type=="bubble")
     
     if(is.null(p_bubble())){
-        HTML(
-            "No significant term found at P value threshold ",
-            rv$bar_p_cutoff,
-            ", P.adj threshold ",
-            rv$bar_q_cutoff
-        )
+        sig_none()
     }
 })
 
@@ -362,12 +365,7 @@ output$plot_word_none <- renderUI({
     req(input$plot_type=="word")
     
     if(is.null(word_plot())){
-        HTML(
-            "No significant term found at P value threshold ",
-            rv$bar_p_cutoff,
-            ", P.adj threshold ",
-            rv$bar_q_cutoff
-        )
+        sig_none()
     }
 })
 
@@ -899,6 +897,8 @@ output$gs_stats_tl <- DT::renderDataTable({
 
 output$plot_db_es <- renderPlot({
     req(rv$run == "success")
+    req(rv$es_term)
+    
     # req(input$selected_es_term != "")
     req(rv$es_term)
     enrichmentplot()
@@ -938,6 +938,8 @@ output$download_density <- downloadHandler(
 # Box plot ------------------------
 output$plot_box <- renderPlot({
     req(rv$run == "success")
+    req(rv$es_term)
+    
     # req(input$selected_es_term != "")
     req(rv$es_term)
     box_plot()
@@ -957,6 +959,8 @@ output$download_box <- downloadHandler(
 # Violin plot ------------------------
 output$plot_violin <- renderPlot({
     req(rv$run == "success")
+    req(rv$es_term)
+    
     # req(input$selected_es_term != "")
     req(rv$es_term)
     rv$k = input$cutoff_k
@@ -976,9 +980,35 @@ output$download_violin <- downloadHandler(
 
 
 # ES UI ----------------------------------------------------
+output$ui_es <- renderUI({
+    req(rv$es_term)
+    
+    fluidRow(
+        column(
+            width = 12,
+            tags$hr(style="border-color: grey; margin:20px;"),
+            div(
+                style = 'overflow-x: scroll;font-size:75%', 
+                DT::dataTableOutput("gs_stats_tl")
+            ),
+            tags$hr(style="border-color: grey; margin:20px;"),
+            div(
+                style = "position: relative",
+                uiOutput("ui_gsea_plots_radio"),
+                br(),
+                uiOutput("ui_gsea_plots"),
+                
+            )
+        )
+        
+    )
+})
+
 # ES UI only when mode == gsea
 output$ui_gsea_plots <- renderUI({
     req(rv$run_mode=="gsea")
+    req(rv$es_term)
+    
     div(
         style = "position: relative",
         uiOutput("gs_enrichment_plot"),
@@ -990,19 +1020,28 @@ output$ui_gsea_plots <- renderUI({
 
 output$ui_gsea_plots_radio <- renderUI({
     req(rv$run_mode=="gsea")
-    radioGroupButtons(
-        inputId = "plot_type_2",
-        # label = "Select plot type",
-        choiceNames = c("Enrichment", "Density","Box","Violin"),
-        choiceValues = c("enrichment", "density", "box","violin"), 
-        selected = "enrichment",
-        checkIcon = list(
-            yes = icon("check-square"),
-            no = icon("square-o")
-        ),
-        status = "primary",
-        direction = "horizontal"
+    
+    fluidRow(
+        column(
+            width = 12, align = "center",
+            radioGroupButtons(
+                inputId = "plot_type_2",
+                # label = "Select plot type",
+                choiceNames = c("Enrichment", "Density","Box","Violin"),
+                choiceValues = c("enrichment", "density", "box","violin"), 
+                selected = "enrichment",
+                checkIcon = list(
+                    yes = icon("check-square"),
+                    no = icon("square-o")
+                ),
+                status = "primary",
+                direction = "horizontal"
+            )
+        )
+        
     )
+
+    
 })
 
 
@@ -1153,10 +1192,10 @@ observe({
 # UI enrichment plot ----------------------
 output$gs_enrichment_plot <- renderUI({
     req(input$plot_type_2=="enrichment")
-    box(
-        status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Enrichment Plot",
+    div(
+        # status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Enrichment Plot",
         plotOutput("plot_db_es", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1174,10 +1213,10 @@ output$gs_enrichment_plot <- renderUI({
 
 output$density_plot <- renderUI({
     req(input$plot_type_2=="density")
-    box(
-        status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Density Plot",
+    div(
+        # status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Density Plot",
         plotOutput("plot_density", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1195,10 +1234,10 @@ output$density_plot <- renderUI({
 
 output$box_plot <- renderUI({
     req(input$plot_type_2=="box")
-    box(
-        status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Box Plot",
+    div(
+        # status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Box Plot",
         plotOutput("plot_box", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1216,10 +1255,10 @@ output$box_plot <- renderUI({
 
 output$violin_plot <- renderUI({
     req(input$plot_type_2=="violin")
-    box(
-        id = "density_plot",status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Violin Plot",
+    div(
+        # id = "density_plot",status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Violin Plot",
         plotOutput("plot_violin", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1544,7 +1583,7 @@ observeEvent(input$confirm_kegg_plot,{
         req(rv$run == "success")
         selectizeInput(
             "selected_es_term",
-            "Manual selection of gene set:",
+            "Click plot, or manually select a gene set:",
             # choices = isolate(sort_gs_terms()),
             choices = isolate((rv$fgseagg)$pathway),
             options = list(
