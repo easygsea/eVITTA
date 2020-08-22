@@ -11,16 +11,20 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     
                     # mode of analysis
                     fluidRow(
-                        box(
-                            title = NULL, background = "yellow", solidHeader = T, width = 12,
-                            radioButtons(
-                                inputId = "selected_mode",
-                                label = "Mode of analysis",
-                                choices = run_modes,
-                                selected = "glist"
-                            )
+                        column(width = 12,
+                               wellPanel(
+                                   style = paste0("background:",bcol1),
+                                   # title = NULL, background = "yellow", solidHeader = T, width = 12,
+                                   radioButtons(
+                                       inputId = "selected_mode",
+                                       label = "Mode of analysis",
+                                       choices = run_modes,
+                                       selected = "gsea"
+                                   )
+                               )
                         )
-                    ),
+                    )
+                    ,
                     
                     # select species
                     selectizeInput(
@@ -62,7 +66,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     # br(),
                     fluidRow(
                         column(
-                            width = 4, offset = 6,
+                            width = 12, align = "right",
                             uiOutput("run_GSEA"),
                             uiOutput("run_GList")
                         )

@@ -1,6 +1,13 @@
 # ====================== Cytoscape network ======================
 bodyNetwork <- tabItem(tabName = "network",
     fluidRow(
+      column(
+        width = 12,align = "right",
+        uiOutput("ui_vis_gear")
+      )
+    ),
+    br(),
+    fluidRow(
         box(
             width = 12,
             #<i class="fas fa-chart-network"></i>
@@ -15,7 +22,6 @@ bodyNetwork <- tabItem(tabName = "network",
                     downloadButton(outputId = "download_vis", label = "Download network")
                 )
             ),
-            uiOutput("ui_vis_gear"),
             div(
                 uiOutput("vis_error")
             ),

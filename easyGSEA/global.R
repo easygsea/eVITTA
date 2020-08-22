@@ -32,10 +32,14 @@ data(stop_words)
 useless_words <- read_csv(paste0(getwd(),"/inc/some_words.csv"))
 
 # run modes
-run_modes = list("Gene List (Overrepresentation Analysis)"="glist","Pre-ranked GSEA"="gsea")
+run_modes = list("Pre-ranked GSEA"="gsea","Gene List (Overrepresentation Analysis)"="glist")
 
 # gene identifiers
 gene_identifiers = list("SYMBOL"="symbol","Other/Mixed" = "other")
+
+# wellpanel background colors
+bcol1 = "#e6f4fc"
+bcol2 = "#ffffe6"
 
 # ===================== FUNCTIONS =====================
 # function to abbreviate strings

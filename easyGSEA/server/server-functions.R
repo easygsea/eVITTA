@@ -95,8 +95,9 @@
             df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
             
             df = df %>% 
-                dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
+              dplyr::filter(db %in% pathways) %>% 
+              mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
+              dplyr::arrange(padj)
             
             if(cutoff_p < 1){
                 df = df %>% dplyr::filter(pval < cutoff_p)
@@ -108,19 +109,11 @@
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
-                df1 <- df %>% dplyr::filter(ES > 0)
-                if(nrow(df1)<up){
-                    df1 = df1[order(df1[[pq]])]
-                }else{
-                    df1 = df1[head(order(df1[[pq]]),n=up)]
-                }
+                df1 <- df %>% dplyr::filter(ES > 0) %>%
+                  dplyr::slice_min(padj,n=up)
                 
-                df2 <- df  %>% dplyr::filter(ES < 0)
-                if(nrow(df2)<down){
-                    df2 = df2[order(df2[[pq]])]
-                }else{
-                    df2 = df2[head(order(df2[[pq]]),n=down)]
-                }
+                df2 <- df  %>% dplyr::filter(ES < 0) %>%
+                  dplyr::slice_min(padj,n=down)
                 
                 df <- rbind(df1,df2)
                 df <- df %>% arrange(desc(ES))
@@ -155,9 +148,15 @@
                           legend.title = element_text(size = 9)) +
                     scale_y_discrete(labels = y_pathway)
                 
-                fig <- ggplotly(fig,tooltip = "text",
+                yh = nrow(df) * 18 + 50
+                if(yh<=600){yh=600}
+                
+                fig <- ggplotly(fig,
+                                height = yh,
+                                tooltip = "text",
                                 source = "bar_plot_click"
                 ) %>%
+                  # layout(legend=list(colorbar=list(side="right"))) %>%
                     event_register("plotly_click")
                 
                 return(fig)
@@ -173,7 +172,8 @@
             
             df = df %>% 
                 dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
+                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
+              dplyr::arrange(padj)
             
             if(cutoff_p < 1){
                 df = df %>% dplyr::filter(pval < cutoff_p)
@@ -185,19 +185,11 @@
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
-                df1 <- df %>% dplyr::filter(ES > 0)
-                if(nrow(df1)<up){
-                    df1 = df1[order(df1[[pq]])]
-                }else{
-                    df1 = df1[head(order(df1[[pq]]),n=up)]
-                }
+                df1 <- df %>% dplyr::filter(ES > 0) %>%
+                  dplyr::slice_min(padj,n=up)
                 
-                df2 <- df  %>% dplyr::filter(ES < 0)
-                if(nrow(df2)<down){
-                    df2 = df2[order(df2[[pq]])]
-                }else{
-                    df2 = df2[head(order(df2[[pq]]),n=down)]
-                }
+                df2 <- df  %>% dplyr::filter(ES < 0) %>%
+                  dplyr::slice_min(padj,n=down)
                 
                 df <- rbind(df1,df2)
                 df <- df %>% arrange(desc(ES))
@@ -240,9 +232,12 @@
                     scale_y_discrete(labels = y_pathway)
                 
                     
+                yh = nrow(df) * 18 + 50
+                if(yh<=600){yh=600}
                 
-                
-                fig <- ggplotly(fig,tooltip = "text",
+                fig <- ggplotly(fig,
+                                height = yh,
+                                tooltip = "text",
                                 source = "bubble_plot_click"
                 ) %>%
                     event_register("plotly_click")
@@ -415,6 +410,201 @@
         }
     }
     
+    word_plot <- function(pathways=rv$bar_pathway,cutoff_p=rv$bar_p_cutoff,cutoff_q=rv$bar_q_cutoff,ntop=rv$n_word){
+      if(is.null(pathways)==T){
+        return(NULL)
+      }else{
+        df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
+        
+        df = df %>% 
+          dplyr::filter(db %in% pathways) %>% 
+          mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
+        
+        if(cutoff_p < 1){
+          df = df %>% dplyr::filter(pval < cutoff_p)
+        }
+        if(cutoff_q < 1){
+          df = df %>% dplyr::filter(padj < cutoff_q)
+        }
+        
+        if(is.null(df)==T || nrow(df)<1){
+          return(NULL)
+        }else{
+          # transform df to tibble
+          data <- df %>% 
+            as_tibble() %>%
+            dplyr::select(-db) %>%
+            dplyr::arrange(padj) %>%
+            mutate_if(is.numeric, function(x) round(x, digits=3))
+          
+          if(rv$run_mode == "glist"){
+            # create data for word freq count plots
+            data <- data %>%
+              dplyr::mutate(linenumber = row_number(),text = pathway) %>%
+              dplyr::select(text,linenumber)
+            
+            data$text <- lapply(data$text,function(x) strsplit(x,"%")[[1]][1]) %>%
+              lapply(.,function(x) regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]) %>%
+              lapply(., function(x) gsub("_"," ",x)) %>%
+              unlist(.)
+            
+            # tidy and count data
+            data <- data %>%
+              unnest_tokens(word, text) %>%
+              dplyr::anti_join(stop_words) %>%
+              dplyr::anti_join(useless_words) %>%
+              dplyr::filter(is.na(as.numeric(word))) %>%
+              dplyr::count(word,sort=TRUE)
+            
+            data <- data %>%
+              dplyr::arrange(desc(n))
+
+            tidy_data <- data %>%
+              dplyr::mutate(word = factor(word, levels = rev(unique(word)))) %>%
+              top_n(ntop)
+            
+            # hover text
+            text = lapply(tidy_data$word, function(x){
+              x = as.character(droplevels(x))
+              a = df %>%
+                dplyr::filter(str_detect(pathway,regex(x, ignore_case = TRUE))) %>%
+                dplyr::select(pathway) %>%
+                unlist(.) %>%
+                unname(.)
+              if(length(a)>14){a = c(a[1:14],"... ...")}
+              a = paste(a,collapse = "\n")
+              return(a)
+            })
+            
+            text = unlist(text)
+            
+            p <- tidy_data %>%
+              ggplot(aes(word, n, text=text)) +
+              geom_col(show.legend = FALSE, fill = "#F8766D") +
+              labs(x = NULL, y = NULL, title = NULL) +
+              coord_flip() +
+              scale_x_reordered() +
+              theme(
+                plot.title = element_text(size = 10,face = "bold",vjust=0) #hjust = 0.5
+              )
+            
+            # adjust plot height
+            lth = nrow(tidy_data) * 18 + 50
+            if(lth<600){lth=600}
+            
+            p <- ggplotly(p, height = lth,
+                          # margin=dict(
+                          #     l=250,
+                          #     r=0,
+                          #     b=0,
+                          #     t=50,
+                          #     pad=0
+                          # ),
+                          tooltip=c("word","n","text"))
+            
+            return(p)
+          }else if(rv$run_mode == "gsea"){
+            # create data for word freq count plots
+            data <- data %>%
+              dplyr::mutate(linenumber = row_number(),text = pathway) %>%
+              dplyr::select(ES,text,linenumber)
+            
+            data1 <- data %>% dplyr::filter(ES>0)
+            data2 <- data %>% dplyr::filter(ES<0)
+            
+            tidy_data = NULL
+
+            for(ESsign in c(-1,1)){
+              if(ESsign == 1){i0 = data1}else{i0 = data2}
+              
+              i = i0
+
+              i$text <- lapply(i$text,function(x) strsplit(x,"%")[[1]][1]) %>%
+                lapply(.,function(x) regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]) %>%
+                lapply(., function(x) gsub("_"," ",x)) %>%
+                unlist(.)
+              
+              # tidy and count data
+              i <- i %>%
+                unnest_tokens(word, text) %>%
+                dplyr::anti_join(stop_words) %>%
+                dplyr::anti_join(useless_words) %>%
+                dplyr::filter(is.na(as.numeric(word))) %>%
+                dplyr::count(word,sort=TRUE)
+              
+              if(ESsign == 1){
+                i = i %>%
+                  dplyr::arrange(n)
+              }else{
+                i = i %>%
+                  dplyr::arrange(desc(n))
+              }
+              
+              tidy_data0 <- i %>%
+                dplyr::mutate(word = factor(word, levels = rev(unique(word)))) %>%
+                top_n(ntop) %>%
+                dplyr::mutate(n = n * ESsign)
+              
+              if(ESsign == 1){
+                tidy_data0$color = "Up"
+              }else{
+                tidy_data0$color = "Down"
+              }
+
+              # hover text
+              text0 = lapply(tidy_data0$word, function(x){
+                x = as.character(droplevels(x))
+                a = i0 %>%
+                  dplyr::filter(str_detect(text,regex(x, ignore_case = TRUE))) %>%
+                  dplyr::select(text) %>%
+                  unlist(.) %>%
+                  unname(.)
+                if(length(a)>14){a = c(a[1:14],"... ...")}
+                a = paste(a,collapse = "\n")
+                return(a)
+              })
+              
+              text0 = unlist(text0)
+              
+              tidy_data0$text = text0
+              tidy_data = rbind(tidy_data,tidy_data0)
+            }
+            
+            p <- tidy_data %>%
+              dplyr::arrange(n) %>%
+              dplyr::mutate(word = factor(word, levels = rev(unique(word)))) %>%
+              ggplot(aes(word, n, text=text, fill = color)) +
+              geom_col(show.legend = FALSE) +
+              labs(x = NULL, y = NULL, title = NULL) +
+              coord_flip() +
+              scale_x_reordered() +
+              scale_fill_manual(values = c("#00BFC4", "#F8766D")) +
+              theme(
+                plot.title = element_text(size = 10,face = "bold",vjust=0) #hjust = 0.5
+              )
+            
+            # adjust plot height
+            lth = nrow(tidy_data) * 18 + 50
+            if(lth<600){lth=600}
+            
+            p <- ggplotly(p, height = lth,
+                          # margin=dict(
+                          #     l=250,
+                          #     r=0,
+                          #     b=0,
+                          #     t=50,
+                          #     pad=0
+                          # ),
+                          tooltip=c("word","n","text"))
+            
+            return(p)
+          }
+          
+          
+        }
+      }
+    }
+    
     # glist bar bubble volcano -------------------
     bar_plot2 <- function(pathways=rv$bar_pathway,up=rv$bar_up,down=rv$bar_down,pq=rv$bar_pq,cutoff_p=rv$bar_p_cutoff,cutoff_q=rv$bar_q_cutoff,abby=rv$bar_abb,abbn=rv$bar_abb_n){
         if(is.null(pathways)==T){
@@ -422,7 +612,8 @@
         }else{
             df = rv$fgseagg %>% 
                 dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
+                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
+              dplyr::arrange(padj)
             
             if(cutoff_p < 1){
                 df = df %>% dplyr::filter(pval<cutoff_p)
@@ -436,7 +627,8 @@
                 return(NULL)
             }else{
                 
-                df <- df[head(order(df[[pq]]),n=up)]
+                df <- df %>%
+                  dplyr::slice_min(padj,n=up)
                 
                 rv$bar_pathway_list = df[["pathway"]]
                 
@@ -467,8 +659,12 @@
                     scale_y_discrete(labels = y_pathway)
 
                 
+                yh = nrow(df) * 18 + 50
+                if(yh<=600){yh=600}
                 
-                fig <- ggplotly(fig,tooltip = "text",
+                fig <- ggplotly(fig,
+                                height = yh,
+                                tooltip = "text",
                                 source = "bar_plot_click"
                 ) %>%
                     event_register("plotly_click")
@@ -484,7 +680,8 @@
         }else{
             df = rv$fgseagg %>% 
                 dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
+                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
+              dplyr::arrange(padj)
             
             if(cutoff_p < 1){
                 df = df[which(df[["pval"]]<cutoff_p),]
@@ -497,7 +694,8 @@
                 return(NULL)
             }else{
                                 
-                df <- df[head(order(df[[pq]]),n=up)]
+                df <- df %>%
+                  dplyr::slice_min(padj,n=up)
                 
                 rv$bubble_pathway_list = df[["pathway"]]
                 
@@ -536,8 +734,12 @@
                           legend.title = element_text(size = 9)) +
                     scale_y_discrete(labels = y_pathway)
 
+                yh = nrow(df) * 18 + 50
+                if(yh<=600){yh=600}
                 
-                fig <- ggplotly(fig,tooltip = "text",
+                fig <- ggplotly(fig,
+                                height = yh,
+                                tooltip = "text",
                                 source = "bubble_plot_click"
                 ) %>%
                     event_register("plotly_click")

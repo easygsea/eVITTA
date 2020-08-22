@@ -1,6 +1,20 @@
 #=============================================================# 
 ######                 ENRICHMENT RESULTS              ########
 #=============================================================#
+# feedbacks on no significant enrichment
+sig_none <- reactive({
+    req(rv$bar_p_cutoff)
+    req(rv$bar_q_cutoff)
+    
+    HTML(
+        "No significant term found at pval < ",
+        rv$bar_p_cutoff,
+        "& padj < ",
+        rv$bar_q_cutoff,
+        ". Please adjust thresholds by clicking the bottom-right gear button."
+    )
+})
+
 # manhattan plot --------------
 observeEvent(input$manhattan_confirm,{
     rv$volcano_pq = input$p_or_q_manhattan
@@ -170,12 +184,7 @@ output$plot_bar_none <- renderUI({
     req(input$plot_type=="bar")
     
     if(is.null(p_bar())){
-        HTML(
-            "No significant term found at P value threshold ",
-            rv$bar_p_cutoff,
-            ", P.adj threshold ",
-            rv$bar_q_cutoff
-        )
+        sig_none()
     }
 })
 
@@ -192,8 +201,11 @@ output$plot_bar <- renderPlotly({
     req(rv$run == "success")
     req(input$plot_type=="bar")
     req(is.null(rv$bar_pathway)==F)
+    
+    withProgress(message = "Updating bar plot ...",value = 1,{
+        p_bar()
+    })
 
-    p_bar()
 })
 
 # bar download
@@ -225,12 +237,7 @@ output$plot_bubble_none <- renderUI({
     req(input$plot_type=="bubble")
     
     if(is.null(p_bubble())){
-        HTML(
-            "No significant term found at P value threshold ",
-            rv$bar_p_cutoff,
-            ", P.adj threshold ",
-            rv$bar_q_cutoff
-        )
+        sig_none()
     }
 })
 
@@ -247,8 +254,9 @@ output$plot_bubble <- renderPlotly({
     req(input$plot_type=="bubble")
     req(is.null(rv$bar_pathway)==F)
 
-    
-    p_bubble()
+    withProgress(message = "Updating bubble plot ...",value = 1,{
+        p_bubble()
+    })
 })
 
 # bubble download
@@ -348,6 +356,41 @@ output$ui_volcano_glist <- renderUI({
     p("No volcano plot available for gene list overrepresentation analysis.")
 })
 
+# keyword plot --------------
+observeEvent(input$word_confirm,{
+    rv$bar_pathway = input$pathway_to_plot_word
+    rv$bar_p_cutoff = input$cutoff_word_p
+    rv$bar_q_cutoff = input$cutoff_word_q
+    rv$n_word = input$n_word
+})
+
+# if no significant terms found
+output$plot_word_none <- renderUI({
+    req(rv$run == "success")
+    req(input$plot_type=="word")
+    
+    if(is.null(word_plot())){
+        sig_none()
+    }
+})
+
+# word plot
+output$plot_word <- renderPlotly({
+    req(rv$run == "success")
+    req(input$plot_type=="word")
+    req(is.null(rv$bar_pathway)==F)
+    
+    withProgress(message = "Generating word frequency chart..,", value = 1,{
+        word_plot()
+    })
+})
+
+# bar download
+output$download_word <- downloadHandler(
+    filename = function() {paste0("keyword_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".html")},
+    content = function(file) {saveWidget(as_widget(word_plot()), file, selfcontained = TRUE)}
+)
+
 # UI manhattan -----------
 output$manhattan_box <- renderUI({
     req(input$plot_type=="manhattan")
@@ -423,7 +466,7 @@ output$bar_box <- renderUI({
                 style = "position: absolute; left: 1em; bottom: 1em;",
                 dropdown(
                     selectizeInput("pathway_to_plot_bar",
-                                   "Select term(s) to plot",
+                                   "Select database(s) to plot",
                                    choices = rv$dbs,
                                    selected = rv$bar_pathway,
                                    multiple = TRUE),
@@ -533,7 +576,7 @@ output$bubble_box <- renderUI({
                 style = "position: absolute; left: 1em; bottom: 1em;",
                 dropdown(
                     selectizeInput("pathway_to_plot_bubble",
-                                   "Select term(s) to plot",
+                                   "Select database(s) to plot",
                                    choices = rv$dbs,
                                    selected = rv$bar_pathway,
                                    multiple = TRUE),
@@ -648,7 +691,7 @@ output$volcano_box <- renderUI({
                     style = "position: absolute; left: 1em; bottom: 1em;",
                     dropdown(
                         selectizeInput("pathway_to_plot_volcano",
-                                       "Select term(s) to plot",
+                                       "Select database(s) to plot",
                                        choices = rv$dbs,
                                        selected = rv$volcano_pathway,
                                        multiple = TRUE),
@@ -758,6 +801,72 @@ output$ui_volcano_cutoff <- renderUI({
 #     )
 # })
 
+
+# UI bubble --------------------
+output$word_box <- renderUI({
+    req(input$plot_type=="word")
+    div(
+        style = "position: relative",
+        box(
+            width = 12,height = "621px",align = "center",
+            status = "primary", 
+            div(
+                style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
+                uiOutput("plot_word_none"),
+                plotlyOutput("plot_word", width = "100%",height = "600px")
+            ),
+            div(
+                align = "left",
+                style = "position: absolute; left: 1em; bottom: 1em;",
+                dropdown(
+                    selectizeInput("pathway_to_plot_word",
+                                   "Select database(s) to plot",
+                                   choices = rv$dbs,
+                                   selected = rv$bar_pathway,
+                                   multiple = TRUE),
+                    splitLayout(
+                        sliderTextInput("cutoff_word_p",
+                                        label = "Adjust P.adj threshold:",
+                                        choices= cutoff_slider,
+                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
+                        ),
+                        sliderTextInput("cutoff_word_q",
+                                        label = "Adjust P.adj threshold:",
+                                        choices= cutoff_slider,
+                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
+                        )
+                    ),
+                    numericInput("n_word",
+                                 "# of top words",
+                                 rv$n_word, min=1,
+                                 width = "50%"
+                    ),
+                    fluidRow(
+                        column(
+                            width = 12, align = "right",
+                            br(),br(),
+                            bsButton("word_confirm",tags$b("Replot!"),style = "danger")
+                        )
+                    )
+                    ,
+                    size = "xs",
+                    icon = icon("gear", class = "opt"),
+                    up = TRUE,width = "410px"
+                )
+            ),
+            div(
+                style = "position: absolute; left: 4.5em; bottom: 1em;",
+                dropdown(
+                    downloadButton(outputId = "download_word", label = "Download plot"),
+                    size = "xs",
+                    icon = icon("download", class = "opt"),
+                    up = TRUE
+                )
+            )
+        )
+    )
+})
+
 # GSEA table --------------------
 output$gs_stats_tl <- DT::renderDataTable({
     # req(input$selected_es_term != "")
@@ -776,22 +885,25 @@ output$gs_stats_tl <- DT::renderDataTable({
     rownames(df) = r_names
     colnames(df) = c_names
     
-    
-    return(df)
-    
-    # DT::datatable(df,
-    #               # extensions=c('Scroller'),
-    # )
-},options = list(pageLength = 4,
-    # scrollY = "160px",
-    # scroller = TRUE,
-    scrollX=TRUE
-))
+
+    DT::datatable(df,
+                  extensions=c('Scroller','Buttons'),
+                  options = list(
+                      # sDom  = '<"top">lrt<"bottom">ip',
+                      dom = 'Bfrtip',
+                      buttons = c('copy', 'pdf', 'csv'), #, 'excel', 'print'
+                      scrollY = "128px",
+                      scroller = TRUE,
+                      scrollX=TRUE           
+                  ))
+})
 
 # Enrichment plot ---------------------------
 
 output$plot_db_es <- renderPlot({
     req(rv$run == "success")
+    req(rv$es_term)
+    
     # req(input$selected_es_term != "")
     req(rv$es_term)
     enrichmentplot()
@@ -831,6 +943,8 @@ output$download_density <- downloadHandler(
 # Box plot ------------------------
 output$plot_box <- renderPlot({
     req(rv$run == "success")
+    req(rv$es_term)
+    
     # req(input$selected_es_term != "")
     req(rv$es_term)
     box_plot()
@@ -850,6 +964,8 @@ output$download_box <- downloadHandler(
 # Violin plot ------------------------
 output$plot_violin <- renderPlot({
     req(rv$run == "success")
+    req(rv$es_term)
+    
     # req(input$selected_es_term != "")
     req(rv$es_term)
     rv$k = input$cutoff_k
@@ -869,9 +985,34 @@ output$download_violin <- downloadHandler(
 
 
 # ES UI ----------------------------------------------------
+output$ui_es <- renderUI({
+    req(rv$es_term)
+    
+    fluidRow(
+        column(
+            width = 12,
+            tags$hr(style="border-color: grey; margin:20px;"),
+            div(
+                style = 'overflow-x: scroll;font-size:75%', 
+                DT::dataTableOutput("gs_stats_tl")
+            ),
+            tags$hr(style="border-color: grey; margin:22px;"),
+            div(
+                style = "position: relative",
+                uiOutput("ui_gsea_plots_radio"),
+                br(),
+                uiOutput("ui_gsea_plots"),
+            )
+        )
+        
+    )
+})
+
 # ES UI only when mode == gsea
 output$ui_gsea_plots <- renderUI({
     req(rv$run_mode=="gsea")
+    req(rv$es_term)
+    
     div(
         style = "position: relative",
         uiOutput("gs_enrichment_plot"),
@@ -883,19 +1024,28 @@ output$ui_gsea_plots <- renderUI({
 
 output$ui_gsea_plots_radio <- renderUI({
     req(rv$run_mode=="gsea")
-    radioGroupButtons(
-        inputId = "plot_type_2",
-        # label = "Select plot type",
-        choiceNames = c("Enrichment", "Density","Box","Violin"),
-        choiceValues = c("enrichment", "density", "box","violin"), 
-        selected = "enrichment",
-        checkIcon = list(
-            yes = icon("check-square"),
-            no = icon("square-o")
-        ),
-        status = "primary",
-        direction = "horizontal"
+    
+    fluidRow(
+        column(
+            width = 12, align = "center",
+            radioGroupButtons(
+                inputId = "plot_type_2",
+                # label = "Select plot type",
+                choiceNames = c("Enrichment", "Density","Box","Violin"),
+                choiceValues = c("enrichment", "density", "box","violin"), 
+                selected = "enrichment",
+                checkIcon = list(
+                    yes = icon("check-square"),
+                    no = icon("square-o")
+                ),
+                status = "primary",
+                direction = "horizontal"
+            )
+        )
+        
     )
+
+    
 })
 
 
@@ -1046,10 +1196,10 @@ observe({
 # UI enrichment plot ----------------------
 output$gs_enrichment_plot <- renderUI({
     req(input$plot_type_2=="enrichment")
-    box(
-        status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Enrichment Plot",
+    div(
+        # status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Enrichment Plot",
         plotOutput("plot_db_es", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1067,10 +1217,10 @@ output$gs_enrichment_plot <- renderUI({
 
 output$density_plot <- renderUI({
     req(input$plot_type_2=="density")
-    box(
-        status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Density Plot",
+    div(
+        # status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Density Plot",
         plotOutput("plot_density", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1088,10 +1238,10 @@ output$density_plot <- renderUI({
 
 output$box_plot <- renderUI({
     req(input$plot_type_2=="box")
-    box(
-        status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Box Plot",
+    div(
+        # status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Box Plot",
         plotOutput("plot_box", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1109,10 +1259,10 @@ output$box_plot <- renderUI({
 
 output$violin_plot <- renderUI({
     req(input$plot_type_2=="violin")
-    box(
-        id = "density_plot",status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Violin Plot",
+    div(
+        # id = "density_plot",status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Violin Plot",
         plotOutput("plot_violin", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1437,7 +1587,7 @@ observeEvent(input$confirm_kegg_plot,{
         req(rv$run == "success")
         selectizeInput(
             "selected_es_term",
-            "Manual selection of gene set:",
+            "Click plot, or manually select a gene set:",
             # choices = isolate(sort_gs_terms()),
             choices = isolate((rv$fgseagg)$pathway),
             options = list(
@@ -1636,257 +1786,28 @@ observeEvent(input$confirm_kegg_plot,{
         
     })
     
-# UI manhattan tables & words ---------------
-    output$ui_manhattan_table <- renderUI({
-        fluidRow(
-            tabBox(
-                width = 12, title = "Significant Enrichment",
-                tabPanel(
-                    "Table summary",
-                    uiOutput("ui_gsea_toggle"),
-                    br(),
-                    fluidRow(
-                        column(
-                            width = 6,
-                            uiOutput("ui_tables")
-                        ),
-                        column(
-                            width = 6,
-                            uiOutput("plot_words")
-                        )
-                    )
-                )
-                
-            )
-        )
-    })
-    
-    # UI switch button
-    output$ui_gsea_toggle <- renderUI({
-        req(rv$run_mode=="gsea")
-        req(rv$run == "success")
-        req(input$plot_type=="manhattan")
-        req(input$p_or_q_manhattan)
-        
-        fluidRow(
-            column(
-                width = 2,
-                h4(tags$b("Direction of change"))
-            ),
-            column(
-                width = 10,
-                radioGroupButtons(
-                    "tables_switch",
-                    NULL,
-                    choices = list("Up"="up","Down"="down"),
-                    selected = "down"
-                )
-                # switchInput(
-                #     inputId = "tables_switch",
-                #     value = FALSE,
-                #     onLabel = "Up",
-                #     offLabel = "Down",
-                #     onStatus = "danger",
-                #     offStatus = "primary",
-                #     width = "100%"
-                # )
-            )
-        )
-    })
-    
-    
-    # dynamically render manhattan tables & word bars -----------------
-    observe({
-        req(rv$run == "success")
-        req(input$plot_type=="manhattan")
-        req(input$p_or_q_manhattan)
-        req(input$tables_switch)
-        
-        df = filter_df_mh()
-        
-        # if gsea, further filter by direction of change
-        if(rv$run_mode == "gsea"){
-            # up or down
-            direction <- input$tables_switch
-            print(direction)
-            # filter by cutoff
-            if(direction == "up"){
-                df = df %>% dplyr::filter(ES > 0)
-                
-            }else if(direction == "down"){
-                df = df %>% dplyr::filter(ES < 0)
-                
-            }
-        }
-
-        if(nrow(df)<1){
-            output$ui_tables <- renderUI({
-                if(rv$run_mode == "gsea"){
-                    paste0("No significant ",direction,"regulation found at ",pq," threshold ", cutoff)
-                }else{
-                    paste0("No significant regulation found at ",pq," threshold ", cutoff)
-                }
-            })
-            
-            output$plot_words <- renderUI({})
-        }else{
-            
-            withProgress(message = "Generating summary stats ...", value = 1,{
-                
-                # get db categories
-                cats = unique(df$db)
-                max_table = length(cats)
-                
-                # read in table content
-                lst <- list()
-                lst_words <- list()
-                for (i in 1:max_table) {
-                    # get df == db
-                    data <- df %>% 
-                        dplyr::filter(db == cats[i]) %>%
-                        dplyr::select(-db)
-                    
-                    # save table data into lst
-                    lst[[i]] <- data %>%
-                        mutate_if(is.numeric, function(x) round(x, digits=3))
-                    
-                    # create data for word freq count plots
-                    data <- data %>%
-                        dplyr::mutate(linenumber = row_number(),text = pathway) %>%
-                        dplyr::select(text,linenumber)
-                    
-                    data$text <- lapply(data$text,function(x) strsplit(x,"%")[[1]][1]) %>%
-                        lapply(.,function(x) regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]) %>%
-                        lapply(., function(x) gsub("_"," ",x)) %>%
-                        unlist(.)
-                    
-                    # tidy and count data
-                    
-                    data <- data %>%
-                        unnest_tokens(word, text) %>%
-                        dplyr::anti_join(stop_words) %>%
-                        dplyr::anti_join(useless_words) %>%
-                        dplyr::filter(is.na(as.numeric(word))) %>%
-                        dplyr::count(word,sort=TRUE)
-                    
-                    data <- data %>%
-                        dplyr::mutate(total = sum(n)) %>%
-                        dplyr::mutate(freq = n/total) %>%
-                        dplyr::arrange(desc(freq)) %>%
-                        dplyr::select(-total)
-                    
-                    lst_words[[i]] <- data
-                }
-                
-                # UI tables
-                output$ui_tables <- renderUI({
-                    plot_output_list <- lapply(1:max_table, function(i) {
-                        tablename <- paste0("tablename", i)
-                        div(
-                            dataTableOutput(tablename,height = "300px"),
-                            tags$br()
-                        )
-                    })
-                    do.call(tagList, plot_output_list)
-                })
-                
-                # render tables' contents
-                for (i in 1:max_table) {
-                    local({
-                        my_i <- i
-                        tablename <- paste0("tablename", my_i)
-                        output[[tablename]] <- DT::renderDataTable({
-                            DT::datatable(lst[[my_i]],
-                                          extensions=c('Scroller','Buttons'),
-                                          options = list(
-                                              dom = 'Bfrtip',
-                                              buttons = c('copy', 'pdf', 'print','csv', 'excel'),
-                                              scrollY = "160px",
-                                              scroller = TRUE,
-                                              scrollX=TRUE           
-                                          )
-                            )
-                        })
-                    })
-                }
-                
-                # word frequency bar plots ----------
-                output$plot_words <- renderUI({
-                    plot_output_list <- lapply(1:max_table, function(i) {
-                        barname <- paste0("barname", i)
-                        div(
-                            plotlyOutput(barname,height = "300px",width = "100%"),
-                            tags$br()
-                        )
-                    })
-                    do.call(tagList, plot_output_list)
-                })
-                
-                # render word count bar plots
-                colors = brewer.pal(n = max_table, name = "Set2")
-                for (i in 1:max_table) {
-                    local({
-                        my_i <- i
-                        barname <- paste0("barname", my_i)
-                        output[[barname]] <- renderPlotly({
-                            tidy_data = lst_words[[my_i]] %>%
-                                mutate(word = factor(word, levels = rev(unique(word)))) %>%
-                                head(.,n=15)
-                            # top_n(10)
-                            
-                            # hover text
-                            text = lapply(tidy_data$word, function(x){
-                                x = as.character(droplevels(x))
-                                a = lst[[my_i]] %>%
-                                    dplyr::filter(str_detect(pathway,regex(x, ignore_case = TRUE))) %>%
-                                    dplyr::select(pathway) %>%
-                                    unlist(.) %>%
-                                    unname(.)
-                                if(length(a)>14){a = c(a[1:14],"... ...")}
-                                a = paste(a,collapse = "\n")
-                                return(a)
-                            })
-                            
-                            text = unlist(text)
-                            
-                            # y axis label
-                            if(rv$run_mode == "glist"){
-                                y_label = paste0("Word frequency (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                            }else if(rv$run_mode == "gsea"){
-                                if(direction == "up"){
-                                    y_label = paste0("Word frequency for upregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                                }else if(direction == "down"){
-                                    y_label = paste0("Word frequency for downregulations (",names(rv$dbs)[rv$dbs==cats[my_i]],")")
-                                }
-                            }
-                            
-                            p <- tidy_data %>%
-                                ggplot(aes(word, n, text=text)) +
-                                geom_col(show.legend = FALSE, fill = colors[my_i]) +
-                                labs(x = NULL, y = y_label) +
-                                coord_flip() +
-                                scale_x_reordered()
-                            
-                            ggplotly(p,tooltip=c("word","n","text"))
-                        })
-                    })
-                }
-            })
-            
-            
-        }
-    })
-    
-    # ------------- 00 FUNCTIONS: text mining -------------
-    
-    filter_df_mh <- function(){
-        # retrieve data
-        df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
-        pq = input$p_or_q_manhattan
-        cutoff = input$cutoff_manhattan
-        
-        # filter by cutoff
-        df = df %>% dplyr::filter(df[[pq]]<cutoff)
-
-        return(df)
-    }
+# # UI manhattan tables & words ---------------
+#     output$ui_manhattan_table <- renderUI({
+#         fluidRow(
+#             tabBox(
+#                 width = 12, title = "Significant Enrichment",
+#                 tabPanel(
+#                     "Table summary",
+#                     uiOutput("ui_gsea_toggle"),
+#                     br(),
+#                     fluidRow(
+#                         column(
+#                             width = 6,
+#                             uiOutput("ui_tables")
+#                         ),
+#                         column(
+#                             width = 6,
+#                             uiOutput("plot_words")
+#                         )
+#                     )
+#                 )
+#                 
+#             )
+#         )
+#     })
+#     

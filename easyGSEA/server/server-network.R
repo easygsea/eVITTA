@@ -2,10 +2,11 @@
 output$vis_error <- renderUI({
     req(rv$vis_status == "failed")
     HTML(
-        "No significant term found at P value threshold ",
+        "No significant enrichment found at pval < ",
         rv$vis_p,
-        ", P.adj threshold ",
-        rv$vis_q
+        " & q < ",
+        rv$vis_q,
+        ". Please adjust thresholds by clicking the top-right gear button."
     )
 
 })
@@ -62,13 +63,20 @@ observeEvent(input$q_vis_edge_threshold,{
 
 #  ============UI vis parameter =============
 output$ui_vis_gear <- renderUI({
-    div(
-        align = "left",
-        style = "position: absolute; right: 4.5em; top: 3em;",
+    # div(
+    #     align = "left",
+    #     style = "position: absolute; right: 4.5em; top: 3em;",
         dropdown(
-            size = "xs",up = FALSE,right = TRUE,width = "850px",
+            # size = "xs",up = FALSE,right = TRUE,width = "850px",
             # circle = TRUE, tooltip = TRUE, label = "Advanced parameters for creating a network",
-            icon = icon("gear", class = "opt"),
+            # icon = icon("gear", class = "opt"),
+            style = "material-circle", icon = icon("gear"),align = "left",
+            status = "default", width = "850px",
+            right=T,
+            animate = animateOptions(
+                enter = "slideInRight",
+                exit = "fadeOutRight", duration = 0.5
+            ),
             div(
                 align = "center",
                 tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
@@ -78,14 +86,14 @@ output$ui_vis_gear <- renderUI({
                     width = 5,
                     sliderTextInput("cutoff_vis_p",
                                     label = "Adjust P threshold:",
-                                    choices= c(0.0001,0.0005,0.001,0.005,0.01,0.05,0.1,0.25,0.3,0.5,1),
+                                    choices= cutoff_slider,
                                     selected=rv$vis_p, grid=T, force_edges=T)
                 ),
                 column(
                     width = 5,
                     sliderTextInput("cutoff_vis_q",
                                     label = "Adjust P.adj threshold:",
-                                    choices= c(0.0001,0.0005,0.001,0.005,0.01,0.05,0.1,0.25,0.3,0.5,1),
+                                    choices= cutoff_slider,
                                     selected=rv$vis_q, grid=T, force_edges=T)
                 ),
                 column(
@@ -146,6 +154,6 @@ output$ui_vis_gear <- renderUI({
             
             
         )
-    )
+    # )
     
 })

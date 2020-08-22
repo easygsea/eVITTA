@@ -26,6 +26,8 @@
         infile_name=NULL,infile_path=NULL,
         rnkll=NULL,rnkgg=NULL,#deggg=NULL,
         
+        tables_switch="up",
+        
         #========================================#
         #####       RVs for ORA run          #####
         #========================================#
@@ -50,14 +52,14 @@
         gmin=NULL,gmax=NULL,gperm=NULL,
         no_up_01=0,no_down_01=0,no_up_05=0,no_down_05=0,
         
-        bar_q_cutoff=1, volcano_cutoff=.005, # bar cutoff synchronized with bubble; bubble_q_cutoff=1, 
+        bar_q_cutoff=.05, volcano_cutoff=.005, # bar cutoff synchronized with bubble; bubble_q_cutoff=1, 
         bar_p_cutoff=.005, #bar cutoff synchronized with bubble; bubble_p_cutoff=.005,
         bar_up=10, bubble_up=10,
         bar_down=10, bubble_down=10,
         bar_pq="pval", volcano_pq="pval", #bar pq synchronized with bubble; bubble_pq="padj", 
         bar_pathway=NULL, bubble_pathway=NULL, volcano_pathway=NULL,
         bar_pathway_list=NULL,bubble_pathway_list=NULL,volcano_pathway_list=NULL,manhattan_pathway_list=NULL,
-        bar_abb="n",bubble_abb="n",bar_abb_n=40,bubble_abb_n=40,
+        bar_abb="y",bubble_abb="y",bar_abb_n=40,bubble_abb_n=40,
         
         bubble_zmin=2.5,bubble_zmax=9.5,
         
@@ -66,6 +68,8 @@
         volcano_name=NULL,
         
         p_volcano=NULL,
+        
+        n_word = 10, # no of words with top frequency
         
         k=1.5,
         
@@ -84,7 +88,7 @@
         # hc_edges = NULL,
         vis=NULL,
         vis_status=NULL, #success if plotted, failed if df nrow==0
-        vis_k=0.5,vis_p=0.005,vis_q=1,vis_pq="pval",
+        vis_k=0.5,vis_p=.005,vis_q=.05,vis_pq="pval",
         percent_method="jaccard",# or   combined overlap
         percent_cutoff = 0.25, # or 0.5 for overlap
         

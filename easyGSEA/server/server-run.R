@@ -55,21 +55,21 @@
         fluidRow(
             column(
                 width = 12,
-                tags$script(HTML('$(document).ready(function(){
-      $("#showdbs_collapsible").on("hide.bs.collapse", function(){
-        $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-down\\\"></span> Advanced database options ...");
-      });
-      $("#showdbs_collapsible").on("show.bs.collapse", function(){
-        $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-up\\\"></span> Advanced database options ...");
-      });
-    });')),
+    #             tags$script(HTML('$(document).ready(function(){
+    #   $("#showdbs_collapsible").on("hide.bs.collapse", function(){
+    #     $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-down\\\"></span> Advanced database options ...");
+    #   });
+    #   $("#showdbs_collapsible").on("show.bs.collapse", function(){
+    #     $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-up\\\"></span> Advanced database options ...");
+    #   });
+    # });')),
                 bsButton("showdbs", "Advanced database options ...", 
                          icon = icon("collapse-down", lib = "glyphicon"),
                          style = "default",
-                         type = "toggle",
-                         # class = "btn-primary btn-sm", 
-                         `data-toggle`="collapse", 
-                         `data-target` = "#showdbs_collapsible"
+                         type = "toggle"
+                         # #, class = "btn-primary btn-sm"
+                         # ,`data-toggle`="collapse"
+                         # ,`data-target` = "#showdbs_collapsible"
                          ),
                 br(),
                 conditionalPanel('input.showdbs % 2 == 1',
@@ -103,7 +103,7 @@
       rv$db_status <- "modify"
       
       # clear RVs
-      rv$run = NULL
+      # rv$run = NULL
       rv$glist_check = NULL
       rv$rnk_check = NULL
       rv$infile_check = NULL
@@ -211,18 +211,22 @@
     output$bs_file_reset <- renderUI({
         req(input$selected_mode == "gsea")
         req(is.null(rv$infile_name)==F)
-        bsButton(
+        div(
+          bsButton(
             inputId = "reset",
             label = "Reset file",
             style = "default",
-            type = "button")
+            type = "button"),
+          br(),br()
+        )
+        
     })
     
     # reset RNK input widget
     observeEvent(input$reset, {
       rv$file_upload_status = "reset"
       
-      rv$run = NULL
+      # rv$run = NULL
       rv$rnk_check = NULL
       rv$infile_check = NULL
       rv$example_file = NULL
@@ -253,6 +257,14 @@
         if(input$selected_species == ""){
             showNotification("Please select your species of interest.",type="error",duration=2)
         }else{
+          updateRadioButtons(
+            session,
+            "gene_identifier",
+            "2. Gene identifier",
+            choices = gene_identifiers,
+            selected = "symbol",
+            inline = TRUE
+          )
             sampleRNK_file <- paste0(getwd(),"/inc/",input$selected_species,".rnk")
             rv$infile_name = paste0(input$selected_species,".rnk")
             rv$infile_path = sampleRNK_file
@@ -270,6 +282,14 @@
         if(input$selected_species == ""){
             showNotification("Please select your species of interest.",type="error",duration=2)
         }else{
+          updateRadioButtons(
+            session,
+            "gene_identifier",
+            "2. Gene identifier",
+            choices = gene_identifiers,
+            selected = "symbol",
+            inline = TRUE
+          )
             sampleDE_file <- paste0(getwd(),"/inc/",input$selected_species,".csv")
             rv$infile_name = paste0(input$selected_species,".csv")
             rv$infile_path = sampleDE_file
@@ -308,7 +328,7 @@
         }else if(ncol(ranks)>2){
             rv$rnk_or_deg = "deg"
         }else{
-            showNotification("You probably uploaded a wrong file. Please check",type = "error",duration = 3)
+            showNotification("You uploaded a file with < 2 columns. Please click the help button for accepted file formats.",type = "error",duration = 3)
         }
         
         # save had data into RV
@@ -400,41 +420,42 @@
         req(input$selected_mode == "glist")
         # req(input$selected_species != "")
         # req(is.null(rv$dbs)==F)
-        div(
-            textAreaInput(
-                inputId = "gene_list",
-                label = p("3. Input your genes (",
-                          tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
-                          actionLink("load_example_glist", label = tags$u("example data")),
-                          "):"
-                          ),
-                placeholder = "Paste your genes here ...",
-                height = 110
+      fluidRow(
+        column(
+          width = 12,
+          textAreaInput(
+            inputId = "gene_list",
+            label = p("3. Input your genes (",
+                      tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
+                      actionLink("load_example_glist", label = tags$u("example data")),
+                      "):"
             ),
-            fluidRow(
-                column(
-                    width = 6,
-                    textInput(
-                        "glist_name",
-                        NULL,
-                        placeholder = 'Name your list ...'
-                    )
-                ),
-                column(
-                    width = 2, #offset = 6,
-                    bsButton(
-                        inputId = "gene_list_clear",
-                        label = "Reset",
-                        style = "default"
-                    )
-                ),
-                column(
-                    width = 3, #offset = 1,
-                    uiOutput("glist_add_button")
-                )
-                
-            )
+            placeholder = "Paste your genes here ...",
+            height = 110
+          )
+        ),
+        column(
+          width = 6,
+          textInput(
+            "glist_name",
+            NULL,
+            placeholder = 'Name your list ...'
+          )
+        ),
+        column(
+          width = 2, #offset = 6,
+          bsButton(
+            inputId = "gene_list_clear",
+            label = "Reset",
+            style = "default"
+          )
+        ),
+        column(
+          width = 4, align="right",
+          uiOutput("glist_add_button")
         )
+        
+      )
     })
     
     # Glist add button
@@ -503,7 +524,7 @@
 
                     # name the analysis
                     if(input$glist_name == ""){
-                        rv$rnkll = "unamed"
+                        rv$rnkll = "unnamed"
                     }else{
                         rv$rnkll = input$glist_name
                     }
@@ -524,7 +545,7 @@
     
     # clear GList input ------------------------------
     observeEvent(input$gene_list_clear, {
-        rv$run = NULL
+        # rv$run = NULL
         
         rv$glist_check = NULL
         rv$gene_lists = NULL
@@ -579,14 +600,17 @@
       }
       
       fluidRow(
-        box(
-            width = 12,
+        column(
+          width = 12,
+          wellPanel(
             shiny::HTML("<p style='font-style:italic'>Run parameters</p>"),
             splitLayout(
-                numericInput("mymin", "Min:",15),
-                numericInput("mymax", "Max:",200),
-                uiOutput("ui_nperm")
+              numericInput("mymin", "Min:",15),
+              numericInput("mymax", "Max:",200),
+              uiOutput("ui_nperm")
             )
+            ,style = "background:#e6f4fc;"
+          )
         )
       )
     })
@@ -740,7 +764,7 @@
             incProgress(0.1)
             
             # determine if success or warnings
-            if(is.null(rv$fgseagg)==FALSE){
+            if(nrow(rv$fgseagg)>0){
                 rv$run = "success"
             } else {
                 rv$run = "failed"
@@ -815,8 +839,13 @@
                 # uppercase genes
                 m_list = lapply(gmts[[i]], function(x) toupper(x))
                 
+                # genes present in the database
+                in_genes = genelist[genelist %in% all_genes[[i]]]
+                
+                if(identical(in_genes,character(0))){incProgress(0.2);next}
+                
                 fgseaRes <- fora(pathways = m_list,
-                                  genes    = genelist[genelist %in% all_genes[[i]]],
+                                  genes    = in_genes,
                                   universe = all_genes[[i]],
                                   minSize  = rv$gmin,
                                   maxSize  = rv$gmax
@@ -837,7 +866,7 @@
             incProgress(0.1)
             
             # determine if success or warnings
-            if(is.null(rv$fgseagg)==FALSE){
+            if(is.null(rv$fgseagg)==F && nrow(rv$fgseagg)>0){
                 rv$run = "success"
             } else {
                 rv$run = "failed"
