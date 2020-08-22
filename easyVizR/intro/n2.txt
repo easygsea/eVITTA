@@ -1,0 +1,6 @@
+element	intro
+n1_1	Select the type of visualization you want here.
+n1_2	Here you can apply filters to selected datasets. <br><br>To apply global filters, enter them in the leftmost panel and click "Apply to all"; <br>You can also apply individual filters in the other panels. <br><br>The filters will be applied dynamically. 
+	Visualizations are shown in individual panels.<br><br>Customization and download options are available on the bottom left corner.
+n2_4	Toggle these options to view terms in a particular intersection.<br><br>TRUE: includes only terms that satisfy the filters, e.g. p < 0.05;<br>FALSE: includes only terms that DO NOT satisfy the filters, e.g. p > 0.05;<br>IGNORE: includes everything regardless of the filters.<br><br>Tip: Validate your selections by making sure that the number of entries below matches the corresponding count in the Venn diagram.
+n2_4b	Here you can view the enrichment of words in the list of genes/terms.<br><br>1. Specify the separator. e.g. "KEGG_NUCLEOTIDE_EXCISION_REPAIR" will only be parsed if the separator provided is "_".<br>2. Provide a list of words to ignore (REGEX allowed). e.g. to ignore numbers, add [[:digit:]].<br><br>This function works best if terms are gene sets (ORA or GSEA output). 

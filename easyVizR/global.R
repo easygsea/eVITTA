@@ -21,9 +21,11 @@ library(rvest)
 library(htmlwidgets)
 library(data.table)
 # library(dqshiny)
+library(waiter)
 library(shinythemes)
 library(shinyBS)
 library(BiocManager)
+library(shinyjs)
 options(repos = BiocManager::repositories())
 futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger") # to suppress creation of log file
 

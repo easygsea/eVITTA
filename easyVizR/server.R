@@ -8,6 +8,7 @@
 #                      ex. output$myplot (assign the plot output)
 server <- function(input, output, session) {
     
+
     
     
     ####---------------------- REACTIVE VALUES---------------------------####
@@ -22,17 +23,16 @@ server <- function(input, output, session) {
     # there must be an intro for each page, i.e. pre-render (n0), first page (n1), second page (n2)
     
     observeEvent(input$help_organize, {
-        print(input$tabs)
-        req(input$tabs == "Upload files")
+        # print(input$tabs)
+        req(input$tabs == "tab1")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
             steps = intros$upload)
         )
-
     })
     
     observeEvent(input$help_x_pre, {
-        print(input$tabs)
-        req(input$tabs == "Single Dataset")
+        # print(input$tabs)
+        req(input$tabs == "tab2")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
                 steps = intros$x0
         ))
@@ -40,34 +40,17 @@ server <- function(input, output, session) {
     })
     
     observeEvent(input$help_x_post, {
-        print(input$tabs)
-        req(input$tabs == "Single Dataset")
+        # print(input$tabs)
+        req(input$tabs == "tab2")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
                                                   steps = intros$x1
         ))
         
     })
     
-    
-    observeEvent(input$help_xy_pre, {
-        print(input$tabs)
-        req(input$tabs == "Two Datasets")
-        rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-            steps = intros$xy0
-        ))
-    })
-    
-    observeEvent(input$help_xy_post, {
-        print(input$tabs)
-        req(input$tabs == "Two Datasets")
-        rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                                  steps = intros$xy1
-        ))
-    })
-    
-    
     observeEvent(input$help_n_pre, {
-        req(input$tabs == "Multiple Datasets")
+        # print(input$tabs)
+        req(input$tabs == "tab3")
         rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
                                                   steps = intros$n0)
         )
@@ -75,11 +58,31 @@ server <- function(input, output, session) {
     })
     
     observeEvent(input$help_n_post, {
-        req(input$tabs == "Multiple Datasets")
-        rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                                  steps = intros$n1)
-        )
+        # print(input$tabs)
+        req(input$tabs == "tab3")
         
+        if (input$n_ui_showpanel == "Heatmap"){
+            rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                                      steps = intros$n1)
+            )
+        } else if (input$n_ui_showpanel == "Intersection"){
+            rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                                      steps = intros$n2)
+            )
+        } else if (input$n_ui_showpanel == "Scatter"){
+            rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                                      steps = intros$n3)
+            )
+        }
+        
+        
+    })
+    
+    
+    # initially hide the option panels using shinyjs, to prevent empty white boxes from flashing
+    observe({
+        req(input$tabs != "tab1")
+        shinyjs::show("sidebar_opt")
     })
     
     
@@ -821,41 +824,33 @@ server <- function(input, output, session) {
         selectInput(
             inputId = "show_df",
             label = "Select from uploaded datasets:",
-            choices = rv$ll,
-            selectize = FALSE) # show duplicate entries
-    })
-    
-    # select subset mode
-    output$deg_subset_mode <- renderUI({
-        req(length(rv$ll) >= 1)
-        req(is.null(input$show_df)==F)
-        radioButtons(
-            inputId = "mode",
-            label = "Subset data:",
-            choices = c("All genes", "List of genes"))
-    })
-    
-    # show subset options and submit button
-    output$x_confirm <- renderUI({
-        req(length(rv$ll) >= 1)
-        req(is.null(input$show_df)==F)
-        req(is.null(input$mode)==F)
-        
-        if(input$mode== "All genes"){
-            actionButton("submit_x", "Visualize!")
-        }
-        else if(input$mode== "List of genes"){
-            div(
-                textAreaInput("genelist_p1", "Input gene list (separated by new line):", ""),
-                uiOutput("submit_genelist")
+            choices = rv$ll
             )
-        }
     })
-    output$submit_genelist <- renderUI({
-        req(is.null(input$genelist_p1)==F)
-        req(nchar(input$genelist_p1)>0)
+    
+    
+    # selectively enables inputs according to state
+    observe({
         
-        actionButton("submit_genelist", "Visualize!")
+        if (length(rv$ll) >= 1 & is.null(input$show_df)==F){
+            shinyjs::enable("mode")
+            shinyjs::enable("genelist_p1")
+        } else {
+            shinyjs::disable("mode")
+            shinyjs::disable("genelist_p1")
+        }
+        
+        if (length(rv$ll) >= 1 & is.null(input$show_df)==F & is.null(input$mode)==F){
+            shinyjs::enable("submit_x")
+        } else {
+            shinyjs::disable("submit_x")
+        }
+        
+        if (length(rv$ll) >= 1 & is.null(input$show_df)==F & is.null(input$mode)==F & is.null(input$genelist_p1)==F & nchar(input$genelist_p1)>0){
+            shinyjs::enable("submit_genelist")
+        } else {
+            shinyjs::disable("submit_genelist")
+        }
     })
     
     
@@ -980,17 +975,6 @@ server <- function(input, output, session) {
         }
         else if (rv$mode == "List of genes"){
             div(
-                fluidRow(
-                    column(12, align="right",
-                           div(style="display:inline-block",
-                               
-                               actionBttn(
-                                   inputId = "help_x_post", label=NULL, 
-                                   icon = icon("question"), style="material-circle", color="primary"
-                               ),
-                           )
-                    )
-                ),
                 fluidRow(
                     column(6,
                            box(
@@ -2249,13 +2233,15 @@ server <- function(input, output, session) {
         else{ "Shared rows: "}
     })
     
-    output$n_use_data <- renderUI({
-        req(length(rv$ll) >= 2)
-        req(length(rv$heatmap_i) > 1)
-        req(length(rv$n_sharedrows)>=1)
-        req(length(rv$n_sharedcols)>=1)
-        actionButton("n_use_data", "Visualize!")
+    # only enable the button if all requirements satisfied
+    observe({
+        if (length(rv$ll) >= 2 & length(rv$heatmap_i) > 1 & length(rv$n_sharedrows)>=1 & length(rv$n_sharedcols)>=1){
+            shinyjs::enable("n_use_data")
+        } else {
+            shinyjs::disable("n_use_data")
+        }
     })
+    
     
     
     
@@ -2298,34 +2284,39 @@ server <- function(input, output, session) {
         div(
             fluidRow(
                 column(6,
-                       radioGroupButtons("n_ui_showpanel",
-                                         choices=c("Heatmap", "Intersection", "Scatter"),
-                                         selected="Heatmap", status="primary",
-                                         checkIcon = list(
-                                             yes = tags$i(class = "fa fa-check-square", 
-                                                          style = "color: white"),
-                                             no = tags$i(class = "fa fa-square-o", 
-                                                         style = "color: white"))
-                       ),
+                       div(id="n1_1",
+                               radioGroupButtons("n_ui_showpanel",
+                                                 choices=c("Heatmap", "Intersection", "Scatter"),
+                                                 selected="Heatmap", status="primary",
+                                                 checkIcon = list(
+                                                     yes = tags$i(class = "fa fa-check-square", 
+                                                                  style = "color: white"),
+                                                     no = tags$i(class = "fa fa-square-o", 
+                                                                 style = "color: white"))
+                               ),
+                           )
+                       
                 ),
                 column(6, align= "right",
-
+                       
+                       div(id="n1_2",
                            
                            dropdown(align="right",
-                               
-                               tags$h3("Customize Filters"),
-                               
-                               uiOutput("ui_n_gls_opt"),
-                               
-                               style = "material-circle", icon = icon("gear"),
-                               status = "default", width = "800px",
-                               right=T, 
-                               animate = animateOptions(
-                                   enter = "slideInRight",
-                                   exit = "fadeOutRight", duration = 0.5
-                               ),
+                                    
+                                    tags$h3("Customize Filters"),
+                                    
+                                    uiOutput("ui_n_gls_opt"),
+                                    
+                                    style = "material-circle", icon = icon("gear"),
+                                    status = "default", width = "800px",
+                                    right=T, 
+                                    animate = animateOptions(
+                                        enter = "slideInRight",
+                                        exit = "fadeOutRight", duration = 0.5
+                                    ),
                            ),
-
+                           
+                           )
                        
                        
                        )
@@ -2347,17 +2338,17 @@ server <- function(input, output, session) {
     output$n_ui_basic <- renderUI({
         req(rv$n_ui_showpanel == "Heatmap")
         div(
-            
-            
             #----------------- heatmap --------------------
             box(
                 title = span( icon("chart-area"), "Heatmap"), status = "primary", solidHeader = TRUE, width=8,
                 
-                uiOutput("n_heatmap"), 
-
-                div(style = "position: absolute; left: 1em; bottom: 1em",
+                div(id="n1_3",
+                    uiOutput("n_heatmap")
+                    ), 
+                
+                div(style = "position: absolute; left: 1em; bottom: 1em",id="n1_3b",
                     dropdown(
-
+                        
                         uiOutput("select_sortby_p2"),
                         uiOutput("n_to_plot"),
                         
@@ -2366,7 +2357,7 @@ server <- function(input, output, session) {
                         up = TRUE, width=300
                     )
                 ),
-                div(style = "position: absolute; left: 4em; bottom: 1em",
+                div(style = "position: absolute; left: 4em; bottom: 1em", id="n1_3c",
                     dropdown(
                         downloadButton("n_hm_dl", "Download plot")
                         ,
@@ -2379,75 +2370,13 @@ server <- function(input, output, session) {
                 
             ),
             
-            
-            #----------------- 3ds --------------------
-            
-            # conditionalPanel("output.n_3ds_status == 'ok'",
-            #                  box(
-            #                      title = span( icon("chart-area"), "3D Scatter"), status = "primary", solidHeader = TRUE, width=6,
-            #                      plotlyOutput("df_n_3ds",
-            #                                   width = "100%",height = "600px"),
-            #                      
-            # 
-            #                      div(style = "position: absolute; left: 1em; bottom: 1em",
-            #                          dropdown(
-            #                              "Color threshold options:",
-            #                              sliderTextInput("n_3ds_p",
-            #                                              label = "Select P threshold:",
-            #                                              choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-            #                                              selected=0.05, grid=T, force_edges=T),
-            #                              sliderTextInput("n_3ds_q",
-            #                                              label = "Select FDR threshold:",
-            #                                              choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-            #                                              selected=1, grid=T, force_edges=T),
-            #                              sliderTextInput("n_3ds_Stat",
-            #                                              label = "Select |Stat| threshold:",
-            #                                              choices= c(0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5),
-            #                                              selected=0, grid=T, force_edges=T),
-            #                              "Note: This will be applied to all columns.",
-            #                              
-            #                              
-            #                              size = "xs",
-            #                              icon = icon("gear", class = "opt"),
-            #                              up = TRUE, width=300
-            #                          )
-            #                      ),
-            #                      div(style = "position: absolute; left: 4em; bottom: 1em",
-            #                          dropdown(
-            #                              strong("Summary:"),
-            #                              dataTableOutput("n_3ds_prop_tbl"),
-            #                              
-            #                              
-            #                              size = "xs",
-            #                              icon = icon("table", class = "opt"),
-            #                              up = TRUE, width=300
-            #                          )
-            #                      ),
-            #                      div(style = "position: absolute; left: 7em; bottom: 1em",
-            #                          dropdown(
-            #                              downloadButton("n_3ds_dl", "Download plot"),
-            #                              downloadButton("download_3ds_df", "Download summary")
-            #                              ,
-            #                              size = "xs",
-            #                              icon = icon("download", class = "opt"),
-            #                              up = TRUE
-            #                          )
-            #                      )
-            #                      
-            #                      
-            #                      
-            #                  )
-            # ),
-            # conditionalPanel("output.n_3ds_status == 'no'",
-            #                  uiOutput("n_3ds_placeholder")
-            # ),
-            
-            
             #----------------- table --------------------
             box(
                 title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12, height="610px",
                 
-                dataTableOutput("df_n_tbl"),
+                div(id="n1_4", 
+                    dataTableOutput("df_n_tbl")
+                    ),
                 
                 div(style = "position: absolute; left: 1em; bottom: 1em",
                     dropdown(
@@ -2461,6 +2390,10 @@ server <- function(input, output, session) {
                 
             )
         )
+                                
+
+            
+
     })
     
     #----------------- intersection analysis --------------------
@@ -2476,19 +2409,20 @@ server <- function(input, output, session) {
             
             conditionalPanel("output.n_venn_status == 'ok'",
                              box(title = span( icon("chart-area"), "Venn Diagram"), status = "primary", solidHeader = TRUE, width=6,
+                                 
                                  tabBox(width=12,
                                         tabPanel("Basic",
-                                                 plotOutput("df_n_npvenn", width="100%")
+                                                plotOutput("df_n_npvenn", width="100%")
                                         ),
                                         tabPanel("Area proportional",
-                                                 plotOutput("df_n_venn", width="100%"),
+                                                 plotOutput("df_n_venn", width="100%")
                                         )
                                         
                                  ),
                                  
                                  
                                  
-                                 div(style = "position: absolute; left: 1em; bottom: 1em",
+                                 div(style = "position: absolute; left: 1em; bottom: 1em", 
                                      dropdown(
                                          checkboxGroupInput(
                                              inputId = "n_venn_label",
@@ -2503,7 +2437,7 @@ server <- function(input, output, session) {
                                          up = TRUE
                                      )
                                  ),
-                                 div(style = "position: absolute; left: 4em; bottom: 1em",
+                                 div(style = "position: absolute; left: 4em; bottom: 1em", 
                                      dropdown(
                                          downloadButton("n_npvenn_dl", "Download basic"),
                                          downloadButton("n_venn_dl", "Download area-proportional"),
@@ -2574,10 +2508,14 @@ server <- function(input, output, session) {
                 width = 12, status = "primary",solidHeader = T, height=750,
                 title = span(icon("table"),"View intersections"),
                 
-                wellPanel(
-                    "Combine options below to view specific intersections: ",br(),br(),
-                    uiOutput("ui_intersections")
-                ),
+                div(id="n2_4",
+                    
+                    wellPanel(
+                        "Combine options below to view specific intersections: ",br(),br(),
+                        uiOutput("ui_intersections")
+                    ),
+                    ),
+                
                 
                 
                 dataTableOutput("n_ins_tbl"),
@@ -2599,7 +2537,7 @@ server <- function(input, output, session) {
                     
                 ),
                 
-                div(style = "position: absolute; left: 4em; bottom: 1em",
+                div(style = "position: absolute; left: 4em; bottom: 1em", id="n2_4b",
                     dropdown(
                         column(8,
                                column(2, textInput("n_ins_wc_sep", "Separator:", value="_")),
@@ -2659,24 +2597,27 @@ server <- function(input, output, session) {
                 column(4,
                        box(
                            title = NULL, status = "primary", solidHeader = F, width=12,
-                           selectInput(
-                               inputId = "nxy_selected_x",
-                               label = "Selected x:",
-                               choices = rv$nx_n,
-                               selected = rv$nx_n[[1]]
-                           ),
-                           selectInput(
-                               inputId = "nxy_selected_y",
-                               label = "Selected y:",
-                               choices = rv$nx_n,
-                               selected = rv$nx_n[[2]]
-                           ),
-                           selectInput(
-                               inputId = "nxy_selected_z",
-                               label = "Selected z (optional):",
-                               choices = c("None", rv$nx_n),
-                               selected = "None"
-                           ),
+                           div(id="n3_3",
+                               selectInput(
+                                   inputId = "nxy_selected_x",
+                                   label = "Selected x:",
+                                   choices = rv$nx_n,
+                                   selected = rv$nx_n[[1]]
+                               ),
+                               selectInput(
+                                   inputId = "nxy_selected_y",
+                                   label = "Selected y:",
+                                   choices = rv$nx_n,
+                                   selected = rv$nx_n[[2]]
+                               ),
+                               selectInput(
+                                   inputId = "nxy_selected_z",
+                                   label = "Selected z (optional):",
+                                   choices = c("None", rv$nx_n),
+                                   selected = "None"
+                               ),
+                               )
+                           
                            
                        ),
                        uiOutput("nxy_sc_cor_panel")
@@ -2697,8 +2638,9 @@ server <- function(input, output, session) {
                        box(
                            title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
                            
-                           dataTableOutput("df_nxy_tbl", width = "100%",height="100%") 
-                           ,
+                           div(id="n3_4",
+                               dataTableOutput("df_nxy_tbl", width = "100%",height="100%") 
+                               ),
                            
                            div(style = "position: absolute; left: 1em; bottom: 1em",
                                dropdown(
@@ -3973,7 +3915,7 @@ server <- function(input, output, session) {
             if (rv[[paste0("nic_apply_",xi)]]==T){
                 x_filtered <- apply_single_cutoff(df, selected[[n]], p=rv[[paste0("nic_p_",xi)]], q=rv[[paste0("nic_q_",xi)]], stat=rv[[paste0("nic_Stat_",xi)]], 
                                                   tolerate=rv[[paste0("nic_na_",xi)]])
-                x_filtered <- filter_by_sign(x_filtered, paste0("nic_Stat_",xi), 
+                x_filtered <- filter_by_sign(x_filtered, paste0("Stat_",selected[[n]]), 
                                              rv[[paste0("nic_sign_",xi)]], 
                                              tolerate=rv[[paste0("nic_na_",xi)]])
             } else {
