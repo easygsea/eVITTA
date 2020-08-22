@@ -1,6 +1,6 @@
 element	intro
 	In this view you can make visualizations for multiple (n>=2) datasets.
-stepd1	Select two or more datasets from loaded data.
-stepd2	Data must have enough shared columns and rows.
-stepd3	Click this button to generate visualizations in the dashboard.
-stepd4	Visualizations will be shown in individual panels.
+n0_1	Select two or more datasets from loaded data.
+n0_2	Data must have enough shared columns and rows.
+n0_3	Click this button to generate visualizations in the dashboard.
+n0_4	Visualizations will be shown in individual panels.
