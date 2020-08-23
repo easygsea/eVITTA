@@ -1,6 +1,51 @@
 #=============================================================# 
 ######                   DOWNLOAD RESULTS              ########
 #=============================================================#
+# Overall UI download ----------------
+output$ui_downloadlist <- renderUI({
+    req(rv$run == "success")
+
+    box(
+        width = 12, status = "primary",
+        uiOutput("menu_download_table")
+    )
+})
+
+# UI download box
+output$ui_downloadbox <- renderUI({
+    box(
+        title = "Enrichment Results Table", solidHeader = T, width = 12, status = "primary",
+        
+        if(is.null(rv$run) || rv$run != "success"){
+            fluidRow(
+                box(
+                    title = span( icon("exclamation"), "Notification"), status = "warning", width=12,
+                    "Results table available upon successful run."
+                )
+            )
+            
+        }else{
+            div(
+                h4(HTML("Download and proceed to <b>easyVizR</b> for multiple comparisons")),
+                
+                div(
+                    style="display: inline-block;vertical-align:top;",
+                    uiOutput("ui_tl_cut")
+                ),
+                div(
+                    style="display: inline-block;vertical-align:top;",
+                    downloadButton("gs_tbl_dl",
+                                   label = "Download table (.csv)"), br(),br()
+                ),
+                div(
+                    dataTableOutput("selected_es_tables"),style="font-size:75%"
+                )
+            )
+        }
+        
+    )
+})
+
 # database selection box
 gs_selected <- reactive({
     gs_selected <- input$selected_download_gs
@@ -22,12 +67,12 @@ output$ui_tl_cut <- renderUI({
     dropdown(
         sliderTextInput("cutoff_p_tl",
                         label = "P threshold:",
-                        choices= c(0.0001,0.0005,0.001,0.005,0.01,0.05,0.1,0.25,0.3,0.5,1),
+                        choices= cutoff_slider,
                         selected=rv$tl_p, grid=T, force_edges=T
         ),
         sliderTextInput("cutoff_q_tl",
                         label = "P.adj threshold:",
-                        choices= c(0.0001,0.0005,0.001,0.005,0.01,0.05,0.1,0.25,0.3,0.5,1),
+                        choices= cutoff_slider,
                         selected=rv$tl_q, grid=T, force_edges=T
         ),
         radioGroupButtons(
@@ -86,17 +131,26 @@ output$gs_tbl_dl <- downloadHandler(
     })
 
 output$ui_gmt_download <- renderUI({
-    req(input$selected_species)
-    species <- input$selected_species
-    species_full <- species_translate(species)
-    
-    # get all GMT file paths
-    gmt_paths = unname(unlist(gmt_collections_paths[[species]],recursive = T))
-    gmt_paths = gsub(paste0(getwd(),"/www/"),"",gmt_paths)
-    gmt_paths_basenames = paste0(gsub(" ","_",species_full),"_",basename(gmt_paths))
-    
-    a_links = paste0("<a href='",gmt_paths,"' download> <i class='fa fa-download'> </i>",gmt_paths_basenames,"</a><br/>")
-    do.call(HTML,as.list(a_links))
+    if(input$selected_species == ""){
+        fluidRow(
+            box(
+                title = span( icon("exclamation"), "Notification"), status = "warning", width=12,
+                "Select your species of interest to download."
+            )
+        )
+        
+    }else{
+        species <- input$selected_species
+        species_full <- species_translate(species)
+        
+        # get all GMT file paths
+        gmt_paths = unname(unlist(gmt_collections_paths[[species]],recursive = T))
+        gmt_paths = gsub(paste0(getwd(),"/www/"),"",gmt_paths)
+        gmt_paths_basenames = paste0(gsub(" ","_",species_full),"_",basename(gmt_paths))
+        
+        a_links = paste0("<a href='",gmt_paths,"' download> <i class='fa fa-download'> </i>",gmt_paths_basenames,"</a><br/>")
+        do.call(HTML,as.list(a_links))
+    }
 })
     
     

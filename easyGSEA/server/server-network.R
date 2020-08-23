@@ -1,3 +1,40 @@
+# Overall bodyNetwork UI ------------------
+output$ui_bodyNetwork <- renderUI({
+    if(is.null(rv$run) || rv$run != "success"){
+        box(
+            title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
+            "Visualization available upon successful run."
+        )
+    }else{
+        fluidRow(
+            uiOutput("ui_vis_gear"),
+            
+            box(
+                width = 12,
+                #<i class="fas fa-chart-network"></i>
+                title=span( icon("project-diagram"), "Network view of enriched gene sets"),solidHeader=T,status = "primary",
+                div(
+                    style = "position: absolute; right: 1em; top: 3em;",
+                    dropdown(
+                        size = "xs",
+                        icon = icon("download", class = "opt"),
+                        up = FALSE,
+                        right = TRUE,
+                        downloadButton(outputId = "download_vis", label = "Download network")
+                    )
+                ),
+                div(
+                    uiOutput("vis_error")
+                ),
+                div(
+                    visNetworkOutput("vis_network", height = "660px")
+                )
+                
+            )
+        )
+    }
+})
+
 # vis network--------------
 output$vis_error <- renderUI({
     req(rv$vis_status == "failed")
@@ -63,24 +100,31 @@ observeEvent(input$q_vis_edge_threshold,{
 
 #  ============UI vis parameter =============
 output$ui_vis_gear <- renderUI({
-    # div(
-    #     align = "left",
-    #     style = "position: absolute; right: 4.5em; top: 3em;",
-        dropdown(
-            # size = "xs",up = FALSE,right = TRUE,width = "850px",
-            # circle = TRUE, tooltip = TRUE, label = "Advanced parameters for creating a network",
-            # icon = icon("gear", class = "opt"),
-            style = "material-circle", icon = icon("gear"),align = "left",
-            status = "default", width = "850px",
-            right=T,
-            animate = animateOptions(
-                enter = "slideInRight",
-                exit = "fadeOutRight", duration = 0.5
-            ),
-            div(
-                align = "center",
-                tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
-            ),
+    # # div(
+    # #     align = "left",
+    # #     style = "position: absolute; right: 4.5em; top: 3em;",
+    #     dropdown(
+    #         # size = "xs",up = FALSE,right = TRUE,width = "850px",
+    #         # circle = TRUE, tooltip = TRUE, label = "Advanced parameters for creating a network",
+    #         # icon = icon("gear", class = "opt"),
+    #         style = "material-circle", icon = icon("gear"),align = "left",
+    #         status = "default", width = "850px",
+    #         right=T,
+    #         animate = animateOptions(
+    #             enter = "slideInRight",
+    #             exit = "fadeOutRight", duration = 0.5
+    #         ),
+    box(
+        width = 12,
+        title = span(icon("gear", class = "opt"),tags$strong("Advanced parameters for creating a network")),
+        icon = "fa fa-th",
+        status = "primary", 
+        # solidHeader = T,
+        collapsible = T, collapsed = T, 
+            # div(
+            #     align = "center",
+            #     tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
+            # ),
             fluidRow(
                 column(
                     width = 5,
@@ -154,6 +198,6 @@ output$ui_vis_gear <- renderUI({
             
             
         )
-    # )
+    # # )
     
 })
