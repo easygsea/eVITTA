@@ -88,35 +88,70 @@
         plotEnrichment(toupper(gmt),ranks) + labs(title = rv$es_term)
     }
     
+    filter_plot_df <- function(pathways, up, down, cutoff_p, cutoff_q){
+      df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
+      
+      df = df %>% 
+        dplyr::filter(db %in% pathways) %>% 
+        mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
+        dplyr::arrange(padj)
+      
+      if(cutoff_p < 1){
+        df = df %>% dplyr::filter(pval < cutoff_p)
+      }
+      if(cutoff_q < 1){
+        df = df %>% dplyr::filter(padj < cutoff_q)
+      }
+      
+      if(is.null(df)==T || nrow(df)<1){
+        return(NULL)
+      }else{
+        if(rv$run_mode == "gsea"){
+          df1 <- df %>% #dplyr::filter(ES > 0) %>%
+            dplyr::slice_max(ES,n=up)
+          
+          df2 <- df  %>% #dplyr::filter(ES < 0) %>%
+            dplyr::slice_min(ES,n=down)
+          
+          df <- rbind(df1,df2)
+          df <- df %>% arrange(desc(ES))
+        }else if(rv$run_mode == "glist"){
+          df <- df %>%
+            dplyr::slice_min(padj,n=up)
+        }
+      }
+    }
+    
     bar_plot <- function(pathways=rv$bar_pathway,up=rv$bar_up,down=rv$bar_down,pq=rv$bar_pq,cutoff_p=rv$bar_p_cutoff,cutoff_q=rv$bar_q_cutoff,abby=rv$bar_abb,abbn=rv$bar_abb_n){
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-            df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
-            
-            df = df %>% 
-              dplyr::filter(db %in% pathways) %>% 
-              mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-              dplyr::arrange(padj)
-            
-            if(cutoff_p < 1){
-                df = df %>% dplyr::filter(pval < cutoff_p)
-            }
-            if(cutoff_q < 1){
-                df = df %>% dplyr::filter(padj < cutoff_q)
-            }
+          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+            # df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
+            # 
+            # df = df %>% 
+            #   dplyr::filter(db %in% pathways) %>% 
+            #   mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
+            #   dplyr::arrange(padj)
+            # 
+            # if(cutoff_p < 1){
+            #     df = df %>% dplyr::filter(pval < cutoff_p)
+            # }
+            # if(cutoff_q < 1){
+            #     df = df %>% dplyr::filter(padj < cutoff_q)
+            # }
             
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
-                df1 <- df %>% dplyr::filter(ES > 0) %>%
-                  dplyr::slice_min(padj,n=up)
-                
-                df2 <- df  %>% dplyr::filter(ES < 0) %>%
-                  dplyr::slice_min(padj,n=down)
-                
-                df <- rbind(df1,df2)
-                df <- df %>% arrange(desc(ES))
+                # df1 <- df %>% dplyr::filter(ES > 0) %>%
+                #   dplyr::slice_min(padj,n=up)
+                # 
+                # df2 <- df  %>% dplyr::filter(ES < 0) %>%
+                #   dplyr::slice_min(padj,n=down)
+                # 
+                # df <- rbind(df1,df2)
+                # df <- df %>% arrange(desc(ES))
                 size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
                 
                 rv$bar_pathway_list = df[["pathway"]]
@@ -168,31 +203,33 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-            df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
-            
-            df = df %>% 
-                dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-              dplyr::arrange(padj)
-            
-            if(cutoff_p < 1){
-                df = df %>% dplyr::filter(pval < cutoff_p)
-            }
-            if(cutoff_q < 1){
-                df = df %>% dplyr::filter(padj < cutoff_q)
-            }
+          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+          
+            # df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
+            # 
+            # df = df %>% 
+            #     dplyr::filter(db %in% pathways) %>% 
+            #     mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
+            #   dplyr::arrange(padj)
+            # 
+            # if(cutoff_p < 1){
+            #     df = df %>% dplyr::filter(pval < cutoff_p)
+            # }
+            # if(cutoff_q < 1){
+            #     df = df %>% dplyr::filter(padj < cutoff_q)
+            # }
             
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
-                df1 <- df %>% dplyr::filter(ES > 0) %>%
-                  dplyr::slice_min(padj,n=up)
-                
-                df2 <- df  %>% dplyr::filter(ES < 0) %>%
-                  dplyr::slice_min(padj,n=down)
-                
-                df <- rbind(df1,df2)
-                df <- df %>% arrange(desc(ES))
+                # df1 <- df %>% dplyr::filter(ES > 0) %>%
+                #   dplyr::slice_min(padj,n=up)
+                # 
+                # df2 <- df  %>% dplyr::filter(ES < 0) %>%
+                #   dplyr::slice_min(padj,n=down)
+                # 
+                # df <- rbind(df1,df2)
+                # df <- df %>% arrange(desc(ES))
                 
                 rv$bubble_pathway_list = df[["pathway"]]
                 
@@ -610,25 +647,27 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-            df = rv$fgseagg %>% 
-                dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-              dplyr::arrange(padj)
-            
-            if(cutoff_p < 1){
-                df = df %>% dplyr::filter(pval<cutoff_p)
-            }
-            if(cutoff_q < 1){
-                df = df %>% dplyr::filter(padj<cutoff_q)
-            }
+          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+          
+            # df = rv$fgseagg %>% 
+            #     dplyr::filter(db %in% pathways) %>% 
+            #     mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
+            #   dplyr::arrange(padj)
+            # 
+            # if(cutoff_p < 1){
+            #     df = df %>% dplyr::filter(pval<cutoff_p)
+            # }
+            # if(cutoff_q < 1){
+            #     df = df %>% dplyr::filter(padj<cutoff_q)
+            # }
             
 
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
                 
-                df <- df %>%
-                  dplyr::slice_min(padj,n=up)
+                # df <- df %>%
+                #   dplyr::slice_min(padj,n=up)
                 
                 rv$bar_pathway_list = df[["pathway"]]
                 
@@ -678,24 +717,26 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-            df = rv$fgseagg %>% 
-                dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-              dplyr::arrange(padj)
-            
-            if(cutoff_p < 1){
-                df = df[which(df[["pval"]]<cutoff_p),]
-            }
-            if(cutoff_q < 1){
-                df = df[which(df[["padj"]]<cutoff_q),]
-            }
+          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+          
+            # df = rv$fgseagg %>% 
+            #     dplyr::filter(db %in% pathways) %>% 
+            #     mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
+            #   dplyr::arrange(padj)
+            # 
+            # if(cutoff_p < 1){
+            #     df = df[which(df[["pval"]]<cutoff_p),]
+            # }
+            # if(cutoff_q < 1){
+            #     df = df[which(df[["padj"]]<cutoff_q),]
+            # }
 
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
                                 
-                df <- df %>%
-                  dplyr::slice_min(padj,n=up)
+                # df <- df %>%
+                #   dplyr::slice_min(padj,n=up)
                 
                 rv$bubble_pathway_list = df[["pathway"]]
                 

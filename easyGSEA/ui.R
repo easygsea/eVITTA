@@ -1,5 +1,5 @@
 source("ui/ui-run.R")
-source("ui/ui-vis.R")
+source("ui/ui-results.R")
 source("ui/ui-network.R")
 # source("ui/ui-summary.R")
 source("ui/ui-download.R")
