@@ -1660,7 +1660,7 @@ observeEvent(input$confirm_kegg_plot,{
         # req(input$selected_es_term != "")
         bsButton(
             inputId = "plot_db_es_confirm", 
-            label = "Plot!",
+            label = "View!",
             style = "success",
             type = "button")
     })

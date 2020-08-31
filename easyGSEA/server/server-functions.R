@@ -553,7 +553,7 @@
 
             for(ESsign in c(-1,1)){
               if(ESsign == 1){i0 = data1}else{i0 = data2}
-              
+              if(nrow(i0) < 1){next}
               i = i0
 
               i$text <- lapply(i$text,function(x) strsplit(x,"%")[[1]][1]) %>%
