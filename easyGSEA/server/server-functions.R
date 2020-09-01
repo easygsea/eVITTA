@@ -93,7 +93,7 @@
       
       df = df %>% 
         dplyr::filter(db %in% pathways) %>% 
-        mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
+        mutate_if(is.numeric,  ~replace(., . == 0, p_min)) %>%
         dplyr::arrange(padj)
       
       if(cutoff_p < 1){
@@ -292,7 +292,7 @@
         }else{
             df = rv$fgseagg %>% 
                 dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
+                mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
@@ -336,7 +336,7 @@
         }else{
             df = rv$fgseagg %>% 
                 dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
+                mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
             df = df[order(df[[pq]]),]
             
@@ -385,7 +385,7 @@
         }else{
             df = rv$fgseagg %>% 
                 dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, 0.0000000001))
+                mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
             y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
             
@@ -455,7 +455,7 @@
         
         df = df %>% 
           dplyr::filter(db %in% pathways) %>% 
-          mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
+          mutate_if(is.numeric,  ~replace(., . == 0, p_min))
         
         if(cutoff_p < 1){
           df = df %>% dplyr::filter(pval < cutoff_p)

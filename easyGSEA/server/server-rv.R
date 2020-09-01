@@ -88,7 +88,7 @@
         # hc_edges = NULL,
         vis=NULL,
         vis_status=NULL, #success if plotted, failed if df nrow==0
-        vis_k=0.5,vis_p=.005,vis_q=.05,vis_pq="pval",
+        vis_k=0.5,vis_p=.005,vis_q=1,vis_pq="pval",
         percent_method="jaccard",# or   combined overlap
         percent_cutoff = 0.25, # or 0.5 for overlap
         
