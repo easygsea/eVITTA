@@ -1,5 +1,5 @@
 source("ui/ui-run.R")
-source("ui/ui-vis.R")
+source("ui/ui-results.R")
 source("ui/ui-network.R")
 # source("ui/ui-summary.R")
 source("ui/ui-download.R")
@@ -29,16 +29,17 @@ shinyUI(
         sidebar,
         dashboardBody(
             # theme = shinytheme("flatly"),
+            
             use_waiter(), # dependencies
             waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else 
             
             tags$head(
+                # tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
                 HTML("<script type='text/javascript' language='javascript' src='https://reactome.org/DiagramJs/diagram/diagram.nocache.js'></script>"),
                 tags$script(src = "reactome.js")
             ),
+            
             useShinyjs(),
-            # tags$head(
-            #     tags$link(rel = "stylesheet", type = "text/css", href = "./www/custom.css")),
             
             tabItems(
                 bodyGSEA,

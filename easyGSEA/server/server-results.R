@@ -1,6 +1,77 @@
 #=============================================================# 
 ######                 ENRICHMENT RESULTS              ########
 #=============================================================#
+# Overall bodyResults UI
+output$ui_bodyResults <- renderUI({
+    if(is.null(rv$run) || rv$run != "success"){
+        box(
+            title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
+            "Visualization available upon successful run."
+        )
+    }else{
+        fluidRow(
+            column(
+                width = 8,
+                radioGroupButtons(
+                    inputId = "plot_type",
+                    choiceNames = list(span(icon("chart-bar"),"Bar plot"),span(icon("first-order-alt"),"Bubble plot"),span(icon("file-word"),"Keywords"),span(icon("braille"),"Manhattan plot"),span(icon("fire-alt"),"Volcano plot")), #,
+                    choiceValues = list("bar", "bubble","word","manhattan","volcano"), #,
+                    selected = "bar",
+                    status = "primary",
+                    size = "normal",
+                    direction = "horizontal"
+                ),
+                fluidRow(
+                    uiOutput("manhattan_box"),
+                    uiOutput("bar_box"),
+                    uiOutput("bubble_box"),
+                    uiOutput("volcano_box"),
+                    uiOutput("word_box"),
+                    uiOutput("kegg_feedback"),
+                    uiOutput("reactome_feedback"),
+                    uiOutput("wp_feedback")
+                )
+            ),
+            column(
+                width = 4,
+                fluidRow(
+                    box(
+                        title = "Individual gene set statistics & visualization",status="primary",solidHeader = TRUE,
+                        id = "gs_es_result",
+                        width = 12, #height = "300px",
+                        fluidRow(
+                            column(
+                                width = 9,
+                                uiOutput("es_plot_term")
+                            ),
+                            column(
+                                width = 3, align = "right",
+                                br(),
+                                uiOutput("es_plot_term_confirm")
+                            )
+                        ),
+                        uiOutput("ui_es")
+                    )
+                )
+            )
+        )
+    }
+})
+
+# feedbacks on no significant enrichment
+sig_none <- reactive({
+    req(rv$bar_p_cutoff)
+    req(rv$bar_q_cutoff)
+    
+    HTML(
+        "No significant term found at pval < ",
+        rv$bar_p_cutoff,
+        "& padj < ",
+        rv$bar_q_cutoff,
+        ". Please adjust thresholds by clicking the bottom-right gear button."
+    )
+})
+
 # manhattan plot --------------
 observeEvent(input$manhattan_confirm,{
     rv$volcano_pq = input$p_or_q_manhattan
@@ -170,12 +241,7 @@ output$plot_bar_none <- renderUI({
     req(input$plot_type=="bar")
     
     if(is.null(p_bar())){
-        HTML(
-            "No significant term found at P value threshold ",
-            rv$bar_p_cutoff,
-            ", P.adj threshold ",
-            rv$bar_q_cutoff
-        )
+        sig_none()
     }
 })
 
@@ -192,8 +258,11 @@ output$plot_bar <- renderPlotly({
     req(rv$run == "success")
     req(input$plot_type=="bar")
     req(is.null(rv$bar_pathway)==F)
+    
+    withProgress(message = "Updating bar plot ...",value = 1,{
+        p_bar()
+    })
 
-    p_bar()
 })
 
 # bar download
@@ -225,12 +294,7 @@ output$plot_bubble_none <- renderUI({
     req(input$plot_type=="bubble")
     
     if(is.null(p_bubble())){
-        HTML(
-            "No significant term found at P value threshold ",
-            rv$bar_p_cutoff,
-            ", P.adj threshold ",
-            rv$bar_q_cutoff
-        )
+        sig_none()
     }
 })
 
@@ -247,8 +311,9 @@ output$plot_bubble <- renderPlotly({
     req(input$plot_type=="bubble")
     req(is.null(rv$bar_pathway)==F)
 
-    
-    p_bubble()
+    withProgress(message = "Updating bubble plot ...",value = 1,{
+        p_bubble()
+    })
 })
 
 # bubble download
@@ -362,12 +427,7 @@ output$plot_word_none <- renderUI({
     req(input$plot_type=="word")
     
     if(is.null(word_plot())){
-        HTML(
-            "No significant term found at P value threshold ",
-            rv$bar_p_cutoff,
-            ", P.adj threshold ",
-            rv$bar_q_cutoff
-        )
+        sig_none()
     }
 })
 
@@ -889,7 +949,7 @@ output$gs_stats_tl <- DT::renderDataTable({
                       # sDom  = '<"top">lrt<"bottom">ip',
                       dom = 'Bfrtip',
                       buttons = c('copy', 'pdf', 'csv'), #, 'excel', 'print'
-                      scrollY = "155px",
+                      scrollY = "128px",
                       scroller = TRUE,
                       scrollX=TRUE           
                   ))
@@ -899,6 +959,8 @@ output$gs_stats_tl <- DT::renderDataTable({
 
 output$plot_db_es <- renderPlot({
     req(rv$run == "success")
+    req(rv$es_term)
+    
     # req(input$selected_es_term != "")
     req(rv$es_term)
     enrichmentplot()
@@ -938,6 +1000,8 @@ output$download_density <- downloadHandler(
 # Box plot ------------------------
 output$plot_box <- renderPlot({
     req(rv$run == "success")
+    req(rv$es_term)
+    
     # req(input$selected_es_term != "")
     req(rv$es_term)
     box_plot()
@@ -957,6 +1021,8 @@ output$download_box <- downloadHandler(
 # Violin plot ------------------------
 output$plot_violin <- renderPlot({
     req(rv$run == "success")
+    req(rv$es_term)
+    
     # req(input$selected_es_term != "")
     req(rv$es_term)
     rv$k = input$cutoff_k
@@ -976,9 +1042,34 @@ output$download_violin <- downloadHandler(
 
 
 # ES UI ----------------------------------------------------
+output$ui_es <- renderUI({
+    req(rv$es_term)
+    
+    fluidRow(
+        column(
+            width = 12,
+            tags$hr(style="border-color: grey; margin:20px;"),
+            div(
+                style = 'overflow-x: scroll;font-size:75%', 
+                DT::dataTableOutput("gs_stats_tl")
+            ),
+            tags$hr(style="border-color: grey; margin:22px;"),
+            div(
+                style = "position: relative",
+                uiOutput("ui_gsea_plots_radio"),
+                br(),
+                uiOutput("ui_gsea_plots"),
+            )
+        )
+        
+    )
+})
+
 # ES UI only when mode == gsea
 output$ui_gsea_plots <- renderUI({
     req(rv$run_mode=="gsea")
+    req(rv$es_term)
+    
     div(
         style = "position: relative",
         uiOutput("gs_enrichment_plot"),
@@ -990,19 +1081,28 @@ output$ui_gsea_plots <- renderUI({
 
 output$ui_gsea_plots_radio <- renderUI({
     req(rv$run_mode=="gsea")
-    radioGroupButtons(
-        inputId = "plot_type_2",
-        # label = "Select plot type",
-        choiceNames = c("Enrichment", "Density","Box","Violin"),
-        choiceValues = c("enrichment", "density", "box","violin"), 
-        selected = "enrichment",
-        checkIcon = list(
-            yes = icon("check-square"),
-            no = icon("square-o")
-        ),
-        status = "primary",
-        direction = "horizontal"
+    
+    fluidRow(
+        column(
+            width = 12, align = "center",
+            radioGroupButtons(
+                inputId = "plot_type_2",
+                # label = "Select plot type",
+                choiceNames = c("Enrichment", "Density","Box","Violin"),
+                choiceValues = c("enrichment", "density", "box","violin"), 
+                selected = "enrichment",
+                checkIcon = list(
+                    yes = icon("check-square"),
+                    no = icon("square-o")
+                ),
+                status = "primary",
+                direction = "horizontal"
+            )
+        )
+        
     )
+
+    
 })
 
 
@@ -1153,10 +1253,10 @@ observe({
 # UI enrichment plot ----------------------
 output$gs_enrichment_plot <- renderUI({
     req(input$plot_type_2=="enrichment")
-    box(
-        status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Enrichment Plot",
+    div(
+        # status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Enrichment Plot",
         plotOutput("plot_db_es", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1174,10 +1274,10 @@ output$gs_enrichment_plot <- renderUI({
 
 output$density_plot <- renderUI({
     req(input$plot_type_2=="density")
-    box(
-        status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Density Plot",
+    div(
+        # status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Density Plot",
         plotOutput("plot_density", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1195,10 +1295,10 @@ output$density_plot <- renderUI({
 
 output$box_plot <- renderUI({
     req(input$plot_type_2=="box")
-    box(
-        status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Box Plot",
+    div(
+        # status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Box Plot",
         plotOutput("plot_box", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1216,10 +1316,10 @@ output$box_plot <- renderUI({
 
 output$violin_plot <- renderUI({
     req(input$plot_type_2=="violin")
-    box(
-        id = "density_plot",status="primary",solidHeader = TRUE,
-        width = NULL, height = "300px",
-        title = "Violin Plot",
+    div(
+        # id = "density_plot",status="primary",solidHeader = TRUE,
+        # width = NULL, height = "300px",
+        # title = "Violin Plot",
         plotOutput("plot_violin", height = "242px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1544,7 +1644,7 @@ observeEvent(input$confirm_kegg_plot,{
         req(rv$run == "success")
         selectizeInput(
             "selected_es_term",
-            "Manual selection of gene set:",
+            "Click plot, or manually select a gene set:",
             # choices = isolate(sort_gs_terms()),
             choices = isolate((rv$fgseagg)$pathway),
             options = list(
@@ -1560,7 +1660,7 @@ observeEvent(input$confirm_kegg_plot,{
         # req(input$selected_es_term != "")
         bsButton(
             inputId = "plot_db_es_confirm", 
-            label = "Plot!",
+            label = "View!",
             style = "success",
             type = "button")
     })

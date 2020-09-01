@@ -1334,6 +1334,9 @@ shinyServer(function(input, output, session) {
         samples_t = input$samples_t_deg
         min_n = min(length(samples_c),length(samples_t))
         
+        # counts in at least 5 samples if too many samples as in scRNAseq
+        if(min_n > 5){min_n = 5}
+        
         msg = paste0("Running DEG analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. Please wait a minute...")
 
         if(is.null(samples_c) && is.null(samples_t)){
