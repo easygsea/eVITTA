@@ -10,11 +10,11 @@ server <- function(input, output, session) {
     
     source("server/server-rv.R", local = TRUE)
     source("server/server-functions.R", local = TRUE)
-    source("server/server-run.R", local = TRUE)
-    source("server/server-body1.R", local = TRUE)
+    source("server/1.1.server-run.R", local = TRUE)
+    source("server/1.2.server-body1.R", local = TRUE)
     
-    source("server/server-results.R", local = TRUE)
+    source("server/2.server-results.R", local = TRUE)
     # source("server/server-summary.R", local = TRUE)
-    source("server/server-network.R", local = TRUE)
-    source("server/server-download.R", local = TRUE)
+    source("server/3.server-network.R", local = TRUE)
+    source("server/4.server-download.R", local = TRUE)
 }

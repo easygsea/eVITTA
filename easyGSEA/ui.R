@@ -1,9 +1,9 @@
-source("ui/ui-run.R")
-source("ui/ui-results.R")
-source("ui/ui-network.R")
+source("ui/1.ui-run.R")
+source("ui/2.ui-results.R")
+source("ui/3.ui-network.R")
 # source("ui/ui-summary.R")
-source("ui/ui-download.R")
-source("ui/ui-help.R")
+source("ui/4.ui-download.R")
+source("ui/5.ui-help.R")
 
 
 sidebar <- dashboardSidebar(

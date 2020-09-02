@@ -10,7 +10,7 @@
         ))
     })
 
-# UI select databases ------------------
+    # --------------  1.1 select databases --------------------
     
     # disable selection when user confirms gmts; enables upon modify
     # this is to prevent accidentally messing up selections by changing species
@@ -24,7 +24,7 @@
         }
     })
 
-    #-------------- UI select GMTs ----------------
+    # --------------  1.2 select GMTs ---------------------------
     
     observe({
         req(nchar(input$selected_species)>0)
@@ -82,7 +82,7 @@
     })
     
     
-    #-------------- button control of gmt selection ----------------
+    #-------------- 1.3 button control of gmt selection ----------------
     
     # write selected databases into RV
     observeEvent(input$add_db, {
@@ -184,7 +184,7 @@
             type = "button")
     })
     
-# ------------ Upload & reset RNK -------------
+# ------------ 2.1.1 Upload & reset RNK ---------------
     # UI file input
     output$ui_rnk <- renderUI({
         req(input$selected_mode == "gsea")
@@ -251,7 +251,7 @@
     })
     
         
-# ------------- Upload and reset example RNK/DE --------------
+# ------------- 2.1.2 Upload and reset example RNK/DE --------------
     observeEvent(input$loadExampleRNK,{
         rv$example_file = NULL
         if(input$selected_species == ""){
@@ -303,7 +303,7 @@
     })
 
     
-#---------- Return RNK ---------
+# ----------------- 2.1.3 Return RNK -----------------------
     # check and store input file content into rv$data_head
     observe({
         req(is.null(rv$infile_name)==F)
@@ -338,6 +338,10 @@
     # convert into ranks
     observeEvent(input$filecontent_confirm,{
         data = rv$data_head
+        wtext = tags$b(
+          "Duplicated genes found in your uploaded file. If to continue, only the first duplicate(s) will be kept. Do you want to continue?",
+          style = "color: #FA5858;"
+        )
         
         if(ncol(data)==2){
           if(is.null(input$rank_column) && is.null(input$gene_column)){
@@ -347,14 +351,22 @@
           }else if(is.null(input$gene_column)){
             shinyalert("Please select the gene column.")
           }else{
-            rv$infile_confirm = "confirm"
-            
-            if(is.numeric(data[[input$rank_column]])){
-              ranks <- setNames(data[[input$rank_column]], data[[input$gene_column]])
-              rv$infile_check = "pass"
-              rv$rnkgg <- ranks 
+            all_genes = data[[input$gene_column]]
+            duplicates = duplicated(all_genes)
+
+            if(TRUE %in% duplicates){
+              shinyWidgets::ask_confirmation(
+                inputId = "confirm_duplicate_rnk",
+                title = NULL,
+                text = wtext,
+                type = "warning",
+                btn_labels = c("Cancel", "Continue"),
+                btn_colors = c("#00BFFF", "#FE2E2E"),
+                html = TRUE
+              )
             }else{
-              rv$infile_check = "wrong_rnk"
+              convert_rnk()
+              return_rnk()
             }
           }
         }else if(ncol(data)>2){
@@ -373,72 +385,44 @@
           }else if(is.null(input$p_column)){
             shinyalert("Please select the p-value column.")
           }else{
-            rv$infile_confirm = "confirm"
+            all_genes = data[[input$gene_column]]
+            duplicates = duplicated(all_genes)
             
-            genes <- data[[input$gene_column]]
-            logfc <- data[[input$logfc_column]]
-            pval <- data[[input$p_column]] #%>% mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
-            pval[pval==0] = 0.000000001
-            if(is.numeric(pval) && is.numeric(logfc)){
-              rank_values <- -log10(pval) * sign(logfc)
-              ranks <- setNames(rank_values,genes)
-              rv$infile_check = "pass"
-              rv$rnkgg <- ranks 
+            if(TRUE %in% duplicates){
+              shinyWidgets::ask_confirmation(
+                inputId = "confirm_duplicate_deg",
+                title = NULL,
+                text = wtext,
+                type = "warning",
+                btn_labels = c("Cancel", "Continue"),
+                btn_colors = c("#00BFFF", "#FE2E2E"),
+                html = TRUE
+              )
             }else{
-              rv$infile_check = "wrong_deg"
-            }
-          }
-        }
-        
-        if(is.null(rv$rnkgg)==F){
-          # total no of genes before conversion
-          rv$total_genes = nrow(data)
-          
-          # clear rv which was used to store input file data
-          rv$data_head = NULL
-
-          if(input$gene_identifier=="other"){
-            # autodetect and convert into SYMBOL (if applicable) using gprofiler2
-            species = isolate(input$selected_species)
-            
-            withProgress(message = "Autodetecting and converting gene IDs...",{
-              Sys.sleep(0.1)
-              incProgress(1)
-              lst = convert_rank_id(species,rv$rnkgg)
+              convert_rnk_from_deg()
+              return_rnk()
               
-              if(is.null(lst)){
-                # no ID detected in database
-                rv$rnk_check = "none"
-                rv$rnkgg = NULL
-              }else{
-                # check percentage of IDs found in database
-                g_perc = lst[[1]]
-                
-                # if <30%, reports error
-                if(g_perc < 0.5){
-                  rv$rnk_check = "low"
-                }else{
-                  rv$rnk_check = "pass"
-                }
-                
-                # convert ID and save converted IDs & conversion table into RVs
-                rv$rnkgg = lst[[2]]
-                rv$gene_lists_mat = lst[[3]]
-                
-                # count # of genes after conversion
-                rv$total_genes_after = length(rv$rnkgg)
-                
-              }
-            })
-          }else{
-            rv$rnk_check = "pass"
-            rv$total_genes_after = length(rv$rnkgg)
+            }
           }
         }
     })
     
+    observeEvent(input$confirm_duplicate_rnk,{
+      if(input$confirm_duplicate_rnk==TRUE){
+        convert_rnk()
+        return_rnk()
+      }
+    },ignoreInit = T)
+    
+    observeEvent(input$confirm_duplicate_deg,{
+      if(input$confirm_duplicate_deg==TRUE){
+        convert_rnk_from_deg()
+        return_rnk()
+      }
+    },ignoreInit = T)
+    
 #====================================================#
-######       GList mode: input gene lists       ######
+######      2.2.1 GList mode: input gene lists  ######
 #====================================================#
     output$ui_glist <- renderUI({
         req(input$selected_mode == "glist")
@@ -492,7 +476,7 @@
       )
     })
     
-    #----------------read in GList-----------------
+    #---------------- 2.2.2 read in GList-----------------
     # from input field
     observeEvent(input$gene_list_add,{
         species = isolate(input$selected_species)  
@@ -567,7 +551,7 @@
         # }
     })
     
-    # clear GList input ------------------------------
+    # -------------- 2.2.3 clear GList input ---------------------------
     observeEvent(input$gene_list_clear, {
         # rv$run = NULL
         
@@ -586,7 +570,7 @@
         # )
     })
     
-    #----------- Example GList --------------
+    #----------- 2.2.4 Example GList --------------
     observeEvent(input$load_example_glist,{
         if(input$selected_species == ""){
             showNotification("Please select your species of interest.",type="error",duration=2)
@@ -601,7 +585,7 @@
 
     
 
-#---------- UI confirm & confirm modals ---------
+#---------- 3. run parameters & confirm buttons ---------
     # clear Glist rv when switching to gsea mode
     observe({
         req(input$selected_mode == "gsea")
@@ -691,7 +675,7 @@
 
     
     #===============================================#
-    #####               run GSEA!!!             #####
+    #####           4.1 run GSEA!!!             #####
     #===============================================#
     # runs upon the analysis name is provided.
     observeEvent(input$confirm1, {
@@ -798,7 +782,7 @@
     })
     
     #===============================================#
-    #####               run GList!!!            #####
+    #####             4.2 run GList!!!          #####
     #===============================================#
     
     observeEvent(input$confirm2, {
