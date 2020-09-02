@@ -1,6 +1,8 @@
 rv <- reactiveValues(
   gse_all = NULL,
   
+  fpta_ids = list(),
+
   # ========= filtered data from DEG run ======== #
   deg = NULL, # DEG table
   deg_counts = NULL, # normalized count table
