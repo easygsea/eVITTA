@@ -15,6 +15,7 @@ library(BiocManager)
 library(waiter)
 library(statmod)
 library(scales)
+library(curl)
 options(repos = BiocManager::repositories())
 
 source("global/functions.R")
@@ -54,4 +55,7 @@ cscale_zscore <- list(c(0, "rgb(8,81,156)"), # -0.001 = cornflower,
                       list(0.9, "rgb(215,48,39)"), # 0.01 = red
                       list(1, "rgb(165,0,38)") # 0.001 = dark red
 )
+
+# ===================== remove previous files downloaded from GEO ftp sites =====================
+do.call(file.remove, list(list.files(paste0(getwd(),"/www/tmp/"),full.names = TRUE)))
 
