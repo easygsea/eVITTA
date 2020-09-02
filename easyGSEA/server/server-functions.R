@@ -107,10 +107,10 @@
         return(NULL)
       }else{
         if(rv$run_mode == "gsea"){
-          df1 <- df %>% #dplyr::filter(ES > 0) %>%
+          df1 <- df %>% dplyr::filter(ES > 0) %>%
             dplyr::slice_max(ES,n=up)
           
-          df2 <- df  %>% #dplyr::filter(ES < 0) %>%
+          df2 <- df  %>% dplyr::filter(ES < 0) %>%
             dplyr::slice_min(ES,n=down)
           
           df <- rbind(df1,df2)
@@ -1208,5 +1208,102 @@
         }
         
         return(lst)
+    }
+    
+    #=============================================#
+    ########   convert & return RNK     ##########
+    #=============================================#
+    # generate ranks from RNK file
+    convert_rnk <- function(data=rv$data_head){
+      all_genes = data[[input$gene_column]]
+      duplicates = duplicated(all_genes)
+      
+      if(TRUE %in% duplicates){
+        data = data[!duplicates, ]
+      }
+      
+      rv$infile_confirm = "confirm"
+      
+      if(is.numeric(data[[input$rank_column]])){
+        ranks <- setNames(data[[input$rank_column]], data[[input$gene_column]])
+        rv$infile_check = "pass"
+        rv$rnkgg <- ranks 
+      }else{
+        rv$infile_check = "wrong_rnk"
+      }
+    }
+    
+    # generate ranks from DEG file
+    convert_rnk_from_deg <- function(data=rv$data_head){
+      all_genes = data[[input$gene_column]]
+      duplicates = duplicated(all_genes)
+      
+      if(TRUE %in% duplicates){
+        data = data[!duplicates, ]
+      }
+      
+      rv$infile_confirm = "confirm"
+      
+      genes <- data[[input$gene_column]]
+      logfc <- data[[input$logfc_column]]
+      pval <- data[[input$p_column]] #%>% mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
+      pval[pval==0] = 0.000000001
+      if(is.numeric(pval) && is.numeric(logfc)){
+        rank_values <- -log10(pval) * sign(logfc)
+        ranks <- setNames(rank_values,genes)
+        rv$infile_check = "pass"
+        rv$rnkgg <- ranks 
+      }else{
+        rv$infile_check = "wrong_deg"
+      }
+    }
+    
+    # check ranks and auto-convert gene IDs if applicable
+    return_rnk <- function(data=rv$data_head){
+      if(is.null(rv$rnkgg)==F){
+        # total no of genes before conversion
+        rv$total_genes = nrow(data)
+        
+        # # clear rv which was used to store input file data
+        # rv$data_head = NULL
+        
+        if(input$gene_identifier=="other"){
+          # autodetect and convert into SYMBOL (if applicable) using gprofiler2
+          species = isolate(input$selected_species)
+          
+          withProgress(message = "Autodetecting and converting gene IDs. Please wait a minute...",{
+            Sys.sleep(0.1)
+            incProgress(1)
+            lst = convert_rank_id(species,rv$rnkgg)
+            
+            if(is.null(lst)){
+              # no ID detected in database
+              rv$rnk_check = "none"
+              rv$rnkgg = NULL
+            }else{
+              # check percentage of IDs found in database
+              g_perc = lst[[1]]
+              
+              # if <30%, reports error
+              if(g_perc < 0.5){
+                rv$rnk_check = "low"
+              }else{
+                rv$rnk_check = "pass"
+              }
+              
+              # convert ID and save converted IDs & conversion table into RVs
+              rv$rnkgg = lst[[2]]
+              rv$gene_lists_mat = lst[[3]]
+              
+              # count # of genes after conversion
+              rv$total_genes_after = length(rv$rnkgg)
+              
+            }
+          })
+        }else{
+          rv$rnk_check = "pass"
+          rv$total_genes_after = length(rv$rnkgg)
+        }
+      }
     }
 

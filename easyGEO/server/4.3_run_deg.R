@@ -1,6 +1,7 @@
 # ------------ UI: DEG run & table -----------
 output$confirm_run <- renderUI({
   req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
+  # req(length(input$samples_c_deg)>0 && length(input$samples_t_deg)>0)
   
   # RUN DEG button
   bsButton("run_deg", "Run DEG analysis",
@@ -85,137 +86,133 @@ observeEvent(input$run_deg,{
   
   if(is.null(samples_c) && is.null(samples_t)){
     showNotification("Select at least 1 control and 1 experimental samples.", type = "error", duration=4)
-    next
   }else if(is.null(samples_c)){
     showNotification("Select at least 1 control sample.", type = "error", duration=4)
-    next
   }else if(is.null(samples_t)){
     showNotification("Select at least 1 experimental sample.", type = "error", duration=4)
-    next
+  }else{
+    withProgress(message = msg, value = 1, {
+      ## 1) create design matrix
+      # 1.1) batch effects
+      batch_var = input$sp_batch_col
+      batch = NULL
+      
+      # original design matrix
+      p_df = rv$fddf
+      
+      if(batch_var!="na"){
+        batch = factor(p_df[[batch_var]])
+      }
+      
+      # 1.2) filter design matrix according to the selected two levels in selected variable
+      # selected variable
+      c_var = input$sp_select_var
+      
+      # selected two levels
+      c_var_levels = input$sp_select_levels
+      
+      # selected variable - control level
+      c_level = input$sp_select_levels_base
+      
+      # selected variable - experimental level
+      t_level = c_var_levels[!c_var_levels %in% c_level]
+      
+      # filter design matrix according to selections
+      p_df1 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_c)
+      p_df2 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_t)
+      p_df = rbind(p_df1,p_df2)
+      
+      
+      # 1.3) create treatment factor
+      # treatment effects
+      treatment = factor(p_df[[c_var]])
+      treatment = relevel(treatment, ref = c_level)
+      
+      # 1.4) design matrix
+      if(is.null(batch)){
+        design1 <- model.matrix(~treatment)
+      }else{
+        design1 <- model.matrix(~batch+treatment)
+      }
+      
+      ## 2) filter count matrix according to variable selection
+      # filtered samples
+      samples = rownames(p_df)
+      
+      # titles of filtered samples
+      samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
+      
+      # original count matrix
+      m_df = filtered_data_df()
+      
+      # genes
+      genes = m_df$Name %>% toupper(.)
+      
+      # as numeric matrix
+      m_df = m_df %>% dplyr::select(one_of(samples))
+      setcolorder(m_df, as.character(samples))
+      m_df = m_df %>% 
+        apply(., 2, as.numeric) %>%
+        as.matrix(.)
+      
+      # rename rownames
+      rownames(m_df) = genes
+      
+      ## 3) run edgeR and/or limma
+      # 3.1) determine if raw or normalized counts
+      raw_or_norm = input$data_type
+      
+      # 3.2) create dgelist
+      y <- DGEList(counts=m_df)
+      
+      # 3.3) filter and normalize if raw read counts, and run limma
+      if(raw_or_norm == "raw"){
+        # filter genes expressed in at least 3 of the samples
+        keep <- rowSums(cpm(y)>1) >= min_n
+        y <- y[keep,,keep.lib.sizes=FALSE]
+        
+        # normalize count data
+        y=calcNormFactors(y, method = "TMM")
+        
+        # voom on normalized data
+        v <- voom(y, design1, plot=F)
+      }else{
+        keep <- rowSums(y$counts>1) >= min_n
+        y <- y[keep,,keep.lib.sizes=TRUE]
+        
+        # # voom directly on counts, if data are very noisy, as would be used for microarray
+        v <- voom(y, design1, plot=F, normalize="quantile")
+      }
+      
+      # 3.4) DEG analysis
+      fit <- lmFit(v, design1)
+      fit <- eBayes(fit,trend=TRUE, robust=TRUE)
+      
+      # results
+      results <- decideTests(fit)
+      summary(results)
+      
+      # export DEG table
+      degs = topTable(fit, coef=ncol(fit),sort.by="P",number=Inf)
+      rv$deg = degs
+      
+      # export count table
+      if(raw_or_norm == "raw"){
+        rv$deg_counts = cpm(y)
+      }else{
+        rv$deg_counts = y$counts
+      }
+      
+      # export other data
+      rv$c_var = c_var
+      rv$c_level = c_level
+      rv$t_level = t_level
+      rv$samples_c = samples_c
+      rv$samples_t = samples_t
+      
+      rv$deg_pdata = p_df
+    })
   }
-  
-  withProgress(message = msg, value = 1, {
-    ## 1) create design matrix
-    # 1.1) batch effects
-    batch_var = input$sp_batch_col
-    batch = NULL
-    
-    # original design matrix
-    p_df = rv$fddf
-    
-    if(batch_var!="na"){
-      batch = factor(p_df[[batch_var]])
-    }
-    
-    # 1.2) filter design matrix according to the selected two levels in selected variable
-    # selected variable
-    c_var = input$sp_select_var
-    
-    # selected two levels
-    c_var_levels = input$sp_select_levels
-    
-    # selected variable - control level
-    c_level = input$sp_select_levels_base
-    
-    # selected variable - experimental level
-    t_level = c_var_levels[!c_var_levels %in% c_level]
-    
-    # filter design matrix according to selections
-    p_df1 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_c)
-    p_df2 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_t)
-    p_df = rbind(p_df1,p_df2)
-    
-    
-    # 1.3) create treatment factor
-    # treatment effects
-    treatment = factor(p_df[[c_var]])
-    treatment = relevel(treatment, ref = c_level)
-    
-    # 1.4) design matrix
-    if(is.null(batch)){
-      design1 <- model.matrix(~treatment)
-    }else{
-      design1 <- model.matrix(~batch+treatment)
-    }
-    
-    ## 2) filter count matrix according to variable selection
-    # filtered samples
-    samples = rownames(p_df)
-    
-    # titles of filtered samples
-    samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
-    
-    # original count matrix
-    m_df = filtered_data_df()
-    
-    # genes
-    genes = m_df$Name %>% toupper(.)
-    
-    # as numeric matrix
-    m_df = m_df %>% dplyr::select(one_of(samples))
-    setcolorder(m_df, as.character(samples))
-    m_df = m_df %>% 
-      apply(., 2, as.numeric) %>%
-      as.matrix(.)
-    
-    # rename rownames
-    rownames(m_df) = genes
-    
-    ## 3) run edgeR and/or limma
-    # 3.1) determine if raw or normalized counts
-    raw_or_norm = input$data_type
-    
-    # 3.2) create dgelist
-    y <- DGEList(counts=m_df)
-    
-    # 3.3) filter and normalize if raw read counts, and run limma
-    if(raw_or_norm == "raw"){
-      # filter genes expressed in at least 3 of the samples
-      keep <- rowSums(cpm(y)>1) >= min_n
-      y <- y[keep,,keep.lib.sizes=FALSE]
-      
-      # normalize count data
-      y=calcNormFactors(y, method = "TMM")
-      
-      # voom on normalized data
-      v <- voom(y, design1, plot=F)
-    }else{
-      keep <- rowSums(y$counts>1) >= min_n
-      y <- y[keep,,keep.lib.sizes=TRUE]
-      
-      # # voom directly on counts, if data are very noisy, as would be used for microarray
-      v <- voom(y, design1, plot=F, normalize="quantile")
-    }
-    
-    # 3.4) DEG analysis
-    fit <- lmFit(v, design1)
-    fit <- eBayes(fit,trend=TRUE, robust=TRUE)
-    
-    # results
-    results <- decideTests(fit)
-    summary(results)
-    
-    # export DEG table
-    degs = topTable(fit, coef=ncol(fit),sort.by="P",number=Inf)
-    rv$deg = degs
-    
-    # export count table
-    if(raw_or_norm == "raw"){
-      rv$deg_counts = cpm(y)
-    }else{
-      rv$deg_counts = y$counts
-    }
-    
-    # export other data
-    rv$c_var = c_var
-    rv$c_level = c_level
-    rv$t_level = t_level
-    rv$samples_c = samples_c
-    rv$samples_t = samples_t
-    
-    rv$deg_pdata = p_df
-  })
-  
 })
 
 # -------------render DEG Table, download------------

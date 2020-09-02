@@ -21,7 +21,97 @@ easyVizR/.RData
 easyVizR/.Rhistory
 easyGSEA/server/.DS_Store
 easyGSEA/server/.DS_Store
-.DS_Store
-.DS_Store
-.DS_Store
-.DS_Store
+easyGSEA/www/gmts/bta/02_Pathway/KEGG20200805.gmt
+easyGSEA/www/gmts/ssc/03_Gene Ontology/Molecular_Function20200805.gmt
+easyGSEA/www/gmts/ssc/03_Gene Ontology/Cellular_Component20200805.gmt
+easyGSEA/www/gmts/ssc/03_Gene Ontology/Biological_Process20200805.gmt
+easyGSEA/www/gmts/ssc/02_Pathway/WikiPathways20200805.gmt
+easyGSEA/www/gmts/ssc/02_Pathway/Reactome_Pathway20200805.gmt
+easyGSEA/www/gmts/ssc/02_Pathway/Reactome_Location20200805.gmt
+easyGSEA/www/gmts/ssc/02_Pathway/KEGG20200805.gmt
+easyGSEA/www/gmts/sce/07_Other/TF2DNA20200805.gmt
+easyGSEA/www/gmts/sce/03_Gene Ontology/Molecular_Function20200805.gmt
+easyGSEA/www/gmts/sce/03_Gene Ontology/Cellular_Component20200805.gmt
+easyGSEA/www/gmts/sce/03_Gene Ontology/Biological_Process20200805.gmt
+easyGSEA/www/gmts/sce/02_Pathway/WikiPathways20200805.gmt
+easyGSEA/www/gmts/sce/02_Pathway/Reactome_Pathway20200805.gmt
+easyGSEA/www/gmts/sce/02_Pathway/Reactome_Location20200805.gmt
+easyGSEA/www/gmts/sce/02_Pathway/KEGG20200805.gmt
+easyGSEA/www/gmts/rno/03_Gene Ontology/Molecular_Function20200805.gmt
+easyGSEA/www/gmts/rno/03_Gene Ontology/Cellular_Component20200805.gmt
+easyGSEA/www/gmts/rno/03_Gene Ontology/Biological_Process20200805.gmt
+easyGSEA/www/gmts/rno/02_Pathway/WikiPathways20200805.gmt
+easyGSEA/www/gmts/rno/02_Pathway/Reactome_Pathway20200805.gmt
+easyGSEA/www/gmts/rno/02_Pathway/Reactome_Location20200805.gmt
+easyGSEA/www/gmts/rno/02_Pathway/KEGG20200805.gmt
+easyGSEA/www/gmts/mmu/07_Other/TF2DNA20200805.gmt
+easyGSEA/www/gmts/mmu/03_Gene Ontology/Molecular_Function20200805.gmt
+easyGSEA/www/gmts/mmu/03_Gene Ontology/Cellular_Component20200805.gmt
+easyGSEA/www/gmts/mmu/03_Gene Ontology/Biological_Process20200805.gmt
+easyGSEA/www/gmts/mmu/02_Pathway/WikiPathways20200805.gmt
+easyGSEA/www/gmts/mmu/02_Pathway/Reactome_Pathway20200805.gmt
+easyGSEA/www/gmts/mmu/02_Pathway/Reactome_Location20200805.gmt
+easyGSEA/www/gmts/mmu/02_Pathway/KEGG20200805.gmt
+easyGSEA/www/gmts/hsa/07_Other/TF2DNA20200805.gmt
+easyGSEA/www/gmts/hsa/06_DisGeNET/DisGeNET20200805.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/h.Hallmark_Gene_Sets.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c7.Immunologic
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c6.Oncogenic
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c4.Cancer_Modules.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c4.Cancer_Gene_Neighborhoods.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c3.TFT_Legacy.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c3.TFT_GTRD.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c3.miRDB.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c3.MIR_Legacy.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c2.PID.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c2.Chemical_and_Genetic_Perturbations.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c2.BIOCARTA.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.1/c1.Positional_Gene_Sets.gmt
+easyGSEA/www/gmts/hsa/04_DrugBank v5-1-7/Nutraceuticals20200805.gmt
+easyGSEA/www/gmts/hsa/04_DrugBank v5-1-7/Illicit_Drugs20200805.gmt
+easyGSEA/www/gmts/hsa/04_DrugBank v5-1-7/Experimental_Drugs20200805.gmt
+easyGSEA/www/gmts/hsa/04_DrugBank v5-1-7/Approved_Drugs20200805.gmt
+easyGSEA/www/gmts/hsa/03_Gene Ontology/Molecular_Function20200805.gmt
+easyGSEA/www/gmts/hsa/03_Gene Ontology/Cellular_Component20200805.gmt
+easyGSEA/www/gmts/hsa/03_Gene Ontology/Biological_Process20200805.gmt
+easyGSEA/www/gmts/hsa/02_Pathway/WikiPathways20200805.gmt
+easyGSEA/www/gmts/hsa/02_Pathway/Reactome_Pathway20200805.gmt
+easyGSEA/www/gmts/hsa/02_Pathway/Reactome_Location20200805.gmt
+easyGSEA/www/gmts/hsa/02_Pathway/KEGG20200805.gmt
+easyGSEA/www/gmts/gga/03_Gene Ontology/Molecular_Function20200805.gmt
+easyGSEA/www/gmts/gga/03_Gene Ontology/Cellular_Component20200805.gmt
+easyGSEA/www/gmts/gga/03_Gene Ontology/Biological_Process20200805.gmt
+easyGSEA/www/gmts/gga/02_Pathway/WikiPathways20200805.gmt
+easyGSEA/www/gmts/gga/02_Pathway/Reactome_Pathway20200805.gmt
+easyGSEA/www/gmts/gga/02_Pathway/Reactome_Location20200805.gmt
+easyGSEA/www/gmts/gga/02_Pathway/KEGG20200805.gmt
+easyGSEA/www/gmts/dre/03_Gene Ontology/Molecular_Function20200805.gmt
+easyGSEA/www/gmts/dre/03_Gene Ontology/Cellular_Component20200805.gmt
+easyGSEA/www/gmts/dre/03_Gene Ontology/Biological_Process20200805.gmt
+easyGSEA/www/gmts/dre/02_Pathway/WikiPathways20200805.gmt
+easyGSEA/www/gmts/dre/02_Pathway/Reactome_Pathway20200805.gmt
+easyGSEA/www/gmts/dre/02_Pathway/Reactome_Location20200805.gmt
+easyGSEA/www/gmts/dre/02_Pathway/KEGG20200805.gmt
+easyGSEA/www/gmts/dme/07_Other/TF2DNA20200805.gmt
+easyGSEA/www/gmts/dme/03_Gene Ontology/Molecular_Function20200805.gmt
+easyGSEA/www/gmts/dme/03_Gene Ontology/Cellular_Component20200805.gmt
+easyGSEA/www/gmts/dme/03_Gene Ontology/Biological_Process20200805.gmt
+easyGSEA/www/gmts/dme/02_Pathway/WikiPathways20200805.gmt
+easyGSEA/www/gmts/dme/02_Pathway/Reactome_Pathway20200805.gmt
+easyGSEA/www/gmts/dme/02_Pathway/Reactome_Location20200805.gmt
+easyGSEA/www/gmts/dme/02_Pathway/KEGG20200805.gmt
+easyGSEA/www/gmts/cfa/03_Gene Ontology/Molecular_Function20200805.gmt
+easyGSEA/www/gmts/cfa/03_Gene Ontology/Cellular_Component20200805.gmt
+easyGSEA/www/gmts/cfa/03_Gene Ontology/Biological_Process20200805.gmt
+easyGSEA/www/gmts/cfa/02_Pathway/KEGG20200805.gmt
+easyGSEA/www/gmts/bta/03_Gene Ontology/Molecular_Function20200805.gmt
+easyGSEA/www/gmts/bta/03_Gene Ontology/Cellular_Component20200805.gmt
+easyGSEA/www/gmts/bta/03_Gene Ontology/Biological_Process20200805.gmt
+easyGSEA/www/gmts/bta/02_Pathway/WikiPathways20200805.gmt
+easyGSEA/www/gmts/bta/02_Pathway/Reactome_Pathway20200805.gmt
+easyGSEA/www/gmts/bta/02_Pathway/Reactome_Location20200805.gmt
+easyGSEA/www/gmts/.DS_Store
+easyGSEA/www/gmts/.DS_Store
+easyGSEA/www/gmts/.DS_Store
+easyGSEA/www/gmts/.DS_Store
+easyGSEA/www/.DS_Store

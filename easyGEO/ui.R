@@ -231,7 +231,8 @@ body <- dashboardBody(
                            )
                     ),
                     column(6,
-                           tabBox(
+                           # fluidRow(
+                             tabBox(
                                title = NULL, width = 12, height = "150px",
                                id = "sp",
                                tabPanel("Confirm data matrix", 
@@ -239,12 +240,21 @@ body <- dashboardBody(
                                         uiOutput("confirm_matrix_ui")
                                         
                                )
-                           )
+                             )
+                           # ),
+                           # br(),br(),br(),
+                           # fluidRow(
+                           #   column(12,
+                           #          uiOutput("confirm_run")
+                           #          
+                           #   )
+                           # )
+                           
                     )
                 ),
                 
                 column(
-                  width = 12, 
+                  width = 12,
                   uiOutput("confirm_run"),
                   br()
                 ),

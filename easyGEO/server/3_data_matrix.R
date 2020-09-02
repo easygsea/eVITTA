@@ -65,25 +65,53 @@ output$data_matrix_ui <- renderUI({
 
 
 # generates url links
-observe({
-  req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup" | rv$sup_source == "none")
-  
-  for (i in 1:length(rv$suplist)){
-    path = rv$suplist[[i]]
-    ftp = dirname(path)
-    rv$s[[i]] <- div(style="display: inline-block;vertical-align:top; width: 100%;",
-                     wellPanel(tagList(basename(path), br(),
-                                       a("Download", href=path), " / ",
-                                       a("FTP Folder", href=ftp),
-                     )
-                     ))
-  }
-})
-
 output$sup_links <- renderUI({
   req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup" | rv$sup_source == "none")
-  rv$s
-})
+  
+  o_list <- lapply(1:length(rv$suplist), function(i){
+    path = rv$suplist[[i]]
+    ftp = dirname(path)
+    # ftp_id = paste0("ftp",i)
+    ftpa_id = paste0("ftpa",i)
+    
+    output[[ftpa_id]] <- downloadHandler(
+      filename <- function() {
+        basename(path)
+      },
+      content <- function(file) {
+        rv$ftpy = basename(path)
+        o_file = paste0(getwd(),"/www/tmp/",basename(path))
+        if(! file.exists(o_file)){
+          curl::curl_fetch_disk(path, o_file)
+        }
+        file.copy(o_file, file)
+      }
+    )
+    
+    div(style="display: inline-block;vertical-align:top; width: 100%;",
+                     wellPanel(basename(path), br(),
+                                       # conditionalPanel(
+                                       #   "false", downloadButton(ftp_id, "Download")
+                                       # ),
+                                       downloadLink(ftpa_id,"Download")
+                                       # a("Download", href=path), " / ",
+                                       # a("FTP Folder", href=ftp),
+                     ))
+  })
+  
+  do.call(tagList, o_list)
+})    
+    
+# observe rv$ftpy, render successful modal
+observeEvent(rv$ftpy,{
+  showModal(modalDialog(
+    title = rv$ftpy,
+    "Successfully downloaded.",
+    easyClose = T,
+    footer = modalButton("Got it!")
+  ))
+})  
+ 
 
 
 # --------------- upload tidied matrix (show conditionally) ---------------
