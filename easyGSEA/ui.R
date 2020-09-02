@@ -39,7 +39,8 @@ shinyUI(
                 tags$script(src = "reactome.js")
             ),
             
-            useShinyjs(),
+            useShinyjs(), # Set up shinyjs
+            useShinyalert(),  # Set up shinyalert
             
             tabItems(
                 bodyGSEA,
