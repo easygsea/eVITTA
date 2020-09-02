@@ -163,20 +163,30 @@ output$upload_matrix_ui <- renderUI({
 # when file is uploaded, update the stored count matrix
 observeEvent(input$file, {
   inFile <- input$file
-  indf <- read.csv(inFile$datapath, header=F, 
-                   colClasses=c("character"))
+  #added try() here because there could be an error reading the file
+  indf <- try(read.csv(inFile$datapath, header=F, 
+                   colClasses=c("character")))
   
   # read in TAB delimited
   if(ncol(indf)==1){
-    indf <- read.table(inFile$datapath, sep="\t",header=F, 
-                       colClasses=c("character"))
+    indf <- try(read.table(inFile$datapath, sep="\t",header=F, 
+                       colClasses=c("character")))
   }
   
   # read in space delimited
   if(ncol(indf)==1){
-    indf <- read.table(inFile$datapath, sep=" ",header=F, 
-                       colClasses=c("character"))
+    indf <- try(read.table(inFile$datapath, sep=" ",header=F, 
+                       colClasses=c("character")))
   }
+  if(inherits(indf, "try-error")) {        
+    ErrorMessage <- conditionMessage(attr(indf, "condition"))  # the error message
+    showModal(modalDialog(
+    title = "An error has occurred",
+    paste0("Having trouble loading your file: ",ErrorMessage),
+    size = "l",
+    easyClose = FALSE
+  )) }
+  
   
   indf_coln <- unname(unlist(indf[1,])) # colnames = first row
   # print(indf_coln)
