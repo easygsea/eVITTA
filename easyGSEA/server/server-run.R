@@ -337,39 +337,66 @@
     
     # convert into ranks
     observeEvent(input$filecontent_confirm,{
-        rv$infile_confirm = "confirm"
         data = rv$data_head
         
-        # total no of genes before conversion
-        rv$total_genes = nrow(data)
-        
-        # clear rv which was used to store input file data
-        rv$data_head = NULL
-        
         if(ncol(data)==2){
+          if(is.null(input$rank_column) && is.null(input$gene_column)){
+            shinyalert("Please select the rank and the gene columns.")
+          }else if(is.null(input$rank_column)){
+            shinyalert("Please select the rank column.")
+          }else if(is.null(input$gene_column)){
+            shinyalert("Please select the gene column.")
+          }else{
+            rv$infile_confirm = "confirm"
+            
             if(is.numeric(data[[input$rank_column]])){
-                ranks <- setNames(data[[input$rank_column]], data[[input$gene_column]])
-                rv$infile_check = "pass"
-                rv$rnkgg <- ranks 
+              ranks <- setNames(data[[input$rank_column]], data[[input$gene_column]])
+              rv$infile_check = "pass"
+              rv$rnkgg <- ranks 
             }else{
-                rv$infile_check = "wrong_rnk"
+              rv$infile_check = "wrong_rnk"
             }
+          }
         }else if(ncol(data)>2){
+          if(is.null(input$gene_column) && is.null(input$logfc_column) && is.null(input$p_column)){
+            shinyalert("Please select the gene, the logFC, and the p-value columns.")
+          }else if(is.null(input$gene_column) && is.null(input$logfc_column)){
+            shinyalert("Please select the gene and the logFC columns.")
+          }else if(is.null(input$gene_column) && is.null(input$p_column)){
+            shinyalert("Please select the gene and the p-value columns.")
+          }else if(is.null(input$logfc_column) && is.null(input$p_column)){
+            shinyalert("Please select the logFC and the p-value columns.")
+          }else if(is.null(input$gene_column)){
+            shinyalert("Please select the gene column.")
+          }else if(is.null(input$logfc_column)){
+            shinyalert("Please select the logFC column.")
+          }else if(is.null(input$p_column)){
+            shinyalert("Please select the p-value column.")
+          }else{
+            rv$infile_confirm = "confirm"
+            
             genes <- data[[input$gene_column]]
             logfc <- data[[input$logfc_column]]
             pval <- data[[input$p_column]] #%>% mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
             pval[pval==0] = 0.000000001
             if(is.numeric(pval) && is.numeric(logfc)){
-                rank_values <- -log10(pval) * sign(logfc)
-                ranks <- setNames(rank_values,genes)
-                rv$infile_check = "pass"
-                rv$rnkgg <- ranks 
+              rank_values <- -log10(pval) * sign(logfc)
+              ranks <- setNames(rank_values,genes)
+              rv$infile_check = "pass"
+              rv$rnkgg <- ranks 
             }else{
-                rv$infile_check = "wrong_deg"
+              rv$infile_check = "wrong_deg"
             }
+          }
         }
         
         if(is.null(rv$rnkgg)==F){
+          # total no of genes before conversion
+          rv$total_genes = nrow(data)
+          
+          # clear rv which was used to store input file data
+          rv$data_head = NULL
+
           if(input$gene_identifier=="other"){
             # autodetect and convert into SYMBOL (if applicable) using gprofiler2
             species = isolate(input$selected_species)
@@ -407,9 +434,6 @@
             rv$rnk_check = "pass"
             rv$total_genes_after = length(rv$rnkgg)
           }
-            
-            
-            
         }
     })
     

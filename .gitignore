@@ -21,6 +21,7 @@ easyVizR/.RData
 easyVizR/.Rhistory
 easyGSEA/server/.DS_Store
 easyGSEA/server/.DS_Store
+easyGSEA/www/gmts/bta/02_Pathway/KEGG20200805.gmt
 easyGSEA/www/gmts/ssc/03_Gene Ontology/Molecular_Function20200805.gmt
 easyGSEA/www/gmts/ssc/03_Gene Ontology/Cellular_Component20200805.gmt
 easyGSEA/www/gmts/ssc/03_Gene Ontology/Biological_Process20200805.gmt
@@ -109,4 +110,7 @@ easyGSEA/www/gmts/bta/03_Gene Ontology/Biological_Process20200805.gmt
 easyGSEA/www/gmts/bta/02_Pathway/WikiPathways20200805.gmt
 easyGSEA/www/gmts/bta/02_Pathway/Reactome_Pathway20200805.gmt
 easyGSEA/www/gmts/bta/02_Pathway/Reactome_Location20200805.gmt
-easyGSEA/www/gmts/bta/02_Pathway/KEGG20200805.gmt
+easyGSEA/www/gmts/.DS_Store
+easyGSEA/www/gmts/.DS_Store
+easyGSEA/www/gmts/.DS_Store
+easyGSEA/www/gmts/.DS_Store

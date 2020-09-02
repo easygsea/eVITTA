@@ -71,14 +71,30 @@ observe({
   for (i in 1:length(rv$suplist)){
     path = rv$suplist[[i]]
     ftp = dirname(path)
+    ftp_id = paste0("ftp",i)
     rv$s[[i]] <- div(style="display: inline-block;vertical-align:top; width: 100%;",
                      wellPanel(tagList(basename(path), br(),
-                                       a("Download", href=path), " / ",
-                                       a("FTP Folder", href=ftp),
+                                       downloadLink(ftp_id,"Download")
+                                       # a("Download", href=path), " / ",
+                                       # a("FTP Folder", href=ftp),
                      )
                      ))
+    
+    # download ftp file via curl
+    output[[ftp_id]] <- downloadHandler(
+      filename <- function() {
+        basename(path)
+      },
+      content <- function(file) {
+        o_file = paste0(getwd(),"/www/tmp/",basename(path))
+        curl::curl_download(path, o_file)
+        file.copy(o_file, file)
+      }
+    )
   }
 })
+
+
 
 output$sup_links <- renderUI({
   req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup" | rv$sup_source == "none")
