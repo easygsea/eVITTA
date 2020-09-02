@@ -180,9 +180,12 @@ observeEvent(input$file, {
   }
   if(inherits(indf, "try-error")) {        
     ErrorMessage <- conditionMessage(attr(indf, "condition"))  # the error message
-    showModal(modalDialog(
-    title = "An error has occurred",
-    paste0("Having trouble loading your file: ",ErrorMessage),
+    showModal(modalDialog( #show a modal dialog if there is an error reading files causing crash
+    title = "Your input file has a wrong format",
+    HTML(paste0("Having trouble loading your file:<br>",
+      ErrorMessage,"<br>",
+      "Please revise your input file according to our notes and try again later.")),
+    #paste("Having trouble loading your file:",ErrorMessage,"Please revise your input file according to our notes and try again later",sep="\n"),
     size = "l",
     easyClose = FALSE
   )) }
