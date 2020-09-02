@@ -131,6 +131,7 @@ output$sp_select_levels_rel <- renderUI({
 # ------------- feedbacks on selected levels ---------------
 output$sp_select_levels_rel_fb <- renderUI({
   req(length(input$sp_select_levels)==2 & input$sp_select_var != input$sp_batch_col)
+  req(is.null(input$sp_select_levels_base)==F)
   
   # control level name
   c_level = input$sp_select_levels_base
