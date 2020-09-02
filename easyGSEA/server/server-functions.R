@@ -107,10 +107,10 @@
         return(NULL)
       }else{
         if(rv$run_mode == "gsea"){
-          df1 <- df %>% #dplyr::filter(ES > 0) %>%
+          df1 <- df %>% dplyr::filter(ES > 0) %>%
             dplyr::slice_max(ES,n=up)
           
-          df2 <- df  %>% #dplyr::filter(ES < 0) %>%
+          df2 <- df  %>% dplyr::filter(ES < 0) %>%
             dplyr::slice_min(ES,n=down)
           
           df <- rbind(df1,df2)
