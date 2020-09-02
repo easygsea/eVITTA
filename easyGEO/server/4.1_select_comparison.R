@@ -184,16 +184,52 @@ output$ui_samples_fb <- renderUI({
     names(samples_t) = titles_t
   }
   
-  splitLayout(
-    checkboxGroupInput(inputId = "samples_c_deg",
-                       label = c_level,
-                       choices = samples_c,
-                       selected = samples_c
+  fluidRow(
+    column(
+      width = 6,
+      pickerInput(
+        inputId = "samples_c_deg",
+        label = c_level,
+        choices = samples_c,
+        selected = samples_c,
+        options = list(
+          `actions-box` = TRUE,
+          size = 10,
+          style = "btn-default",
+          `selected-text-format` = "count > 0"
+        ),
+        multiple = TRUE
+      )
     ),
-    checkboxGroupInput(inputId = "samples_t_deg",
-                       label = t_level,
-                       choices = samples_t,
-                       selected = samples_t
+    column(
+      width = 6,
+      pickerInput(
+        inputId = "samples_t_deg",
+        label = t_level,
+        choices = samples_t,
+        selected = samples_t,
+        options = list(
+          `actions-box` = TRUE,
+          size = 10,
+          style = "btn-default",
+          `selected-text-format` = "count > 0"
+        ),
+        multiple = TRUE
+      )
     )
+    
   )
+  
+  # splitLayout(
+  #   checkboxGroupInput(inputId = "samples_c_deg",
+  #                      label = c_level,
+  #                      choices = samples_c,
+  #                      selected = samples_c
+  #   ),
+  #   checkboxGroupInput(inputId = "samples_t_deg",
+  #                      label = t_level,
+  #                      choices = samples_t,
+  #                      selected = samples_t
+  #   )
+  # )
 })
