@@ -313,15 +313,15 @@
         rv$run = NULL
         
         rv$rnkll <- strsplit(isolate(rv$infile_name),"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1] # add value to rv
-        ranks <- read_delim(isolate(rv$infile_path), "," , escape_double = FALSE, trim_ws = TRUE)
-        ranks = ranks[complete.cases(ranks), ]
-        
+        ranks <- read_delim(isolate(rv$infile_path), ",")# , escape_double = FALSE, trim_ws = TRUE)
+
         # print(str(head(ranks)))
         if(ncol(ranks)==1){
-            ranks <- read_delim(isolate(rv$infile_path), "\t" , escape_double = FALSE, trim_ws = TRUE)
-            ranks = ranks[complete.cases(ranks), ]
+            ranks <- read_delim(isolate(rv$infile_path), "\t")# , escape_double = FALSE, trim_ws = TRUE)
         }
-        
+        ranks =  ranks %>% #[complete.cases(ranks), ]
+          dplyr::select_if(~sum(!is.na(.)) > 0)
+
         # detect if RNK or DEG
         if(ncol(ranks)==2){
             rv$rnk_or_deg = "rnk"
