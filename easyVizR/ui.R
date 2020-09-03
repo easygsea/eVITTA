@@ -61,6 +61,17 @@ body <- dashboardBody(
   
   # -------------- Load Dependencies -------------------
   
+    # customTheme, ### changing theme
+  
+  # shinyDashboardThemes(
+  #   theme = "poor_mans_flatly"
+  # ),
+  
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
+  ),
+  
+  
     rintrojs::introjsUI(), # introjs
     useShinyjs(), # shinyJS
     
