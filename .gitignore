@@ -21,3 +21,8 @@ easyVizR/.RData
 easyVizR/.Rhistory
 easyGSEA/server/.DS_Store
 easyGSEA/server/.DS_Store
+easyVizR/.Rapp.history
+*.history
+easyVizR/.Rhistory
+easyVizR/rsconnect/shinyapps.io/easygsea/easyDEG.dcf
+*.dcf
