@@ -87,7 +87,7 @@ output$n_ui_basic <- renderUI({
   req(rv$n_ui_showpanel == "Heatmap")
   div(
     heatmap_panel(),
-    hm_table_panel()
+    # hm_table_panel()
     
   )
   
@@ -97,7 +97,7 @@ output$n_ui_basic <- renderUI({
 heatmap_panel <- reactive({
   #----------------- heatmap --------------------
   box(
-    title = span( icon("chart-area"), "Heatmap"), status = "primary", solidHeader = TRUE, width=8,
+    title = span( icon("chart-area"), "Heatmap"), status = "primary", solidHeader = F, width=8,
     
     div(id="n1_3",
         uiOutput("n_heatmap")
@@ -131,7 +131,7 @@ heatmap_panel <- reactive({
 hm_table_panel <- reactive({
   #----------------- table --------------------
   box(
-    title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12, height="610px",
+    title = span( icon("table"), "Table"), status = "primary", solidHeader = F, width=12, height="610px",
     
     div(id="n1_4", 
         dataTableOutput("df_n_tbl")
@@ -160,7 +160,6 @@ output$n_ui_intersect <- renderUI({
   
   div(
     
-    
     #----------------- venn --------------------
     
     conditionalPanel("output.n_venn_status == 'ok'",
@@ -182,16 +181,14 @@ output$n_ui_intersect <- renderUI({
                      uiOutput("n_upset_placeholder")
     ),
     
-    #----------------- Intersect table--------------------
     
-    ins_table_panel()
     
   )
 })
 
 #----------------- venn --------------------
 ins_venn_panel <- reactive({
-  box(title = span( icon("chart-area"), "Venn Diagram"), status = "primary", solidHeader = TRUE, width=6,
+  box(title = span( icon("chart-area"), "Venn Diagram"), status = "primary", solidHeader = F, width=6,
       
       tabBox(width=12,
              tabPanel("Basic",
@@ -240,7 +237,7 @@ ins_venn_panel <- reactive({
 ins_upset_panel <- reactive({
   
   box(
-    title = span( icon("chart-area"), "UpSet Plot"), status = "primary", solidHeader = TRUE, width=6,
+    title = span( icon("chart-area"), "UpSet Plot"), status = "primary", solidHeader = F, width=6,
     
     plotOutput("df_n_upset", width = "100%"),
     
@@ -278,29 +275,141 @@ ins_upset_panel <- reactive({
 
 output$n_venn_placeholder <- renderUI({
   box(
-    title = span( icon("chart-area"), "Venn Diagram"), status = "warning", solidHeader = TRUE, width=6,
+    title = span( icon("chart-area"), "Venn Diagram"), status = "warning", solidHeader = F, width=6,
     paste0("Venn diagram is only available for 5 or less datasets. You have selected ", length(rv$nx_i)," datasets.")
   )
 })
 output$n_upset_placeholder <- renderUI({
   box(
-    title = span( icon("chart-area"), "UpSet Plot"), status = "warning", solidHeader = TRUE, width=6,
+    title = span( icon("chart-area"), "UpSet Plot"), status = "warning", solidHeader = F, width=6,
     paste0("UpSet plot is only available for 5 or less datasets. You have selected ", length(rv$nx_i)," datasets.")
   )
 })
 
 #----------------- table --------------------
+
+# summarizes verbally the filters used to trim gene lists
+output$filters_summary <- renderUI({
+  
+  desc <-list()
+  
+  for (i in 1:length(rv$nx_n)){
+    req(rv[[paste0("nic_p_",i)]])
+    req(rv[[paste0("nic_q_",i)]])
+    req(rv[[paste0("nic_Stat_",i)]])
+    req(rv[[paste0("nic_sign_",i)]])
+    
+    name <- rv$nx_n[[i]]
+    cur_p <- rv[[paste0("nic_p_",i)]]
+    cur_q <- rv[[paste0("nic_q_",i)]]
+    cur_Stat <- rv[[paste0("nic_Stat_",i)]]
+    if (rv[[paste0("nic_sign_",i)]]=="All"){
+      cur_sign = "Positive and Negative"
+    } else {
+      cur_sign <- rv[[paste0("nic_sign_",i)]]
+    }
+    
+    nterms <- length(n_ins_gls()[[i]]) # number of genes in genelist
+    
+    adddesc <- paste(name, ": ",
+                     nterms, " ",
+                     cur_sign, " entries with ",
+                     "p <= ",cur_p, ", ", 
+                     "FDR <= ", cur_q, ", ", 
+                     "|Stat| >= ", cur_Stat,
+                     sep="")
+    desc <- c(desc, adddesc)
+  }
+  text <- paste(desc, collapse="<br>")
+  
+  
+  HTML(text)
+})
+
+# summarizes verbally what is in the selected intersection
+output$intersection_summary <- renderUI({
+  req(is.null(rv$ins_criteria)==F)
+  req(length(rv$ins_criteria)>0)
+  
+  desc <-list()
+  criteria <- rv$ins_criteria
+  
+  for (i in 1:length(rv$nx_n)){
+    req(is.null(rv[[paste0("nic_p_",i)]])==F)
+    req(is.null(rv[[paste0("nic_q_",i)]])==F)
+    req(is.null(rv[[paste0("nic_Stat_",i)]])==F)
+    req(is.null(rv[[paste0("nic_sign_",i)]])==F)
+    
+    name <- rv$nx_n[[i]]
+    cur_p <- rv[[paste0("nic_p_",i)]]
+    cur_q <- rv[[paste0("nic_q_",i)]]
+    
+    cur_Stat <- rv[[paste0("nic_Stat_",i)]]
+    req(is.null(criteria[[name]])==F)
+    if (is.na(criteria[[name]])==T){
+      stat_text=""
+    } else if (is.na(criteria[[name]])==F){
+      if (rv[[paste0("nic_sign_",i)]]=="All"){
+        stat_text <- paste0("|Stat| >= ", cur_Stat)
+      } else if (rv[[paste0("nic_sign_",i)]]=="Positive"){
+        stat_text <- paste0("Stat >= ", cur_Stat)
+      } else if (rv[[paste0("nic_sign_",i)]]=="Negative") {
+        stat_text <- paste0("Stat <=  ", cur_Stat)
+      }
+    } else if (criteria[[name]]==F){
+      if (rv[[paste0("nic_sign_",i)]]=="All"){
+        stat_text <- paste0("|Stat| < ", cur_Stat)
+      } else if (rv[[paste0("nic_sign_",i)]]=="Positive"){
+        stat_text <- paste0("Stat < ", cur_Stat)
+      } else if (rv[[paste0("nic_sign_",i)]]=="Negative") {
+        stat_text <- paste0("Stat >  ", cur_Stat)
+      }
+    }
+    
+    
+    if (is.na(criteria[[name]])==F){
+      if (criteria[[name]]==T){
+        adddesc <- paste(
+          "p <= ",cur_p, " AND ", 
+          "FDR <= ", cur_q, " AND ", 
+          stat_text,
+          " in ", name,
+          sep="")
+      } else if (criteria[[name]]==F){
+        adddesc <- paste(
+          "p > ",cur_p, " OR ", 
+          "FDR > ", cur_q, " OR ", 
+          stat_text, 
+          " in ", name,
+          sep="")
+      } 
+      # only append a description when it's not on ignore
+      desc <- c(desc, adddesc)
+    }
+    
+
+    
+  }
+  text <- paste(desc, collapse="; <br>")
+  
+  
+  HTML(text)
+})
+
+
 ins_table_panel <- reactive({
   
   box(
-    width = 12, status = "primary",solidHeader = T, height=750,
-    title = span(icon("table"),"View intersections"),
+    width = 12, status = "primary",solidHeader = F, height=750,
+    title = span(icon("table"),"Select and view intersection"),
     
     div(id="n2_4",
         
         wellPanel(
+          
           "Combine options below to view specific intersections: ",br(),br(),
-          uiOutput("ui_intersections")
+          uiOutput("ui_intersections"),
+          uiOutput("intersection_summary")
         ),
     ),
     
@@ -409,13 +518,13 @@ output$n_ui_scatter <- renderUI({
       
     ),
     
-    fluidRow(
-      column(12,
-             sc_table_panel()
-             
-      )
-      
-    )
+    # fluidRow(
+    #   column(12,
+    #          sc_table_panel()
+    #          
+    #   )
+    #   
+    # )
     
   )
 })
@@ -423,7 +532,7 @@ output$nxy_sc_panel <- renderUI({
   req(rv$nxy_selected_z =="None")
   
   box(
-    title = span( icon("chart-area"), "Scatter"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("chart-area"), "Scatter"), status = "primary", solidHeader = F, width=12,
     
     plotlyOutput("df_nxy_scatter",
                  width = "100%",height = "600px")
@@ -490,7 +599,7 @@ output$nxy_sc_cor_panel <- renderUI({
   req(rv$nxy_selected_z =="None")
   
   box(
-    title = span( icon("calculator"), "Correlation"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("calculator"), "Correlation"), status = "primary", solidHeader = F, width=12,
     
     uiOutput("nxy_corline"),br(),
     verbatimTextOutput("nxy_cor_summary")
@@ -503,7 +612,7 @@ output$nxy_3ds_panel <- renderUI({
   req(rv$nxy_selected_z !="None")
   
   box(
-    title = span( icon("chart-area"), "3D Scatter"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("chart-area"), "3D Scatter"), status = "primary", solidHeader = F, width=12,
     plotlyOutput("df_n_3ds",
                  width = "100%",height = "600px"),
     
@@ -575,7 +684,7 @@ output$nxy_3ds_panel <- renderUI({
 sc_table_panel <- reactive({
   
   box(
-    title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("table"), "Table"), status = "primary", solidHeader = F, width=12,
     
     div(id="n3_4",
         dataTableOutput("df_nxy_tbl", width = "100%",height="100%") 
@@ -670,19 +779,19 @@ observe({
                                          ),
                                          
                                        ),
-                                       fluidRow(
-                                         column(4,offset=1, align = "left",
-                                                checkboxInput(
-                                                  inputId= "nic_apply",
-                                                  label = "Apply",
-                                                  value = T)),
-                                         column(7, align = "left",
-                                                checkboxInput(
-                                                  inputId= "nic_na",
-                                                  label = "Show NAs",
-                                                  value = T, ))
-                                         
-                                       ),
+                                       # fluidRow(
+                                       #   column(4,offset=1, align = "left",
+                                       #          checkboxInput(
+                                       #            inputId= "nic_apply",
+                                       #            label = "Apply",
+                                       #            value = T)),
+                                       #   column(7, align = "left",
+                                       #          checkboxInput(
+                                       #            inputId= "nic_na",
+                                       #            label = "Show NAs",
+                                       #            value = T, ))
+                                       # 
+                                       # ),
                                        actionButton("nic_applytoall", "Apply to all"),
                                        actionButton("nic_resetall", "Reset all"),
                                        
@@ -721,20 +830,21 @@ observe({
                                                              selected="All",size="s",direction = "horizontal"),
                                     ),
                                     
-                                  ),
-                                  fluidRow(
-                                    column(4,offset=1, align = "left",
-                                           checkboxInput(
-                                             inputId= paste0("nic_apply_",i),
-                                             label = "Apply",
-                                             value = T)),
-                                    column(7, align = "left",
-                                           checkboxInput(
-                                             inputId= paste0("nic_na_",i),
-                                             label = "Show NAs",
-                                             value = T, ))
-                                    
                                   )
+                                  # ,
+                                  # fluidRow(
+                                  #   column(4,offset=1, align = "left",
+                                  #          checkboxInput(
+                                  #            inputId= paste0("nic_apply_",i),
+                                  #            label = "Apply",
+                                  #            value = T)),
+                                  #   column(7, align = "left",
+                                  #          checkboxInput(
+                                  #            inputId= paste0("nic_na_",i),
+                                  #            label = "Show NAs",
+                                  #            value = T, ))
+                                  # 
+                                  # )
                                   ,style = "padding: 15px;background:#e6f4fc;")
     )
   }
@@ -798,11 +908,12 @@ output$n_panels <- renderUI({
   else{
     div(
       fluidRow(
+        
         column(6,
                div(id="n1_1",
                    radioGroupButtons("n_ui_showpanel",
-                                     choices=c("Heatmap", "Intersection", "Scatter"),
-                                     selected="Heatmap", status="primary",
+                                     choices=c("Intersection", "Heatmap", "Scatter"),
+                                     selected="Intersection", status="primary",
                                      checkIcon = list(
                                        yes = tags$i(class = "fa fa-check-square", 
                                                     style = "color: white"),
@@ -824,10 +935,23 @@ output$n_panels <- renderUI({
         )
       ),
       
+      fluidRow(
+        column(12,
+               box(
+                 width = 12, status = "primary",solidHeader = F,
+                 title = span(icon("table"),"Filter summary"),
+                 uiOutput("filters_summary")
+               ),
+               
+        ),
+      ),
       
-      uiOutput("n_ui_basic"),
       uiOutput("n_ui_intersect"),
-      uiOutput("n_ui_scatter")
+      uiOutput("n_ui_basic"),
+      uiOutput("n_ui_scatter"),
+      #----------------- Intersect table--------------------
+      
+      ins_table_panel()
       
       
     )   

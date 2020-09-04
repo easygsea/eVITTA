@@ -101,7 +101,7 @@ observeEvent(input$n_use_data,{
     rv$iso_sharedcols<- isolate(rv$n_sharedcols) # shared cols
     
     # current panel
-    rv$n_ui_showpanel <- "Heatmap"
+    rv$n_ui_showpanel <- "Intersection"
     
     # input genelist
     rv$n_igl <- ""
@@ -338,7 +338,6 @@ n_ins_ss <- reactive({
   
   df <- rv$df_n
   
-  
   glm <- n_ins_glm()
   
   # get subset of genes based on t/f table
@@ -355,6 +354,17 @@ n_ins_fgl <- reactive({
   genelist <- rownames(subset) # these are gene list
   genelist
   
+})
+
+# full raw df to be used for other visualizations in other tabs
+n_ins_full <- reactive({
+  req(length(rv$ins_criteria)>0)
+  req(length(rv$ins_criteria)==length(rv$nx_i))
+  
+  df <- rv$df_n # full df to subset
+  genelist <- n_ins_fgl() # list of genes to show in table
+  df <- df[df$Name %in% genelist,] # extract the rows from full df
+  df
 })
 
 # 5. subsets full df based on ss and filtered gl

@@ -1,72 +1,73 @@
-####-------------------- table ------------------------####
-
-df_n_tbl <- reactive({
-  
-  df <- n_basic_df()
-  
-  # tidy row names
-  if (nrow(df)>0){rownames(df) <- seq(1,nrow(df),1)}
-  
-  # to replace the stat col names
-  colnames(df) <- gsub("Stat", rv$tt[[rv$nx_i[[1]]]], colnames(df))
-  
-  df
-})
-
-# display table
-output$df_n_tbl <- DT::renderDataTable({
-  #req(length(rv$ll) >= 1)
-  req(rv$df_n)
-  
-  df <- df_n_tbl()
-  
-  rv$df_n_fullcols <- colnames(df)
-  
-  # to abbreviate the long column names...take first 5 letters
-  char_limit <- 56 / length(colnames(df))
-  # print(char_limit)
-  colnames(df) <- sapply(names(df), function(x){
-    if (nchar(x)>char_limit)
-    {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
-    else{return (x)}
-  })
-  
-  # to round everything down to 3 decimals
-  df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., 3))
-  
-  
-  df
-  
-  
-}, plugins = "ellipsis",
-options = list(scrollX=TRUE, 
-               columnDefs = list(
-                 list(
-                   targets = 1,
-                   render = JS("$.fn.dataTable.render.ellipsis( 17, true )")
-                 ),
-                 list(
-                   targets = "_all",
-                   render = JS("$.fn.dataTable.render.ellipsis( 6, true )")
-                 )
-               ),
-               headerCallback= JS("function(thead, data, start, end, display){",
-                                  sprintf("  var tooltips = [%s];", toString(paste0("'", rv$df_n_fullcols, "'"))),
-                                  "  for(var i = 1; i <= tooltips.length; i++){",
-                                  "    $('th:eq('+i+')',thead).attr('title', tooltips[i-1]);",
-                                  "  }",
-                                  "}")))
-
-
-
-# download current df
-output$download_n_df <- downloadHandler(
-  filename = function() {
-    paste("data", "-", "multiple", "-", Sys.Date(), ".csv", sep="")},
-  content = function(file) {
-    write.csv(df_n_tbl(), file, 
-              row.names = F, quote=TRUE)})
-
+# ####-------------------- table ------------------------####
+# 
+# df_n_tbl <- reactive({
+#   
+#   # df <- n_basic_df()
+#   df <- n_ins_full()
+#   
+#   # tidy row names
+#   if (nrow(df)>0){rownames(df) <- seq(1,nrow(df),1)}
+#   
+#   # to replace the stat col names
+#   colnames(df) <- gsub("Stat", rv$tt[[rv$nx_i[[1]]]], colnames(df))
+#   
+#   df
+# })
+# 
+# # display table
+# output$df_n_tbl <- DT::renderDataTable({
+#   #req(length(rv$ll) >= 1)
+#   req(rv$df_n)
+#   
+#   df <- df_n_tbl()
+#   
+#   rv$df_n_fullcols <- colnames(df)
+#   
+#   # to abbreviate the long column names...take first 5 letters
+#   char_limit <- 56 / length(colnames(df))
+#   # print(char_limit)
+#   colnames(df) <- sapply(names(df), function(x){
+#     if (nchar(x)>char_limit)
+#     {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
+#     else{return (x)}
+#   })
+#   
+#   # to round everything down to 3 decimals
+#   df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., 3))
+#   
+#   
+#   df
+#   
+#   
+# }, plugins = "ellipsis",
+# options = list(scrollX=TRUE, 
+#                columnDefs = list(
+#                  list(
+#                    targets = 1,
+#                    render = JS("$.fn.dataTable.render.ellipsis( 17, true )")
+#                  ),
+#                  list(
+#                    targets = "_all",
+#                    render = JS("$.fn.dataTable.render.ellipsis( 6, true )")
+#                  )
+#                ),
+#                headerCallback= JS("function(thead, data, start, end, display){",
+#                                   sprintf("  var tooltips = [%s];", toString(paste0("'", rv$df_n_fullcols, "'"))),
+#                                   "  for(var i = 1; i <= tooltips.length; i++){",
+#                                   "    $('th:eq('+i+')',thead).attr('title', tooltips[i-1]);",
+#                                   "  }",
+#                                   "}")))
+# 
+# 
+# 
+# # download current df
+# output$download_n_df <- downloadHandler(
+#   filename = function() {
+#     paste("data", "-", "multiple", "-", Sys.Date(), ".csv", sep="")},
+#   content = function(file) {
+#     write.csv(df_n_tbl(), file, 
+#               row.names = F, quote=TRUE)})
+# 
 
 
 
@@ -158,7 +159,8 @@ n_hm_plt <- reactive({
   
   withProgress(message = 'Drawing heatmap...', value = 0, {
     
-    df <- n_basic_df()
+    # df <- n_basic_df()
+    df <- n_ins_full()
     
     rownames(df) <- df$Name # put genename as index
     

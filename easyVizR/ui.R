@@ -28,7 +28,7 @@ sidebar <- dashboardSidebar(
                 
                 menuItem("Multiple Datasets", tabName="tab3", icon=icon("vials")),
                 
-                tags$hr(style="border-color: #808080; margin:10px;"),
+                tags$hr(style="border-color: #48617b;margin: 8px;"),
                 
                 
                 # ---------------- options panels -------------------
@@ -68,7 +68,10 @@ body <- dashboardBody(
   # ),
   
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+    # tags$link(rel = "stylesheet", type = "text/css", href = "stylesheet.css"),
+    # tags$link(rel = "stylesheet", type = "text/css", href = "colormind-paper-dashboard.css")
+    # tags$link(rel = "stylesheet", type = "text/css", href = "yeti.css"),
   ),
   
   
