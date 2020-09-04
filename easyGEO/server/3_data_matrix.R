@@ -178,19 +178,21 @@ observeEvent(input$file, {
     indf <- try(read.table(inFile$datapath, sep=" ",header=F, 
                        colClasses=c("character")))
   }
+  
   if(inherits(indf, "try-error")) {        
     ErrorMessage <- conditionMessage(attr(indf, "condition"))  # the error message
-    showModal(modalDialog( #show a modal dialog if there is an error reading files causing crash
+    #show a modal dialog if there is an error reading files causing crash
+    showModal(modalDialog( 
     title = "Your input file has a wrong format",
     HTML(paste0("Having trouble loading your file:<br>",
       ErrorMessage,"<br>",
-      "Please revise your input file according to our notes and try again later.")),
-    #paste("Having trouble loading your file:",ErrorMessage,"Please revise your input file according to our notes and try again later",sep="\n"),
+      "Please revise your input file according to our notes and reupload the file.")),
     size = "l",
     easyClose = FALSE
-  )) }
+    )) }
   
-  
+
+  req(!inherits(indf, "try-error")) #require to be no error to proceed the following codes
   indf_coln <- unname(unlist(indf[1,])) # colnames = first row
   # print(indf_coln)
   indf_rown <- unname(unlist(indf[,1])) # rownames = first col

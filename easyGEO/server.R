@@ -118,7 +118,8 @@ shinyServer(function(input, output, session) {
     # filtered_data_df()
     # updates rv$dmdf
     
-    
+
+    #This part accompanies refresh button in modal dialog
     
     ####---------------------- 4.1. SELECT COMPARISON  ---------------------------####
     

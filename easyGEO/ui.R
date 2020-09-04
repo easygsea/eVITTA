@@ -35,6 +35,8 @@ sidebar <- dashboardSidebar(
 loadMsg = "easyGEO"
 
 body <- dashboardBody(
+  #shinyjs::useShinyjs(),# dependencies
+  #shinyjs::extendShinyjs(text = "shinyjs.refresh = function() { location.reload(); }"),# extend by adding a refresh function
   use_waiter(), # dependencies
   waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else 
     
