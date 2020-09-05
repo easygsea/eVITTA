@@ -356,7 +356,7 @@ output$run_summary_gsea <- renderUI({
         fluidRow(
             box(
                 background = "red", width = 12,
-                HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if species matches your query or adjust parameters accordingly.")
+                HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if species matches your query and/or if your input file is correct.")
             )
         )
     }
