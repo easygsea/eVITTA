@@ -231,3 +231,60 @@ filter_by_sign <- function(df, colname, sign, tolerate=F){
   }
   return(df)
 }
+
+
+# get cols or colnames by class
+#------------------------------------
+# output_type: statnames = the statistic name only, (e.g. PValue)
+# colnames = full names of all the fitting cols
+# cols = Name column, plus all the fitting cols content
+
+get_cols_by_class <- function(df, FUN, output_type="statnames"){
+  # get all numeric columns
+  num_cols <- lapply(seq_along(df), function(x){
+    if (FUN(df[[x]])){
+      colnames(df)[[x]]
+    }
+  })
+  num_cols <- na.omit(unlist(num_cols))
+  
+  if (output_type=="statnames"){
+    # get the strings before underscore and filter out the unique ones
+    out <- unique(unlist(lapply(num_cols, function(x){
+      strsplit(x, "_")[[1]][[1]]
+    })))
+    
+  } else if (output_type=="colnames"){
+    out <- num_cols
+  } else if (output_type=="cols"){
+    # get the Name column and the cols content
+    out <- df[,unique(c("Name", num_cols))]
+  }
+  
+  out
+}
+
+# example: get_cols_by_class(df, is.numeric, output_type="cols")
+
+
+
+
+# generate summary df for factor column (e.g. color)
+# -------------------------------------------
+
+summarize_factor_column <- function(df, colname="color"){
+  # generate properties table
+  summary <- c("total"=nrow(df), table(df[[colname]]))
+  summary_df <- t(data.frame(as.list(summary)))
+  summary_df <- data.frame(summary_df)
+  # add genes to the table
+  unicl <- unique(df[[colname]])
+  gene_cats <- lapply(unicl, function(x){
+    gl <- df[which(df[[colname]]==x),][["Name"]]
+    paste(gl, collapse=" ")
+  })
+  gene_cats <- c(paste(df$Name, collapse=" "),gene_cats)
+  summary_df$genes <- unlist(gene_cats)
+  colnames(summary_df) <- c("n","Names")
+  summary_df
+}

@@ -196,6 +196,8 @@ n_venn_plt <- reactive({
 output$df_n_venn <- renderPlot({
   req(length(n_ins_gls())>0)
   req(max(lengths(n_ins_gls()))>0)
+  req(rv$n_venn_type=="Area-proportional")
+  
   n_venn_plt()
 })
 
@@ -233,12 +235,26 @@ n_npvenn_plt <- reactive({
 output$df_n_npvenn <- renderPlot({
   req(length(n_ins_gls())>0)
   req(max(lengths(n_ins_gls()))>0)
-  
+  req(rv$n_venn_type=="Basic")
   
   
   
   grid.draw(n_npvenn_plt())
   
+  
+})
+
+
+#------------------- Conditionally show either Venn -------------------
+
+output$n_venn_ui <- renderUI({
+  req(is.null(rv$n_venn_type)==F)
+  
+  if (rv$n_venn_type=="Basic"){
+    plotOutput("df_n_npvenn", width="100%")
+  } else if (rv$n_venn_type=="Area-proportional"){
+    plotOutput("df_n_venn", width="100%")
+  }
   
 })
 

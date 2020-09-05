@@ -114,7 +114,19 @@ heatmap_panel <- reactive({
           up = TRUE, width=300
         )
     ),
-    div(style = "position: absolute; left: 4em; bottom: 1em", id="n1_3c",
+    div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;", id="n1_3c",
+        dropdown(
+          materialSwitch(
+            inputId = "n_hm_ylabs", label = "Show y labels?", status="primary",
+            value = FALSE
+          )
+          ,
+          size = "xs",
+          icon = icon("palette", class = "opt"),
+          up = TRUE
+        )
+    ),
+    div(style = "position: absolute; left: 7em; bottom: 1em", id="n1_3c",
         dropdown(
           downloadButton("n_hm_dl", "Download plot")
           ,
@@ -190,17 +202,7 @@ output$n_ui_intersect <- renderUI({
 ins_venn_panel <- reactive({
   box(title = span( icon("chart-area"), "Venn Diagram"), status = "primary", solidHeader = F, width=6,
       
-      tabBox(width=12,
-             tabPanel("Basic",
-                      plotOutput("df_n_npvenn", width="100%")
-             ),
-             tabPanel("Area proportional",
-                      plotOutput("df_n_venn", width="100%")
-             )
-             
-      ),
-      
-      
+      uiOutput("n_venn_ui"),
       
       div(style = "position: absolute; left: 1em; bottom: 1em", 
           dropdown(
@@ -210,6 +212,12 @@ ins_venn_panel <- reactive({
               choices = c("Counts"="counts", "Percent"="percent"),
               selected="counts",
               inline=T, width="250px"
+            ),
+            radioGroupButtons(
+              inputId = "n_venn_type",
+              label = "Venn type:",
+              choices = c("Basic","Area-proportional"),
+              selected= "Basic", direction="horizontal"
             )
             ,
             size = "xs",
@@ -303,10 +311,11 @@ output$filters_summary <- renderUI({
     cur_p <- rv[[paste0("nic_p_",i)]]
     cur_q <- rv[[paste0("nic_q_",i)]]
     cur_Stat <- rv[[paste0("nic_Stat_",i)]]
-    if (rv[[paste0("nic_sign_",i)]]=="All"){
+    cur_sign <- rv[[paste0("nic_sign_",i)]]
+    if (cur_sign=="All"){
       cur_sign = "Positive and Negative"
     } else {
-      cur_sign <- rv[[paste0("nic_sign_",i)]]
+      cur_sign <- cur_sign
     }
     
     nterms <- length(n_ins_gls()[[i]]) # number of genes in genelist
@@ -343,43 +352,60 @@ output$intersection_summary <- renderUI({
     name <- rv$nx_n[[i]]
     cur_p <- rv[[paste0("nic_p_",i)]]
     cur_q <- rv[[paste0("nic_q_",i)]]
-    
     cur_Stat <- rv[[paste0("nic_Stat_",i)]]
+    cur_sign <- rv[[paste0("nic_sign_",i)]]
+    
+    
     req(is.null(criteria[[name]])==F)
-    if (is.na(criteria[[name]])==T){
+    if (is.na(criteria[[name]])==T){ # if NA
       stat_text=""
-    } else if (is.na(criteria[[name]])==F){
-      if (rv[[paste0("nic_sign_",i)]]=="All"){
-        stat_text <- paste0("|Stat| >= ", cur_Stat)
-      } else if (rv[[paste0("nic_sign_",i)]]=="Positive"){
-        stat_text <- paste0("Stat >= ", cur_Stat)
-      } else if (rv[[paste0("nic_sign_",i)]]=="Negative") {
-        stat_text <- paste0("Stat <=  ", cur_Stat)
-      }
-    } else if (criteria[[name]]==F){
-      if (rv[[paste0("nic_sign_",i)]]=="All"){
-        stat_text <- paste0("|Stat| < ", cur_Stat)
-      } else if (rv[[paste0("nic_sign_",i)]]=="Positive"){
+    } else if (criteria[[name]]==F){ # if FALSE
+      if (cur_p<1){ # p cutoff is only meaningful if <1
+        p_text <- paste0("p > ",cur_p)
+      } else {p_text <- NA}
+      if (cur_q<1){ # q cutoff is only meaningful if <1
+        q_text <- paste0("q > ",cur_q)
+      } else {q_text <- NA}
+      
+      if (cur_sign=="All"){ # if FALSE and ALL
+        if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
+          stat_text <- paste0("|Stat| < ", cur_Stat)
+        } else {stat_text <- NA} 
+      } else if (cur_sign=="Positive"){ # if FALSE and POS
         stat_text <- paste0("Stat < ", cur_Stat)
-      } else if (rv[[paste0("nic_sign_",i)]]=="Negative") {
+      } else if (cur_sign=="Negative") { # if FALSE and NEG
         stat_text <- paste0("Stat >  ", cur_Stat)
       }
-    }
-    
+    } else if (criteria[[name]]==T){ # if TRUE
+      if (cur_p<1){
+        p_text <- paste0("p <= ",cur_p)
+      } else {p_text <- NA}
+      if (cur_q<1){
+        q_text <- paste0("q <= ",cur_q)
+      } else {q_text <- NA}
+      
+      if (cur_sign=="All"){ # if TRUE and ALL
+        if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
+          stat_text <- paste0("|Stat| >= ", cur_Stat) 
+        } else {stat_text <- NA} 
+      } else if (cur_sign=="Positive"){ # if TRUE and POS
+        stat_text <- paste0("Stat >= ", cur_Stat)
+      } else if (cur_sign=="Negative") { # if TRUE and NEG
+        stat_text <- paste0("Stat <=  ", cur_Stat)
+      }
+    } 
     
     if (is.na(criteria[[name]])==F){
       if (criteria[[name]]==T){
+        cond_string <- paste(na.omit(c(p_text, q_text, stat_text)), collapse=" AND ")
         adddesc <- paste(
-          "p <= ",cur_p, " AND ", 
-          "FDR <= ", cur_q, " AND ", 
-          stat_text,
+          cond_string,
           " in ", name,
           sep="")
       } else if (criteria[[name]]==F){
+        cond_string <- paste(na.omit(c(p_text, q_text, stat_text)), collapse=" OR ")
         adddesc <- paste(
-          "p > ",cur_p, " OR ", 
-          "FDR > ", cur_q, " OR ", 
-          stat_text, 
+          cond_string,
           " in ", name,
           sep="")
       } 
@@ -409,6 +435,7 @@ ins_table_panel <- reactive({
           
           "Combine options below to view specific intersections: ",br(),br(),
           uiOutput("ui_intersections"),
+          strong("Active filters:"),
           uiOutput("intersection_summary")
         ),
     ),
@@ -429,13 +456,14 @@ ins_table_panel <- reactive({
           
           size = "xs",
           icon = icon("gear", class = "opt"),
-          up = TRUE, width=300
+          up = TRUE
         )
         
     ),
     
     div(style = "position: absolute; left: 4em; bottom: 1em", id="n2_4b",
         dropdown(
+          column(12, "Text enrichment:"),
           column(8,
                  column(2, textInput("n_ins_wc_sep", "Separator:", value="_")),
                  column(10, textInput("n_ins_Wc_ignore", "Ignore strings: (separated by spaces)", value="and or of GO KEGG WP")),
@@ -539,37 +567,45 @@ output$nxy_sc_panel <- renderUI({
     ,
     div(style = "position: absolute; left: 1em; bottom: 1em",
         dropdown(
+          radioButtons(
+            inputId = "nxy_colormode",
+            label = "Represent significance by:",
+            choices = c("None", "Two colors", "Color and size")
+            ),
+          uiOutput("nxy_colormode_options"),
           
-          radioGroupButtons("n_sc_logic",
-                            label = "Cutoff mode:",
-                            choices=c("OR" ="Either", "AND" = "Both"),
-                            selected="Both",size="s")
-          , 
-          uiOutput("nxy_logic_caption"),
+
           size = "xs",
-          icon = icon("cut", class = "opt"),
-          up = TRUE, width=200
+          icon = icon("gear", class = "opt"),
+          up = TRUE, width=230
         )
     ),
     div(style = "position: absolute; left: 4em; bottom: 1em",
         dropdown(
-          uiOutput("nxy_colormode"),
-          uiOutput("nxy_sig"),
-          uiOutput("nxy_thresh"),
+          
           numericInput(
             inputId = "nxy_sc_size",
             label = "Dot size:",
             value = 3, step=0.5, width="100px")
           ,
           size = "xs",
-          icon = icon("gear", class = "opt"),
-          up = TRUE, width=230
+          icon = icon("palette", class = "opt"),
+          up = TRUE, width=200
         )
     ),
     div(style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
-          downloadButton("scatter_nxy_dl", "Download plot")
-          ,
+          uiOutput("nxy_color_summary_panel"),
+          
+          size = "xs",
+          icon = icon("eye-dropper", class = "opt"),
+          up = TRUE, width=300
+        )
+    ),
+    div(style = "position: absolute; left: 10em; bottom: 1em",
+        dropdown(
+          downloadButton("scatter_nxy_dl", "Download plot"),
+          
           size = "xs",
           icon = icon("download", class = "opt"),
           up = TRUE
@@ -580,20 +616,7 @@ output$nxy_sc_panel <- renderUI({
   )
 })
 
-output$nxy_logic_caption <- renderUI({
-  if (rv$n_sc_logic == "Both"){
-    HTML("<strong>AND</strong>: shows entries that satisfy the filters in <strong>ALL</strong> of the selected datasets.")
-  } else if (rv$n_sc_logic == "Either"){
-    HTML("<strong>OR</strong>: shows entries that satisfy the filters in <strong>ANY</strong> of the selected datasets.")
-  }
-})
-output$nxyz_logic_caption <- renderUI({
-  if (rv$n_sc_logic == "Both"){
-    HTML("<strong>AND</strong>: shows entries that satisfy the filters in <strong>ALL</strong> of the selected datasets.")
-  } else if (rv$n_sc_logic == "Either"){
-    HTML("<strong>OR</strong>: shows entries that satisfy the filters in <strong>ANY</strong> of the selected datasets.")
-  }
-})
+
 
 output$nxy_sc_cor_panel <- renderUI({
   req(rv$nxy_selected_z =="None")
@@ -616,36 +639,16 @@ output$nxy_3ds_panel <- renderUI({
     plotlyOutput("df_n_3ds",
                  width = "100%",height = "600px"),
     
+
     div(style = "position: absolute; left: 1em; bottom: 1em",
         dropdown(
-          
-          radioGroupButtons("nxyz_sc_logic",
-                            label = "Cutoff mode:",
-                            choices=c("OR" ="Either", "AND" = "Both"),
-                            selected="Both",size="s")
-          , 
-          uiOutput("nxyz_logic_caption"),
-          size = "xs",
-          icon = icon("cut", class = "opt"),
-          up = TRUE, width=200
-        )
-    ),
-    div(style = "position: absolute; left: 4em; bottom: 1em",
-        dropdown(
-          "Color threshold options:",
-          sliderTextInput("n_3ds_p",
-                          label = "Select P threshold:",
-                          choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                          selected=0.05, grid=T, force_edges=T),
-          sliderTextInput("n_3ds_q",
-                          label = "Select FDR threshold:",
-                          choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                          selected=1, grid=T, force_edges=T),
-          sliderTextInput("n_3ds_Stat",
-                          label = "Select |Stat| threshold:",
-                          choices= c(0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5),
-                          selected=0, grid=T, force_edges=T),
-          "Note: This will be applied to all columns.",
+          radioButtons(
+            inputId = "nxyz_colormode",
+            label = "Represent significance by:",
+            choices = c("None", "Two colors"), 
+            selected = "None"
+          ),
+          uiOutput("nxyz_colormode_options"),
           
           
           size = "xs",
@@ -653,22 +656,33 @@ output$nxy_3ds_panel <- renderUI({
           up = TRUE, width=300
         )
     ),
+    div(style = "position: absolute; left: 4em; bottom: 1em",
+        dropdown(
+          numericInput(
+            inputId = "nxyz_sc_size",
+            label = "Dot size:",
+            value = 3, step=0.5, width="100px")
+          ,
+          size = "xs",
+          icon = icon("palette", class = "opt"),
+          up = TRUE, width=200
+        )
+    ),
     div(style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
-          strong("Summary:"),
-          dataTableOutput("n_3ds_prop_tbl"),
-          
+          strong("Color Summary:"),
+          dataTableOutput("n_3ds_prop_tbl"),br(),
+          downloadButton("download_3ds_df", "Download color summary"),
           
           size = "xs",
-          icon = icon("table", class = "opt"),
+          icon = icon("eye-dropper", class = "opt"),
           up = TRUE, width=300
         )
     ),
     div(style = "position: absolute; left: 10em; bottom: 1em",
         dropdown(
           downloadButton("n_3ds_dl", "Download plot"),
-          downloadButton("download_3ds_df", "Download summary")
-          ,
+          
           size = "xs",
           icon = icon("download", class = "opt"),
           up = TRUE
@@ -869,6 +883,26 @@ customize_filters <- reactive({
   )
 })
 
+test_button <- reactive({
+  dropdown(align="right",
+           
+           tags$h3("Gene lists"),
+           "scrollable text output field here",
+           # # scrollability setting:
+           # tags$head(tags$style("#clickGene{color:red; font-size:12px; font-style:italic; 
+                                # overflow-y:scroll; max-height: 50px; background: ghostwhite;}")),
+           
+           style = "material-circle", icon = icon("bars"),
+           status = "default", width = "800px",
+           right=T, 
+           animate = animateOptions(
+             enter = "slideInRight",
+             exit = "fadeOutRight", duration = 0.5
+           ),
+  )
+})
+
+
 
 output$n_floating_buttons <- renderUI({
   
@@ -926,8 +960,8 @@ output$n_panels <- renderUI({
         column(6, align= "right",
                
                div(id="n1_2",
-                   
-                   customize_filters(),
+                   div(style="display: inline-block;margin-right: 5px;", test_button()),
+                   div(style="display: inline-block;", customize_filters()),
                    
                )
                
@@ -935,16 +969,16 @@ output$n_panels <- renderUI({
         )
       ),
       
-      fluidRow(
-        column(12,
-               box(
-                 width = 12, status = "primary",solidHeader = F,
-                 title = span(icon("table"),"Filter summary"),
-                 uiOutput("filters_summary")
-               ),
-               
-        ),
-      ),
+      # fluidRow(
+      #   column(12,
+      #          box(
+      #            width = 12, status = "primary",solidHeader = F,
+      #            title = span(icon("table"),"Filter summary"),
+      #            uiOutput("filters_summary")
+      #          ),
+      #          
+      #   ),
+      # ),
       
       uiOutput("n_ui_intersect"),
       uiOutput("n_ui_basic"),

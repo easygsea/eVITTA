@@ -66,43 +66,63 @@
 ####--------------- xy scatter -------------------####
 
 
-
-# color mode
-output$nxy_colormode <- renderUI({
-  req(is.null(n_nxy_df())==F)
-  radioButtons(
-    inputId = "nxy_colormode",
-    label = "Represent significance by:",
-    choices = c("None", "Two colors", "Color and size"))
-})
-output$nxy_sig <- renderUI({
-  req(is.null(n_nxy_df())==F)
+# colormode options (shows different panels conditionally)
+output$nxy_colormode_options <- renderUI({
+  req(is.null(n_ins_full())==F)
   req(rv$nxy_colormode !="None")
-  radioButtons(
-    inputId = "nxy_sig",
-    label = "Significance:",
-    choices = c("PValue", "FDR"),
-    selected="PValue")
+  if(rv$nxy_colormode =="Two colors"){
+    div(
+      radioButtons(
+        inputId = "nxy_sig",
+        label = "Significance:",
+        choices = c("PValue", "FDR"),
+        selected="PValue", inline=T),
+      numericInput("nxy_thresh", 
+                   "Threshold:", value = 0.01, min = 0, max = 1, step=0.001, width="100px"),
+      radioGroupButtons("n_sc_logic",
+                        label = "Cutoff mode:",
+                        choices=c("OR" ="Either", "AND" = "Both"),
+                        selected="Both",size="s")
+      , 
+      uiOutput("nxy_logic_caption")
+    )
+  } else if (rv$nxy_colormode =="Color and size"){
+    radioButtons(
+      inputId = "nxy_sig",
+      label = "Significance:",
+      choices = c("PValue", "FDR"),
+      selected="PValue", inline=T)
+  }
 })
-output$nxy_thresh <- renderUI({
-  req(rv$nxy_colormode =="Two colors")
-  
-  numericInput("nxy_thresh", 
-               "Threshold:", value = 0.01, min = 0, max = 1, step=0.001, width="100px")
+
+output$nxy_logic_caption <- renderUI({
+  if (rv$n_sc_logic == "Both"){
+    HTML("<strong>AND</strong>: highlights if conditions are met for <strong>ALL</strong> datasets.")
+  } else if (rv$n_sc_logic == "Either"){
+    HTML("<strong>OR</strong>: highlights if conditions are met for <strong>ANY</strong> dataset.")
+  }
 })
+output$nxyz_logic_caption <- renderUI({
+  if (rv$n_sc_logic == "Both"){
+    HTML("<strong>AND</strong>: highlights if conditions are met for <strong>ALL</strong> datasets.")
+  } else if (rv$n_sc_logic == "Either"){
+    HTML("<strong>OR</strong>: highlights if conditions are met for <strong>ANY</strong> dataset.")
+  }
+})
+
 
 
 # plotly scatter
 nxy_sc_plt <- reactive({
-  req(is.null(n_nxy_df())==F)
+  req(is.null(n_ins_full())==F)
   req(is.null(rv$nxy_selected_x)==F)
   req(is.null(rv$nxy_selected_y)==F)
   
   withProgress(message = 'Making graph...', value = 0, {
     
-    # df_p <- n_nxy_df()
-    df_p <- n_ins_full()
-    # print(head(df_p))
+    # df <- n_nxy_df()
+    df <- n_ins_full()
+    print(head(df))
     
     selected <- c(rv$nxy_selected_x, rv$nxy_selected_y)
     xsig <- paste(rv$nxy_sig, selected[[1]], sep="_")
@@ -116,79 +136,87 @@ nxy_sc_plt <- reactive({
     
     
     
-    df_p[df_p==0]<-0.00001 # replace 0 with 0.001
-    df_p <- remove_nas(df_p)
+    df[df==0]<-0.00001 # replace 0 with 0.001
+    df <- remove_nas(df)
     
-    req(nrow(df_p)>0)
+    req(nrow(df)>0)
     
     incProgress(0.2)
     
     # initialize marker settings as none
-    df_p$color <- "black"
-    df_p$color <- as.factor(df_p$color)
-    df_p$size <- rv$nxy_sc_size+2 # initialized to 5
+    df$color <- "black"
+    df$color <- as.factor(df$color)
+    df$size <- rv$nxy_sc_size+2 # initialized to 5
     marker_settings <- list(
-      color= df_p$color, size= df_p$size, 
+      color= df$color, size= df$size, 
       line = list(color = 'white', width = 0))
     
     incProgress(0.2)
     
-    if (rv$nxy_colormode== "Two colors"){ # is this a good idea????
-      #print(head(df_p))
+    if (rv$nxy_colormode== "Two colors"){ 
+      #print(head(df))
       
-      df_p$color <- as.character(df_p$color)
+      # color by AND or OR logic
+      df$color <- as.character(df$color)
       if (rv$n_sc_logic == "Both"){
-        df_p$color[which(df_p[[xsig]] < rv$nxy_thresh & df_p[[ysig]] < rv$nxy_thresh)] <- "red"
+        df$color[which(df[[xsig]] < rv$nxy_thresh & df[[ysig]] < rv$nxy_thresh)] <- "red"
       } else if (rv$n_sc_logic == "Either"){
-        df_p$color[which(df_p[[xsig]] < rv$nxy_thresh | df_p[[ysig]] < rv$nxy_thresh)] <- "red"
+        df$color[which(df[[xsig]] < rv$nxy_thresh | df[[ysig]] < rv$nxy_thresh)] <- "red"
       }
       
-      df_p$color <- as.factor(df_p$color)
+      df$color <- as.factor(df$color)
       
-      df_p$size <- rv$nxy_sc_size+2 # initialized to 5
+      df$size <- rv$nxy_sc_size+2 # initialized to 5
       marker_settings <- list(
-        color= df_p$color, size= df_p$size, 
+        color= df$color, size= df$size, 
         line = list(color = 'white', width = 1))
     }
     else if (rv$nxy_colormode== "Color and size"){
-      df_p[df_p==0]<-0.00001 # replace 0 with 0.001
-      df_p$color <- -log10(as.numeric(df_p[[xsig]]))
-      df_p$color <- as.numeric(df_p$color)
-      df_p$size <- -log10(as.numeric(df_p[[ysig]]))* (rv$nxy_sc_size-1) + 3 # initialized to 2+3
-      #print(head(df_p))
+      df[df==0]<-0.00001 # replace 0 with 0.001
+      df$color <- -log10(as.numeric(df[[xsig]]))
+      df$color <- as.numeric(df$color)
+      df$size <- -log10(as.numeric(df[[ysig]]))* (rv$nxy_sc_size-1) + 3 # initialized to 2+3
+      #print(head(df))
       marker_settings <- list(
-        color= df_p$color, size= df_p$size,
+        color= df$color, size= df$size,
         opacity=.7, line = list(color = 'white', width = 1),
         colorscale=cscale, cauto=F, cmin=0, cmax=3,
         colorbar=list(title=paste0('-log10(',rv$nxy_sig,'(x))')))
     }
     
+    # generate properties table only when two color mode is selected
+    if (rv$nxy_colormode!="Color and size"){
+      summary_df <- summarize_factor_column(df, "color")
+      rv$nxy_color <- summary_df
+    }
+    
+    
     incProgress(0.2)
     lm_fun <- paste0("`", xstat, "` ~ `", ystat, "`")
-    rv$fit_nxy <- lm(lm_fun, data = df_p)
+    rv$fit_nxy <- lm(lm_fun, data = df)
     
-    print(head(df_p))
+    print(head(df))
     
     
     
     fig <- plot_ly(
-      data = df_p, 
-      x = df_p[[xstat]],
-      y = df_p[[ystat]],
+      data = df, 
+      x = df[[xstat]],
+      y = df[[ystat]],
       type = 'scatter',
       mode = 'markers', 
       marker = marker_settings,
       hoverinfo="text",
-      text=c(paste(df_p$Name, 
-                   "<br>Stat(x):", round(df_p[[xstat]], 3),
-                   "<br>p(x):", round(df_p[[xp]], 3),
-                   ", q(x):", round(df_p[[xq]], 3),
-                   "<br>Stat(y):", round(df_p[[ystat]], 3),
-                   "<br>p(y):", round(df_p[[yp]], 3),
-                   ", q(y):", round(df_p[[yq]], 3)
+      text=c(paste(df$Name, 
+                   "<br>Stat(x):", round(df[[xstat]], 3),
+                   "<br>p(x):", round(df[[xp]], 3),
+                   ", q(x):", round(df[[xq]], 3),
+                   "<br>Stat(y):", round(df[[ystat]], 3),
+                   "<br>p(y):", round(df[[yp]], 3),
+                   ", q(y):", round(df[[yq]], 3)
       ))
     )
-    fig <- fig %>% layout(title = paste0(rv$nxy_selected_x, " vs ", rv$nxy_selected_x, " (n=",nrow(df_p),")"),
+    fig <- fig %>% layout(title = paste0(rv$nxy_selected_x, " vs ", rv$nxy_selected_x, " (n=",nrow(df),")"),
                           yaxis = list(zeroline = T, title=paste0("Stat_",rv$nxy_selected_y)),
                           xaxis = list(zeroline = T, title=paste0("Stat_",rv$nxy_selected_x))
     )
@@ -199,9 +227,9 @@ nxy_sc_plt <- reactive({
 
 
 output$df_nxy_scatter <- renderPlotly({
-  req(is.null(n_nxy_df())==F)
+  req(is.null(n_ins_full())==F)
   req(is.null(rv$nxy_colormode)==F)
-  req(nrow(n_nxy_df()) > 0)
+  req(nrow(n_ins_full()) > 0)
   
   nxy_sc_plt()
 })
@@ -212,6 +240,46 @@ output$df_nxy_scatter <- renderPlotly({
 output$scatter_nxy_dl <- downloadHandler(
   filename = function() {paste("scatter-multiple-xy-", Sys.Date(), ".html", sep = "")},
   content = function(file) {saveWidget(as_widget(nxy_sc_plt()), file, selfcontained = TRUE)})
+
+
+
+# ---------------- color summary table
+# ui
+output$nxy_color_summary_panel <- renderUI({
+  if (rv$nxy_colormode!="Color and size"){
+    div(
+      strong("Color Summary:"),
+      dataTableOutput("nxy_color_tbl"),br(),
+      downloadButton("download_nxy_color_df", "Download color summary"),
+    )
+  } else {
+    div(
+      "Color summary is only available for discrete color schemes."
+    )
+  }
+})
+
+
+nxy_color_df <- reactive({ rv$nxy_color })
+# summary table
+output$nxy_color_tbl <- DT::renderDataTable({
+  nxy_color_df()
+}, plugins="ellipsis",
+options=list(scrollX=T, scrollY=T, paging = FALSE, searching = FALSE, info=FALSE,
+             columnDefs = list(
+               list(
+                 targets = "_all",
+                 render = JS("$.fn.dataTable.render.ellipsis( 36, false )")
+               ))
+))
+
+# download summary table
+output$download_nxy_color_df <- downloadHandler(
+  filename = function() {
+    paste("colors-scatter-multiple-", Sys.Date(), ".csv", sep="")},
+  content = function(file) {
+    write.csv(nxy_color_df(), file, 
+              row.names = T, quote=TRUE)})
 
 
 
@@ -246,7 +314,7 @@ output$nxy_corline <- renderUI({
   
 })
 output$nxy_cor_summary <- renderPrint({
-  req(is.null(n_nxy_df())==F)
+  req(is.null(n_ins_full())==F)
   summary(rv$fit_nxy)
 })
 
@@ -255,10 +323,45 @@ output$nxy_cor_summary <- renderPrint({
 
 ####-------------------- 3D scatter ------------------------####
 
+# colormode options (shows different panels conditionally)
+output$nxyz_colormode_options <- renderUI({
+  req(is.null(n_ins_full())==F)
+  req(rv$nxyz_colormode !="None")
+  if(rv$nxyz_colormode =="Two colors"){
+    div(
+      "Color threshold options:",
+      fluidRow(
+        column(6,
+               numericInput("n_3ds_p", 
+                            "P <:", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),
+        ),
+        column(6,
+               numericInput("n_3ds_q", 
+                            "FDR <:", value = 1, min = 0, max = 1, step=0.001, width="100px"),
+        ),
+      ),
+      fluidRow(
+        column(6,
+               numericInput("n_3ds_Stat", 
+                            "|Stat| >:", value = 0, min = 0, max = 10, step=0.1, width="100px"),
+               ),
+        column(6,
+               radioGroupButtons("nxyz_sc_logic",
+                                 label = "Cutoff mode:",
+                                 choices=c("OR" ="Either", "AND" = "Both"),
+                                 selected="Both",size="s"), 
+               )
+      ),
+
+      uiOutput("nxyz_logic_caption"),
+    )
+  } 
+})
+
 
 # main graph
 n_3ds_plt <- reactive({
-  req(nrow(n_nxy_df())>0)
+  req(nrow(n_ins_full())>0)
   req(is.null(rv$nxy_selected_x)==F)
   req(is.null(rv$nxy_selected_y)==F)
   req(is.null(rv$nxy_selected_z)==F)
@@ -266,36 +369,56 @@ n_3ds_plt <- reactive({
   
   withProgress(message = 'Making 3D Scatter...', value = 0, {
     
-    df <- n_nxy_df()
+    df <- n_ins_full()
     df <- remove_nas(df)
     
     selected <- c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z)
-    
-    # attain columns max/min values for cutoff and coloring (automatically filters out NA)
-    df <- df %>% mutate(mp = do.call(pmax, dplyr::select(df, contains("PValue")))) 
-    df <- df %>% mutate(mq = do.call(pmax, dplyr::select(df, contains("FDR")))) 
-    df <- df %>% mutate(msmin = do.call(pmin, dplyr::select(df, contains("Stat")))) %>% 
-      mutate(msmax = do.call(pmax, dplyr::select(df, contains("Stat")))) 
-    
-    incProgress(0.2)
-    
-    # assign color by certain criteria
-    df$color <- ifelse(df$mp < rv$n_3ds_p & df$mq < rv$n_3ds_q & df$msmin > rv$n_3ds_Stat, "red", "gray")
-    df$color <- ifelse(df$mp < rv$n_3ds_p & df$mq < rv$n_3ds_q & df$msmax < -rv$n_3ds_Stat, "blue",df$color)
-    df$color <- as.factor(df$color)
-    #print(head(df))
-    
-    incProgress(0.2)
-    
     # get col names
     statcols <- paste("Stat_", selected, sep="")
     pcols <- paste("PValue_", selected, sep="")
     qcols <- paste("FDR_", selected, sep="")
-    # print(statcols)
+    pp <- rv$n_3ds_p
+    qq <- rv$n_3ds_q
+    ss <- rv$n_3ds_Stat
+    
     
     incProgress(0.2)
     
-    fig <- plot_ly(df, x = df[[statcols[[1]]]], y = df[[statcols[[2]]]], z = df[[statcols[[3]]]], marker = list(color = df$color, size=2),
+    # default color is black. conditionally color by threshold.
+    df$color <- "black"
+    
+    # assign color by certain criteria
+    if (rv$nxyz_colormode == "Two colors"){
+      if (rv$nxyz_sc_logic == "Both"){
+        req(is.null(rv$nxyz_sc_logic)==F)
+        df$color <- ifelse(
+          (df[[pcols[[1]]]] < pp & df[[qcols[[1]]]] < qq & df[[statcols[[1]]]] > ss) &
+            (df[[pcols[[2]]]] < pp & df[[qcols[[2]]]] < qq & df[[statcols[[2]]]] > ss) &
+            (df[[pcols[[3]]]] < pp & df[[qcols[[3]]]] < qq & df[[statcols[[3]]]] > ss), 
+          "red", "gray")
+        df$color <- ifelse(
+          (df[[pcols[[1]]]] < pp & df[[qcols[[1]]]] < qq & df[[statcols[[1]]]] < -ss) &
+            (df[[pcols[[2]]]] < pp & df[[qcols[[2]]]] < qq & df[[statcols[[2]]]] < -ss) &
+            (df[[pcols[[3]]]] < pp & df[[qcols[[3]]]] < qq & df[[statcols[[3]]]] < -ss), 
+          "blue", df$color)
+      } else if (rv$nxyz_sc_logic == "Either"){
+        df$color <- ifelse(
+          (df[[pcols[[1]]]] < pp & df[[qcols[[1]]]] < qq & df[[statcols[[1]]]] > ss) |
+            (df[[pcols[[2]]]] < pp & df[[qcols[[2]]]] < qq & df[[statcols[[2]]]] > ss) |
+            (df[[pcols[[3]]]] < pp & df[[qcols[[3]]]] < qq & df[[statcols[[3]]]] > ss), 
+          "red", "gray")
+        df$color <- ifelse(
+          (df[[pcols[[1]]]] < pp & df[[qcols[[1]]]] < qq & df[[statcols[[1]]]] < -ss) |
+            (df[[pcols[[2]]]] < pp & df[[qcols[[2]]]] < qq & df[[statcols[[2]]]] < -ss) |
+            (df[[pcols[[3]]]] < pp & df[[qcols[[3]]]] < qq & df[[statcols[[3]]]] < -ss), 
+          "blue", df$color)
+      }
+      df$color <- as.factor(df$color)
+    }
+    
+    incProgress(0.2)
+    
+    fig <- plot_ly(df, x = df[[statcols[[1]]]], y = df[[statcols[[2]]]], z = df[[statcols[[3]]]], marker = list(color = df$color, size=rv$nxyz_sc_size-1),
                    hoverinfo="text",
                    text=c(paste(df$Name, 
                                 "<br>logFC(x):", round(df[[statcols[[1]]]], 3),
@@ -309,18 +432,7 @@ n_3ds_plt <- reactive({
     incProgress(0.2)
     
     # generate properties table
-    summary <- c("total"=nrow(df), table(df$color))
-    summary_df <- t(data.frame(as.list(summary)))
-    summary_df <- data.frame(summary_df)
-    # add genes to the table
-    unicl <- unique(df$color)
-    gene_cats <- lapply(unicl, function(x){
-      gl <- df[which(df$color==x),][["Name"]]
-      paste(gl, collapse=" ")
-    })
-    gene_cats <- c(paste(df$Name, collapse=" "),gene_cats)
-    summary_df$genes <- unlist(gene_cats)
-    colnames(summary_df) <- c("n","Names")
+    summary_df <- summarize_factor_column(df, "color")
     rv$n_3ds_prop <- summary_df
     
     fig <- fig %>% add_markers()
@@ -335,12 +447,18 @@ n_3ds_plt <- reactive({
 
 output$df_n_3ds <- renderPlotly({
   req(rv$df_n)
-  req(is.null(n_nxy_df())==F)
+  req(is.null(n_ins_full())==F)
   # req(rv$n_3ds_status=="ok")
   
   n_3ds_plt()
 })
 
+# download plotly html graph
+output$n_3ds_dl <- downloadHandler(
+  filename = function() {paste("scatter-multiple-", Sys.Date(), ".html", sep = "")},
+  content = function(file) {saveWidget(as_widget(n_3ds_plt()), file, selfcontained = TRUE)})
+
+# ---------------- color summary table
 n_3ds_prop_df <- reactive({ rv$n_3ds_prop })
 # summary table
 output$n_3ds_prop_tbl <- DT::renderDataTable({
@@ -353,11 +471,6 @@ options=list(scrollX=T, scrollY=T, paging = FALSE, searching = FALSE, info=FALSE
                  render = JS("$.fn.dataTable.render.ellipsis( 36, false )")
                ))
 ))
-
-# download plotly html graph
-output$n_3ds_dl <- downloadHandler(
-  filename = function() {paste("scatter-multiple-", Sys.Date(), ".html", sep = "")},
-  content = function(file) {saveWidget(as_widget(n_3ds_plt()), file, selfcontained = TRUE)})
 
 # download summary table
 output$download_3ds_df <- downloadHandler(
