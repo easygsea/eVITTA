@@ -50,7 +50,20 @@ observe({
   if(is.null(input$n_3ds_Stat)==F){ rv$n_3ds_Stat <- input$n_3ds_Stat }
   if(is.null(input$nxyz_sc_size)==F){rv$nxyz_sc_size <- input$nxyz_sc_size}
   
-  # if(is.null(input$n_igl)==F){ rv$n_igl <- input$n_igl }
+  # single
+  if(is.null(input$nx_vol_plotmode)==F){rv$nx_vol_plotmode <- input$nx_vol_plotmode}
+  if(is.null(input$nx_selected)==F){rv$nx_selected <- input$nx_selected}
+  if(is.null(input$nx_p)==F){rv$nx_p <- input$nx_p}
+  if(is.null(input$nx_Stat)==F){rv$nx_Stat <- input$nx_Stat}
+  if(is.null(input$nx_vol_c1)==F){rv$nx_vol_c1 <- input$nx_vol_c1}
+  if(is.null(input$nx_vol_c2)==F){rv$nx_vol_c2 <- input$nx_vol_c2}
+  if(is.null(input$nx_vol_c3)==F){rv$nx_vol_c3 <- input$nx_vol_c3}
+  
+  
+  if(is.null(input$nx_bar_sig)==F){rv$nx_bar_sig <- input$nx_bar_sig}
+  if(is.null(input$nx_bar_to_plot)==F){rv$nx_bar_to_plot <- input$nx_bar_to_plot}
+  
+
 })
 
 
@@ -166,6 +179,20 @@ observeEvent(input$n_use_data,{
     rv$nxyz_sc_size <- 3
     
     
+    # single options
+    rv$nx_vol_plotmode <- "Focus"
+    rv$nx_selected <- rv$nx_n[[1]]
+    rv$nx_p <- 0.05
+    rv$nx_Stat <- 0
+    rv$nx_vol_c1 <- "red"
+    rv$nx_vol_c2 <- "black"
+    rv$nx_vol_c3 <- "gray"
+    
+    rv$nx_bar_sig <- "PValue"
+    rv$nx_bar_to_plot <- "Stat"
+    
+    
+    
     if (length(rv$nx_i) <= 5){rv$n_venn_status <- "ok"}
     else{ rv$n_venn_status <- "no" }
     if (length(rv$nx_i) == 3){rv$n_3ds_status <- "ok"}
@@ -175,6 +202,7 @@ observeEvent(input$n_use_data,{
     rv$s <- vector(mode="list", length=length(rv$nx_i))
     rv$nic <- vector(mode="list", length=length(rv$nx_i))
     rv$v <- vector(mode="list", length=length(rv$nx_i))
+    rv$gls_ui <- vector(mode="list", length=length(rv$nx_i))
     
     incProgress(0.2)
     # print(tt)
@@ -203,92 +231,21 @@ outputOptions(output, "n_3ds_status", suspendWhenHidden = F)
 
 ####-------------------- Process and filter data ------------------------####
 
-# 1. cut first by input genelist (if any)
-n_basic_igl <- reactive({
+# 0. cut first by input genelist (if any); 
+# if no gene list is found, return the full df.
+
+df_n_basic <- reactive({
   df <- rv$df_n
   if (nchar(rv$n_igl)>0){
     igl <- isolate(as.list(strsplit(rv$n_igl, '\\n+')))
-    # print(igl)
+    print(igl)
     df <- df[df$Name %in% igl[[1]],]
     df <- df[order(match(df$Name, igl[[1]])), ]
   }
   return(df)
+  print(df)
 })
 
-# report genes that are not found
-n_basic_igl_nm <- reactive({
-  if (nchar(rv$n_igl)>0){
-    igl <- isolate(as.list(strsplit(rv$n_igl, '\\n+')))
-    notfound <- setdiff(igl[[1]], n_basic_igl()$Name)
-  }
-  else{notfound=vector()}
-  return(notfound)
-})
-output$n_igl_nm <- renderUI({
-  req(length(n_basic_igl_nm())>0)
-  nl <- paste(n_basic_igl_nm(), collapse=", ")
-  box(width=12,
-      shiny::HTML(paste0("<strong>Not found</strong> (",length(n_basic_igl_nm()),"): ", nl)),
-  )
-})
-observeEvent(input$n_igl_update,{
-  rv$n_igl <- input$n_igl
-})
-observeEvent(input$n_igl_reset,{
-  updateTextAreaInput(session, "n_igl", value="")
-  rv$n_igl <- ""
-})
-
-# # 2. apply cutoffs to the master df
-# n_basic_df <- reactive({
-#   req(nrow(rv$df_n)>0)
-#   req(length(rv$s)>0)
-#   req(length(rv$s)==length(rv$nx_i))
-#   
-#   df <- n_basic_igl()
-#   
-#   # loop filters over every dataset
-#   for (i in 1:length(rv$nx_n)){
-#     req(rv[[paste0("nic_p_",i)]])
-#     req(rv[[paste0("nic_q_",i)]])
-#     req(rv[[paste0("nic_Stat_",i)]])
-#     req(rv[[paste0("nic_sign_",i)]])
-#     req(is.null(rv[[paste0("nic_na_",i)]])==F)
-#     req(is.null(rv[[paste0("nic_apply_",i)]])==F)
-#     
-#     
-#     tol = rv[[paste0("nic_na_",i)]]
-#     apply = rv[[paste0("nic_apply_",i)]]
-#     
-#     if (apply==T){
-#       # get the col names
-#       n <- rv$nx_n[[i]]
-#       statn <- paste0("Stat_", n)
-#       pn <- paste0("PValue","_", n)
-#       qn <- paste0("FDR","_", n)
-#       
-#       # filter by sign
-#       df <- filter_by_sign(df, statn, 
-#                            rv[[paste0("nic_sign_",i)]], 
-#                            tolerate=tol)
-#       # filter by cutoffs
-#       df <- apply_single_cutoff(df, n, 
-#                                 rv[[paste0("nic_p_",i)]],
-#                                 rv[[paste0("nic_q_",i)]], 
-#                                 rv[[paste0("nic_Stat_",i)]], 
-#                                 tolerate=tol)
-#       
-#     }
-#   }
-#   return(df)
-#   
-# })
-
-
-
-
-
-####### -------------- Processing for all intersection related analysis. ---------------
 
 # 1. generate gene lists (gls) according to individual cutoffs
 n_ins_gls <- reactive({
@@ -297,7 +254,7 @@ n_ins_gls <- reactive({
   req(length(rv$s)>0)
   req(length(rv$s)==length(rv$nx_i)) # make sure selections are fully rendered
   
-  df <- rv$df_n
+  df <- df_n_basic()
   
   gls <- vector(mode="list") # initialize gls as empty list
   
@@ -329,7 +286,7 @@ n_ins_glm <- reactive({
   req(nrow(rv$df_n)>0)
   req(length(n_ins_gls())>0)
   
-  df <- rv$df_n
+  df <- df_n_basic()
   
   gls <- n_ins_gls()
   
@@ -377,7 +334,7 @@ n_ins_full <- reactive({
   req(length(rv$ins_criteria)>0)
   req(length(rv$ins_criteria)==length(rv$nx_i))
   
-  df <- rv$df_n # full df to subset
+  df <- df_n_basic() # full df to subset
   genelist <- n_ins_fgl() # list of genes to show in table
   df <- df[df$Name %in% genelist,] # extract the rows from full df
   df
@@ -388,7 +345,7 @@ n_ins_df <- reactive({
   req(length(rv$ins_criteria)>0)
   req(length(rv$ins_criteria)==length(rv$nx_i))
   
-  df <- rv$df_n # full df to subset
+  df <- df_n_basic() # full df to subset
   genelist <- n_ins_fgl() # list of genes to show in table
   
   if(rv$n_ins_view == "Full"){
@@ -430,7 +387,7 @@ n_ins_df <- reactive({
 #   req(is.null(rv$nxy_selected_z)==F)
 #   req(is.null(rv$n_sc_logic)==F)
 #   
-#   df <- n_basic_igl()
+#   df <- df_n_basic()
 #   
 #   if (rv$nxy_selected_z=="None"){
 #     selected <- c(rv$nxy_selected_x, rv$nxy_selected_y)

@@ -68,6 +68,9 @@ q_alias <- c("(?i)qv(?-i)al.*","(?i)q(?-i).(?i)v(?-i)al.*",
 
 loadMsg = "easyVizR"
 
+nmax_bar = 15
+default_colors = c("red", "black", "gray", "darkgray", "lightgray", "blue")
+
 
 # --------------- Initialize -------------------
 

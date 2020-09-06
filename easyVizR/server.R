@@ -8,6 +8,9 @@
 
 server <- function(input, output, session) {
     
+    waiter_hide() # will hide *on_load waiter
+    
+    
     # initialize reactive values
     source("server/rv.R", local = TRUE)
     
@@ -36,9 +39,9 @@ server <- function(input, output, session) {
     ####                         SINGLE WAY                             ####
     #======================================================================#
     
-    source("server/x_events.R", local = TRUE)
-    source("server/x_ui.R", local = TRUE)
-    source("server/x_vis.R", local = TRUE)
+    # source("server/x_events.R", local = TRUE)
+    # source("server/x_ui.R", local = TRUE)
+    # source("server/x_vis.R", local = TRUE)
     
     
     

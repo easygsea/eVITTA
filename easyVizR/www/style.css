@@ -45,7 +45,7 @@ Sidebar text: #a3bcd6;
 /* other links in the sidebarmenu */
 .skin-blue .main-sidebar .sidebar .sidebar-menu a{
                       background-color: #112a41;
-                      color: #a3bcd6; 
+                      color: #c0d3e7; 
                       }
 
 /* other links in the sidebarmenu when hovered */
@@ -99,4 +99,16 @@ Sidebar text: #a3bcd6;
 /* hyperlinks */
 a {
     color: #1976d2;
+}
+
+
+/*------------------------------------------------------*/
+
+/* universal fixes for sidebars:
+wraps text;
+changes all text colors to light blue;
+*/
+.main-sidebar .user-panel, .sidebar-menu, .sidebar-menu>li.header {
+    word-break: break-word;
+    color: #c0d3e7;
 }

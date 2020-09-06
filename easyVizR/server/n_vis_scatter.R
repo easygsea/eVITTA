@@ -249,7 +249,8 @@ output$nxy_color_summary_panel <- renderUI({
   if (rv$nxy_colormode!="Color and size"){
     div(
       strong("Color Summary:"),
-      dataTableOutput("nxy_color_tbl"),br(),
+      dataTableOutput("nxy_color_tbl"),
+      br(),
       downloadButton("download_nxy_color_df", "Download color summary"),
     )
   } else {

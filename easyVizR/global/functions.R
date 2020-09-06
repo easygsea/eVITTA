@@ -288,3 +288,20 @@ summarize_factor_column <- function(df, colname="color"){
   colnames(summary_df) <- c("n","Names")
   summary_df
 }
+
+
+
+
+# calculate dropdown ui width when containing multiple divs
+# -------------------------------------------
+# example: calc_dropdown_width(4, 225, 70, max_per_row=3)
+calc_dropdown_width <- function(box_n, box_width, margin_width, max_per_row=3, unit="px"){
+  if (box_n >= max_per_row){
+    divs_per_row <- max_per_row
+  } else {
+    divs_per_row <- box_n
+  }
+  w <- (box_width * divs_per_row) + margin_width
+  out <- paste0(w, unit)
+  out
+}

@@ -24,7 +24,7 @@ sidebar <- dashboardSidebar(
                 
                 menuItem("Organize Files", tabName="tab1", icon=icon("th-list")),
                 
-                menuItem("Single Dataset", tabName="tab2", icon=icon("vial")),
+                # menuItem("Single Dataset", tabName="tab2", icon=icon("vial")),
                 
                 menuItem("Multiple Datasets", tabName="tab3", icon=icon("vials")),
                 
@@ -41,7 +41,7 @@ sidebar <- dashboardSidebar(
                 shinyjs::hidden(
                     div(id="sidebar_opt", 
                         
-                        sideopt2,
+                        # sideopt2,
                         
                         sideopt3
                     )
@@ -59,34 +59,42 @@ sidebar <- dashboardSidebar(
 
 body <- dashboardBody(
   
-  # -------------- Load Dependencies -------------------
+    # -------------- Load Dependencies -------------------
   
-    # customTheme, ### changing theme
-  
-  # shinyDashboardThemes(
-  #   theme = "poor_mans_flatly"
-  # ),
-  
-  tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
-    # tags$link(rel = "stylesheet", type = "text/css", href = "stylesheet.css"),
-    # tags$link(rel = "stylesheet", type = "text/css", href = "colormind-paper-dashboard.css")
-    # tags$link(rel = "stylesheet", type = "text/css", href = "yeti.css"),
-  ),
+    # link to stylesheet
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
+    ),
+    
+    # apply specific css adjustments additionally
+    tags$head(
+      tags$style(HTML(paste0(
+      
+      # fixes large datatables flashing and adds margin on bottom
+      "#n_ins_tbl{min-height: 480px;margin-bottom: 30px;}
+      #single_tbl{min-height: 480px;margin-bottom: 30px;}
+      #single_gl_tbl{min-height: 480px;margin-bottom: 30px;}"
+      ,
+      # fixes textareainput box in multiple dropdown
+      "#n_igl{width: 200px;height: 100px;overflow-y: scroll;resize: none;}"
+      
+      
+    )))
+    ),
   
   
     rintrojs::introjsUI(), # introjs
     useShinyjs(), # shinyJS
     
-    # use_waiter(), # waiter
-    # waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else
+    use_waiter(), # waiter
+    waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else
 
     
     tabItems(
       
       body1,
       
-      body2, 
+      # body2, 
       
       body3
 
