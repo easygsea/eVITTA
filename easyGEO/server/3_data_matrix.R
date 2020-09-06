@@ -189,10 +189,18 @@ observeEvent(input$file, {
       "Please revise your input file according to our notes and reupload the file.")),
     size = "l",
     easyClose = FALSE
-    )) }
+    ))
+    }
   
 
   req(!inherits(indf, "try-error")) #require to be no error to proceed the following codes
+  
+  # This part removes duplicate rows of indf
+  DuplicateCheck <- as.data.frame(indf[,1], drop=FALSE) #extract first column of indf and check if there is 
+  DuplicateCheck <- duplicated(DuplicateCheck)
+  indf<-indf[!DuplicateCheck, ]
+  ###
+  
   indf_coln <- unname(unlist(indf[1,])) # colnames = first row
   # print(indf_coln)
   indf_rown <- unname(unlist(indf[,1])) # rownames = first col
