@@ -188,7 +188,7 @@ observeEvent(input$file, {
       ErrorMessage,"<br>",
       "Please revise your input file according to our notes and reupload the file.")),
     size = "l",
-    easyClose = FALSE
+    easyClose = TRUE
     ))
     }
   
@@ -198,7 +198,17 @@ observeEvent(input$file, {
   # This part removes duplicate rows of indf
   DuplicateCheck <- as.data.frame(indf[,1], drop=FALSE) #extract first column of indf and check if there is 
   DuplicateCheck <- duplicated(DuplicateCheck)
-  indf<-indf[!DuplicateCheck, ]
+  indf<-indf[!DuplicateCheck, ] #remove duplicate rows
+  DuplicateRows <- which(DuplicateCheck == TRUE, arr.ind=TRUE)
+  if(length(DuplicateRows) > 0){ # if there are duplicate rows
+    showModal(modalDialog( 
+      title = "Warning: Your input file contains duplicate gene names",
+      HTML(paste0("Duplicate entries were omitted.<br>",
+                  "If this is not what you intend, please double check and try again.")),
+      size = "l",
+      easyClose = TRUE
+    ))
+  }
   ###
   
   indf_coln <- unname(unlist(indf[1,])) # colnames = first row
