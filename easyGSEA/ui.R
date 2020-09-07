@@ -34,7 +34,7 @@ shinyUI(
             waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else 
             
             tags$head(
-                tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+                # tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
                 HTML("<script type='text/javascript' language='javascript' src='https://reactome.org/DiagramJs/diagram/diagram.nocache.js'></script>"),
                 tags$script(src = "reactome.js")
             ),
