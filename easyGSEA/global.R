@@ -35,7 +35,7 @@ data(stop_words)
 useless_words <- read_csv(paste0(getwd(),"/inc/some_words.csv"))
 
 # run modes
-run_modes = list("Pre-ranked GSEA"="gsea","Gene List (Overrepresentation Analysis)"="glist")
+run_modes = list("Pre-ranked GSEA"="gsea","Overrepresentation Analysis"="glist")
 
 # gene identifiers
 gene_identifiers = list("SYMBOL"="symbol","Other/Mixed" = "other")
