@@ -108,7 +108,7 @@ body <- dashboardBody(
 shinyUI(
   dashboardPage(
     title="easyVizR",
-    dashboardHeader(title = "easyVizR", dropdownMenuOutput("dropdown_menu")),
+    dashboardHeader(title = "easyVizR"),
     sidebar,
     body
   )
