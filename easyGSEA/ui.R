@@ -24,7 +24,9 @@ shinyUI(
     dashboardPage(
         title="easyGSEA - gene set enrichment analysis, interpretation & visualization",       
         
-        dashboardHeader(title = "easyGSEA"), #,titleWidth = 200
+        dashboardHeader(title = "easyGSEA", tags$li(class = "dropdown", actionButton("home", "Home",icon("paper-plane"), 
+                                                                                     style="color: #fff; background-color: #1976D2; border-color: #2e6da4",
+                                                                                     onclick ="location.href='http://tau.cmmt.ubc.ca/eVITTA/';"))), #,titleWidth = 200
         # skin = "black",
         sidebar,
         dashboardBody(

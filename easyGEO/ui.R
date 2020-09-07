@@ -335,7 +335,10 @@ body <- dashboardBody(
 shinyUI(
   dashboardPage(
     title="easyGEO - GEO expression analysis & visualization",
-    dashboardHeader(title = "easyGEO", dropdownMenuOutput("dropdown_menu")),
+    dashboardHeader(title = "easyGEO",tags$li(class = "dropdown", actionButton("home", "Home",icon("paper-plane"), 
+                                                                               style="color: #fff; background-color: #1976D2; border-color: #2e6da4",
+                                                                               onclick ="location.href='http://tau.cmmt.ubc.ca/eVITTA/';")),
+                    dropdownMenuOutput("dropdown_menu")),
     sidebar,
     body
   )
