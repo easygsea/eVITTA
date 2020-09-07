@@ -44,7 +44,7 @@ observe({
 # ---------------- single full dataset volcano
 x_fs_volcano <- reactive({
   box(
-    title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = F, width=12,
     plotlyOutput("p1_fs_volcano",
                  width = "100%",height = "400px"),
     
@@ -81,7 +81,7 @@ x_fs_volcano <- reactive({
 
 x_fs_table <- reactive({
   box(
-    title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("table"), "Table"), status = "primary", solidHeader = F, width=12,
     dataTableOutput("single_tbl", width = "100%",height="100%"),
     
     div(style = "position: absolute; left: 1em; bottom: 1em",
@@ -121,7 +121,7 @@ x_fs_table <- reactive({
 
 x_gl_volcano <- reactive({
   box(
-    title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = F, width=12,
     plotlyOutput("p1_gl_volcano",
                  width = "100%",height = "400px"),
     
@@ -149,7 +149,7 @@ x_gl_volcano <- reactive({
 
 x_gl_bar <- reactive({
   box(
-    title = span( icon("chart-area"), "Bar"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("chart-area"), "Bar"), status = "primary", solidHeader = F, width=12,
     uiOutput("gl_bar_fig"),
     div(style = "position: absolute; left: 1em; bottom: 1em",
         dropdown(
@@ -190,7 +190,7 @@ x_gl_bar <- reactive({
 
 x_gl_table <- reactive({
   box(
-    title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("table"), "Table"), status = "primary", solidHeader = F, width=12,
     dataTableOutput("single_gl_tbl", width = "100%",height="100%"),
     
     div(style = "position: absolute; left: 1em; bottom: 1em",
@@ -273,7 +273,7 @@ output$single_panels <- renderUI({
         ),
         column(6,
                box(
-                 title = span( icon("chart-area"), "Bar"), status = "warning", solidHeader = TRUE, width=12,
+                 title = span( icon("chart-area"), "Bar"), status = "warning", solidHeader = F, width=12,
                  
                  "Bar plot is only available for gene list mode."
                ),

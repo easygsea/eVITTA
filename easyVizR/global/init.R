@@ -68,6 +68,9 @@ q_alias <- c("(?i)qv(?-i)al.*","(?i)q(?-i).(?i)v(?-i)al.*",
 
 loadMsg = "easyVizR"
 
+nmax_bar = 15
+default_colors = c("red", "black", "gray", "darkgray", "lightgray", "blue")
+
 
 # --------------- Initialize -------------------
 
@@ -78,7 +81,15 @@ ll <- c("Sample_Hibshman_lite.csv"
         # , "z_efk1starved_vs_fed.csv", "z_N2starved_vs_fed.csv","z_zip2starved_vs_fed.csv"
 )
 # list paths
-pl <- paste0(getwd(),"/inc/", ll, sep = '')
+pl=list()
+pl1 <- paste0(getwd(),"//inc//", ll[[1]], sep = '')
+if (length(ll)>1){
+  pl <- paste(getwd(),"//add//", ll[-1], sep = '')
+  pl <- c(pl1, pl)
+} else {
+  pl <- pl1
+}
+
 # list dfs
 gg <- lapply(pl, read.csv)
 # remove any row with na anywhere

@@ -12,7 +12,7 @@ observe({
                      radioGroupButtons(inputId = paste0("ins_",i),
                                        label = rv$nx_n[[i]], size="s",
                                        choices = c("True", "False", "Ignore"),
-                                       selected ="Ignore",
+                                       selected ="True",
                                        status = "info"))
   }
 })
@@ -42,7 +42,7 @@ observe({
   if (length(criteria) == length(rv$nx_n)){
     names(criteria) <- rv$nx_n
   }
-  print(criteria)
+  # print(criteria)
   rv$ins_criteria <- criteria
 })
 
@@ -60,7 +60,7 @@ output$n_ins_tbl <- DT::renderDataTable({
   
   # to abbreviate the long column names...take first 5 letters
   char_limit <- 56 / length(colnames(df))
-  print(char_limit)
+  # print(char_limit)
   colnames(df) <- sapply(names(df), function(x){
     if (nchar(x)>char_limit)
     {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
@@ -196,6 +196,8 @@ n_venn_plt <- reactive({
 output$df_n_venn <- renderPlot({
   req(length(n_ins_gls())>0)
   req(max(lengths(n_ins_gls()))>0)
+  req(rv$n_venn_type=="Area-proportional")
+  
   n_venn_plt()
 })
 
@@ -233,12 +235,26 @@ n_npvenn_plt <- reactive({
 output$df_n_npvenn <- renderPlot({
   req(length(n_ins_gls())>0)
   req(max(lengths(n_ins_gls()))>0)
-  
+  req(rv$n_venn_type=="Basic")
   
   
   
   grid.draw(n_npvenn_plt())
   
+  
+})
+
+
+#------------------- Conditionally show either Venn -------------------
+
+output$n_venn_ui <- renderUI({
+  req(is.null(rv$n_venn_type)==F)
+  
+  if (rv$n_venn_type=="Basic"){
+    plotOutput("df_n_npvenn", width="100%")
+  } else if (rv$n_venn_type=="Area-proportional"){
+    plotOutput("df_n_venn", width="100%")
+  }
   
 })
 

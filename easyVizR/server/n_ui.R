@@ -87,7 +87,7 @@ output$n_ui_basic <- renderUI({
   req(rv$n_ui_showpanel == "Heatmap")
   div(
     heatmap_panel(),
-    hm_table_panel()
+    # hm_table_panel()
     
   )
   
@@ -97,7 +97,7 @@ output$n_ui_basic <- renderUI({
 heatmap_panel <- reactive({
   #----------------- heatmap --------------------
   box(
-    title = span( icon("chart-area"), "Heatmap"), status = "primary", solidHeader = TRUE, width=8,
+    title = span( icon("chart-area"), "Heatmap"), status = "primary", solidHeader = F, width=8,
     
     div(id="n1_3",
         uiOutput("n_heatmap")
@@ -114,7 +114,19 @@ heatmap_panel <- reactive({
           up = TRUE, width=300
         )
     ),
-    div(style = "position: absolute; left: 4em; bottom: 1em", id="n1_3c",
+    div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;", id="n1_3c",
+        dropdown(
+          materialSwitch(
+            inputId = "n_hm_ylabs", label = "Show y labels?", status="primary",
+            value = FALSE
+          )
+          ,
+          size = "xs",
+          icon = icon("palette", class = "opt"),
+          up = TRUE
+        )
+    ),
+    div(style = "position: absolute; left: 7em; bottom: 1em", id="n1_3c",
         dropdown(
           downloadButton("n_hm_dl", "Download plot")
           ,
@@ -131,7 +143,7 @@ heatmap_panel <- reactive({
 hm_table_panel <- reactive({
   #----------------- table --------------------
   box(
-    title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12, height="610px",
+    title = span( icon("table"), "Table"), status = "primary", solidHeader = F, width=12, height="610px",
     
     div(id="n1_4", 
         dataTableOutput("df_n_tbl")
@@ -160,7 +172,6 @@ output$n_ui_intersect <- renderUI({
   
   div(
     
-    
     #----------------- venn --------------------
     
     conditionalPanel("output.n_venn_status == 'ok'",
@@ -182,28 +193,16 @@ output$n_ui_intersect <- renderUI({
                      uiOutput("n_upset_placeholder")
     ),
     
-    #----------------- Intersect table--------------------
     
-    ins_table_panel()
     
   )
 })
 
 #----------------- venn --------------------
 ins_venn_panel <- reactive({
-  box(title = span( icon("chart-area"), "Venn Diagram"), status = "primary", solidHeader = TRUE, width=6,
+  box(title = span( icon("chart-area"), "Venn Diagram"), status = "primary", solidHeader = F, width=6,
       
-      tabBox(width=12,
-             tabPanel("Basic",
-                      plotOutput("df_n_npvenn", width="100%")
-             ),
-             tabPanel("Area proportional",
-                      plotOutput("df_n_venn", width="100%")
-             )
-             
-      ),
-      
-      
+      uiOutput("n_venn_ui"),
       
       div(style = "position: absolute; left: 1em; bottom: 1em", 
           dropdown(
@@ -213,6 +212,12 @@ ins_venn_panel <- reactive({
               choices = c("Counts"="counts", "Percent"="percent"),
               selected="counts",
               inline=T, width="250px"
+            ),
+            radioGroupButtons(
+              inputId = "n_venn_type",
+              label = "Venn type:",
+              choices = c("Basic","Area-proportional"),
+              selected= "Basic", direction="horizontal"
             )
             ,
             size = "xs",
@@ -240,7 +245,7 @@ ins_venn_panel <- reactive({
 ins_upset_panel <- reactive({
   
   box(
-    title = span( icon("chart-area"), "UpSet Plot"), status = "primary", solidHeader = TRUE, width=6,
+    title = span( icon("chart-area"), "UpSet Plot"), status = "primary", solidHeader = F, width=6,
     
     plotOutput("df_n_upset", width = "100%"),
     
@@ -278,29 +283,173 @@ ins_upset_panel <- reactive({
 
 output$n_venn_placeholder <- renderUI({
   box(
-    title = span( icon("chart-area"), "Venn Diagram"), status = "warning", solidHeader = TRUE, width=6,
+    title = span( icon("chart-area"), "Venn Diagram"), status = "warning", solidHeader = F, width=6,
     paste0("Venn diagram is only available for 5 or less datasets. You have selected ", length(rv$nx_i)," datasets.")
   )
 })
 output$n_upset_placeholder <- renderUI({
   box(
-    title = span( icon("chart-area"), "UpSet Plot"), status = "warning", solidHeader = TRUE, width=6,
+    title = span( icon("chart-area"), "UpSet Plot"), status = "warning", solidHeader = F, width=6,
     paste0("UpSet plot is only available for 5 or less datasets. You have selected ", length(rv$nx_i)," datasets.")
   )
 })
 
 #----------------- table --------------------
+
+# summarizes verbally the filters used to trim gene lists
+output$filters_summary <- renderUI({
+  
+  desc <-list()
+  
+  for (i in 1:length(rv$nx_n)){
+    req(rv[[paste0("nic_p_",i)]])
+    req(rv[[paste0("nic_q_",i)]])
+    req(rv[[paste0("nic_Stat_",i)]])
+    req(rv[[paste0("nic_sign_",i)]])
+    
+    name <- rv$nx_n[[i]]
+    cur_p <- rv[[paste0("nic_p_",i)]]
+    cur_q <- rv[[paste0("nic_q_",i)]]
+    cur_Stat <- rv[[paste0("nic_Stat_",i)]]
+    cur_sign <- rv[[paste0("nic_sign_",i)]]
+    if (cur_sign=="All"){
+      cur_sign = "Positive and Negative"
+    } else {
+      cur_sign <- cur_sign
+    }
+    
+    nterms <- length(n_ins_gls()[[i]]) # number of genes in genelist
+    
+    adddesc <- paste(name, ": ",
+                     nterms, " ",
+                     cur_sign, " entries with ",
+                     "p <= ",cur_p, ", ", 
+                     "FDR <= ", cur_q, ", ", 
+                     "|Stat| >= ", cur_Stat,
+                     sep="")
+    desc <- c(desc, adddesc)
+  }
+  text <- paste(desc, collapse="<br>")
+  
+  
+  HTML(text)
+})
+
+# summarizes verbally what is in the selected intersection
+output$intersection_summary <- renderUI({
+  req(is.null(rv$ins_criteria)==F)
+  req(length(rv$ins_criteria)>0)
+  
+  desc <-list()
+  criteria <- rv$ins_criteria
+  
+  for (i in 1:length(rv$nx_n)){
+    req(is.null(rv[[paste0("nic_p_",i)]])==F)
+    req(is.null(rv[[paste0("nic_q_",i)]])==F)
+    req(is.null(rv[[paste0("nic_Stat_",i)]])==F)
+    req(is.null(rv[[paste0("nic_sign_",i)]])==F)
+    
+    name <- rv$nx_n[[i]]
+    cur_p <- rv[[paste0("nic_p_",i)]]
+    cur_q <- rv[[paste0("nic_q_",i)]]
+    cur_Stat <- rv[[paste0("nic_Stat_",i)]]
+    cur_sign <- rv[[paste0("nic_sign_",i)]]
+    
+    
+    req(is.null(criteria[[name]])==F)
+    if (is.na(criteria[[name]])==T){ # if NA
+      stat_text=""
+    } else if (criteria[[name]]==F){ # if FALSE
+      if (cur_p<1){ # p cutoff is only meaningful if <1
+        p_text <- paste0("p > ",cur_p)
+      } else {p_text <- NA}
+      if (cur_q<1){ # q cutoff is only meaningful if <1
+        q_text <- paste0("q > ",cur_q)
+      } else {q_text <- NA}
+      
+      if (cur_sign=="All"){ # if FALSE and ALL
+        if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
+          stat_text <- paste0("|Stat| < ", cur_Stat)
+        } else {stat_text <- NA} 
+      } else if (cur_sign=="Positive"){ # if FALSE and POS
+        stat_text <- paste0("Stat < ", cur_Stat)
+      } else if (cur_sign=="Negative") { # if FALSE and NEG
+        stat_text <- paste0("Stat >  ", cur_Stat)
+      }
+    } else if (criteria[[name]]==T){ # if TRUE
+      if (cur_p<1){
+        p_text <- paste0("p <= ",cur_p)
+      } else {p_text <- NA}
+      if (cur_q<1){
+        q_text <- paste0("q <= ",cur_q)
+      } else {q_text <- NA}
+      
+      if (cur_sign=="All"){ # if TRUE and ALL
+        if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
+          stat_text <- paste0("|Stat| >= ", cur_Stat) 
+        } else {stat_text <- NA} 
+      } else if (cur_sign=="Positive"){ # if TRUE and POS
+        stat_text <- paste0("Stat >= ", cur_Stat)
+      } else if (cur_sign=="Negative") { # if TRUE and NEG
+        stat_text <- paste0("Stat <=  ", cur_Stat)
+      }
+    } 
+    
+    if (is.na(criteria[[name]])==F){
+      if (criteria[[name]]==T){
+        cond_string <- paste(
+          paste0("<strong>", na.omit(c(p_text, q_text, stat_text)), "</strong>")
+          , collapse=" AND ")
+        adddesc <- paste(
+          cond_string,
+          " in ", "<i>",name,"</i>",
+          sep="")
+      } else if (criteria[[name]]==F){
+        cond_string <- paste(
+          paste0("<strong>", na.omit(c(p_text, q_text, stat_text)), "</strong>")
+          , collapse=" OR ")
+        adddesc <- paste(
+          cond_string,
+          " in ", "<i>",name,"</i>",
+          sep="")
+      } 
+      # only append a description when it's not on ignore
+      desc <- c(desc, adddesc)
+    }
+  }
+  # print(desc)
+  if (length(desc)>0){
+    text <- paste0("<ul>", paste(paste0("<li>",desc,"</li>"), collapse=""), "</ul>")
+    HTML(text)
+  } else {
+    HTML("No filters are active.")
+  }
+  
+})
+
+
 ins_table_panel <- reactive({
   
   box(
-    width = 12, status = "primary",solidHeader = T, height=750,
-    title = span(icon("table"),"View intersections"),
+    width = 12, status = "primary",solidHeader = F,
+    title = span(icon("table"),"Selected Intersection"),
     
     div(id="n2_4",
         
         wellPanel(
-          "Combine options below to view specific intersections: ",br(),br(),
-          uiOutput("ui_intersections")
+          HTML("<strong>Combine options below to view specific intersections</strong>: 
+               <i class='fa fa-question-circle' style = 'color:#00c0ef;' id='ins_help'></i>"),
+          bsTooltip("ins_help", 
+                    "TRUE: contained in this list;<br>FALSE: NOT contained in this list.", 
+                    placement = "top"),
+          br(),br(),
+          uiOutput("ui_intersections"),
+          HTML("<strong>Active filters</strong>: 
+               <i class='fa fa-question-circle' style = 'color:#00c0ef;' id='active_filters_help'></i>"),
+          bsTooltip("active_filters_help", 
+          "Filtering conditions for this intersection are displayed below", 
+          placement = "top"),
+          uiOutput("intersection_summary")
         ),
     ),
     
@@ -320,13 +469,13 @@ ins_table_panel <- reactive({
           
           size = "xs",
           icon = icon("gear", class = "opt"),
-          up = TRUE, width=300
+          up = TRUE
         )
         
     ),
-    
+    bsTooltip("n_wc_dropdown", "Text enrichment for selected terms", placement = "top"),
     div(style = "position: absolute; left: 4em; bottom: 1em", id="n2_4b",
-        dropdown(
+        dropdown(inputId="n_wc_dropdown",
           column(8,
                  column(2, textInput("n_ins_wc_sep", "Separator:", value="_")),
                  column(10, textInput("n_ins_Wc_ignore", "Ignore strings: (separated by spaces)", value="and or of GO KEGG WP")),
@@ -343,6 +492,7 @@ ins_table_panel <- reactive({
         )
         
     ),
+    
     div(style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
           downloadButton("download_ins_df", "Download current table"),
@@ -409,13 +559,13 @@ output$n_ui_scatter <- renderUI({
       
     ),
     
-    fluidRow(
-      column(12,
-             sc_table_panel()
-             
-      )
-      
-    )
+    # fluidRow(
+    #   column(12,
+    #          sc_table_panel()
+    #          
+    #   )
+    #   
+    # )
     
   )
 })
@@ -423,44 +573,52 @@ output$nxy_sc_panel <- renderUI({
   req(rv$nxy_selected_z =="None")
   
   box(
-    title = span( icon("chart-area"), "Scatter"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("chart-area"), "Scatter"), status = "primary", solidHeader = F, width=12,
     
     plotlyOutput("df_nxy_scatter",
                  width = "100%",height = "600px")
     ,
     div(style = "position: absolute; left: 1em; bottom: 1em",
         dropdown(
+          radioButtons(
+            inputId = "nxy_colormode",
+            label = "Represent significance by:",
+            choices = c("None", "Two colors", "Color and size")
+            ),
+          uiOutput("nxy_colormode_options"),
           
-          radioGroupButtons("n_sc_logic",
-                            label = "Cutoff mode:",
-                            choices=c("OR" ="Either", "AND" = "Both"),
-                            selected="Both",size="s")
-          , 
-          uiOutput("nxy_logic_caption"),
+
           size = "xs",
-          icon = icon("cut", class = "opt"),
-          up = TRUE, width=200
+          icon = icon("gear", class = "opt"),
+          up = TRUE, width=230
         )
     ),
     div(style = "position: absolute; left: 4em; bottom: 1em",
         dropdown(
-          uiOutput("nxy_colormode"),
-          uiOutput("nxy_sig"),
-          uiOutput("nxy_thresh"),
+          
           numericInput(
             inputId = "nxy_sc_size",
             label = "Dot size:",
             value = 3, step=0.5, width="100px")
           ,
           size = "xs",
-          icon = icon("gear", class = "opt"),
-          up = TRUE, width=230
+          icon = icon("palette", class = "opt"),
+          up = TRUE, width=200
         )
     ),
     div(style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
-          downloadButton("scatter_nxy_dl", "Download plot")
-          ,
+          uiOutput("nxy_color_summary_panel"),
+          
+          size = "xs",
+          icon = icon("eye-dropper", class = "opt"),
+          up = TRUE, width=300
+        )
+    ),
+    div(style = "position: absolute; left: 10em; bottom: 1em",
+        dropdown(
+          downloadButton("scatter_nxy_dl", "Download plot"),
+          
           size = "xs",
           icon = icon("download", class = "opt"),
           up = TRUE
@@ -471,26 +629,13 @@ output$nxy_sc_panel <- renderUI({
   )
 })
 
-output$nxy_logic_caption <- renderUI({
-  if (rv$n_sc_logic == "Both"){
-    HTML("<strong>AND</strong>: shows entries that satisfy the filters in <strong>ALL</strong> of the selected datasets.")
-  } else if (rv$n_sc_logic == "Either"){
-    HTML("<strong>OR</strong>: shows entries that satisfy the filters in <strong>ANY</strong> of the selected datasets.")
-  }
-})
-output$nxyz_logic_caption <- renderUI({
-  if (rv$n_sc_logic == "Both"){
-    HTML("<strong>AND</strong>: shows entries that satisfy the filters in <strong>ALL</strong> of the selected datasets.")
-  } else if (rv$n_sc_logic == "Either"){
-    HTML("<strong>OR</strong>: shows entries that satisfy the filters in <strong>ANY</strong> of the selected datasets.")
-  }
-})
+
 
 output$nxy_sc_cor_panel <- renderUI({
   req(rv$nxy_selected_z =="None")
   
   box(
-    title = span( icon("calculator"), "Correlation"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("calculator"), "Correlation"), status = "primary", solidHeader = F, width=12,
     
     uiOutput("nxy_corline"),br(),
     verbatimTextOutput("nxy_cor_summary")
@@ -503,40 +648,20 @@ output$nxy_3ds_panel <- renderUI({
   req(rv$nxy_selected_z !="None")
   
   box(
-    title = span( icon("chart-area"), "3D Scatter"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("chart-area"), "3D Scatter"), status = "primary", solidHeader = F, width=12,
     plotlyOutput("df_n_3ds",
                  width = "100%",height = "600px"),
     
+
     div(style = "position: absolute; left: 1em; bottom: 1em",
         dropdown(
-          
-          radioGroupButtons("nxyz_sc_logic",
-                            label = "Cutoff mode:",
-                            choices=c("OR" ="Either", "AND" = "Both"),
-                            selected="Both",size="s")
-          , 
-          uiOutput("nxyz_logic_caption"),
-          size = "xs",
-          icon = icon("cut", class = "opt"),
-          up = TRUE, width=200
-        )
-    ),
-    div(style = "position: absolute; left: 4em; bottom: 1em",
-        dropdown(
-          "Color threshold options:",
-          sliderTextInput("n_3ds_p",
-                          label = "Select P threshold:",
-                          choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                          selected=0.05, grid=T, force_edges=T),
-          sliderTextInput("n_3ds_q",
-                          label = "Select FDR threshold:",
-                          choices= c(0.001,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.5,1),
-                          selected=1, grid=T, force_edges=T),
-          sliderTextInput("n_3ds_Stat",
-                          label = "Select |Stat| threshold:",
-                          choices= c(0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5),
-                          selected=0, grid=T, force_edges=T),
-          "Note: This will be applied to all columns.",
+          radioButtons(
+            inputId = "nxyz_colormode",
+            label = "Represent significance by:",
+            choices = c("None", "Two colors"), 
+            selected = "None"
+          ),
+          uiOutput("nxyz_colormode_options"),
           
           
           size = "xs",
@@ -544,22 +669,33 @@ output$nxy_3ds_panel <- renderUI({
           up = TRUE, width=300
         )
     ),
+    div(style = "position: absolute; left: 4em; bottom: 1em",
+        dropdown(
+          numericInput(
+            inputId = "nxyz_sc_size",
+            label = "Dot size:",
+            value = 3, step=0.5, width="100px")
+          ,
+          size = "xs",
+          icon = icon("palette", class = "opt"),
+          up = TRUE, width=200
+        )
+    ),
     div(style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
-          strong("Summary:"),
-          dataTableOutput("n_3ds_prop_tbl"),
-          
+          strong("Color Summary:"),
+          dataTableOutput("n_3ds_prop_tbl"),br(),
+          downloadButton("download_3ds_df", "Download color summary"),
           
           size = "xs",
-          icon = icon("table", class = "opt"),
+          icon = icon("eye-dropper", class = "opt"),
           up = TRUE, width=300
         )
     ),
     div(style = "position: absolute; left: 10em; bottom: 1em",
         dropdown(
           downloadButton("n_3ds_dl", "Download plot"),
-          downloadButton("download_3ds_df", "Download summary")
-          ,
+          
           size = "xs",
           icon = icon("download", class = "opt"),
           up = TRUE
@@ -575,7 +711,7 @@ output$nxy_3ds_panel <- renderUI({
 sc_table_panel <- reactive({
   
   box(
-    title = span( icon("table"), "Table"), status = "primary", solidHeader = TRUE, width=12,
+    title = span( icon("table"), "Table"), status = "primary", solidHeader = F, width=12,
     
     div(id="n3_4",
         dataTableOutput("df_nxy_tbl", width = "100%",height="100%") 
@@ -595,6 +731,284 @@ sc_table_panel <- reactive({
     
   )
 })
+
+####================= Single panel =====================####
+
+output$n_ui_single <- renderUI({
+  req(rv$n_ui_showpanel == "Single")
+  div(
+    fluidRow(
+      column(6,
+             box(
+               title = NULL, status = "primary", solidHeader = F, width=12,
+               selectInput(
+                 inputId = "nx_selected",
+                 label = "View dataset:",
+                 choices = rv$nx_n,
+                 selected = rv$nx_n[[1]]
+               )
+             ),
+             uiOutput("nx_bar_panel"),
+             
+      ),
+      
+      column(6,
+             box(
+               title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = F, width=12,
+               plotlyOutput("nx_vol"),
+               
+               div(style = "position: absolute; left: 1em; bottom: 1em; width:400px;",
+                   dropdown(
+                     radioButtons(
+                       inputId = "nx_vol_plotmode",
+                       label = HTML("<strong>Plotting mode</strong>: 
+               <i class='fa fa-question-circle' style = 'color:#00c0ef;' id='vol_plotmode_help'></i>"),
+                       choices = c("Focus", "Context")
+                     ),
+                     
+                     bsTooltip("vol_plotmode_help", 
+                               "Focus: only plot genes in intersection;<br>Context: plot all genes.", 
+                               placement = "right"),
+                     
+                     
+                     br(),
+                     strong("Color threshold:"),
+                     br(),
+                     numericInput("nx_p", 
+                                  "P <= :", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),
+                     numericInput("nx_Stat", 
+                                  "|Stat| >= :", value = 0, min = 0, max = 1, step=0.001, width="100px"),
+                     
+                     size = "xs",
+                     icon = icon("gear", class = "opt"),
+                     up = TRUE
+                   )
+               ),
+               
+               div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;",
+                   dropdown(
+                     selectInput("nx_vol_c1", "Primary color:",
+                       choices = default_colors,
+                       selected="red"
+                       ),
+                     selectInput("nx_vol_c2", "Secondary color:",
+                                 choices = default_colors,
+                                 selected="black"
+                     ),
+                     selectInput("nx_vol_c3", "Tertiary color:",
+                                 choices = default_colors,
+                                 selected="gray"
+                     ),
+                     
+                     size = "xs",
+                     icon = icon("palette", class = "opt"),
+                     up = TRUE
+                   )
+               ),
+               
+               div(style = "position: absolute; left: 7em; bottom: 1em",
+                   dropdown(
+                     downloadButton("nx_vol_dl", "Download plot"),
+                     
+                     size = "xs",
+                     icon = icon("download", class = "opt"),
+                     up = TRUE
+                   )
+               )
+               ),
+             
+             
+      ),
+      
+    ),
+    
+    
+  )
+})
+
+####-----------------single gl bar plot----------------####
+
+
+output$nx_bar_panel <- renderUI({
+  req(is.null(n_ins_full())==F)
+  
+  if (nrow(n_ins_full())<= nmax_bar) {
+    box(
+      title = span( icon("chart-area"), "Bar"), status = "primary", solidHeader = F, width=12,
+      plotlyOutput("nx_bar", width = "100%", height = "400px"),
+      
+      div(style = "position: absolute; left: 1em; bottom: 1em; width:300px;",
+          dropdown(
+            radioButtons("nx_bar_sig", "Color by significance:",
+                         choices=c("PValue", "FDR"),
+                         selected="PValue"),
+            selectInput(
+              inputId = "nx_bar_to_plot",
+              label= "Plot data:",
+              choices = rv$hm_numeric_stats, # this displays all the shared numeric columns, 
+              selected = "Stat"
+            ),
+            
+            size = "xs",
+            icon = icon("gear", class = "opt"),
+            up = TRUE
+          )
+      ),
+      div(style = "position: absolute; left: 4em; bottom: 1em",
+          dropdown(
+            downloadButton("nx_bar_dl", "Download plot"),
+            
+            size = "xs",
+            icon = icon("download", class = "opt"),
+            up = TRUE
+          )
+      )
+    )
+  } else {
+    box(
+      title = span( icon("chart-area"), "Bar"), status = "warning", solidHeader = F, width=12,
+      paste0("Bar plot is only available for ", nmax_bar," or less entries.")
+    )
+    
+  }
+})
+
+
+
+# bar graph
+nx_bar_plt <- reactive({
+  df <- n_ins_full()
+  
+  name <- rv$nx_selected
+  pcol <- paste0("PValue_", name)
+  qcol <- paste0("FDR_", name)
+  statcol <- paste0("Stat_", name)
+  sigcol <- paste0(rv$nx_bar_sig,"_",name)
+  plotcol <- paste0(rv$nx_bar_to_plot, "_", name)
+  
+  df[df==0]<-0.00001 # replace 0 with 0.001
+  
+  df$color <- -log10(as.numeric(df[[sigcol]]))
+  print(head(df))
+  fig <- plot_ly(
+    x = df$Name,
+    y = df[[plotcol]],
+    type = "bar",
+    hoverinfo="text",
+    marker = list(
+      colorscale=cscale,
+      color = df$color,
+      colorbar=list(title=paste0("-log10(",rv$nx_bar_sig, ")")),
+      cauto = F,cmin = 0,cmax = 3
+    ),
+    text=c(paste(df$Name, 
+                 "<br>Stat:", as.character(round(df[[statcol]], 3)),
+                 "<br>PValue:", as.character(round(df[[pcol]], 3)),
+                 "<br>FDR:", as.character(round(df[[qcol]], 3))))
+    
+    
+  )
+  fig <- fig %>% layout(title = paste0(name, " (n=",nrow(df),")")
+                        )
+  return(fig)
+})
+
+output$nx_bar <- renderPlotly({
+  req(is.null(rv$nx_selected)==F)
+  req(is.null(n_ins_full())==F)
+  req(nrow(n_ins_full())<= nmax_bar) # only plot when few genes are selected
+  
+  nx_bar_plt()
+})
+
+# download plotly html graph
+output$nx_bar_dl <- downloadHandler(
+  filename = function() {paste("single-bar-", Sys.Date(), ".html", sep = "")},
+  content = function(file) {saveWidget(as_widget(nx_bar_plt()), file, selfcontained = TRUE)})
+
+
+
+####-----------------single volcano ----------------####
+
+
+# volcano graph 
+nx_vol_plt <- reactive({
+  
+  if (rv$nx_vol_plotmode=="Focus"){
+    df <- n_ins_full()
+  } else if (rv$nx_vol_plotmode=="Context"){
+    df_ins <- n_ins_full()$Name
+    df <- n_ins_full()
+    df <- rbind(rv$df_n[-which(rv$df_n$Name %in% df_ins),], df) # make sure the ins is plotted first
+  }
+  
+  
+  name <- rv$nx_selected
+  pcol <- paste0("PValue_", name)
+  qcol <- paste0("FDR_", name)
+  statcol <- paste0("Stat_", name)
+  
+  df <- df[, c("Name",pcol,qcol,statcol)]
+  
+  df[[pcol]][df[[pcol]]==0]<-0.00001 # replace 0 with 0.001
+  df <- remove_nas(df)
+  
+  if (rv$nx_vol_plotmode=="Focus"){
+    df$color <- ifelse(df[[pcol]] <= rv$nx_p & 
+                         abs(df[[statcol]]) >= rv$nx_Stat, 
+                       rv$nx_vol_c1, rv$nx_vol_c2)
+  } else if (rv$nx_vol_plotmode=="Context"){
+    # print(df_ins)
+    df$color <- ifelse(df$Name %in% df_ins,
+                       rv$nx_vol_c2, rv$nx_vol_c3)
+    df$color <- ifelse(df[[pcol]] <= rv$nx_p & 
+                         abs(df[[statcol]]) >= rv$nx_Stat & df$Name %in% df_ins, 
+                       rv$nx_vol_c1, df$color)
+    # print(df)
+  }
+
+  
+  
+  volcano_xmax <- max(abs(df[[statcol]]), na.rm = TRUE)+0.5 # find max of Stat
+  volcano_ymax <- max(-log10(df[[pcol]]), na.rm = TRUE)+0.5 # find max of -log10p
+  
+  fs_volcano <- plot_ly(
+    data = df, 
+    x = df[[statcol]],
+    y = -log10(df[[pcol]]),
+    mode = 'markers', 
+    marker = list(color = df$color),
+    hoverinfo="text",
+    text=c(paste(df$Name, 
+                 "<br>Stat:", as.character(round(df[[statcol]], 3)),
+                 "<br>PValue:", as.character(round(df[[pcol]], 3)),
+                 "<br>FDR:", as.character(round(df[[qcol]], 3))
+    ))
+  )
+  
+  fs_volcano <- fs_volcano %>% layout(title = paste0(name, " (n=",nrow(df),")"),
+                                      yaxis = list(zeroline = T, title="-log10(PValue)",
+                                                   range=c(0,volcano_ymax)),
+                                      xaxis = list(zeroline = T, title="Stat",
+                                                   range=c(-volcano_xmax,volcano_xmax)))
+  
+  return(fs_volcano)
+})
+output$nx_vol <- renderPlotly({
+  req(is.null(rv$nx_selected)==F)
+  req(is.null(n_ins_full())==F)
+  
+  nx_vol_plt()
+})
+
+# download plotly html graph
+output$nx_vol_dl <- downloadHandler(
+  filename = function() {paste("single-volcano-", Sys.Date(), ".html", sep = "")},
+  content = function(file) {saveWidget(as_widget(nx_vol_plt()), file, selfcontained = TRUE)})
+
+
+
+
 
 
 ####================= MULTIPLE FILTERING MENU =====================####
@@ -617,15 +1031,15 @@ observeEvent(input$nic_applytoall, {
     updateCheckboxInput(session, paste0("nic_na_",i), value=input$nic_na)
   }
 })
-observeEvent(input$nic_resetall, {
+observeEvent(input$nic_remove_filters, {
   for (i in 1:length(rv$nx_n)){
-    updateNumericInput(session, paste0("nic_p_",i), value=0.05)
+    updateNumericInput(session, paste0("nic_p_",i), value=1)
     updateNumericInput(session, paste0("nic_q_",i), value=1)
     updateNumericInput(session, paste0("nic_Stat_",i), value=0)
     updateRadioGroupButtons(session, paste0("nic_sign_",i), selected="All")
     updateCheckboxInput(session, paste0("nic_apply_",i), value=T)
     updateCheckboxInput(session, paste0("nic_na_",i), value=T)
-    updateNumericInput(session, "nic_p", value=0.05)
+    updateNumericInput(session, "nic_p", value=1)
     updateNumericInput(session, "nic_q", value=1)
     updateNumericInput(session, "nic_Stat", value=0)
     updateRadioGroupButtons(session, "nic_sign", selected="All")
@@ -647,7 +1061,7 @@ observe({
                                       #nic_Stat {height: 40px;}
                                       #nic_sign {height: 40px;}
                                       #nic_applytoall {height: 40px; line-height: 10px;}
-                                      #nic_resetall {height: 40px;line-height: 10px;}
+                                      #nic_remove_filters {height: 40px;line-height: 10px;}
                                     ")))
                                        ),
                                        fluidRow(
@@ -670,21 +1084,21 @@ observe({
                                          ),
                                          
                                        ),
-                                       fluidRow(
-                                         column(4,offset=1, align = "left",
-                                                checkboxInput(
-                                                  inputId= "nic_apply",
-                                                  label = "Apply",
-                                                  value = T)),
-                                         column(7, align = "left",
-                                                checkboxInput(
-                                                  inputId= "nic_na",
-                                                  label = "Show NAs",
-                                                  value = T, ))
-                                         
-                                       ),
+                                       # fluidRow(
+                                       #   column(4,offset=1, align = "left",
+                                       #          checkboxInput(
+                                       #            inputId= "nic_apply",
+                                       #            label = "Apply",
+                                       #            value = T)),
+                                       #   column(7, align = "left",
+                                       #          checkboxInput(
+                                       #            inputId= "nic_na",
+                                       #            label = "Show NAs",
+                                       #            value = T, ))
+                                       # 
+                                       # ),
                                        actionButton("nic_applytoall", "Apply to all"),
-                                       actionButton("nic_resetall", "Reset all"),
+                                       actionButton("nic_remove_filters", "Remove filters"),
                                        
                                        style = "padding: 15px;")
                             
@@ -721,36 +1135,144 @@ observe({
                                                              selected="All",size="s",direction = "horizontal"),
                                     ),
                                     
-                                  ),
-                                  fluidRow(
-                                    column(4,offset=1, align = "left",
-                                           checkboxInput(
-                                             inputId= paste0("nic_apply_",i),
-                                             label = "Apply",
-                                             value = T)),
-                                    column(7, align = "left",
-                                           checkboxInput(
-                                             inputId= paste0("nic_na_",i),
-                                             label = "Show NAs",
-                                             value = T, ))
-                                    
                                   )
+                                  # ,
+                                  # fluidRow(
+                                  #   column(4,offset=1, align = "left",
+                                  #          checkboxInput(
+                                  #            inputId= paste0("nic_apply_",i),
+                                  #            label = "Apply",
+                                  #            value = T)),
+                                  #   column(7, align = "left",
+                                  #          checkboxInput(
+                                  #            inputId= paste0("nic_na_",i),
+                                  #            label = "Show NAs",
+                                  #            value = T, ))
+                                  # 
+                                  # )
                                   ,style = "padding: 15px;background:#e6f4fc;")
     )
   }
 })
 
-####================= filter button UI =====================####
+####================= GENELISTS MENU =====================####
+
+# format gene lists text
+output$n_genelist <- renderText({
+  req(length(n_ins_gls())>1)
+  paste(n_ins_gls()[[1]], collapse="<br>")
+})
+
+
+# generates dynamic ui for showing genelists
+observe({
+  req(nrow(rv$df_n)>0)
+  
+  # prepare gene lists to render
+  for (i in 1:length(rv$nx_n)){
+    # apply textbox style to every text output
+    rv$gls_text[[i]] <- div(style="
+                white-space: pre-wrap;
+                display: block;
+                padding: 9.5px;
+                margin: 5px 0 10px;
+                font-size: 13px;
+                line-height: 1.42857143;
+                color: #333;
+                word-break: break-all;
+                word-wrap: break-word;
+                background-color: #f5f5f5;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                overflow-y: scroll;
+                height: 200px;
+                width: 200px;
+                font-family: monospace;
+                text-align: left;
+                "
+                            ,{
+                              HTML(paste(n_ins_gls()[[i]], collapse="<br>"))
+                            })
+  }
+  
+  # render the gene lists in block format
+  for (i in 1:length(rv$nx_n)){
+    rv$gls_ui[[i]] <- div(style="display: inline-block;vertical-align:top; width: 225px;word-break: break-all;text-align:left;",
+                          
+                          # display name and list length
+                          HTML(paste0("<strong>", rv$nx_n[[i]], "</strong>")), 
+                          br(),
+                          HTML(paste0("<i>", length(n_ins_gls()[[i]]), 
+                                      " out of ", nrow(rv$df_n), " total</i>")),
+                          br(),
+                          # display gene list in box
+                          rv$gls_text[[i]]
+    )
+  }
+})
+
+output$n_gls_ui <- renderUI({
+  req(nrow(rv$df_n)>0)
+  rv$gls_ui
+})
+
+
+####================= ENTER GENES MENU =====================####
+
+# report genes that are not found
+df_n_basic_nm <- reactive({
+  if (nchar(rv$n_igl)>0){
+    igl <- isolate(as.list(strsplit(rv$n_igl, '\\n+')))
+    notfound <- setdiff(igl[[1]], df_n_basic()$Name)
+  }
+  else{notfound=vector()}
+  return(notfound)
+})
+output$n_igl_nm <- renderUI({
+  req(length(df_n_basic_nm())>0)
+  nl <- paste(df_n_basic_nm(), collapse=", ")
+  box(width=12,
+      shiny::HTML(paste0("<strong>Not found</strong> (",length(df_n_basic_nm()),"): ", nl)),
+  )
+})
+observeEvent(input$n_igl_update,{
+  rv$n_igl <- input$n_igl
+})
+observeEvent(input$n_igl_reset,{
+  updateTextAreaInput(session, "n_igl", value="")
+  rv$n_igl <- ""
+})
+
+
+
+####================= Buttons UI =====================####
 
 customize_filters <- reactive({
-  dropdown(align="right",
+  dropdown(inputId="customize_filters", align="right",
            
-           tags$h3("Customize Filters"),
+           tags$h3("Gene list filters"),
            
            uiOutput("ui_n_gls_opt"),
            
            style = "material-circle", icon = icon("gear"),
-           status = "default", width = "800px",
+           status = "default", width = calc_dropdown_width(length(rv$nx_n)+1, 250, 70, max_per_row=3),
+           right=T, 
+           animate = animateOptions(
+             enter = "slideInRight",
+             exit = "fadeOutRight", duration = 0.5
+           ),
+  )
+})
+
+view_genelists <- reactive({
+  dropdown(inputId="view_genelists", align="right",
+           
+           tags$h3("Filtered gene lists"),
+           # downloadButton("gls_dl", "Download"),
+           uiOutput("n_gls_ui"),
+           
+           style = "material-circle", icon = icon("bars"),
+           status = "default", width = calc_dropdown_width(length(rv$nx_n), 225, 70, max_per_row=3),
            right=T, 
            animate = animateOptions(
              enter = "slideInRight",
@@ -760,6 +1282,46 @@ customize_filters <- reactive({
 })
 
 
+enter_genes <- reactive({
+  dropdown(inputId="enter_genes", align="right",
+           
+           tags$h3("Enter genes"),
+           
+           
+           textAreaInput("n_igl", 
+                         "Enter genes of interest (separated by new line):",
+                         placeholder="efk-1\nzip-2\ncep-1",
+                         value="efk-1\nzip-2\ncep-1"
+           ),
+           actionButton("n_igl_update", "Apply"),
+           bsTooltip("n_igl_update", "Only view selected genes"),
+           
+           actionButton("n_igl_reset", "Reset"),
+           bsTooltip("n_igl_reset", "Reset entry and view all data"),
+           
+           br(),br(),
+           uiOutput("n_igl_nm"),
+           div(style="text-align:left;",
+           HTML("<i>NOTE: If you are not seeing all the selected genes, 
+                remove the filters in the \"Gene list filters\" dropdown.</i>")
+           ),
+           
+           style = "material-circle", icon = icon("font"),
+           status = "default", width = "250px",
+           right=T, 
+           animate = animateOptions(
+             enter = "slideInRight",
+             exit = "fadeOutRight", duration = 0.5
+           ),
+  )
+})
+
+
+
+
+
+
+# floating help button on bottom
 output$n_floating_buttons <- renderUI({
   
   if (is.null(rv$df_n)==T){
@@ -798,11 +1360,12 @@ output$n_panels <- renderUI({
   else{
     div(
       fluidRow(
+        
         column(6,
                div(id="n1_1",
                    radioGroupButtons("n_ui_showpanel",
-                                     choices=c("Heatmap", "Intersection", "Scatter"),
-                                     selected="Heatmap", status="primary",
+                                     choices=c("Intersection", "Heatmap", "Scatter", "Single"),
+                                     selected="Intersection", status="primary",
                                      checkIcon = list(
                                        yes = tags$i(class = "fa fa-check-square", 
                                                     style = "color: white"),
@@ -815,8 +1378,12 @@ output$n_panels <- renderUI({
         column(6, align= "right",
                
                div(id="n1_2",
-                   
-                   customize_filters(),
+                   div(style="display: inline-block;margin-right: 5px;", enter_genes()),
+                   bsTooltip("enter_genes", "Enter genes of interest"),
+                   div(style="display: inline-block;margin-right: 5px;", view_genelists()),
+                   bsTooltip("view_genelists", "View filtered gene lists"),
+                   div(style="display: inline-block;", customize_filters()),
+                   bsTooltip("customize_filters", "Gene list filters"),
                    
                )
                
@@ -824,10 +1391,25 @@ output$n_panels <- renderUI({
         )
       ),
       
+      # fluidRow(
+      #   column(12,
+      #          box(
+      #            width = 12, status = "primary",solidHeader = F,
+      #            title = span(icon("table"),"Filter summary"),
+      #            uiOutput("filters_summary")
+      #          ),
+      #          
+      #   ),
+      # ),
       
-      uiOutput("n_ui_basic"),
       uiOutput("n_ui_intersect"),
-      uiOutput("n_ui_scatter")
+      uiOutput("n_ui_basic"),
+      uiOutput("n_ui_scatter"),
+      uiOutput("n_ui_single"),
+      
+      #----------------- Intersect table--------------------
+      
+      ins_table_panel()
       
       
     )   

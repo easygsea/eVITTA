@@ -1,72 +1,73 @@
-####-------------------- table ------------------------####
-
-df_n_tbl <- reactive({
-  
-  df <- n_basic_df()
-  
-  # tidy row names
-  if (nrow(df)>0){rownames(df) <- seq(1,nrow(df),1)}
-  
-  # to replace the stat col names
-  colnames(df) <- gsub("Stat", rv$tt[[rv$nx_i[[1]]]], colnames(df))
-  
-  df
-})
-
-# display table
-output$df_n_tbl <- DT::renderDataTable({
-  #req(length(rv$ll) >= 1)
-  req(rv$df_n)
-  
-  df <- df_n_tbl()
-  
-  rv$df_n_fullcols <- colnames(df)
-  
-  # to abbreviate the long column names...take first 5 letters
-  char_limit <- 56 / length(colnames(df))
-  # print(char_limit)
-  colnames(df) <- sapply(names(df), function(x){
-    if (nchar(x)>char_limit)
-    {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
-    else{return (x)}
-  })
-  
-  # to round everything down to 3 decimals
-  df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., 3))
-  
-  
-  df
-  
-  
-}, plugins = "ellipsis",
-options = list(scrollX=TRUE, 
-               columnDefs = list(
-                 list(
-                   targets = 1,
-                   render = JS("$.fn.dataTable.render.ellipsis( 17, true )")
-                 ),
-                 list(
-                   targets = "_all",
-                   render = JS("$.fn.dataTable.render.ellipsis( 6, true )")
-                 )
-               ),
-               headerCallback= JS("function(thead, data, start, end, display){",
-                                  sprintf("  var tooltips = [%s];", toString(paste0("'", rv$df_n_fullcols, "'"))),
-                                  "  for(var i = 1; i <= tooltips.length; i++){",
-                                  "    $('th:eq('+i+')',thead).attr('title', tooltips[i-1]);",
-                                  "  }",
-                                  "}")))
-
-
-
-# download current df
-output$download_n_df <- downloadHandler(
-  filename = function() {
-    paste("data", "-", "multiple", "-", Sys.Date(), ".csv", sep="")},
-  content = function(file) {
-    write.csv(df_n_tbl(), file, 
-              row.names = F, quote=TRUE)})
-
+# ####-------------------- table ------------------------####
+# 
+# df_n_tbl <- reactive({
+#   
+#   # df <- n_basic_df()
+#   df <- n_ins_full()
+#   
+#   # tidy row names
+#   if (nrow(df)>0){rownames(df) <- seq(1,nrow(df),1)}
+#   
+#   # to replace the stat col names
+#   colnames(df) <- gsub("Stat", rv$tt[[rv$nx_i[[1]]]], colnames(df))
+#   
+#   df
+# })
+# 
+# # display table
+# output$df_n_tbl <- DT::renderDataTable({
+#   #req(length(rv$ll) >= 1)
+#   req(rv$df_n)
+#   
+#   df <- df_n_tbl()
+#   
+#   rv$df_n_fullcols <- colnames(df)
+#   
+#   # to abbreviate the long column names...take first 5 letters
+#   char_limit <- 56 / length(colnames(df))
+#   # print(char_limit)
+#   colnames(df) <- sapply(names(df), function(x){
+#     if (nchar(x)>char_limit)
+#     {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
+#     else{return (x)}
+#   })
+#   
+#   # to round everything down to 3 decimals
+#   df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., 3))
+#   
+#   
+#   df
+#   
+#   
+# }, plugins = "ellipsis",
+# options = list(scrollX=TRUE, 
+#                columnDefs = list(
+#                  list(
+#                    targets = 1,
+#                    render = JS("$.fn.dataTable.render.ellipsis( 17, true )")
+#                  ),
+#                  list(
+#                    targets = "_all",
+#                    render = JS("$.fn.dataTable.render.ellipsis( 6, true )")
+#                  )
+#                ),
+#                headerCallback= JS("function(thead, data, start, end, display){",
+#                                   sprintf("  var tooltips = [%s];", toString(paste0("'", rv$df_n_fullcols, "'"))),
+#                                   "  for(var i = 1; i <= tooltips.length; i++){",
+#                                   "    $('th:eq('+i+')',thead).attr('title', tooltips[i-1]);",
+#                                   "  }",
+#                                   "}")))
+# 
+# 
+# 
+# # download current df
+# output$download_n_df <- downloadHandler(
+#   filename = function() {
+#     paste("data", "-", "multiple", "-", Sys.Date(), ".csv", sep="")},
+#   content = function(file) {
+#     write.csv(df_n_tbl(), file, 
+#               row.names = F, quote=TRUE)})
+# 
 
 
 
@@ -91,7 +92,7 @@ output$n_to_plot <- renderUI({
     inputId = "n_to_plot",
     label= shiny::HTML("Plot data: 
                                <span style='color: gray'>(Note: only shared columns are selectable)</span>"),
-    choices = rv$iso_sharedcols, # this displays all the shared columns, 
+    choices = rv$hm_numeric_stats, # this displays all the shared numeric columns, 
     selected = "Stat"
   )
 })
@@ -156,9 +157,10 @@ n_hm_plt <- reactive({
   
   # print(head(df))
   
-  withProgress(message = 'Drawing heatmap...', value = 0, {
+  # withProgress(message = 'Drawing heatmap...', value = 0, {
     
-    df <- n_basic_df()
+    # df <- n_basic_df()
+    df <- n_ins_full()
     
     rownames(df) <- df$Name # put genename as index
     
@@ -166,19 +168,19 @@ n_hm_plt <- reactive({
     sortby_coln <- paste0(rv$n_to_plot,"_", rv$heatmap_sortby)
     df <- df[order(-df[sortby_coln]),] 
     names <- df$Name # preserve formatting in vector
-    incProgress(0.1)
+    # incProgress(0.1)
     
     # extract plotted values
     to_match <- paste0(rv$n_to_plot, "_")
     plotted <- data.frame(t(dplyr::select(df,contains(to_match))))
     req(nrow(plotted) > 0)
-    incProgress(0.1)
+    # incProgress(0.1)
     
     # make matrix for plot
     dat <- expand.grid(x = rownames(plotted), y = addlinebreaks(names,30,"<br>"))
     dat$z <- unlist(plotted)
     req(length(dat$z)>0)
-    incProgress(0.2)
+    # incProgress(0.2)
     
     # put all the shared columns in the hovertext (as many as you have).
     sharedcols <- rv$n_sharedcols
@@ -193,7 +195,7 @@ n_hm_plt <- reactive({
       }
       addlabel <- paste(addlabel, paste0(coln, ": ", le), sep="<br>")
     }
-    incProgress(0.2)
+    # incProgress(0.2)
     
     # define the hovertext
     textt <- ~paste(dat$y, addlabel)
@@ -204,14 +206,14 @@ n_hm_plt <- reactive({
                 colorscale  = cscale_simple,zauto = T, zmid= 0, colorbar = list(title = rv$n_to_plot),
                 hoverinfo = 'text',
                 text = textt)
-    incProgress(0.2)
+    # incProgress(0.2)
     fig <- fig %>% layout(
       xaxis = list(title = "", showticklabels = T),
-      yaxis = list(title = "", showticklabels = F)
+      yaxis = list(title = "", showticklabels = rv$n_hm_ylabs)
       # ,margin = list(l=200)
     )
     
-  })
+  # })
   
   fig
 })
