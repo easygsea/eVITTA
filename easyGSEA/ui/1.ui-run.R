@@ -77,7 +77,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
         column(
             width = 8,
             tabBox(
-                title = "Welcome to easyGSEA", width = 12, 
+                title = span(img(src = "easygsea_bw.tiff", height = 35)), width = 12, #, "Welcome to easyGSEA"
                 tabPanel(
                     "Summary",
                     uiOutput("summary_box")
