@@ -43,6 +43,7 @@ gene_identifiers = list("SYMBOL"="symbol","Other/Mixed" = "other")
 # wellpanel background colors
 bcol1 = "#e6f4fc"
 bcol2 = "#ffffe6"
+bcol3 = "#e6f4fc"
 
 # ===================== FUNCTIONS =====================
 # function to abbreviate strings

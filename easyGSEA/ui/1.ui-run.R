@@ -7,7 +7,7 @@ a_mode <- conditionalPanel(
                
                radioButtons(
                    inputId = "selected_mode",
-                   label = "Select analysis mode",
+                   label = "Select mode of analysis",
                    choices = run_modes,
                    selected = "gsea"
                ),
@@ -59,6 +59,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     # GSEA UI - uploading RNK file
                     uiOutput("ui_rnk"),
                     uiOutput("bs_file_reset"),
+                    uiOutput("feedbacks"),
                     
                     # GList UI - type in genes
                     uiOutput("ui_glist"),
