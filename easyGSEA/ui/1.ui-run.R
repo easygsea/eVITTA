@@ -1,3 +1,21 @@
+# ====================== Mode of analysis ======================
+a_mode <- conditionalPanel(
+    condition = "input.tabs == 'gsea'",
+    fluidRow(
+        column(12,
+               tags$hr(style="border-color: #48617b;margin: 8px;"),
+               
+               radioButtons(
+                   inputId = "selected_mode",
+                   label = "Select analysis mode",
+                   choices = run_modes,
+                   selected = "gsea"
+               ),
+               tags$hr(style="border-color: #48617b;margin: 8px;")
+        )
+    )
+)
+
 # ====================== Body GSEA ======================
 bodyGSEA <- tabItem(tabName = "gsea",
     fluidRow(
@@ -9,22 +27,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     width = 12,align = "left",
                     status = "primary",
                     
-                    # mode of analysis
-                    fluidRow(
-                        column(width = 12,
-                               wellPanel(
-                                   style = paste0("background:",bcol1),
-                                   # title = NULL, background = "yellow", solidHeader = T, width = 12,
-                                   radioButtons(
-                                       inputId = "selected_mode",
-                                       label = "Mode of analysis",
-                                       choices = run_modes,
-                                       selected = "gsea"
-                                   )
-                               )
-                        )
-                    )
-                    ,
+                    
                     
                     # select species
                     selectizeInput(
@@ -76,17 +79,20 @@ bodyGSEA <- tabItem(tabName = "gsea",
         ),
         column(
             width = 8,
-            tabBox(
-                title = span(img(src = "easygsea_bw.tiff", height = 35)), width = 12, #, "Welcome to easyGSEA"
-                tabPanel(
-                    "Summary",
-                    uiOutput("summary_box")
-                ),
-                tabPanel(
-                    "ID conversion",
-                    uiOutput("id_box")
+            fluidRow(
+                tabBox(
+                    title = "Welcome to easyGSEA", width = 12, #span(img(src = "easygsea_bw.tiff", height = 35),)
+                    tabPanel(
+                        "Overview",
+                        uiOutput("summary_box")
+                    ),
+                    tabPanel(
+                        "ID conversion",
+                        uiOutput("id_box")
+                    )
                 )
             )
+            
             # fluidRow(
             #     column(
             #         width = 8,

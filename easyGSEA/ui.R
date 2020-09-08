@@ -7,8 +7,9 @@ source("ui/5.ui-help.R")
 source("ui/css_addons.R")
 
 sidebar <- dashboardSidebar(
-    sidebarMenu(
+    sidebarMenu(id="tabs",
         menuItem("Run Analysis", tabName = "gsea", icon = icon("play")), #code-branch align-left
+        a_mode,
         menuItem("Enrichment Results", tabName = "kegg", icon = icon("bar-chart")), #fingerprint
         menuItem("Enrichment Network", tabName = "network", icon = icon("project-diagram")),
         # menuItem("Enrichment Summary", tabName = "summary", icon = icon("table")),
