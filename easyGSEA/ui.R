@@ -4,7 +4,7 @@ source("ui/3.ui-network.R")
 # source("ui/ui-summary.R")
 source("ui/4.ui-download.R")
 source("ui/5.ui-help.R")
-
+source("ui/css_addons.R")
 
 sidebar <- dashboardSidebar(
     sidebarMenu(
@@ -24,9 +24,11 @@ shinyUI(
     dashboardPage(
         title="easyGSEA - gene set enrichment analysis, interpretation & visualization",       
         
-        dashboardHeader(title = "easyGSEA", tags$li(class = "dropdown", actionButton("home", "Home",icon("paper-plane"), 
-                                                                                     style="color: #fff; background-color: #1976D2; border-color: #2e6da4",
-                                                                                     onclick ="location.href='http://tau.cmmt.ubc.ca/eVITTA/';"))), #,titleWidth = 200
+        dashboardHeader(title = "easyGSEA", 
+                        tags$li(class = "dropdown", actionButton("home", "Home",icon("paper-plane"), 
+                                                                 style="color: #fff; background-color: transparent; border-color: #c0d3e7; margin-top:8px; margin-right:8px; border-radius:2rem; border:0.125rem solid #fff",
+                                                                 onclick ="location.href='http://tau.cmmt.ubc.ca/eVITTA/';"))
+                        ), #,titleWidth = 200
         # skin = "black",
         sidebar,
         dashboardBody(
@@ -36,13 +38,19 @@ shinyUI(
             waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else 
             
             tags$head(
-                # tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+                tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
                 HTML("<script type='text/javascript' language='javascript' src='https://reactome.org/DiagramJs/diagram/diagram.nocache.js'></script>"),
                 tags$script(src = "reactome.js")
             ),
             
             useShinyjs(), # Set up shinyjs
             useShinyalert(),  # Set up shinyalert
+            
+            
+            # apply specific css adjustments additionally
+            css_addons,
+            
+            
             
             tabItems(
                 bodyGSEA,

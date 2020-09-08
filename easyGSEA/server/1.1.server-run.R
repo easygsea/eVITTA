@@ -72,7 +72,7 @@
                          # ,`data-target` = "#showdbs_collapsible"
                          ),
                 br(),
-                conditionalPanel('input.showdbs % 2 == 1',
+                conditionalPanel('input.showdbs % 2 == 1', id="showdbs_panel",
                                  rv$v[[species]],
                                  uiOutput("bs_reset_db")
                 ),
