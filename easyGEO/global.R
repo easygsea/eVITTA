@@ -16,7 +16,7 @@ library(BiocManager)
 library(waiter)
 library(statmod)
 library(scales)
-library(curl)
+# library(curl)
 options(repos = BiocManager::repositories())
 
 source("global/functions.R")

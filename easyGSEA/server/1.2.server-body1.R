@@ -149,11 +149,18 @@ output$feedback_filecontent_confirm <- renderUI({
     req(rv$db_status == "selected")
     req(rv$file_upload_status == "uploaded")
     req(is.null(rv$infile_confirm) == T)
-    bsButton(
-        "filecontent_confirm",
-        "Confirm",
-        style = "primary"
+    
+    fluidRow(
+        column(
+            12,
+            bsButton(
+                "filecontent_confirm",
+                "Confirm",
+                style = "primary"
+            )
+        )
     )
+    
 })
 
 # --------------- feedback on converted RNK --------------
@@ -326,7 +333,7 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("<b>",rv$no_down_01,"</b> (down) <b>",rv$no_up_01,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.01"))
                     ),
                     br(),
-                    HTML("Navigate to <b>Enrichment Summary</b> for details.")
+                    HTML("Navigate to <b>Enrichment Results</b> for details.")
                 )
             )
         }else if(rv$run_mode == "glist"){
@@ -348,7 +355,7 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("<b>",rv$no_up_01,"</b> gene sets are significantly enriched at P.adj < 0.01"))
                     ),
                     br(),
-                    HTML("Navigate to <b>Enrichment Summary</b> for details.")
+                    HTML("Navigate to <b>Enrichment Results</b> for details.")
                 )
             )
         }
@@ -407,9 +414,9 @@ output$run_summary_gsea <- renderUI({
                     uiOutput("feedback_rnk"),
                     uiOutput("feedback_filename"),
                     uiOutput("feedback_filecontent"),
-                    uiOutput("feedback_filecontent_deg"),
-                    uiOutput("feedback_filecontent_rnk"),
-                    uiOutput("feedback_filecontent_confirm"),
+                    # uiOutput("feedback_filecontent_deg"),
+                    # uiOutput("feedback_filecontent_rnk"),
+                    # uiOutput("feedback_filecontent_confirm"),
                     uiOutput("feedback_converted_rnk"),
                     
                     uiOutput("feedback_glist"),
