@@ -3,12 +3,17 @@
         showModal(modalDialog(
             inputId = "rank_md",
             title = "Ranked list file format (*.rnk)",
-            includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
+             includeHTML(paste0(getwd(),"/inc/rnk_explanation.html")),
+            # dataTableOutput('example_data1'),
+            # includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
             # includeMarkdown(knitr::knit(paste0(getwd(),"/inc/rnk_explaination.Rmd"),quiet=T)),
             easyClose = TRUE,size="l",
             footer = modalButton("Close")
         ))
     })
+
+  output$example1 <- renderTable({(example_data1 <- read.csv(paste0(getwd(),"/inc/cel2_example1.rnk"),header = TRUE, sep = "\t"))},escape = FALSE)
+  output$example2 <- renderTable({(example_data2 <- read.csv(paste0(getwd(),"/inc/cel2_example2.csv")))},escape = TRUE)
 
     # --------------  1.1 select databases --------------------
     
