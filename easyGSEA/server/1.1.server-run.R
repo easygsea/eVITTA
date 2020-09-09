@@ -456,7 +456,7 @@
       fluidRow(
         column(
           width = 12,
-          bsTooltip("gene_list_q", "Input gene list", placement = "top"),
+          bsTooltip("gene_list_q", "Input newline-delimited gene list", placement = "top"),
           textAreaInput(
             inputId = "gene_list",
             label = p("3. Input your genes (",
