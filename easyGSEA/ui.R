@@ -15,7 +15,7 @@ sidebar <- dashboardSidebar(
         # menuItem("Enrichment Summary", tabName = "summary", icon = icon("table")),
         menuItem("Download", tabName = "download", icon = icon("download")),
         menuItem("Help", tabName = "help", icon = icon("info-circle"))
-        
+
     )
 )
 
@@ -23,10 +23,10 @@ loadMsg = "easyGSEA - gene set enrichment analysis, interpretation & visualizati
 
 shinyUI(
     dashboardPage(
-        title="easyGSEA - gene set enrichment analysis, interpretation & visualization",       
-        
-        dashboardHeader(title = "easyGSEA", 
-                        tags$li(class = "dropdown", actionButton("home", "Home",icon("paper-plane"), 
+        title="easyGSEA - gene set enrichment analysis, interpretation & visualization",
+
+        dashboardHeader(title = "easyGSEA",
+                        tags$li(class = "dropdown", actionButton("home", "Home",icon("paper-plane"),
                                                                  style="color: #fff; background-color: transparent; border-color: #c0d3e7; margin-top:8px; margin-right:8px; border-radius:2rem; border:0.125rem solid #fff",
                                                                  onclick ="location.href='http://tau.cmmt.ubc.ca/eVITTA/';"))
                         ), #,titleWidth = 200
@@ -34,24 +34,25 @@ shinyUI(
         sidebar,
         dashboardBody(
             # theme = shinytheme("flatly"),
-            
+
             use_waiter(), # dependencies
-            waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else 
+            waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else
             
             tags$head(
-                tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+                # tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+                tags$style(' #reset {margin-top:-39px;margin-bottom:5px;} #add_db_modify{margin-top:-5px;}'),
                 HTML("<script type='text/javascript' language='javascript' src='https://reactome.org/DiagramJs/diagram/diagram.nocache.js'></script>"),
                 tags$script(src = "reactome.js")
             ),
-            
+
             useShinyjs(), # Set up shinyjs
             useShinyalert(),  # Set up shinyalert
-            
-            
-            
-            
-            
-            
+
+
+
+
+
+
             tabItems(
                 bodyGSEA,
                 bodyResults,
@@ -70,13 +71,13 @@ shinyUI(
             #   padding: 5px;
             #   background-color: #3179ae;
             #   z-index: 1000;")
-            
-            
+
+
             # apply specific css adjustments additionally
             ,css_addons
         )
-        
+
     )
-    
-    
+
+
 )
