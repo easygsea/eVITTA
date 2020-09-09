@@ -38,7 +38,7 @@ shinyUI(
             
             tags$head(
                 # tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
-                tags$style(' #reset {margin-top:-32px;margin-bottom:5px;}'),
+                tags$style(' #reset {margin-top:-39px;margin-bottom:5px;} #add_db_modify{margin-top:-5px;}'),
                 HTML("<script type='text/javascript' language='javascript' src='https://reactome.org/DiagramJs/diagram/diagram.nocache.js'></script>"),
                 tags$script(src = "reactome.js")
             ),
