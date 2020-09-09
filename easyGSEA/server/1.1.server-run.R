@@ -3,9 +3,9 @@
         showModal(modalDialog(
             inputId = "rank_md",
             title = "Ranked list file format (*.rnk)",
-             includeHTML(paste0(getwd(),"/inc/rnk_explanation.html")),
+             # includeHTML(paste0(getwd(),"/inc/rnk_explanation.html")),
             # dataTableOutput('example_data1'),
-            # includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
+            includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
             # includeMarkdown(knitr::knit(paste0(getwd(),"/inc/rnk_explaination.Rmd"),quiet=T)),
             easyClose = TRUE,size="l",
             footer = modalButton("Close")

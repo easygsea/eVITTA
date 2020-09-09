@@ -7,7 +7,9 @@ runtime: shiny
 ---
 
 
-The RNK file contains a single, rank ordered gene list (not gene set) in a simple newline-delimited text format. It is used when you have a pre-ordered ranked list that you want to analyze with GSEA. The list need not be sorted.
+The RNK file contains a single, rank ordered gene list (not gene set) in a simple newline-delimited text format. It has two columns: the first column contains genes while the second contains rank scores. It is used when you have a pre-ordered ranked list that you want to analyze with GSEA. The list need not be sorted.
+
+We support both comma- and tab-delimited text files.
 
 <br/>
 
