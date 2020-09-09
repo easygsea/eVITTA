@@ -23,7 +23,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
             width = 4,
             # fluidRow(
                 box(
-                    title = "RUN Analysis", solidHeader = F,
+                    title = span(icon("play-circle"),"RUN Analysis"), solidHeader = F,
                     width = 12,align = "left",
                     status = "primary",
                     
@@ -43,7 +43,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                             onInitialize = I('function() { this.setValue(""); }')
                         )
                     ),
-                    bsTooltip("selected_species_q", "Select species", placement = "top"),
+                    bsTooltip("selected_species_q", "Select species, then click \"Confirm selection\"", placement = "top"),
                     
                     # database selection
                     uiOutput("test_db"),
@@ -56,14 +56,14 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     radioButtons(
                         "gene_identifier",
                         HTML(paste0(
-                            "2. Gene identifier",
+                            "2. Select gene identifier:",
                             add_help("gene_identifier_q", style="padding:3px 0 0 0;position:absolute;right:0.4em;")
                         )),
                         choices = gene_identifiers,
                         selected = "other",
                         inline = TRUE
                     ),
-                    bsTooltip("gene_identifier_q", "Select gene identifier type", placement = "top"),
+                    bsTooltip("gene_identifier_q", "Select identifier of your input genes", placement = "top"),
                     
                     # GSEA UI - uploading RNK file
                     uiOutput("ui_rnk"),

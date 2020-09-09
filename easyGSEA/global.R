@@ -20,7 +20,6 @@ library(plotly)
 library(htmltools)
 library(AnnotationDbi)
 library(waiter)
-library(shinyalert)
 
 options(repos = BiocManager::repositories())
 

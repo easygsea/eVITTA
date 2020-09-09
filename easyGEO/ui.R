@@ -310,7 +310,7 @@ shinyUI(
     title="easyGEO - GEO expression analysis & visualization",
     dashboardHeader(title = "easyGEO",
                     dropdownMenuOutput("dropdown_menu"),
-                    tags$li(class = "dropdown", actionButton("home", "Home",icon("home"), 
+                    tags$li(class = "dropdown", actionButton("home", "eVITTA Home",icon("home"), 
                                                              style="color: #fff; background-color: transparent; border-color: #c0d3e7; margin-top:8px; margin-right:8px; border-radius:2rem; border:0.125rem solid #fff",
                                                              onclick ="location.href='http://tau.cmmt.ubc.ca/eVITTA/';"))
                     ),

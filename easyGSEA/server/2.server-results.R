@@ -36,7 +36,7 @@ output$ui_bodyResults <- renderUI({
                 width = 4,
                 fluidRow(
                     box(
-                        title = "Individual gene set statistics & visualization",status="primary",solidHeader = TRUE,
+                        title = span(icon("search"),"Individual gene set statistics & visualization"),status="primary", #solidHeader = TRUE,
                         id = "gs_es_result",
                         width = 12, #height = "300px",
                         fluidRow(

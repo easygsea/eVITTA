@@ -14,7 +14,7 @@ output$ui_downloadlist <- renderUI({
 # UI download box
 output$ui_downloadbox <- renderUI({
     box(
-        title = "Enrichment Results Table", solidHeader = T, width = 12, status = "primary",
+        title = span(icon("table"),"Enrichment Results Table"), width = 12, status = "primary",
         
         if(is.null(rv$run) || rv$run != "success"){
             fluidRow(

@@ -211,7 +211,7 @@
                       
 
             ),
-            bsTooltip("q1", "Click for more details", placement = "top")
+            bsTooltip("q1", "Click to learn more", placement = "top")
             
             
         )
@@ -288,10 +288,7 @@
           updateRadioButtons(
             session,
             "gene_identifier",
-            "2. Gene identifier",
-            choices = gene_identifiers,
-            selected = "symbol",
-            inline = TRUE
+            selected = "symbol"
           )
             sampleRNK_file <- paste0(getwd(),"/inc/",input$selected_species,".rnk")
             rv$infile_name = paste0(input$selected_species,".rnk")
@@ -367,7 +364,7 @@
     observeEvent(input$filecontent_confirm,{
         data = rv$data_head
         wtext = tags$b(
-          "Duplicated genes found in your uploaded file. If to continue, only the first duplicate(s) will be kept. Do you want to continue?",
+          "Duplicated genes found in your uploaded file. Only the first duplicate(s) will be kept. Do you want to continue?",
           style = "color: #FA5858;"
         )
         

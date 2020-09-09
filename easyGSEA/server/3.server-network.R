@@ -12,9 +12,9 @@ output$ui_bodyNetwork <- renderUI({
             box(
                 width = 12,
                 #<i class="fas fa-chart-network"></i>
-                title=span( icon("project-diagram"), "Network view of enriched gene sets"),solidHeader=T,status = "primary",
+                title=span( icon("project-diagram"), "Network view of enriched gene sets"), status = "primary",
                 div(
-                    style = "position: absolute; right: 1em; top: 3em;",
+                    style = "position: absolute; right: 1em; top: 1em;",
                     dropdown(
                         size = "xs",
                         icon = icon("download", class = "opt"),
@@ -116,7 +116,7 @@ output$ui_vis_gear <- renderUI({
     #         ),
     box(
         width = 12,
-        title = span(icon("gear", class = "opt"),tags$strong("Advanced parameters for creating a network")),
+        title = span(icon("gear", class = "opt"),"Advanced parameters for creating a network"),
         icon = "fa fa-th",
         status = "primary", 
         # solidHeader = T,
@@ -164,8 +164,23 @@ output$ui_vis_gear <- renderUI({
                             "Combined Coefficient" = "combined"
                         ),
                         selected = rv$percent_method
-                    )
+                    ),
+                    bsTooltip("q_vis_edge", "Click to learn more", placement = "top")
                 ),
+                column(
+                    width = 5,
+                    numericInput("vis_percent_cutoff",
+                                 label = p("Edge threshold",
+                                           tags$style(type = "text/css", "#q_vis_edge_threshold {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;margin-left: 10px;}"),
+                                           bsButton("q_vis_edge_threshold", label = "", icon = icon("question"), style = "default", size = "extra-small")),
+                                 rv$percent_cutoff, min = 0, max = 1, step = 0.01
+                    ),
+                    bsTooltip("q_vis_edge_threshold", "Click to learn more", placement = "top")
+                    
+                )
+                
+            ),br(),
+            fluidRow(
                 column(
                     width = 3,
                     conditionalPanel(
@@ -173,18 +188,6 @@ output$ui_vis_gear <- renderUI({
                         numericInput("combined_k","Combined constant, K",
                                      rv$vis_k, min = 0, max = 1, step = 0.01
                         )
-                    )
-                )
-                
-            ),br(),
-            fluidRow(
-                column(
-                    width = 3,
-                    numericInput("vis_percent_cutoff",
-                                 label = p("Edge threshold",
-                                           tags$style(type = "text/css", "#q_vis_edge_threshold {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;margin-left: 10px;}"),
-                                           bsButton("q_vis_edge_threshold", label = "", icon = icon("question"), style = "default", size = "extra-small")),
-                                 rv$percent_cutoff, min = 0, max = 1, step = 0.01
                     )
                 ),
                 column(
