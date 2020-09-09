@@ -16,7 +16,7 @@ We support both comma- and tab-delimited text files.
 
 #### **Example RNK file**
 
-You can try our example RNK file (Goh et al., *Aging Cell*, 2018) by clicking the `loadExampleRNK` button below. Please make sure you have selected your species of interest. The file will be automatically loaded.
+You can try our example RNK file (Goh et al., *Aging Cell*, 2018; Blanco-Melo D et al., *Cell*, 2020) by clicking the `loadExampleRNK` button below. Please make sure you have selected your species of interest. The file will be automatically loaded.
 
 
 <div id="example1" class="shiny-html-output"></div>

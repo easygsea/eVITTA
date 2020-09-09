@@ -45,8 +45,7 @@ shinyUI(
             ),
             
             useShinyjs(), # Set up shinyjs
-            useShinyalert(),  # Set up shinyalert
-            
+
             
             
             
