@@ -189,11 +189,12 @@
     output$ui_rnk <- renderUI({
         req(input$selected_mode == "gsea")
         # req(rv$db_status == "selected")
-        # div(
-        #     class = "btn-danger",
+        div(
+
+      
             fileInput("rnkfile",
                       label = p("3. Upload RNK file:",
-                                tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;margin-left: 160px;}"),
+                                tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
                                 bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                       buttonLabel = "Upload...",
                       accept = c(
@@ -201,9 +202,14 @@
                           "text/comma-separated-values",
                           ".csv",".txt",".tab",".tsv",
                           ".rnk")
+                      
+                      
 
-            )
-        # )
+            ),
+            bsTooltip("q1", "Click for more details", placement = "top")
+            
+            
+        )
 
     })
     
@@ -448,11 +454,15 @@
       fluidRow(
         column(
           width = 12,
+          bsTooltip("gene_list_q", "Input gene list", placement = "top"),
           textAreaInput(
             inputId = "gene_list",
             label = p("3. Input your genes (",
                       tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
-                      actionLink("load_example_glist", label = tags$u("example data")),
+                      HTML("<i class='fa fa-question-circle' style = 'color:#00c0ef;font-size:medium;padding:3px 0 0 0;position:absolute;right:0.8em;' id='gene_list_q'></i>"),
+                      actionLink("load_example_glist", label = tags$u("example data")
+                                 
+                                 ),
                       "):"
             ),
             placeholder = "Paste your genes here ...",

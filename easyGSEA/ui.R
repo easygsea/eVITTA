@@ -48,8 +48,7 @@ shinyUI(
             useShinyalert(),  # Set up shinyalert
             
             
-            # apply specific css adjustments additionally
-            css_addons,
+            
             
             
             
@@ -72,6 +71,9 @@ shinyUI(
             #   background-color: #3179ae;
             #   z-index: 1000;")
             
+            
+            # apply specific css adjustments additionally
+            ,css_addons
         )
         
     )
