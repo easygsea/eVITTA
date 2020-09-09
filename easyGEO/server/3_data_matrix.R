@@ -89,7 +89,7 @@ output$sup_links <- renderUI({
       }
     )
     
-    div(style="display: inline-block;vertical-align:top; width: 100%;",
+    div(style="display: inline-block;vertical-align:top; width: 100%;word-break: break-word;",
                      wellPanel(basename(path), br(),
                                        # conditionalPanel(
                                        #   "false", downloadButton(ftp_id, "Download")
@@ -136,29 +136,28 @@ observeEvent(rv$ftpy,{
 output$upload_matrix_ui <- renderUI({
   req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup" | rv$sup_source == "none")
   
-  tabBox(
-    title = NULL, width = 12,
-    id = "upload_matrix",
-    tabPanel("Upload tidied matrix", 
-             
-             fileInput("file", "Upload tidied data matrix (CSV/TSV format):",
-                       accept = c(
-                         "text/csv",
-                         "text/comma-separated-values,text/plain",
-                         ".csv",".tsv",".txt",".tab")
-             ), 
-             
-             tags$hr(style="border-color: grey;"),
-             
-             strong("Note on uploading data matrix:"),br(),
-             "1) the data should be in comma- or tab-delimited format (csv, tsv, tab, txt),",br(),
-             "2) first row of matrix should be sample names; must match either the GEO accession or sample names,",br(),
-             "3) first column of matrix should be gene names; no duplicates are allowed,", br(),
-             "4) IMPORTANT FOR EXCEL USERS: to prevent excel auto-formatting gene names into dates, 
+  box(title=span(icon("upload"),"Upload tidied matrix"), width = 12, solidHeader=F, status = "primary", 
+      id = "upload_matrix",
+      
+      fileInput("file", "Upload tidied data matrix (CSV/TSV format):",
+                accept = c(
+                  "text/csv",
+                  "text/comma-separated-values,text/plain",
+                  ".csv",".tsv",".txt",".tab")
+      ), 
+      
+      tags$hr(style="border-color: grey;"),
+      
+      strong("Note on uploading data matrix:"),br(),
+      "1) the data should be in comma- or tab-delimited format (csv, tsv, tab, txt),",br(),
+      "2) first row of matrix should be sample names; must match either the GEO accession or sample names,",br(),
+      "3) first column of matrix should be gene names; no duplicates are allowed,", br(),
+      "4) IMPORTANT FOR EXCEL USERS: to prevent excel auto-formatting gene names into dates, 
                      when importing data into excel, select 'do not detect data types'."
-             
-    )
-  )
+      
+      
+      )
+  
 })
 
 # when file is uploaded, update the stored count matrix

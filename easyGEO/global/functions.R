@@ -160,7 +160,7 @@ dropdownMenuCustom <-     function (..., type = c("messages", "notifications", "
   dropdownClass <- paste0("dropdown ", type, "-menu")
   if (is.null(icon)) {
     icon <- switch(type, messages = shiny::icon("envelope"),
-                   notifications = shiny::icon("warning"), tasks = shiny::icon("tasks"))
+                   notifications = shiny::icon("warning"), tasks = shiny::icon("bars"))
   }
   numItems <- length(items)
   if (is.null(badgeStatus)) {
@@ -176,8 +176,9 @@ dropdownMenuCustom <-     function (..., type = c("messages", "notifications", "
       href = "#",
       class = "dropdown-toggle",
       `data-toggle` = "dropdown",
-      icon,
-      badge
+      icon
+      # ,
+      # badge
     ),
     tags$ul(
       class = "dropdown-menu",

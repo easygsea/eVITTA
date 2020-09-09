@@ -21,6 +21,10 @@ options(repos = BiocManager::repositories())
 
 source("global/functions.R")
 
+# load screen message
+loadMsg = "easyGEO"
+
+
 # accepted study types
 accepted_study_types <- c("Expression profiling by high throughput sequencing", "Expression profiling by array")
 
