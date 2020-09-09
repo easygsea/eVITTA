@@ -10,8 +10,7 @@ output$ui_bodyResults <- renderUI({
         )
     }else{
         fluidRow(
-            column(
-                width = 8,
+            column(12,
                 radioGroupButtons(
                     inputId = "plot_type",
                     choiceNames = list(span(icon("chart-bar"),"Bar plot"),span(icon("first-order-alt"),"Bubble plot"),span(icon("file-word"),"Keywords"),span(icon("braille"),"Manhattan plot"),span(icon("fire-alt"),"Volcano plot")), #,
@@ -20,7 +19,10 @@ output$ui_bodyResults <- renderUI({
                     status = "primary",
                     size = "normal",
                     direction = "horizontal"
-                ),
+                )
+            ),
+            column(
+                width = 8,
                 fluidRow(
                     uiOutput("manhattan_box"),
                     uiOutput("bar_box"),
@@ -54,6 +56,7 @@ output$ui_bodyResults <- renderUI({
                     )
                 )
             )
+            
         )
     }
 })
@@ -1048,12 +1051,11 @@ output$ui_es <- renderUI({
     fluidRow(
         column(
             width = 12,
-            tags$hr(style="border-color: grey; margin:20px;"),
+            # tags$hr(style="border-color: grey; margin:0px;"),br(),
             div(
                 style = 'overflow-x: scroll;font-size:75%', 
                 DT::dataTableOutput("gs_stats_tl")
             ),
-            tags$hr(style="border-color: grey; margin:22px;"),
             div(
                 style = "position: relative",
                 uiOutput("ui_gsea_plots_radio"),
@@ -1085,6 +1087,7 @@ output$ui_gsea_plots_radio <- renderUI({
     fluidRow(
         column(
             width = 12, align = "center",
+            br(),tags$hr(style="border-color: grey; margin:0px;"),br(),
             radioGroupButtons(
                 inputId = "plot_type_2",
                 # label = "Select plot type",

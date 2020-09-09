@@ -444,11 +444,11 @@ output$id_box <- renderUI({
             fluidRow(
                 column(
                     width = 4,
-                    uiOutput("ui_mat_download")
+                    uiOutput("ui_rnk_download")
                 ),
                 column(
                     width = 4,
-                    uiOutput("ui_rnk_download")
+                    uiOutput("ui_mat_download")
                 )
             ),
             br(),

@@ -1306,4 +1306,20 @@
         }
       }
     }
+    
+    #===================================================#
+    ###### reset all RVs when clicking RUN button #######
+    #===================================================#
 
+    reset_rvs <- function(){
+      rv$run = NULL
+      rv$fgseagg=NULL
+      rv$gmts=NULL
+      
+      rv$no_up_01 = 0;rv$no_up_05 = 0;rv$no_down_01 = 0;rv$no_down_05 = 0
+      
+      rv$es_term = NULL
+      
+      rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
+      rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
+    }
