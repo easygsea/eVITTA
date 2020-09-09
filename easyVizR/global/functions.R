@@ -305,3 +305,16 @@ calc_dropdown_width <- function(box_n, box_width, margin_width, max_per_row=3, u
   out <- paste0(w, unit)
   out
 }
+
+
+
+# add help buttons to labels (need to wrap again in HTML)
+# example of use: label=HTML("Label here", add_help("id1", style="padding:1px 1px 1px 1px;") )
+add_help <- function(id, color="#00c0ef", style=""){
+  out <- paste0("<i class='fa fa-question-circle' 
+                style = 'color:",color,";
+                font-size:medium;",style,"' 
+                id='",id,"'></i>")
+  
+  HTML(out)
+}

@@ -87,7 +87,7 @@ body <- dashboardBody(
     useShinyjs(), # shinyJS
     
     use_waiter(), # waiter
-    waiter_show_on_load(tagList(spin_fading_circles(),h4(loadMsg))), # shows before anything else
+    waiter_show_on_load(tagList(spin_three_bounce(),h4(loadMsg)), color = "#1976D2"), # shows before anything else 
 
     
     tabItems(
@@ -109,7 +109,7 @@ shinyUI(
   dashboardPage(
     title="easyVizR",
     dashboardHeader(title = "easyVizR",
-                    tags$li(class = "dropdown", actionButton("home", "Home",icon("paper-plane"), 
+                    tags$li(class = "dropdown", actionButton("home", "Home",icon("home"), 
                                                              style="color: #fff; background-color: transparent; border-color: #c0d3e7; margin-top:8px; margin-right:8px; border-radius:2rem; border:0.125rem solid #fff",
                                                              onclick ="location.href='http://tau.cmmt.ubc.ca/eVITTA/';"))
                     ),

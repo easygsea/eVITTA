@@ -32,7 +32,11 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     # select species
                     selectizeInput(
                         "selected_species",
-                        HTML("1. Select species that matches your input query: <i class='fa fa-question-circle' style = 'color:#00c0ef;font-size:medium;padding:3px 0 0 0;position:absolute;right:0.4em;' id='selected_species_q'></i>"),
+                        HTML(paste0(
+                            "1. Select species that matches your input query:",
+                            add_help("selected_species_q", style="padding:3px 0 0 0;position:absolute;right:0.4em;")
+                            )),
+                        
                         choices = species_names,
                         options = list(
                             placeholder = 'Type to search ...',
@@ -51,7 +55,10 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     # UI select identifier
                     radioButtons(
                         "gene_identifier",
-                        HTML("2. Gene identifier <i class='fa fa-question-circle' style = 'color:#00c0ef;font-size:medium;padding:3px 0 0 0;position:absolute;right:0.4em;' id='gene_identifier_q'></i>"),
+                        HTML(paste0(
+                            "2. Gene identifier",
+                            add_help("gene_identifier_q", style="padding:3px 0 0 0;position:absolute;right:0.4em;")
+                        )),
                         choices = gene_identifiers,
                         selected = "other",
                         inline = TRUE

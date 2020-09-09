@@ -437,15 +437,19 @@ ins_table_panel <- reactive({
     div(id="n2_4",
         
         wellPanel(
-          HTML("<strong>Combine options below to view specific intersections</strong>: 
-               <i class='fa fa-question-circle' style = 'color:#00c0ef;' id='ins_help'></i>"),
+          HTML(paste0(
+            "Combine options below to view specific intersections:",
+            add_help("ins_help", style="margin-left: 5px;"))
+          ),
           bsTooltip("ins_help", 
                     "TRUE: contained in this list;<br>FALSE: NOT contained in this list.", 
                     placement = "top"),
           br(),br(),
           uiOutput("ui_intersections"),
-          HTML("<strong>Active filters</strong>: 
-               <i class='fa fa-question-circle' style = 'color:#00c0ef;' id='active_filters_help'></i>"),
+          HTML(paste0(
+            "Active filters:",
+            add_help("active_filters_help", style="margin-left: 5px;"))
+          ),
           bsTooltip("active_filters_help", 
           "Filtering conditions for this intersection are displayed below", 
           placement = "top"),
@@ -761,8 +765,10 @@ output$n_ui_single <- renderUI({
                    dropdown(
                      radioButtons(
                        inputId = "nx_vol_plotmode",
-                       label = HTML("<strong>Plotting mode</strong>: 
-               <i class='fa fa-question-circle' style = 'color:#00c0ef;' id='vol_plotmode_help'></i>"),
+                       HTML(paste0(
+                         "Plotting mode:",
+                         add_help("vol_plotmode_help", style="margin-left: 5px;"))
+                       ),
                        choices = c("Focus", "Context")
                      ),
                      
