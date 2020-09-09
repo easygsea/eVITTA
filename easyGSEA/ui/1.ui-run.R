@@ -7,7 +7,7 @@ a_mode <- conditionalPanel(
                
                radioButtons(
                    inputId = "selected_mode",
-                   label = "Select analysis mode",
+                   label = "Select mode of analysis",
                    choices = run_modes,
                    selected = "gsea"
                ),
@@ -23,7 +23,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
             width = 4,
             # fluidRow(
                 box(
-                    title = "RUN Analysis", solidHeader = T,
+                    title = "RUN Analysis", solidHeader = F,
                     width = 12,align = "left",
                     status = "primary",
                     
@@ -32,13 +32,14 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     # select species
                     selectizeInput(
                         "selected_species",
-                        "1. Select species that matches your input query:",
+                        HTML("1. Select species that matches your input query: <i class='fa fa-question-circle' style = 'color:#00c0ef;font-size:medium;padding:3px 0 0 0;position:absolute;right:0.4em;' id='selected_species_q'></i>"),
                         choices = species_names,
                         options = list(
                             placeholder = 'Type to search ...',
                             onInitialize = I('function() { this.setValue(""); }')
                         )
                     ),
+                    bsTooltip("selected_species_q", "Select species", placement = "top"),
                     
                     # database selection
                     uiOutput("test_db"),
@@ -50,15 +51,17 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     # UI select identifier
                     radioButtons(
                         "gene_identifier",
-                        "2. Gene identifier",
+                        HTML("2. Gene identifier <i class='fa fa-question-circle' style = 'color:#00c0ef;font-size:medium;padding:3px 0 0 0;position:absolute;right:0.4em;' id='gene_identifier_q'></i>"),
                         choices = gene_identifiers,
                         selected = "other",
                         inline = TRUE
                     ),
+                    bsTooltip("gene_identifier_q", "Select gene identifier type", placement = "top"),
                     
                     # GSEA UI - uploading RNK file
                     uiOutput("ui_rnk"),
                     uiOutput("bs_file_reset"),
+                    uiOutput("feedbacks"),
                     
                     # GList UI - type in genes
                     uiOutput("ui_glist"),

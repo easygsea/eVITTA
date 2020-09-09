@@ -110,9 +110,9 @@ shinyUI(
     title="easyVizR",
     dashboardHeader(title = "easyVizR",
                     tags$li(class = "dropdown", actionButton("home", "Home",icon("paper-plane"), 
-                                                             style="color: #fff; background-color: #1976D2; border-color: #2e6da4",
-                                                             onclick ="location.href='http://tau.cmmt.ubc.ca/eVITTA/';")),
-                    dropdownMenuOutput("dropdown_menu")),
+                                                             style="color: #fff; background-color: transparent; border-color: #c0d3e7; margin-top:8px; margin-right:8px; border-radius:2rem; border:0.125rem solid #fff",
+                                                             onclick ="location.href='http://tau.cmmt.ubc.ca/eVITTA/';"))
+                    ),
     sidebar,
     body
   )

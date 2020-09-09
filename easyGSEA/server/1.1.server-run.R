@@ -77,7 +77,7 @@
                          # ,`data-target` = "#showdbs_collapsible"
                          ),
                 br(),
-                conditionalPanel('input.showdbs % 2 == 1',
+                conditionalPanel('input.showdbs % 2 == 1', id="showdbs_panel",
                                  rv$v[[species]],
                                  uiOutput("bs_reset_db")
                 ),
@@ -194,11 +194,12 @@
     output$ui_rnk <- renderUI({
         req(input$selected_mode == "gsea")
         # req(rv$db_status == "selected")
-        # div(
-        #     class = "btn-danger",
+        div(
+
+      
             fileInput("rnkfile",
                       label = p("3. Upload RNK file:",
-                                tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;margin-left: 160px;}"),
+                                tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
                                 bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                       buttonLabel = "Upload...",
                       accept = c(
@@ -206,9 +207,14 @@
                           "text/comma-separated-values",
                           ".csv",".txt",".tab",".tsv",
                           ".rnk")
+                      
+                      
 
-            )
-        # )
+            ),
+            bsTooltip("q1", "Click for more details", placement = "top")
+            
+            
+        )
 
     })
     
@@ -216,16 +222,16 @@
     output$bs_file_reset <- renderUI({
         req(input$selected_mode == "gsea")
         req(is.null(rv$infile_name)==F)
-        div(
+        fluidRow(column(12,
           bsButton(
             inputId = "reset",
             label = "Reset file",
             style = "default",
             type = "button"),
-          br(),br()
-        )
+        ))
         
     })
+
     
     # reset RNK input widget
     observeEvent(input$reset, {
@@ -254,9 +260,26 @@
         rv$infile_path = input$rnkfile$datapath
         shinyjs::disable("rnkfile")
     })
-    
+
+# ------------- 2.1.2 select corresponding table columns -----------------
+    # UI: select columns to 
+    output$feedbacks <- renderUI({
+      req(input$selected_mode == "gsea")
+      req(rv$db_status == "selected")
+      req(rv$file_upload_status == "uploaded")
+      req(is.null(rv$infile_confirm) == T)
+      
+      wellPanel(
+        # shiny::HTML("<p style='font-style:italic'>Select corresponding columns</p>"),
+        h4("Select corresponding columns"),
+        uiOutput("feedback_filecontent_deg"),
+        uiOutput("feedback_filecontent_rnk"),
+        uiOutput("feedback_filecontent_confirm"),
+        style = paste0("background:",bcol3)
+      )
+    })
         
-# ------------- 2.1.2 Upload and reset example RNK/DE --------------
+# ------------- 2.1.3 Upload and reset example RNK/DE --------------
     observeEvent(input$loadExampleRNK,{
         rv$example_file = NULL
         if(input$selected_species == ""){
@@ -308,7 +331,7 @@
     })
 
     
-# ----------------- 2.1.3 Return RNK -----------------------
+# ----------------- 2.1.4 Return RNK -----------------------
     # check and store input file content into rv$data_head
     observe({
         req(is.null(rv$infile_name)==F)
@@ -436,11 +459,15 @@
       fluidRow(
         column(
           width = 12,
+          bsTooltip("gene_list_q", "Input gene list", placement = "top"),
           textAreaInput(
             inputId = "gene_list",
             label = p("3. Input your genes (",
                       tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
-                      actionLink("load_example_glist", label = tags$u("example data")),
+                      HTML("<i class='fa fa-question-circle' style = 'color:#00c0ef;font-size:medium;padding:3px 0 0 0;position:absolute;right:0.8em;' id='gene_list_q'></i>"),
+                      actionLink("load_example_glist", label = tags$u("example data")
+                                 
+                                 ),
                       "):"
             ),
             placeholder = "Paste your genes here ...",
@@ -616,7 +643,8 @@
         column(
           width = 12,
           wellPanel(
-            shiny::HTML("<p style='font-style:italic'>Run parameters</p>"),
+            # shiny::HTML("<p style='font-style:italic'>Run parameters</p>"),
+            h4("Run parameters"),
             splitLayout(
               numericInput("mymin", "Min:",15),
               numericInput("mymax", "Max:",200),

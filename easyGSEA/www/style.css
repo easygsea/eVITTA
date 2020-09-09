@@ -1,39 +1,114 @@
+/* Stylesheet included 
+Main bright blue: #1976D2;
+Sharper main bright blue: #1d89ff;
+Sidebar muted dark blue: #112a41;
+Sidebar darker muted dark blue: #031321;
+Sidebar, toggle, logo hover: #14497c;
+Sidebar text: #a3bcd6;
+
+*/
+/*------------------------------------------------------*/
+
 /* logo */
-        .skin-blue .main-header .logo {
-                              background-color: #3564C3;
-                              }
+.skin-blue .main-header .logo {
+                      background-color: #1976D2;
+                      }
 
-        /* logo when hovered */
-        .skin-blue .main-header .logo:hover {
-                              background-color: #5d83cf;
-                              }
+/* logo when hovered */
+.skin-blue .main-header .logo:hover {
+                      background-color: #14497c;
+                      }
 
-        /* navbar (rest of the header) */
-        .skin-blue .main-header .navbar {
-                              background-color: #5d83cf;
-                              }        
+/* navbar (rest of the header) */
+.skin-blue .main-header .navbar {
+                      background-color: #1976D2;
+                      }        
 
-        /* main sidebar */
-        .skin-blue .main-sidebar {
-                              background-color: #1976D2;
-                              }
+/* toggle button when hovered  */                    
+ .skin-blue .main-header .navbar .sidebar-toggle:hover{
+                      background-color: #14497c;
+                      }
 
-        /* active selected tab in the sidebarmenu */
-        .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
-                              background-color: #ff0000;
-                              }
+/*------------------------------------------------------*/
 
-        /* other links in the sidebarmenu */
-        .skin-blue .main-sidebar .sidebar .sidebar-menu a{
-                              background-color: #00ff00;
-                              color: #000000;
-                              }
+/* main sidebar */
+.skin-blue .main-sidebar {
+                      background-color: #112a41;
+                      }
 
-        /* other links in the sidebarmenu when hovered */
-         .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
-                              background-color: #ff69b4;
-                              }
-        /* toggle button when hovered  */                    
-         .skin-blue .main-header .navbar .sidebar-toggle:hover{
-                              background-color: #ff69b4;
-                              }
+/* active selected tab in the sidebarmenu */
+.skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
+                      background-color: #031321;
+                      border-left-color: #1976D2;
+                      }
+
+/* other links in the sidebarmenu */
+.skin-blue .main-sidebar .sidebar .sidebar-menu a{
+                      background-color: #112a41;
+                      color: #c0d3e7; 
+                      }
+
+/* other links in the sidebarmenu when hovered */
+ .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
+                      background-color: #14497c;
+                      }
+
+
+/*------------------------------------------------------*/
+
+
+/* box headers */
+.box.box-solid.box-primary>.box-header {
+                      color: #fff;
+                      background: #1976d2;
+                      background-color: #1976d2;
+                      }
+
+/* box and tabbox top color */
+.box.box-primary {
+    border-top-color: #1d89ff;
+}
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #1d89ff;
+}
+
+/* box title */
+.box-header .box-title, .box-header>.fa, .box-header>.glyphicon, .box-header>.ion {
+                      display: inline-block;
+                      font-size: 17px;
+                      margin: 0;
+                      line-height: 1;
+                  }
+/* add margins to fa icons */                  
+.fa {
+    margin-right: 3px;
+    margin-left: 1.5px;
+}
+
+/*------------------------------------------------------*/
+
+/* buttons */
+.btn-primary {
+    background-color: #2c6eaf;
+    border-color: #184d82;
+}
+
+
+/*------------------------------------------------------*/
+
+/* hyperlinks */
+a {
+    color: #1976d2;
+}
+
+
+/*------------------------------------------------------*/
+
+/* universal fixes for sidebars:
+wraps text;
+changes all text colors to light blue;
+*/
+.main-sidebar .user-panel, .sidebar-menu, .sidebar-menu>li.header {
+    word-break: break-word;
+    color: #c0d3e7;
+}
