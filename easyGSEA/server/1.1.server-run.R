@@ -459,7 +459,7 @@
             inputId = "gene_list",
             label = p("3. Input your genes (",
                       tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
-                      HTML("<i class='fa fa-question-circle' style = 'color:#00c0ef;font-size:medium;padding:3px 0 0 0;position:absolute;right:0.8em;' id='gene_list_q'></i>"),
+                      add_help("gene_list_q", style="font-size:medium;padding:3px 0 0 0;position:absolute;right:0.8em;"),
                       actionLink("load_example_glist", label = tags$u("example data")
                                  
                                  ),
