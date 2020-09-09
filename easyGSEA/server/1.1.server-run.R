@@ -721,16 +721,7 @@
         rv$gperm=isolate(input$nperm)
 
         # reset RVs
-        rv$run = NULL
-        rv$fgseagg=NULL
-        rv$gmts=NULL
-        
-        rv$no_up_01 = 0;rv$no_up_05 = 0;rv$no_down_01 = 0;rv$no_down_05 = 0
-        
-        rv$es_term = NULL
-        
-        rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
-        rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
+        reset_rvs()
 
         rv$bar_pathway = rv$dbs
         rv$bubble_pathway = rv$dbs
@@ -819,19 +810,12 @@
         rv$run_mode = "glist"
         
         # reset RVs
-        rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
-        rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
-        
+        reset_rvs()
+
         # read in parameters
         
         genelist = toupper(rv$gene_lists_after)
-        
-        rv$run = NULL
-        rv$fgseagg=NULL
-        rv$gmts=NULL
-        
-        rv$no_up_01 = 0;rv$no_up_05 = 0
-        
+
         rv$gmin=isolate(input$mymin)
         rv$gmax=isolate(input$mymax)
 

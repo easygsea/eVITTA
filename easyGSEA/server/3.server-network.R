@@ -116,7 +116,7 @@ output$ui_vis_gear <- renderUI({
     #         ),
     box(
         width = 12,
-        title = span(icon("gear", class = "opt"),"Advanced parameters for creating a network"),
+        title = span(icon("gear", class = "opt"),"Advanced parameters for creating a network"), solidHeader = T,
         icon = "fa fa-th",
         status = "primary", 
         # solidHeader = T,
@@ -191,7 +191,7 @@ output$ui_vis_gear <- renderUI({
                     )
                 ),
                 column(
-                    width = 2,offset = 7,br(),br(),
+                    width = 2,offset = 7,br(),
                     bsButton("vis_replot","Replot!",width="100%",
                              style = "danger",icon = icon("atom") #,lib="font-awesome"
                     )
