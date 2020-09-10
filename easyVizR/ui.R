@@ -77,7 +77,9 @@ body <- dashboardBody(
       ,
       # fixes textareainput box in multiple dropdown
       "#n_igl{width: 200px;height: 100px;overflow-y: scroll;resize: none;}"
-      
+      ,
+      # fixes visnetwork footer
+      "#vis_network{margin-bottom:35px;}"
       
     )))
     ),

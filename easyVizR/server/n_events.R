@@ -63,7 +63,18 @@ observe({
   if(is.null(input$nx_bar_sig)==F){rv$nx_bar_sig <- input$nx_bar_sig}
   if(is.null(input$nx_bar_to_plot)==F){rv$nx_bar_to_plot <- input$nx_bar_to_plot}
   
-
+  
+  # network
+  
+  if(is.null(input$nw_selected_n)==F){rv$nw_selected_n <- input$nw_selected_n}
+  if(is.null(input$nw_le_sep)==F){rv$nw_le_sep <- input$nw_le_sep}
+  if(is.null(input$nw_selected_col)==F){rv$nw_selected_col <- input$nw_selected_col}
+  # if(is.null(input$cutoff_vis_p)==F){rv$cutoff_vis_p <- input$cutoff_vis_p}
+  # if(is.null(input$cutoff_vis_q)==F){rv$cutoff_vis_q <- input$cutoff_vis_q}
+  if(is.null(input$p_or_q_vis)==F){rv$p_or_q_vis <- input$p_or_q_vis}
+  if(is.null(input$vis_percent)==F){rv$vis_percent <- input$vis_percent}
+  if(is.null(input$vis_percent_cutoff)==F){rv$vis_percent_cutoff <- input$vis_percent_cutoff}
+  if(is.null(input$combined_k)==F){rv$combined_k <- input$combined_k}
 })
 
 
@@ -121,6 +132,8 @@ observeEvent(input$n_use_data,{
     rv$nx_n <- isolate(input$heatmap_dfs) # names
     # rv$iso_sharedcols<- isolate(rv$n_sharedcols) # shared cols (used for hm)
     rv$hm_numeric_stats <- get_cols_by_class(df_n, is.numeric, output_type="statnames")
+    rv$all_char_stats <- get_cols_by_class(df_n, is.character, output_type="statnames")
+    rv$nw_char_stats <- rv$all_char_stats[-which(rv$all_char_stats %in% c("Name"))] # without name col
     
     # current panel
     rv$n_ui_showpanel <- "Intersection"
@@ -191,6 +204,17 @@ observeEvent(input$n_use_data,{
     rv$nx_bar_sig <- "PValue"
     rv$nx_bar_to_plot <- "Stat"
     
+    
+    # network options
+    rv$nw_selected_n <- rv$nx_n[[1]]
+    rv$nw_le_sep <- "\\s+"
+    rv$nw_selected_col <- firstmatch(le_alias,rv$nw_char_stats)
+    # rv$cutoff_vis_p <- 0.05
+    # rv$cutoff_vis_q <- 1
+    rv$p_or_q_vis <- "PValue"
+    rv$vis_percent <- "jaccard"
+    rv$vis_percent_cutoff <- 0.25
+    rv$combined_k <- 0.5
     
     
     if (length(rv$nx_i) <= 5){rv$n_venn_status <- "ok"}
@@ -352,7 +376,7 @@ n_ins_df <- reactive({
     df <- df[df$Name %in% genelist,] # extract the rows from full df
   }
   else if (rv$n_ins_view == "Minimized"){
-    xx <- dplyr::select(df, contains(c("Name","Stat", rv$n_ins_plot)))
+    xx <- dplyr::select(df, contains(c("Name","Stat", "PValue", "FDR")))
     print(head(xx))
     df <- xx[xx$Name %in% genelist,]
   }

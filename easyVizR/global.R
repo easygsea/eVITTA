@@ -27,6 +27,8 @@ library(shinyBS)
 library(BiocManager)
 library(shinyjs)
 library(rintrojs)
+library(visNetwork)
+library(markdown)
 # library(dashboardthemes)
 options(repos = BiocManager::repositories())
 futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger") # to suppress creation of log file
