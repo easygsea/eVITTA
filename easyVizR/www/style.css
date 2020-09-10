@@ -109,7 +109,7 @@ wraps text;
 changes all text colors to light blue;
 */
 .main-sidebar .user-panel, .sidebar-menu, .sidebar-menu>li.header {
-    word-break: break-word;
+    word-break: break-all;
     color: #c0d3e7;
 }
 

@@ -237,10 +237,10 @@ outputOptions(output, "n_3ds_status", suspendWhenHidden = F)
 df_n_basic <- reactive({
   df <- rv$df_n
   if (nchar(rv$n_igl)>0){
-    igl <- isolate(as.list(strsplit(rv$n_igl, '\\n+')))
+    igl <- isolate(as.list(strsplit(toupper(rv$n_igl), '\\n+')))[[1]]
     print(igl)
-    df <- df[df$Name %in% igl[[1]],]
-    df <- df[order(match(df$Name, igl[[1]])), ]
+    df <- df[df$Name %in% igl,]
+    df <- df[order(match(df$Name, igl)), ]
   }
   return(df)
   print(df)
