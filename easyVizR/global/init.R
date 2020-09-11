@@ -65,6 +65,8 @@ q_alias <- c("(?i)qv(?-i)al.*","(?i)q(?-i).(?i)v(?-i)al.*",
              "(?i)p(?-i)adj", 
              "(?i)a(?-i)dj.(?i)p(?-i).(?i)v(?-i)al"
 )
+le_alias <- c("(?i)l(?-i)eading.*(?i)e(?-i)dge"
+)
 
 loadMsg = "easyVizR"
 

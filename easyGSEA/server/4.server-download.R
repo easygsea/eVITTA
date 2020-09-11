@@ -4,11 +4,19 @@
 # Overall UI download ----------------
 output$ui_downloadlist <- renderUI({
     req(rv$run == "success")
-
-    box(
-        width = 12, status = "primary",
-        uiOutput("menu_download_table")
+    
+    fluidRow(
+        column(12,
+               tags$hr(style="border-color: #48617b;margin: 8px;"),
+               uiOutput("menu_download_table"),
+               tags$hr(style="border-color: #48617b;margin: 8px;")
+        )
     )
+
+    # box(
+    #     width = 12, status = "primary",
+    #     uiOutput("menu_download_table")
+    # )
 })
 
 # UI download box
@@ -64,7 +72,7 @@ output$menu_download_table <- renderUI({
 
 # ----------UI table cut-------------
 output$ui_tl_cut <- renderUI({
-    dropdown(
+    dropdown(width=300,
         sliderTextInput("cutoff_p_tl",
                         label = "P threshold:",
                         choices= cutoff_slider,
@@ -86,8 +94,8 @@ output$ui_tl_cut <- renderUI({
         br(),
         bsButton(
             inputId = "confirm_tl",
-            label = "Cut table",
-            style = "success"
+            label = span(icon("cut"),"Cut table"),
+            style = "primary"
         ),
         size = "l",
         icon = icon("fas fa-cut"),# class = "opt"),
@@ -109,16 +117,16 @@ output$selected_es_tables <- DT::renderDataTable({
     df = filter_df()
     df <- df %>%
         mutate_if(is.numeric, function(x) round(x, digits=3))
+    df
+    # DT::datatable(df,
+    #               extensions=c('Scroller'),
+    #               options = list(
+    #                   scrollY = "155px",
+    #                   scroller = TRUE,
+    #                   scrollX=TRUE           
+    #               ))
     
-    DT::datatable(df,
-                  extensions=c('Scroller'),
-                  options = list(
-                      scrollY = "155px",
-                      scroller = TRUE,
-                      scrollX=TRUE           
-                  ))
-    
-    }
+    }, plugins="ellipsis", options = dt_options()
 )
 
 output$gs_tbl_dl <- downloadHandler(
@@ -149,7 +157,12 @@ output$ui_gmt_download <- renderUI({
         gmt_paths_basenames = paste0(gsub(" ","_",species_full),"_",basename(gmt_paths))
         
         a_links = paste0("<a href='",gmt_paths,"' download> <i class='fa fa-download'> </i>",gmt_paths_basenames,"</a><br/>")
-        do.call(HTML,as.list(a_links))
+        
+        div(
+            p("All our gene set libraries (.GMT) are available for download for further analysis and for tool development."),
+            p("Please acknowledge our work if you use one of our library files."),
+            do.call(HTML,as.list(a_links))
+        )
     }
 })
     

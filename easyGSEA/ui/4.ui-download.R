@@ -1,19 +1,26 @@
 # ====================== Download page ======================
+a_download <- conditionalPanel(
+    condition = "input.tabs == 'download'",
+    
+    uiOutput("ui_downloadlist")
+)
+
 bodyDownload <- tabItem(tabName = "download",
     fluidRow(
+        # column(
+        #     width = 3,
+        #     uiOutput("ui_downloadlist")
+        # ),
         column(
-            width = 3,
-            uiOutput("ui_downloadlist")
+            width = 7,
+            uiOutput("ui_downloadbox")
         ),
-        column(
-            width = 9,
-            uiOutput("ui_downloadbox"),
-            box(
-                title = span(icon("book-open"),"Gene Set Libraries"), width = 12, status = "primary",
-                p("All our gene set libraries (.GMT) are available for download for further analysis and for tool development."),
-                p("Please acknowledge our work if you use one of our library files."),
-                uiOutput("ui_gmt_download")
-            )
+        column(5,
+               box(
+                   title = span(icon("book-open"),"Gene Set Libraries"), width = 12, status = "primary",
+                   uiOutput("ui_gmt_download")
+               )
+            
         )
         
     )

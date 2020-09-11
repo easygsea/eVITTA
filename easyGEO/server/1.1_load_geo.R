@@ -40,7 +40,46 @@ observeEvent(input$search_geo, {
   withProgress(message = 'Getting data. Please wait a minute...', value = 1, {
     
     rv$geo_accession <- isolate(input$geo_accession)
-    rv$gse_all <- getGEO(input$geo_accession, GSEMatrix=T) 
+    #It appears that this is where load happens and we need to test if we things are unexpected when loading
+    rv$gse_all <- try(getGEO(input$geo_accession, GSEMatrix=T))
+
+    if(inherits(rv$gse_all, "try-error")) {        
+      ErrorMessage <- conditionMessage(attr(rv$gse_all, "condition"))  # the error message
+      #Depending on what we entered, different types of errors could occur:
+      
+      if(ErrorMessage == "object 'destfile' not found"){      
+          DisplayText <- "Your input is invalid. Please enter an existing accession number."
+          showModal(modalDialog( 
+            title = "Data fetching error",
+            HTML(DisplayText),
+            size = "l",
+            easyClose = TRUE
+          ))
+        }
+      if(ErrorMessage == "HTTP error 400."){
+        DisplayText <- "Input format is invalid. Please double check and try again."
+        showModal(modalDialog( 
+          title = "Data fetching error",
+          HTML(DisplayText),
+          size = "l",
+          easyClose = TRUE
+        ))
+      }
+      if((ErrorMessage != "object 'destfile' not found")&(ErrorMessage != "object 'destfile' not found")){
+        DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
+        showModal(modalDialog( 
+          title = "Data fetching error",
+          HTML(DisplayText),
+          size = "l",
+          easyClose = TRUE
+        ))
+      }
+      
+    }
+    
+    
+    req(!inherits(rv$gse_all, "try-error"))
+    
     
     rv$platforms <- tabulate(rv$gse_all, annotation)
     
@@ -135,7 +174,7 @@ output$select_geo_platform <- renderUI({
   #     # study_type()$type %in% accepted_study_types & 
   #         study_type()$channel_count == 1)
   
-  actionButton("geo_platform", "Select")
+  actionButton("geo_platform", "Select to proceed")
 })
 
 
@@ -167,3 +206,12 @@ observeEvent(input$geo_platform, {
   
 })
 
+
+# when all is done, show guide box to next page
+output$guide_1a <- renderUI({
+  if (is.null(rv$plat_id)==F){ # user already selected a platform
+    guide_box("<strong>Navigate to the next tab to proceed.</strong>")
+  } else {
+    return(NULL)
+  }
+})

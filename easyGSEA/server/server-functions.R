@@ -481,7 +481,10 @@
               dplyr::select(text,linenumber)
             
             data$text <- lapply(data$text,function(x) strsplit(x,"%")[[1]][1]) %>%
-              lapply(.,function(x) regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]) %>%
+              lapply(.,function(x){
+                if(grepl("_",x))
+                  regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]
+                }) %>%
               lapply(., function(x) gsub("_"," ",x)) %>%
               unlist(.)
             
@@ -1322,4 +1325,12 @@
       
       rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
       rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
+    }
+    
+    # ------------------ Panell Null -------------------
+    panel_null <- function(){
+      box(
+        title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
+        "Visualization available upon successful run."
+      )
     }
