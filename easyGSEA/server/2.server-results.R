@@ -1,7 +1,7 @@
 #=============================================================# 
 ######                 ENRICHMENT RESULTS              ########
 #=============================================================#
-# Overall bodyResults UI
+# ------------ Overall bodyResults UI ------------------
 output$ui_bodyResults <- renderUI({
     if(is.null(rv$run) || rv$run != "success"){
         box(
@@ -10,7 +10,7 @@ output$ui_bodyResults <- renderUI({
         )
     }else{
         fluidRow(
-            column(12,
+            column(9,
                 radioGroupButtons(
                     inputId = "plot_type",
                     choiceNames = list(span(icon("chart-bar"),"Bar plot"),span(icon("first-order-alt"),"Bubble plot"),span(icon("file-word"),"Keywords"),span(icon("braille"),"Manhattan plot"),span(icon("fire-alt"),"Volcano plot")), #,
@@ -20,6 +20,10 @@ output$ui_bodyResults <- renderUI({
                     size = "normal",
                     direction = "horizontal"
                 )
+            ),
+            column(3,
+                align="right"
+                # introjs button
             ),
             column(
                 width = 8,
@@ -1363,12 +1367,11 @@ output$kegg_feedback <- renderUI({
         title = NULL, background = "orange", solidHeader = TRUE, width=12,
         column(
             width = 10,
-            tags$b(paste0("Do you want to visualize the KEGG pathway for \"",rv$es_term,"\"? ")),
+            tags$b(paste0("Visualize KEGG pathway for \"",rv$es_term,"\"? ")),
         ),
         column(
-            width = 2,
+            width = 2, align = "right",
             bsButton("confirm_kegg_plot",tags$b("YES!"),style = "danger")
-            
         )
     )
 })
@@ -1424,8 +1427,8 @@ observeEvent(input$confirm_kegg_plot,{
     output$ui_kegg_1 <- renderUI({
         req(input$kegg_type == "native")
         box(
-            title = "KEGG native view",
-            solidHeader = T, status = "primary",width="100%",height=500,
+            title = span(icon("dna"),"KEGG native view"),
+            solidHeader = F, status = "primary",width="100%",height=500,
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
                 imageOutput("kegg_output_1")
@@ -1446,8 +1449,8 @@ observeEvent(input$confirm_kegg_plot,{
     output$ui_kegg_2 <- renderUI({
         req(input$kegg_type == "graphviz")
         box(
-            title = "KEGG graphviz layout",
-            solidHeader = T, status = "primary",width="100%",height=500,
+            title = span(icon("magnet"),"KEGG graphviz layout"),
+            solidHeader = F, status = "primary",width="100%",height=500,
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
                 htmlOutput("kegg_output_2")
@@ -1708,10 +1711,10 @@ observeEvent(input$confirm_kegg_plot,{
             title = NULL, background = "orange", solidHeader = TRUE, width=12,
             column(
                 width = 10,
-                tags$b(paste0("Do you want to visualize the Reactome pathway for \"",rv$es_term,"\"? ")),
+                tags$b(paste0("Visualize Reactome pathway for \"",rv$es_term,"\"? ")),
             ),
             column(
-                width = 2,
+                width = 2, align = "right",
                 bsButton("confirm_reactome_plot",tags$b("YES!"),style = "danger")
                 
             )
@@ -1734,8 +1737,8 @@ observeEvent(input$confirm_kegg_plot,{
     output$ui_reactome <- renderUI({
         req(rv$reactome_confirm == "yes")
         box(
-            title = "Reactome Pathway Diagram",
-            solidHeader = T, status = "primary",width="100%",height=610,align = "center",
+            title = span(icon("lightbulb"),"Reactome Pathway Diagram"),
+            solidHeader = F, status = "primary",width="100%",height=610,align = "center",
             div(
                 id="diagramHolder",style = 'overflow-x: scroll',
                 tags$script(HTML(sprintf("onReactomeDiagramReady('%s','%s');",rv$reactome_id,rv$reactome_genes)))
@@ -1752,10 +1755,10 @@ observeEvent(input$confirm_kegg_plot,{
             title = NULL, background = "orange", solidHeader = TRUE, width=12,
             column(
                 width = 10,
-                tags$b(paste0("Do you want to visualize the WikiPathways diagram for \"",rv$es_term,"\"? ")),
+                tags$b(paste0("Visualize WikiPathways diagram for \"",rv$es_term,"\"? ")),
             ),
             column(
-                width = 2,
+                width = 2, align = "right",
                 bsButton("confirm_wp_plot",tags$b("YES!"),style = "danger")
                 
             )
@@ -1837,8 +1840,8 @@ observeEvent(input$confirm_kegg_plot,{
     output$ui_wp <- renderUI({
         req(rv$wp_confirm == "yes")
         box(
-            title = "WikiPathways Diagram",
-            solidHeader = T, status = "primary",width="100%",height=610,align = "center",
+            title = span(icon("seeding"),"WikiPathways Diagram"),
+            solidHeader = F, status = "primary",width="100%",height=610,align = "center",
             div(
                 tags$iframe(src = rv$wp_src, width="100%", height="550px", style="overflow:hidden;")
             )

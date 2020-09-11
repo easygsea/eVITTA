@@ -14,6 +14,7 @@ sidebar <- dashboardSidebar(
         menuItem("Enrichment Network", tabName = "network", icon = icon("project-diagram")),
         # menuItem("Enrichment Summary", tabName = "summary", icon = icon("table")),
         menuItem("Download", tabName = "download", icon = icon("download")),
+        a_download,
         menuItem("Help", tabName = "help", icon = icon("info-circle"))
         
     )
