@@ -481,7 +481,10 @@
               dplyr::select(text,linenumber)
             
             data$text <- lapply(data$text,function(x) strsplit(x,"%")[[1]][1]) %>%
-              lapply(.,function(x) regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]) %>%
+              lapply(.,function(x){
+                if(grepl("_",x))
+                  regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]
+                }) %>%
               lapply(., function(x) gsub("_"," ",x)) %>%
               unlist(.)
             
