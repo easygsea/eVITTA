@@ -1326,3 +1326,11 @@
       rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
       rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
     }
+    
+    # ------------------ Panell Null -------------------
+    panel_null <- function(){
+      box(
+        title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
+        "Visualization available upon successful run."
+      )
+    }

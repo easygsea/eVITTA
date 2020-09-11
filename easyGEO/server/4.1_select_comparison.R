@@ -83,8 +83,13 @@ output$select_params_ui <- renderUI({
       uiOutput("sp_select_levels_rel_fb")
     )
   } else {
-    msg = HTML("<strong>No variables are available for selection.</strong><br>
-                       (NOTE: at least one variable must have >2 levels)")
+    msg = HTML(paste0("No variables are available for selection.<br>
+                       (NOTE: at least one variable must have >2 levels)<br><br>
+                      Try ",
+                      "<b>Coerce Selection</b> to proceed"
+                      # actionLink("coerce",tags$b("Coerce Selection"))
+                      # ," or return to <b>Design Matrix</b> to refine study designs."
+                      ))
     box_color = "red"
     fluidRow(
       box(
@@ -127,6 +132,15 @@ output$sp_select_levels_rel <- renderUI({
     )
   )
 })
+
+# # --------------- jump to coerce selection tab if variable only have one level ---------------
+# observeEvent(input$coerce,{
+#   updateTabsetPanel(
+#     session,
+#     "ui_select",
+#     selected = "coerce"
+#   )
+# })
 
 # ------------- feedbacks on selected levels ---------------
 output$sp_select_levels_rel_fb <- renderUI({

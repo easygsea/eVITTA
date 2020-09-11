@@ -1,3 +1,58 @@
+# ------------ overall visualization tab UI ---------------
+output$ui_vis <- renderUI({
+  if(is.null(rv$deg)){
+    panel_null()
+  }else{
+    tabBox(
+      title = "DEG Visualization", width = 12,
+      id = "visDEG", height = "720px",
+      
+      tabPanel(
+        "Volcano plot",
+        column(
+          width = 8,
+          uiOutput("ui_volcano")
+        ),
+        column(
+          width = 4,
+          uiOutput("vplot_parameters")
+        )
+      ),
+      
+      tabPanel(
+        "Heatmap",
+        column(
+          width = 8,
+          plotlyOutput("heatmap_plot",width = "100%", height = "650px")
+        ),
+        column(
+          width = 4,
+          uiOutput("hplot_parameters")
+        )
+      ),
+      
+      tabPanel(
+        "Explore a gene",
+        column(
+          width = 8,
+          radioGroupButtons(
+            "a_type",
+            NULL,
+            choices = list("Violin plot"="violin","Box plot"="box")
+          ),
+          plotOutput("ui_aplot",width = "100%", height = "600px")
+        ),
+        column(
+          width = 4,
+          uiOutput("aplot_parameters")
+        )
+        
+      )
+    )
+    
+  }
+})
+
 #---------------volcano: parameters------------------
 # volcano parameters UI
 output$vplot_parameters <- renderUI({

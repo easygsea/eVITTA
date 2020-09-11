@@ -135,7 +135,7 @@ output$select_geo_platform <- renderUI({
   #     # study_type()$type %in% accepted_study_types & 
   #         study_type()$channel_count == 1)
   
-  actionButton("geo_platform", "Select")
+  actionButton("geo_platform", "Select to proceed")
 })
 
 

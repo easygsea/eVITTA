@@ -1,4 +1,12 @@
-# basic function to filter DEG table
+# ------------- notification panel ------------------
+panel_null <- function(text = "Visualization available upon successful DEG run."){
+  box(
+    title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
+    text
+  )
+}
+
+# ------------- basic function to filter DEG table -------------------
 filter_df <- function(df = rv$deg,q_cutoff=input$tl_q,logfc_cutoff=input$tl_logfc){
   # filter table according to q & logFC
   df %>%
