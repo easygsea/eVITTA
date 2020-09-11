@@ -103,11 +103,13 @@ output$sup_links <- renderUI({
   do.call(tagList, o_list)
 })    
     
-# observe rv$ftpy, render successful modal
+# ------------ observe rv$ftpy, render reminder modal -------------
 observeEvent(rv$ftpy,{
   showModal(modalDialog(
-    title = rv$ftpy,
-    "Successfully downloaded.",
+    title = paste0("Successfully downloaded ",rv$ftpy),
+    tags$strong("Please decompress and check your downloaded data:"),
+    tags$li("If they are raw/normalized counts, please tidy them up and upload the right format according to our instructions below."),
+    tags$li(HTML("If they are analyzed, proceed to <b>easyGSEA</b> for enrichment analysis or <b>easyVizR</b> for multiple comparisons.")),
     easyClose = T,
     footer = modalButton("Got it!")
   ))

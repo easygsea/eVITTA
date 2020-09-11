@@ -6,10 +6,10 @@ sidebar <- dashboardSidebar(
     sidebarMenu(id="menu1",
                 menuItem("Extract GEO Data", tabName="tab1", icon=icon("dashboard")),
                 
-                menuItem("Design Summary", tabName="tab2", icon=icon("pencil-ruler")),
-                
                 menuItem("Data matrix", tabName="tab3", icon=icon("table")),
                 
+                menuItem("Design Summary (optional)", tabName="tab2", icon=icon("pencil-ruler")),
+
                 menuItem("Run DEG analysis", tabName="tab4", icon=icon("calculator")),
                 
                 menuItem("Visualize Results", tabName="tab5", icon=icon("chart-area"))
@@ -210,12 +210,20 @@ body <- dashboardBody(
                 fluidRow(
                     column(6,
                            
-                           box(title=span(icon("check-square"),"Select Comparison"), width = 12, solidHeader=F, status = "primary", 
+                           tabBox(id = "ui_select",
+                             width = 12, #solidHeader=F, status = "primary", 
+                             tabPanel(
+                               span(icon("check-square"),"Fine-tune Selection"), 
                                id = "sp",
                                
                                uiOutput("select_params_ui")
-                               
-                               ),
+                             ),
+                             tabPanel(id = "coerce",
+                              span(icon("mixer"),"Coerce Selection"),
+                              uiOutput("coerce_ui")
+                              
+                             )
+                           ),
                            
                     ),
                     column(6,
@@ -248,55 +256,9 @@ body <- dashboardBody(
                 
         ),
         
-        
+        # --------------------- Visualization tab ---------------------------
         tabItem(tabName = "tab5",
-                tabBox(
-                    title = "DEG Visualization", width = 12,
-                    id = "visDEG", height = "720px",
-                    
-                    tabPanel(
-                      "Volcano plot",
-                      column(
-                        width = 8,
-                        uiOutput("ui_volcano")
-                      ),
-                      column(
-                        width = 4,
-                        uiOutput("vplot_parameters")
-                      )
-                    ),
-                    
-                    tabPanel(
-                      "Heatmap",
-                      column(
-                        width = 8,
-                        plotlyOutput("heatmap_plot",width = "100%", height = "650px")
-                      ),
-                      column(
-                        width = 4,
-                        uiOutput("hplot_parameters")
-                      )
-                    ),
-                    
-                    tabPanel(
-                      "Explore a gene",
-                      column(
-                        width = 8,
-                        radioGroupButtons(
-                          "a_type",
-                          NULL,
-                          choices = list("Violin plot"="violin","Box plot"="box")
-                        ),
-                        plotOutput("ui_aplot",width = "100%", height = "600px")
-                      ),
-                      column(
-                        width = 4,
-                        uiOutput("aplot_parameters")
-                      )
-                      
-                    )
-                )
-                
+                uiOutput("ui_vis")
         )
     )
     

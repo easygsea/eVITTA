@@ -26,9 +26,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     title = span(icon("play-circle"),"RUN Analysis"), solidHeader = F,
                     width = 12,align = "left",
                     status = "primary",
-                    
-                    
-                    
+
                     # select species
                     selectizeInput(
                         "selected_species",
