@@ -55,7 +55,9 @@ body <- dashboardBody(
                            
                            box(title=span(icon("hdd"),"Select Platform"), width = 12, solidHeader=F, status = "primary",
                                uiOutput("geo_platform_ui")
-                           )
+                           ),
+                           
+                           uiOutput("guide_1a")
                            
                            
                     ),
