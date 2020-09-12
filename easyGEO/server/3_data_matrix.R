@@ -1,3 +1,56 @@
+# --------------- overall data matrix tab UI ---------------
+output$ui_dm <- renderUI({
+  if(is.null(rv$plat_id)){
+    panel_null()
+  }else{
+    fluidRow(
+      column(4,
+             
+             box(title=span(icon("download"),"Get data matrix"), width = 12, solidHeader=F, status = "primary", 
+                 id = "download_matrix",
+                 
+                 uiOutput("data_matrix_ui")
+                 
+             ),
+             
+             uiOutput("upload_matrix_ui")
+             
+      ),
+      column(8,
+             
+             box(title=span(icon("table"),"Processed data matrix"), width = 12, solidHeader=F, status = "primary", 
+                 id = "data_matrix",
+                 
+                 fluidRow(
+                   column(12,
+                          box(title=NULL, width = 6, solidHeader=T, status="primary",
+                              radioGroupButtons(
+                                inputId = "dmdf_show_coln",
+                                label = "Show column names as:", 
+                                choices = c("GEO accession", "Sample name"),
+                                selected = "GEO accession"
+                              ),
+                              
+                          ),
+                          
+                          uiOutput("dmdf_filter_ui"),
+                          
+                          DT::dataTableOutput("data_matrix_df")
+                          
+                   )
+                   
+                   
+                 )
+                 
+             )
+             
+      )
+    )
+    
+  }
+})
+
+
 # --------------- detect data source and provide download ---------------
 
 # Data matrix source is stored in rv$sup_source

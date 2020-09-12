@@ -1,5 +1,5 @@
 # ------------- notification panel ------------------
-panel_null <- function(text = "Visualization available upon successful DEG run."){
+panel_null <- function(text = "Data available upon selection of a platform."){
   box(
     title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
     text

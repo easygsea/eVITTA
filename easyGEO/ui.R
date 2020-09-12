@@ -92,115 +92,18 @@ body <- dashboardBody(
                 )
         ),
         
+        # ---------------------2. design matrix ---------------------------
+        
+        
         tabItem(tabName = "tab2",
-                fluidRow(
-                    
-                    column(8,
-                           
-                           
-                           tabBox(
-                               title = NULL, width = 12,
-                               id = "filter",
-                               
-                               tabPanel("Filter Data", 
-                                        
-                                        uiOutput("filter_design_ui"),
-                               ),
-
-                               tabPanel("Study Design Summary",
-
-                                        uiOutput("design_summary_ui")
-
-                               )
-                           ),
-                           box(title=span(icon("microscope"),"Filtered Design Matrix"), width = 12, solidHeader=F, status = "primary", 
-                               id = "filtered design matrix",
-                               
-                               fluidRow(
-                                 column(12,
-                                        box(title=NULL, width = 6, solidHeader=T, status="primary",
-                                            radioGroupButtons(
-                                              inputId = "fddf_show_rown",
-                                              label = "Show column names as:", 
-                                              choices = c("GEO accession", "Sample name"),
-                                              selected = "GEO accession"
-                                            )
-                                        ),
-                                        
-                                        DT::dataTableOutput("filtered_design_df")
-                                        
-                                 )
-                                 
-                               )
-                               
-                               )
-
-                    ),
-                    column(4,
-                           valueBoxOutput("design_variables", width=12),
-                           valueBoxOutput("design_samples", width=12),
-                           
-                           # tabBox(
-                           #     title = NULL, width = 12,
-                           #     id = "design_vis",
-                           #     
-                           #     
-                           #     tabPanel("Visualization", 
-                           #              
-                           #              "Some categorical heatmap/ sunburst visualization here"
-                           #     )
-                           # ),
-                           
-                           )
-                    
-                ),
+                uiOutput("ui_design")
 
         ),
+        
+        # ---------------------3. data matrix ---------------------------
+        
         tabItem(tabName = "tab3",
-                fluidRow(
-                    column(4,
-                           
-                           box(title=span(icon("download"),"Get data matrix"), width = 12, solidHeader=F, status = "primary", 
-                               id = "download_matrix",
-                               
-                               uiOutput("data_matrix_ui")
-                               
-                               ),
-                           
-                           uiOutput("upload_matrix_ui")
-                           
-                    ),
-                    column(8,
-                           
-                           box(title=span(icon("table"),"Processed data matrix"), width = 12, solidHeader=F, status = "primary", 
-                               id = "data_matrix",
-                               
-                               fluidRow(
-                                 column(12,
-                                        box(title=NULL, width = 6, solidHeader=T, status="primary",
-                                            radioGroupButtons(
-                                              inputId = "dmdf_show_coln",
-                                              label = "Show column names as:", 
-                                              choices = c("GEO accession", "Sample name"),
-                                              selected = "GEO accession"
-                                            ),
-                                            
-                                        ),
-                                        
-                                        uiOutput("dmdf_filter_ui"),
-                                        
-                                        DT::dataTableOutput("data_matrix_df")
-                                        
-                                 )
-                                 
-                                 
-                               )
-                           
-                           )
-                           
-                    )
-                )
-                
+                uiOutput("ui_dm")
 
         ),
         
