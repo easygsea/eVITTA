@@ -4,6 +4,9 @@ rv <- reactiveValues(
   fpta_ids = list(),
 
   # ========= filtered data from DEG run ======== #
+  min_n = 5, # maximum no of min samples for filtering
+  samples_null = NULL, # missed samples
+  
   deg = NULL, # DEG table
   deg_counts = NULL, # normalized count table
   deg_pdata = NULL, # pData for DEG run

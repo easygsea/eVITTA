@@ -23,7 +23,7 @@ samples_t <- function(p_df=deg_pdata(),c_var=input$sp_select_var){
     rownames(.)
 }
 
-# --------------- select variables and levels ---------------
+# --------------- 4.1.1 select variables and levels: fine-tune ---------------
 
 output$select_params_ui <- renderUI({
   req(is.null(rv$fddf)==F)
@@ -133,14 +133,7 @@ output$sp_select_levels_rel <- renderUI({
   )
 })
 
-# # --------------- jump to coerce selection tab if variable only have one level ---------------
-# observeEvent(input$coerce,{
-#   updateTabsetPanel(
-#     session,
-#     "ui_select",
-#     selected = "coerce"
-#   )
-# })
+
 
 # ------------- feedbacks on selected levels ---------------
 output$sp_select_levels_rel_fb <- renderUI({
@@ -233,17 +226,94 @@ output$ui_samples_fb <- renderUI({
     )
     
   )
+})
+
+# --------------- 4.1.2 select variables and levels: coerce ---------------
+
+# # --------------- jump to coerce selection tab if variable only have one level ---------------
+# observeEvent(input$coerce,{
+#   updateTabsetPanel(
+#     session,
+#     "ui_select",
+#     selected = "coerce"
+#   )
+# })
+
+# coerce overall ui
+output$coerce_ui <- renderUI({
+  req(is.null(rv$fddf)==F)
+
+  fluidRow(
+    column(12,
+      radioGroupButtons(
+        "names_toggle2",
+        "Show sample names as",
+        choices = list("GEO accession"="accession","Sample name"="title"),
+        selected = "title"
+      ),
+      uiOutput("ui_samples_fb2")
+    )
+  )
+})
+
+# -------- coerce sample selection -----------
+output$ui_samples_fb2 <- renderUI({
+  req(is.null(rv$fddf)==F)
   
-  # splitLayout(
-  #   checkboxGroupInput(inputId = "samples_c_deg",
-  #                      label = c_level,
-  #                      choices = samples_c,
-  #                      selected = samples_c
-  #   ),
-  #   checkboxGroupInput(inputId = "samples_t_deg",
-  #                      label = t_level,
-  #                      choices = samples_t,
-  #                      selected = samples_t
-  #   )
-  # )
+  fddf <- rv$fddf
+  
+  samples_c = samples_t = rownames(fddf)
+  
+  if(input$names_toggle2 == "title"){
+    titles_c = translate_sample_names(samples_c,  rv$pdata[c("title", "geo_accession")],  "title")
+    titles_t = translate_sample_names(samples_t,  rv$pdata[c("title", "geo_accession")],  "title")
+    
+    names(samples_c) = titles_c
+    names(samples_t) = titles_t
+  }
+  
+  fluidRow(
+    column(
+      width = 6,
+      pickerInput(
+        inputId = "samples_c_deg2",
+        label = "Control group",
+        choices = samples_c,
+        selected = samples_c,
+        options = list(
+          `actions-box` = TRUE,
+          size = 10,
+          style = "btn-default",
+          `selected-text-format` = "count > 0"
+        ),
+        multiple = TRUE
+      )
+    ),
+    column(
+      width = 6,
+      pickerInput(
+        inputId = "samples_t_deg2",
+        label = "Experimental group",
+        choices = samples_t,
+        selected = samples_t,
+        options = list(
+          `actions-box` = TRUE,
+          size = 10,
+          style = "btn-default",
+          `selected-text-format` = "count > 0"
+        ),
+        multiple = TRUE
+      )
+    )
+    
+  )
+})
+
+# --------------- observer selections, update rv$samples ---------------------
+observeEvent(list(input$samples_c_deg, input$samples_t_deg, input$samples_c_deg2, input$samples_t_deg2),{
+  if(input$ui_select == "sp"){
+    rv$samples = c(input$samples_c_deg, input$samples_t_deg)
+  }else if(input$ui_select == "coerce"){
+    rv$samples = c(input$samples_c_deg2, input$samples_t_deg2)
+  }
 })

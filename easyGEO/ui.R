@@ -205,22 +205,24 @@ body <- dashboardBody(
         ),
         
         
+        # ---------------------4. run DEG ---------------------------
         
         tabItem(tabName = "tab4",
                 fluidRow(
                     column(6,
                            
-                           tabBox(id = "ui_select",
+                           tabBox(
+                             id = "ui_select",
                              width = 12, #solidHeader=F, status = "primary", 
                              tabPanel(
+                               value = "sp",
                                span(icon("check-square"),"Fine-tune Selection"), 
-                               id = "sp",
-                               
                                uiOutput("select_params_ui")
                              ),
-                             tabPanel(id = "coerce",
-                              span(icon("mixer"),"Coerce Selection"),
-                              uiOutput("coerce_ui")
+                             tabPanel(
+                               value = "coerce",
+                                span(icon("mixer"),"Coerce Selection"),
+                                uiOutput("coerce_ui")
                               
                              )
                            ),
@@ -256,7 +258,7 @@ body <- dashboardBody(
                 
         ),
         
-        # --------------------- Visualization tab ---------------------------
+        # ---------------------5. Visualization ---------------------------
         tabItem(tabName = "tab5",
                 uiOutput("ui_vis")
         )
