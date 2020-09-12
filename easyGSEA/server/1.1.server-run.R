@@ -7,8 +7,8 @@
             # dataTableOutput('example_data1'),
             includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
             # includeMarkdown(knitr::knit(paste0(getwd(),"/inc/rnk_explaination.Rmd"),quiet=T)),
-            easyClose = TRUE,size="l",
-            footer = modalButton("Close")
+            easyClose = TRUE,size="l"
+            # , footer = modalButton("Close")
         ))
     })
 
@@ -39,7 +39,7 @@
 
         for(collection in sort(names(gmt_collections_paths[[species]]))){
             # print(paste0(species,gsub(" ","_",collection)))
-            rv$v[[species]][[collection]] <- div(
+            rv$v[[species]][[collection]] <- column(6,
                 checkboxGroupInput(
                     inputId = paste0(species,gsub(" ","_",collection)),
                     label = strsplit(collection,"_")[[1]][[2]],
@@ -68,30 +68,83 @@
     #     $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-up\\\"></span> Advanced database options ...");
     #   });
     # });')),
-                bsButton("showdbs", "Advanced database options ...", 
-                         icon = icon("collapse-down", lib = "glyphicon"),
-                         style = "default",
-                         type = "toggle"
+                actionButton("showdbs", "Advanced database options ...", 
+                         icon = icon("book-open")
+                         # icon = icon("collapse-down", lib = "glyphicon")
+                         # ,style = "default"
+                         # , type = "toggle"
                          # #, class = "btn-primary btn-sm"
                          # ,`data-toggle`="collapse"
                          # ,`data-target` = "#showdbs_collapsible"
                          ),
-                br(),
-                conditionalPanel('input.showdbs % 2 == 1', id="showdbs_panel",
-                                 rv$v[[species]],
-                                 uiOutput("bs_reset_db")
-                ),
-                br()
+                br(),br(),
+                # conditionalPanel('input.showdbs % 2 == 1', id="showdbs_panel",
+                #                  rv$v[[species]],
+                #                  uiOutput("bs_reset_db")
+                # ),
+                # br()
             )
         )
     })
     
+    # --------------  1.2.2 show databases in a modal ---------------------------
+    observeEvent(input$showdbs,{
+      species = input$selected_species
+      
+      showModal(modalDialog(id = "db_modal",
+        title = HTML(paste0("Available databases for <i>",species_translate(species),"</i>")),
+        div(
+          fluidRow(
+            # "Hello"
+            rv$v[[species]]
+          ),
+          fluidRow(
+            column(12,align="right",
+                   uiOutput("bs_reset_db")
+            )
+          )
+        ),
+        easyClose = F,size="m"
+        , footer = tagList(
+          # modalButton('Cancel'), 
+          bsButton('select_db', 'Select', style = "primary")
+        )
+      ))
+    })
+    
+    # reset to default selected databases
+    output$bs_reset_db <- renderUI({
+      req(input$selected_species != "")
+      req(is.null(rv$db_status)==T || rv$db_status == "modify")
+      bsButton(
+        inputId = "reset_db", 
+        label = "Reset to default selections",
+        # style = "primary",
+        type = "button")
+    })
+    
+    # observe modal "select" bsbutton, dismiss modal
+    observeEvent(input$select_db,{
+      dbs = NULL
+      species<-input$selected_species
+      
+      for(collection in sort(names(gmt_collections_paths[[species]]))){
+        db_id = paste0(species,gsub(" ","_",collection))
+        # db_name = input[[db_id]]
+        dbs = c(dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% isolate(input[[db_id]]))])
+      }
+      
+      if(length(dbs)<1){
+        showNotification("Select at least one database", type = "error", duration = 3)
+      }else{
+        removeModal()
+      }
+    })
     
     #-------------- 1.3 button control of gmt selection ----------------
     
     # write selected databases into RV
     observeEvent(input$add_db, {
-        rv$db_status <- "selected"
         rv$dbs = NULL
         
         species<-input$selected_species
@@ -100,6 +153,12 @@
             db_id = paste0(species,gsub(" ","_",collection))
             # db_name = input[[db_id]]
             rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% isolate(input[[db_id]]))])
+        }
+        
+        if(length(rv$dbs)<1){
+          showNotification("Select at least one database", type = "error", duration = 3)
+        }else{
+          rv$db_status <- "selected"
         }
     })
     
@@ -179,16 +238,7 @@
         }
     })
     
-    output$bs_reset_db <- renderUI({
-        req(input$selected_species != "")
-        req(is.null(rv$db_status)==T || rv$db_status == "modify")
-        bsButton(
-            inputId = "reset_db", 
-            label = "Reset",
-            style = "info",
-            type = "button")
-    })
-    
+
 # ------------ 2.1.1 Upload & reset RNK ---------------
     # UI file input
     output$ui_rnk <- renderUI({

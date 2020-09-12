@@ -45,8 +45,6 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     
                     # database selection
                     uiOutput("test_db"),
-                    
-                    
                     uiOutput("bs_add_db"),
                     
                     
