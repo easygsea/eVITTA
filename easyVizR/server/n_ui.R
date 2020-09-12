@@ -837,7 +837,7 @@ output$n_ui_single <- renderUI({
 
 ####================= Network panel =====================####
 
-output$n_ui_single <- renderUI({
+output$n_ui_network <- renderUI({
   req(rv$n_ui_showpanel == "Network")
   div(
     fluidRow(
@@ -1264,6 +1264,7 @@ output$n_panels <- renderUI({
       uiOutput("n_ui_basic"),
       uiOutput("n_ui_scatter"),
       uiOutput("n_ui_single"),
+      uiOutput("n_ui_network"),
       
       #----------------- Intersect table--------------------
       
