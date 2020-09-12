@@ -86,7 +86,7 @@ output$select_params_ui <- renderUI({
     msg = HTML(paste0("No variables are available for selection.<br>
                        (NOTE: at least one variable must have >2 levels)<br><br>
                       Try ",
-                      "<b>Coerce Selection</b> to proceed"
+                      "<b>Coerce sample selection</b> to proceed"
                       # actionLink("coerce",tags$b("Coerce Selection"))
                       # ," or return to <b>Design Matrix</b> to refine study designs."
                       ))

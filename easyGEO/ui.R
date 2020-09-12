@@ -8,7 +8,7 @@ sidebar <- dashboardSidebar(
                 
                 menuItem("Data matrix", tabName="tab3", icon=icon("table")),
                 
-                menuItem("Design Summary (optional)", tabName="tab2", icon=icon("pencil-ruler")),
+                menuItem("Design matrix (optional)", tabName="tab2", icon=icon("pencil-ruler")),
 
                 menuItem("Run DEG analysis", tabName="tab4", icon=icon("calculator")),
                 
@@ -213,15 +213,15 @@ body <- dashboardBody(
                            
                            tabBox(
                              id = "ui_select",
-                             width = 12, #solidHeader=F, status = "primary", 
+                             width = 12,
                              tabPanel(
                                value = "sp",
-                               span(icon("check-square"),"Fine-tune Selection"), 
+                               span(icon("check-square"),"Fine-tuned sample selection"), 
                                uiOutput("select_params_ui")
                              ),
                              tabPanel(
                                value = "coerce",
-                                span(icon("mixer"),"Coerce Selection"),
+                                span(icon("mixer"),"Coerce sample selection"),
                                 uiOutput("coerce_ui")
                               
                              )
