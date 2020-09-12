@@ -1,6 +1,6 @@
 element	intro
 n1_1	Select the type of visualization you want here.
-n1_2	Here you can apply filters to selected datasets. <br><br>To apply global filters, enter them in the leftmost panel and click "Apply to all"; <br>You can also apply individual filters in the other panels. <br><br>The filters will be applied dynamically. 
+n1_2	Here are the filtering options. <br><br>Filters are applied dynamically to each dataset, yielding gene lists.<br><br>You can also filter manually by entering a list of genes.
+n3_4	The currently selected intersection will be plotted. <br><br>You can change your selection any time.
 n3_3	To plot 2D scatter, select 2 datasets;<br>To plot 3D scatter, select 3 datasets.
-	Scatter plot is shown in the right panel.<br><br>Customization and download options are available on the bottom left corner.<br><br>For 2D scatter, correlation line and the lm() output are shown on the left. 
-n3_4	Data used for visualizations in this page are shown here; this is available for download in CSV format.
+	Scatter plot is shown in the right panel.<br><br>For 2D scatter, correlation line and the lm() output are shown on the left. 

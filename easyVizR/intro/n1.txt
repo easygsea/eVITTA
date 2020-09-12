@@ -1,7 +1,6 @@
 element	intro
 n1_1	Select the type of visualization you want here.
-n1_2	Here you can apply filters to selected datasets. <br><br>To apply global filters, enter them in the leftmost panel and click "Apply to all"; <br>You can also apply individual filters in the other panels. <br><br>The filters will be applied dynamically. 
-n1_3	Visualizations are shown in individual panels.
+n1_2	Here are the filtering options. <br><br>Filters are applied dynamically to each dataset, yielding gene lists.<br><br>You can also filter manually by entering a list of genes.
+n1_4	The currently selected intersection will be plotted. <br><br>You can change your selection any time.
 n1_3b	You can customize this visualization here.
 n1_3c	Download this visualization here.
-n1_4	Data used for visualizations in this page are shown here; this is available for download in CSV format.
