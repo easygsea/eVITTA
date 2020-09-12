@@ -40,7 +40,7 @@ output$run_deg_ui <- renderUI({
           width = 8,
           
           br(),
-          dataTableOutput("deg_table")
+          uiOutput("ui_deg_table")
         ),
         column(
           width = 4,
@@ -82,8 +82,8 @@ output$run_deg_ui <- renderUI({
 observeEvent(input$run_deg,{
   rv$gene_lists = NULL
   rv$deg = NULL
-  rv$samples_null_c = NULL; rv$samples_null_t = NULL; rv$samples_null = NULL
-  
+
+    
   # selected samples
   samples_c = input$samples_c_deg
   samples_t = input$samples_t_deg
@@ -153,7 +153,7 @@ observeEvent(input$run_deg,{
       samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
       
       # original count matrix
-      m_df = filtered_data_df()
+      m_df = filtered_data_df() %>% as.data.frame(.)
       
       # genes
       genes = m_df$Name %>% toupper(.)
@@ -164,15 +164,14 @@ observeEvent(input$run_deg,{
       m_df = m_df %>% 
         apply(., 2, as.numeric) %>%
         as.matrix(.)
-      
-      # missed samples
-      rv$samples_null_c = samples_c[!samples_c %in% colnames(m_df)]
-      rv$samples_null_t = samples_t[!samples_t %in% colnames(m_df)]
-      rv$samples_null = c(rv$samples_null_c,rv$samples_null_t)
 
       # rename rownames
       rownames(m_df) = genes
       
+      # remove duplicates
+      duplicates = duplicated(genes)
+      m_df = m_df[!duplicates, ]
+
       ## 3) run edgeR and/or limma
       # 3.1) determine if raw or normalized counts
       raw_or_norm = input$data_type
@@ -234,7 +233,6 @@ observeEvent(input$run_deg,{
 observeEvent(input$run_deg2,{
   rv$gene_lists = NULL
   rv$deg = NULL
-  rv$samples_null_c = NULL; rv$samples_null_t = NULL
 
   # selected samples
   samples_c = input$samples_c_deg2
@@ -285,27 +283,27 @@ observeEvent(input$run_deg2,{
       samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
       
       # original count matrix
-      m_df = filtered_data_df()
-      
+      m_df = filtered_data_df() %>% as.data.frame(.)
+
       # genes
       genes = m_df$Name %>% toupper(.)
       
       # as numeric matrix
       m_df = m_df %>% dplyr::select(one_of(samples))
+
       setcolorder(m_df, as.character(samples))
       
       m_df = m_df %>% 
         apply(., 2, as.numeric) %>%
         as.matrix(.)
-      
-      # missed samples
-      rv$samples_null_c = samples_c[!samples_c %in% colnames(m_df)]
-      rv$samples_null_t = samples_t[!samples_c %in% colnames(m_df)]
-      rv$samples_null = c(rv$samples_null_c,rv$samples_null_t)
 
       # rename rownames
       rownames(m_df) = genes
       
+      # remove duplicates
+      duplicates = duplicated(genes)
+      m_df = m_df[!duplicates, ]
+
       ## 3) run edgeR and/or limma
       # 3.1) determine if raw or normalized counts
       raw_or_norm = input$data_type
@@ -338,8 +336,7 @@ observeEvent(input$run_deg2,{
       
       # results
       results <- decideTests(fit)
-      summary(results)
-      
+
       # export DEG table
       degs = topTable(fit, coef=ncol(fit),sort.by="P",number=Inf)
       rv$deg = degs
@@ -361,20 +358,28 @@ observeEvent(input$run_deg2,{
 })
 
 # -------------render DEG Table, download------------
-output$deg_table <- DT::renderDataTable({
+output$ui_deg_table <- renderUI({
   req(is.null(rv$deg)==F)
   
   df = filter_df()
   
-  genes = rownames(df)
+  if(nrow(df)<1){
+    msg = paste0("No significant results found at <b>adj.P.Val < ",rv$plot_q,"</b> and <b>logFC >= ", rv$plot_logfc
+                 ,"</b>. <br><br> Please adjust the filtering criteria on the right.")
+    box(
+      title = NULL, background = "red", solidHeader = TRUE, width=12,
+      h4(HTML(msg))
+    )
+  }else{
+    dataTableOutput("deg_table")
+  }
+})
+
+# render DEG table if filtered row >= 1
+output$deg_table <- DT::renderDataTable({
+  req(is.null(rv$deg)==F)
   
-  df = df %>% 
-    dplyr::mutate_at(c("logFC","AveExpr","t","B"),function(x) round(x, digits = 1)) %>%
-    dplyr::mutate_at(c("P.Value","adj.P.Val"),function(x) scientific(x, digits = 2))
-  
-  rownames(df) = genes
-  
-  df
+  mutate_df()
 })
 
 # download DEG table

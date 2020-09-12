@@ -279,7 +279,7 @@ output$ui_samples_fb2 <- renderUI({
         inputId = "samples_c_deg2",
         label = "Control group",
         choices = samples_c,
-        selected = samples_c,
+        # selected = samples_c,
         options = list(
           `actions-box` = TRUE,
           size = 10,
@@ -295,7 +295,7 @@ output$ui_samples_fb2 <- renderUI({
         inputId = "samples_t_deg2",
         label = "Experimental group",
         choices = samples_t,
-        selected = samples_t,
+        # selected = samples_t,
         options = list(
           `actions-box` = TRUE,
           size = 10,

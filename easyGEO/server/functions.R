@@ -12,6 +12,22 @@ filter_df <- function(df = rv$deg,q_cutoff=input$tl_q,logfc_cutoff=input$tl_logf
   df %>%
     dplyr::filter(adj.P.Val < q_cutoff, abs(logFC)>=logfc_cutoff)
 }
+
+# mutate digits to 2 decimals
+mutate_df <- function(){
+  df = filter_df()
+  
+  genes = rownames(df)
+  
+  df = df %>% 
+    dplyr::mutate_at(c("logFC","AveExpr","t","B"),function(x) round(x, digits = 1)) %>%
+    dplyr::mutate_at(c("P.Value","adj.P.Val"),function(x) scientific(x, digits = 2))
+  
+  rownames(df) = genes
+  
+  return(df)
+}
+
 # input table for volcano plots
 volcano_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
   # genes
