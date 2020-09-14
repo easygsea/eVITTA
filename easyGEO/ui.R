@@ -4,15 +4,15 @@ source("ui/css_addons.R")
 
 sidebar <- dashboardSidebar(
     sidebarMenu(id="menu1",
-                menuItem("Extract GEO Data", tabName="tab1", icon=icon("dashboard")),
+                menuItem("1. Extract GEO Data", tabName="tab1", icon=icon("dashboard")),
                 
-                menuItem("Data matrix", tabName="tab3", icon=icon("table")),
+                menuItem("2. Data matrix", tabName="tab3", icon=icon("table")),
                 
-                menuItem("Design matrix (optional)", tabName="tab2", icon=icon("pencil-ruler")),
+                menuItem("(Optional: Design Matrix)", tabName="tab2", icon=icon("pencil-ruler")),
 
-                menuItem("Run DEG analysis", tabName="tab4", icon=icon("calculator")),
+                menuItem("3. Run DEG analysis", tabName="tab4", icon=icon("calculator")),
                 
-                menuItem("Visualize Results", tabName="tab5", icon=icon("chart-area"))
+                menuItem("4. Visualize Results", tabName="tab5", icon=icon("chart-area"))
                 
                 
     )
@@ -119,12 +119,24 @@ body <- dashboardBody(
                              width = 12,
                              tabPanel(
                                value = "sp",
-                               span(icon("check-square"),"Fine-tuned sample selection"), 
+                               span(icon("check-square"),
+                                    HTML(paste0("Fine-tuned sample selection",add_help(
+                                      "fine_q"
+                                    )))
+                                    ), 
+                               bsTooltip("fine_q", "Applicable when design matrix is provided by authors and complete","top"),
+                               
                                uiOutput("select_params_ui")
                              ),
                              tabPanel(
                                value = "coerce",
-                                span(icon("mixer"),"Coerce sample selection"),
+                                span(icon("mixer"),
+                                     HTML(paste0("Coerce sample selection",add_help(
+                                       "coerce_q"
+                                     )))
+                                     ),
+                               bsTooltip("coerce_q", "For any combination of samples","top"),
+                               
                                 uiOutput("coerce_ui")
                               
                              )

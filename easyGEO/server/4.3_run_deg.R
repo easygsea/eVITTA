@@ -29,9 +29,12 @@ output$run_deg_ui <- renderUI({
     tabPanel(
       "DEG Table",
       fluidRow(
-        column(
-          width = 12,
-          h4(HTML("Download entire DEG table and proceed to <b>easyGSEA</b> for gene set enrichment analysis and/or <b>easyVizR</b> for multiple comparisons.")),
+        box(
+          width = 12, title = NULL, background = "orange",
+          h4(HTML("DEG analysis complete!<br><br>
+                  Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><b>easyGSEA</b></a> for gene set enrichment analysis 
+                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><b>easyVizR</b></a> for multiple comparisons.")),
+          downloadButton("deg_table_download",label = "Download entire DEG table (.csv)")
           
         )
       ),
@@ -46,10 +49,10 @@ output$run_deg_ui <- renderUI({
           width = 4,
           br(),
           wellPanel(
-            downloadButton("deg_table_download",label = "Download entire DEG table (.csv)"),
-            tags$hr(style="border-color: grey;"),
             
             h4("Filter DEG table"),
+            tags$hr(style="border-color: grey;"),
+            
             
             # adj.P.Val cutoff
             sliderTextInput(

@@ -33,19 +33,22 @@ output$ui_downloadbox <- renderUI({
             )
             
         }else{
-            div(
-                h4(HTML("Download and proceed to <b>easyVizR</b> for multiple comparisons")),
-                
-                div(
-                    style="display: inline-block;vertical-align:top;",
-                    uiOutput("ui_tl_cut")
+            fluidRow(
+                box(
+                    width = 12, background = "orange", title=NULL,
+                    h4(HTML("Download non-filtered enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><b>easyVizR</b></a> for multiple comparisons")),
+                    div(
+                        style="display: inline-block;vertical-align:top;",
+                        uiOutput("ui_tl_cut")
+                    ),
+                    div(
+                        style="display: inline-block;vertical-align:top;",
+                        downloadButton("gs_tbl_dl",
+                                       label = "Download enrichment table (.csv)"), br(),br()
+                    )
+                    
                 ),
-                div(
-                    style="display: inline-block;vertical-align:top;",
-                    downloadButton("gs_tbl_dl",
-                                   label = "Download table (.csv)"), br(),br()
-                ),
-                div(
+                column(12,
                     dataTableOutput("selected_es_tables"),style="font-size:75%"
                 )
             )
