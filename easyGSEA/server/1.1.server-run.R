@@ -729,19 +729,13 @@
       req(input$selected_mode == "gsea")
       req(rv$db_status == "selected")
       
-      if(input$selected_mode == "gsea"){
-        req(is.null(rv$rnk_check)==F)
-        req(is.null(rv$rnkgg)==F)
-        
-      }else if(input$selected_mode == "glist"){
-        req(is.null(rv$glist_check)==F)
-        req(is.null(rv$gene_lists_after)==F)
-        
-      }
+      req(is.null(rv$rnk_check)==F)
+      req(is.null(rv$rnkgg)==F)
         
       bsButton(inputId = "confirm1", 
-               label = "RUN GSEA",
-               # block = TRUE,
+               label = "RUN GSEA!",
+               size = "large",
+               block = TRUE,
                icon = icon("play-circle"), 
                style = "danger")
     })
@@ -751,19 +745,13 @@
       req(input$selected_mode == "glist")
       req(rv$db_status == "selected")
       
-      if(input$selected_mode == "gsea"){
-        req(is.null(rv$rnk_check)==F)
-        req(is.null(rv$rnkgg)==F)
-        
-      }else if(input$selected_mode == "glist"){
-        req(is.null(rv$glist_check)==F)
-        req(is.null(rv$gene_lists_after)==F)
-        
-      }
+      req(is.null(rv$glist_check)==F)
+      req(is.null(rv$gene_lists_after)==F)
       
       bsButton(inputId = "confirm2", 
-               label = "RUN GLIST", 
-               # block = TRUE,
+               label = "RUN GLIST!", 
+               size = "large",
+               block = TRUE,
                icon = icon("play-circle"), 
                style = "danger")
         
@@ -807,16 +795,19 @@
             for(collection in sort(names(gmt_collections_paths[[species]]))){
                 db_id = paste0(species,gsub(" ","_",collection))
                 if(is.null(input[[db_id]])==F){
-                    for(cat_name in input[[db_id]]){
-                        gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
-                        m_list <- gmtPathways(gmt_path)
-
-                        gmts = c(gmts,list(m_list))
-                        catnames <- c(catnames, cat_name)
-                        incProgress(0.1)
-                    }
-                 }
-                
+                  inputs = input[[db_id]]
+                }else{
+                  inputs = gmt_collections_selected[[species]][[collection]]
+                }
+                    
+                for(cat_name in inputs){
+                  gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
+                  m_list <- gmtPathways(gmt_path)
+                  
+                  gmts = c(gmts,list(m_list))
+                  catnames <- c(catnames, cat_name)
+                  incProgress(0.1)
+                }
             }
             
             # save GMTs to rv
@@ -903,18 +894,22 @@
             for(collection in sort(names(gmt_collections_paths[[species]]))){
                 db_id = paste0(species,gsub(" ","_",collection))
                 if(is.null(input[[db_id]])==F){
-                    for(cat_name in input[[db_id]]){
-                        gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
-                        m_list <- gmtPathways(gmt_path)
-                        
-                        # get all genes
-                        a_genes = toupper(unname(unlist(m_list,recursive = T)))
-                        all_genes <- c(all_genes, list(a_genes))
-                        
-                        gmts = c(gmts,list(m_list))
-                        catnames <- c(catnames, cat_name)
-                        incProgress(0.1)
-                    }
+                  inputs = input[[db_id]]
+                }else{
+                  inputs = gmt_collections_selected[[species]][[collection]]
+                }
+                
+                for(cat_name in inputs){
+                  gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
+                  m_list <- gmtPathways(gmt_path)
+                  
+                  # get all genes
+                  a_genes = toupper(unname(unlist(m_list,recursive = T)))
+                  all_genes <- c(all_genes, list(a_genes))
+                  
+                  gmts = c(gmts,list(m_list))
+                  catnames <- c(catnames, cat_name)
+                  incProgress(0.1)
                 }
                 
             }
