@@ -745,10 +745,9 @@
       req(is.null(rv$rnkgg)==F)
         
       bsButton(inputId = "confirm1", 
-               label = "RUN GSEA!",
-               size = "large",
+               label = h4(span(icon("play-circle"),"RUN GSEA!")),
+               # size = "large",
                block = TRUE,
-               icon = icon("play-circle"), 
                style = "danger")
     })
     
@@ -761,10 +760,9 @@
       req(is.null(rv$gene_lists_after)==F)
       
       bsButton(inputId = "confirm2", 
-               label = "RUN ORA!", 
-               size = "large",
+               label = h4(span(icon("play-circle"),"RUN ORA!")),
+               # size = "large",
                block = TRUE,
-               icon = icon("play-circle"), 
                style = "danger")
         
     })
