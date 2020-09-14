@@ -116,7 +116,7 @@
         easyClose = F,size="m"
         , footer = tagList(
           # modalButton('Cancel'), 
-          bsButton('select_db', 'Select', style = "primary")
+          bsButton('select_db', 'Select!', style = "primary")
         )
       ))
     })
@@ -237,13 +237,20 @@
         rv$run = NULL
         
         species <- input$selected_species
-        for(collection in sort(names(gmt_collections_paths[[species]]))){
+        for(collection in names(gmt_collections_paths[[species]])){
+          sel = gmt_collections_selected[[species]][[collection]]
+          if(is.null(sel)){
             updateCheckboxGroupInput(session,
                                      inputId = paste0(species,gsub(" ","_",collection)),
-                                     label = strsplit(collection,"_")[[1]][[2]],
-                                     choices = sort(gmt_collections[[species]][[collection]]),
-                                     selected = gmt_collections_selected[[species]][[collection]]
+                                     selected = ""
             )
+          }else{
+            updateCheckboxGroupInput(session,
+                                     inputId = paste0(species,gsub(" ","_",collection)),
+                                     selected = sel
+            )
+          }
+            
         }
     })
     
