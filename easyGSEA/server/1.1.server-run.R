@@ -703,25 +703,37 @@
       }
       
       fluidRow(
-        column(
-          width = 12,
+        box(
+          width = 12, title = "Advanced run parameters", status = "warning", collapsible = T, collapsed = T,
           wellPanel(
-            # shiny::HTML("<p style='font-style:italic'>Run parameters</p>"),
-            h4("Run parameters"),
+            # h4("Run parameters"),
             splitLayout(
-              numericInput("mymin", "Min:",15),
-              numericInput("mymax", "Max:",200),
+              numericInput("mymin", 
+                           HTML(paste0("Min:",
+                                       add_help("mymin_q")))
+                           ,rv$gmin),
+              numericInput("mymax", 
+                           HTML(paste0("Max:",
+                                       add_help("mymax_q")))
+                           ,rv$gmax),
               uiOutput("ui_nperm")
             )
             ,style = "background:#e6f4fc;"
-          )
+          ),
+          bsTooltip("mymin_q", "Minimum gene set size", placement = "top"),
+          bsTooltip("mymax_q", "Maximum gene set size", placement = "top")
         )
       )
     })
 
     output$ui_nperm <- renderUI({
         req(input$selected_mode == "gsea")
-        numericInput("nperm", "# perm:",1000)
+      div(
+        numericInput("nperm", 
+                     HTML(paste0("# perm:",add_help("nperm_q")))
+                     ,rv$gperm),
+        bsTooltip("nperm_q", "No. of permutations", placement = "top")
+      )
     })
     
     # UI confirm GSEA
@@ -749,7 +761,7 @@
       req(is.null(rv$gene_lists_after)==F)
       
       bsButton(inputId = "confirm2", 
-               label = "RUN GLIST!", 
+               label = "RUN ORA!", 
                size = "large",
                block = TRUE,
                icon = icon("play-circle"), 
@@ -770,10 +782,10 @@
         
         sd = sd(ranks); rv$sd_high = sd * 2.5
         
-        rv$gmin=isolate(input$mymin)
-        rv$gmax=isolate(input$mymax)
-        rv$gperm=isolate(input$nperm)
-
+        if(is.null(input$mymin)==F){rv$gmin=input$mymin}
+        if(is.null(input$mymax)==F){rv$gmax=input$mymax}
+        if(is.null(input$nperm)==F){rv$gperm=input$nperm}
+        
         # reset RVs
         reset_rvs()
 
@@ -873,8 +885,8 @@
         
         genelist = toupper(rv$gene_lists_after)
 
-        rv$gmin=isolate(input$mymin)
-        rv$gmax=isolate(input$mymax)
+        if(is.null(input$mymin)==F){rv$gmin=input$mymin}
+        if(is.null(input$mymax)==F){rv$gmax=input$mymax}
 
         rv$bar_pathway = rv$dbs
         rv$bubble_pathway = rv$dbs

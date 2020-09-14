@@ -1334,3 +1334,18 @@
         "Visualization available upon successful run."
       )
     }
+    
+    # Function to draw an info box to guide the user along the pipeline
+    #--------------------- guide box ----------------------
+    # You can pass html string into msg, e.g. : guide_box("<strong>This is a bold message</strong>")
+    # default color is blue
+    # default width is 12 (maximum), must be is an integer value
+    # To make it appear on condition, call it in a conditional renderUI({})
+    
+    guide_box <- function(msg="Navigate to <b>Enrichment Results</b> for details", color="orange", width=12){
+      box(
+        title = NULL, background = color, solidHeader = TRUE, width=width,
+        h4(HTML(msg))
+      )
+    }
+    

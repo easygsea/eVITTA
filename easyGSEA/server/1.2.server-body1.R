@@ -155,7 +155,8 @@ output$feedback_filecontent_confirm <- renderUI({
             12,
             bsButton(
                 "filecontent_confirm",
-                "Confirm",
+                "Confirm and continue!",
+                block = TRUE,
                 style = "primary"
             )
         )
@@ -320,7 +321,7 @@ output$run_summary_gsea <- renderUI({
                     # style="text-align:center",
                     # width = 12, status = "warning",
                     # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
-                    h5(tags$b("Summary Report")),
+                    h4("Summary Report"),
                     # br(),
                     p(paste0("Mode of analysis: ",names(run_modes[run_modes == rv$run_mode]))),
                     # br(),
@@ -331,9 +332,10 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("Number of permutation=",rv$gperm)),
                         tags$li(HTML("<b>",rv$no_down_05,"</b> (down) <b>",rv$no_up_05,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.05")),
                         tags$li(HTML("<b>",rv$no_down_01,"</b> (down) <b>",rv$no_up_01,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.01"))
-                    ),
-                    br(),
-                    HTML("Navigate to <b>Enrichment Results</b> for details.")
+                    )
+                ),
+                fluidRow(
+                    guide_box()
                 )
             )
         }else if(rv$run_mode == "glist"){
@@ -343,7 +345,7 @@ output$run_summary_gsea <- renderUI({
                     # style="text-align:center",
                     # width = 12, status = "warning",
                     # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
-                    h5(tags$b("Summary Report")),
+                    h4("Summary Report"),
                     # br(),
                     p(paste0("Mode of analysis: ",names(run_modes[run_modes == rv$run_mode]))),
                     # br(),
@@ -353,9 +355,10 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("Gene set size filters min=",rv$gmin," max=",rv$gmax," results in ",rv$gmts_length," / ",length(rv$gmts)," gene sets")),
                         tags$li(HTML("<b>",rv$no_up_05,"</b> gene sets are significantly enriched at P.adj < 0.05")),
                         tags$li(HTML("<b>",rv$no_up_01,"</b> gene sets are significantly enriched at P.adj < 0.01"))
-                    ),
-                    br(),
-                    HTML("Navigate to <b>Enrichment Results</b> for details.")
+                    )
+                ),
+                fluidRow(
+                    guide_box()
                 )
             )
         }

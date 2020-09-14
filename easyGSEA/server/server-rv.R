@@ -49,7 +49,7 @@
 
         # org_db=NULL,
         dbs=NULL,fgseagg=NULL,gmts=NULL,gmts_length=NULL,
-        gmin=NULL,gmax=NULL,gperm=NULL,
+        gmin=15,gmax=200,gperm=1000,
         no_up_01=0,no_down_01=0,no_up_05=0,no_down_05=0,
         
         bar_q_cutoff=1, volcano_cutoff=.005, # bar cutoff synchronized with bubble; bubble_q_cutoff=1, 
