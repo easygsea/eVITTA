@@ -80,6 +80,19 @@ body <- dashboardBody(
       ,
       # fixes visnetwork footer
       "#vis_network{margin-bottom:35px;}"
+      ,
+      # fixes modal padding
+      ".modal-body {
+            position: relative;
+            padding: 15px;
+            margin: 0px 10px 0px 10px;
+        }",
+      # fixes modal footer
+      ".modal-footer {
+            border-top-color: #f4f4f4;
+            margin: 0px 20px 0px 20px;
+      }"
+      
       
     )))
     ),
