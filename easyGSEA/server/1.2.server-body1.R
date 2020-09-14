@@ -417,7 +417,7 @@ observeEvent(input$msg1,{
                     # uiOutput("feedback_dbs"),
                     uiOutput("feedback_rnk"),
                     uiOutput("feedback_filename"),
-                    uiOutput("feedback_filecontent"),
+                    # uiOutput("feedback_filecontent"),
                     # uiOutput("feedback_filecontent_deg"),
                     # uiOutput("feedback_filecontent_rnk"),
                     # uiOutput("feedback_filecontent_confirm"),

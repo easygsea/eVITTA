@@ -301,22 +301,7 @@
     
     # reset RNK input widget
     observeEvent(input$reset, {
-      rv$file_upload_status = "reset"
-      
-      # rv$run = NULL
-      rv$rnk_check = NULL
-      rv$infile_check = NULL
-      rv$example_file = NULL
-      rv$infile_confirm = NULL
-      rv$infile_name = NULL
-      rv$infile_path = NULL
-      rv$file_upload_status = NULL
-      rv$rnk_or_deg = NULL
-      rv$gene_lists_mat = NULL
-      
-      shinyjs::reset("rnkfile")
-      shinyjs::enable("rnkfile")
-              
+      reset_rnk()
     })
     
     # read in RNK file path name, disable widget
@@ -329,20 +314,42 @@
 
 # ------------- 2.1.2 select corresponding table columns -----------------
     # UI: select columns to 
-    output$feedbacks <- renderUI({
+    # output$feedbacks <- renderUI
+    observe({
       req(input$selected_mode == "gsea")
       req(rv$db_status == "selected")
       req(rv$file_upload_status == "uploaded")
       req(is.null(rv$infile_confirm) == T)
       
-      wellPanel(
-        # shiny::HTML("<p style='font-style:italic'>Select corresponding columns</p>"),
-        h4("Select corresponding columns"),
-        uiOutput("feedback_filecontent_deg"),
-        uiOutput("feedback_filecontent_rnk"),
-        uiOutput("feedback_filecontent_confirm"),
-        style = paste0("background:",bcol3)
-      )
+      showModal(modalDialog(
+        title = "Select corresponding columns to continue",
+        
+        fluidRow(
+          column(12,
+            wellPanel(
+              # shiny::HTML("<p style='font-style:italic'>Select corresponding columns</p>"),
+              h4("Select corresponding columns"),
+              uiOutput("feedback_filecontent_deg"),
+              uiOutput("feedback_filecontent_rnk"),
+              # uiOutput("feedback_filecontent_confirm"),
+              style = paste0("background:",bcol3)
+            )
+          ),
+          column(12,
+                 p("Your query file content:"),
+                 uiOutput("feedback_filecontent")
+          )
+        ),,
+          
+        easyClose = F,
+        footer = bsButton(
+          "filecontent_confirm",
+          h4("Confirm and continue!"),
+          block = TRUE,
+          style = "primary"
+        )
+      ))
+      
     })
         
 # ------------- 2.1.3 Upload and reset example RNK/DE --------------
@@ -394,8 +401,7 @@
     })
 
     
-# ----------------- 2.1.4 Return RNK -----------------------
-    # check and store input file content into rv$data_head
+# ----------------- 2.1.4 check and store input file content into rv$data_head -----------------------
     observe({
         req(is.null(rv$infile_name)==F)
         rv$infile_check=NULL
@@ -426,8 +432,9 @@
         rv$data_head = ranks
     })
     
-    # convert into ranks
+    # ----------------- 2.1.5 Return RNK -----------------------
     observeEvent(input$filecontent_confirm,{
+      removeModal()
         data = rv$data_head
         wtext = tags$b(
           "Duplicated genes found in your uploaded file. Only the first duplicate(s) will be kept. Do you want to continue?",
@@ -497,11 +504,15 @@
           }
         }
     })
+
+    # ----------------- 2.1.6 check if duplicated genes -----------------------
     
     observeEvent(input$confirm_duplicate_rnk,{
-      if(input$confirm_duplicate_rnk==TRUE){
+      if(input$confirm_duplicate_rnk){
         convert_rnk()
         return_rnk()
+      }else{
+        reset_rnk()
       }
     },ignoreInit = T)
     

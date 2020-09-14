@@ -1327,6 +1327,27 @@
       rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
     }
     
+    #===================================================#
+    ######             reset RNK button          #######
+    #===================================================#
+    reset_rnk <- function(){
+      rv$file_upload_status = "reset"
+      
+      # rv$run = NULL
+      rv$rnk_check = NULL
+      rv$infile_check = NULL
+      rv$example_file = NULL
+      rv$infile_confirm = NULL
+      rv$infile_name = NULL
+      rv$infile_path = NULL
+      rv$file_upload_status = NULL
+      rv$rnk_or_deg = NULL
+      rv$gene_lists_mat = NULL
+      
+      shinyjs::reset("rnkfile")
+      shinyjs::enable("rnkfile")
+    }
+    
     # ------------------ Panell Null -------------------
     panel_null <- function(){
       box(
