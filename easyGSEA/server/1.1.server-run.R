@@ -134,7 +134,7 @@
     
     # observe modal "select" bsbutton, dismiss modal
     observeEvent(input$select_db,{
-      dbs = NULL
+      dbs = NULL; rv$db_modal = "yes"
       species<-input$selected_species
       
       for(collection in sort(names(gmt_collections_paths[[species]]))){
@@ -150,7 +150,7 @@
       }
     })
     
-    #-------------- 1.3 button control of gmt selection ----------------
+    #-------------- 1.3 select GMTs ----------------
     
     # write selected databases into RV
     observeEvent(input$add_db, {
@@ -158,15 +158,26 @@
         
         species<-input$selected_species
         
-        for(collection in sort(names(gmt_collections_paths[[species]]))){
+        if(is.null(rv$db_modal)){
+          for(collection in sort(names(gmt_collections_paths[[species]]))){
             db_id = paste0(species,gsub(" ","_",collection))
-            # db_name = input[[db_id]]
-            if(is.null(input[[db_id]])){
-              rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% gmt_collections_selected[[species]][[collection]])])
-            }else{
-              rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% input[[db_id]])])
-            }
+            rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% gmt_collections_selected[[species]][[collection]])])
+          }
+        }else{
+          for(collection in sort(names(gmt_collections_paths[[species]]))){
+            db_id = paste0(species,gsub(" ","_",collection))
+            rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% input[[db_id]])])
+          }
         }
+        # for(collection in sort(names(gmt_collections_paths[[species]]))){
+        #     db_id = paste0(species,gsub(" ","_",collection))
+        #     # db_name = input[[db_id]]
+        #     if(is.null(input[[db_id]])){
+        #       rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% gmt_collections_selected[[species]][[collection]])])
+        #     }else{
+        #       rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% input[[db_id]])])
+        #     }
+        # }
         
         rv$db_status <- "selected"
     })
@@ -187,6 +198,7 @@
       rv$file_upload_status = NULL
       rv$rnk_or_deg = NULL
       rv$gene_lists_mat = NULL
+      rv$db_modal = NULL
       
       # rest glist UIs
       shinyjs::reset("gene_list")
@@ -815,7 +827,7 @@
             
             for(collection in sort(names(gmt_collections_paths[[species]]))){
                 db_id = paste0(species,gsub(" ","_",collection))
-                if(is.null(input[[db_id]])==F){
+                if(is.null(rv$db_modal)==F){
                   inputs = input[[db_id]]
                 }else{
                   inputs = gmt_collections_selected[[species]][[collection]]
@@ -835,48 +847,68 @@
             rv$gmts = unlist(gmts,recursive = F)
 
             # ------ run fgsea ------ #
-
+            errors = 0
             for (i in seq_along(gmts)){
                 # uppercase genes
                 m_list = lapply(gmts[[i]], function(x) toupper(x))
                 
-                fgseaRes <- fgsea(pathways = m_list,
+                a_lens = lengths(m_list)
+                print(min(a_lens))
+                print(max(a_lens))
+                
+                if(min(a_lens)>rv$gmax){errors = errors + 1}
+                
+                frun <- try(fgseaRes <- fgsea(pathways = m_list,
                                   stats    = ranks,
                                   minSize  = rv$gmin,
                                   maxSize  = rv$gmax,
-                                  nperm = rv$gperm)
-                # fgseaRes <- fgseaMultilevel(
-                #     pathways = gmts[[i]],
-                #     stats = ranks,
-                #     minSize = rv$gmin,
-                #     maxSize = rv$gmax
-                # )
-                db <- rep(catnames[[i]], nrow(fgseaRes))
-                fgseaRes <- cbind(db,fgseaRes)
-                #print(head(fgseaRes))
-                rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
-                # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
-                rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.01&fgseaRes$ES>0,na.rm=TRUE)
-                rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
-                rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.01&fgseaRes$ES<0,na.rm=TRUE)
-                rv$no_down_05 = rv$no_down_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
-                # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
-                incProgress(0.2)
+                                  nperm = rv$gperm))
+                
+                if(inherits(frun, "try-error")) {        
+                  errors = errors + 1
+                }else{
+                  db <- rep(catnames[[i]], nrow(fgseaRes))
+                  fgseaRes <- cbind(db,fgseaRes)
+                  #print(head(fgseaRes))
+                  rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
+                  # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
+                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.01&fgseaRes$ES>0,na.rm=TRUE)
+                  rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
+                  rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.01&fgseaRes$ES<0,na.rm=TRUE)
+                  rv$no_down_05 = rv$no_down_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
+                  # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
+                  incProgress(0.2)
+                }
             }
             
-            
-            # count number of filtered GSs in GMTs
-            l = unlist(lapply(rv$gmts, function(x){return(length(x)>=rv$gmin && length(x)<=rv$gmax)}))
-            rv$gmts_length = sum(l)
-            incProgress(0.1)
-            
-            # determine if success or warnings
-            if(nrow(rv$fgseagg)>0){
+            if(errors > 0 && nrow(rv$fgseagg)<1){
+              db_selected = names(rv$dbs)
+              db_selected = paste(db_selected,collapse = "; ")
+              # ErrorMessage <- conditionMessage(attr(frun, "condition"))  # the error message
+              #show a modal dialog if there is an error reading files causing crash
+              showModal(modalDialog(
+                title = h3(HTML("Please click and adjust <b>Advanced run parameters</b>")),
+                tags$li(h4(paste0("Database(s): ",db_selected))),
+                tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
+                                  ," and max=",rv$gmax))),
+                
+                size = "l",
+                easyClose = TRUE
+              ))
+            }else{
+              # count number of filtered GSs in GMTs
+              l = unlist(lapply(rv$gmts, function(x){return(length(x)>=rv$gmin && length(x)<=rv$gmax)}))
+              rv$gmts_length = sum(l)
+              incProgress(0.1)
+              
+              # determine if success or warnings
+              if(nrow(rv$fgseagg)>0){
                 rv$run = "success"
-            } else {
+              } else {
                 rv$run = "failed"
+              }
+              incProgress(0.1)
             }
-            incProgress(0.1)
         })
     })
     
@@ -914,7 +946,7 @@
             
             for(collection in sort(names(gmt_collections_paths[[species]]))){
                 db_id = paste0(species,gsub(" ","_",collection))
-                if(is.null(input[[db_id]])==F){
+                if(is.null(rv$db_modal)==F){
                   inputs = input[[db_id]]
                 }else{
                   inputs = gmt_collections_selected[[species]][[collection]]
@@ -923,9 +955,9 @@
                 for(cat_name in inputs){
                   gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
                   m_list <- gmtPathways(gmt_path)
-                  
+
                   # get all genes
-                  a_genes = toupper(unname(unlist(m_list,recursive = T)))
+                  a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
                   all_genes <- c(all_genes, list(a_genes))
                   
                   gmts = c(gmts,list(m_list))
@@ -939,42 +971,64 @@
             rv$gmts = unlist(gmts,recursive = F)
 
             # ------ run fgsea ------ #
+            errors = 0
             for (i in seq_along(gmts)){
                 # uppercase genes
                 m_list = lapply(gmts[[i]], function(x) toupper(x))
                 
                 # genes present in the database
                 in_genes = genelist[genelist %in% all_genes[[i]]]
-                
+
                 if(identical(in_genes,character(0))){incProgress(0.2);next}
                 
-                fgseaRes <- fora(pathways = m_list,
+                frun <- try(fgseaRes <- fora(pathways = m_list,
                                   genes    = in_genes,
                                   universe = all_genes[[i]],
                                   minSize  = rv$gmin,
                                   maxSize  = rv$gmax
-                                  )
+                                  ))
                 
+                if(inherits(frun, "try-error")) {        
+                  errors = errors + 1
+                }else{
+                  db <- rep(catnames[[i]], nrow(fgseaRes))
+                  fgseaRes <- cbind(db,fgseaRes)
+                  rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
+                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.01,na.rm=TRUE)
+                  rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
+                  incProgress(0.2)
+                }
+            }
+            
+            if(errors > 0 && is.null(rv$fgseagg)){
+              db_selected = names(rv$dbs)
+              db_selected = paste(db_selected,collapse = "; ")
+              # ErrorMessage <- conditionMessage(attr(frun, "condition"))  # the error message
+              #show a modal dialog if there is an error reading files causing crash
+              showModal(modalDialog(
+                title = h3(HTML("Please click and adjust <b>Advanced run parameters</b>")),
+                tags$li(h4(paste0("Database(s): ",db_selected))),
+                tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
+                                  ," and max=",rv$gmax))),
 
-                db <- rep(catnames[[i]], nrow(fgseaRes))
-                fgseaRes <- cbind(db,fgseaRes)
-                rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
-                rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.01,na.rm=TRUE)
-                rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
-                incProgress(0.2)
-            }
-            
-            # count number of filtered GSs in GMTs
-            l = unlist(lapply(rv$gmts, function(x){return(length(x)>=rv$gmin && length(x)<=rv$gmax)}))
-            rv$gmts_length = sum(l)
-            incProgress(0.1)
-            
-            # determine if success or warnings
-            if(is.null(rv$fgseagg)==F && nrow(rv$fgseagg)>0){
+                size = "l",
+                easyClose = TRUE
+              ))
+            }else{
+              # count number of filtered GSs in GMTs
+              l = unlist(lapply(rv$gmts, function(x){return(length(x)>=rv$gmin && length(x)<=rv$gmax)}))
+              rv$gmts_length = sum(l)
+              incProgress(0.1)
+              
+              # determine if success or warnings
+              if(is.null(rv$fgseagg)==F && nrow(rv$fgseagg)>0){
                 rv$run = "success"
-            } else {
+              } else {
                 rv$run = "failed"
+              }
+              incProgress(0.1)
             }
-            incProgress(0.1)
+            
+
         })
     })

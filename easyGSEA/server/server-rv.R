@@ -2,6 +2,7 @@
         run_mode=NULL, #gsea glist
         
         db_status=NULL, # selected
+        db_modal=NULL, # check if modal if used or not
         
         #========================================#
         #####      RVs for GSEA run          #####
