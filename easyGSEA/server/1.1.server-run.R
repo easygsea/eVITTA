@@ -38,15 +38,24 @@
         species <- input$selected_species
 
         for(collection in sort(names(gmt_collections_paths[[species]]))){
+          if(collection %in% col_f){
+            f = FALSE
+          }else{
+            f = TRUE
+          }
             # print(paste0(species,gsub(" ","_",collection)))
-            rv$v[[species]][[collection]] <- column(6,
+            rv$v[[species]][[collection]] <- column(
+              6,
+              box(
+                title = strsplit(collection,"_")[[1]][[2]], width = 12, status = "primary", collapsible = T, collapsed = f,
                 checkboxGroupInput(
-                    inputId = paste0(species,gsub(" ","_",collection)),
-                    label = strsplit(collection,"_")[[1]][[2]],
-                    choices = sort(gmt_collections[[species]][[collection]]),
-                    selected = gmt_collections_selected[[species]][[collection]]
-
+                  inputId = paste0(species,gsub(" ","_",collection)),
+                  label = NULL,
+                  # label = strsplit(collection,"_")[[1]][[2]],
+                  choices = sort(gmt_collections[[species]][[collection]]),
+                  selected = gmt_collections_selected[[species]][[collection]]
                 )
+              )
             )
         }
     })
@@ -152,14 +161,14 @@
         for(collection in sort(names(gmt_collections_paths[[species]]))){
             db_id = paste0(species,gsub(" ","_",collection))
             # db_name = input[[db_id]]
-            rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% isolate(input[[db_id]]))])
+            if(is.null(input[[db_id]])){
+              rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% gmt_collections_selected[[species]][[collection]])])
+            }else{
+              rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% input[[db_id]])])
+            }
         }
         
-        if(length(rv$dbs)<1){
-          showNotification("Select at least one database", type = "error", duration = 3)
-        }else{
-          rv$db_status <- "selected"
-        }
+        rv$db_status <- "selected"
     })
     
     # reset species, at the same time reset rnk/glist
