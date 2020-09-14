@@ -206,3 +206,15 @@ dropdownMenuCustom <-     function (..., type = c("messages", "notifications", "
     )
   )
 }
+
+# ------------- add help buttons to labels (need to wrap again in HTML) ----------
+# example of use: label=HTML("Label here", add_help("id1", style="padding:1px 1px 1px 1px;") )
+add_help <- function(id, color="#00c0ef", style=""){
+  out <- paste0("<i class='fa fa-question-circle' 
+                style = 'color:",color,";
+                font-size:medium;",style,"' 
+                id='",id,"'></i>")
+  
+  HTML(out)
+}
+
