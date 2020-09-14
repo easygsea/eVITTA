@@ -853,10 +853,8 @@
                 m_list = lapply(gmts[[i]], function(x) toupper(x))
                 
                 a_lens = lengths(m_list)
-                print(min(a_lens))
-                print(max(a_lens))
-                
-                if(min(a_lens)>rv$gmax){errors = errors + 1}
+                              
+                if(max(a_lens)<rv$gmin || min(a_lens)>rv$gmax){errors = errors + 1}
                 
                 frun <- try(fgseaRes <- fgsea(pathways = m_list,
                                   stats    = ranks,
