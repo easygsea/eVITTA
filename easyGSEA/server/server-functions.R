@@ -1342,10 +1342,19 @@
     # default width is 12 (maximum), must be is an integer value
     # To make it appear on condition, call it in a conditional renderUI({})
     
-    guide_box <- function(msg="Navigate to <b>Enrichment Results</b> for details", color="orange", width=12){
-      box(
-        title = NULL, background = color, solidHeader = TRUE, width=width,
-        h4(HTML(msg))
+    # guide_box <- function(msg="Navigate to <b>Enrichment Results</b> for details", color="orange", width=12){
+    #   box(
+    #     title = NULL, background = color, solidHeader = TRUE, width=width,
+    #     h4(HTML(msg))
+    #   )
+    # }
+    
+    guide_box <- function(id="msg1",msg="Navigate to <b>Enrichment Results</b> for details"){
+      bsButton(
+        inputId = id,
+        label = h4(HTML(msg)),
+        style = "warning",
+        block = T
       )
     }
     
