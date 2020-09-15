@@ -1383,11 +1383,11 @@
       column(12,
              bsButton(
                inputId = id,
-               label = h4(HTML(msg)),
+               # label = div(style="word-break:break-all;",h4(HTML(msg))),
+               label = HTML(paste0("<p style='font-size:110%;word-break:break-all;vertical-align:middle;'>",msg,"</p>")),
                style = "warning",
                block = T
              )
       )
-      
     }
     
