@@ -6,7 +6,10 @@ css_addons <-
       .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
       width:400px;
       }
-      "
+      ",
+      "#select_plat .tooltip {width: 300px;}
+      .tooltip-inner {
+    text-align: left;}"
       
       
     )))
