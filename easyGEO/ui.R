@@ -45,6 +45,13 @@ body <- dashboardBody(
     # verbatimTextOutput("debug0"),
     tabItems(
         tabItem(tabName = "tab1",
+                fluidRow(column(12,
+                                box(title=NULL, width = 12, solidHeader=T, status = "primary",
+                                    uiOutput("progress_1")
+                                    )
+                                
+                                
+                                )),
                 fluidRow(
                     column(4,
                            

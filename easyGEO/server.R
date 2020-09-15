@@ -12,8 +12,6 @@ shinyServer(function(input, output, session) {
     source("server/rv.R", local = TRUE)
     
     
-    
-    
     ####---------------------- HEADER DROPDOWN: SAMPLES SELECTED  ---------------------------####
     # this is the top right notification button on header
     # that shows your currently selected samples

@@ -1,3 +1,7 @@
+
+
+
+
 # --------------- search GEO accession ---------------
 # currently checks if input exists
 # todo: check if input format is correct (GSEXXXXXX)
@@ -253,4 +257,22 @@ output$guide_1a <- renderUI({
   } else {
     return(NULL)
   }
+})
+
+
+
+# --------------- progress info box ---------------
+
+output$progress_1 <- renderUI({
+  
+  progress_box(id="infobox_1", prompt="To-dos:",
+               msg=c("1. Search a valid GSE number", "2. Select a platform", "3. Read the study information"), 
+               condition=c(!is.null(rv$gse_all), !is.null(rv$plat_id), !is.null(rv$plat_id)),
+               bttn_id="next_p1"
+               )
+
+})
+
+observeEvent(input$next_p1, {
+  updateTabItems(session, "menu1", "tab3")
 })
