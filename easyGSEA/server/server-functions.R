@@ -1370,12 +1370,24 @@
     #   )
     # }
     
-    guide_box <- function(id="msg1",msg="Navigate to <b>Enrichment Results</b> for details"){
+    tab_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details"){
       bsButton(
         inputId = id,
         label = h4(HTML(msg)),
         style = "warning",
         block = T
       )
+    }
+    
+    path_box <- function(id,msg){
+      column(12,
+             bsButton(
+               inputId = id,
+               label = h4(HTML(msg)),
+               style = "warning",
+               block = T
+             )
+      )
+      
     }
     

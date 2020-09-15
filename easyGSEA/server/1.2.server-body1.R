@@ -334,7 +334,7 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("<b>",rv$no_down_01,"</b> (down) <b>",rv$no_up_01,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.01"))
                     )
                 ),
-                guide_box()
+                tab_box("msg1")
             )
         }else if(rv$run_mode == "glist"){
             fluidRow(
@@ -355,7 +355,7 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("<b>",rv$no_up_01,"</b> gene sets are significantly enriched at P.adj < 0.01"))
                     )
                 ),
-                guide_box()
+                tab_box("msg1")
             )
         }
     }else if(rv$run == "failed"){
