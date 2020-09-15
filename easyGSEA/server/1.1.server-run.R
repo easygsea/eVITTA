@@ -116,7 +116,7 @@
         easyClose = F,size="m"
         , footer = tagList(
           # modalButton('Cancel'), 
-          bsButton('select_db', 'Select!', style = "primary")
+          bsButton('select_db', h4('Select to continue!'), style = "primary", block=TRUE)
         )
       ))
     })
