@@ -352,6 +352,8 @@ observeEvent(input$run_deg2,{
       }
       
       # export other data
+      rv$c_level = "Control"
+      rv$t_level = "Experimental"
       rv$samples_c = samples_c
       rv$samples_t = samples_t
       
