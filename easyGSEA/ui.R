@@ -44,7 +44,8 @@ shinyUI(
                 HTML("<script type='text/javascript' language='javascript' src='https://reactome.org/DiagramJs/diagram/diagram.nocache.js'></script>"),
                 tags$script(src = "reactome.js")
             ),
-
+            
+            useShinyalert(),  # Set up shinyalert
             useShinyjs(), # Set up shinyjs
 
             tabItems(
