@@ -160,6 +160,70 @@ guide_box <- function(msg, color="blue", width=12){
 
 
 
+# summarize gpl info.
+#-------------------------------------
+# returns a named list of named vectors, containing
+# id, organism, molecule (both ch1), type, samplen
+summarize_gpl <- function(gse){
+  out <- lapply(seq_along(gse), function(i){
+    tempp <- as.list(pData(phenoData(gse[[i]])))
+    id <- annotation(gse[[i]])
+    # only finds the ch1 organism.
+    query <- c("organism", "molecule", "strategy")
+    for (nn in query){
+      fn <- tempp[grep(nn, names(tempp))]
+      if (length(fn)>0){
+        assign(nn, paste(unique(fn[[1]]), collapse=", ")) # wrap in paste to ensure atomic
+      } else {
+        assign(nn, "")
+      }
+    }
+    # get experiment type
+    type <- paste(notes(experimentData(gse[[i]]))$type, collapse=", ") # wrap in paste to ensure atomic
+    samplen <- length(sampleNames(gse[[i]]))
+    c(ID=id, Organism=organism, Samples=samplen, Type=type, Molecule=molecule, Strategy=strategy)
+  })
+  names(out) <- tabulate(gse, annotation)
+  out
+}
+
+
+# for a named vector or list, invert the names and values
+#---------------------------------------------------
+# useful for input choices.
+invert_vector <- function(vector){
+  out <- names(vector)
+  names(out) <- vector
+  out
+}
+
+
+# BStooltip for radiobutton choices
+#--------------------------------------------------------------------------
+# we need to construct some new function to replace the coarser bsTooltip.
+# The new function is called radioTooltip and is basically a ripoff from bsTooltip. 
+# It takes one more arguement, namely the choice of the radioButton you want the tooltip to be assigned to.
+radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hover", options = NULL){
+  
+  options = shinyBS:::buildTooltipOrPopoverOptionsList(title, placement, trigger, options)
+  options = paste0("{'", paste(names(options), options, sep = "': '", collapse = "', '"), "'}")
+  bsTag <- shiny::tags$script(shiny::HTML(paste0("
+    $(document).ready(function() {
+      setTimeout(function() {
+        $('input', $('#", id, "')).each(function(){
+          if(this.getAttribute('value') == '", choice, "') {
+            opts = $.extend(", options, ", {html: true});
+            $(this.parentElement).tooltip('destroy');
+            $(this.parentElement).tooltip(opts);
+          }
+        })
+      }, 500)
+    });
+  ")))
+  htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
+}
+
+
 
 
 # Function to call in place of dropdownMenu
