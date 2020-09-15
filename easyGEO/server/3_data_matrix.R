@@ -194,26 +194,49 @@ output$upload_matrix_ui <- renderUI({
   box(title=span(icon("upload"),"Upload tidied matrix"), width = 12, solidHeader=F, status = "primary", 
       id = "upload_matrix",
       
-      fileInput("file", "Upload tidied data matrix (CSV/TSV format):",
+      div(
+        fileInput("file",
+                  # help button added Edtion 1
+                label = p("Upload tidied data matrix (CSV/TSV format):",
+                          tags$style(type = "text/css", "#file_help {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;position: absolute; right: 0;top:50px}"),
+                          bsButton("file_help", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                # "Upload tidied data matrix (CSV/TSV format):",
                 accept = c(
                   "text/csv",
                   "text/comma-separated-values,text/plain",
                   ".csv",".tsv",".txt",".tab")
       ), 
-      
-      tags$hr(style="border-color: grey;"),
-      
-      strong("Note on uploading data matrix:"),br(),
-      "1) the data should be in comma- or tab-delimited format (csv, tsv, tab, txt),",br(),
-      "2) first row of matrix should be sample names; must match either the GEO accession or sample names,",br(),
-      "3) first column of matrix should be gene names; no duplicates are allowed,", br(),
-      "4) IMPORTANT FOR EXCEL USERS: to prevent excel auto-formatting gene names into dates, 
-                     when importing data into excel, select 'do not detect data types'."
-      
+      bsTooltip("file_help", "Click to learn more", placement = "top")
+      )
+      # tags$hr(style="border-color: grey;"),
+      # 
+      # strong("Note on uploading data matrix:"),br(),
+      # "1) the data should be in comma- or tab-delimited format (csv, tsv, tab, txt),",br(),
+      # "2) first row of matrix should be sample names; must match either the GEO accession or sample names,",br(),
+      # "3) first column of matrix should be gene names; no duplicates are allowed,", br(),
+      # "4) IMPORTANT FOR EXCEL USERS: to prevent excel auto-formatting gene names into dates, 
+      #                when importing data into excel, select 'do not detect data types'."
+      # 
       
       )
   
 })
+# help button page added Edition 2
+observeEvent(input$file_help,{
+  showModal(modalDialog(
+    inputId = "file_help_html",
+    #title = "Ranked list file format (*.rnk)",
+     includeHTML(paste0(getwd(),"/server/help_button_page.html")),
+    # dataTableOutput('example_data1'),
+    # includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
+    # includeMarkdown(knitr::knit(paste0(getwd(),"/inc/rnk_explaination.Rmd"),quiet=T)),
+    easyClose = TRUE,size="l",
+    footer = modalButton("Close")
+  ))
+})
+
+output$example3 <- renderTable({(example_data3 <- read.csv(paste0(getwd(),"/server/easyGEO_example1.rnk"),header = TRUE, sep = "\t"))},escape = FALSE)
+
 
 # when file is uploaded, update the stored count matrix
 observeEvent(input$file, {
