@@ -727,7 +727,7 @@
       
       fluidRow(
         box(
-          width = 12, title = "Advanced run parameters", status = "warning", collapsible = T, collapsed = T,
+          width = 12, title = "Advanced run parameters", status = "primary", collapsible = T, collapsed = T,
           wellPanel(
             # h4("Run parameters"),
             splitLayout(
@@ -767,11 +767,11 @@
       req(is.null(rv$rnk_check)==F)
       req(is.null(rv$rnkgg)==F)
         
-      bsButton(inputId = "confirm1", 
-               label = h4(span(icon("play-circle"),"RUN GSEA!")),
-               # size = "large",
-               block = TRUE,
-               style = "danger")
+      actionBttn("confirm1", 
+                 h4(span(icon("play-circle"),"RUN GSEA!")),
+               style="simple", color="primary", # size = "large",
+               block = TRUE
+               )
     })
     
     # UI confirm GList
@@ -781,12 +781,11 @@
       
       req(is.null(rv$glist_check)==F)
       req(is.null(rv$gene_lists_after)==F)
-      
-      bsButton(inputId = "confirm2", 
-               label = h4(span(icon("play-circle"),"RUN ORA!")),
-               # size = "large",
-               block = TRUE,
-               style = "danger")
+
+      actionBttn("confirm2", 
+               h4(span(icon("play-circle"),"RUN ORA!")),
+               style="simple", color="primary", # size = "large",
+               block = TRUE)
         
     })
 
