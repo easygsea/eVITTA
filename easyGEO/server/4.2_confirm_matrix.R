@@ -60,11 +60,9 @@ output$confirm_matrix_feedback <- renderUI({
         # titles of all na samples
         samples_title = translate_sample_names(all_nas,rv$pdata[c("title", "geo_accession")],  "title")
 
-        if(length(all_nas)==1){d_msg = "it"}else{d_msg = "them"}
-        
-        msg = c(msg, paste0("<strong>Data are incomplete for selected samples: </strong><br>
+        msg = c(msg, paste0("<strong>Data are missing for selected samples: </strong><br>
                             ", paste(all_nas, collapse=", "), " (", paste(samples_title, collapse=", ") ,")"
-                            ,"<br><br><b>You may de-select ",d_msg, " to perform DEG analysis</b>"))
+                            ,"<br><br><b>Please check if your uploaded data matrix is in correct format and is complete.</b>"))
         
       } else if (length(has_nas)>0){
         # titles of has na samples

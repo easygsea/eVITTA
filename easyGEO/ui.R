@@ -122,27 +122,29 @@ body <- dashboardBody(
                     column(6,
                            
                            tabBox(
-                             id = "ui_select",
+                             id = "ui_select",title = "Make contrast",
                              width = 12,
                              tabPanel(
                                value = "sp",
-                               span(icon("check-square"),
-                                    HTML(paste0("Fine-tuned sample selection",add_help(
-                                      "fine_q"
-                                    )))
-                                    ), 
-                               bsTooltip("fine_q", "Applicable when design matrix is provided by authors and complete","top"),
+                               span(icon("check-square"),"By design matrix"),
+                                    # HTML(paste0("By design matrix",add_help(
+                                    #   "fine_q"
+                                    # )))
+                                    # ), 
+                               # bsTooltip("fine_q", "Applicable when design matrix is provided by authors and complete","top"),
+                               HTML("<b>Note:</b> Applicable when the authors have uploaded their study design in full."),
                                
                                uiOutput("select_params_ui")
                              ),
                              tabPanel(
                                value = "coerce",
-                                span(icon("mixer"),
-                                     HTML(paste0("Coerce sample selection",add_help(
-                                       "coerce_q"
-                                     )))
-                                     ),
-                               bsTooltip("coerce_q", "For any combination of samples","top"),
+                                span(icon("mixer"),"Manual selection"),
+                                     # HTML(paste0("Manual selection",add_help(
+                                     #   "coerce_q"
+                                     # )))
+                                     # ),
+                               # bsTooltip("coerce_q", "For any combination of samples","top"),
+                               HTML("<b>Note:</b> For any combination of samples. You can manually select samples in the control and the experimental groups."),
                                
                                 uiOutput("coerce_ui")
                               

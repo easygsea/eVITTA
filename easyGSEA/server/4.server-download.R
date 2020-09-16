@@ -36,7 +36,7 @@ output$ui_downloadbox <- renderUI({
             fluidRow(
                 box(
                     width = 12, background = "orange", title=NULL,
-                    h4(HTML("Download non-filtered enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><b>easyVizR</b></a> for multiple comparisons")),
+                    p(HTML("Download non-filtered enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><b>easyVizR</b></a> for multiple comparisons")),
                     div(
                         style="display: inline-block;vertical-align:top;",
                         uiOutput("ui_tl_cut")
