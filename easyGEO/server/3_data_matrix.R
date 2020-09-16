@@ -198,7 +198,7 @@ output$upload_matrix_ui <- renderUI({
         fileInput("file",
                   # help button added Edtion 1
                 label = p("Upload tidied data matrix (CSV/TSV format):",
-                          tags$style(type = "text/css", "#file_help {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;position: absolute; right: 0;top:50px}"),
+                          tags$style(type = "text/css", "#file_help {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
                           bsButton("file_help", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                 # "Upload tidied data matrix (CSV/TSV format):",
                 accept = c(
