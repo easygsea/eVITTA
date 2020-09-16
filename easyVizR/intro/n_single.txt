@@ -3,4 +3,4 @@ n_filter_cuts	Start first by applying filters. <br><br>Filters are applied dynam
 n_filter_names	You can also filter manually by entering a list of names.
 ui_intersections	Use these options to find terms contained in your desired intersection. <br><br>Tip: check if the number of terms match the Venn count.
 n_ins_tbl	Terms contained in this intersection are shown here. <br><br>You can change the selected intersection any time. 
-n_heatmap	Heatmap of the selected intersection is shown here. Parameters are shown on the bottom left.
+n_select_single	Select one dataset to see visualizations of the selected intersection. 
