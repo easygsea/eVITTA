@@ -4,6 +4,8 @@
         db_status=NULL, # selected
         db_modal=NULL, # check if modal if used or not
         
+        box_h_a = "594px", box_h = "574px", box_hp = 574, es_h = "245px",
+        
         #========================================#
         #####      RVs for GSEA run          #####
         #========================================#
