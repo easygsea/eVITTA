@@ -311,9 +311,16 @@ observeEvent(input$file, {
   dmdf <- data.frame(matrix(NA, nrow = nrow(indf), ncol = ncol(rvdf))) # initialize empty df
   dmdf <- data.frame(lapply(colnames(rvdf), function(x){ # update values into dmdf (leaves NA if not found)
     if (x %in% colnames(indf)){
-      dmdf[[x]] <- indf[[x]]
-    } else {return (rep(NA, nrow(indf)))}
+      indf[[x]]
+    } else {
+      return (rep(NA, nrow(indf)))
+      }
   }))
+  
+  matched_cols <- intersect(colnames(rvdf)[-1], colnames(indf)) # a vector of GSM id for matched cols
+  unmatched_cols <- setdiff(colnames(indf), matched_cols) # vector of uploaded colnames that cannot find a match
+  print(matched_cols)
+  print(unmatched_cols)
   
   colnames(dmdf) <- colnames(rvdf)
   # print(head(dmdf))
