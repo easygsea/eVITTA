@@ -1,6 +1,7 @@
 element	intro
+	The network visualization is only applicable to GSEA results with the leadingEdge column.
 n_filter_cuts	Start first by applying filters. <br><br>Filters are applied dynamically to each dataset, yielding gene lists.
 n_filter_names	You can also filter manually by entering a list of names.
 ui_intersections	Use these options to find terms contained in your desired intersection. <br><br>Tip: check if the number of terms match the Venn count.
 n_ins_tbl	Terms contained in this intersection are shown here. <br><br>You can change the selected intersection any time. 
-n_heatmap	Heatmap of the selected intersection is shown here. Parameters are shown on the bottom left.
+n_nw_select	Select a dataset with an applicable column (e.g. leadingEdge), and specify the separator. Network will be shown on the right. 

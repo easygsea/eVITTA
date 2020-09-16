@@ -54,17 +54,29 @@ observeEvent(input$help_n_post, {
   # print(input$tabs)
   req(input$tabs == "tab3")
   
-  if (input$n_ui_showpanel == "Heatmap"){
+  if (input$n_ui_showpanel == "Intersection"){
     rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
                                               steps = intros$n1)
     )
-  } else if (input$n_ui_showpanel == "Intersection"){
+  } else if (input$n_ui_showpanel == "Heatmap"){
+    # updateRadioGroupButtons(session, inputId = "n_ui_showpanel", selected="Intersection")
     rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
                                               steps = intros$n2)
     )
   } else if (input$n_ui_showpanel == "Scatter"){
+    # updateRadioGroupButtons(session, inputId = "n_ui_showpanel", selected="Intersection")
     rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
                                               steps = intros$n3)
+    )
+  } else if (input$n_ui_showpanel == "Single"){
+    # updateRadioGroupButtons(session, inputId = "n_ui_showpanel", selected="Intersection")
+    rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                              steps = intros$n_single)
+    )
+  } else if (input$n_ui_showpanel == "Network"){
+    # updateRadioGroupButtons(session, inputId = "n_ui_showpanel", selected="Intersection")
+    rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                              steps = intros$n_nw)
     )
   }
   

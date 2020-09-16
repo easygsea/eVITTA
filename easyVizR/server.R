@@ -14,6 +14,9 @@ server <- function(input, output, session) {
     # initialize reactive values
     source("server/rv.R", local = TRUE)
     
+    # server side functions
+    source("server/functions.R", local = TRUE)
+    
     
     #======================================================================#
     ####                        INTRO TOUR                              ####
