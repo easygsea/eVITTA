@@ -198,7 +198,7 @@ output$upload_matrix_ui <- renderUI({
         fileInput("file",
                   # help button added Edtion 1
                 label = p("Upload tidied data matrix (CSV/TSV format):",
-                          tags$style(type = "text/css", "#file_help {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;position: absolute; right: 0;top:50px}"),
+                          tags$style(type = "text/css", "#file_help {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
                           bsButton("file_help", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                 # "Upload tidied data matrix (CSV/TSV format):",
                 accept = c(
@@ -296,9 +296,11 @@ observeEvent(input$file, {
   indf <- indf[-1,-1]
   # print(head(indf))
   
-  # try to convert the indf headers into gsm format
-  indf_coln <- translate_sample_names(indf_coln,  # translating from
-                                      rv$pdata[c("title", "geo_accession")],  # translation df
+  # try to convert the indf headers into gsm format. matching is done in upper case.
+  translation_df <- rv$pdata[c("title", "geo_accession")]
+  translation_df$title <- toupper(translation_df$title) # convert the translation df to upper case as well
+  indf_coln <- translate_sample_names(toupper(indf_coln),  # translating from (upper case)
+                                      translation_df,  # translation df
                                       "geo_accession") # translating to
   colnames(indf) <- indf_coln[-1]
   
@@ -309,9 +311,16 @@ observeEvent(input$file, {
   dmdf <- data.frame(matrix(NA, nrow = nrow(indf), ncol = ncol(rvdf))) # initialize empty df
   dmdf <- data.frame(lapply(colnames(rvdf), function(x){ # update values into dmdf (leaves NA if not found)
     if (x %in% colnames(indf)){
-      dmdf[[x]] <- indf[[x]]
-    } else {return (rep(NA, nrow(indf)))}
+      indf[[x]]
+    } else {
+      return (rep(NA, nrow(indf)))
+      }
   }))
+  
+  matched_cols <- intersect(colnames(rvdf)[-1], colnames(indf)) # a vector of GSM id for matched cols
+  unmatched_cols <- setdiff(colnames(indf), matched_cols) # vector of uploaded colnames that cannot find a match
+  print(matched_cols)
+  print(unmatched_cols)
   
   colnames(dmdf) <- colnames(rvdf)
   # print(head(dmdf))
