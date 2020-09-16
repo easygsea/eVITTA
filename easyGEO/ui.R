@@ -132,7 +132,8 @@ body <- dashboardBody(
                                     # )))
                                     # ), 
                                # bsTooltip("fine_q", "Applicable when design matrix is provided by authors and complete","top"),
-                               HTML("<b>Note:</b> Applicable when the authors have uploaded their study design in full."),
+                               HTML("<b>Note:</b> Applicable when the authors have uploaded their study design in full. 
+                                    Select the comparisons you're interested in and run DEG analysis one by one."),
                                hr(),
                                
                                uiOutput("select_params_ui")
@@ -145,7 +146,8 @@ body <- dashboardBody(
                                      # )))
                                      # ),
                                # bsTooltip("coerce_q", "For any combination of samples","top"),
-                               HTML("<b>Note:</b> For any combination of samples. You can manually select samples in the control and the experimental groups."),
+                               HTML("<b>Note:</b> For any combination of samples. You may manually select samples in the control and the experimental groups. 
+                                     Select the comparisons you're interested in and run DEG analysis one by one."),
                                hr(),
                                
                                 uiOutput("coerce_ui")

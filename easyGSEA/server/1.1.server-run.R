@@ -289,7 +289,7 @@
                       
 
             ),
-            bsTooltip("q1", "Click to learn more", placement = "top")
+            bsTooltip("q1", "DEG file also supported. Click to learn more", placement = "top")
             
             
         )

@@ -22,8 +22,8 @@ output$confirm_matrix_feedback <- renderUI({
   # check if count matrix is empty
   if (nrow(dmdf)==0){
     errors <- errors + 1
-    msg = c(msg, "<strong>Data Matrix is empty. </strong><br>
-            Please upload data matrix in the Data Matrix page.")
+    msg = c(msg, "<strong>Data matrix is empty. </strong><br>
+            Please upload data matrix in the <b>2. Data Matrix</b> page.")
     
   } else {
         

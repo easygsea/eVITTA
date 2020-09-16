@@ -87,7 +87,7 @@ output$select_params_ui <- renderUI({
                        (NOTE: at least one variable must have >2 levels)<br><br>
                       Try ",
                       "<b>Manual selection</b> to proceed"
-                      # actionLink("coerce",tags$b("Coerce Selection"))
+                      # , actionLink("coerce",tags$b("Coerce Selection"))
                       # ," or return to <b>Design Matrix</b> to refine study designs."
                       ))
     box_color = "red"
