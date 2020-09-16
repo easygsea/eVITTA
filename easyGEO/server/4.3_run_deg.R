@@ -32,8 +32,8 @@ output$run_deg_ui <- renderUI({
         box(
           width = 12, title = NULL, background = "orange",
           h4(HTML("DEG analysis complete!<br><br>
-                  Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><b>easyGSEA</b></a> for gene set enrichment analysis 
-                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><b>easyVizR</b></a> for multiple comparisons.")),
+                  Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' style='color:white' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
+                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' style='color:white' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.")),
           downloadButton("deg_table_download",label = "Download entire DEG table (.csv)")
           
         )

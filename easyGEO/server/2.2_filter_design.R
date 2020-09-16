@@ -22,16 +22,20 @@
 # whole ui
 output$filter_design_ui <- renderUI({
   div(
-    radioButtons(
-      inputId = "fddf_filter_mode",
-      label = "Filter mode",
-      choices = c("By Predefined Variables"="variables", 
-                  "Manual" = "manual"),
-      inline=T),
+    # radioButtons(
+    #   inputId = "fddf_filter_mode",
+    #   label = "Filter mode",
+    #   choices = c("By Predefined Variables"="variables", 
+    #               "Manual" = "manual"),
+    #   inline=T),
     
-    uiOutput("fddf_filter_samples"),
-    uiOutput("fddf_filter_vars"),
-    
+    # uiOutput("fddf_filter_samples"),
+    # uiOutput("fddf_filter_vars"),
+    HTML("<strong>Pre-filtering by existing study design <i>(optional)</i></strong><br>
+         If the authors have uploaded their study design in full, you may use the following options to exclude unwanted samples from analysis.
+         You will be able to fine-tune your selection in the next section.
+         "),
+    hr(),
     uiOutput("filter_vars_levels")
     
   )
@@ -40,63 +44,78 @@ output$filter_design_ui <- renderUI({
 
 ##### manual filter by samples -------------##
 # to carry over variable mode selections to manual mode. (but not vice versa)
-observeEvent(input$fddf_filter_mode, {
-  rv$temp_samples <- rv$samples
-})
-
-
-# filter by samples
-output$fddf_filter_samples <- renderUI({
-  req(input$fddf_filter_mode=="manual")
-  
-  all_gsms <- isolate(rv$all_samples)
-  choices <- all_gsms
-  if (input$fddf_show_rown == "Sample name"){
-    # show the sample names instead
-    names(choices) <- translate_sample_names(all_gsms,  # translating from
-                                             rv$pdata[c("title", "geo_accession")],  # translation df
-                                             "title") # translating to
-  }
-  
-  checkboxGroupInput("filter_samples", "Filter samples by variables:",
-                     choices= choices,
-                     selected= rv$temp_samples, # carries over previous selection
-                     inline=T
-  )
-})
+# observeEvent(input$fddf_filter_mode, {
+#   rv$temp_samples <- rv$samples
+# })
+# 
+# 
+# # filter by samples
+# output$fddf_filter_samples <- renderUI({
+#   req(input$fddf_filter_mode=="manual")
+#   
+#   all_gsms <- isolate(rv$all_samples)
+#   choices <- all_gsms
+#   if (input$fddf_show_rown == "Sample name"){
+#     # show the sample names instead
+#     names(choices) <- translate_sample_names(all_gsms,  # translating from
+#                                              rv$pdata[c("title", "geo_accession")],  # translation df
+#                                              "title") # translating to
+#   }
+#   
+#   checkboxGroupInput("filter_samples", "Filter samples by variables:",
+#                      choices= choices,
+#                      selected= rv$temp_samples, # carries over previous selection
+#                      inline=T
+#   )
+# })
 
 
 ##### filter by variables -------------##
-# select vars
-output$fddf_filter_vars <- renderUI({
-  req(input$fddf_filter_mode=="variables")
-  
-  checkboxGroupInput("filter_vars", "Filter samples by variables:",
-                     choices= names(var_summary()),
-                     selected= names(var_summary()),
-                     inline=T
-  )
-})
+# # select vars
+# output$fddf_filter_vars <- renderUI({
+#   # req(input$fddf_filter_mode=="variables")
+#   
+#   checkboxGroupInput("filter_vars", "Filter samples by variables:",
+#                      choices= names(var_summary()),
+#                      selected= names(var_summary()),
+#                      inline=T
+#   )
+# })
 
 # select levels
 observe({
   req(length(var_summary()) >0)
   
   vs <- var_summary()
-  if (length(input$filter_vars)>0){
-    vs <- vs[input$filter_vars] # subset list to selected vars only
+  filter_vars <- names(var_summary())
+  if (length(filter_vars)>0){
+    vs <- vs[filter_vars] # subset list to selected vars only
     
     v <- vector(mode="list", length=length(vs))
     for (i in 1:length(vs)){
       v[[i]] <- div(style="display: inline-block;vertical-align:top; width: 190px;",
-                    box(title=names(vs)[[i]], width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=T,
-                        checkboxGroupInput(inputId = paste0("vs_",i),
-                                           label = NULL,
-                                           choices = names(vs[[i]]),
-                                           selected = names(vs[[i]])
-                        )
-                        
-                    ))
+                    pickerInput(
+                      inputId = paste0("vs_",i),
+                      label = names(vs)[[i]],
+                      choices = names(vs[[i]]),
+                      selected = names(vs[[i]]),
+                      options = list(
+                        `actions-box` = TRUE,
+                        size = 10,
+                        style = "btn-default",
+                        `selected-text-format` = "count > 0"
+                      ),
+                      multiple = TRUE
+                    )
+                    # box(title=names(vs)[[i]], width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=T,
+                    #     checkboxGroupInput(inputId = paste0("vs_",i),
+                    #                        label = NULL,
+                    #                        choices = names(vs[[i]]),
+                    #                        selected = names(vs[[i]])
+                    #     )
+                    #     
+                    # )
+                    )
     }
     rv$v <- v
   } else {
@@ -109,7 +128,7 @@ observe({
 
 output$filter_vars_levels <- renderUI({
   req(is.null(rv$v)==F)
-  req(input$fddf_filter_mode=="variables")
+  # req(input$fddf_filter_mode=="variables")
   
   rv$v
 })
@@ -118,30 +137,31 @@ output$filter_vars_levels <- renderUI({
 
 # filter design matrix
 filtered_design_df <- reactive({
-  req(length(input$filter_vars)>0)
-  req(nchar(input$fddf_filter_mode)>0)
+  # req(length(input$filter_vars)>0)
+  # req(nchar(input$fddf_filter_mode)>0)
   
   df <- design_df()
   
   
-  if (input$fddf_filter_mode== "variables"){
+  # if (input$fddf_filter_mode== "variables"){
     
     # for each specified var, filter by specified levels.
-    for (i in 1:length(input$filter_vars)){
-      var <- input$filter_vars[[i]]
+    filter_vars <- names(var_summary())
+    for (i in 1:length(filter_vars)){
+      var <- filter_vars[[i]]
       levels <- input[[paste0("vs_",i)]]
       
       df <- df[(df[[var]] %in% levels),]
     }
-    
-  } else if (input$fddf_filter_mode== "manual"){
-    
-    # filter by samples
-    if (length(input$filter_samples)>0){
-      df <- df[input$filter_samples, ]
-    }
-    
-  }
+
+  # } else if (input$fddf_filter_mode== "manual"){
+  # 
+  #   # filter by samples
+  #   if (length(input$filter_samples)>0){
+  #     df <- df[input$filter_samples, ]
+  #   }
+  # 
+  # }
   
   rv$samples <- rownames(df) # update filtered samples into rv
   rv$fddf <- df # update filtered table into rv
@@ -155,7 +175,7 @@ filtered_design_df <- reactive({
 output$filtered_design_df <- DT::renderDataTable({
   req(is.null(rv$gse_all)==F)
   req(is.null(rv$plat_id)==F)
-  req(length(input$filter_vars)>0)
+  # req(length(input$filter_vars)>0)
   
   df <- filtered_design_df()
   

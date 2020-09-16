@@ -20,6 +20,7 @@ library(plotly)
 library(htmltools)
 library(AnnotationDbi)
 library(waiter)
+library(shinyalert)
 
 options(repos = BiocManager::repositories())
 
@@ -40,9 +41,9 @@ run_modes = list("Pre-ranked GSEA"="gsea","Overrepresentation Analysis"="glist")
 gene_identifiers = list("SYMBOL"="symbol","Other/Mixed" = "other")
 
 # wellpanel background colors
-bcol1 = "#e6f4fc"
-bcol2 = "#ffffe6"
-bcol3 = "#e6f4fc"
+bcol1 = "#e6f4fc" # color for parameters wellpanel
+bcol2 = "#ffffe6" # color for summary box
+bcol3 = "#e6f4fc" # color for column selection wellpanel
 
 # ===================== FUNCTIONS =====================
 # function to abbreviate strings

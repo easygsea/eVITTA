@@ -1663,11 +1663,14 @@ observeEvent(input$confirm_kegg_plot,{
     output$es_plot_term_confirm <- renderUI({
         req(rv$run == "success")
         # req(input$selected_es_term != "")
-        bsButton(
-            inputId = "plot_db_es_confirm", 
-            label = "View!",
-            style = "success",
-            type = "button")
+        div(
+            actionBttn(
+                "plot_db_es_confirm", 
+                "View!",
+                style = "simple", color="primary", size = "sm",
+                block = TRUE),
+            bsTooltip("plot_db_es_confirm", HTML("Select term, then click <b>View!</b> Or, click interactive plots on the left"))
+        )
     })
     
     # read in ES text input

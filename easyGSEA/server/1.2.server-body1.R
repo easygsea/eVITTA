@@ -190,7 +190,7 @@ output$feedback_converted_rnk <- renderUI({
             fluidRow(
                 box(
                     background = "red", width=12,
-                    "No ID detected in ",species_translate(species),"'s database. Please check if your query file is correct and/or if your selected species matches your query."
+                    "No ID detected in ",species_translate(species),"'s database. Please check if your query file is correct and/or if you have selected the right gene identifier and/or if your selected species matches your query."
                 )
             )
         }else if(rv$rnk_check == "low"){
@@ -362,7 +362,7 @@ output$run_summary_gsea <- renderUI({
         fluidRow(
             box(
                 background = "red", width = 12,
-                HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if species matches your query and/or if your input gene list is correct.")
+                HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if species matches your query and/or if you have selected the right gene identifier and/or if your input gene list is correct.")
             )
         )
     }

@@ -1,4 +1,4 @@
-# options(shiny.maxRequestSize=30*1024^2)
+options(shiny.maxRequestSize=50*1024^2) # sets max upload size to 50 mb
 
 server <- function(input, output, session) {
     waiter_hide() # will hide *on_load waiter

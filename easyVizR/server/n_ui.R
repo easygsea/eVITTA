@@ -745,12 +745,15 @@ output$n_ui_single <- renderUI({
       column(6,
              box(
                title = NULL, status = "primary", solidHeader = F, width=12,
-               selectInput(
-                 inputId = "nx_selected",
-                 label = "View dataset:",
-                 choices = rv$nx_n,
-                 selected = rv$nx_n[[1]]
-               )
+               div(id="n_select_single",
+                   selectInput(
+                     inputId = "nx_selected",
+                     label = "View dataset:",
+                     choices = rv$nx_n,
+                     selected = rv$nx_n[[1]]
+                   )
+              )
+               
              ),
              uiOutput("nx_bar_panel"),
              
@@ -844,13 +847,16 @@ output$n_ui_network <- renderUI({
       column(3,
              box(
                title = NULL, status = "primary", solidHeader = F, width=12,
-               selectInput(
-                 inputId = "nw_selected_n",
-                 label = "Select dataset:",
-                 choices = rv$nx_n,
-                 selected = rv$nx_n[[1]]
-               ),
-               uiOutput("nw_set_le_ui"),
+               div(id="n_nw_select",
+                   selectInput(
+                     inputId = "nw_selected_n",
+                     label = "Select dataset:",
+                     choices = rv$nx_n,
+                     selected = rv$nx_n[[1]]
+                   ),
+                   uiOutput("nw_set_le_ui"),
+                   )
+               
              ),
              
              ),
@@ -1217,6 +1223,16 @@ output$n_panels <- renderUI({
   }
   else{
     div(
+      # fluidRow(
+      #   column(12,
+      #          wellPanel(
+      #            progress_box(id="infobox_1", prompt="To-dos:",
+      #            msg=c("1. Adjust filters", "2. Select an intersection", "3. Try out visualizations"),
+      #            condition=c(!is.null(input$nic_p), !is.null(rv$criteria), T),
+      #            bttn_id="next_p1", bttn_text="Continue to next panel"
+      #            )
+      #          ))
+      # ),
       fluidRow(
         
         column(6,
@@ -1235,14 +1251,13 @@ output$n_panels <- renderUI({
         ),
         column(6, align= "right",
                
-               div(id="n1_2",
-                   div(style="display: inline-block;margin-right: 5px;", enter_genes()),
-                   bsTooltip("enter_genes", "Enter genes of interest"),
-                   div(style="display: inline-block;margin-right: 5px;", view_genelists()),
-                   bsTooltip("view_genelists", "View filtered gene lists"),
-                   div(style="display: inline-block;", customize_filters()),
+               div(id="n_filters",
+                   div(id="n_filter_cuts", style="display: inline-block;margin-right: 5px;", customize_filters()),
                    bsTooltip("customize_filters", "Gene list filters"),
-                   
+                   div(id="n_filter_gls", style="display: inline-block;margin-right: 5px;", view_genelists()),
+                   bsTooltip("view_genelists", "View filtered gene lists"),
+                   div(id="n_filter_names", style="display: inline-block;margin-right: 5px;", enter_genes()),
+                   bsTooltip("enter_genes", "Enter genes of interest"),
                )
                
                

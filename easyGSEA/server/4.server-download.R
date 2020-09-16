@@ -34,19 +34,21 @@ output$ui_downloadbox <- renderUI({
             
         }else{
             fluidRow(
-                box(
-                    width = 12, background = "orange", title=NULL,
-                    h4(HTML("Download non-filtered enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><b>easyVizR</b></a> for multiple comparisons")),
-                    div(
-                        style="display: inline-block;vertical-align:top;",
-                        uiOutput("ui_tl_cut")
-                    ),
-                    div(
-                        style="display: inline-block;vertical-align:top;",
-                        downloadButton("gs_tbl_dl",
-                                       label = "Download enrichment table (.csv)"), br(),br()
+                column(12,
+                    wellPanel(
+                        style = paste0("background:",bcol1),
+                        p(HTML("Download non-filtered enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons")),
+                        div(
+                            style="display: inline-block;vertical-align:top;",
+                            uiOutput("ui_tl_cut")
+                        ),
+                        div(
+                            style="display: inline-block;vertical-align:top;",
+                            downloadButton("gs_tbl_dl",
+                                           label = "Download enrichment table (.csv)"), br(),br()
+                        )
+                        
                     )
-                    
                 ),
                 column(12,
                     dataTableOutput("selected_es_tables"),style="font-size:75%"

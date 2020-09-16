@@ -1,6 +1,6 @@
 element	intro
-n1_1	Select the type of visualization you want here.
-n1_2	Here are the filtering options. <br><br>Filters are applied dynamically to each dataset, yielding gene lists.<br><br>You can also filter manually by entering a list of genes.
-n3_4	The currently selected intersection will be plotted. <br><br>You can change your selection any time.
-n3_3	To plot 2D scatter, select 2 datasets;<br>To plot 3D scatter, select 3 datasets.
-	Scatter plot is shown in the right panel.<br><br>For 2D scatter, correlation line and the lm() output are shown on the left. 
+n_filter_cuts	Start first by applying filters. <br><br>Filters are applied dynamically to each dataset, yielding gene lists.
+n_filter_names	You can also filter manually by entering a list of names.
+ui_intersections	Use these options to find terms contained in your desired intersection. <br><br>Tip: check if the number of terms match the Venn count.
+n_ins_tbl	Terms contained in this intersection are shown here. <br><br>You can change the selected intersection any time. 
+n3_3	Scatter applies to two or three datasets. Select two to plot a 2D scatter; 3 for 3D scatter. Plot will be shown on the right side.

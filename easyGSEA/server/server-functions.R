@@ -1229,8 +1229,9 @@
       
       if(is.numeric(data[[input$rank_column]])){
         ranks <- setNames(data[[input$rank_column]], data[[input$gene_column]])
+        ranks <- ranks[complete.cases(names(ranks))]
         rv$infile_check = "pass"
-        rv$rnkgg <- ranks 
+        rv$rnkgg <- ranks
       }else{
         rv$infile_check = "wrong_rnk"
       }
@@ -1254,6 +1255,7 @@
       if(is.numeric(pval) && is.numeric(logfc)){
         rank_values <- -log10(pval) * sign(logfc)
         ranks <- setNames(rank_values,genes)
+        ranks <- ranks[complete.cases(names(ranks))]
         rv$infile_check = "pass"
         rv$rnkgg <- ranks 
       }else{
@@ -1371,21 +1373,23 @@
     # }
     
     tab_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details"){
-      bsButton(
-        inputId = id,
-        label = h4(HTML(msg)),
-        style = "warning",
+      actionBttn(
+        id,
+        HTML(msg),
+        icon=icon("angle-double-right"),
+        style = "simple", color="primary", size = "sm",
         block = T
       )
     }
     
     path_box <- function(id,msg){
       column(12,
-             bsButton(
-               inputId = id,
-               # label = div(style="word-break:break-all;",h4(HTML(msg))),
-               label = HTML(paste0("<p style='font-size:110%;word-break:break-all;vertical-align:middle;'>",msg,"</p>")),
-               style = "warning",
+             actionBttn(
+               id,
+               HTML(msg),
+               # HTML(paste0("<p style='font-size:110%;word-break:break-all;vertical-align:middle;'>",msg,"</p>")),
+               icon=icon("mouse"),
+               style = "simple", color="primary", size = "md",
                block = T
              )
       )
