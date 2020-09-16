@@ -83,10 +83,10 @@ output$select_params_ui <- renderUI({
       uiOutput("sp_select_levels_rel_fb")
     )
   } else {
-    msg = HTML(paste0("No variables are available for selection.<br>
+    msg = HTML(paste0("Design matrix is incomplete.<br>
                        (NOTE: at least one variable must have >2 levels)<br><br>
                       Try ",
-                      "<b>Coerce sample selection</b> to proceed"
+                      "<b>Manual selection</b> to proceed"
                       # actionLink("coerce",tags$b("Coerce Selection"))
                       # ," or return to <b>Design Matrix</b> to refine study designs."
                       ))

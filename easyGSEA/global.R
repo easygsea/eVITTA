@@ -42,7 +42,7 @@ gene_identifiers = list("SYMBOL"="symbol","Other/Mixed" = "other")
 
 # wellpanel background colors
 bcol1 = "#e6f4fc" # color for parameters wellpanel
-bcol2 = "#ffffe6" # color for summary box
+bcol2 = "#e6f4fc" # ffffe6 color for summary box
 bcol3 = "#e6f4fc" # color for column selection wellpanel
 
 # ===================== FUNCTIONS =====================
