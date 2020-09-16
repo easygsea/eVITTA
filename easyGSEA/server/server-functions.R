@@ -1229,8 +1229,9 @@
       
       if(is.numeric(data[[input$rank_column]])){
         ranks <- setNames(data[[input$rank_column]], data[[input$gene_column]])
+        ranks <- ranks[complete.cases(names(ranks))]
         rv$infile_check = "pass"
-        rv$rnkgg <- ranks 
+        rv$rnkgg <- ranks
       }else{
         rv$infile_check = "wrong_rnk"
       }
@@ -1254,6 +1255,7 @@
       if(is.numeric(pval) && is.numeric(logfc)){
         rank_values <- -log10(pval) * sign(logfc)
         ranks <- setNames(rank_values,genes)
+        ranks <- ranks[complete.cases(names(ranks))]
         rv$infile_check = "pass"
         rv$rnkgg <- ranks 
       }else{
