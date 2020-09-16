@@ -25,24 +25,37 @@ output$confirm_matrix_feedback <- renderUI({
             Please upload data matrix in the Data Matrix page.")
     
   } else {
-    
+        
     # check if columns are present in dmdf for the selected samples
     notfound <- setdiff(rv$samples, intersect(colnames(rv$dmdf),rv$samples))
     if (length(notfound)>0){
       errors <- errors + 1
+      
+      # titles of not found samples
+      samples_title = translate_sample_names(notfound,rv$pdata[c("title", "geo_accession")],  "title")
+      
+      if(length(notfound)==1){d_msg = "it"}else{d_msg = "them"}
+      
       msg = c(msg, paste0("<strong>Selected samples are missing from data matrix: </strong><br>
-            ", paste(notfound, collapse=", ")))
+            ", paste(notfound, collapse=", "), " (", paste(samples_title, collapse=", ") ,")"))
       
     } else {
       
       # check if the selected samples all have data in the count matrix
-      checkdf <- rv$dmdf[,rv$samples]
+      checkdf <- rv$dmdf[,rv$samples,drop=FALSE]
       indx = apply(checkdf, 2, function(x) any(is.na(x)))
       has_nas <- names(indx[indx==T])
       if (length(has_nas)>0){
         errors <- errors + 1
-        msg = c(msg, paste0("<strong>Data is incomplete for selected samples: </strong><br>
-                            ", paste(has_nas, collapse=", ")))
+        
+        # titles of has na samples
+        samples_title = translate_sample_names(has_nas,rv$pdata[c("title", "geo_accession")],  "title")
+
+        if(length(has_nas)==1){d_msg = "it"}else{d_msg = "them"}
+        
+        msg = c(msg, paste0("<strong>Data are incomplete for selected samples: </strong><br>
+                            ", paste(has_nas, collapse=", "), " (", paste(samples_title, collapse=", ") ,")"
+                            ,"<br><br><b>You may de-select ",d_msg, " to perform DEG analysis</b>"))
         
       }
       

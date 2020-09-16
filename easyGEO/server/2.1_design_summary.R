@@ -1,3 +1,72 @@
+# --------------- overall design tab UI -----------------
+output$ui_design <- renderUI({
+  if(is.null(rv$plat_id)){
+    panel_null()
+  }else{
+    fluidRow(
+      
+      column(8,
+             
+             
+             tabBox(
+               title = NULL, width = 12,
+               id = "filter",
+               
+               tabPanel("Filter Data", 
+                        
+                        uiOutput("filter_design_ui"),
+               ),
+               
+               tabPanel("Study Design Summary",
+                        
+                        uiOutput("design_summary_ui")
+                        
+               )
+             ),
+             box(title=span(icon("microscope"),"Filtered Design Matrix"), width = 12, solidHeader=F, status = "primary", 
+                 id = "filtered design matrix",
+                 
+                 fluidRow(
+                   column(12,
+                          box(title=NULL, width = 6, solidHeader=T, status="primary",
+                              radioGroupButtons(
+                                inputId = "fddf_show_rown",
+                                label = "Show column names as:", 
+                                choices = c("GEO accession", "Sample name"),
+                                selected = "GEO accession"
+                              )
+                          ),
+                          
+                          DT::dataTableOutput("filtered_design_df")
+                          
+                   )
+                   
+                 )
+                 
+             )
+             
+      ),
+      column(4,
+             valueBoxOutput("design_variables", width=12),
+             valueBoxOutput("design_samples", width=12),
+             
+             # tabBox(
+             #     title = NULL, width = 12,
+             #     id = "design_vis",
+             #     
+             #     
+             #     tabPanel("Visualization", 
+             #              
+             #              "Some categorical heatmap/ sunburst visualization here"
+             #     )
+             # ),
+             
+      )
+      
+    )
+  }
+})
+
 # get full design matrix table -----------#
 
 design_df <- reactive({

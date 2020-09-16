@@ -1327,6 +1327,27 @@
       rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
     }
     
+    #===================================================#
+    ######             reset RNK button          #######
+    #===================================================#
+    reset_rnk <- function(){
+      rv$file_upload_status = "reset"
+      
+      # rv$run = NULL
+      rv$rnk_check = NULL
+      rv$infile_check = NULL
+      rv$example_file = NULL
+      rv$infile_confirm = NULL
+      rv$infile_name = NULL
+      rv$infile_path = NULL
+      rv$file_upload_status = NULL
+      rv$rnk_or_deg = NULL
+      rv$gene_lists_mat = NULL
+      
+      shinyjs::reset("rnkfile")
+      shinyjs::enable("rnkfile")
+    }
+    
     # ------------------ Panell Null -------------------
     panel_null <- function(){
       box(
@@ -1334,3 +1355,39 @@
         "Visualization available upon successful run."
       )
     }
+    
+    # Function to draw an info box to guide the user along the pipeline
+    #--------------------- guide box ----------------------
+    # You can pass html string into msg, e.g. : guide_box("<strong>This is a bold message</strong>")
+    # default color is blue
+    # default width is 12 (maximum), must be is an integer value
+    # To make it appear on condition, call it in a conditional renderUI({})
+    
+    # guide_box <- function(msg="Navigate to <b>Enrichment Results</b> for details", color="orange", width=12){
+    #   box(
+    #     title = NULL, background = color, solidHeader = TRUE, width=width,
+    #     h4(HTML(msg))
+    #   )
+    # }
+    
+    tab_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details"){
+      bsButton(
+        inputId = id,
+        label = h4(HTML(msg)),
+        style = "warning",
+        block = T
+      )
+    }
+    
+    path_box <- function(id,msg){
+      column(12,
+             bsButton(
+               inputId = id,
+               # label = div(style="word-break:break-all;",h4(HTML(msg))),
+               label = HTML(paste0("<p style='font-size:110%;word-break:break-all;vertical-align:middle;'>",msg,"</p>")),
+               style = "warning",
+               block = T
+             )
+      )
+    }
+    

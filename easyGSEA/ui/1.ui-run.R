@@ -45,8 +45,6 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     
                     # database selection
                     uiOutput("test_db"),
-                    
-                    
                     uiOutput("bs_add_db"),
                     
                     
@@ -73,15 +71,16 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     
                     
                     # br(),
-                    uiOutput("ui_gsea_par"),
-                    # br(),
                     fluidRow(
                         column(
                             width = 12, align = "right",
                             uiOutput("run_GSEA"),
                             uiOutput("run_GList")
                         )
-                    )
+                    ),
+                    br(),
+                    uiOutput("ui_gsea_par")
+                    
                 )
             # )
         ),

@@ -1,3 +1,7 @@
+
+
+
+
 # --------------- search GEO accession ---------------
 # currently checks if input exists
 # todo: check if input format is correct (GSEXXXXXX)
@@ -82,7 +86,12 @@ observeEvent(input$search_geo, {
     
     
     rv$platforms <- tabulate(rv$gse_all, annotation)
-    
+    rv$gpl_summary <- summarize_gpl(rv$gse_all)
+    # initialize gpl selection choices
+    choices <- lapply(rv$gpl_summary, function(x){
+      HTML(paste0(x[["ID"]],": ", x[["Organism"]], " (", x[["Samples"]]," samples)" ))
+    })
+    rv$gpl_choices <- invert_vector(choices)
     
   })
   
@@ -92,16 +101,21 @@ observeEvent(input$search_geo, {
 # Sometimes multiple platforms are in the GSE, thus the GSE object is a list with length >1
 # we need to make people choose one
 
+# select GEO platform, with tooltips that summarize the GPL
 output$geo_platform_ui <- renderUI({
   req(is.null(rv$gse_all)==F)
   req(length(rv$platforms)>0)
-  
-  div(
+  req(length(rv$gpl_summary)>0)
+  req(length(rv$gpl_choices)>0)
+
+  div(id="select_plat",
     radioButtons(
       inputId = "plat",
       label = "Platforms available:",
-      choices = rv$platforms
+      # choices = rv$platforms
+      choices = rv$gpl_choices
     ),
+    uiOutput("gpl_tooltips"),
     uiOutput("study_type_feedback"),
     uiOutput("select_geo_platform")
     
@@ -109,14 +123,43 @@ output$geo_platform_ui <- renderUI({
   
 })
 
+# generate tooltips for gpl selections
+observe({
+  req(length(rv$gpl_summary)>0)
+  req(length(rv$gpl_choices)>0)
+  
+  # tooltip content
+  tooltips <- unlist(unname(lapply(rv$gpl_summary, function(x){
+    paste0("<strong>", names(x),"</strong>: ", x, collapse="<br>")
+  })))
+  
+  # generate tooltip
+  for (i in 1:length(rv$gpl_choices)){
+    rv$gpl_tooltips[[i]] <- radioTooltip(id = "plat",
+                                     choice = rv$gpl_choices[[i]], 
+                                     title = tooltips[[i]], 
+                                     placement = "right", trigger = "hover")
+  }
+})
+
+output$gpl_tooltips <- renderUI({
+  req(length(rv$gpl_tooltips)>0)
+  rv$gpl_tooltips
+})
+
+
+
 # detect study type during platform selection
 study_type <- reactive({
   req(is.null(rv$gse_all)==F)
   req(length(rv$platforms)>0)
   req(is.null(input$plat)==F)
   
+  
   gse_temp <- rv$gse_all[[match(input$plat, rv$platforms) ]]
-  print(gse_temp)
+  # print(gse_temp)
+  
+  req(is.null(gse_temp)==F)
   
   # get channel count
   gsm_meta_temp <- find_repeating_values(pData(phenoData(gse_temp)))
@@ -214,4 +257,22 @@ output$guide_1a <- renderUI({
   } else {
     return(NULL)
   }
+})
+
+
+
+# --------------- progress info box ---------------
+
+output$progress_1 <- renderUI({
+  
+  progress_box(id="infobox_1", prompt="To-dos:",
+               msg=c("1. Search a valid GSE number", "2. Select a platform", "3. Read the study information"), 
+               condition=c(!is.null(rv$gse_all), !is.null(rv$plat_id), !is.null(rv$plat_id)),
+               bttn_id="next_p1"
+               )
+
+})
+
+observeEvent(input$next_p1, {
+  updateTabItems(session, "menu1", "tab3")
 })

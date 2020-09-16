@@ -4,15 +4,15 @@ source("ui/css_addons.R")
 
 sidebar <- dashboardSidebar(
     sidebarMenu(id="menu1",
-                menuItem("Extract GEO Data", tabName="tab1", icon=icon("dashboard")),
+                menuItem("1. Extract GEO data", tabName="tab1", icon=icon("dashboard")),
                 
-                menuItem("Data matrix", tabName="tab3", icon=icon("table")),
+                menuItem("2. Data matrix", tabName="tab3", icon=icon("table")),
                 
-                menuItem("Design Summary (optional)", tabName="tab2", icon=icon("pencil-ruler")),
+                menuItem("3. Review/filter design matrix", tabName="tab2", icon=icon("pencil-ruler")),
 
-                menuItem("Run DEG analysis", tabName="tab4", icon=icon("calculator")),
+                menuItem("4. Run DEG analysis", tabName="tab4", icon=icon("calculator")),
                 
-                menuItem("Visualize Results", tabName="tab5", icon=icon("chart-area"))
+                menuItem("5. Visualize results", tabName="tab5", icon=icon("chart-area"))
                 
                 
     )
@@ -45,6 +45,13 @@ body <- dashboardBody(
     # verbatimTextOutput("debug0"),
     tabItems(
         tabItem(tabName = "tab1",
+                fluidRow(column(12,
+                                box(title=NULL, width = 12, solidHeader=T, status = "primary",
+                                    uiOutput("progress_1")
+                                    )
+                                
+                                
+                                )),
                 fluidRow(
                     column(4,
                            
@@ -92,135 +99,52 @@ body <- dashboardBody(
                 )
         ),
         
+        # ---------------------2. design matrix ---------------------------
+        
+        
         tabItem(tabName = "tab2",
-                fluidRow(
-                    
-                    column(8,
-                           
-                           
-                           tabBox(
-                               title = NULL, width = 12,
-                               id = "filter",
-                               
-                               tabPanel("Filter Data", 
-                                        
-                                        uiOutput("filter_design_ui"),
-                               ),
-
-                               tabPanel("Study Design Summary",
-
-                                        uiOutput("design_summary_ui")
-
-                               )
-                           ),
-                           box(title=span(icon("microscope"),"Filtered Design Matrix"), width = 12, solidHeader=F, status = "primary", 
-                               id = "filtered design matrix",
-                               
-                               fluidRow(
-                                 column(12,
-                                        box(title=NULL, width = 6, solidHeader=T, status="primary",
-                                            radioGroupButtons(
-                                              inputId = "fddf_show_rown",
-                                              label = "Show column names as:", 
-                                              choices = c("GEO accession", "Sample name"),
-                                              selected = "GEO accession"
-                                            )
-                                        ),
-                                        
-                                        DT::dataTableOutput("filtered_design_df")
-                                        
-                                 )
-                                 
-                               )
-                               
-                               )
-
-                    ),
-                    column(4,
-                           valueBoxOutput("design_variables", width=12),
-                           valueBoxOutput("design_samples", width=12),
-                           
-                           # tabBox(
-                           #     title = NULL, width = 12,
-                           #     id = "design_vis",
-                           #     
-                           #     
-                           #     tabPanel("Visualization", 
-                           #              
-                           #              "Some categorical heatmap/ sunburst visualization here"
-                           #     )
-                           # ),
-                           
-                           )
-                    
-                ),
+                uiOutput("ui_design")
 
         ),
+        
+        # ---------------------3. data matrix ---------------------------
+        
         tabItem(tabName = "tab3",
-                fluidRow(
-                    column(4,
-                           
-                           box(title=span(icon("download"),"Get data matrix"), width = 12, solidHeader=F, status = "primary", 
-                               id = "download_matrix",
-                               
-                               uiOutput("data_matrix_ui")
-                               
-                               ),
-                           
-                           uiOutput("upload_matrix_ui")
-                           
-                    ),
-                    column(8,
-                           
-                           box(title=span(icon("table"),"Processed data matrix"), width = 12, solidHeader=F, status = "primary", 
-                               id = "data_matrix",
-                               
-                               fluidRow(
-                                 column(12,
-                                        box(title=NULL, width = 6, solidHeader=T, status="primary",
-                                            radioGroupButtons(
-                                              inputId = "dmdf_show_coln",
-                                              label = "Show column names as:", 
-                                              choices = c("GEO accession", "Sample name"),
-                                              selected = "GEO accession"
-                                            ),
-                                            
-                                        ),
-                                        
-                                        uiOutput("dmdf_filter_ui"),
-                                        
-                                        DT::dataTableOutput("data_matrix_df")
-                                        
-                                 )
-                                 
-                                 
-                               )
-                           
-                           )
-                           
-                    )
-                )
-                
+                uiOutput("ui_dm")
 
         ),
         
         
+        # ---------------------4. run DEG ---------------------------
         
         tabItem(tabName = "tab4",
                 fluidRow(
                     column(6,
                            
-                           tabBox(id = "ui_select",
-                             width = 12, #solidHeader=F, status = "primary", 
+                           tabBox(
+                             id = "ui_select",
+                             width = 12,
                              tabPanel(
-                               span(icon("check-square"),"Fine-tune Selection"), 
-                               id = "sp",
+                               value = "sp",
+                               span(icon("check-square"),
+                                    HTML(paste0("Fine-tuned sample selection",add_help(
+                                      "fine_q"
+                                    )))
+                                    ), 
+                               bsTooltip("fine_q", "Applicable when design matrix is provided by authors and complete","top"),
                                
                                uiOutput("select_params_ui")
                              ),
-                             tabPanel(id = "coerce",
-                              span(icon("mixer"),"Coerce Selection"),
-                              uiOutput("coerce_ui")
+                             tabPanel(
+                               value = "coerce",
+                                span(icon("mixer"),
+                                     HTML(paste0("Coerce sample selection",add_help(
+                                       "coerce_q"
+                                     )))
+                                     ),
+                               bsTooltip("coerce_q", "For any combination of samples","top"),
+                               
+                                uiOutput("coerce_ui")
                               
                              )
                            ),
@@ -256,7 +180,7 @@ body <- dashboardBody(
                 
         ),
         
-        # --------------------- Visualization tab ---------------------------
+        # ---------------------5. Visualization ---------------------------
         tabItem(tabName = "tab5",
                 uiOutput("ui_vis")
         )

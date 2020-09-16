@@ -1,7 +1,8 @@
 # ------------ overall visualization tab UI ---------------
 output$ui_vis <- renderUI({
   if(is.null(rv$deg)){
-    panel_null()
+    msg = "Visualization available upon successful DEG run."
+    panel_null(text = msg)
   }else{
     tabBox(
       title = "DEG Visualization", width = 12,
