@@ -341,7 +341,7 @@ output$data_matrix_df <- DT::renderDataTable({
   
   # filter according to stored sample list
   if (input$dmdf_filter == "Filtered"){
-    df <- filtered_data_df()
+    df <- filtered_data_showdf()
   }
   
   # translate GSM column names to sample names on display
@@ -377,10 +377,27 @@ output$dmdf_filter_ui <- renderUI({
   )
 })
 
-# filter count matrix by selected samples
+# filter count matrix by selected samples (DISPLAY ONLY)
+filtered_data_showdf <- reactive({
+  req(is.null(rv$dmdf)==F)
+  req(length(rv$samples)>0)
+  
+  dmdf <- rv$dmdf
+  dmdf <- dmdf[,c("Name", rv$samples)]
+  dmdf
+  
+})
+
+
+# filter count matrix by selected samples (USE FOR ANALYSIS)
 filtered_data_df <- reactive({
   req(is.null(rv$dmdf)==F)
   req(length(rv$samples)>0)
   
-  rv$dmdf[,c("Name", rv$samples)] 
+  dmdf <- rv$dmdf
+  dmdf <- dmdf[,c("Name", rv$samples)]
+  dmdf[dmdf==""]<-NA # replace empty string with na
+  dmdf <- dmdf[complete.cases(dmdf),] # get rid of na values
+  dmdf
+  
 })
