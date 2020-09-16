@@ -133,6 +133,7 @@ body <- dashboardBody(
                                     # ), 
                                # bsTooltip("fine_q", "Applicable when design matrix is provided by authors and complete","top"),
                                HTML("<b>Note:</b> Applicable when the authors have uploaded their study design in full."),
+                               hr(),
                                
                                uiOutput("select_params_ui")
                              ),
@@ -145,6 +146,7 @@ body <- dashboardBody(
                                      # ),
                                # bsTooltip("coerce_q", "For any combination of samples","top"),
                                HTML("<b>Note:</b> For any combination of samples. You can manually select samples in the control and the experimental groups."),
+                               hr(),
                                
                                 uiOutput("coerce_ui")
                               

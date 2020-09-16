@@ -162,7 +162,7 @@ observeEvent(rv$ftpy,{
     title = paste0("Successfully downloaded ",rv$ftpy),
     tags$strong("Please decompress and check your downloaded data:"),
     tags$li("If they are raw/normalized counts, please tidy them up and upload the right format according to our instructions below."),
-    tags$li(HTML("If they are analyzed, proceed to <b>easyGSEA</b> for enrichment analysis or <b>easyVizR</b> for multiple comparisons.")),
+    tags$li(HTML("If they are analyzed, proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><b>easyGSEA</b></a> for enrichment analysis or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><b>easyVizR</b></a> for multiple comparisons.")),
     easyClose = T,
     footer = modalButton("Got it!")
   ))
