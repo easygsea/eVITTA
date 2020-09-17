@@ -241,6 +241,20 @@ output$example3 <- renderTable({(example_data3 <- read.csv(paste0(getwd(),"/serv
 # when file is uploaded, update the stored count matrix
 observeEvent(input$file, {
   inFile <- input$file
+  
+  # the modal that appears when the file user upload exceeds 50MB, Version1
+  if(inFile$size >= 50*1024^2){
+    showModal(modalDialog(
+      inputId = "size_reminder_modal",
+      # title = "The file size exceeds 50MB.",
+      div("The file you uploaded exceeds 50MB, please modify it to proceed. Try to delete unneeded columns and 
+            only keep the columns that you are interested in. 
+            Then press \"Browse...\" to upload it again. Thank you.",style="font-size:200%"),
+      easyClose = TRUE,size="l"
+      # , footer = modalButton("Close")
+    ))
+  }
+  
   #added try() here because there could be an error reading the file
   indf <- try(read.csv(inFile$datapath, header=F, 
                    colClasses=c("character")))
@@ -320,7 +334,9 @@ observeEvent(input$file, {
   matched_cols <- intersect(colnames(rvdf)[-1], colnames(indf)) # a vector of GSM id for matched cols
   unmatched_cols <- setdiff(colnames(indf), matched_cols) # vector of uploaded colnames that cannot find a match
   print(matched_cols)
+  print(length(matched_cols))
   print(unmatched_cols)
+  print(length(unmatched_cols))
   
   colnames(dmdf) <- colnames(rvdf)
   # print(head(dmdf))

@@ -322,6 +322,18 @@
         rv$infile_name = input$rnkfile$name
         rv$infile_path = input$rnkfile$datapath
         shinyjs::disable("rnkfile")
+        # the modal that appears whent the file user upload exceeds 50MB, Version1
+        if(input$rnkfile$size >= 50*1024^2){
+          showModal(modalDialog(
+            inputId = "size_reminder_modal",
+            # title = "The file size exceeds 50MB.",
+            div("The file you uploaded exceeds 50MB, please modify it to proceed. Try to delete unneeded columns and 
+            only keep gene name, p value, and expression/counts. 
+            Then press \"reset file\" to upload it again. Thank you.",style="font-size:200%"),
+            easyClose = TRUE,size="l"
+            # , footer = modalButton("Close")
+          ))
+        }
     })
 
 # ------------- 2.1.2 select corresponding table columns -----------------
@@ -727,7 +739,7 @@
       
       fluidRow(
         box(
-          width = 12, title = "Advanced run parameters", status = "primary", collapsible = T, collapsed = T,
+          width = 12, title = "Advanced run parameters", status = "warning", collapsible = T, collapsed = T,
           wellPanel(
             # h4("Run parameters"),
             splitLayout(
@@ -767,11 +779,11 @@
       req(is.null(rv$rnk_check)==F)
       req(is.null(rv$rnkgg)==F)
         
-      actionBttn("confirm1", 
-                 h4(span(icon("play-circle"),"RUN GSEA!")),
-               style="simple", color="primary", # size = "large",
-               block = TRUE
-               )
+      bsButton(inputId = "confirm1", 
+               label = h4(span(icon("play-circle"),"RUN GSEA!")),
+               # size = "large",
+               block = TRUE,
+               style = "danger")
     })
     
     # UI confirm GList
@@ -781,11 +793,12 @@
       
       req(is.null(rv$glist_check)==F)
       req(is.null(rv$gene_lists_after)==F)
-
-      actionBttn("confirm2", 
-               h4(span(icon("play-circle"),"RUN ORA!")),
-               style="simple", color="primary", # size = "large",
-               block = TRUE)
+      
+      bsButton(inputId = "confirm2", 
+               label = h4(span(icon("play-circle"),"RUN ORA!")),
+               # size = "large",
+               block = TRUE,
+               style = "danger")
         
     })
 
