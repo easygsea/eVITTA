@@ -192,8 +192,9 @@ output$ui_vis_gear <- renderUI({
                 ),
                 column(
                     width = 2,offset = 7,br(),
-                    bsButton("vis_replot","Replot!",width="100%",
-                             style = "primary",icon = icon("atom") #,lib="font-awesome"
+                    actionBttn("vis_replot","Replot!"
+                               ,block = T,style = "simple"#,size = "sm"
+                             ,color = "primary",icon = icon("atom") #,lib="font-awesome"
                     )
                 )
             )

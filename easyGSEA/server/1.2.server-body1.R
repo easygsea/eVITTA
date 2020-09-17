@@ -447,12 +447,15 @@ output$id_box <- renderUI({
             status = "primary",
             fluidRow(
                 column(
-                    width = 4,
-                    uiOutput("ui_rnk_download")
-                ),
-                column(
-                    width = 5,
-                    uiOutput("ui_mat_download")
+                    12,
+                    div(
+                        style="display: inline-block;vertical-align:top;",
+                        uiOutput("ui_rnk_download")
+                    ),
+                    div(
+                        style="display: inline-block;vertical-align:top;",
+                        uiOutput("ui_mat_download")
+                    )
                 )
             ),
             br(),
