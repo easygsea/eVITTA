@@ -448,6 +448,7 @@
         
         # save had data into RV
         rv$data_head = ranks
+        rv$data_head_o = ranks
     })
     
     # ----------------- 2.1.5 Return RNK -----------------------
