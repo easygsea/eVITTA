@@ -203,7 +203,7 @@ output$ui_samples_fb <- renderUI({
   
   fluidRow(
     box(
-      title="Make contrast", width = 12, solidHeader=T, status="warning",
+      title="Make contrast", width = 12, solidHeader=T, status="primary",
       column(
         width = 6,
         pickerInput(
@@ -292,7 +292,7 @@ output$ui_samples_fb2 <- renderUI({
   
   fluidRow(
     box(
-      title="Make contrast", width = 12, solidHeader=T, status="warning",
+      title="Make contrast", width = 12, solidHeader=T, status="primary",
       column(
         width = 6,
         pickerInput(

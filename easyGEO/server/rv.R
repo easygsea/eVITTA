@@ -19,7 +19,7 @@ rv <- reactiveValues(
   
   # ========= parameters for DEG visualizations ======== #
   plot_q=0.05, # adj.P.Val threshold for visualizations
-  plot_logfc=1, # logfc threshold for visualization
+  plot_logfc=0, # logfc threshold for visualization
   
   v_mode = "static", # or "interactive"
   
