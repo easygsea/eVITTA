@@ -2,6 +2,8 @@ rv <- reactiveValues(
   gse_all = NULL,
   
   fpta_ids = list(),
+  
+  bcol1 = "#e6f4fc",
 
   # ========= filtered data from DEG run ======== #
   min_n = 5, # maximum no of min samples for filtering

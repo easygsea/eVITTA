@@ -27,6 +27,7 @@ samples_t <- function(p_df=deg_pdata(),c_var=input$sp_select_var){
 
 output$select_params_ui <- renderUI({
   req(is.null(rv$fddf)==F)
+  req(input$ui_select == "sp")
   
   fddf <- rv$fddf
   
@@ -60,6 +61,14 @@ output$select_params_ui <- renderUI({
     }
     
     div(
+      fluidRow(
+        column(12,
+          wellPanel(style = paste0("background:",rv$bcol1),
+                    HTML("<b>Note:</b> \"By design matrix\" is applicable when the authors have uploaded their study design in full. 
+                                    Select the comparisons you're interested in and run DEG analysis.")
+          )
+        )
+      ),
       fluidRow(
         column(6,
                selectInput(
@@ -140,35 +149,35 @@ output$sp_select_levels_rel_fb <- renderUI({
   req(length(input$sp_select_levels)==2 & input$sp_select_var != input$sp_batch_col)
   req(is.null(input$sp_select_levels_base)==F)
   
-  # control level name
-  c_level = input$sp_select_levels_base
+  # # control level name
+  # c_level = input$sp_select_levels_base
+  # 
+  # # samples in control group
+  # t_level = t_level()
+  # samples_c = samples_c()
+  # samples_c_n = length(samples_c)
+  # 
+  # # samples in treatment group
+  # samples_t = samples_t()
+  # samples_t_n = length(samples_t)
+  # 
+  # textx = paste0("Review samples: ",
+  #                c_level," (n=",samples_c_n,") vs. ",
+  #                t_level," (n=",samples_t_n,")"
+  # )
   
-  # samples in control group
-  t_level = t_level()
-  samples_c = samples_c()
-  samples_c_n = length(samples_c)
   
-  # samples in treatment group
-  samples_t = samples_t()
-  samples_t_n = length(samples_t)
-  
-  textx = paste0("Review samples: ",
-                 c_level," (n=",samples_c_n,") vs. ",
-                 t_level," (n=",samples_t_n,")"
-  )
-  
-  
-  fluidRow(
-    box(title=textx, width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=F,
-        radioGroupButtons(
-          "names_toggle",
-          "Show sample names as",
-          choices = list("GEO accession"="accession","Sample name"="title"),
-          selected = "title"
-        ),
+  # fluidRow(
+  #   box(title=textx, width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=F,
+  #       radioGroupButtons(
+  #         "names_toggle",
+  #         "Show sample names as",
+  #         choices = list("GEO accession"="accession","Sample name"="title"),
+  #         selected = "title"
+  #       ),
         uiOutput("ui_samples_fb")
-    )
-  )
+  #   )
+  # )
   
 })
 
@@ -183,13 +192,14 @@ output$ui_samples_fb <- renderUI({
   # samples in treatment group
   samples_t = samples_t()
   
-  if(input$names_toggle == "title"){
+  # # determine input source GSM or title
+  # if(input$names_toggle == "title"){
     titles_c = translate_sample_names(samples_c,  rv$pdata[c("title", "geo_accession")],  "title")
     titles_t = translate_sample_names(samples_t,  rv$pdata[c("title", "geo_accession")],  "title")
     
     names(samples_c) = titles_c
     names(samples_t) = titles_t
-  }
+  # }
   
   fluidRow(
     column(
@@ -242,9 +252,15 @@ output$ui_samples_fb <- renderUI({
 # coerce overall ui
 output$coerce_ui <- renderUI({
   req(is.null(rv$fddf)==F)
+  req(input$ui_select == "coerce")
 
   fluidRow(
-    column(12,
+    column(
+      12,
+      wellPanel(style = paste0("background:",rv$bcol1),
+                HTML("<b>Note:</b> \"Manual selection\" is for any combination of samples. You may manually select samples in the control and the experimental groups. 
+                                      Select the comparisons you're interested in and run DEG analysis.")
+      ),
       radioGroupButtons(
         "names_toggle2",
         "Show sample names as",

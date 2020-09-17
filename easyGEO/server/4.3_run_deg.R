@@ -7,8 +7,8 @@ output$confirm_run <- renderUI({
     # req(length(input$samples_c_deg)>0 && length(input$samples_t_deg)>0)
     bsButton("run_deg", "Run DEG analysis",
              icon = icon("play-circle"), 
-             size = "large",
-             style = "primary")
+             size = "large",block = T,
+             style = "warning")
   }else if(input$ui_select == "coerce"){
     req(rv$matrix_ready==T)
     req(is.null(input$samples_c_deg2)==F & is.null(input$samples_t_deg2)==F)
@@ -22,15 +22,15 @@ output$confirm_run <- renderUI({
 output$run_deg_ui <- renderUI({
   req(is.null(rv$deg)==F)
   
-  tabBox(
-    width = 12, title = "DEG Analysis",
+  box(
+    width = 12, title = span(icon("align-left"),"DEG Analysis Results"), status = "primary",
     
     
-    tabPanel(
-      "DEG Table",
+    # tabPanel(
+    #   "DEG Table",
       fluidRow(
         box(
-          width = 12, title = NULL, background = "orange",
+          width = 12, title = NULL, background = "yellow",
           h4(HTML("DEG analysis complete!<br><br>
                   Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' style='color:white' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
                   and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' style='color:white' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.")),
@@ -77,7 +77,7 @@ output$run_deg_ui <- renderUI({
           )
         )
       )
-    )
+    # )
   )
 })
 
