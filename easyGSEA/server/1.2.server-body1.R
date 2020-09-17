@@ -451,7 +451,7 @@ output$id_box <- renderUI({
                     uiOutput("ui_rnk_download")
                 ),
                 column(
-                    width = 4,
+                    width = 5,
                     uiOutput("ui_mat_download")
                 )
             ),
@@ -480,8 +480,9 @@ output$id_conversion_table <- DT::renderDataTable({
 # download ID conversion button
 output$ui_mat_download <- renderUI({
     req(is.null(rv$gene_lists_mat) == F)
-    downloadButton("mat_download",
-                   label = "Download ID conversion table (.csv)"
+    downloadBttn("mat_download",
+                   label = "Download ID conversion table (.csv)", style = rv$dbtn_style,
+                   color = rv$dbtn_color, size=rv$dbtn_size, block = TRUE
     )
 })
 
@@ -498,8 +499,9 @@ output$mat_download <- downloadHandler(
 # UI download RNK --------------
 output$ui_rnk_download <- renderUI({
     req(is.null(rv$rnkgg) == F)
-    downloadButton("rnk_download",
-                   label = "Download RNK (.rnk)"
+    downloadBttn("rnk_download",
+                   label = "Download RNK (.rnk)", style = rv$dbtn_style,
+                 color = rv$dbtn_color, size=rv$dbtn_size, block = TRUE
     )
 })
 

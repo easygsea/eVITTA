@@ -33,7 +33,10 @@ output$run_deg_ui <- renderUI({
           width = 12,
           wellPanel(
             style = paste0("background:",rv$bcol1),
-            downloadButton("deg_table_download",label = "Download entire DEG table (.csv)", class = "buttd"),
+            downloadBttn("deg_table_download",label = "Download entire DEG table (.csv)"
+                         , style = "unite"
+                         , color = "primary"
+                         ),
             HTML("<br>Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
                   and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.")
         ))

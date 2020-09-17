@@ -768,8 +768,9 @@
       req(is.null(rv$rnkgg)==F)
         
       actionBttn("confirm1", 
-                 h4(span(icon("play-circle"),"RUN GSEA!")),
-               style=rv$run_btn_style, color=rv$run_btn_color, # size = "large",
+                 "RUN GSEA!",
+               style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+               icon = icon("play-circle"),
                block = TRUE
                )
     })
@@ -783,8 +784,9 @@
       req(is.null(rv$gene_lists_after)==F)
 
       actionBttn("confirm2", 
-               h4(span(icon("play-circle"),"RUN ORA!")),
-               style=rv$run_btn_style, color=rv$run_btn_color, # size = "large",
+               "RUN ORA!",
+               icon = icon("play-circle"),
+               style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
                block = TRUE)
         
     })
