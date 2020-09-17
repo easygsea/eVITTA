@@ -1389,7 +1389,7 @@
                HTML(msg),
                # HTML(paste0("<p style='font-size:110%;word-break:break-all;vertical-align:middle;'>",msg,"</p>")),
                icon=icon("mouse"),
-               style = "jelly", color="primary", size = "md",
+               style = "simple", color="primary", size = "md",
                block = T
              )
       )

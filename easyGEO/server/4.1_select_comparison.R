@@ -64,8 +64,8 @@ output$select_params_ui <- renderUI({
       fluidRow(
         column(12,
           wellPanel(style = paste0("background:",rv$bcol1),
-                    HTML("<b>Note:</b> \"By design matrix\" is applicable when the authors have uploaded their study design in full. 
-                                    Select the comparisons you're interested in and run DEG analysis.")
+                    HTML("<b>Note:</b> You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full. 
+                                    ")
           )
         )
       ),
@@ -202,36 +202,39 @@ output$ui_samples_fb <- renderUI({
   # }
   
   fluidRow(
-    column(
-      width = 6,
-      pickerInput(
-        inputId = "samples_c_deg",
-        label = c_level,
-        choices = samples_c,
-        selected = samples_c,
-        options = list(
-          `actions-box` = TRUE,
-          size = 10,
-          style = "btn-default",
-          `selected-text-format` = "count > 0"
-        ),
-        multiple = TRUE
-      )
-    ),
-    column(
-      width = 6,
-      pickerInput(
-        inputId = "samples_t_deg",
-        label = t_level,
-        choices = samples_t,
-        selected = samples_t,
-        options = list(
-          `actions-box` = TRUE,
-          size = 10,
-          style = "btn-default",
-          `selected-text-format` = "count > 0"
-        ),
-        multiple = TRUE
+    box(
+      title="Make contrast", width = 12, solidHeader=T, status="warning",
+      column(
+        width = 6,
+        pickerInput(
+          inputId = "samples_c_deg",
+          label = c_level,
+          choices = samples_c,
+          selected = samples_c,
+          options = list(
+            `actions-box` = TRUE,
+            size = 10,
+            style = "btn-default",
+            `selected-text-format` = "count > 0"
+          ),
+          multiple = TRUE
+        )
+      ),
+      column(
+        width = 6,
+        pickerInput(
+          inputId = "samples_t_deg",
+          label = t_level,
+          choices = samples_t,
+          selected = samples_t,
+          options = list(
+            `actions-box` = TRUE,
+            size = 10,
+            style = "btn-default",
+            `selected-text-format` = "count > 0"
+          ),
+          multiple = TRUE
+        )
       )
     )
     
@@ -258,8 +261,7 @@ output$coerce_ui <- renderUI({
     column(
       12,
       wellPanel(style = paste0("background:",rv$bcol1),
-                HTML("<b>Note:</b> \"Manual selection\" is for any combination of samples. You may manually select samples in the control and the experimental groups. 
-                                      Select the comparisons you're interested in and run DEG analysis.")
+                HTML("<b>Note:</b> \"Manual selection\" is for any combination of samples. You may manually select samples in the control and the experimental groups.")
       ),
       radioGroupButtons(
         "names_toggle2",
@@ -289,38 +291,42 @@ output$ui_samples_fb2 <- renderUI({
   }
   
   fluidRow(
-    column(
-      width = 6,
-      pickerInput(
-        inputId = "samples_c_deg2",
-        label = "Control group",
-        choices = samples_c,
-        # selected = samples_c,
-        options = list(
-          `actions-box` = TRUE,
-          size = 10,
-          style = "btn-default",
-          `selected-text-format` = "count > 0"
-        ),
-        multiple = TRUE
-      )
-    ),
-    column(
-      width = 6,
-      pickerInput(
-        inputId = "samples_t_deg2",
-        label = "Experimental group",
-        choices = samples_t,
-        # selected = samples_t,
-        options = list(
-          `actions-box` = TRUE,
-          size = 10,
-          style = "btn-default",
-          `selected-text-format` = "count > 0"
-        ),
-        multiple = TRUE
+    box(
+      title="Make contrast", width = 12, solidHeader=T, status="warning",
+      column(
+        width = 6,
+        pickerInput(
+          inputId = "samples_c_deg2",
+          label = "Control group",
+          choices = samples_c,
+          # selected = samples_c,
+          options = list(
+            `actions-box` = TRUE,
+            size = 10,
+            style = "btn-default",
+            `selected-text-format` = "count > 0"
+          ),
+          multiple = TRUE
+        )
+      ),
+      column(
+        width = 6,
+        pickerInput(
+          inputId = "samples_t_deg2",
+          label = "Experimental group",
+          choices = samples_t,
+          # selected = samples_t,
+          options = list(
+            `actions-box` = TRUE,
+            size = 10,
+            style = "btn-default",
+            `selected-text-format` = "count > 0"
+          ),
+          multiple = TRUE
+        )
       )
     )
+    
     
   )
 })

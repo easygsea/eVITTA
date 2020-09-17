@@ -3,7 +3,10 @@ rv <- reactiveValues(
   
   fpta_ids = list(),
   
-  bcol1 = "#e6f4fc", runs = 0, run_btn_color="royal", run_btn_style="jelly",
+  bcol1 = "#e6f4fc", runs = 0,
+  
+  run_btn_color="royal", run_btn_style="jelly",
+  dbtn_color="danger", dbtn_style="unite",
 
   # ========= filtered data from DEG run ======== #
   min_n = 5, # maximum no of min samples for filtering

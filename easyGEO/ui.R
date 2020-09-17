@@ -128,7 +128,7 @@ body <- dashboardBody(
                                uiOutput("confirm_matrix_ui")
                              # )
                            ),
-                           
+                           br(),
                            box(
                              title = span(HTML("<b>4.2.</b>"),icon("mixer"),HTML("Make contrast")), width = 12, status = "primary",
                              # id = "ui_select",
@@ -142,7 +142,7 @@ body <- dashboardBody(
                                  yes = icon("check-square"),
                                  no = icon("square-o")
                                ),
-                               status = "primary",
+                               # status = "primary",
                                direction = "horizontal"
                              ),
                              # tabPanel(
