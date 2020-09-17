@@ -334,9 +334,12 @@ observeEvent(input$file, {
   matched_cols <- intersect(colnames(rvdf)[-1], colnames(indf)) # a vector of GSM id for matched cols
   unmatched_cols <- setdiff(colnames(indf), matched_cols) # vector of uploaded colnames that cannot find a match
   print(matched_cols)
-  print(length(matched_cols))
+  #print(length(matched_cols))
   print(unmatched_cols)
-  print(length(unmatched_cols))
+  #print(length(unmatched_cols))
+  
+ 
+  
   
   colnames(dmdf) <- colnames(rvdf)
   # print(head(dmdf))
@@ -352,7 +355,29 @@ observeEvent(input$file, {
   print(head(dmdf))
   
   rv$dmdf <- dmdf
-})
+
+  #the modal that remind user that there are unmatched columns exist is added, Vesion 1
+  #declare some variables
+    unmatched_cols_length_one_character <- glue_collapse(unmatched_cols, sep = ", ", last = " and ")
+    length_matched <- length(matched_cols)
+    length_unmatched <- length(unmatched_cols)
+ 
+     #the code of the modal
+    if(length_unmatched > 0){showModal(modalDialog(
+      inputId = "column_match_modal",
+      # title = "See below for your column information",
+      span("IMPORTANT: ", style = "font-size:200%"),
+      span(length_matched,style = "font-size:200%"),
+      span(" columns successfully read; ",style = "font-size:200%"),
+      span(length_unmatched,style = "font-size:200%"),
+      span(" columns omitted because column name does not match existing sample names (",style = "font-size:200%"),
+      span(unmatched_cols_length_one_character,style = "font-size:200%"),
+      span("). Please check your file and try again.",style = "font-size:200%"),
+      #2 columns successfully read; 2 columns omitted because column name does not match existing sample names (C, D). Please check your file and try again.
+      easyClose = TRUE,size="l"
+      # , footer = modalButton("Close")
+    ))}
+  })
 
 # --------------- show data matrix df ---------------
 
