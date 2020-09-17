@@ -45,13 +45,13 @@ body <- dashboardBody(
     # verbatimTextOutput("debug0"),
     tabItems(
         tabItem(tabName = "tab1",
-                fluidRow(column(12,
-                                box(title=NULL, width = 12, solidHeader=T, status = "primary",
-                                    uiOutput("progress_1")
-                                    )
-                                
-                                
-                                )),
+                # fluidRow(column(12,
+                #                 box(title=NULL, width = 12, solidHeader=T, status = "primary",
+                #                     uiOutput("progress_1")
+                #                     )
+                #                 
+                #                 
+                #                 )),
                 fluidRow(
                     column(4,
                            
@@ -64,7 +64,10 @@ body <- dashboardBody(
                                uiOutput("geo_platform_ui")
                            ),
                            
-                           uiOutput("guide_1a")
+                           column(12,align="center",
+                             uiOutput("guide_1a")
+                             
+                           )
                            
                            
                     ),

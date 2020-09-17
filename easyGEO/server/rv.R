@@ -5,7 +5,7 @@ rv <- reactiveValues(
   
   bcol1 = "#e6f4fc", runs = 0,
   
-  run_btn_color="royal", run_btn_style="jelly",
+  run_btn_color="danger", run_btn_style="jelly",
   dbtn_color="danger", dbtn_style="unite",
 
   # ========= filtered data from DEG run ======== #

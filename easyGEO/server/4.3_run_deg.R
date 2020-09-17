@@ -38,45 +38,45 @@ output$run_deg_ui <- renderUI({
                            ,size="md")
             )
             ,br(),
-            HTML("<br><br><b>Note:</b> Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
+            HTML("<br><br>Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
                   and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons."),
             
-            tags$hr(style="border-color:grey;"),
-            
-            fluidRow(
-              column(5,
-                h4("Filtered DEG table")
-              ),
-              column(7,
-                uiOutput("tl_summary")
-              )
-            ),
-            
-            fluidRow(
-              column(5,
-                # adj.P.Val cutoff
-                sliderTextInput(
-                  inputId = "tl_q",
-                  label = "Threshold of adj.P.Val",
-                  choices = cutoff_slider,
-                  selected = rv$plot_q, grid=T, force_edges=T
-                )
-              ),
-              column(3,
-                # |logFC| cutoff
-                numericInput(
-                  "tl_logfc",
-                  "Threshold of |logFC|",
-                  rv$plot_logfc,min=0
-                )
-              ),
-              column(4, 
-                     # download table
-                     downloadButton("tl_table","Download filtered table"),
-                     # download list
-                     downloadButton("tl_list","Download filtered genes")
-              )
-            )
+            # tags$hr(style="border-color:grey;"),
+            # 
+            # fluidRow(
+            #   column(5,
+            #     h4("Filtered DEG table")
+            #   ),
+            #   column(7,
+            #     uiOutput("tl_summary")
+            #   )
+            # ),
+            # 
+            # fluidRow(
+            #   column(5,
+            #     # adj.P.Val cutoff
+            #     sliderTextInput(
+            #       inputId = "tl_q",
+            #       label = "Threshold of adj.P.Val",
+            #       choices = cutoff_slider,
+            #       selected = rv$plot_q, grid=T, force_edges=T
+            #     )
+            #   ),
+            #   column(3,
+            #     # |logFC| cutoff
+            #     numericInput(
+            #       "tl_logfc",
+            #       "Threshold of |logFC|",
+            #       rv$plot_logfc,min=0
+            #     )
+            #   ),
+            #   column(4, 
+            #          # download table
+            #          downloadButton("tl_table","Download filtered table"),
+            #          # download list
+            #          downloadButton("tl_list","Download filtered genes")
+            #   )
+            # )
             ))
       ),
       fluidRow(
@@ -378,28 +378,28 @@ observeEvent(input$run_deg2,{
 output$ui_deg_table <- renderUI({
   req(is.null(rv$deg)==F)
   
-  df = filter_df()
-  
-  if(nrow(df)<1){
-    msg = paste0("No significant results found at <b>adj.P.Val < ",input$tl_q,"</b> and <b>logFC >= ", input$tl_logfc
-                 ,"</b>. <br><br> Please adjust the filtering criteria above.")
-    fluidRow(
-      box(
-        title = NULL, background = "red", solidHeader = TRUE, width=12,
-        HTML(msg)
-      )
-    )
-  }else{
+  # df = filter_df()
+  # 
+  # if(nrow(df)<1){
+  #   msg = paste0("No significant results found at <b>adj.P.Val < ",input$tl_q,"</b> and <b>logFC >= ", input$tl_logfc
+  #                ,"</b>. <br><br> Please adjust the filtering criteria above.")
+  #   fluidRow(
+  #     box(
+  #       title = NULL, background = "red", solidHeader = TRUE, width=12,
+  #       HTML(msg)
+  #     )
+  #   )
+  # }else{
     dataTableOutput("deg_table")
-  }
+  # }
 })
 
 # render DEG table if filtered row >= 1
 output$deg_table <- DT::renderDataTable({
   req(is.null(rv$deg)==F)
   
-  mutate_df()
-}, options = list(pageLength = 4))
+  mutate_df(df=rv$deg)
+}, options = list(pageLength = 9))
 
 # download DEG table
 output$deg_table_download <- downloadHandler(
