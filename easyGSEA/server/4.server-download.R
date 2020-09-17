@@ -39,18 +39,24 @@ output$ui_downloadbox <- renderUI({
                         style = paste0("background:",bcol1),
                         p(HTML("Download <b>non-filtered enrichment table</b> and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons")),
                         
-                        div(
-                            style="display: inline-block;vertical-align:top;",
-                            downloadBttn("gs_tbl_dl",
-                                           label = "Download enrichment table (.csv)"
-                                         , style = rv$dbtn_style, color = rv$dbtn_color
-                                         , size=rv$dbtn_size, block = TRUE
-                                         )
-                        ),
-                        div(
-                            style="display: inline-block;vertical-align:top;",
-                            uiOutput("ui_tl_cut")
+                        fluidRow(
+                            column(12, align="center",
+                                   div(
+                                       style="display: inline-block;vertical-align:top;",
+                                       downloadBttn("gs_tbl_dl",
+                                                    label = "Download enrichment table (.csv)"
+                                                    , style = rv$dbtn_style, color = rv$dbtn_color
+                                                    , size="md", block = TRUE
+                                       )
+                                   ),
+                                   div(
+                                       style="display: inline-block;vertical-align:top;",
+                                       uiOutput("ui_tl_cut")
+                                   )
+                            )
                         )
+                        
+                        
                         
                     )
                 ),
@@ -109,7 +115,8 @@ output$ui_tl_cut <- renderUI({
         width = "300px",circle = TRUE, status = "danger",
         size = "xs",
         icon = icon("fas fa-cut"),# class = "opt"),
-        up = FALSE
+        up = FALSE,
+        tooltip = tooltipOptions(title = "Click to filter table")
     )
 })
 

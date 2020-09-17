@@ -1377,7 +1377,7 @@
         id,
         HTML(msg),
         icon=icon("angle-double-right"),
-        style = "simple", color="warning", size = "md",
+        style = "simple", color="warning", size = "sm",
         block = T
       )
     }
