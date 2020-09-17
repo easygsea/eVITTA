@@ -340,7 +340,13 @@
           column(12,
             wellPanel(
               # shiny::HTML("<p style='font-style:italic'>Select corresponding columns</p>"),
-              h4("Select corresponding columns"),
+              materialSwitch(
+                inputId = "mcol",
+                label = HTML("<span style='font-size:110%'>Missing column names in your query file?</span>"),
+                value = F, inline = TRUE, width = "100%",
+                status = "danger"
+              ),
+              
               uiOutput("feedback_filecontent_deg"),
               uiOutput("feedback_filecontent_rnk"),
               # uiOutput("feedback_filecontent_confirm"),
@@ -351,7 +357,7 @@
                  p("Your query file content:"),
                  uiOutput("feedback_filecontent")
           )
-        ),,
+        ),
           
         easyClose = F,
         footer = bsButton(
@@ -446,13 +452,11 @@
     
     # ----------------- 2.1.5 Return RNK -----------------------
     observeEvent(input$filecontent_confirm,{
-      removeModal()
-        data = rv$data_head
+        data = rv$data_head_o
         wtext = tags$b(
           "Duplicated genes found in your uploaded file. Only the first duplicate(s) will be kept. Do you want to continue?",
           style = "color: #FA5858;"
         )
-        
         if(ncol(data)==2){
           if(is.null(input$rank_column) && is.null(input$gene_column)){
             shinyalert("Please select the rank and the gene columns.")
@@ -461,6 +465,8 @@
           }else if(is.null(input$gene_column)){
             shinyalert("Please select the gene column.")
           }else{
+            removeModal()
+            
             all_genes = data[[input$gene_column]]
             duplicates = duplicated(all_genes)
 
@@ -495,6 +501,8 @@
           }else if(is.null(input$p_column)){
             shinyalert("Please select the p-value column.")
           }else{
+            removeModal()
+            
             all_genes = data[[input$gene_column]]
             duplicates = duplicated(all_genes)
             
@@ -920,6 +928,7 @@
         
         # reset RVs
         reset_rvs()
+        rv$rnkgg=NULL
 
         # read in parameters
         

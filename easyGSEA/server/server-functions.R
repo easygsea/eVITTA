@@ -1217,7 +1217,7 @@
     ########   convert & return RNK     ##########
     #=============================================#
     # generate ranks from RNK file
-    convert_rnk <- function(data=rv$data_head){
+    convert_rnk <- function(data=rv$data_head_o){
       all_genes = data[[input$gene_column]]
       duplicates = duplicated(all_genes)
       
@@ -1227,6 +1227,8 @@
       
       rv$infile_confirm = "confirm"
       
+      data[[input$rank_column]] = as.numeric(data[[input$rank_column]])
+
       if(is.numeric(data[[input$rank_column]])){
         ranks <- setNames(data[[input$rank_column]], data[[input$gene_column]])
         ranks <- ranks[complete.cases(names(ranks))]
@@ -1238,7 +1240,7 @@
     }
     
     # generate ranks from DEG file
-    convert_rnk_from_deg <- function(data=rv$data_head){
+    convert_rnk_from_deg <- function(data=rv$data_head_o){
       all_genes = data[[input$gene_column]]
       duplicates = duplicated(all_genes)
       
@@ -1248,10 +1250,16 @@
       
       rv$infile_confirm = "confirm"
       
+      data[[input$logfc_column]] = as.numeric(data[[input$logfc_column]])
+      data[[input$p_column]] = as.numeric(data[[input$p_column]])
+      
+      data = data[complete.cases(data),]
+      
       genes <- data[[input$gene_column]]
       logfc <- data[[input$logfc_column]]
       pval <- data[[input$p_column]] #%>% mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
       pval[pval==0] = 0.000000001
+      
       if(is.numeric(pval) && is.numeric(logfc)){
         rank_values <- -log10(pval) * sign(logfc)
         ranks <- setNames(rank_values,genes)
@@ -1393,5 +1401,18 @@
                block = T
              )
       )
+    }
+    
+    #========================================================#
+    ######  set colnames as first row, rename colnames #######
+    #========================================================#
+    reset_colnames <- function(df){
+      c_names_o = colnames(df)
+      c_names = paste0("X",1:ncol(df))
+      
+      df = rbind(c_names_o, df)
+      colnames(df) = c_names
+
+      return(df)
     }
     
