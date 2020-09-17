@@ -184,7 +184,7 @@
                     scale_y_discrete(labels = y_pathway)
                 
                 yh = nrow(df) * 18 + 50
-                if(yh<=600){yh=600}
+                if(yh<=rv$box_hp){yh=rv$box_hp}
                 
                 fig <- ggplotly(fig,
                                 height = yh,
@@ -270,7 +270,7 @@
                 
                     
                 yh = nrow(df) * 18 + 50
-                if(yh<=600){yh=600}
+                if(yh<=rv$box_hp){yh=rv$box_hp}
                 
                 fig <- ggplotly(fig,
                                 height = yh,
@@ -530,7 +530,7 @@
             
             # adjust plot height
             lth = nrow(tidy_data) * 18 + 50
-            if(lth<600){lth=600}
+            if(lth<=rv$box_hp){lth=rv$box_hp}
             
             p <- ggplotly(p, height = lth,
                           # margin=dict(
@@ -625,7 +625,7 @@
             
             # adjust plot height
             lth = nrow(tidy_data) * 18 + 50
-            if(lth<600){lth=600}
+            if(lth<=rv$box_hp){lth=rv$box_hp}
             
             p <- ggplotly(p, height = lth,
                           # margin=dict(
@@ -702,7 +702,7 @@
 
                 
                 yh = nrow(df) * 18 + 50
-                if(yh<=600){yh=600}
+                if(yh<=rv$box_hp){yh=rv$box_hp}
                 
                 fig <- ggplotly(fig,
                                 height = yh,
@@ -779,7 +779,7 @@
                     scale_y_discrete(labels = y_pathway)
 
                 yh = nrow(df) * 18 + 50
-                if(yh<=600){yh=600}
+                if(yh<=rv$box_hp){yh=rv$box_hp}
                 
                 fig <- ggplotly(fig,
                                 height = yh,
@@ -1377,7 +1377,7 @@
         id,
         HTML(msg),
         icon=icon("angle-double-right"),
-        style = "simple", color="primary", size = "sm",
+        style = "simple", color="warning", size = "sm",
         block = T
       )
     }

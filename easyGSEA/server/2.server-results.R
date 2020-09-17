@@ -39,7 +39,8 @@ output$ui_bodyResults <- renderUI({
                 width = 4,
                 fluidRow(
                     box(
-                        title = span(icon("search"),"Individual gene set statistics & visualization"),status="primary", #solidHeader = TRUE,
+                        # title = span(icon("search"),"Individual gene set statistics & visualization"),status="primary", #solidHeader = TRUE,
+                        title = span(icon("search"),"Click plot, or manually select a gene set:"),status="primary", #solidHeader = TRUE,
                         id = "gs_es_result",
                         width = 12, #height = "300px",
                         fluidRow(
@@ -49,7 +50,6 @@ output$ui_bodyResults <- renderUI({
                             ),
                             column(
                                 width = 3, align = "right",
-                                br(),
                                 uiOutput("es_plot_term_confirm")
                             )
                         ),
@@ -458,11 +458,11 @@ output$manhattan_box <- renderUI({
     div(
         style = "position: relative",
         box(
-            width = 12,height = "621px",align = "center",
+            width = 12,height = rv$box_h_a,align = "center",
             status = "primary", 
             div(
                 style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
-                plotlyOutput("plot_manhattan", width = "100%", height = "600px")
+                plotlyOutput("plot_manhattan", width = "100%", height = rv$box_h)
             ),
             div(
                 align = "left",
@@ -515,12 +515,12 @@ output$bar_box <- renderUI({
     div(
         style = "position: relative",
         box(
-            width = 12,height = "621px",align = "center",
+            width = 12,height = rv$box_h_a,align = "center",
             status = "primary", 
             div(
                 style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
                 uiOutput("plot_bar_none"),
-                plotlyOutput("plot_bar", width = "100%", height = "600px")
+                plotlyOutput("plot_bar", width = "100%", height = rv$box_h)
             ),
             div(
                 align = "left",
@@ -625,12 +625,12 @@ output$bubble_box <- renderUI({
     div(
         style = "position: relative",
         box(
-            width = 12,height = "621px",align = "center",
+            width = 12,height = rv$box_h_a,align = "center",
             status = "primary", 
             div(
                 style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
                 uiOutput("plot_bubble_none"),
-                plotlyOutput("plot_bubble", width = "100%",height = "600px")
+                plotlyOutput("plot_bubble", width = "100%",height = rv$box_h)
             ),
             div(
                 align = "left",
@@ -739,7 +739,7 @@ output$volcano_box <- renderUI({
     div(
         style = "position: relative",
         box(
-            width = 12,height = "621px",align = "center",
+            width = 12,height = rv$box_h_a,align = "center",
             status = "primary", 
             div(
                 div(
@@ -814,11 +814,11 @@ output$volcano_box <- renderUI({
 # UI volcano
 output$ui_volcano <- renderUI({
     if(rv$volcano_mode=="plotly"){
-        plotlyOutput("p1_fs_volcano",width = "100%",height = "600px")
+        plotlyOutput("p1_fs_volcano",width = "100%",height = rv$box_h)
     }else if(rv$volcano_mode=="plotly2"){
-        plotlyOutput("p2_fs_volcano",width = "100%",height = "600px")
+        plotlyOutput("p2_fs_volcano",width = "100%",height = rv$box_h)
     }else if(rv$volcano_mode=="ggplot"){
-        plotOutput("p3_fs_volcano",width = "100%",height = "600px")
+        plotOutput("p3_fs_volcano",width = "100%",height = rv$box_h)
     }
 })
 
@@ -869,12 +869,12 @@ output$word_box <- renderUI({
     div(
         style = "position: relative",
         box(
-            width = 12,height = "621px",align = "center",
+            width = 12,height = rv$box_h_a,align = "center",
             status = "primary", 
             div(
                 style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
                 uiOutput("plot_word_none"),
-                plotlyOutput("plot_word", width = "100%",height = "600px")
+                plotlyOutput("plot_word", width = "100%",height = rv$box_h)
             ),
             div(
                 align = "left",
@@ -1052,17 +1052,17 @@ output$ui_es <- renderUI({
     fluidRow(
         column(
             width = 12,
-            # tags$hr(style="border-color: grey; margin:0px;"),br(),
-            div(
-                style = 'overflow-x: scroll;font-size:75%', 
-                DT::dataTableOutput("gs_stats_tl")
-            ),
             div(
                 style = "position: relative",
-                uiOutput("ui_gsea_plots_radio"),
-                br(),
                 uiOutput("ui_gsea_plots"),
+                br(),
+                uiOutput("ui_gsea_plots_radio")
+            ),
+            div(
+                style = 'overflow-x: scroll;font-size:75%', 
+                DT::dataTableOutput("gs_stats_tl"),br()
             )
+            
         )
         
     )
@@ -1088,7 +1088,6 @@ output$ui_gsea_plots_radio <- renderUI({
     fluidRow(
         column(
             width = 12, align = "center",
-            br(),tags$hr(style="border-color: grey; margin:0px;"),br(),
             radioGroupButtons(
                 inputId = "plot_type_2",
                 # label = "Select plot type",
@@ -1101,7 +1100,8 @@ output$ui_gsea_plots_radio <- renderUI({
                 ),
                 status = "primary",
                 direction = "horizontal"
-            )
+            ),
+            tags$hr(style="border-color: grey; margin:0px;"),br()
         )
         
     )
@@ -1261,7 +1261,7 @@ output$gs_enrichment_plot <- renderUI({
         # status="primary",solidHeader = TRUE,
         # width = NULL, height = "300px",
         # title = "Enrichment Plot",
-        plotOutput("plot_db_es", height = "242px"),
+        plotOutput("plot_db_es", height = "246px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
             dropdown(
@@ -1282,7 +1282,7 @@ output$density_plot <- renderUI({
         # status="primary",solidHeader = TRUE,
         # width = NULL, height = "300px",
         # title = "Density Plot",
-        plotOutput("plot_density", height = "242px"),
+        plotOutput("plot_density", height = "246px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
             dropdown(
@@ -1303,7 +1303,7 @@ output$box_plot <- renderUI({
         # status="primary",solidHeader = TRUE,
         # width = NULL, height = "300px",
         # title = "Box Plot",
-        plotOutput("plot_box", height = "242px"),
+        plotOutput("plot_box", height = "246px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
             dropdown(
@@ -1324,7 +1324,7 @@ output$violin_plot <- renderUI({
         # id = "density_plot",status="primary",solidHeader = TRUE,
         # width = NULL, height = "300px",
         # title = "Violin Plot",
-        plotOutput("plot_violin", height = "242px"),
+        plotOutput("plot_violin", height = "246px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
             dropdown(
@@ -1648,8 +1648,8 @@ observeEvent(input$confirm_kegg_plot,{
     output$es_plot_term <- renderUI({
         req(rv$run == "success")
         selectizeInput(
-            "selected_es_term",
-            "Click plot, or manually select a gene set:",
+            "selected_es_term", label = NULL,
+            # "Click plot, or manually select a gene set:",
             # choices = isolate(sort_gs_terms()),
             choices = isolate((rv$fgseagg)$pathway),
             options = list(

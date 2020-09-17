@@ -45,13 +45,13 @@ body <- dashboardBody(
     # verbatimTextOutput("debug0"),
     tabItems(
         tabItem(tabName = "tab1",
-                fluidRow(column(12,
-                                box(title=NULL, width = 12, solidHeader=T, status = "primary",
-                                    uiOutput("progress_1")
-                                    )
-                                
-                                
-                                )),
+                # fluidRow(column(12,
+                #                 box(title=NULL, width = 12, solidHeader=T, status = "primary",
+                #                     uiOutput("progress_1")
+                #                     )
+                #                 
+                #                 
+                #                 )),
                 fluidRow(
                     column(4,
                            
@@ -64,7 +64,10 @@ body <- dashboardBody(
                                uiOutput("geo_platform_ui")
                            ),
                            
-                           uiOutput("guide_1a")
+                           column(12,align="center",
+                             uiOutput("guide_1a")
+                             
+                           )
                            
                            
                     ),
@@ -119,69 +122,78 @@ body <- dashboardBody(
         
         tabItem(tabName = "tab4",
                 fluidRow(
-                    column(6,
-                           
-                           tabBox(
-                             id = "ui_select",title = "Make contrast",
-                             width = 12,
-                             tabPanel(
-                               value = "sp",
-                               span(icon("check-square"),"By design matrix"),
+                    column(5,
+                           box(
+                             title=span(HTML("<b>4.1.</b>"),icon("check-square"),HTML("Confirm data matrix")), width = 12, status = "primary",
+                             id = "sp",
+                             # tabPanel(
+                               # span(icon("clipboard-check"),"Check if data matrix is ready"),
+                               uiOutput("confirm_matrix_ui")
+                             # )
+                           ),
+                           br(),
+                           box(
+                             title = span(HTML("<b>4.2.</b>"),icon("mixer"),HTML("Make contrast")), width = 12, status = "primary",
+                             # id = "ui_select",
+                             radioGroupButtons(
+                               inputId = "ui_select",
+                               # label = "Select plot type",
+                               choiceNames = c("By design matrix", "Manual selection"),
+                               choiceValues = c("sp","coerce"),
+                               selected = "sp",
+                               checkIcon = list(
+                                 yes = icon("check-square"),
+                                 no = icon("square-o")
+                               ),
+                               # status = "primary",
+                               direction = "horizontal"
+                             ),
+                             # tabPanel(
+                             #   value = "sp",
+                             #   span(icon("check-square"),"By design matrix"),
                                     # HTML(paste0("By design matrix",add_help(
                                     #   "fine_q"
                                     # )))
                                     # ), 
                                # bsTooltip("fine_q", "Applicable when design matrix is provided by authors and complete","top"),
-                               HTML("<b>Note:</b> Applicable when the authors have uploaded their study design in full."),
-                               hr(),
-                               
-                               uiOutput("select_params_ui")
-                             ),
-                             tabPanel(
-                               value = "coerce",
-                                span(icon("mixer"),"Manual selection"),
+                               uiOutput("select_params_ui"),
+                             # ),
+                             # tabPanel(
+                               # value = "coerce",
+                                # span(icon("mixer"),"Manual"),
                                      # HTML(paste0("Manual selection",add_help(
                                      #   "coerce_q"
                                      # )))
                                      # ),
                                # bsTooltip("coerce_q", "For any combination of samples","top"),
-                               HTML("<b>Note:</b> For any combination of samples. You can manually select samples in the control and the experimental groups."),
-                               hr(),
+                               # HTML("<b>Note:</b> \"Manual\" is for any combination of samples. You may manually select samples in the control and the experimental groups. 
+                               #       Select the comparisons you're interested in and run DEG analysis."),
+                               # hr(),
                                
                                 uiOutput("coerce_ui")
                               
-                             )
-                           ),
+                             # )
+                           )
                            
                     ),
-                    column(6,
+                    column(7,
+                           column(
+                             width = 12,
+                             uiOutput("confirm_run"),
+                             br()
+                           ),
                            
-                           box(title=span(icon("clipboard-check"),"Confirm data matrix"), width = 12, solidHeader=F, status = "primary", 
-                               id = "sp",
-                               uiOutput("confirm_matrix_ui")
-                               )
-                           
-                          
-                           
+                           fluidRow(
+                             column(
+                               width = 12,
+                               uiOutput("run_deg_ui")
+                               
+                             )
+                             
+                           )
+
                     )
-                ),
-                
-                column(
-                  width = 12,
-                  uiOutput("confirm_run"),
-                  br()
-                ),
-                
-                fluidRow(
-                  column(
-                    width = 12,
-                    uiOutput("run_deg_ui")
-                    
-                  )
-                  
                 )
-                
-                
         ),
         
         # ---------------------5. Visualization ---------------------------

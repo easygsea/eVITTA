@@ -94,7 +94,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                         uiOutput("summary_box")
                     ),
                     tabPanel(
-                        "ID conversion",
+                        span(icon("list"),"ID conversion"),
                         uiOutput("id_box")
                     )
                 )

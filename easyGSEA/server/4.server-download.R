@@ -37,16 +37,26 @@ output$ui_downloadbox <- renderUI({
                 column(12,
                     wellPanel(
                         style = paste0("background:",bcol1),
-                        p(HTML("Download non-filtered enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons")),
-                        div(
-                            style="display: inline-block;vertical-align:top;",
-                            uiOutput("ui_tl_cut")
-                        ),
-                        div(
-                            style="display: inline-block;vertical-align:top;",
-                            downloadButton("gs_tbl_dl",
-                                           label = "Download enrichment table (.csv)"), br(),br()
+                        p(HTML("Download <b>non-filtered enrichment table</b> and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons")),
+                        
+                        fluidRow(
+                            column(12, align="center",
+                                   div(
+                                       style="display: inline-block;vertical-align:top;",
+                                       downloadBttn("gs_tbl_dl",
+                                                    label = "Download enrichment table (.csv)"
+                                                    , style = rv$dbtn_style, color = rv$dbtn_color
+                                                    , size="md", block = TRUE
+                                       )
+                                   ),
+                                   div(
+                                       style="display: inline-block;vertical-align:top;",
+                                       uiOutput("ui_tl_cut")
+                                   )
+                            )
                         )
+                        
+                        
                         
                     )
                 ),
@@ -77,7 +87,7 @@ output$menu_download_table <- renderUI({
 
 # ----------UI table cut-------------
 output$ui_tl_cut <- renderUI({
-    dropdown(width=300,
+    dropdownButton(
         sliderTextInput("cutoff_p_tl",
                         label = "P threshold:",
                         choices= cutoff_slider,
@@ -102,9 +112,11 @@ output$ui_tl_cut <- renderUI({
             label = span(icon("cut"),"Cut table"),
             style = "primary"
         ),
-        size = "l",
+        width = "300px",circle = TRUE, status = "danger",
+        size = "xs",
         icon = icon("fas fa-cut"),# class = "opt"),
-        up = FALSE
+        up = FALSE,
+        tooltip = tooltipOptions(title = "Click to filter table")
     )
 })
 

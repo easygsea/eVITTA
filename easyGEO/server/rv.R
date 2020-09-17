@@ -2,6 +2,11 @@ rv <- reactiveValues(
   gse_all = NULL,
   
   fpta_ids = list(),
+  
+  bcol1 = "#e6f4fc", runs = 0,
+  
+  run_btn_color="danger", run_btn_style="jelly",
+  dbtn_color="danger", dbtn_style="unite",
 
   # ========= filtered data from DEG run ======== #
   min_n = 5, # maximum no of min samples for filtering
@@ -14,7 +19,7 @@ rv <- reactiveValues(
   
   # ========= parameters for DEG visualizations ======== #
   plot_q=0.05, # adj.P.Val threshold for visualizations
-  plot_logfc=1, # logfc threshold for visualization
+  plot_logfc=0, # logfc threshold for visualization
   
   v_mode = "static", # or "interactive"
   

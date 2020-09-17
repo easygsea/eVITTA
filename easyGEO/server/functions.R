@@ -1,3 +1,22 @@
+# ------- Function to draw an info box to guide the user along the pipeline ---------
+# You can pass html string into msg, e.g. : guide_box("<strong>This is a bold message</strong>")
+# default color is blue
+# default width is 12 (maximum), must be is an integer value
+# To make it appear on condition, call it in a conditional renderUI({})
+# Then, observeEvent to next tab:
+# observeEvent(input$guide1,{updateTabItems(session, "menu1", "tab3")})
+
+guide_box <- function(id,msg, color="warning", size="sm"){
+  actionBttn(
+    id,
+    HTML(msg),
+    icon=icon("angle-double-right"),
+    style = "simple", color=color, size = size
+    , block = T
+  )
+}
+
+
 # ------------- enhanced page progress infobox ------------------
 # call in renderUI on the server side. you need to wrap this in a box
 # 
@@ -63,9 +82,7 @@ filter_df <- function(df = rv$deg,q_cutoff=input$tl_q,logfc_cutoff=input$tl_logf
 }
 
 # mutate digits to 2 decimals
-mutate_df <- function(){
-  df = filter_df()
-  
+mutate_df <- function(df = filter_df()){
   genes = rownames(df)
   
   df = df %>% 

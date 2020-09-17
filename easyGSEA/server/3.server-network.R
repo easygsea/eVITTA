@@ -165,7 +165,7 @@ output$ui_vis_gear <- renderUI({
                         ),
                         selected = rv$percent_method
                     ),
-                    bsTooltip("q_vis_edge", "Click to learn more", placement = "top")
+                    bsTooltip("q_vis_edge", "Click to learn more!", placement = "top")
                 ),
                 column(
                     width = 5,
@@ -175,7 +175,7 @@ output$ui_vis_gear <- renderUI({
                                            bsButton("q_vis_edge_threshold", label = "", icon = icon("question"), style = "default", size = "extra-small")),
                                  rv$percent_cutoff, min = 0, max = 1, step = 0.01
                     ),
-                    bsTooltip("q_vis_edge_threshold", "Click to learn more", placement = "top")
+                    bsTooltip("q_vis_edge_threshold", "Click to learn more!", placement = "top")
                     
                 )
                 
@@ -192,8 +192,9 @@ output$ui_vis_gear <- renderUI({
                 ),
                 column(
                     width = 2,offset = 7,br(),
-                    bsButton("vis_replot","Replot!",width="100%",
-                             style = "primary",icon = icon("atom") #,lib="font-awesome"
+                    actionBttn("vis_replot","Replot!"
+                               ,block = T,style = "simple"#,size = "sm"
+                             ,color = "primary",icon = icon("atom") #,lib="font-awesome"
                     )
                 )
             )

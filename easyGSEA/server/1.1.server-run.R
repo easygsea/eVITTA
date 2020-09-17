@@ -289,7 +289,7 @@
                       
 
             ),
-            bsTooltip("q1", "Click to learn more", placement = "top")
+            bsTooltip("q1", "DEG file also supported! Click to learn more", placement = "top")
             
             
         )
@@ -779,11 +779,12 @@
       req(is.null(rv$rnk_check)==F)
       req(is.null(rv$rnkgg)==F)
         
-      bsButton(inputId = "confirm1", 
-               label = h4(span(icon("play-circle"),"RUN GSEA!")),
-               # size = "large",
-               block = TRUE,
-               style = "danger")
+      actionBttn("confirm1", 
+                 "RUN GSEA!",
+               style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+               icon = icon("play-circle"),
+               block = TRUE
+               )
     })
     
     # UI confirm GList
@@ -793,12 +794,12 @@
       
       req(is.null(rv$glist_check)==F)
       req(is.null(rv$gene_lists_after)==F)
-      
-      bsButton(inputId = "confirm2", 
-               label = h4(span(icon("play-circle"),"RUN ORA!")),
-               # size = "large",
-               block = TRUE,
-               style = "danger")
+
+      actionBttn("confirm2", 
+               "RUN ORA!",
+               icon = icon("play-circle"),
+               style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+               block = TRUE)
         
     })
 

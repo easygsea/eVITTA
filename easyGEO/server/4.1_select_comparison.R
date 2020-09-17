@@ -27,6 +27,7 @@ samples_t <- function(p_df=deg_pdata(),c_var=input$sp_select_var){
 
 output$select_params_ui <- renderUI({
   req(is.null(rv$fddf)==F)
+  req(input$ui_select == "sp")
   
   fddf <- rv$fddf
   
@@ -61,6 +62,14 @@ output$select_params_ui <- renderUI({
     
     div(
       fluidRow(
+        column(12,
+          wellPanel(style = paste0("background:",rv$bcol1),
+                    HTML("<b>Note:</b> You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full. 
+                                    ")
+          )
+        )
+      ),
+      fluidRow(
         column(6,
                selectInput(
                  inputId = "sp_select_var",
@@ -83,11 +92,11 @@ output$select_params_ui <- renderUI({
       uiOutput("sp_select_levels_rel_fb")
     )
   } else {
-    msg = HTML(paste0("No variables are available for selection.<br>
+    msg = HTML(paste0("Design matrix is incomplete.<br>
                        (NOTE: at least one variable must have >2 levels)<br><br>
                       Try ",
-                      "<b>Coerce sample selection</b> to proceed"
-                      # actionLink("coerce",tags$b("Coerce Selection"))
+                      "<b>Manual selection</b> to proceed"
+                      # , actionLink("coerce",tags$b("Coerce Selection"))
                       # ," or return to <b>Design Matrix</b> to refine study designs."
                       ))
     box_color = "red"
@@ -140,35 +149,35 @@ output$sp_select_levels_rel_fb <- renderUI({
   req(length(input$sp_select_levels)==2 & input$sp_select_var != input$sp_batch_col)
   req(is.null(input$sp_select_levels_base)==F)
   
-  # control level name
-  c_level = input$sp_select_levels_base
+  # # control level name
+  # c_level = input$sp_select_levels_base
+  # 
+  # # samples in control group
+  # t_level = t_level()
+  # samples_c = samples_c()
+  # samples_c_n = length(samples_c)
+  # 
+  # # samples in treatment group
+  # samples_t = samples_t()
+  # samples_t_n = length(samples_t)
+  # 
+  # textx = paste0("Review samples: ",
+  #                c_level," (n=",samples_c_n,") vs. ",
+  #                t_level," (n=",samples_t_n,")"
+  # )
   
-  # samples in control group
-  t_level = t_level()
-  samples_c = samples_c()
-  samples_c_n = length(samples_c)
   
-  # samples in treatment group
-  samples_t = samples_t()
-  samples_t_n = length(samples_t)
-  
-  textx = paste0("Review samples: ",
-                 c_level," (n=",samples_c_n,") vs. ",
-                 t_level," (n=",samples_t_n,")"
-  )
-  
-  
-  fluidRow(
-    box(title=textx, width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=F,
-        radioGroupButtons(
-          "names_toggle",
-          "Show sample names as",
-          choices = list("GEO accession"="accession","Sample name"="title"),
-          selected = "title"
-        ),
+  # fluidRow(
+  #   box(title=textx, width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=F,
+  #       radioGroupButtons(
+  #         "names_toggle",
+  #         "Show sample names as",
+  #         choices = list("GEO accession"="accession","Sample name"="title"),
+  #         selected = "title"
+  #       ),
         uiOutput("ui_samples_fb")
-    )
-  )
+  #   )
+  # )
   
 })
 
@@ -183,45 +192,49 @@ output$ui_samples_fb <- renderUI({
   # samples in treatment group
   samples_t = samples_t()
   
-  if(input$names_toggle == "title"){
+  # # determine input source GSM or title
+  # if(input$names_toggle == "title"){
     titles_c = translate_sample_names(samples_c,  rv$pdata[c("title", "geo_accession")],  "title")
     titles_t = translate_sample_names(samples_t,  rv$pdata[c("title", "geo_accession")],  "title")
     
     names(samples_c) = titles_c
     names(samples_t) = titles_t
-  }
+  # }
   
   fluidRow(
-    column(
-      width = 6,
-      pickerInput(
-        inputId = "samples_c_deg",
-        label = c_level,
-        choices = samples_c,
-        selected = samples_c,
-        options = list(
-          `actions-box` = TRUE,
-          size = 10,
-          style = "btn-default",
-          `selected-text-format` = "count > 0"
-        ),
-        multiple = TRUE
-      )
-    ),
-    column(
-      width = 6,
-      pickerInput(
-        inputId = "samples_t_deg",
-        label = t_level,
-        choices = samples_t,
-        selected = samples_t,
-        options = list(
-          `actions-box` = TRUE,
-          size = 10,
-          style = "btn-default",
-          `selected-text-format` = "count > 0"
-        ),
-        multiple = TRUE
+    box(
+      title="Make contrast", width = 12, solidHeader=T, status="success",
+      column(
+        width = 6,
+        pickerInput(
+          inputId = "samples_c_deg",
+          label = c_level,
+          choices = samples_c,
+          selected = samples_c,
+          options = list(
+            `actions-box` = TRUE,
+            size = 10,
+            style = "btn-default",
+            `selected-text-format` = "count > 0"
+          ),
+          multiple = TRUE
+        )
+      ),
+      column(
+        width = 6,
+        pickerInput(
+          inputId = "samples_t_deg",
+          label = t_level,
+          choices = samples_t,
+          selected = samples_t,
+          options = list(
+            `actions-box` = TRUE,
+            size = 10,
+            style = "btn-default",
+            `selected-text-format` = "count > 0"
+          ),
+          multiple = TRUE
+        )
       )
     )
     
@@ -242,9 +255,14 @@ output$ui_samples_fb <- renderUI({
 # coerce overall ui
 output$coerce_ui <- renderUI({
   req(is.null(rv$fddf)==F)
+  req(input$ui_select == "coerce")
 
   fluidRow(
-    column(12,
+    column(
+      12,
+      wellPanel(style = paste0("background:",rv$bcol1),
+                HTML("<b>Note:</b> \"Manual selection\" is for any combination of samples. You may manually select samples in the control and the experimental groups.")
+      ),
       radioGroupButtons(
         "names_toggle2",
         "Show sample names as",
@@ -273,38 +291,42 @@ output$ui_samples_fb2 <- renderUI({
   }
   
   fluidRow(
-    column(
-      width = 6,
-      pickerInput(
-        inputId = "samples_c_deg2",
-        label = "Control group",
-        choices = samples_c,
-        # selected = samples_c,
-        options = list(
-          `actions-box` = TRUE,
-          size = 10,
-          style = "btn-default",
-          `selected-text-format` = "count > 0"
-        ),
-        multiple = TRUE
-      )
-    ),
-    column(
-      width = 6,
-      pickerInput(
-        inputId = "samples_t_deg2",
-        label = "Experimental group",
-        choices = samples_t,
-        # selected = samples_t,
-        options = list(
-          `actions-box` = TRUE,
-          size = 10,
-          style = "btn-default",
-          `selected-text-format` = "count > 0"
-        ),
-        multiple = TRUE
+    box(
+      title="Make contrast", width = 12, solidHeader=T, status="success",
+      column(
+        width = 6,
+        pickerInput(
+          inputId = "samples_c_deg2",
+          label = "Control group",
+          choices = samples_c,
+          # selected = samples_c,
+          options = list(
+            `actions-box` = TRUE,
+            size = 10,
+            style = "btn-default",
+            `selected-text-format` = "count > 0"
+          ),
+          multiple = TRUE
+        )
+      ),
+      column(
+        width = 6,
+        pickerInput(
+          inputId = "samples_t_deg2",
+          label = "Experimental group",
+          choices = samples_t,
+          # selected = samples_t,
+          options = list(
+            `actions-box` = TRUE,
+            size = 10,
+            style = "btn-default",
+            `selected-text-format` = "count > 0"
+          ),
+          multiple = TRUE
+        )
       )
     )
+    
     
   )
 })

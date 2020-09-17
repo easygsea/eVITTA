@@ -5,79 +5,87 @@ output$confirm_run <- renderUI({
   if(input$ui_select == "sp"){
     req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
     # req(length(input$samples_c_deg)>0 && length(input$samples_t_deg)>0)
-    bsButton("run_deg", "Run DEG analysis",
+    actionBttn("run_deg", "4.3. Run DEG Analysis!",
              icon = icon("play-circle"), 
-             size = "large",
-             style = "primary")
+             style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+             block = TRUE)
   }else if(input$ui_select == "coerce"){
     req(rv$matrix_ready==T)
     req(is.null(input$samples_c_deg2)==F & is.null(input$samples_t_deg2)==F)
-    bsButton("run_deg2", "Run DEG analysis",
+    actionBttn("run_deg2", "4.3. Run DEG Analysis!",
              icon = icon("play-circle"), 
-             size = "large",
-             style = "primary")
+             style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+             block = TRUE)
   }
 })
 
 output$run_deg_ui <- renderUI({
   req(is.null(rv$deg)==F)
   
-  tabBox(
-    width = 12, title = "DEG Analysis",
+  box(
+    width = 12, title = span(HTML("<b>4.4.</b>"),icon("book-open"),HTML("Review & "),icon("download"),HTML("download DEG analysis results")), status = "primary",
     
     
-    tabPanel(
-      "DEG Table",
       fluidRow(
-        box(
-          width = 12, title = NULL, background = "orange",
-          h4(HTML("DEG analysis complete!<br><br>
-                  Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' style='color:white' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
-                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' style='color:white' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.")),
-          downloadButton("deg_table_download",label = "Download entire DEG table (.csv)")
-          
-        )
+        column(
+          width = 12,
+          wellPanel(
+            style = paste0("background:",rv$bcol1),
+            column(12, align = "center",
+              downloadBttn("deg_table_download",label = "Download entire DEG table (.csv)"
+                           , style = rv$dbtn_style
+                           , color = rv$dbtn_color
+                           ,size="md")
+            )
+            ,br(),
+            HTML("<br><br>Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
+                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons."),
+            
+            # tags$hr(style="border-color:grey;"),
+            # 
+            # fluidRow(
+            #   column(5,
+            #     h4("Filtered DEG table")
+            #   ),
+            #   column(7,
+            #     uiOutput("tl_summary")
+            #   )
+            # ),
+            # 
+            # fluidRow(
+            #   column(5,
+            #     # adj.P.Val cutoff
+            #     sliderTextInput(
+            #       inputId = "tl_q",
+            #       label = "Threshold of adj.P.Val",
+            #       choices = cutoff_slider,
+            #       selected = rv$plot_q, grid=T, force_edges=T
+            #     )
+            #   ),
+            #   column(3,
+            #     # |logFC| cutoff
+            #     numericInput(
+            #       "tl_logfc",
+            #       "Threshold of |logFC|",
+            #       rv$plot_logfc,min=0
+            #     )
+            #   ),
+            #   column(4, 
+            #          # download table
+            #          downloadButton("tl_table","Download filtered table"),
+            #          # download list
+            #          downloadButton("tl_list","Download filtered genes")
+            #   )
+            # )
+            ))
       ),
       fluidRow(
         column(
-          width = 8,
-          
+          width = 12,
           br(),
           uiOutput("ui_deg_table")
-        ),
-        column(
-          width = 4,
-          br(),
-          wellPanel(
-            
-            h4("Filter DEG table"),
-            tags$hr(style="border-color: grey;"),
-            
-            
-            # adj.P.Val cutoff
-            sliderTextInput(
-              inputId = "tl_q",
-              label = "Threshold of adj.P.Val",
-              choices = cutoff_slider,
-              selected = rv$plot_q, grid=T, force_edges=T
-            ),
-            # |logFC| cutoff
-            numericInput(
-              "tl_logfc",
-              "Threshold of |logFC|",
-              rv$plot_logfc,min=0
-            ),
-            uiOutput("tl_summary"),
-            # download table
-            downloadButton("tl_table","Download filtered table"),
-            br(),br(),
-            # download list
-            downloadButton("tl_list","Download filtered gene list")
-            
-          )
         )
       )
-    )
   )
 })
 
@@ -228,6 +236,8 @@ observeEvent(input$run_deg,{
       rv$samples_t = samples_t
       
       rv$deg_pdata = p_df
+      
+      rv$runs = rv$runs + 1
     })
   }
 })
@@ -358,6 +368,8 @@ observeEvent(input$run_deg2,{
       rv$samples_t = samples_t
       
       rv$deg_pdata = p_df
+      
+      rv$runs = rv$runs + 1
     })
   }
 })
@@ -366,26 +378,28 @@ observeEvent(input$run_deg2,{
 output$ui_deg_table <- renderUI({
   req(is.null(rv$deg)==F)
   
-  df = filter_df()
-  
-  if(nrow(df)<1){
-    msg = paste0("No significant results found at <b>adj.P.Val < ",rv$plot_q,"</b> and <b>logFC >= ", rv$plot_logfc
-                 ,"</b>. <br><br> Please adjust the filtering criteria on the right.")
-    box(
-      title = NULL, background = "red", solidHeader = TRUE, width=12,
-      h4(HTML(msg))
-    )
-  }else{
+  # df = filter_df()
+  # 
+  # if(nrow(df)<1){
+  #   msg = paste0("No significant results found at <b>adj.P.Val < ",input$tl_q,"</b> and <b>logFC >= ", input$tl_logfc
+  #                ,"</b>. <br><br> Please adjust the filtering criteria above.")
+  #   fluidRow(
+  #     box(
+  #       title = NULL, background = "red", solidHeader = TRUE, width=12,
+  #       HTML(msg)
+  #     )
+  #   )
+  # }else{
     dataTableOutput("deg_table")
-  }
+  # }
 })
 
 # render DEG table if filtered row >= 1
 output$deg_table <- DT::renderDataTable({
   req(is.null(rv$deg)==F)
   
-  mutate_df()
-})
+  mutate_df(df=rv$deg)
+}, options = list(pageLength = 9))
 
 # download DEG table
 output$deg_table_download <- downloadHandler(
@@ -403,10 +417,10 @@ output$tl_summary <- renderUI({
   
   fluidRow(
     box(
-      background = "teal", width = 12,
+      background = "teal", width = 12, align = "center",
       HTML(
-        "No. of genes before filtering = <b>",n_total,"</b></br>",
-        "No. of genes after filtering = <b>",n_after,"</b>",
+        "Before filtering n = <b>",n_total,"</b>; ",
+        "After filtering n = <b>",n_after,"</b>",
       )
     )
   )
@@ -428,3 +442,22 @@ output$tl_list <- downloadHandler(
     fwrite(list(rownames(filter_df())), file)
   }
 )
+
+# ---------------- 4.3.3 render modal upon successful DEG run --------------
+observeEvent(rv$runs,{
+  showModal(modalDialog(
+    id = "run_modal",
+    title = NULL,
+    div(style="font-size:150%",
+      fluidRow(
+        column(12,
+           h3("DEG analysis complete!"),
+           br(),p("Download DEG table and explore the results.")
+           ,br(),p("If you'd like to run DEG analysis for another comparison, re-select samples and re-click \"4.3. Run DEG Analysis!\".")
+        )
+      )
+    ),
+    easyClose = T,size="m"
+    , footer = modalButton('Got it!')
+  ))
+},ignoreInit = T)
