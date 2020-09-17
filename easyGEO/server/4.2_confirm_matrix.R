@@ -6,6 +6,7 @@ output$confirm_matrix_ui <- renderUI({
       inputId = "data_type",
       label = "Select the type of data provided by the authors:",
       choices = c("Raw counts"="raw", "Normalized counts"="normalized"),
+      selected = "normalized",
       inline=T
     )
   )

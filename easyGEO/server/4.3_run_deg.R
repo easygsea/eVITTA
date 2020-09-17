@@ -39,7 +39,9 @@ output$run_deg_ui <- renderUI({
             )
             ,br(),
             HTML("<br><br>Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
-                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons."),
+                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons."
+                 ),
+            
             
             # tags$hr(style="border-color:grey;"),
             # 
@@ -83,7 +85,10 @@ output$run_deg_ui <- renderUI({
         column(
           width = 12,
           br(),
-          uiOutput("ui_deg_table")
+          uiOutput("ui_deg_table"),
+          br(),
+          guide_box("guide4", "Navigate to <b>5. Visualize results</b> for visualizations"),
+          br()
         )
       )
   )
@@ -399,10 +404,18 @@ output$deg_table <- DT::renderDataTable({
   req(is.null(rv$deg)==F)
   
   mutate_df(df=rv$deg)
-}, options = list(pageLength = 9))
+}, options = list(pageLength = 5))
 
 # download DEG table
 output$deg_table_download <- downloadHandler(
+  filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,".csv")},
+  content = function(file) {
+    write.csv(rv$deg, file)
+  }
+)
+
+# download DEG table
+output$deg_table_download2 <- downloadHandler(
   filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,".csv")},
   content = function(file) {
     write.csv(rv$deg, file)
@@ -452,8 +465,15 @@ observeEvent(rv$runs,{
       fluidRow(
         column(12,
            h3("DEG analysis complete!"),
-           br(),p("Download DEG table and explore the results.")
-           ,br(),p("If you'd like to run DEG analysis for another comparison, re-select samples and re-click \"4.3. Run DEG Analysis!\".")
+           HTML("<br>Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
+                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.
+                <br>"
+           ),
+           downloadBttn("deg_table_download2",label = "Download entire DEG table (.csv)"
+                        , style = rv$dbtn_style
+                        , color = rv$dbtn_color
+                        ,size="md")
+           ,br(),br(),p("If you'd like to run DEG analysis for another comparison, re-select samples and re-click \"4.3. Run DEG Analysis!\".")
         )
       )
     ),
@@ -461,3 +481,8 @@ observeEvent(rv$runs,{
     , footer = modalButton('Got it!')
   ))
 },ignoreInit = T)
+
+# ------------ guide to 5. visualize results page ------------
+observeEvent(input$guide4,{
+  updateTabItems(session, "menu1", "tab5")
+})

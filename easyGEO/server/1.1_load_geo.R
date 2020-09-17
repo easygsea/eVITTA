@@ -254,7 +254,7 @@ observeEvent(input$geo_platform, {
 # ---------- when all is done, show guide box to next page ---------
 output$guide_1a <- renderUI({
   if (is.null(rv$plat_id)==F){ # user already selected a platform
-    msg = "Navigate to <b>2. Data matrix</b> to proceed."
+    msg = "Navigate to <b>2. Data matrix</b> to proceed"
     guide_box("guide1", msg)
   } else {
     return(NULL)
