@@ -7,7 +7,7 @@ output$ui_bodyResults <- renderUI({
         panel_null()
     }else{
         fluidRow(
-            column(9,
+            column(8,
                 radioGroupButtons(
                     inputId = "plot_type",
                     choiceNames = list(span(icon("chart-bar"),"Bar plot"),span(icon("first-order-alt"),"Bubble plot"),span(icon("file-word"),"Keywords"),span(icon("braille"),"Manhattan plot"),span(icon("fire-alt"),"Volcano plot")), #,
@@ -18,7 +18,7 @@ output$ui_bodyResults <- renderUI({
                     direction = "horizontal"
                 )
             ),
-            column(3,
+            column(4,
                 align="right"
                 # introjs button
             ),
@@ -653,7 +653,7 @@ output$bubble_box <- renderUI({
                     ),
                     splitLayout(
                         sliderTextInput("cutoff_p_bubble",
-                                        label = "Adjust P.adj threshold:",
+                                        label = "Adjust P threshold:",
                                         choices= cutoff_slider,
                                         selected=rv$bar_p_cutoff, grid=T, force_edges=T
                         ),

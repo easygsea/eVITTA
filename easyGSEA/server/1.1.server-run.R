@@ -376,6 +376,8 @@
         if(input$selected_species == ""){
             showNotification("Please select your species of interest.",type="error",duration=2)
         }else{
+          reset_rnk()
+          
           updateRadioButtons(
             session,
             "gene_identifier",
@@ -398,6 +400,8 @@
         if(input$selected_species == ""){
             showNotification("Please select your species of interest.",type="error",duration=2)
         }else{
+          reset_rnk()
+          
           updateRadioButtons(
             session,
             "gene_identifier",

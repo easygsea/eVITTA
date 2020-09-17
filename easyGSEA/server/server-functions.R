@@ -1380,7 +1380,7 @@
     #   )
     # }
     
-    tab_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details"){
+    guide_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details"){
       actionBttn(
         id,
         HTML(msg),
