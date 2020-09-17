@@ -5,17 +5,17 @@ output$confirm_run <- renderUI({
   if(input$ui_select == "sp"){
     req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
     # req(length(input$samples_c_deg)>0 && length(input$samples_t_deg)>0)
-    bsButton("run_deg", "Run DEG analysis",
+    actionBttn("run_deg", "Run DEG analysis!",
              icon = icon("play-circle"), 
-             size = "large",block = T,
-             style = "warning")
+             style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+             block = TRUE)
   }else if(input$ui_select == "coerce"){
     req(rv$matrix_ready==T)
     req(is.null(input$samples_c_deg2)==F & is.null(input$samples_t_deg2)==F)
-    bsButton("run_deg2", "Run DEG analysis",
+    actionBttn("run_deg2", "Run DEG analysis!",
              icon = icon("play-circle"), 
-             size = "large",
-             style = "primary")
+             style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+             block = TRUE)
   }
 })
 
@@ -23,20 +23,20 @@ output$run_deg_ui <- renderUI({
   req(is.null(rv$deg)==F)
   
   box(
-    width = 12, title = span(icon("align-left"),"DEG Analysis Results"), status = "primary",
+    width = 12, title = span(HTML("<b>4.3.</b>"),icon("book-open"),HTML("Review & "),icon("download"),HTML("download DEG analysis results")), status = "primary",
     
     
     # tabPanel(
     #   "DEG Table",
       fluidRow(
-        box(
-          width = 12, title = NULL, background = "yellow",
-          h4(HTML("DEG analysis complete!<br><br>
-                  Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' style='color:white' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
-                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' style='color:white' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.")),
-          downloadButton("deg_table_download",label = "Download entire DEG table (.csv)")
-          
-        )
+        column(
+          width = 12,
+          wellPanel(
+            style = paste0("background:",rv$bcol1),
+            downloadButton("deg_table_download",label = "Download entire DEG table (.csv)", class = "buttd"),
+            HTML("<br>Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
+                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.")
+        ))
       ),
       fluidRow(
         column(
@@ -228,6 +228,8 @@ observeEvent(input$run_deg,{
       rv$samples_t = samples_t
       
       rv$deg_pdata = p_df
+      
+      rv$runs = rv$runs + 1
     })
   }
 })
@@ -358,6 +360,8 @@ observeEvent(input$run_deg2,{
       rv$samples_t = samples_t
       
       rv$deg_pdata = p_df
+      
+      rv$runs = rv$runs + 1
     })
   }
 })
@@ -428,3 +432,23 @@ output$tl_list <- downloadHandler(
     fwrite(list(rownames(filter_df())), file)
   }
 )
+
+# ---------------- 4.3.3 render modal upon successful DEG run --------------
+observeEvent(rv$runs,{
+  showModal(modalDialog(
+    id = "run_modal",
+    title = "DEG analysis complete!",
+    div(style="font-size:150%",
+      fluidRow(
+        column(12,
+           p("Download DEG table")
+        )
+      )
+    ),
+    easyClose = T,size="m"
+    , footer = tagList(
+      # modalButton('Cancel'), 
+      bsButton('select_db', h4('Select to continue!'), style = "primary", block=TRUE)
+    )
+  ))
+},ignoreInit = T)

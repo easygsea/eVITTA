@@ -769,7 +769,7 @@
         
       actionBttn("confirm1", 
                  h4(span(icon("play-circle"),"RUN GSEA!")),
-               style="simple", color="primary", # size = "large",
+               style=rv$run_btn_style, color=rv$run_btn_color, # size = "large",
                block = TRUE
                )
     })
@@ -784,7 +784,7 @@
 
       actionBttn("confirm2", 
                h4(span(icon("play-circle"),"RUN ORA!")),
-               style="simple", color="primary", # size = "large",
+               style=rv$run_btn_style, color=rv$run_btn_color, # size = "large",
                block = TRUE)
         
     })

@@ -121,7 +121,7 @@ body <- dashboardBody(
                 fluidRow(
                     column(5,
                            box(
-                             title="4.1. Confirm data matrix", width = 12, status = "primary",
+                             title=span(HTML("<b>4.1.</b>"),icon("check-square"),HTML("Confirm data matrix")), width = 12, status = "primary",
                              id = "sp",
                              # tabPanel(
                                # span(icon("clipboard-check"),"Check if data matrix is ready"),
@@ -130,7 +130,7 @@ body <- dashboardBody(
                            ),
                            
                            box(
-                             title = "4.2. Make contrast", width = 12, status = "primary",
+                             title = span(HTML("<b>4.2.</b>"),icon("mixer"),HTML("Make contrast")), width = 12, status = "primary",
                              # id = "ui_select",
                              radioGroupButtons(
                                inputId = "ui_select",

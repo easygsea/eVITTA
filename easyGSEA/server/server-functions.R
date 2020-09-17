@@ -1377,7 +1377,7 @@
         id,
         HTML(msg),
         icon=icon("angle-double-right"),
-        style = "simple", color="primary", size = "sm",
+        style = "simple", color="warning", size = "md",
         block = T
       )
     }
@@ -1389,7 +1389,7 @@
                HTML(msg),
                # HTML(paste0("<p style='font-size:110%;word-break:break-all;vertical-align:middle;'>",msg,"</p>")),
                icon=icon("mouse"),
-               style = "simple", color="primary", size = "md",
+               style = "jelly", color="primary", size = "md",
                block = T
              )
       )

@@ -112,3 +112,6 @@ changes all text colors to light blue;
     word-break: break-word;
     color: #c0d3e7;
 }
+/* downloadbutton: */
+.buttd{background-color:#add8e6;}
+.buttd{color: white;}
