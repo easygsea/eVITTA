@@ -740,7 +740,7 @@
       
       fluidRow(
         box(
-          width = 12, title = "Advanced run parameters", status = "primary", collapsible = T, collapsed = T,
+          width = 12, title = "Advanced run parameters", status = "warning", collapsible = T, collapsed = T,
           wellPanel(
             # h4("Run parameters"),
             splitLayout(

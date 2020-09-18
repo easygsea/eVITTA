@@ -112,7 +112,7 @@ output$ui_tl_cut <- renderUI({
             label = span(icon("cut"),"Cut table"),
             style = "primary"
         ),
-        width = "300px",circle = TRUE, status = "danger",
+        width = "300px",circle = TRUE, status = "warning",
         size = "xs",
         icon = icon("fas fa-cut"),# class = "opt"),
         up = FALSE,
