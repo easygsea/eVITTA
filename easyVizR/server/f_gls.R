@@ -120,8 +120,8 @@ observeEvent(input$f_applytorv, {
     updateNumericInput(session, paste0("f_Stat_",i),
                        value = rv[[paste0("nic_Stat_",i)]]
     )
-    updateNumericInput(session, paste0("f_sign_",i),
-                       value = rv[[paste0("nic_sign_",i)]]
+    updateRadioGroupButtons(session, paste0("f_sign_",i),
+                            selected = rv[[paste0("nic_sign_",i)]]
     )
   }
 })
@@ -152,8 +152,8 @@ observeEvent(input$nic_applytorv, {
     updateNumericInput(session, paste0("nic_Stat_",i),
                        value = rv[[paste0("nic_Stat_",i)]]
     )
-    updateNumericInput(session, paste0("nic_sign_",i),
-                       value = rv[[paste0("nic_sign_",i)]]
+    updateRadioGroupButtons(session, paste0("nic_sign_",i),
+                                selected = rv[[paste0("nic_sign_",i)]]
     )
   }
 })
