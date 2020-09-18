@@ -344,3 +344,21 @@ guide_box <- function(msg, color="blue", width=12){
     HTML(msg)
   )
 }
+
+
+
+# function to detect if box is collapsed
+# need to call in ui  like so: collapseInput(inputId = "iscollapsebox1", boxId = "box1"),
+# access the value using input$iscollapsebox1
+collapseInput <- function(inputId, boxId) {
+  tags$script(
+    sprintf(
+      "$('#%s').closest('.box').on('hidden.bs.collapse', function () {Shiny.onInputChange('%s', true);})",
+      boxId, inputId
+    ),
+    sprintf(
+      "$('#%s').closest('.box').on('shown.bs.collapse', function () {Shiny.onInputChange('%s', false);})",
+      boxId, inputId
+    )
+  )
+}

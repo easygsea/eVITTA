@@ -7,6 +7,8 @@
 
 
 source("ui/body1.R")
+source("ui/body_filters.R")
+source("ui/body_ins.R")
 source("ui/body2.R")
 source("ui/body3.R")
 source("ui/sideopt2.R")
@@ -22,11 +24,13 @@ sidebar <- dashboardSidebar(
                 
                 # ---------------- tabs -------------------
                 
-                menuItem("Organize Files", tabName="tab1", icon=icon("th-list")),
+                menuItem("1. Organize Data", tabName="tab1", icon=icon("th-list")),
                 
                 # menuItem("Single Dataset", tabName="tab2", icon=icon("vial")),
+                menuItem("2. Apply Filters", tabName="tab_filters", icon=icon("cut")),
+                menuItem("3. Select Intersection", tabName="tab_ins", icon=icon("map-marker")),
                 
-                menuItem("Multiple Datasets", tabName="tab3", icon=icon("vials")),
+                menuItem("4. Visualize Intersection", tabName="tab3", icon=icon("vials")),
                 
                 tags$hr(style="border-color: #48617b;margin: 8px;"),
                 
@@ -91,6 +95,12 @@ body <- dashboardBody(
       ".modal-footer {
             border-top-color: #f4f4f4;
             margin: 0px 20px 0px 20px;
+      }",
+      # fixes warning button color
+      ".btn-warning {
+          background-color: #f39c12;
+          border-color: #e08e0b;
+          color: white;
       }"
       
       
@@ -100,6 +110,7 @@ body <- dashboardBody(
   
     rintrojs::introjsUI(), # introjs
     useShinyjs(), # shinyJS
+    extendShinyjs(text = jscode),
     
     use_waiter(), # waiter
     waiter_show_on_load(tagList(spin_three_bounce(),h4(loadMsg)), color = "#1976D2"), # shows before anything else 
@@ -110,6 +121,9 @@ body <- dashboardBody(
       body1,
       
       # body2, 
+      
+      body_filters,
+      body_ins,
       
       body3
 

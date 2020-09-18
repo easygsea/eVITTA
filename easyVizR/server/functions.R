@@ -45,3 +45,22 @@ progress_box <- function(id, prompt, msg, condition, bttn_id, bttn_text="Continu
     bttn
   )
 }
+
+
+# initialize filter presets
+# ------------------------------------------
+filter_presets <- list(
+  "p significant" = c("psig", 0.05, NA, NA, NA),
+  "q significant" = c("qsig", NA, 0.05, NA, NA),
+  "Changed 0.5x" = c("c0.5", NA, NA, 0.5, "All"),
+  "Changed 1x" = c("c1", NA, NA, 1, "All"),
+  "Changed 1.5x" = c("c1.5", NA, NA, 1.5, "All"),
+  "Up 0.5x" = c("up0.5", NA, NA, 0.5, "Positive"),
+  "Up 1x" = c("up1", NA, NA, 1, "Positive"),
+  "Up 1.5x" = c("up1.5", NA, NA, 1.5, "Positive"),
+  "Down 0.5x" = c("down0.5", NA, NA, 0.5, "Negative"),
+  "Down 1x" = c("down1", NA, NA, 1, "Negative"),
+  "Down 1.5x" = c("down1.5", NA, NA, 1.5, "Negative"),
+  "No filter" = c("nofilter", 1, 1, 0, "All")
+)
+
