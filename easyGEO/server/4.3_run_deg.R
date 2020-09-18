@@ -111,11 +111,11 @@ observeEvent(input$run_deg,{
   msg = paste0("Running DEG analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. Please wait a minute...")
   
   if(is.null(samples_c) && is.null(samples_t)){
-    showNotification("Select at least 1 control and 1 experimental samples.", type = "error", duration=4)
+    shinyalert("Select at least 1 control and 1 experimental samples.")
   }else if(is.null(samples_c)){
-    showNotification("Select at least 1 control sample.", type = "error", duration=4)
+    shinyalert("Select at least 1 control sample.")
   }else if(is.null(samples_t)){
-    showNotification("Select at least 1 experimental sample.", type = "error", duration=4)
+    shinyalert("Select at least 1 experimental sample.")
   }else{
     withProgress(message = msg, value = 1, {
       ## 1) create design matrix
@@ -266,14 +266,13 @@ observeEvent(input$run_deg2,{
   
   if(length(overlap)>0){
     overlap_names = translate_sample_names(overlap,rv$pdata[c("title", "geo_accession")],  "title")
-    print(overlap_names)
-    
+
     w_msg = paste0("You have selected ",abbreviate_vector(overlap)
                    , " (", abbreviate_vector(overlap_names),")"
                    , "(n = ",length(overlap),")"
                    ," in both control and experimental group. Please re-select.")
 
-    showNotification(w_msg, type = "error", duration=5)
+    shinyalert(w_msg)
   }else{
     withProgress(message = msg, value = 1, {
       ## 1) create design matrix

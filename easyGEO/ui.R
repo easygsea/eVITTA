@@ -40,7 +40,8 @@ body <- dashboardBody(
   
     # apply specific css adjustments additionally
     css_addons,
-      
+  
+  useShinyalert(),  # Set up shinyalert
 
     # verbatimTextOutput("debug0"),
     tabItems(

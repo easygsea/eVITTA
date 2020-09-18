@@ -16,6 +16,8 @@ library(BiocManager)
 library(waiter)
 library(statmod)
 library(scales)
+library(shinyalert)
+
 # library(curl)
 options(repos = BiocManager::repositories())
 

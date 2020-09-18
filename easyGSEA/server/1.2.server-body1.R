@@ -517,6 +517,8 @@ output$mat_download <- downloadHandler(
 # UI download RNK --------------
 output$ui_rnk_download <- renderUI({
     req(is.null(rv$rnkgg) == F)
+    req(input$selected_mode == "gsea")
+    
     downloadBttn("rnk_download",
                    label = "Download RNK (.rnk)", style = rv$dbtn_style,
                  color = rv$dbtn_color, size=rv$dbtn_size, block = TRUE

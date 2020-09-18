@@ -144,7 +144,7 @@
       }
       
       if(length(dbs)<1){
-        showNotification("Select at least one database", type = "error", duration = 3)
+        shinyalert("Select at least one database")
       }else{
         removeModal()
       }
@@ -374,7 +374,7 @@
     observeEvent(input$loadExampleRNK,{
         rv$example_file = NULL
         if(input$selected_species == ""){
-            showNotification("Please select your species of interest.",type="error",duration=2)
+          shinyalert("Please select your species of interest.")
         }else{
           reset_rnk()
           
@@ -398,7 +398,7 @@
     observeEvent(input$loadExampleDE,{
         rv$example_file = NULL
         if(input$selected_species == ""){
-            showNotification("Please select your species of interest.",type="error",duration=2)
+          shinyalert("Please select your species of interest.")
         }else{
           reset_rnk()
           
@@ -447,7 +447,7 @@
         }else if(ncol(ranks)>2){
             rv$rnk_or_deg = "deg"
         }else{
-            showNotification("You uploaded a file with < 2 columns. Please click the help button for accepted file formats.",type = "error",duration = 3)
+            shinyalert("You uploaded a file with < 2 columns. Please click the help button for accepted file formats.")
         }
         
         # save had data into RV
@@ -669,10 +669,10 @@
                     }
                 }
             }else{
-                showNotification("Please input your query. Click example data for a trial run.",type="error",duration=3)
+              shinyalert("Please input your query. Click example data for a trial run.")
             }
         }else{
-            showNotification("Please select species that matches your query.",type="error",duration=3)
+          shinyalert("Please select species that matches your query.")
         }
         # }else{
         #     rv$gene_lists = rv$data_glist
@@ -704,7 +704,7 @@
     #----------- 2.2.4 Example GList --------------
     observeEvent(input$load_example_glist,{
         if(input$selected_species == ""){
-            showNotification("Please select your species of interest.",type="error",duration=2)
+          shinyalert("Please select your species of interest.")
         }else{
             updateTextAreaInput(session,
                                 inputId = "gene_list",
@@ -933,7 +933,6 @@
         
         # reset RVs
         reset_rvs()
-        rv$rnkgg=NULL
 
         # read in parameters
         
