@@ -167,7 +167,8 @@ hm_table_panel <- reactive({
 #======================================================================#
 
 output$n_ui_intersect <- renderUI({
-  req(rv$n_ui_showpanel == "Intersection")
+  # req(rv$n_ui_showpanel == "Intersection")
+  req(is.null(rv$df_n)==F)
   
   
   div(
@@ -428,24 +429,23 @@ output$intersection_summary <- renderUI({
 })
 
 
-ins_table_panel <- reactive({
+output$ins_table_panel <- renderUI({
   
-  box(
-    width = 12, status = "primary",solidHeader = F,
-    title = span(icon("table"),"Selected Intersection"),
+  div(
     
     div(id="n2_4",
         
         wellPanel(
           HTML(paste0(
-            "Combine options below to view specific intersections:",
+            "Combine options below to select an intersection of interest:",
             add_help("ins_help", style="margin-left: 5px;"))
           ),
           bsTooltip("ins_help", 
-                    "TRUE: contained in this list;<br>FALSE: NOT contained in this list.", 
+                    "TRUE: fulfills the filters and contained in the gene list;<br>FALSE: NOT contained in the gene list and NOT fulfilling the filters.", 
                     placement = "top"),
           br(),br(),
           uiOutput("ui_intersections"),
+          
           HTML(paste0(
             "Active filters:",
             add_help("active_filters_help", style="margin-left: 5px;"))
@@ -882,34 +882,54 @@ output$n_ui_network <- renderUI({
 output$ui_n_gls_opt <- renderUI({
   req(nrow(rv$df_n)>0)
   
-  append(rv$nic, rv$global_nic, 0) # add the global box to first item when output
+  rv$nic
+  # append(rv$nic, rv$global_nic, 0) # add the global box to first item when output
 })
 
-observeEvent(input$nic_applytoall, {
-  for (i in 1:length(rv$nx_n)){
-    updateNumericInput(session, paste0("nic_p_",i), value=input$nic_p)
-    updateNumericInput(session, paste0("nic_q_",i), value=input$nic_q)
-    updateNumericInput(session, paste0("nic_Stat_",i), value=input$nic_Stat)
-    updateRadioGroupButtons(session, paste0("nic_sign_",i), selected=input$nic_sign)
-    updateCheckboxInput(session, paste0("nic_apply_",i), value=input$nic_apply)
-    updateCheckboxInput(session, paste0("nic_na_",i), value=input$nic_na)
-  }
-})
-observeEvent(input$nic_remove_filters, {
-  for (i in 1:length(rv$nx_n)){
-    updateNumericInput(session, paste0("nic_p_",i), value=1)
-    updateNumericInput(session, paste0("nic_q_",i), value=1)
-    updateNumericInput(session, paste0("nic_Stat_",i), value=0)
-    updateRadioGroupButtons(session, paste0("nic_sign_",i), selected="All")
-    updateCheckboxInput(session, paste0("nic_apply_",i), value=T)
-    updateCheckboxInput(session, paste0("nic_na_",i), value=T)
-    updateNumericInput(session, "nic_p", value=1)
-    updateNumericInput(session, "nic_q", value=1)
-    updateNumericInput(session, "nic_Stat", value=0)
-    updateRadioGroupButtons(session, "nic_sign", selected="All")
-    updateCheckboxInput(session, "nic_apply", value=T)
-    updateCheckboxInput(session, "nic_na", value=T)
-  }
+# observeEvent(input$nic_applytoall, {
+#   for (i in 1:length(rv$nx_n)){
+#     updateNumericInput(session, paste0("nic_p_",i), value=input$nic_p)
+#     updateNumericInput(session, paste0("nic_q_",i), value=input$nic_q)
+#     updateNumericInput(session, paste0("nic_Stat_",i), value=input$nic_Stat)
+#     updateRadioGroupButtons(session, paste0("nic_sign_",i), selected=input$nic_sign)
+#     updateCheckboxInput(session, paste0("nic_apply_",i), value=input$nic_apply)
+#     updateCheckboxInput(session, paste0("nic_na_",i), value=input$nic_na)
+#   }
+# })
+# observeEvent(input$nic_remove_filters, {
+#   for (i in 1:length(rv$nx_n)){
+#     updateNumericInput(session, paste0("nic_p_",i), value=1)
+#     updateNumericInput(session, paste0("nic_q_",i), value=1)
+#     updateNumericInput(session, paste0("nic_Stat_",i), value=0)
+#     updateRadioGroupButtons(session, paste0("nic_sign_",i), selected="All")
+#     updateCheckboxInput(session, paste0("nic_apply_",i), value=T)
+#     updateCheckboxInput(session, paste0("nic_na_",i), value=T)
+#     updateNumericInput(session, "nic_p", value=1)
+#     updateNumericInput(session, "nic_q", value=1)
+#     updateNumericInput(session, "nic_Stat", value=0)
+#     updateRadioGroupButtons(session, "nic_sign", selected="All")
+#     updateCheckboxInput(session, "nic_apply", value=T)
+#     updateCheckboxInput(session, "nic_na", value=T)
+#   }
+# })
+
+
+output$n_presets <- renderUI({
+  div(style="display: inline-block;vertical-align:top; width: 250px;",
+      wellPanel(align = "left",
+        HTML("<b>Filter presets:</b><br>Click to load one or multiple presets:<br>"),
+        hr(),
+        # dynamically render the list of presets as buttons
+        tagList(lapply(1:length(filter_presets), function(i) {
+          name <- names(filter_presets)[[i]]
+          preset <- filter_presets[[i]]
+          actionButton(inputId = paste0("npreset_", preset[[1]]),
+                       label = name
+          )
+        })),
+      )
+    
+  )
 })
 
 observe({
@@ -918,36 +938,38 @@ observe({
   rv$global_nic[[1]] <- div(style="display: inline-block;vertical-align:top; width: 250px;",
                             wellPanel( align = "left",
                                        
-                                       tags$head(
-                                         tags$style(HTML(paste0("
-                                      #nic_p {height: 40px;}
-                                      #nic_q {height: 40px;}
-                                      #nic_Stat {height: 40px;}
-                                      #nic_sign {height: 40px;}
-                                      #nic_applytoall {height: 40px; line-height: 10px;}
-                                      #nic_remove_filters {height: 40px;line-height: 10px;}
-                                    ")))
-                                       ),
-                                       fluidRow(
-                                         column(6, align = "left", 
-                                                numericInput("nic_p", 
-                                                             "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
-                                         column(6, align = "left",
-                                                numericInput("nic_Stat", 
-                                                             "|Stat| filter:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
-                                       ),
-                                       fluidRow(
-                                         column(6, align = "left",
-                                                numericInput("nic_q", 
-                                                             "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
-                                         column(6, align = "left",
-                                                radioGroupButtons("nic_sign", 
-                                                                  label = "Filter by sign:",
-                                                                  choices=c("All"="All", "+"="Positive", "-"="Negative"),
-                                                                  selected="All",size="s",direction = "horizontal"),
-                                         ),
-                                         
-                                       ),
+
+                                       
+                                    #    tags$head(
+                                    #      tags$style(HTML(paste0("
+                                    #   #nic_p {height: 40px;}
+                                    #   #nic_q {height: 40px;}
+                                    #   #nic_Stat {height: 40px;}
+                                    #   #nic_sign {height: 40px;}
+                                    #   #nic_applytoall {height: 40px; line-height: 10px;}
+                                    #   #nic_remove_filters {height: 40px;line-height: 10px;}
+                                    # ")))
+                                    #    ),
+                                    #    fluidRow(
+                                    #      column(6, align = "left", 
+                                    #             numericInput("nic_p", 
+                                    #                          "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
+                                    #      column(6, align = "left",
+                                    #             numericInput("nic_Stat", 
+                                    #                          "|Stat| filter:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
+                                    #    ),
+                                    #    fluidRow(
+                                    #      column(6, align = "left",
+                                    #             numericInput("nic_q", 
+                                    #                          "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
+                                    #      column(6, align = "left",
+                                    #             radioGroupButtons("nic_sign", 
+                                    #                               label = "Filter by sign:",
+                                    #                               choices=c("All"="All", "+"="Positive", "-"="Negative"),
+                                    #                               selected="All",size="s",direction = "horizontal"),
+                                    #      ),
+                                    #      
+                                    #    ),
                                        # fluidRow(
                                        #   column(4,offset=1, align = "left",
                                        #          checkboxInput(
@@ -961,8 +983,8 @@ observe({
                                        #            value = T, ))
                                        # 
                                        # ),
-                                       actionButton("nic_applytoall", "Apply to all"),
-                                       actionButton("nic_remove_filters", "Remove filters"),
+                                       # actionButton("nic_applytoall", "Apply to all"),
+                                       # actionButton("nic_remove_filters", "Remove filters"),
                                        
                                        style = "padding: 15px;")
                             
@@ -983,20 +1005,20 @@ observe({
                                   fluidRow(
                                     column(6, align = "left", 
                                            numericInput(inputId = paste0("nic_p_",i), 
-                                                        "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
+                                                        "P filter:", value = rv[[paste0("nic_p_",i)]], min = 0, max = 1, step=0.001, width="100px")),
                                     column(6, align = "left",
                                            numericInput(paste0("nic_Stat_",i), 
-                                                        "|Stat| filter:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
+                                                        "|Stat| filter:", value = rv[[paste0("nic_Stat_",i)]], min = 0, max = 5, step=0.1, width="100px")),
                                   ),
                                   fluidRow(
                                     column(6, align = "left",
                                            numericInput(inputId = paste0("nic_q_",i), 
-                                                        "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
+                                                        "FDR filter:", value = rv[[paste0("nic_q_",i)]], min = 0, max = 1, step=0.001, width="100px")),
                                     column(6, align = "left",
                                            radioGroupButtons(inputId = paste0("nic_sign_",i), 
                                                              label = "Filter by sign:",
                                                              choices=c("All"="All", "+"="Positive", "-"="Negative"),
-                                                             selected="All",size="s",direction = "horizontal"),
+                                                             selected=rv[[paste0("nic_sign_",i)]],size="s",direction = "horizontal"),
                                     ),
                                     
                                   )
@@ -1018,6 +1040,131 @@ observe({
     )
   }
 })
+
+
+# observe the presets one by one
+# observe these buttons and update filters when any is pressed
+observeEvent(input[[paste0("npreset_",filter_presets[[1]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[1]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[2]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[2]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[3]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[3]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[4]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[4]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[5]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[5]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[6]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[6]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[7]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[7]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[8]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[8]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[9]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[9]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[10]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[10]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[11]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[11]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[12]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[12]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
+  }
+})
+
 
 ####================= GENELISTS MENU =====================####
 
@@ -1116,7 +1263,16 @@ customize_filters <- reactive({
            
            tags$h3("Gene list filters"),
            
-           uiOutput("ui_n_gls_opt"),
+           fluidRow(
+             column(3, 
+                    uiOutput("n_presets"),
+                    ),
+             column(9,
+                    uiOutput("ui_n_gls_opt"),
+                    )
+           ),
+           
+           actionButton("nic_applytorv", "Apply Filters", class = "btn-warning"),
            
            style = "material-circle", icon = icon("gear"),
            status = "default", width = calc_dropdown_width(length(rv$nx_n)+1, 250, 70, max_per_row=3),
@@ -1234,34 +1390,30 @@ output$n_panels <- renderUI({
       #          ))
       # ),
       fluidRow(
+        div(style="height:3.5em",
+            column(6,
+                   div(id="n1_1",
+                       radioGroupButtons("n_ui_showpanel",
+                                         choices=c("Heatmap", "Scatter", "Single", "Network"),
+                                         selected="Heatmap", status="primary",
+                                         checkIcon = list(
+                                           yes = tags$i(class = "fa fa-check-square", 
+                                                        style = "color: white"),
+                                           no = tags$i(class = "fa fa-square-o", 
+                                                       style = "color: white"))
+                       ),
+                   )
+                   
+            ),
+            column(6, align= "right",
+                   div(id="n_filters_here"),
+                   # uiOutput("n_filters")
+                   
+                   
+                   
+            )
+            )
         
-        column(6,
-               div(id="n1_1",
-                   radioGroupButtons("n_ui_showpanel",
-                                     choices=c("Intersection", "Heatmap", "Scatter", "Single", "Network"),
-                                     selected="Intersection", status="primary",
-                                     checkIcon = list(
-                                       yes = tags$i(class = "fa fa-check-square", 
-                                                    style = "color: white"),
-                                       no = tags$i(class = "fa fa-square-o", 
-                                                   style = "color: white"))
-                   ),
-               )
-               
-        ),
-        column(6, align= "right",
-               
-               div(id="n_filters",
-                   div(id="n_filter_cuts", style="display: inline-block;margin-right: 5px;", customize_filters()),
-                   bsTooltip("customize_filters", "Gene list filters"),
-                   div(id="n_filter_gls", style="display: inline-block;margin-right: 5px;", view_genelists()),
-                   bsTooltip("view_genelists", "View filtered gene lists"),
-                   div(id="n_filter_names", style="display: inline-block;margin-right: 5px;", enter_genes()),
-                   bsTooltip("enter_genes", "Enter genes of interest"),
-               )
-               
-               
-        )
       ),
       
       # fluidRow(
@@ -1275,7 +1427,7 @@ output$n_panels <- renderUI({
       #   ),
       # ),
       
-      uiOutput("n_ui_intersect"),
+      
       uiOutput("n_ui_basic"),
       uiOutput("n_ui_scatter"),
       uiOutput("n_ui_single"),
@@ -1283,10 +1435,32 @@ output$n_panels <- renderUI({
       
       #----------------- Intersect table--------------------
       
-      ins_table_panel()
+      
+      fluidRow(
+        column(12,
+               box(
+                 width = 12, status = "primary",solidHeader = F,
+                 title = span(icon("table"),"Selected Intersection"),
+                 div(id= "vis_pg_bottom"),
+               )
+               
+        )
+      ),
+      # uiOutput("ins_table_panel")
       
       
     )   
   }
   
+})
+
+output$n_filters <- renderUI({
+  div(
+      div(id="n_filter_cuts", style="display: inline-block;margin-right: 5px;", customize_filters()),
+      bsTooltip("customize_filters", "Gene list filters"),
+      div(id="n_filter_gls", style="display: inline-block;margin-right: 5px;", view_genelists()),
+      bsTooltip("view_genelists", "View filtered gene lists"),
+      div(id="n_filter_names", style="display: inline-block;margin-right: 5px;", enter_genes()),
+      bsTooltip("enter_genes", "Enter genes of interest"),
+  )
 })

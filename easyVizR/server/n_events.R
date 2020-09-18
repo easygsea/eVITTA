@@ -7,14 +7,6 @@ observe({
   
   if(is.null(input$n_ui_showpanel)==F){ rv$n_ui_showpanel <- input$n_ui_showpanel }
   
-  for (i in 1:length(rv$nx_n)){
-    if(is.null(input[[paste0("nic_p_",i)]])==F){ rv[[paste0("nic_p_",i)]] <- input[[paste0("nic_p_",i)]] }
-    if(is.null(input[[paste0("nic_q_",i)]])==F){ rv[[paste0("nic_q_",i)]] <- input[[paste0("nic_q_",i)]] }
-    if(is.null(input[[paste0("nic_Stat_",i)]])==F){ rv[[paste0("nic_Stat_",i)]] <- input[[paste0("nic_Stat_",i)]] }
-    if(is.null(input[[paste0("nic_sign_",i)]])==F){ rv[[paste0("nic_sign_",i)]] <- input[[paste0("nic_sign_",i)]] }
-    if(is.null(input[[paste0("nic_apply_",i)]])==F){ rv[[paste0("nic_apply_",i)]] <- input[[paste0("nic_apply_",i)]] }
-    if(is.null(input[[paste0("nic_na_",i)]])==F){ rv[[paste0("nic_na_",i)]] <- input[[paste0("nic_na_",i)]] }
-  }
   
   
   if(is.null(input$n_ins_view)==F){ rv$n_ins_view <- input$n_ins_view }
@@ -136,7 +128,7 @@ observeEvent(input$n_use_data,{
     rv$nw_char_stats <- rv$all_char_stats[-which(rv$all_char_stats %in% c("Name"))] # without name col
     
     # current panel
-    rv$n_ui_showpanel <- "Intersection"
+    rv$n_ui_showpanel <- "Heatmap"
     
     # input genelist
     rv$n_igl <- ""
@@ -216,6 +208,9 @@ observeEvent(input$n_use_data,{
     rv$vis_percent_cutoff <- 0.25
     rv$combined_k <- 0.5
     
+    rv$ins_criteria <- rep(T,length(rv$nx_n))
+    names(rv$ins_criteria) <- rv$nx_n
+    
     
     if (length(rv$nx_i) <= 5){rv$n_venn_status <- "ok"}
     else{ rv$n_venn_status <- "no" }
@@ -238,6 +233,18 @@ observeEvent(input$n_use_data,{
   # # find max stat and generate scale
   # statmax <- max(dplyr::select(df_n, contains("Stat_")), na.rm=TRUE)
   # rv$n_stat_scale <- round(generate_scale(statmax, 10),2)
+  
+
+  
+  
+  js$collapse("select_n_panel")
+  if(is.null(input$f_global_iscollapsed)==T){ # uncollapse this box
+    js$collapse("f_global")
+  } else if (input$f_global_iscollapsed==T){
+    js$collapse("f_global")
+  }
+  
+  
   
   shinyjs::enable("n_use_data")
 })

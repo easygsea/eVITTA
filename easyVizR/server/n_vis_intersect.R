@@ -6,24 +6,35 @@
 # generates dynamic ui for selection
 observe({
   req(nrow(rv$df_n)>0)
-  
+  criteria <- rv$ins_criteria
+  criteria <- as.character(criteria)
+  criteria[is.na(criteria)] <- "Ignore"
+  criteria <- gsub("FALSE","False", criteria)
+  criteria <- gsub("TRUE", "True",criteria)
+  print(criteria)
   for (i in 1:length(rv$nx_n)){
     rv$s[[i]] <- div(style="display: inline-block;vertical-align:top; width: 280px;",
                      radioGroupButtons(inputId = paste0("ins_",i),
                                        label = rv$nx_n[[i]], size="s",
                                        choices = c("True", "False", "Ignore"),
-                                       selected ="True",
+                                       selected =criteria[[i]],
                                        status = "info"))
   }
+  rv$s_button[[1]] <- div(style="display: inline-block;margin-top: 1.55em; width: 280px;",
+                     actionButton("ins_applytorv", "Apply selection", class = "btn-warning")
+                     )
+    
+  
 })
 
 output$ui_intersections <- renderUI({
   req(nrow(rv$df_n)>0)
-  rv$s
+  append(x = rv$s, value=rv$s_button, length(rv$s))
+    
 })
 
 # updates criteria
-observe({
+observeEvent(input$ins_applytorv, {
   req(rv$df_n)
   req(length(rv$s)==length(rv$nx_i))
   
@@ -325,3 +336,61 @@ options=list(scrollX=T, scrollY=T, dom= 'tp',
 ),
 rownames= FALSE
 )
+
+
+
+
+#======================== ASSEMBLE INTO A PAGE ========================#
+
+output$ins_main_panels <- renderUI({
+  if (is.null(rv$df_n)==T){
+    box(
+      title = span( icon("exclamation"), "Notification"), status = "warning", width=8,
+      "No data selected."
+    )
+  } else {
+    div(
+      fluidRow(
+        div(style="height: 3.5em;",
+            column(6,
+                   HTML("<span style='font-size: 160%;margin-left: 0.5em;'>Intersection analysis</span>"),
+                   
+            ),
+            column(6,align= "right",
+                   div(id="ins_filters_here"),
+                   
+            )
+        )
+        
+      ),
+      fluidRow(
+        div(
+          column(
+            width = 12,
+            div(id="n0_4", style="height:400px",
+                uiOutput("n_ui_intersect"),
+            )
+            
+          )
+        )
+      ),
+      
+      # fluidRow(
+      #   column(12,
+      #          uiOutput("ins_table_panel")
+      #          )
+      # )
+      # ,
+      fluidRow(
+        column(12,
+               box(
+                 width = 12, status = "primary",solidHeader = F,
+                 title = span(icon("table"),"Selected Intersection"),
+                 div(id= "ins_pg_bottom"),
+               )
+               
+        )
+      )
+    )
+  }
+})
