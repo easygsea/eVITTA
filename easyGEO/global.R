@@ -63,6 +63,11 @@ cscale_zscore <- list(c(0, "rgb(8,81,156)"), # -0.001 = cornflower,
                       list(1, "rgb(165,0,38)") # 0.001 = dark red
 )
 
+# -------------- potential terms in DEG file, so as to tell users it's already analyzed files -------------
+deg_colnames <- c("logfc","fc","log2_fold_change"
+                  ,"p","pval","pvalue","p.value","p_value"
+                  ,"fdr","padj","adj.p.val","q_value")
+
 # ===================== remove previous files downloaded from GEO ftp sites =====================
 do.call(file.remove, list(list.files(paste0(getwd(),"/www/tmp/"),full.names = TRUE)))
 
