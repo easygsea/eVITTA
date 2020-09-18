@@ -191,15 +191,18 @@ output$study_type_feedback <- renderUI({
     )
     box_color = "yellow"
   } 
-  if (channel_count != 1) {
-    errors = errors +1
-    msgs <- c(msgs, 
-              paste0("<strong>CAUTION: </strong>Dataset has <strong>",channel_count, "</strong> channels, which is not currently supported.<br>
-                                Only data in the first channel will be read.")
-    )
-    box_color = "yellow"
-  }
   
+  # making sure the channel_count is not null to run the function
+  if(is.null(channel_count) == F){
+    if (channel_count != 1) {
+      errors = errors +1
+      msgs <- c(msgs, 
+                paste0("<strong>CAUTION: </strong>Dataset has <strong>",channel_count, "</strong> channels, which is not currently supported.<br>
+                                  Only data in the first channel will be read.")
+      )
+      box_color = "yellow"
+    }
+  }
   msg <- paste(msgs, collapse="<br>")
   if(errors>0){
     fluidRow(

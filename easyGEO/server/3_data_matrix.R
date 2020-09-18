@@ -62,12 +62,16 @@ output$ui_dm <- renderUI({
 
 
 output$data_matrix_ui <- renderUI({
-  
-  # check supplementary data in GSE
+    # check supplementary data in GSE
   gse_sup <- unlist(gse_meta_df()[grep("supplementary_file", gse_meta_df()$Field),"Value"])
+  print(gse_sup)
   gse_sup[gse_sup=="NONE"] <- NA # convert NONE to NA
+  print(gse_sup)
   gse_sup <- gse_sup[is.na(gse_sup)==F] # delete NA
-  gse_sup <- strsplit(gse_sup, "\n")[[1]]
+  print(gse_sup)
+  if(!identical(gse_sup, character(0))){
+    gse_sup <- strsplit(gse_sup, "\n")[[1]]
+  }
   print(gse_sup)
   
   # check supplementary data in GSMs
@@ -119,7 +123,7 @@ output$data_matrix_ui <- renderUI({
 
 # generates url links
 output$sup_links <- renderUI({
-  req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup" | rv$sup_source == "none")
+  req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup" )
   
   o_list <- lapply(1:length(rv$suplist), function(i){
     path = rv$suplist[[i]]
@@ -308,9 +312,9 @@ observeEvent(input$file, {
   ###
   
   indf_coln <- unname(unlist(indf[1,])) # colnames = first row
-  # print(indf_coln)
+  print(indf_coln)
   indf_rown <- unname(unlist(indf[,1])) # rownames = first col
-  # print(head(indf_rown))
+  print(head(indf_rown))
   indf <- indf[-1,-1]
   # print(head(indf))
   
@@ -360,7 +364,7 @@ observeEvent(input$file, {
   
   rv$dmdf <- dmdf
 
-  #the modal that remind user that there are unmatched columns exist is added, Vesion 1
+  #the modal that reminds user that there are unmatched columns exist is added, Vesion 1
   #declare some variables
     unmatched_cols_length_one_character <- glue_collapse(unmatched_cols, sep = ", ", last = " and ")
     length_matched <- length(matched_cols)
@@ -376,7 +380,7 @@ observeEvent(input$file, {
       span(length_unmatched,style = "font-size:200%"),
       span(" columns omitted because column name does not match existing sample names (",style = "font-size:200%"),
       span(unmatched_cols_length_one_character,style = "font-size:200%"),
-      span("). Please check your file and try again.",style = "font-size:200%"),
+      span("). Please check your file, column names as well as the platform, and then try again.",style = "font-size:200%"),
       #2 columns successfully read; 2 columns omitted because column name does not match existing sample names (C, D). Please check your file and try again.
       easyClose = TRUE,size="l"
       # , footer = modalButton("Close")
