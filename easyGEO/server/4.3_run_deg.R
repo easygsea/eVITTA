@@ -23,7 +23,7 @@ output$run_deg_ui <- renderUI({
   req(is.null(rv$deg)==F)
   
   box(
-    width = 12, title = span(HTML("<b>4.4.</b>"),icon("book-open"),HTML("Review & "),icon("download"),HTML("download DEG analysis results")), status = "primary",
+    width = 12, title = span(HTML("<b>4.4.</b>"),icon("book-open"),HTML("Review & download DEG analysis results")), status = "primary",
     
     
       fluidRow(
