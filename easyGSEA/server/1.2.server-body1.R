@@ -67,7 +67,8 @@ output$feedback_filecontent <- renderTable({
     
     df = rv$data_head_o %>%
         head(.,n=2) %>%
-        dplyr::mutate_if(is.numeric, function(x) round(x,2))
+        dplyr::mutate_if(is.numeric, function(x) round(x,2)) %>%
+        dplyr::mutate_if(is.character, function(x) substr(x,1,7))
     
     arow = rep("...",ncol(df))
     
