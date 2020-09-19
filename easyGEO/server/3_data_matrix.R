@@ -312,7 +312,6 @@ observeEvent(input$file, {
   ###
   
   indf_coln <- unname(unlist(indf[1,])) # colnames = first row
-  print(indf_coln)
   indf_rown <- unname(unlist(indf[,1])) # rownames = first col
   print(head(indf_rown))
   indf <- indf[-1,-1]
@@ -324,8 +323,10 @@ observeEvent(input$file, {
   indf_coln <- translate_sample_names(toupper(indf_coln),  # translating from (upper case)
                                       translation_df,  # translation df
                                       "geo_accession") # translating to
+  #print(indf_coln)
+ 
   colnames(indf) <- indf_coln[-1]
-  
+  #print("a small indicator here")
   # print(head(indf))
   
   # then, match each column to rv$dmdf and update the values into it
@@ -345,10 +346,9 @@ observeEvent(input$file, {
   #print(length(matched_cols))
   print(unmatched_cols)
   #print(length(unmatched_cols))
-  
  
   
-  
+ 
   colnames(dmdf) <- colnames(rvdf)
   # print(head(dmdf))
   # check if all non-name cols contain any values.
@@ -363,7 +363,19 @@ observeEvent(input$file, {
   print(head(dmdf))
   
   rv$dmdf <- dmdf
-
+  
+ 
+  # -------------- potential terms in DEG file, so as to tell users it's already analyzed files -------------
+  deg_colnames <- c("logfc","fc","log2_fold_change"
+                    ,"p","pval","pvalue","p.value","p_value"
+                    ,"fdr","padj","adj.p.val","q_value")
+ 
+  # Check to see if there is some column names matched the potential terms in DEG file
+  match_deg_cols <- intersect(tolower(deg_colnames),tolower(unmatched_cols))
+  match_deg_cols_one_character <- glue_collapse(match_deg_cols, sep = ", ", last = " and ")
+  print(match_deg_cols)
+  print(length(match_deg_cols))
+  
   #the modal that reminds user that there are unmatched columns exist is added, Vesion 1
   #declare some variables
     unmatched_cols_length_one_character <- glue_collapse(unmatched_cols, sep = ", ", last = " and ")
@@ -371,20 +383,49 @@ observeEvent(input$file, {
     length_unmatched <- length(unmatched_cols)
  
      #the code of the modal
-    if(length_unmatched > 0){showModal(modalDialog(
-      inputId = "column_match_modal",
-      # title = "See below for your column information",
-      span("IMPORTANT: ", style = "font-size:200%"),
-      span(length_matched,style = "font-size:200%"),
-      span(" columns successfully read; ",style = "font-size:200%"),
-      span(length_unmatched,style = "font-size:200%"),
-      span(" columns omitted because column name does not match existing sample names (",style = "font-size:200%"),
-      span(unmatched_cols_length_one_character,style = "font-size:200%"),
-      span("). Please check your file, column names as well as the platform, and then try again.",style = "font-size:200%"),
-      #2 columns successfully read; 2 columns omitted because column name does not match existing sample names (C, D). Please check your file and try again.
-      easyClose = TRUE,size="l"
-      # , footer = modalButton("Close")
-    ))}
+    #check if there is any unmatched columns
+    if(length_unmatched > 0){
+    #check to see if the unmatched columns contains the DEG analysis term, such as logfc, pvalue
+      if(length(match_deg_cols) > 0){
+        
+        #the modal that remind the user that the uploaded file has already been analysed 
+        #because the column names match the DEG analysis names such as pvalue and logFC
+        showModal(modalDialog(
+          inputId = "match_DEG_modal",
+          # title = "See below for your column information",
+          span("IMPORTANT: ", style = "font-size:200%"),
+          span(length_matched,style = "font-size:200%"),
+          span(" columns successfully read; ",style = "font-size:200%"),
+          span("your file's column names contain: ",style = "font-size:200%"),
+          span(match_deg_cols_one_character, style = "font-size:200%"),
+          span(". Your file has probably already been processed and analyzed. Please Check it again;
+               if it has been processed, proceed to ",style = "font-size:200%"),
+          HTML("<a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank' style = 'font-size:200%'><u><b>easyGSEA</b></u></a>"),
+          span(" or ", style = "font-size:200%"),
+          HTML("<a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank' style = 'font-size:200%'><u><b>easyVizR</b></u></a>"),
+          span(" for further analysis. Thank you.", style = "font-size:200%"),
+          easyClose = TRUE,size="l"
+          # , footer = modalButton("Close")
+        ))
+      }
+      else{
+        
+        #the modal indicated unrecognizable columns
+        showModal(modalDialog(
+          inputId = "column_match_modal",
+          # title = "See below for your column information",
+          span("IMPORTANT: ", style = "font-size:200%"),
+          span(length_matched,style = "font-size:200%"),
+          span(" columns successfully read; ",style = "font-size:200%"),
+          span(length_unmatched,style = "font-size:200%"),
+          span(" columns omitted because column name does not match existing sample names (",style = "font-size:200%"),
+          span(unmatched_cols_length_one_character,style = "font-size:200%"),
+          span("). Please check your file, column names as well as the platform, and then try again.",style = "font-size:200%"),
+          #2 columns successfully read; 2 columns omitted because column name does not match existing sample names (C, D). Please check your file and try again.
+          easyClose = TRUE,size="l"
+          # , footer = modalButton("Close")
+        ))}
+      }
   })
 
 # --------------- show data matrix df ---------------
