@@ -84,8 +84,8 @@
     enrichmentplot <- function() {
         ranks = rv$rnkgg
         names(ranks) = toupper(names(ranks))
-        gmt = rv$gmts[[rv$es_term]]
-        plotEnrichment(toupper(gmt),ranks) + labs(title = rv$es_term)
+        gmt = rv$gmts[[rv$es_term]] %>% toupper(.)
+        plotEnrichment(gmt,ranks) + labs(title = rv$es_term)
     }
     
     filter_plot_df <- function(pathways, up, down, cutoff_p, cutoff_q){
@@ -804,10 +804,11 @@
         }else{
             ranks <- rv$rnkgg
             x <- rv$gmts[term][[1]]
-            ranks2 <- rv$rnkgg[x]
+            ranks2 <- ranks[x]
             ranks2 <- ranks2[!is.na(ranks2)]
             x <- rv$fgseagg[rv$fgseagg$pathway == term]$leadingEdge[[1]]
-            ranks3 <- rv$rnkgg[x]
+            names(ranks) = toupper(names(ranks))
+            ranks3 <- ranks[x]
             x = NULL
             
             cal_max_density_value <- function(){
