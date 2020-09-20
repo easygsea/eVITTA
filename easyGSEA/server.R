@@ -3,6 +3,29 @@ options(shiny.maxRequestSize=50*1024^2) # sets max upload size to 50 mb
 server <- function(input, output, session) {
     waiter_hide() # will hide *on_load waiter
     
+    #Added a boolean to check if memory limit message has been shown
+    FirstTimeMemLimitMessage <- reactiveVal(TRUE)
+    
+    observe({
+        # Re-execute this reactive expression after 1000 milliseconds
+        invalidateLater(1000, session)
+        #garbage collect and check the memory threshold every 1 second
+        gc()
+        mem = mem_used()
+        #This is the part to decide the threshold, and we can try different values later
+        if(mem > 900000000 & FirstTimeMemLimitMessage()){
+            showModal(modalDialog(
+                title = "Warning",
+                "You are reaching the memory maximum for your session, a disconnect might occur.",
+                easyClose = TRUE,
+                footer = modalButton("Dismiss")
+            ))
+            FirstTimeMemLimitMessage(FALSE)
+        }
+    })
+    
+    #End of memory usage part
+    
     # addClass(selector = "body", class = "sidebar-collapse")
     runjs("$('#rnkfile').parent().removeClass('btn-default').addClass('btn-danger');")
     
@@ -82,5 +105,4 @@ server <- function(input, output, session) {
     gmt_collections_selected = split(gmt_collections_selected,test$V1)
     
     remove(test); remove(dbs)
-    
 }
