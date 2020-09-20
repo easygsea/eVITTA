@@ -405,10 +405,7 @@
           updateRadioButtons(
             session,
             "gene_identifier",
-            "2. Gene identifier",
-            choices = gene_identifiers,
-            selected = "symbol",
-            inline = TRUE
+            selected = "symbol"
           )
             sampleDE_file <- paste0(getwd(),"/inc/",input$selected_species,".csv")
             rv$infile_name = paste0(input$selected_species,".csv")
@@ -740,7 +737,7 @@
       
       fluidRow(
         box(
-          width = 12, title = "Advanced run parameters", status = "primary", collapsible = T, collapsed = T,
+          width = 12, title = "Advanced run parameters", status = "warning", collapsible = T, collapsed = T,
           wellPanel(
             # h4("Run parameters"),
             splitLayout(

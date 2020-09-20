@@ -6,8 +6,8 @@
         
         box_h_a = "594px", box_h = "574px", box_hp = 574, es_h = "245px",
         
-        run_btn_color="danger", run_btn_style="jelly",
-        dbtn_style="unite", dbtn_color="danger", dbtn_size="sm",
+        run_btn_color="warning", run_btn_style="jelly",
+        dbtn_style="unite", dbtn_color="warning", dbtn_size="sm",
 
         #========================================#
         #####      RVs for GSEA run          #####

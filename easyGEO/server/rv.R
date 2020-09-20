@@ -5,8 +5,8 @@ rv <- reactiveValues(
   
   bcol1 = "#e6f4fc", runs = 0,
   
-  run_btn_color="danger", run_btn_style="jelly",
-  dbtn_color="danger", dbtn_style="unite",
+  run_btn_color="warning", run_btn_style="jelly",
+  dbtn_color="warning", dbtn_style="unite",
 
   # ========= filtered data from DEG run ======== #
   min_n = 5, # maximum no of min samples for filtering

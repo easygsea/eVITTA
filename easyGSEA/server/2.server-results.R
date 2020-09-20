@@ -1112,29 +1112,30 @@ output$ui_gsea_plots_radio <- renderUI({
 
 
 # Observe click event pass to rv$es_term -----------
+clear_plot_rv <- function(){
+    rv$kegg_status = NULL
+    rv$kegg_status_g = NULL
+    
+    rv$kegg_yes = NULL
+    rv$kegg_confirm = NULL
+    
+    rv$reactome_yes = NULL
+    rv$reactome_confirm=NULL
+    
+    rv$wp_yes = NULL
+    rv$wp_confirm=NULL
+}
+
 # manhattan click
 observeEvent(event_data("plotly_click", source = "manhattan_plot_click"),{
     # req(rv$run == "success")
     # req(input$plot_type=="manhattan")
     clickData <- event_data("plotly_click", source = "manhattan_plot_click")
     # print(clickData)
-    
-    # if(is.null(clickData)==F){
-        rv$es_term = rv$manhattan_pathway_list[round(clickData$x + 1)]
-        # print(rv$es_term)
-        # rv$es_term = clickData$y
-        rv$kegg_status = NULL
-        rv$kegg_status_g = NULL
-        
-        rv$kegg_yes = NULL
-        rv$kegg_confirm = NULL
-        
-        rv$reactome_yes = NULL
-        rv$reactome_confirm=NULL
-        
-        rv$wp_yes = NULL
-        rv$wp_confirm=NULL
-    # }
+    rv$es_term = rv$manhattan_pathway_list[round(clickData$x + 1)]
+    # print(rv$es_term)
+    # rv$es_term = clickData$y
+    clear_plot_rv()
 })
 
 # bar click
@@ -1143,23 +1144,10 @@ observeEvent(event_data("plotly_click", source = "bar_plot_click"),{
     # req(input$plot_type=="bar")
     clickData <- event_data("plotly_click", source = "bar_plot_click")
     # print(clickData)
-
-    # if(is.null(clickData)==F){
-        rv$es_term = rv$bar_pathway_list[round(clickData$y)]
-        # print(rv$es_term)
-        # rv$es_term = clickData$y
-        rv$kegg_status = NULL
-        rv$kegg_status_g = NULL
-        
-        rv$kegg_yes = NULL
-        rv$kegg_confirm = NULL
-        
-        rv$reactome_yes = NULL
-        rv$reactome_confirm=NULL
-        
-        rv$wp_yes = NULL
-        rv$wp_confirm=NULL
-    # }
+    rv$es_term = rv$bar_pathway_list[round(clickData$y)]
+    # print(rv$es_term)
+    # rv$es_term = clickData$y
+    clear_plot_rv()
 })
 
 # bubble click
@@ -1167,22 +1155,9 @@ observeEvent(event_data("plotly_click", source = "bubble_plot_click"),{
     # req(rv$run == "success")
     # req(input$plot_type=="bubble")
     clickData <- event_data("plotly_click", source = "bubble_plot_click")
-    # if(is.null(clickData)==F){
-        rv$es_term = rv$bubble_pathway_list[round(clickData$y)]
-        
-        # rv$es_term = clickData$y
-        rv$kegg_status = NULL
-        rv$kegg_status_g = NULL
-        
-        rv$kegg_yes = NULL
-        rv$kegg_confirm = NULL
-        
-        rv$reactome_yes = NULL
-        rv$reactome_confirm=NULL
-        
-        rv$wp_yes = NULL
-        rv$wp_confirm=NULL
-    # }
+    rv$es_term = rv$bubble_pathway_list[round(clickData$y)]
+    
+    clear_plot_rv()
 })
 
 # full volcano click
@@ -1192,21 +1167,9 @@ observeEvent(event_data("plotly_click", source = "volcano_plot_click"),{
     # req(rv$volcano_mode == "plotly")
     clickData <- event_data("plotly_click", source = "volcano_plot_click")
     # print(str(clickData))
-    # if(is.null(clickData)==F){
-        rv$es_term = rv$volcano_pathway_list[clickData$pointNumber + 1]
-        # print(str(rv$es_term))
-        rv$kegg_status = NULL
-        rv$kegg_status_g = NULL
-        
-        rv$kegg_yes = NULL
-        rv$kegg_confirm = NULL
-        
-        rv$reactome_yes = NULL
-        rv$reactome_confirm=NULL
-        
-        rv$wp_yes = NULL
-        rv$wp_confirm=NULL
-    # }
+    rv$es_term = rv$volcano_pathway_list[clickData$pointNumber + 1]
+    # print(str(rv$es_term))
+    clear_plot_rv()
 })
 
 # discrete volcano click
@@ -1216,25 +1179,12 @@ observeEvent(event_data("plotly_click", source = "volcano_plot_click2"),{
     # req(rv$volcano_mode == "plotly2")
     clickData <- event_data("plotly_click", source = "volcano_plot_click2")
     # print(str(clickData))
-    # if(is.null(clickData)==F){
-        rv$es_term = rv$volcano_pathway_list[clickData$pointNumber + 1]
-        # print(str(rv$es_term))
-        rv$kegg_status = NULL
-        rv$kegg_status_g = NULL
-        
-        rv$kegg_yes = NULL
-        rv$kegg_confirm = NULL
-        
-        rv$reactome_yes = NULL
-        rv$reactome_confirm=NULL
-        
-        rv$wp_yes = NULL
-        rv$wp_confirm=NULL
-    # }
+    rv$es_term = rv$volcano_pathway_list[clickData$pointNumber + 1]
+    # print(str(rv$es_term))
+    clear_plot_rv()
 })
 
-observe({
-    req(rv$es_term)
+observeEvent(rv$es_term,{
     x <- rv$gmts[rv$es_term][[1]]
     
     ranks2 <- rv$rnkgg[x]
@@ -1251,7 +1201,6 @@ observe({
     if((startsWith(rv$es_term,"KEGG"))==TRUE){rv$kegg_yes = "yes"}
     if((startsWith(rv$es_term,"RA_"))==TRUE){rv$reactome_yes = "yes"}
     if((startsWith(rv$es_term,"WP_"))==TRUE){rv$wp_yes = "yes"}
-    
 })
 
 # UI enrichment plot ----------------------
