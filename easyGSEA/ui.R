@@ -17,13 +17,16 @@ sidebar <- dashboardSidebar(
         a_download
         # ,menuItem("Help", tabName = "help", icon = icon("info-circle"))
 
-    )
+    ),
+    disconnectMessage(text = "An error has occurred.Please double check your uploaded files and try again. If you continue experiencing disconnections, contact us at evitta@cmmt.ubc.ca")
 )
 
 loadMsg = "easyGSEA - gene set enrichment analysis, interpretation & visualization"
 
 shinyUI(
     dashboardPage(
+        #Added a Disconnect Message here: 2020-09-18
+        
         title="easyGSEA - gene set enrichment analysis, interpretation & visualization",
 
         dashboardHeader(title = "easyGSEA",
@@ -78,6 +81,7 @@ shinyUI(
         )
 
     )
+    
 
 
 )
