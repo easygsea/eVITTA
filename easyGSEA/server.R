@@ -6,16 +6,17 @@ server <- function(input, output, session) {
     waiter_hide() # will hide *on_load waiter
     
     #Added a boolean to check if memory limit message has been shown
-    FirstTimeMemLimitMessage <- reactiveVal(TRUE)
+    #FirstTimeMemLimitMessage <- reactiveVal(TRUE)
     
-    observe({
+    
+    #observe({
         # Re-execute this reactive expression after 1000 milliseconds
-        invalidateLater(1000, session)
-        #garbage collect and check the memory threshold every 1 second
-        # gc()
+        #invalidateLater(1000, session)
+
         mem = mem_used()
         #This is the part to decide the threshold, and we can try different values later
-        if(mem < 50000 & FirstTimeMemLimitMessage()){
+        #if(mem < 50000 & FirstTimeMemLimitMessage()){
+        if(mem < 50000){
             showModal(modalDialog(
                 title = NULL,
                 fluidRow(
@@ -42,8 +43,9 @@ server <- function(input, output, session) {
             
             # simulate closing sessions
             session$close()
+            
         }
-    })
+    #})
     #End of memory usage part
     
     # addClass(selector = "body", class = "sidebar-collapse")
