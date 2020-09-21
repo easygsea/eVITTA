@@ -64,12 +64,16 @@ output$ui_dm <- renderUI({
 
 
 output$data_matrix_ui <- renderUI({
-  
-  # check supplementary data in GSE
+    # check supplementary data in GSE
   gse_sup <- unlist(gse_meta_df()[grep("supplementary_file", gse_meta_df()$Field),"Value"])
+  print(gse_sup)
   gse_sup[gse_sup=="NONE"] <- NA # convert NONE to NA
+  print(gse_sup)
   gse_sup <- gse_sup[is.na(gse_sup)==F] # delete NA
-  gse_sup <- strsplit(gse_sup, "\n")[[1]]
+  print(gse_sup)
+  if(!identical(gse_sup, character(0))){
+    gse_sup <- strsplit(gse_sup, "\n")[[1]]
+  }
   print(gse_sup)
   
   # check supplementary data in GSMs
@@ -121,7 +125,7 @@ output$data_matrix_ui <- renderUI({
 
 # generates url links
 output$sup_links <- renderUI({
-  req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup" | rv$sup_source == "none")
+  req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup" )
   
   o_list <- lapply(1:length(rv$suplist), function(i){
     path = rv$suplist[[i]]
@@ -247,6 +251,20 @@ output$example3 <- renderTable({(example_data3 <- read.csv(paste0(getwd(),"/serv
 # when file is uploaded, update the stored count matrix
 observeEvent(input$file, {
   inFile <- input$file
+  
+  # the modal that appears when the file user upload exceeds 50MB, Version1
+  if(inFile$size >= 50*1024^2){
+    showModal(modalDialog(
+      inputId = "size_reminder_modal",
+      # title = "The file size exceeds 50MB.",
+      div("The file you uploaded exceeds 50MB, please modify it to proceed. Try to delete unneeded columns and 
+            only keep the columns that you are interested in. 
+            Then press \"Browse...\" to upload it again. Thank you.",style="font-size:200%"),
+      easyClose = TRUE,size="l"
+      # , footer = modalButton("Close")
+    ))
+  }
+  
   #added try() here because there could be an error reading the file
   indf <- try(read.csv(inFile$datapath, header=F, 
                    colClasses=c("character")))
@@ -296,9 +314,8 @@ observeEvent(input$file, {
   ###
   
   indf_coln <- unname(unlist(indf[1,])) # colnames = first row
-  # print(indf_coln)
   indf_rown <- unname(unlist(indf[,1])) # rownames = first col
-  # print(head(indf_rown))
+  print(head(indf_rown))
   indf <- indf[-1,-1]
   # print(head(indf))
   
@@ -308,8 +325,10 @@ observeEvent(input$file, {
   indf_coln <- translate_sample_names(toupper(indf_coln),  # translating from (upper case)
                                       translation_df,  # translation df
                                       "geo_accession") # translating to
+  #print(indf_coln)
+ 
   colnames(indf) <- indf_coln[-1]
-  
+  #print("a small indicator here")
   # print(head(indf))
   
   # then, match each column to rv$dmdf and update the values into it
@@ -326,8 +345,12 @@ observeEvent(input$file, {
   matched_cols <- intersect(colnames(rvdf)[-1], colnames(indf)) # a vector of GSM id for matched cols
   unmatched_cols <- setdiff(colnames(indf), matched_cols) # vector of uploaded colnames that cannot find a match
   print(matched_cols)
+  #print(length(matched_cols))
   print(unmatched_cols)
+  #print(length(unmatched_cols))
+ 
   
+ 
   colnames(dmdf) <- colnames(rvdf)
   # print(head(dmdf))
   # check if all non-name cols contain any values.
@@ -342,7 +365,70 @@ observeEvent(input$file, {
   print(head(dmdf))
   
   rv$dmdf <- dmdf
-})
+  
+ 
+  # -------------- potential terms in DEG file, so as to tell users it's already analyzed files -------------
+  deg_colnames <- c("logfc","fc","log2_fold_change"
+                    ,"p","pval","pvalue","p.value","p_value"
+                    ,"fdr","padj","adj.p.val","q_value")
+ 
+  # Check to see if there is some column names matched the potential terms in DEG file
+  match_deg_cols <- intersect(tolower(deg_colnames),tolower(unmatched_cols))
+  match_deg_cols_one_character <- glue_collapse(match_deg_cols, sep = ", ", last = " and ")
+  print(match_deg_cols)
+  print(length(match_deg_cols))
+  
+  #the modal that reminds user that there are unmatched columns exist is added, Vesion 1
+  #declare some variables
+    unmatched_cols_length_one_character <- glue_collapse(unmatched_cols, sep = ", ", last = " and ")
+    length_matched <- length(matched_cols)
+    length_unmatched <- length(unmatched_cols)
+ 
+     #the code of the modal
+    #check if there is any unmatched columns
+    if(length_unmatched > 0){
+    #check to see if the unmatched columns contains the DEG analysis term, such as logfc, pvalue
+      if(length(match_deg_cols) > 0){
+        
+        #the modal that remind the user that the uploaded file has already been analysed 
+        #because the column names match the DEG analysis names such as pvalue and logFC
+        showModal(modalDialog(
+          inputId = "match_DEG_modal",
+          # title = "See below for your column information",
+          span("IMPORTANT: ", style = "font-size:200%"),
+          span(length_matched,style = "font-size:200%"),
+          span(" columns successfully read; ",style = "font-size:200%"),
+          span("your file's column names contain: ",style = "font-size:200%"),
+          span(match_deg_cols_one_character, style = "font-size:200%"),
+          span(". Your file has probably already been processed and analyzed. Please Check it again;
+               if it has been processed, proceed to ",style = "font-size:200%"),
+          HTML("<a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank' style = 'font-size:200%'><u><b>easyGSEA</b></u></a>"),
+          span(" or ", style = "font-size:200%"),
+          HTML("<a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank' style = 'font-size:200%'><u><b>easyVizR</b></u></a>"),
+          span(" for further analysis. Thank you.", style = "font-size:200%"),
+          easyClose = TRUE,size="l"
+          # , footer = modalButton("Close")
+        ))
+      }
+      else{
+        
+        #the modal indicated unrecognizable columns
+        showModal(modalDialog(
+          inputId = "column_match_modal",
+          # title = "See below for your column information",
+          span("IMPORTANT: ", style = "font-size:200%"),
+          span(length_matched,style = "font-size:200%"),
+          span(" columns successfully read; ",style = "font-size:200%"),
+          span(length_unmatched,style = "font-size:200%"),
+          span(" columns omitted because column name does not match existing sample names (",style = "font-size:200%"),
+          span(unmatched_cols_length_one_character,style = "font-size:200%"),
+          span("). Please check your file, column names as well as the platform, and then try again.",style = "font-size:200%"),
+          #2 columns successfully read; 2 columns omitted because column name does not match existing sample names (C, D). Please check your file and try again.
+          easyClose = TRUE,size="l"
+          # , footer = modalButton("Close")
+        ))}
+      }
+  })
 
 # --------------- show data matrix df ---------------
 

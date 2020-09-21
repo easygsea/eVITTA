@@ -322,6 +322,18 @@
         rv$infile_name = input$rnkfile$name
         rv$infile_path = input$rnkfile$datapath
         shinyjs::disable("rnkfile")
+        # the modal that appears whent the file user upload exceeds 50MB, Version1
+        if(input$rnkfile$size >= 50*1024^2){
+          showModal(modalDialog(
+            inputId = "size_reminder_modal",
+            # title = "The file size exceeds 50MB.",
+            div("The file you uploaded exceeds 50MB, please modify it to proceed. Try to delete unneeded columns and 
+            only keep gene name, p value, and expression/counts. 
+            Then press \"reset file\" to upload it again. Thank you.",style="font-size:200%"),
+            easyClose = TRUE,size="l"
+            # , footer = modalButton("Close")
+          ))
+        }
     })
 
 # ------------- 2.1.2 select corresponding table columns -----------------

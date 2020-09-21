@@ -16,6 +16,7 @@ library(BiocManager)
 library(waiter)
 library(statmod)
 library(scales)
+library(glue)
 library(shinyalert)
 
 # library(curl)
