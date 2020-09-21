@@ -10,20 +10,39 @@ server <- function(input, output, session) {
         # Re-execute this reactive expression after 1000 milliseconds
         invalidateLater(1000, session)
         #garbage collect and check the memory threshold every 1 second
-        gc()
+        # gc()
         mem = mem_used()
         #This is the part to decide the threshold, and we can try different values later
-        if(mem > 900000000 & FirstTimeMemLimitMessage()){
+        if(mem < 50000 & FirstTimeMemLimitMessage()){
             showModal(modalDialog(
-                title = "Warning",
-                "You are reaching the memory maximum for your session, a disconnect might occur.",
-                easyClose = TRUE,
-                footer = modalButton("Dismiss")
+                title = NULL,
+                fluidRow(
+                    column(12, style="font-size:150%;", align = "center",
+                        p("eVITTA is experiencing high traffic at the moment.")
+                        ,br(),p("If you have any other unused eVITTA session(s) running, kindly close the window(s).")
+                        ,br(),p("Email us at evitta@cmmt.ubc.ca if you continue seesing this message. We appreciate your support.")
+                        ,br(),p("Please refresh your page and try again")
+                        ,HTML("<a href='https://tau.cmmt.ubc.ca/eVITTA/easyGSEA'>Refresh</a>")
+                        
+                    )
+                ),
+                size = "l",
+                easyClose = F,
+                footer = NULL
             ))
             FirstTimeMemLimitMessage(FALSE)
+            
+            # record the disconnection and write out to report table
+            odir = paste0(getwd(),"/bug_report/")
+            ofile = paste0(odir,"out_of_ram_report.csv")
+            fmem = mem_used()
+            oline = paste0("\"",Sys.time(),"\"",",\"OOR\",\"",fmem,"\"")
+            write(oline, file=ofile, append = T)
+            
+            # simulate closing sessions
+            session$close()
         }
     })
-    
     #End of memory usage part
     
     # addClass(selector = "body", class = "sidebar-collapse")
