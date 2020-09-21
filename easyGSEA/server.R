@@ -35,8 +35,7 @@ server <- function(input, output, session) {
             # record the disconnection and write out to report table
             odir = paste0(getwd(),"/bug_report/")
             ofile = paste0(odir,"out_of_ram_report.csv")
-            fmem = mem_used()
-            oline = paste0("\"",Sys.time(),"\"",",\"OOR\",\"",fmem,"\"")
+            oline = paste0("\"",Sys.time(),"\"",",\"OOR\",\"",mem,"\"")
             write(oline, file=ofile, append = T)
             
             # simulate closing sessions
