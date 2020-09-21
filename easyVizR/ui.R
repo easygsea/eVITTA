@@ -101,6 +101,12 @@ body <- dashboardBody(
           background-color: #f39c12;
           border-color: #e08e0b;
           color: white;
+      }",
+      # fixes primary button color
+      ".btn-primary {
+        background-color: #2c6eaf;
+        border-color: #184d82;
+        color: white;
       }"
       
       

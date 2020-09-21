@@ -149,26 +149,8 @@
 
 
 
-####================= multiple upload modal (show when file uploaded) =====================####
+####================= multiple upload modal elements (show when file uploaded) =====================####
 
-# show modal (experimental)
-observeEvent(input$fileIn,{
-  showModal(modalDialog(
-    title = "File upload",
-    
-    uiOutput("batch_feedback_1"),
-    
-    
-    
-    uiOutput("batch_opt"),
-    
-    uiOutput("batch_feedback_2"),
-    uiOutput("batch_feedback_3"),
-    
-    easyClose = F, size="l",
-    footer = uiOutput("batch_buttons")
-  ))
-})  
 
 # select columns
 output$batch_opt <- renderUI({
@@ -221,9 +203,6 @@ output$batch_opt <- renderUI({
 })
 
 
-
-
-# ======================= other modal elements ==========================
 
 # if there are other shared cols, also enable them to load those
 output$batch_additional_cols <- renderUI({
@@ -401,6 +380,23 @@ observeEvent(input$fileIn, {
   
   rv$folder_upload_state <- 'uploaded'
   
+  # show col selection modal
+  showModal(modalDialog(
+    title = "File upload",
+    
+    uiOutput("batch_feedback_1"),
+    
+    
+    
+    uiOutput("batch_opt"),
+    
+    uiOutput("batch_feedback_2"),
+    uiOutput("batch_feedback_3"),
+    
+    easyClose = F, size="l",
+    footer = uiOutput("batch_buttons")
+  ))
+  
 })
 
 
@@ -491,22 +487,7 @@ observeEvent(input$upload_batch_q,{
 
 
 
-####================= single upload modal (show when file uploaded) =====================####
-
-# show modal (experimental)
-observeEvent(input$file,{
-  showModal(modalDialog(
-    title = "File upload",
-    uiOutput("uploaded_file"),
-    uiOutput("upload_opt"),
-    uiOutput("upload_feedback"),
-    
-    
-    easyClose = F, size="l",
-    footer = uiOutput("upload_buttons")
-  ))
-
-})  
+####================= single upload modal elements (show when file uploaded) =====================####
 
 # select columns
 output$upload_opt <- renderUI({
@@ -566,8 +547,6 @@ output$upload_opt <- renderUI({
   
 })
 
-
-# ======================= other modal elements ==========================
 
 # multiselect to load other columns
 output$load_other_cols <- renderUI({
@@ -654,6 +633,18 @@ observeEvent(input$file, {
   inFile <- input$file
   rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1))
   rv$upload_state <- 'uploaded'
+  
+  # show col selection modal
+  showModal(modalDialog(
+    title = "File upload",
+    uiOutput("uploaded_file"),
+    uiOutput("upload_opt"),
+    uiOutput("upload_feedback"),
+    
+    
+    easyClose = F, size="l",
+    footer = uiOutput("upload_buttons")
+  ))
 })
 # when user presses reset, update state
 observeEvent(input$reset, {
