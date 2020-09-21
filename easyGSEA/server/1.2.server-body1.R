@@ -64,14 +64,29 @@ output$feedback_filecontent <- renderTable({
     req(rv$db_status == "selected")
     req(rv$file_upload_status == "uploaded")
     req(is.null(rv$infile_confirm) == T)
-    df = rv$data_head %>%
+    
+    df = rv$data_head_o %>%
         head(.,n=2) %>%
-        dplyr::mutate_if(is.numeric, function(x) round(x,2))
+        dplyr::mutate_if(is.numeric, function(x) round(x,2)) %>%
+        dplyr::mutate_if(is.character, function(x) substr(x,1,7))
     
     arow = rep("...",ncol(df))
     
     rbind(df,arow)
         
+})
+
+# ----------- *** If no colnames, reset rv$data_head_o ----------
+observeEvent(input$mcol,{
+    if(input$mcol){
+        rv$data_head_o = reset_colnames(rv$data_head)
+    }else{
+        rv$data_head_o = rv$data_head
+    }
+    session$sendCustomMessage(type = "resetValue", message = "gene_column")
+    session$sendCustomMessage(type = "resetValue", message = "rank_column")
+    session$sendCustomMessage(type = "resetValue", message = "logfc_column")
+    session$sendCustomMessage(type = "resetValue", message = "p_column")
 })
 
 # colnames for DEG
@@ -88,8 +103,8 @@ output$feedback_filecontent_deg <- renderUI({
             radioButtons(
                 inputId = "gene_column",
                 label = "Gene column:",
-                choices = colnames(rv$data_head),
-                selected = match_colnames(col_gene_names,colnames(rv$data_head))
+                choices = colnames(rv$data_head_o),
+                selected = match_colnames(col_gene_names,colnames(rv$data_head_o))
             )
         ),
         column(
@@ -97,8 +112,8 @@ output$feedback_filecontent_deg <- renderUI({
             radioButtons(
                 inputId = "logfc_column",
                 label = "logFC column:",
-                choices = colnames(rv$data_head),
-                selected = match_colnames(col_fc_names,colnames(rv$data_head))
+                choices = colnames(rv$data_head_o),
+                selected = match_colnames(col_fc_names,colnames(rv$data_head_o))
             )
         ),
         column(
@@ -106,8 +121,8 @@ output$feedback_filecontent_deg <- renderUI({
             radioButtons(
                 inputId = "p_column",
                 label = "P column:",
-                choices = colnames(rv$data_head),
-                selected = match_colnames(col_p_names,colnames(rv$data_head))
+                choices = colnames(rv$data_head_o),
+                selected = match_colnames(col_p_names,colnames(rv$data_head_o))
             )
         )
     )
@@ -127,8 +142,8 @@ output$feedback_filecontent_rnk <- renderUI({
             radioButtons(
                 inputId = "gene_column",
                 label = "Gene column:",
-                choices = colnames(rv$data_head),
-                selected = match_colnames(col_gene_names,colnames(rv$data_head))
+                choices = colnames(rv$data_head_o),
+                selected = match_colnames(col_gene_names,colnames(rv$data_head_o))
             )
         ),
         column(
@@ -136,8 +151,8 @@ output$feedback_filecontent_rnk <- renderUI({
             radioButtons(
                 inputId = "rank_column",
                 label = "Rank column:",
-                choices = colnames(rv$data_head),
-                selected = match_colnames(col_rank_names,colnames(rv$data_head))
+                choices = colnames(rv$data_head_o),
+                selected = match_colnames(col_rank_names,colnames(rv$data_head_o))
             )
         )
     )
@@ -334,7 +349,7 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("<b>",rv$no_down_01,"</b> (down) <b>",rv$no_up_01,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.01"))
                     )
                 ),
-                tab_box("msg1")
+                guide_box("msg1")
             )
         }else if(rv$run_mode == "glist"){
             fluidRow(
@@ -355,14 +370,14 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("<b>",rv$no_up_01,"</b> gene sets are significantly enriched at P.adj < 0.01"))
                     )
                 ),
-                tab_box("msg1")
+                guide_box("msg1")
             )
         }
     }else if(rv$run == "failed"){
         fluidRow(
             box(
                 background = "red", width = 12,
-                HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if species matches your query and/or if you have selected the right gene identifier and/or if your input gene list is correct.")
+                HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if species matches your query and/or if you have selected the right gene identifier and/or if your input file/gene list is correct.")
             )
         )
     }
@@ -502,6 +517,8 @@ output$mat_download <- downloadHandler(
 # UI download RNK --------------
 output$ui_rnk_download <- renderUI({
     req(is.null(rv$rnkgg) == F)
+    req(input$selected_mode == "gsea")
+    
     downloadBttn("rnk_download",
                    label = "Download RNK (.rnk)", style = rv$dbtn_style,
                  color = rv$dbtn_color, size=rv$dbtn_size, block = TRUE

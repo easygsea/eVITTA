@@ -721,14 +721,13 @@ observeEvent(input$delete_deg_confirm, {
 #---------------------- Sidebar UI ---------------------------#
 
 output$delete_deg <- renderUI({
-  req(length(rv$ll) >= 1)
-  
-  div(
-    tags$head(
-      tags$style(".multi-wrapper {height: fit-content;}"), 
-      tags$style(".multi-wrapper .non-selected-wrapper, .multi-wrapper .selected-wrapper {height: 100%;}")
-    ),
+  if(length(rv$ll) >= 1){
     div(
+      tags$head(
+        tags$style(".multi-wrapper {height: fit-content;}"), 
+        tags$style(".multi-wrapper .non-selected-wrapper, .multi-wrapper .selected-wrapper {height: 100%;}")
+      ),
+      div(
         multiInput(inputId = "delete_deg",
                    label = NULL,
                    choices = rv$ll,
@@ -738,8 +737,13 @@ output$delete_deg <- renderUI({
                      non_selected_header = "Loaded dataset(s):",
                      selected_header = "Delete dataset(s):")
         )
-        )
-  )
+      )
+    )
+  } else {
+    HTML("No data currently loaded.")
+  }
+  
+
   
   
 })

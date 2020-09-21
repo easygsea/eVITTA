@@ -84,8 +84,8 @@
     enrichmentplot <- function() {
         ranks = rv$rnkgg
         names(ranks) = toupper(names(ranks))
-        gmt = rv$gmts[[rv$es_term]]
-        plotEnrichment(toupper(gmt),ranks) + labs(title = rv$es_term)
+        gmt = rv$gmts[[rv$es_term]] %>% toupper(.)
+        plotEnrichment(gmt,ranks) + labs(title = rv$es_term)
     }
     
     filter_plot_df <- function(pathways, up, down, cutoff_p, cutoff_q){
@@ -804,10 +804,11 @@
         }else{
             ranks <- rv$rnkgg
             x <- rv$gmts[term][[1]]
-            ranks2 <- rv$rnkgg[x]
+            ranks2 <- ranks[x]
             ranks2 <- ranks2[!is.na(ranks2)]
             x <- rv$fgseagg[rv$fgseagg$pathway == term]$leadingEdge[[1]]
-            ranks3 <- rv$rnkgg[x]
+            names(ranks) = toupper(names(ranks))
+            ranks3 <- ranks[x]
             x = NULL
             
             cal_max_density_value <- function(){
@@ -1217,7 +1218,7 @@
     ########   convert & return RNK     ##########
     #=============================================#
     # generate ranks from RNK file
-    convert_rnk <- function(data=rv$data_head){
+    convert_rnk <- function(data=rv$data_head_o){
       all_genes = data[[input$gene_column]]
       duplicates = duplicated(all_genes)
       
@@ -1227,6 +1228,8 @@
       
       rv$infile_confirm = "confirm"
       
+      data[[input$rank_column]] = as.numeric(data[[input$rank_column]])
+
       if(is.numeric(data[[input$rank_column]])){
         ranks <- setNames(data[[input$rank_column]], data[[input$gene_column]])
         ranks <- ranks[complete.cases(names(ranks))]
@@ -1238,7 +1241,7 @@
     }
     
     # generate ranks from DEG file
-    convert_rnk_from_deg <- function(data=rv$data_head){
+    convert_rnk_from_deg <- function(data=rv$data_head_o){
       all_genes = data[[input$gene_column]]
       duplicates = duplicated(all_genes)
       
@@ -1248,10 +1251,16 @@
       
       rv$infile_confirm = "confirm"
       
+      data[[input$logfc_column]] = as.numeric(data[[input$logfc_column]])
+      data[[input$p_column]] = as.numeric(data[[input$p_column]])
+      
+      data = data[complete.cases(data),]
+      
       genes <- data[[input$gene_column]]
       logfc <- data[[input$logfc_column]]
       pval <- data[[input$p_column]] #%>% mutate_if(is.numeric,  ~replace(., . == 0, 0.00001))
       pval[pval==0] = 0.000000001
+      
       if(is.numeric(pval) && is.numeric(logfc)){
         rank_values <- -log10(pval) * sign(logfc)
         ranks <- setNames(rank_values,genes)
@@ -1372,7 +1381,7 @@
     #   )
     # }
     
-    tab_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details"){
+    guide_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details"){
       actionBttn(
         id,
         HTML(msg),
@@ -1393,5 +1402,18 @@
                block = T
              )
       )
+    }
+    
+    #========================================================#
+    ######  set colnames as first row, rename colnames #######
+    #========================================================#
+    reset_colnames <- function(df){
+      c_names_o = colnames(df)
+      c_names = paste0("X",1:ncol(df))
+      
+      df = rbind(c_names_o, df)
+      colnames(df) = c_names
+
+      return(df)
     }
     

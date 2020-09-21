@@ -8,7 +8,7 @@ sidebar <- dashboardSidebar(
                 
                 menuItem("2. Data matrix", tabName="tab3", icon=icon("table")),
                 
-                menuItem("3. Review/filter design matrix", tabName="tab2", icon=icon("pencil-ruler")),
+                menuItem("3. Filter/review design matrix", tabName="tab2", icon=icon("pencil-ruler")),
 
                 menuItem("4. Run DEG analysis", tabName="tab4", icon=icon("calculator")),
                 
@@ -40,7 +40,8 @@ body <- dashboardBody(
   
     # apply specific css adjustments additionally
     css_addons,
-      
+  
+  useShinyalert(),  # Set up shinyalert
 
     # verbatimTextOutput("debug0"),
     tabItems(
@@ -55,12 +56,12 @@ body <- dashboardBody(
                 fluidRow(
                     column(4,
                            
-                           box(title=span(icon("search"), "Input GEO accession"), width = 12, solidHeader=F, status = "primary",
+                           box(title=span(HTML("<b>1.1.</b>"),icon("search"), "Input GEO accession"), width = 12, solidHeader=F, status = "primary",
                                uiOutput("geo_accession_ui"),
                                
                            ),
                            
-                           box(title=span(icon("hdd"),"Select Platform"), width = 12, solidHeader=F, status = "primary",
+                           box(title=span(HTML("<b>1.2.</b>"),icon("hdd"),"Select Platform"), width = 12, solidHeader=F, status = "primary",
                                uiOutput("geo_platform_ui")
                            ),
                            

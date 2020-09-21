@@ -45,6 +45,11 @@ shinyUI(
                 tags$script(src = "reactome.js")
             ),
             
+            # # this is used to reset input values
+            # example usage: session$sendCustomMessage(type = "resetValue", message = "gene_column")
+            tags$script("Shiny.addCustomMessageHandler('resetValue', function(variableName) {
+            Shiny.onInputChange(variableName, null);});"),
+            
             useShinyalert(),  # Set up shinyalert
             useShinyjs(), # Set up shinyjs
 

@@ -55,6 +55,7 @@ server <- function(input, output, session) {
     # # two-way is obsolete for now
     # source("server/xy.R", local = TRUE)
     
+    source("server/f_gls.R", local = TRUE)
     
 
     

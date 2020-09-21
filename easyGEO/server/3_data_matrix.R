@@ -6,19 +6,21 @@ output$ui_dm <- renderUI({
     fluidRow(
       column(4,
              
-             box(title=span(icon("download"),"Get data matrix"), width = 12, solidHeader=F, status = "primary", 
+             box(title=span(HTML("<b>2.1.</b>"),icon("download"),"Get data matrix"), width = 12, solidHeader=F, status = "primary", 
                  id = "download_matrix",
                  
                  uiOutput("data_matrix_ui")
                  
              ),
              
-             uiOutput("upload_matrix_ui")
+             uiOutput("upload_matrix_ui"),
+             
+             uiOutput("guide_box2")
              
       ),
       column(8,
              
-             box(title=span(icon("table"),"Processed data matrix"), width = 12, solidHeader=F, status = "primary", 
+             box(title=span(icon("table"),"Review processed data matrix"), width = 12, solidHeader=F, status = "primary", 
                  id = "data_matrix",
                  
                  fluidRow(
@@ -199,7 +201,7 @@ observeEvent(rv$ftpy,{
 output$upload_matrix_ui <- renderUI({
   req(rv$sup_source == "gse_sup" | rv$sup_source == "gsm_sup" | rv$sup_source == "none")
   
-  box(title=span(icon("upload"),"Upload tidied matrix"), width = 12, solidHeader=F, status = "primary", 
+  box(title=span(HTML("<b>2.2.</b>"),icon("upload"),"Upload tidied matrix"), width = 12, solidHeader=F, status = "primary", 
       id = "upload_matrix",
       
       div(
@@ -499,4 +501,18 @@ filtered_data_df <- reactive({
   dmdf <- dmdf[complete.cases(dmdf),] # get rid of na values
   dmdf
   
+})
+
+# ---------- guide box to 3. design matrix page -------
+output$guide_box2 <- renderUI({
+  req(filtered_data_df())
+  
+  column(12,
+         guide_box("guide2", "Navigate to <b>3. Filter/review design matrix</b> to proceed"),
+         br()
+  )
+})
+
+observeEvent(input$guide2,{
+  updateTabItems(session, "menu1", "tab2")
 })

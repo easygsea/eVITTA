@@ -4,11 +4,15 @@ output$ui_design <- renderUI({
     panel_null()
   }else{
     div(
+      column(12,
+             guide_box("guide3", "Navigate to <b>4. Run DEG analysis</b> to proceed"),
+             br()
+      ),
       fluidRow(
-        
         column(8,
                
-               box(title=span(icon("pencil-ruler"),"Filter Data"), width = 12, solidHeader=F, status = "primary", 
+               
+               box(title=span(HTML("<b>3.1.</b>"),icon("pencil-ruler"),HTML("Filter data if needed")), width = 12, solidHeader=F, status = "primary", 
                    uiOutput("filter_design_ui"),
                ),
                # tabBox(
@@ -76,7 +80,7 @@ output$ui_design <- renderUI({
                tabBox(
                  title = NULL, width = 12,
                  
-                 tabPanel(span(icon("microscope"),"Design Matrix"),
+                 tabPanel(span(HTML("<b>3.2.</b>"),icon("microscope"),HTML("Review design matrix")),
                           
                           fluidRow(
                             column(12,
@@ -96,7 +100,7 @@ output$ui_design <- renderUI({
                           )
                  ),
                  
-                 tabPanel(span(icon("list"),"Design Summary"),
+                 tabPanel(span(HTML("<b>3.3.</b>"),icon("list"),HTML("Review design summary")),
                           
                           uiOutput("design_summary_ui")
                           
@@ -107,6 +111,11 @@ output$ui_design <- renderUI({
     )
     
   }
+})
+
+# ----------- guide box to 4. run DEG page ---------
+observeEvent(input$guide3,{
+  updateTabItems(session, "menu1", "tab4")
 })
 
 # get full design matrix table -----------#

@@ -29,6 +29,7 @@ library(shinyjs)
 library(rintrojs)
 library(visNetwork)
 library(markdown)
+library(V8)
 # library(dashboardthemes)
 options(repos = BiocManager::repositories())
 futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger") # to suppress creation of log file
@@ -145,6 +146,13 @@ source("global/init.R")
 #   ,tableBorderRowSize = "1"
 # )
 
+
+# js expansion for box collapse
+jscode <- "
+shinyjs.collapse = function(boxid) {
+$('#' + boxid).closest('.box').find('[data-widget=collapse]').click();
+}
+"
 
 
 # ===================================================== global.R END ============

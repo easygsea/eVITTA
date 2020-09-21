@@ -144,7 +144,7 @@
       }
       
       if(length(dbs)<1){
-        showNotification("Select at least one database", type = "error", duration = 3)
+        shinyalert("Select at least one database")
       }else{
         removeModal()
       }
@@ -352,7 +352,13 @@
           column(12,
             wellPanel(
               # shiny::HTML("<p style='font-style:italic'>Select corresponding columns</p>"),
-              h4("Select corresponding columns"),
+              materialSwitch(
+                inputId = "mcol",
+                label = HTML("<span style='font-size:110%'>Missing column names in your query file?</span>"),
+                value = F, inline = TRUE, width = "100%",
+                status = "danger"
+              ),
+              
               uiOutput("feedback_filecontent_deg"),
               uiOutput("feedback_filecontent_rnk"),
               # uiOutput("feedback_filecontent_confirm"),
@@ -363,7 +369,7 @@
                  p("Your query file content:"),
                  uiOutput("feedback_filecontent")
           )
-        ),,
+        ),
           
         easyClose = F,
         footer = bsButton(
@@ -380,8 +386,10 @@
     observeEvent(input$loadExampleRNK,{
         rv$example_file = NULL
         if(input$selected_species == ""){
-            showNotification("Please select your species of interest.",type="error",duration=2)
+          shinyalert("Please select your species of interest.")
         }else{
+          reset_rnk()
+          
           updateRadioButtons(
             session,
             "gene_identifier",
@@ -402,15 +410,14 @@
     observeEvent(input$loadExampleDE,{
         rv$example_file = NULL
         if(input$selected_species == ""){
-            showNotification("Please select your species of interest.",type="error",duration=2)
+          shinyalert("Please select your species of interest.")
         }else{
+          reset_rnk()
+          
           updateRadioButtons(
             session,
             "gene_identifier",
-            "2. Gene identifier",
-            choices = gene_identifiers,
-            selected = "symbol",
-            inline = TRUE
+            selected = "symbol"
           )
             sampleDE_file <- paste0(getwd(),"/inc/",input$selected_species,".csv")
             rv$infile_name = paste0(input$selected_species,".csv")
@@ -449,22 +456,21 @@
         }else if(ncol(ranks)>2){
             rv$rnk_or_deg = "deg"
         }else{
-            showNotification("You uploaded a file with < 2 columns. Please click the help button for accepted file formats.",type = "error",duration = 3)
+            shinyalert("You uploaded a file with < 2 columns. Please click the help button for accepted file formats.")
         }
         
         # save had data into RV
         rv$data_head = ranks
+        rv$data_head_o = ranks
     })
     
     # ----------------- 2.1.5 Return RNK -----------------------
     observeEvent(input$filecontent_confirm,{
-      removeModal()
-        data = rv$data_head
+        data = rv$data_head_o
         wtext = tags$b(
           "Duplicated genes found in your uploaded file. Only the first duplicate(s) will be kept. Do you want to continue?",
           style = "color: #FA5858;"
         )
-        
         if(ncol(data)==2){
           if(is.null(input$rank_column) && is.null(input$gene_column)){
             shinyalert("Please select the rank and the gene columns.")
@@ -473,6 +479,8 @@
           }else if(is.null(input$gene_column)){
             shinyalert("Please select the gene column.")
           }else{
+            removeModal()
+            
             all_genes = data[[input$gene_column]]
             duplicates = duplicated(all_genes)
 
@@ -507,6 +515,8 @@
           }else if(is.null(input$p_column)){
             shinyalert("Please select the p-value column.")
           }else{
+            removeModal()
+            
             all_genes = data[[input$gene_column]]
             duplicates = duplicated(all_genes)
             
@@ -668,10 +678,10 @@
                     }
                 }
             }else{
-                showNotification("Please input your query. Click example data for a trial run.",type="error",duration=3)
+              shinyalert("Please input your query. Click example data for a trial run.")
             }
         }else{
-            showNotification("Please select species that matches your query.",type="error",duration=3)
+          shinyalert("Please select species that matches your query.")
         }
         # }else{
         #     rv$gene_lists = rv$data_glist
@@ -703,7 +713,7 @@
     #----------- 2.2.4 Example GList --------------
     observeEvent(input$load_example_glist,{
         if(input$selected_species == ""){
-            showNotification("Please select your species of interest.",type="error",duration=2)
+          shinyalert("Please select your species of interest.")
         }else{
             updateTextAreaInput(session,
                                 inputId = "gene_list",
