@@ -7,12 +7,14 @@ output$ui_bodyNetwork <- renderUI({
         )
     }else{
         fluidRow(
-            uiOutput("ui_vis_gear"),
+            # uiOutput("ui_vis_gear"),
             
             box(
                 width = 12,
                 #<i class="fas fa-chart-network"></i>
                 title=span( icon("project-diagram"), "Network view of enriched gene sets"), status = "primary",
+                uiOutput("ui_vis_gear"),
+                
                 div(
                     style = "position: absolute; right: 1em; top: 1em;",
                     dropdown(
@@ -100,11 +102,11 @@ observeEvent(input$q_vis_edge_threshold,{
 
 #  ============UI vis parameter =============
 output$ui_vis_gear <- renderUI({
-    # # div(
-    # #     align = "left",
-    # #     style = "position: absolute; right: 4.5em; top: 3em;",
-    #     dropdown(
-    #         # size = "xs",up = FALSE,right = TRUE,width = "850px",
+    div(
+        align = "left",
+        style = "position: absolute; right: 4.5em; top: 1em;",
+        dropdown(
+            size = "xs",up = FALSE,right = TRUE,icon = icon("download", class = "opt"),width = "850px",
     #         # circle = TRUE, tooltip = TRUE, label = "Advanced parameters for creating a network",
     #         # icon = icon("gear", class = "opt"),
     #         style = "material-circle", icon = icon("gear"),align = "left",
@@ -114,17 +116,17 @@ output$ui_vis_gear <- renderUI({
     #             enter = "slideInRight",
     #             exit = "fadeOutRight", duration = 0.5
     #         ),
-    box(
-        width = 12,
-        title = span(icon("gear", class = "opt"),"Advanced parameters for creating a network"), solidHeader = T,
-        icon = "fa fa-th",
-        status = "primary", 
-        # solidHeader = T,
-        collapsible = T, collapsed = T, 
-            # div(
-            #     align = "center",
-            #     tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
-            # ),
+    # box(
+    #     width = 12,
+    #     title = span(icon("gear", class = "opt"),"Advanced parameters for creating a network"), solidHeader = T,
+    #     icon = "fa fa-th",
+    #     status = "primary", 
+    #     # solidHeader = T,
+    #     collapsible = T, collapsed = T, 
+            div(
+                align = "center",
+                tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
+            ),
             fluidRow(
                 column(
                     width = 5,
@@ -182,7 +184,7 @@ output$ui_vis_gear <- renderUI({
             ),br(),
             fluidRow(
                 column(
-                    width = 3,
+                    width = 5,
                     conditionalPanel(
                         condition = "input.vis_percent == 'combined'",
                         numericInput("combined_k","Combined constant, K",
@@ -191,9 +193,9 @@ output$ui_vis_gear <- renderUI({
                     )
                 ),
                 column(
-                    width = 2,offset = 7,br(),
+                    width = 7,align="right",br(),
                     actionBttn("vis_replot","Replot!"
-                               ,block = T,style = "simple"#,size = "sm"
+                               ,style = "simple"#,size = "sm"
                              ,color = "primary",icon = icon("atom") #,lib="font-awesome"
                     )
                 )
@@ -202,6 +204,6 @@ output$ui_vis_gear <- renderUI({
             
             
         )
-    # # )
+    )
     
 })

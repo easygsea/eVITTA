@@ -217,6 +217,7 @@ output$feedback_converted_rnk <- renderUI({
                     uiOutput("converted_rnk"),
                     paste0("Total number of genes: ",
                            rv$total_genes_after, " / ",rv$total_genes),
+                    br()
                 ),
                 box(
                     background = "red", width=12,
