@@ -1,166 +1,85 @@
-# UPON ENTERING THE FILTER OR VIS TAB, update the values of filters in that tab
-observeEvent(input$tabs, {
-  req(is.null(rv$nx_n)==F)
-  # print(input$tabs)
-  if (input$tabs == "tab_filters"){
-    for (i in 1:length(rv$nx_n)){
-      updateNumericInput(session, paste0("f_p_",i),
-                         value = rv[[paste0("nic_p_",i)]]
-      )
-      updateNumericInput(session, paste0("f_q_",i),
-                         value = rv[[paste0("nic_q_",i)]]
-      )
-      updateNumericInput(session, paste0("f_Stat_",i),
-                         value = rv[[paste0("nic_Stat_",i)]]
-      )
-      updateNumericInput(session, paste0("f_sign_",i),
-                         value = rv[[paste0("nic_sign_",i)]]
-      )
-    }
-  } else if (input$tabs == "tab_ins"){
-    
-    removeUI(
-      selector = "#ins_table_panel"
-    )
-    print("removed ui")
-    insertUI(
-      selector = "#ins_pg_bottom",
-      where = "afterEnd",
-      ui = uiOutput("ins_table_panel")
-    )
-    print("inserted ui in p3")
-    
-    
-    # filter buttons
-    removeUI(
-      selector = "#n_filters"
-    )
-    print("removed ui")
-    insertUI(
-      selector = "#ins_filters_here",
-      where = "afterEnd",
-      ui = uiOutput("n_filters")
-    )
-    print("inserted ui in p4")
-    
-    
-    
-    
-  } else if (input$tabs == "tab3"){
-    # for (i in 1:length(rv$nx_n)){
-    #   updateNumericInput(session, paste0("nic_p_",i),
-    #                      value = rv[[paste0("nic_p_",i)]]
-    #   )
-    #   updateNumericInput(session, paste0("nic_q_",i),
-    #                      value = rv[[paste0("nic_q_",i)]]
-    #   )
-    #   updateNumericInput(session, paste0("nic_Stat_",i),
-    #                      value = rv[[paste0("nic_Stat_",i)]]
-    #   )
-    #   updateNumericInput(session, paste0("nic_sign_",i),
-    #                      value = rv[[paste0("nic_sign_",i)]]
-    #   )
-    # }
-    
-    # ins panel
-    removeUI(
-      selector = "#ins_table_panel"
-    )
-    print("removed ui")
-    insertUI(
-      selector = "#vis_pg_bottom",
-      where = "afterEnd",
-      ui = uiOutput("ins_table_panel")
-    )
-    print("inserted ui in p4")
-    
-    # filter buttons
-    removeUI(
-      selector = "#n_filters"
-    )
-    print("removed ui")
-    insertUI(
-      selector = "#n_filters_here",
-      where = "afterEnd",
-      ui = uiOutput("n_filters")
-    )
-    print("inserted ui in p4")
-    
-    
-    
-    
-  }
+#========================= APPLY FILTERS TAB ==============================#
 
+####---------------------- SELECT DATASETS ---------------------------####
+
+# select data
+output$select_df_p2 <- renderUI({
+  req(length(rv$ll) >= 1)
+  checkboxGroupInput(
+    inputId = "heatmap_dfs",
+    label= shiny::HTML("Select from uploaded datasets: 
+                               <span style='color: gray'>(2 or more required)</span>"),
+    choices = rv$ll)
 })
 
-
-
-
-# UPON CLICKING APPLY BUTTON in the FILTER TAB, update filter values into rv
-observeEvent(input$f_applytorv, {
-  req(is.null(rv$nx_n)==F)
-
-  for (i in 1:length(rv$nx_n)){
-    req(is.null(input[[paste0("f_p_",i)]])==F)
-    req(is.null(input[[paste0("f_q_",i)]])==F)
-    req(is.null(input[[paste0("f_Stat_",i)]])==F)
-    req(is.null(input[[paste0("f_sign_",i)]])==F)
-    
-    rv[[paste0("nic_p_",i)]] <- input[[paste0("f_p_",i)]]
-    rv[[paste0("nic_q_",i)]] <- input[[paste0("f_q_",i)]]
-    rv[[paste0("nic_Stat_",i)]] <- input[[paste0("f_Stat_",i)]]
-    rv[[paste0("nic_sign_",i)]] <- input[[paste0("f_sign_",i)]]
-    
-    updateNumericInput(session, paste0("f_p_",i),
-                       value = rv[[paste0("nic_p_",i)]]
-    )
-    updateNumericInput(session, paste0("f_q_",i),
-                       value = rv[[paste0("nic_q_",i)]]
-    )
-    updateNumericInput(session, paste0("f_Stat_",i),
-                       value = rv[[paste0("nic_Stat_",i)]]
-    )
-    updateRadioGroupButtons(session, paste0("f_sign_",i),
-                            selected = rv[[paste0("nic_sign_",i)]]
-    )
-  }
-})
-
-
-
-# UPON CLICKING APPLY BUTTON in the VIS TAB, update filter values into rv
-observeEvent(input$nic_applytorv, {
-  req(is.null(rv$nx_n)==F)
+# feedback on whether the data has enough shared rows/cols
+output$n_shared <- renderUI({
+  # req(is.null(rv$n_sharedcols)==F)
+  # req(is.null(rv$n_sharedrows)==F)
   
-  for (i in 1:length(rv$nx_n)){
-    req(is.null(input[[paste0("nic_p_",i)]])==F)
-    req(is.null(input[[paste0("nic_q_",i)]])==F)
-    req(is.null(input[[paste0("nic_Stat_",i)]])==F)
-    req(is.null(input[[paste0("nic_sign_",i)]])==F)
-    
-    rv[[paste0("nic_p_",i)]] <- input[[paste0("nic_p_",i)]]
-    rv[[paste0("nic_q_",i)]] <- input[[paste0("nic_q_",i)]]
-    rv[[paste0("nic_Stat_",i)]] <- input[[paste0("nic_Stat_",i)]]
-    rv[[paste0("nic_sign_",i)]] <- input[[paste0("nic_sign_",i)]]
-    
-    updateNumericInput(session, paste0("nic_p_",i),
-                       value = rv[[paste0("nic_p_",i)]]
+  if (length(rv$n_sharedcols)>=1){msgx=" (ok)"}
+  else{ msgx=""}
+  if (length(rv$n_sharedrows)>=1){msgy=" (ok)"}
+  else{ msgy=""}
+  
+  
+  if(length(input$heatmap_dfs) < 2){
+    box(
+      title = NULL, background = "black", solidHeader = TRUE, width=12,
+      "Not enough datasets selected."
     )
-    updateNumericInput(session, paste0("nic_q_",i),
-                       value = rv[[paste0("nic_q_",i)]]
+  }
+  else if (msgx==" (ok)" & msgy==" (ok)"){
+    box(
+      title = NULL, background = "green", solidHeader = TRUE, width=12,
+      paste0("Shared columns: ",length(rv$n_sharedcols), msgx),br(),
+      paste0("Shared rows: ",length(rv$n_sharedrows), msgy)
     )
-    updateNumericInput(session, paste0("nic_Stat_",i),
-                       value = rv[[paste0("nic_Stat_",i)]]
+  }
+  else{
+    box(
+      title = NULL, background = "red", solidHeader = TRUE, width=12,
+      paste0("Shared columns: ",length(rv$n_sharedcols), msgx),br(),
+      paste0("Shared rows: ",length(rv$n_sharedrows), msgy)
     )
-    updateRadioGroupButtons(session, paste0("nic_sign_",i),
-                                selected = rv[[paste0("nic_sign_",i)]]
-    )
+  }
+})
+
+output$n_shared_cols <- renderText({
+  req(length(rv$ll) >= 1)
+  if(length(input$heatmap_dfs) >= 2){
+    if (length(rv$n_sharedcols)>=1){msg=" (ok)"}
+    else{msg=" (x)"}
+    paste0("Shared columns: ",length(rv$n_sharedcols), msg)
+  }
+  
+  else{ "Shared columns: "}
+  
+  
+})
+output$n_shared_rows <- renderText({
+  req(length(rv$ll) >= 1)
+  if(length(input$heatmap_dfs) >= 2){
+    if (length(rv$n_sharedrows)>=1){msg=" (ok)"}
+    else{msg=" (x)"}
+    paste0("Shared rows: ",length(rv$n_sharedrows), msg)
+  }
+  
+  else{ "Shared rows: "}
+})
+
+# only enable the button if all requirements satisfied
+observe({
+  if (length(rv$ll) >= 2 & length(rv$heatmap_i) > 1 & length(rv$n_sharedrows)>=1 & length(rv$n_sharedcols)>=1){
+    shinyjs::enable("n_use_data")
+  } else {
+    shinyjs::disable("n_use_data")
   }
 })
 
 
 
-# =========================== apply filters panel on the side
+####---------------------- APPLY FILTERS ---------------------------####
 
 output$f_apply_filters_panel <- renderUI({
   if(is.null(rv$nx_n)==F){
@@ -179,7 +98,11 @@ output$f_apply_filters_panel <- renderUI({
       
       hr(),
       actionButton("f_applytorv", "Apply Filters", class = "btn-warning"),
-      uiOutput("f_msg")
+      bsTooltip("f_applytorv","You can change these filters anytime in the Gene List Filters dropdown", "right"),
+      
+      uiOutput("f_msg"),br(),
+      
+      HTML("Note: You can change these filters in the Gene List Filters dropdown in later tabs.")
     )
   } else {
     HTML("Please select datasets to continue.")
@@ -335,8 +258,41 @@ output$f_msg <- renderUI({
 })
 
 
+# UPON CLICKING APPLY BUTTON in the FILTER TAB, update filter values into rv
+observeEvent(input$f_applytorv, {
+  req(is.null(rv$nx_n)==F)
+  
+  for (i in 1:length(rv$nx_n)){
+    req(is.null(input[[paste0("f_p_",i)]])==F)
+    req(is.null(input[[paste0("f_q_",i)]])==F)
+    req(is.null(input[[paste0("f_Stat_",i)]])==F)
+    req(is.null(input[[paste0("f_sign_",i)]])==F)
+    
+    rv[[paste0("nic_p_",i)]] <- input[[paste0("f_p_",i)]]
+    rv[[paste0("nic_q_",i)]] <- input[[paste0("f_q_",i)]]
+    rv[[paste0("nic_Stat_",i)]] <- input[[paste0("f_Stat_",i)]]
+    rv[[paste0("nic_sign_",i)]] <- input[[paste0("f_sign_",i)]]
+    
+    updateNumericInput(session, paste0("f_p_",i),
+                       value = rv[[paste0("nic_p_",i)]]
+    )
+    updateNumericInput(session, paste0("f_q_",i),
+                       value = rv[[paste0("nic_q_",i)]]
+    )
+    updateNumericInput(session, paste0("f_Stat_",i),
+                       value = rv[[paste0("nic_Stat_",i)]]
+    )
+    updateRadioGroupButtons(session, paste0("f_sign_",i),
+                            selected = rv[[paste0("nic_sign_",i)]]
+    )
+  }
+})
 
-# ============================ show the temporary filtered tables (BASED UPON THE FILTERS ON THE LEFT)
+
+####---------------------- DETAILED GENELIST FILTERING PANELS ---------------------------####
+
+
+# --------------- show temporary filtered tables ----------------
 # apply cutoffs and generate temporary genelists
 f_temp_gls <- reactive({
   req(nrow(rv$df_n)>0) # master df must not be empty
@@ -417,7 +373,7 @@ observe({
   })
 })
 
-# =============================== show the gene list filters with the temp filtered table inside
+# --------------- ASSEMBLE INTO A MULTI-PANEL UI -------------------
 output$f_filtering_ui <- renderUI({
   if(is.null(rv$nx_n)==T){
     box(
@@ -428,43 +384,53 @@ output$f_filtering_ui <- renderUI({
     tagList(lapply(1:length(rv$nx_n), function(i) {
       box(
         title = NULL, status = "primary", solidHeader = F, width=12,
-        column(4,
-               HTML(paste0("<b>",rv$nx_n[[i]],"</b>")),br(),
+        
+        column(4, 
+               div(style="word-break: break-all;",
+                   HTML(paste0("<b>",rv$nx_n[[i]],"</b>")),br(),
+               ),
+               
                hr(),
                wellPanel( align = "left",
                           
                           fluidRow(
                             column(6, align = "left", 
                                    numericInput(inputId = paste0("f_p_",i), 
-                                                "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
+                                                "P <=:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
                             column(6, align = "left",
                                    numericInput(paste0("f_Stat_",i), 
-                                                "|Stat| filter:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
+                                                "|Stat| >=:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
                           ),
                           fluidRow(
                             column(6, align = "left",
                                    numericInput(inputId = paste0("f_q_",i), 
-                                                "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
+                                                "FDR <=:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
                             column(6, align = "left",
                                    radioGroupButtons(inputId = paste0("f_sign_",i), 
-                                                     label = "Filter by sign:",
+                                                     label = "Direction:",
                                                      choices=c("All"="All", "+"="Positive", "-"="Negative"),
                                                      selected="All",size="s",direction = "horizontal"),
                             ),
                           )
                           ,style = "padding: 15px;margin-top:10px;")
         ),
-        column(4,
-               HTML("<b>Preview:</b>"),
-               uiOutput(paste0("T_info",i)),
-               div(dataTableOutput(paste0('T', i)), style="font-size:90%;")
-        ),
-        column(4,
-               HTML("<b>Applied filters:</b>"),br(),
-               HTML(paste0("<i>", length(n_ins_gls()[[i]]),
-                           " out of ", nrow(rv$df_n), " total</i>")),
-               div(dataTableOutput(paste0('TT', i)), style="font-size:90%;")
-        )
+          column(4,style="padding-right:17px;",
+                 HTML("<b>Filter preview:</b>"),
+                 uiOutput(paste0("T_info",i)),
+                 div(dataTableOutput(paste0('T', i)), style="font-size:90%;"),
+                 div(style="position: absolute;top: 150px;right: -15px;color: cornflowerblue;font-size: 23px;",
+                   icon("arrow-right")
+                 )
+          ),
+        
+      
+          column(4,style="padding-left:17px;",
+                 HTML("<b>Applied filters:</b>"),br(),
+                 HTML(paste0("<i>", length(n_ins_gls()[[i]]),
+                             " out of ", nrow(rv$df_n), " total</i>")),
+                 div(dataTableOutput(paste0('TT', i)), style="font-size:90%;")
+          )
+        
         
       )
     }))
@@ -472,71 +438,3 @@ output$f_filtering_ui <- renderUI({
 
 })
 
-
-
-
-# lmUI <- function(id) {
-#   ns <- shiny::NS(id)
-#   uiOutput(ns("lmModel"))
-# }
-# 
-# lmModelModule <- function(input, output, session, nx_n) {
-#   data(mtcars)
-#   cols <- sort(unique(names(mtcars)[names(mtcars) != 'mpg']))
-#   # lmModel <- reactive({
-#   #   lm(sprintf('mpg ~ %s',paste(input$vars, collapse = '+')), data = mtcars)
-#   # })
-#   lmTable <- reactive({
-#     mtcars[,input$vars]
-#   })
-#   output[['lmModel']] <- renderUI({
-#     ns <- session$ns
-#     current_ns <- (environment(ns)[['namespace']])
-#     current_n <- strsplit(current_ns, "_")[[1]][[2]]
-#     tags$div(id = environment(ns)[['namespace']],
-#              tagList(
-#                box(
-#                  title = span(icon("cut"),"Select datasets"), status = "primary", solidHeader = F, width=12,
-#                  fluidRow(
-#                    column(4,
-#                           tags$h3(current_n),
-#                           tags$h3(current_n),
-#                           selectInput(ns('vars'),
-#                                       'Select dependent variables',
-#                                       choices = cols,
-#                                       selected = cols[1:2],
-#                                       multiple = TRUE)),
-#                    column(8, 
-#                           renderDataTable({lmTable()})
-#                    ),
-#                    # column(4, 
-#                    #        renderPlot({par(mfrow = c(2,2))
-#                    #          plot(lmModel())})
-#                    # )
-#                  )
-#                )
-#              )
-#     
-#     )
-#   })
-# }
-# 
-# 
-# observeEvent(input$n_use_data, {
-# 
-#   nx_n <- rv$nx_n
-#   for (x in 1:length(nx_n)){
-#     id <- sprintf('lmModel_%s', x)
-# 
-#     insertUI(
-#       selector = '#f_add_here', # define something as selector
-#       where = "beforeBegin", # adds element before selector itself
-#       ui = lmUI(id)
-#     )
-#     namew <- isolate(nx_n[[x]])
-#     name <- reactive(namew)
-#     # print(nx_n[[x]])
-#     callModule(lmModelModule, id, nx_n = reactive(rv$nx_n))
-#   }
-# 
-# })

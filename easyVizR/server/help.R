@@ -89,3 +89,34 @@ observe({
   req(input$tabs != "tab1")
   shinyjs::show("sidebar_opt")
 })
+
+
+
+
+#======================================================================#
+####                help buttons UI in each page                    ####
+#======================================================================#
+
+
+# n page
+output$n_floating_buttons <- renderUI({
+  
+  if (is.null(rv$df_n)==T){
+    div(style="margin-top:10px",
+        actionBttn(
+          inputId = "help_n_pre", label=NULL, 
+          icon = icon("question"), style="material-circle", color="primary", size="lg"
+        )
+    )
+  } else {
+    div(style="margin-top:10px",
+        actionBttn(
+          inputId = "help_n_post", label=NULL,
+          icon = icon("question"), style="material-circle", color="primary", size="lg"
+        )
+    )
+    
+    
+  }
+  
+})
