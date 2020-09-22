@@ -9,21 +9,22 @@
 mem = mem_used()
 #This is the part to decide the threshold, and we can try different values later
 #if(mem < 50000 & FirstTimeMemLimitMessage()){
-if(mem < 800000000){
+if(mem < 80000){
   showModal(modalDialog(
     title = NULL,
     fluidRow(
-      column(12, style="font-size:150%;", align = "center",
+      column(12, style="font-size:180%;", align = "center",
              p("eVITTA is experiencing high traffic at the moment.")
              ,br(),p("If you have any other unused eVITTA session(s) running, kindly close the window(s).")
-             ,br(),p("Email us at evitta@cmmt.ubc.ca if you continue seesing this message. We appreciate your support.")
+             ,br(),p("Email us at evitta@cmmt.ubc.ca if you continue seeing this message. We appreciate your support.")
+             # ,br(),p("Thank you for your support.")
              ,br(),p("Please refresh your page and try again")
              ,HTML("<a href='https://tau.cmmt.ubc.ca/eVITTA/easyGSEA'>Refresh</a>")
       )
-    ),
-    size = "l",
-    easyClose = T,
-    footer = NULL
+    )
+    ,size = "l"
+    ,easyClose = F
+    ,footer = NULL #modalButton("Dismiss")
   ))
   # FirstTimeMemLimitMessage(FALSE)
   
@@ -33,14 +34,13 @@ if(mem < 800000000){
   oline = paste0("\"",Sys.time(),"\"",",\"OOR\",\"",mem,"\"") # OOR = Out Of RAM
   write(oline, file=ofile, append = T)
   
-  # simulate closing sessions
-  session$close()
-  
+  # # simulate closing sessions
+  # session$close()
 }
 
-# stop app when session ends
-session$onSessionEnded(function(){
-  stopApp()
-})
+# # stop app when session ends
+# session$onSessionEnded(function(){
+#   stopApp()
+# })
 #})
 #End of memory usage part

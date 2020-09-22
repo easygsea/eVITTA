@@ -18,7 +18,7 @@ sidebar <- dashboardSidebar(
         # ,menuItem("Help", tabName = "help", icon = icon("info-circle"))
 
     ),
-    disconnectMessage(text = "Your session has timed out. Please refresh page and start again. For bug report, email us at evitta@cmmt.ubc.ca. We appreciate your support.")
+    disconnectMessage(text = "Your session has timed out. Please refresh page and start again. For bug report, email us at evitta@cmmt.ubc.ca. Thank you for your support.")
 )
 
 loadMsg = "easyGSEA - gene set enrichment analysis, interpretation & visualization"
