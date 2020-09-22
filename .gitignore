@@ -120,3 +120,6 @@ easyGSEA/www/.DS_Store
 easyGSEA/.Rhistory
 easyGSEA/server/.Rhistory
 easyVizR/.Rhistory
+*.gmt
+*.gmt
+*.gmt

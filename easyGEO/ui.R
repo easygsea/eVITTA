@@ -134,7 +134,7 @@ body <- dashboardBody(
                            br(),
                            box(
                              title = span(HTML("<b>4.2.</b>"),icon("mixer"),HTML("Make contrast")), width = 12, status = "primary",
-                             # id = "ui_select",
+                             id = "ui_select_box",
                              radioGroupButtons(
                                inputId = "ui_select",
                                # label = "Select plot type",
@@ -148,6 +148,8 @@ body <- dashboardBody(
                                # status = "primary",
                                direction = "horizontal"
                              ),
+                             bsTooltip("ui_select", "Note: You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full. \"Manual selection\" is for any combination of samples. You may manually select samples in the control and the experimental groups."),
+                             
                              # tabPanel(
                              #   value = "sp",
                              #   span(icon("check-square"),"By design matrix"),

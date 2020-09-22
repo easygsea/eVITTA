@@ -7,7 +7,7 @@ output$ui_bodyResults <- renderUI({
         panel_null()
     }else{
         fluidRow(
-            column(9,
+            column(8,
                 radioGroupButtons(
                     inputId = "plot_type",
                     choiceNames = list(span(icon("chart-bar"),"Bar plot"),span(icon("first-order-alt"),"Bubble plot"),span(icon("file-word"),"Keywords"),span(icon("braille"),"Manhattan plot"),span(icon("fire-alt"),"Volcano plot")), #,
@@ -18,9 +18,13 @@ output$ui_bodyResults <- renderUI({
                     direction = "horizontal"
                 )
             ),
-            column(3,
-                align="right"
-                # introjs button
+            column(4,
+                # align="right",
+                # Button that breifly explain P.value and p.adjusted Version 1
+                div(
+                    div(id="p_value_div", style="display: inline-block;margin-right: 5px;", p_value_help()),
+                    bsTooltip("p_value_help","P value introduction")
+                )
             ),
             column(
                 width = 8,
@@ -1855,6 +1859,38 @@ observeEvent(input$confirm_kegg_plot,{
         
     })
     
+    #help button for p.value and p.adj
+    p_value_help <- reactive({
+        actionBttn(inputId="p_value_help", 
+                 # align="right",
+                 # 
+                 # tags$h3("Enter genes"),
+                 # 
+                 # 
+                 # textAreaInput("p_value_explanation", 
+                 #               "Enter genes of interest (separated by new line):",
+                 #               placeholder="efk-1\nzip-2\ncep-1",
+                 #               value="efk-1\nzip-2\ncep-1"
+                 # ),
+                 # icon = icon("font"),
+                 icon = icon("product-hunt"),
+                 style = "material-circle",
+                 # color = ""
+                 #status = "default", width = "250px",right=T,
+        )
+    })
+    
+    observeEvent(input$p_value_help,{
+        showModal(modalDialog(
+            inputId = "p_help_modal",
+            #title = "What is p value and p adjusted",
+            div("A brief overview of P value: ", style="font-size:200%"),
+            #easyClose = TRUE,size="l"
+            footer = modalButton("Close")
+        ))
+    })
+    
+  
 # # UI manhattan tables & words ---------------
 #     output$ui_manhattan_table <- renderUI({
 #         fluidRow(

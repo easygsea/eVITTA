@@ -63,10 +63,11 @@ output$select_params_ui <- renderUI({
     div(
       fluidRow(
         column(12,
-          wellPanel(style = paste0("background:",rv$bcol1),
-                    HTML("<b>Note:</b> You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full. 
-                                    ")
-          )
+               #bsTooltip("ui_select", "Note: You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full."),
+          # wellPanel(style = paste0("background:",rv$bcol1),
+          #           HTML("<b>Note:</b> You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full. 
+          #                           ")
+          # )
         )
       ),
       fluidRow(
@@ -260,9 +261,10 @@ output$coerce_ui <- renderUI({
   fluidRow(
     column(
       12,
-      wellPanel(style = paste0("background:",rv$bcol1),
-                HTML("<b>Note:</b> \"Manual selection\" is for any combination of samples. You may manually select samples in the control and the experimental groups.")
-      ),
+      #bsTooltip("ui_select","Note:manual selection"),
+      # wellPanel(style = paste0("background:",rv$bcol1),
+      #           HTML("<b>Note:</b> \"Manual selection\" is for any combination of samples. You may manually select samples in the control and the experimental groups.")
+      # ),
       radioGroupButtons(
         "names_toggle2",
         "Show sample names as",
