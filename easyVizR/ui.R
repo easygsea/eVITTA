@@ -13,6 +13,7 @@ source("ui/body2.R")
 source("ui/body3.R")
 source("ui/sideopt2.R")
 source("ui/sideopt3.R")
+source("ui/css_addons.R")
 
 
 #======================================================================#
@@ -32,24 +33,24 @@ sidebar <- dashboardSidebar(
                 
                 menuItem("4. Visualize Intersection", tabName="tab3", icon=icon("vials")),
                 
-                tags$hr(style="border-color: #48617b;margin: 8px;"),
+                tags$hr(style="border-color: #48617b;margin: 8px;")
                 
                 
-                # ---------------- options panels -------------------
-                
-                # these are options that will only show up upon selecting certain tabs.
-                # these are hidden initially with shinyjs, 
-                # and enabled in server side when tabs are selected.
-                # (this is to prevent empty white boxes from flashing upon startup)
-                
-                shinyjs::hidden(
-                    div(id="sidebar_opt", 
-                        
-                        # sideopt2,
-                        
-                        sideopt3
-                    )
-                )
+                # # ---------------- options panels -------------------
+                # 
+                # # these are options that will only show up upon selecting certain tabs.
+                # # these are hidden initially with shinyjs, 
+                # # and enabled in server side when tabs are selected.
+                # # (this is to prevent empty white boxes from flashing upon startup)
+                # 
+                # shinyjs::hidden(
+                #     div(id="sidebar_opt", 
+                #         
+                #         # sideopt2,
+                #         
+                #         # sideopt3
+                #     )
+                # )
                 
     )
 
@@ -71,47 +72,7 @@ body <- dashboardBody(
     ),
     
     # apply specific css adjustments additionally
-    tags$head(
-      tags$style(HTML(paste0(
-      
-      # fixes large datatables flashing and adds margin on bottom
-      "#n_ins_tbl{min-height: 480px;margin-bottom: 30px;}
-      #single_tbl{min-height: 480px;margin-bottom: 30px;}
-      #single_gl_tbl{min-height: 480px;margin-bottom: 30px;}"
-      ,
-      # fixes textareainput box in multiple dropdown
-      "#n_igl{width: 200px;height: 100px;overflow-y: scroll;resize: none;}"
-      ,
-      # fixes visnetwork footer
-      "#vis_network{margin-bottom:35px;}"
-      ,
-      # fixes modal padding
-      ".modal-body {
-            position: relative;
-            padding: 15px;
-            margin: 0px 10px 0px 10px;
-        }",
-      # fixes modal footer
-      ".modal-footer {
-            border-top-color: #f4f4f4;
-            margin: 0px 20px 0px 20px;
-      }",
-      # fixes warning button color
-      ".btn-warning {
-          background-color: #f39c12;
-          border-color: #e08e0b;
-          color: white;
-      }",
-      # fixes primary button color
-      ".btn-primary {
-        background-color: #2c6eaf;
-        border-color: #184d82;
-        color: white;
-      }"
-      
-      
-    )))
-    ),
+    css_addons,
   
   
     rintrojs::introjsUI(), # introjs
@@ -126,9 +87,8 @@ body <- dashboardBody(
       
       body1,
       
-      # body2, 
-      
       body_filters,
+      
       body_ins,
       
       body3
