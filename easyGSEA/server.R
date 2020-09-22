@@ -4,55 +4,13 @@ options(shiny.maxRequestSize=500*1024^2)
 
 server <- function(input, output, session) {
     waiter_hide() # will hide *on_load waiter
-    
-    #Added a boolean to check if memory limit message has been shown
-    #FirstTimeMemLimitMessage <- reactiveVal(TRUE)
-    
-    
-    #observe({
-        # Re-execute this reactive expression after 1000 milliseconds
-        #invalidateLater(1000, session)
 
-        mem = mem_used()
-        #This is the part to decide the threshold, and we can try different values later
-        #if(mem < 50000 & FirstTimeMemLimitMessage()){
-        if(mem < 50000){
-            showModal(modalDialog(
-                title = NULL,
-                fluidRow(
-                    column(12, style="font-size:150%;", align = "center",
-                        p("eVITTA is experiencing high traffic at the moment.")
-                        ,br(),p("If you have any other unused eVITTA session(s) running, kindly close the window(s).")
-                        ,br(),p("Email us at evitta@cmmt.ubc.ca if you continue seesing this message. We appreciate your support.")
-                        ,br(),p("Please refresh your page and try again")
-                        ,HTML("<a href='https://tau.cmmt.ubc.ca/eVITTA/easyGSEA'>Refresh</a>")
-                        
-                    )
-                ),
-                size = "l",
-                easyClose = F,
-                footer = NULL
-            ))
-            FirstTimeMemLimitMessage(FALSE)
-            
-            # record the disconnection and write out to report table
-            odir = paste0(getwd(),"/bug_report/")
-            ofile = paste0(odir,"out_of_ram_report.csv")
-            oline = paste0("\"",Sys.time(),"\"",",\"OOR\",\"",mem,"\"")
-            write(oline, file=ofile, append = T)
-            
-            # simulate closing sessions
-            session$close()
-            
-        }
-    #})
-    #End of memory usage part
-    
     # addClass(selector = "body", class = "sidebar-collapse")
     runjs("$('#rnkfile').parent().removeClass('btn-default').addClass('btn-danger');")
     
     # js$hidehead('none')
     
+    source("server/server-ramCheck.R", local = TRUE)
     source("server/server-rv.R", local = TRUE)
     source("server/server-functions.R", local = TRUE)
     source("server/1.1.server-run.R", local = TRUE)
