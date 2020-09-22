@@ -1,3 +1,574 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:48beaa6fdacc0f7bd95857d7b4cd6661b9cf433f927c5ea47e811950f579be8e
-size 70310
+ced-10 (GIHubs)		hmg-1.2	mys-1	psr-1	lin-40	cdtl-7	cdc-42	sem-5	lin-35	dpy-22		trr-1	
+pry-1 (GIHubs)		htz-1	F49C12.11	ceh-18	bar-1	gex-3	peb-1	ceh-32	pop-1	lin-40	ptr-4	pdcd-2	dpy-30		zfp-1	rars-2	tag-298	egl-30	kin-20	mys-1	let-756	mab-5	lin-35	lin-59	ham-3	din-1	B0495.2	
+lin-3 (GIHubs)		egl-15	glp-1	let-23	cam-1	clk-2	bar-1	let-756	sma-6	lin-35	lin-45	let-60		
+F37C12.1 (GIHubs)		egl-15	let-23	daf-2	clk-2	bar-1	let-756	lin-35		
+pha-4 (GIHubs)		let-23	daf-2	clk-2	bar-1	sem-5	sma-6	egl-15	glp-1	eaf-1	sos-1	let-756	lin-35	let-60		
+mpk-1 (GIHubs)		glp-1	let-23	bar-1	sma-6	lin-35	let-60		
+sex-1 (GIHubs)		bar-1	lin-35	lin-12	lin-25	sel-12	mig-2		
+egl-18 (GIHubs)		bar-1	vab-1	let-756	sma-6	lin-35	lin-25	let-60	sel-12		
+par-6 (GIHubs)		egl-15	glp-1	daf-2	bar-1	sem-5	let-756	sma-6	lin-35	let-60		
+lin-40 (GIHubs)		let-23	ced-10	pry-1	sem-5	sel-12	glp-1	efl-1	sos-1	vab-1	let-756	lin-35	let-60		
+ham-3 (GIHubs)		ark-1	pry-1	vab-1	eor-1	lin-35	sel-12		
+let-60 (GIHubs)		rnt-1	vps-28	soc-2	lin-39	ver-4	his-24	mua-3	kin-30	ver-2	vps-20	ace-4	vps-25	vps-24	eor-2	lin-40	sos-1	pie-1	ptr-24	aph-1	cye-1	mel-11		sel-8	pdi-2	sel-9	mom-5	sel-7	CELE_Y47G6A.5	daf-12	ego-1	tra-2	pros-1	egl-27	did-2	let-653	lin-3	nhr-44	F33E11.2	lin-7	icd-1	mom-2	zyg-9	let-23	dpy-7	lam-2	dpy-2	W06F12.3	chk-1	CELE_F54D5.5	hlh-12	hsf-1	itr-1	ksr-1	scd-1	lin-25	smo-1	T26A5.8	unc-53	mig-5	lin-29	par-5	par-6	let-756	lin-35	mei-2	unc-130	unc-62	hda-1	bar-1	ddr-2	vps-32.1	mex-5	pbrm-1	mex-3	dsh-2	pop-1	kin-9	ZK546.14	sur-6	unc-6	let-502	dpy-10	cyc-1	F22G12.4	mdf-1	unc-52	sur-2	prx-5	epi-1	dab-1	rop-1	rol-3	atp-3	nid-1	cco-1	pha-4	cdc-25.1	plc-1	rme-2	mup-4	mog-4	dpy-22	unc-40	sdz-19	din-1	mog-5	hmg-1.2	emb-5	sma-6	pal-1	lag-1	lrp-1	vps-4	pkg-2	efn-3	egl-15	ptp-3	sop-3	srh-215	egl-18	mpk-1	hmp-2	cgh-1	gsk-3	sem-5	pnk-1	trr-1	pat-3	ins-22	glh-1	gld-1	nhr-269	
+cye-1 (GIHubs)		egl-15	let-23	sos-1	daf-2	bar-1	sem-5	let-756	sma-6	lin-35	let-60		
+prx-5 (GIHubs)		egl-15	glp-1	let-23	daf-2	bar-1	let-756	sma-6	lin-35	let-60		
+mom-2 (GIHubs)		unc-22	let-23	rde-1	bar-1	sma-6	dsh-2	tsn-1	pop-1	efn-4	mes-6	mes-4	mes-3	egl-15	sos-1	let-60		zfp-1	mut-7	daf-2	mom-4	sem-5	plp-1	ptr-23	gfl-1	glp-1	tam-1	let-756	vab-2	lin-35	F33E11.2	lit-1	lin-37	
+arf-3 (GIHubs)		ark-1	bar-1	ksr-1	lin-35	sel-12		sur-2	
+sel-9 (GIHubs)		glp-1	let-23	sos-1	sem-5	let-756	lin-35	let-60		
+pop-1 (GIHubs)		daf-2	bar-1	pry-1	sem-5	egl-15	glp-1	sos-1	nhr-25	let-756	lin-35	lit-1	lin-23	mom-2	let-60		
+vps-28 (GIHubs)		egl-15	glp-1	sos-1	daf-2	bar-1	sem-5	let-756	sma-6	lin-35	let-60		
+unc-52 (GIHubs)		let-23	daf-2	bar-1	sem-5	sma-6	sel-12	efl-1	sos-1	vab-1	let-756	lin-35	let-60		
+ceh-18 (GIHubs)		let-23	dhc-1	pry-1	eor-1	lin-35	lit-1	spn-4		
+cam-1 (GIHubs)		cwn-2	lin-17	lin-3	egl-20	lin-18	cwn-1	lin-12		
+lin-12 (GIHubs)		hmg-1.2	fbf-2	cdtl-7	csnk-1	nstp-6	sex-1	trr-1	ego-1	egl-27	cam-1	vab-1	let-756	dpy-22	lin-12	hgrs-1	his-2	din-1		pat-2	
+lit-1 (GIHubs)		1-Apr	mrpl-54	ceh-18	osr-1	lin-17	dpy-3	pop-1	mrps-2	dpy-10	C50D2.1	mrps-18C	sys-1	lin-44		elpc-1	mrps-17	iars-2	unc-15	mom-5	mrpl-24	M01F1.3	vig-1	mrpl-23	spe-5	gfm-1	mrps-11	D2030.4	Y63D3A.7	exos-3	nhr-25	asd-2	mom-2	tsfm-1	
+daf-2 (GIHubs)		B0361.9	vps-28	mua-3	nuo-4	vps-20	rps-0	eor-2	rpc-2	pdcd-2	cye-1	mel-11		R07E5.7	sel-8	cki-1	pdi-1	spd-2	psd-1	cux-7	M01F1.3	ist-1	did-2	icd-1	mom-2	zyg-9	dpy-7	lam-2	F37A8.2	rpl-3	fipr-18	C45G9.9	chk-1	C27F2.10	CELE_F54D5.5	rpl-6	F26A1.13	hsf-1	itr-1	ksr-1	F26A1.9	mlc-3	scd-2	hpr-17	smo-1	snfc-5	lin-29	mmab-1	C05D2.8	pph-6	sumv-1	par-5	par-6	cfim-1	adm-4	lin-35	pan-1	dao-3	mei-2	cct-5	lgc-50	npp-9	dcn-1	trd-1	rnr-2	bar-1	F35G12.4	F09F7.4	cdtl-7	pot-1	vps-32.1	mex-3	dsh-2	pop-1	odr-1	F37C12.1	ZK546.14	T15B12.2	C35D10.13	sur-6	tbp-1	let-502	K04G7.1	cyc-1	unc-52	tbx-2	ulp-1	wip-1	T08A11.2	F26A1.1	prx-5	epi-1	unc-119	hmg-4	R151.1	lron-5	K10D2.5	atp-2	mcm-5	C16C10.2	nid-1	cco-1	pha-4	cdc-25.1	mup-4	mog-4	B0280.9	dpy-22	pcf-11	mab-21	daf-9	B0284.3	unc-40	mml-1	cpb-3	ZC155.4	sdz-19	asb-1	mog-5	hmg-1.2	emb-5	T20B12.7	emb-8	T20H4.5	pal-1	lag-1	exos-9	ccdc-55	lrp-1	T20B12.5	vps-4	sma-2	efn-3	sop-2	egl-15	gars-1	rps-21	fog-3	rpb-2	CELE_T04A8.7	rpb-8	ifg-1	ztf-8	mrpl-16	F52C9.1	R02F2.7	hmp-2	rsks-1	cgh-1	F48E8.3	gsk-3	sem-5	tbb-2	emb-30	ins-17	mrps-34	pnk-1	pat-3	ucr-1	T04A8.6	mdt-11	gld-1	nhr-9	F56C9.11	rps-14	
+mom-5 (GIHubs)		zfp-1	goa-1	bar-1	mom-4	sma-6	dsh-2	tsn-1	plp-1	B0545.4	egl-8	1-Jun	ins-22	tam-1	lit-1	let-60		
+hda-1 (GIHubs)		glp-1	let-23	unc-37	bar-1	cbp-1	sem-5	let-756	sma-6	let-60		
+lin-25 (GIHubs)		hmg-1.2	mys-1	let-23	swsn-3	sdc-2	cdc-42	lin-45	let-60	sex-1		trr-1	egl-18	
+sel-12 (GIHubs)		F49C12.11	gpc-2	mat-3	hnd-1	set-16	hbl-1	lin-40	sur-6	let-502	aph-1	nap-1	hgrs-1	unc-120	unc-52		let-99	tag-298	fbf-2	sex-1	ego-1	egl-27	cdc-42	plc-1	vab-2	dpy-22	lir-1	ham-3	din-1	1-Apr	hmg-1.2	gex-3	swsn-3	csnk-1	lag-1	ceh-32	hlh-1	kin-10	ptr-4	cdk-8	arf-3	lin-23	dpy-30	mtm-3	egl-18	his-71	gsk-3	cpar-1	sem-5	lin-29	sox-2	kin-20	trr-1	glp-1	mys-1	sdc-2	ftt-2	nhr-8	
+vab-1 (GIHubs)		htz-1	hmg-1.2	gex-3	swsn-3	cdtl-7	csnk-1	pbrm-1	dsh-2	ceh-32	hlh-1	hnd-1	ldb-1	lin-40	ptr-24	cdk-8	dpy-30	hgrs-1	unc-120	unc-52		egl-18	aps-2	tag-298	lin-29	his-37	his-31	abi-1	trr-1	qua-1	egl-27	mes-1	mys-1	let-653	sdc-2	cdc-42	nhr-66	dpy-22	lin-12	nhr-49	lin-59	nhr-8	ham-3	din-1	nhr-6	mel-28	
+sma-6 (GIHubs)		hda-1	vps-28	bar-1	vps-32.1	mex-6	mua-3	oma-2	mex-5	dsh-2	vps-20	max-1	vps-24	ZK546.14	R08E3.3	sur-6	let-502	cye-1	mel-11	mdf-1	unc-52		sel-8	daf-18	pdi-2	prx-5	epi-1	spd-2	sra-6	cux-7	mom-5	col-48	tra-2	did-2	pha-4	cdc-25.1	lin-3	plc-1	rme-2	dpy-22	lin-7	icd-1	cav-1	mom-2	zyg-9	mog-5	hmg-1.2	osm-6	emb-5	gap-2	lam-2	pal-1	pos-1	lag-1	chk-1	lrp-1	CELE_F54D5.5	vps-4	efn-4	sop-2	hsf-1	fog-3	itr-1	let-60	egl-18	mpk-1	skn-1	hmp-2	gsk-3	sem-5	sel-10	par-5	pat-3	par-6	cfim-1	bli-2	pax-3	lin-35	gld-1	unc-62	par-2	rad-51	par-3	
+clk-2 (GIHubs)		rnr-2	bar-1	fkh-5	cdtl-7	F09F7.5	mex-6	oma-2	dsh-2	F37C12.1	kin-9	vps-24	ZK418.5	sos-1	gop-3	sur-6	fum-1	let-502	pdcd-2	ckb-1	mel-11	cyc-1	R151.7		wip-1	R07E5.7	sel-8	T08A11.2	T01D3.1	daf-4	F26A1.1	spd-2	hmg-4	CELE_Y116F11B.9	F47C12.1	M01F1.3	tag-53	ets-6	atp-2	F08F8.10	T08A11.1	pqn-29	pros-1	ykt-6	cco-1	clpf-1	pha-4	lin-3	B0280.9	icd-1	spn-4	asb-1	mel-28	Y52D5A.2	F56D2.3	T20B12.7	F56D2.2	CELE_Y64G10A.7	dhs-9	rpl-3	C45G9.9	lag-1	ccdc-55	chk-1	D1044.5	vps-4	efn-4	gars-1	rpb-2	rpb-8	itr-1	ztf-8	F56C9.8	C27F2.4	arx-6	snfc-5	lin-29	rars-1	tbb-2	emb-30	ins-17	par-5	dsl-6	rbr-2	dsl-3	ucr-1	gld-1	unc-62	nhr-9	rad-51	crb-1	trd-1	
+glp-1 (GIHubs)		hda-1	vps-28	bar-1	vps-32.1	mex-6	oma-2	vps-22	dsh-2	pop-1	bra-1	vps-24	eor-2	lin-40	sur-6	pie-1	aph-2	aph-1	mel-11	mdf-1	lin-44	B0252.1		sel-9	daf-4	pdi-1	prx-5	epi-1	ttx-3	daf-11	ets-6	gfl-1	rop-1	ego-1	atp-3	egl-27	did-2	ten-1	cco-1	pha-4	cdc-25.1	lin-3	rme-2	mup-4	lin-7	daf-9	ikb-1	mom-2	zyg-9	magu-2	hmg-1.2	emb-5	dpy-2	sup-17	pal-1	pos-1	lag-2	lag-1	chk-1	CELE_F54D5.5	efn-3	gska-3	itr-1	mpk-1	zfp-1	hmp-2	hsp-16.11	cgh-1	gsk-3	lin-29	emb-30	sel-12	kin-15	par-6	mes-1	rbr-2	kin-19	bli-2	mei-2	gld-1	par-3	
+egl-15 (GIHubs)		rnp-4	vps-28	amx-1	mua-3	kin-30	vps-20	B0361.6	vps-25	vps-24	eor-2	ZK418.6	sos-1	ZK418.7	rpc-2	fum-1	pdcd-2	cye-1	mel-11	acy-3	unc-93		sel-8	klp-6	C14B1.3	C14B1.8	cux-7	C14B1.9	rpl-37	M01F1.3	ZK1058.9	R07E5.11	tra-2	pros-1	did-2	ykt-6	lin-3	C45G9.5	icd-1	mom-2	zyg-9	mel-28	lam-2	F37A8.2	rpl-3	pos-1	C45G9.9	chk-1	C27F2.10	CELE_F54D5.5	hsf-1	npr-15	itr-1	F37C12.10	smo-1	unc-53	old-1	snfc-5	C34C12.8	lin-29	par-5	par-6	let-756	pan-1	mei-2	npp-9	unc-62	dcn-1	par-2	trd-1	bar-1	F09F7.4	cdtl-7	vps-32.1	mex-6	mex-5	mex-3	dsh-2	pop-1	F37C12.1	ZK546.14	F37C12.3	gop-3	sur-6	gop-2	tbp-1	let-502	K04G7.1	prx-5	epi-1	daf-2	pitp-1	alkb-8	K10D2.5	sax-3	rol-3	atp-3	R13G10.4	C16C10.2	pha-4	tir-1	cdc-25.1	plc-1	rme-2	mup-4	mog-4	pcf-11	daf-9	cpb-2	asb-1	mog-5	F34D10.4	hmg-1.2	dpy-27	emb-8	D1044.6	pal-1	lag-1	ccdc-55	lrp-1	sop-2	gars-1	ptp-3	rpb-2	CELE_T04A8.7	K01A11.2	C35D10.5	mrps-18C	mrpl-16	hmgr-1	let-60	mtm-3	R02F2.7	hmp-2	cgh-1	gsk-3	sem-5	C27F2.8	tbb-2	ins-17	mrps-34	pnk-1	pat-3	pax-3	ntl-9	ucr-1	glh-1	rps-14	rps-12	
+sem-5 (GIHubs)		vps-28	ced-10	eor-1	mua-3	vps-20	eor-2	F46F2.4	lin-40	sos-1	cye-1	mel-11		sel-8	sel-9	spd-2	cux-7	egas-4	ptr-23	egas-3	daf-14	tra-2	did-2	icd-1	mom-2	zyg-9	magu-2	hlh-8	T01G5.1	dpy-7	lam-2	akt-1	dpy-2	pos-1	chk-1	CELE_F54D5.5	ipp-5	itr-1	ptr-4	smo-1	old-1	vps-36	sel-12	par-5	par-6	let-756	mei-2	unc-62	hda-1	bar-1	mex-5	mex-3	pop-1	ZK546.14	sdz-23	sur-6	let-502	B0198.3	sip-1	R151.4	cyc-1	mdf-1	unc-120	unc-52	epi-1	daf-2	dab-1	tag-53	rop-1	atp-3	spr-1	pha-4	cdc-25.1	plc-1	rme-2	mup-4	mog-4	mre-11	spn-4	din-1	mog-5	hmg-1.2	emb-5	che-2	sma-6	pal-1	lag-2	lag-1	lrp-1	egl-15	sop-3	let-60	osm-1	hmp-2	hsp-16.11	gsk-3	sem-5	emb-30	pat-3	dsl-7	mes-1	rbr-2	dsl-5	tam-1	pax-3	
+cdtl-7 (GIHubs)		egl-15	ark-1	let-23	daf-2	clk-2	bar-1	ced-10	vab-1	let-756	lin-12	mig-2		
+let-23 (GIHubs)		gpc-2	R10E4.3	mua-3	ldb-1	B0361.3	R08E3.3	lin-40	ZK418.7	pie-1	fmi-1	pdcd-2	cye-1	nex-1		sel-8	sel-9	cux-7	pfd-5	ist-1	did-2	lin-3	H14A12.3	lin-7	icd-1	mom-2	zyg-9	dpy-7	lam-2	tig-2	mrt-2	W06F12.3	rpl-3	chk-1	CELE_F54D5.5	npr-15	itr-1	K10D2.7	lin-25	scd-2	his-71	par-5	lin-35	B0285.4	mei-2	lin-37	unc-62	rad-50	hda-1	ceh-18	cdtl-7	F59A2.5	mex-5	dsh-2	F37C12.1	sur-6	tbp-1	F59F5.3	let-502	unc-52	toc-1	pars-1	sur-2	T08A11.2	prx-5	epi-1	dab-1	F08F8.10	K10D2.1	ppm-2	C16C10.2	pha-4	plc-1	rme-2	vab-2	mup-4	mog-4	mog-3	ZC155.4	spn-4	clec-154	hmg-1.2	sod-1	che-2	pal-1	lag-1	ccdc-55	ceh-32	rpb-2	K01A11.2	C35D10.5	let-60	osm-1	mpk-1	F48E8.3	sem-4	emb-30	R02F2.1	ins-17	hse-5	R02F2.5	pax-3	mec-9	gld-1	F56C9.11	rps-14	nhr-6	
+egl-27 (GIHubs)		glp-1	efl-1	ark-1	vab-1	lin-12	lin-45	let-60	sel-12	mig-2		
+mog-4 (GIHubs)		egl-15	let-23	sos-1	daf-2	bar-1	sem-5	let-756	let-60		
+sos-1 (GIHubs)		vps-28	bar-1	mua-3	mex-5	mex-3	pop-1	irx-1	eor-2	hbl-1	lin-40	sos-1	sur-6	let-502	cye-1	unc-120	unc-52		sel-8	pdi-2	sel-9	gsp-1	ceh-6	Y38H6C.20	eps-8	pha-4	plc-1	mup-4	mog-4	dpy-22	mom-2	lir-1	zyg-9	his-2	spn-4	din-1	mog-5	hmg-1.2	clk-2	lam-2	tig-2	tag-341	che-2	pal-1	lag-1	chk-1	hlh-1	CELE_F54D5.5	egl-15	dhc-1	itr-1	let-60	hmp-2	hsp-16.11	cgh-1	gsk-3	sem-5	pnk-1	trr-1	par-5	pat-3	mys-1	hpd-1	pax-3	let-756	unc-62	pat-2	
+mel-11 (GIHubs)		egl-15	glp-1	daf-2	clk-2	bar-1	sem-5	let-756	sma-6	let-60		
+pnk-1 (GIHubs)		egl-15	sos-1	daf-2	bar-1	let-756	let-60		
+let-502 (GIHubs)		egl-15	let-23	sos-1	daf-2	clk-2	bar-1	sem-5	let-756	sma-6	let-60	sel-12		
+ccdc-55 (GIHubs)		egl-15	let-23	daf-2	clk-2	bar-1	let-756		
+dsh-2 (GIHubs)		let-23	daf-2	clk-2	bar-1	mom-5	sma-6	egl-15	glp-1	vab-1	let-756	mom-2	let-60		
+sel-8 (GIHubs)		egl-15	let-23	sos-1	daf-2	clk-2	bar-1	sem-5	let-756	sma-6	let-60		
+pal-1 (GIHubs)		egl-15	glp-1	let-23	sos-1	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+eor-2 (GIHubs)		egl-15	glp-1	sos-1	daf-2	sem-5	let-756	dpy-22	pbrm-1	let-60	dve-1		trr-1	
+mdf-1 (GIHubs)		glp-1	bar-1	sem-5	let-756	sma-6	let-60		
+lam-2 (GIHubs)		egl-15	let-23	sos-1	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+vps-32.1 (GIHubs)		egl-15	glp-1	daf-2	bar-1	let-756	sma-6	let-60		
+icd-1 (GIHubs)		egl-15	let-23	daf-2	clk-2	bar-1	sem-5	sma-6	let-60		
+mog-5 (GIHubs)		egl-15	sos-1	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+ksr-1 (GIHubs)		par-5	ark-1	mys-1	daf-2	bar-1	fbf-2	arf-3	let-60		
+zyg-9 (GIHubs)		egl-15	glp-1	let-23	sos-1	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+did-2 (GIHubs)		egl-15	glp-1	let-23	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+sur-6 (GIHubs)		let-23	daf-2	clk-2	bar-1	sem-5	sma-6	sel-12	egl-15	glp-1	sos-1	let-756	let-60		
+pax-3 (GIHubs)		egl-15	let-23	sos-1	bar-1	sem-5	let-756	sma-6		
+lrp-1 (GIHubs)		egl-15	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+plc-1 (GIHubs)		egl-15	let-23	sos-1	bar-1	sem-5	let-756	sma-6	let-60	sel-12		
+spd-2 (GIHubs)		daf-2	clk-2	bar-1	sem-5	let-756	sma-6		
+itr-1 (GIHubs)		egl-15	glp-1	let-23	sos-1	daf-2	clk-2	bar-1	sem-5	let-756	sma-6	let-60		
+sur-2 (GIHubs)		let-23	arf-3	dpy-22	pbrm-1	let-60	efn-3	dve-1		trr-1	
+dpy-22 (GIHubs)		daf-2	bar-1	ced-10	eor-1	sma-6	sel-12	eor-2	efl-1	ark-1	sos-1	vab-1	let-756	lin-12	let-60		sur-2	
+hmg-1.2 (GIHubs)		let-23	daf-2	bar-1	ced-10	sem-5	eor-1	sma-6	sel-12	egl-15	glp-1	eaf-1	ark-1	sos-1	vab-1	let-756	lin-12	lin-25	let-60	mig-2		
+pos-1 (GIHubs)		egl-15	glp-1	bar-1	sem-5	sma-6	mes-6	mes-4		mes-3	
+mex-3 (GIHubs)		egl-15	sos-1	daf-2	sem-5	let-756	let-60		
+emb-30 (GIHubs)		glp-1	let-23	daf-2	clk-2	sem-5	let-756		
+CELE_F54D5.5 (GIHubs)		egl-15	glp-1	let-23	sos-1	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+ins-17 (GIHubs)		egl-15	let-23	daf-2	clk-2	bar-1	let-756		
+mei-2 (GIHubs)		egl-15	glp-1	let-23	daf-2	bar-1	sem-5	let-756	let-60		
+par-2 (GIHubs)		egl-15	bar-1	let-756	sma-6	gfl-1	mes-6	mes-4		mes-3	
+hmp-2 (GIHubs)		zfp-1	rde-1	mut-7	daf-2	bar-1	sem-5	sma-6	gfl-1	mes-6	mes-4	mes-3	egl-15	glp-1	sos-1	let-756	let-60		
+cdc-25.1 (GIHubs)		egl-15	glp-1	daf-2	sem-5	let-756	sma-6	let-60		
+mup-4 (GIHubs)		egl-15	glp-1	let-23	sos-1	daf-2	bar-1	sem-5	let-756	let-60		
+lag-1 (GIHubs)		egl-15	glp-1	let-23	sos-1	daf-2	clk-2	bar-1	sem-5	sma-6	let-60	sel-12		
+epi-1 (GIHubs)		egl-15	glp-1	let-23	daf-2	bar-1	sem-5	sma-6	let-60		
+mua-3 (GIHubs)		egl-15	let-23	sos-1	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+smo-1 (GIHubs)		egl-15	daf-2	bar-1	sem-5	let-756	let-60		
+M01F1.3 (GIHubs)		egl-15	dhc-1	daf-2	clk-2	bar-1	let-756	lit-1		
+par-5 (GIHubs)		egl-15	let-23	sos-1	daf-2	clk-2	bar-1	ksr-1	sem-5	let-756	sma-6	let-60		
+pdcd-2 (GIHubs)		egl-15	let-23	daf-2	clk-2	pry-1	let-756		
+emb-5 (GIHubs)		glp-1	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+rme-2 (GIHubs)		egl-15	glp-1	let-23	bar-1	sem-5	let-756	sma-6	let-60		
+gld-1 (GIHubs)		glp-1	let-23	daf-2	clk-2	bar-1	let-756	sma-6	let-60		
+vps-24 (GIHubs)		egl-15	glp-1	clk-2	let-756	sma-6	let-60		
+unc-62 (GIHubs)		egl-15	let-23	sos-1	clk-2	bar-1	sem-5	let-756	sma-6	let-60		
+mex-5 (GIHubs)		egl-15	let-23	sos-1	bar-1	sem-5	let-756	sma-6	let-60		
+lin-29 (GIHubs)		egl-15	glp-1	daf-2	clk-2	bar-1	vab-1	let-756	eor-1	lin-45	let-60	sel-12		
+gsk-3 (GIHubs)		egl-15	glp-1	sos-1	daf-2	bar-1	sem-5	let-756	eor-1	sma-6	let-60	sel-12		
+vps-4 (GIHubs)		daf-2	clk-2	bar-1	let-756	sma-6	let-60		
+chk-1 (GIHubs)		egl-15	glp-1	let-23	sos-1	daf-2	clk-2	bar-1	sem-5	let-756	sma-6	let-60		
+lin-7 (GIHubs)		glp-1	let-23	bar-1	let-756	sma-6	let-60		
+vps-20 (GIHubs)		egl-15	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+spn-4 (GIHubs)		mrpl-54	let-23	ceh-18	clk-2	osr-1	bar-1	unc-15	rpl-36	sem-5	vig-1	dpy-3	sos-1	dpy-10	C50D2.1	mrps-18C	R09B3.3	asd-2		
+pat-3 (GIHubs)		egl-15	sos-1	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+ZK546.14 (GIHubs)		egl-15	daf-2	bar-1	sem-5	let-756	sma-6	let-60		
+hgrs-1 (GIHubs)		efl-1	ubc-13	bar-1	vab-1	lin-12	uev-1	sel-12		
+ark-1 (GIHubs)		hmg-1.2	gpc-2	cdtl-7	sox-2	egl-30	nekl-2	unc-18	trr-1	egl-27	mys-1	tam-1	let-653	ksr-1	arf-3	dpy-22	ham-3	din-1	B0495.2		
+eor-1 (GIHubs)		hmg-1.2	ceh-18	tag-298	gsk-3	sem-5	lin-29	mat-3	pbrm-1	nekl-2	kin-10	dve-1	trr-1	qua-1	ceh-60	eps-8	mys-1	tam-1	attf-3	sdc-2	dpy-22	hlh-30	ham-3	din-1		
+mig-2 (GIHubs)		egl-27	hmg-1.2	mys-1	gex-3	sdc-2	cdtl-7	cdc-42	sex-1		
+mys-1 (GIHubs)		bar-1	ced-10	pry-1	eor-1	sel-12	efl-1	ark-1	sos-1	ksr-1	vab-1	lin-25	mig-2		
+lin-45 (GIHubs)		egl-27	lin-3	lin-29	peb-1	nhr-49	lin-25	unc-73		nhr-80	
+din-1 (GIHubs)		ark-1	sos-1	pry-1	vab-1	sem-5	eor-1	lin-12	let-60	sel-12		
+trr-1 (GIHubs)		bar-1	ced-10	eor-1	sel-12	eor-2	efl-1	ark-1	sos-1	vab-1	lin-12	lin-25	let-60		sur-2	
+efl-1 (GIHubs)		gei-13	kin-4	ubc-18	swsn-3	F22B3.8	nob-1	col-184	csnk-1	lin-40	hgrs-1	ncr-1	unc-52		T26A5.8	ref-1	rga-2	trr-1	egl-27	eps-8	mys-1	pha-1	dpy-22	nhr-49	pptr-2	mif-2	
+dhc-1 (GIHubs)		chd-1	ceh-18	osr-1	mrpl-30	ZK1236.5	K04F10.3	dyrb-1	npp-22	sos-1	anc-1	efa-6	dpy-10	C50D2.1	cua-1	T23D8.3	mop-25.2	mrps-17	rpl-36	mrpl-24	M01F1.3	mrps-11	inx-14	D2030.4	cth-2	Y63D3A.7	rab-10	asd-2	tsfm-1	mrpl-54	dpy-3	T08B2.7	mrps-2	dli-1	ufd-2	eif-3.J	xbx-1	mrps-18C	R09B3.3	rpl-34	dylt-1	elpc-1	iars-2	unc-15	vig-1	spe-5	gfm-1	dlc-1	farl-11	hpo-35	exos-3	cfim-1	
+dlg-1 (PPIHubs)		vbh-1	gna-1	npp-19	lst-1	tac-1	rfp-1	dsh-2	lin-5		
+pal-1 (PPIHubs)		pch-2	vav-1	paa-1	air-1	mat-3	jkk-1	pmk-1	F44B9.9	pik-1	ndc-80	aap-1	lin-45	F13E6.1		klp-6	zyg-11	zyg-1	hmg-4	pfd-2	tbg-1	F53F4.10	pas-4	vab-3	F08G12.2	K07C11.4	tap-1	mel-26	C34B2.4	rnh-1.3	C38D4.9	gna-1	akt-2	sma-3	gip-1	tor-2	cdk-1	apc-2	thoc-2	sek-1	tag-257	mrpl-16	elpc-4	cmk-1	rars-1	erm-1	ccf-1	his-35	sta-1	emb-30	gst-11	csn-4	dlc-1	him-10	F44E7.9	mig-15	sli-1	C29F9.5	nhr-67	Y51H4A.8	let-756	
+W02G9.3 (PPIHubs)		uaf-1	skr-10	air-1	rpy-1	rnp-7	pmk-1	cdc-37	pbs-6	F46H5.3	ufc-1	mdf-2		anmt-2	hacd-1	mkk-4	lbp-7	arf-1.2	arrd-7	trpp-3	pas-4	pas-5	pas-6	pas-7	inso-1	C25D7.10	pas-2	gna-1	bcmo-1	ebp-2	R53.5	sma-3	F46C5.9	C37A2.7	gst-43	gst-42	C28H8.11	Y102E9.2	rpb-8	ubq-2	ran-1	Y52E8A.3	Y106G6H.14	elb-1	mpk-1	Y44F5A.1	F23F1.5	cfim-1	pqn-54	mek-1	F42H10.6	
+crm-1 (PPIHubs)		T21B6.3	rps-7	F56B3.2	CELE_Y64G10A.7	tyr-4	crm-1	CELE_F23B12.4	tyr-1	F53A9.1	gip-1	F53A9.2	cyk-4	act-1	tatn-1	ZK849.1	T22F7.3	vdac-1	Y65B4A.7	abu-14	W03G1.5	C54D2.2		CELE_Y69H2.3	mig-6	CELE_K08E7.5	CELE_Y69H2.10	lon-1	T21D12.11	F16B4.5	scrm-1	elo-6	adt-2	hpo-34	F54B11.7	F30H5.3	B0507.1	ces-1	T01B7.8	Y39B6A.1	R02F11.1	K07C11.7	
+B0507.1 (PPIHubs)		F18A1.6	sydn-1	sgt-1	crm-1	K04F10.7	rpl-5	atp-3	T21H3.1	lst-3	ces-1	Y39B6A.1	ZK849.1		
+mig-6 (PPIHubs)		daf-21	crm-1	arrd-8	C23H3.3	pqn-71	abu-1	arrd-24	abu-10	abu-11	nhr-111	abu-14	rps-15		
+hpo-34 (PPIHubs)		T04C9.1	alp-1	unc-101	abu-11	crm-1	abu-14	pmk-1	lec-1	abu-15	fbxc-20	lec-3		
+F30H5.3 (PPIHubs)		C23H3.3	daf-4	ces-1	abu-10	crm-1	Y65B4A.7	abu-14	abu-15	zyg-8		
+F54B11.7 (PPIHubs)		unc-97	lrx-1	spr-5	ZK849.1	pqn-54	crm-1	aak-2	vps-52		
+CELE_K08E7.5 (PPIHubs)		pat-12	lrx-1	abu-10	ttm-1	crm-1	F08G2.5		
+R02F11.1 (PPIHubs)		CELE_Y61A9LA.11	tni-3	unc-43	tni-4	tni-1	unc-27	sgt-1	asp-5	crm-1	asp-6	F10D7.5	F10E9.3	bub-3	C30F12.1	Y47D9A.1	eef-1A.1	C23F12.4	Y39B6A.1	D2063.1	Y65B4A.7	ccz-1	T19A5.3		
+T01B7.8 (PPIHubs)		CELE_Y69H2.3	T21B6.3	Y39B6A.1	crm-1	crn-1	mup-2	F08G2.5		
+act-1 (PPIHubs)		act-1	act-2	thoc-2	ran-1	folt-2	lit-1	crm-1	pmk-1	act-5	act-4		
+T21B6.3 (PPIHubs)		daf-4	crm-1	scrm-1	gei-4	arrd-8	C23H3.3	arrd-24	T01B7.8	twk-14	F31E3.2	lin-36	Y65B4A.7	zyg-8	sdz-38		
+scrm-1 (PPIHubs)		daf-3	daf-4	lbp-6	vet-6	T21B6.3	apc-11	crm-1	arrd-8	vab-3	C23H3.3	pqn-71	pbs-7	scrm-6	cri-3	ima-3	nhr-111	abu-14	unc-52		
+W03G1.5 (PPIHubs)		pqn-71	abu-11	crm-1	abu-15	F08G2.5		Y113G7B.15	
+Y39B6A.1 (PPIHubs)		ZK632.12	C27A2.5	crm-1	F41G3.10	mes-4	nhr-53	lrx-1	B0238.12	T04H1.2	abu-10	pdr-1	abu-11	Y57A10A.24	T22F3.3	abu-14	ZK1307.8	abu-15		unc-97	C40A11.2	phat-1	dnc-4	cir-1	F08G2.5	pqn-71	dpff-1	B0507.1	F01D5.1	T01B7.8	pqn-54	T06E6.10	ikb-1	tnc-2	R02F11.1	
+CELE_Y69H2.3 (PPIHubs)		apc-11	crm-1	arrd-8	gip-1	pqn-71	T01B7.8	ima-3	abu-11	lin-36	Y65B4A.7	abu-14	rps-15	abu-15		
+rps-7 (PPIHubs)		alp-1	vps-39	T12B3.4	rpn-11	crm-1	ZK1307.8		
+abu-14 (PPIHubs)		CELE_Y69H2.3	daf-4	mig-6	sgt-1	lon-1	crm-1	scrm-1	W04B5.3	pqn-71	abu-1	hpo-34	F30H5.3	C01B10.8	Y39B6A.1	abu-10	abu-15	col-167		
+ZK849.1 (PPIHubs)		pat-12	bath-44	ant-1.1	cpl-1	F10G8.8	eor-1	crm-1	zim-2	gei-4	rps-0	rla-0	cyp-36A1	nhr-111	F31C3.2	F52C6.2	acly-1		C39D10.7	CELE_C12D8.1	gbh-2	siah-1	adt-2	F54B11.7	F57G12.2	nhr-46	B0507.1	T26C12.3	fbl-1	let-92	lir-1	tag-260	F59C6.5	D2063.1	ZK849.1	gras-1	Y51H1A.3	C05D12.5	H06I04.1	vab-19	mig-5	ZC239.15	sqst-2	K10D3.4	rhgf-2	F53B3.3	T08G11.4	par-6	ces-1	prg-1	lst-1	lim-8	
+sgt-1 (PPIHubs)		C32H11.5	mtx-1	Y38H6C.8	C18A3.2	dnj-2	CELE_T05E11.3	pqn-60	CELE_T01B11.2	cul-1	trap-4	B0238.12	abu-14	R05H5.3		tomm-20	C14B1.2	gly-5	apy-1	F40H3.2	ckr-1	C15H9.9	lec-1	pqn-71	C24A3.2	B0507.1	ces-1	cyp-35D1	ccdc-47	pqn-54	C06E4.2	casy-1	mom-2	R02F11.1	
+rpn-10 (PPIHubs)		rpt-3	try-10	rpl-9	ocrl-1	lgc-40	sptl-1	grl-7	arf-1.2	csr-1	rpl-7	gpdh-2	col-41	rad-23	F57F5.1	prmt-3	rpl-25.1	CELE_F23C8.5	mek-1	K09E2.3	rpl-23	W09C5.1		
+rpl-7 (PPIHubs)		mig-5	mom-4	akt-2	sta-1	F08G2.5	klc-2	uso-1	atn-1	sli-1	pqn-54	vha-2	rpn-10		
+mek-1 (PPIHubs)		col-20	W02G9.3	twk-37	BE0003N10.3	rpn-10	C33G3.6		
+rpl-9 (PPIHubs)		clec-86	ndc-80	vha-2	abu-15	rpn-10	F39H12.1		bub-3	
+air-2 (PPIHubs)		wrn-1	bir-1	asb-2	F41C3.5	C14F11.6	act-5	csc-1		icp-1	
+icp-1 (PPIHubs)		T20D3.3	air-1	rpl-15	air-2	T28C6.7	pyp-1	fib-1	cut-3	lec-2	flp-11	bir-1	F35E2.9	rpa-1	csc-1		nhr-6	
+pmk-1 (PPIHubs)		nhr-4	R02F2.9	tag-196	unc-43	ebp-3	rskn-2	W02G9.3	pal-1	T12G3.1	csn-5	farl-11	T09B4.9	act-1	cky-1	gsy-1	ogt-1	hpo-34	grl-15	mak-2	B0336.7	npp-9		F54D5.7	
+csn-5 (PPIHubs)		hda-11	apc-11	lag-1	pmk-1	npp-22	sma-2	npp-20	pmk-2	npp-19	K06H7.1	cul-3	bir-1	iff-1	CELE_F42A6.6	mdf-2	valv-1	CELE_Y63D3A.4		mpk-1	T21C9.4	spd-5	cif-1	csn-1	sta-1	dnc-2	csn-3	csn-2	csn-5	lec-1	csn-4	csn-6	klc-2	mig-15	npp-1	npp-4	lis-1	lin-37	ikb-1	rps-15	mel-28	
+npp-9 (PPIHubs)		W03D8.8	ceh-45	mett-10	pmk-1	vab-3	samp-1	ran-1	npp-4	eya-1	npp-9	T22F3.3	kle-2		smo-1	mpk-1	
+unc-43 (PPIHubs)		egl-2	syx-4	vha-8	knl-1	R02F11.1	pmk-1	lec-1		mpk-1	
+gsy-1 (PPIHubs)		pbs-6	pat-12	tpst-2	taf-9	bir-1	npp-8	dnc-4	gei-4	pmk-1	sdz-38		
+rpl-4 (PPIHubs)		pqn-60	Y18D10A.8	B0238.12	sta-1	mei-1	lin-5	gei-4	F08G2.5		abce-1	
+eef-1G (PPIHubs)		memb-1	vps-39	K07C11.4	lrx-1	cfim-1	teg-1	gld-1	F42H10.6		
+rad-26 (PPIHubs)		alp-1	W03D8.8	CELE_C12D8.1	gcl-1	bath-42	vab-3	nhr-10	uso-1	atn-1	nhr-69	lin-1	eya-1	F58B3.6	hpo-9	mel-26	exc-7		smo-1	
+zen-4 (PPIHubs)		cgh-1	enu-3.1	C27A12.7	lgg-1	zen-4	pas-4	nhr-10	K11D12.9	ubq-1	cyld-1	fln-1	tsg-101		
+vab-23 (PPIHubs)		nhr-10	pat-12	pas-6	prp-21	T04H1.2	bir-1	eif-3.D	lin-36	gei-4		
+nhr-111 (PPIHubs)		unc-44	ubxn-1	Y54F10AM.7	F49H12.3	gei-4	pbs-6	C36B1.11	CELE_T06G6.3	T04H1.2	wwp-1	ZK652.6	bir-1	pdr-1	nhr-111	col-93	rpa-2	abcf-1	F39H12.1		T10B11.5	Y48E1A.1	spd-5	F32D8.3	hsp-1	pyk-1	tag-299	D1054.8	F08G2.5	gls-1	cut-2	vab-3	let-413	C35E7.8	spt-4	Y119C1A.1	F13H8.6	F59C6.5	ssl-1	mrt-2	T20D4.4	Y47G6A.15	C15A7.2	Y71G12B.27	F25H9.2	rabn-5	gad-1	trap-4	ZK849.1	Y62E10A.14	suca-1	ztf-4	rpl-18	gst-19	mig-6	C27H5.2	ncl-1	scrm-1	H02I12.5	ubql-1	lec-1	ntl-2	die-1	flh-1	spk-1	C04F5.8	sdz-38	
+rps-0 (PPIHubs)		rps-21	ndx-4	ran-1	ZK849.1	M01E5.3	tag-257	atp-2		
+vps-51 (PPIHubs)		syx-16	klp-4	vps-54	vps-53	vps-52	gei-4	nhr-60	memb-1	memb-2	syx-5	vps-51	rtel-1	vti-1		
+spk-1 (PPIHubs)		ddl-2	apc-11	B0035.1	daf-21	tac-1	gei-4	npp-20	obr-4	gars-1	CELE_T04A8.7	T04H1.2	bir-1	T19A5.1	nhr-111	fars-3	iff-1		elb-1	nurf-1	H02I12.5	arf-1.2	F33D11.10	trpp-3	npp-2	cdc-26	clpf-1	npp-7	imb-2	cey-2	npp-8	pas-2	
+daf-21 (PPIHubs)		alp-1	daf-4	daf-1	mig-6	uaf-1	daf-21	sma-4	ZC434.8	rps-22	cdc-37	nhr-51	nhr-67	let-756	spk-1	ebax-1	CELE_Y63D3A.4	cku-80	hpr-17		anmt-2	
+H02I12.5 (PPIHubs)		pdl-1	CELE_Y39B6A.34	Y43F4B.5	hmg-4	mrt-2	F28D1.2	T20H4.5	sex-1	tbx-42	ZK131.11	arrd-13	cdc-14	thoc-2	gad-1	spk-1	nhr-111		anmt-2	
+lin-10 (PPIHubs)		sorb-1	cdk-5	lin-2	egl-9	gei-18	Cask	valv-1		lin-10	
+T18D3.7 (PPIHubs)		C01B10.3	sptl-2	T07D4.2	prp-21	vps-52	ttm-5	dyla-1	npr-12		gst-4	
+C01B10.8 (PPIHubs)		pabp-2	W07G1.5	Y58A7A.1	swsn-1	C53C11.2	wrt-5	K02D3.1	dpy-17	lips-1	F46A9.2	str-131	C14F11.4	ins-6	CELE_F59A1.11	abu-14	atat-2	C14B9.8	C46C11.3	sut-1	tomm-22		C04E12.6	
+pabp-2 (PPIHubs)		pabp-2	vbh-1	prmt-1	C01B10.8	gei-4		lev-11	
+swsn-1 (PPIHubs)		daf-3	swsn-1	snfc-5	prp-21	CELE_C12D8.1	dnc-2	abl-1	F57B9.1	ceh-40	acd-4	let-413	arrd-24	pha-4	C01B10.8	Y51H4A.8	eya-1	lys-8		
+lst-1 (PPIHubs)		pat-12	rpy-1	lag-1	dlg-1	npp-13	arrd-13	vbh-1	T04H1.2	ZK849.1	Y65B4A.7		mpk-1	anmt-2	alp-1	W03D8.8	mrps-17	C01F6.2	vps-52	vab-3	uso-1	pha-4	puf-11	eya-1	imb-2	rad-54	
+ZK1055.7 (PPIHubs)		scrm-8	lit-1	ikb-1	F46G11.1	C01F6.2	sma-3		
+smo-1 (PPIHubs)		CELE_W02F12.4	gei-17	brd-1	sop-2	C18B2.5	atn-1	mbk-2	rad-26	sqv-4	T22F3.3	fan-1		smo-1	ubc-9	T10B11.7	pfd-2	egl-9	glrx-21	figl-1	dlc-1	mep-1	npp-9	mel-26	par-3	lev-11	
+C18B2.5 (PPIHubs)		kin-2	arrd-13	mig-5	C34C12.8	erm-1	gei-4		smo-1	
+umps-1 (PPIHubs)		rps-1	erm-1	mrpl-12	C55C3.1	rpl-6	rps-22	hpo-21	taf-9	C16A3.5	let-756	C53D6.6	R166.2		
+ftn-1 (PPIHubs)		ftn-1	rpl-19	eef-1A.1	ZK856.11	apc-11	ftn-2	nfya-1	gst-33	mrpl-50	bath-40		
+ftn-2 (PPIHubs)		ftn-1	nhr-51	ZK856.11	sem-5	ftn-2	ima-3	lit-1	gst-33		W07G4.5	
+knl-1 (PPIHubs)		unc-43	epn-1	rsp-8	mis-12	kbp-3	kbp-4	him-10	kbp-2	pbs-6	kbp-5	hcp-4	ndc-80	F15E11.15	vit-2	knl-3		
+pbs-6 (PPIHubs)		vha-16	F59C6.5	fbxa-166	C23G10.8	W02G9.3	wve-1	ZK1098.4	cyk-3	gsy-1	clpf-1	ZC411.1	C06G3.6	brp-1	nhr-111	knl-1	mthf-1	acly-1		
+C06G3.6 (PPIHubs)		pbs-6	sorb-1	mtss-1	atn-1	mig-5	mrt-2	lin-2	T04H1.2	dyb-1	F46G11.1		rabn-5	
+wve-1 (PPIHubs)		pbs-6	sorb-1	spr-5	rpy-1	gei-4		ddl-1	
+brp-1 (PPIHubs)		pat-12	W03D8.8	bcmo-1	dyb-1	sma-4	gei-4	tbx-42	vab-3	scrm-8	pbs-6	scrm-7	F08G12.2	pas-6	vbh-1	pha-4	eya-1	imb-2	lit-1	F13H10.1	lin-37	exc-7		
+ZK1098.4 (PPIHubs)		mig-5	fars-1	rpy-1	nuo-2	cks-1	ess-2	T01G9.2	pbs-6	pas-6	arrd-13	tpst-2	npp-19	K06H7.1	nhr-67	T04H1.2	sca-1	bir-1	ima-3	sek-1		
+abu-15 (PPIHubs)		rps-3	rpl-9	T20F5.4	F07A5.2	gst-23	pqn-57	M02G9.1	rpl-1	gip-1	msra-1	atn-1	abu-11	abu-14	W03G1.5	abu-15	cysl-2	lbp-1	pbs-3		ile-1	cyp-14A5	lys-2	CELE_Y69H2.3	lys-1	rpl-13	gipc-2	rpl-16	fat-6	sodh-1	W09D10.1	csn-6	W02B12.1	M195.2	abu-1	hpo-34	F30H5.3	Y39B6A.1	col-20	pqn-32	pqn-54	rps-19	col-80	lys-8	abu-8	rps-15	F58F12.1	
+abu-1 (PPIHubs)		pqn-71	rps-10	daf-4	mig-6	abu-11	abu-8	abu-14	abu-15	gip-1	pqn-2		
+abu-8 (PPIHubs)		pqn-71	abu-1	C40A11.2	pqn-54	gst-23	abu-11	npr-10	abu-15	gip-1		
+lys-8 (PPIHubs)		pqn-71	swsn-1	pqn-54	abu-11	abu-15	C18B2.4		
+rps-3 (PPIHubs)		mrg-1	pqn-71	T23D8.3	mig-5	trap-4	mrt-2	abu-15		ZC434.8	
+col-20 (PPIHubs)		mek-1	nekl-2	ccz-1	abu-15	dlc-1	ceh-40		mpk-1	
+abu-11 (PPIHubs)		rps-4	ruvb-1	ndk-1	M02G9.1	far-2	T22F7.5	F45B8.3	abu-11	W03G1.5	abu-15		CELE_Y69H2.3	T04C9.1	pdhb-1	mig-6	lys-1	K02D3.2	B0336.5	ubc-1	T25F10.6	gtbp-1	cyn-7	col-106	pqn-71	abu-1	hpo-34	Y39B6A.1	phat-4	pqn-54	rpl-43	lys-8	rps-9	abu-8	gla-3	gpi-1	zyg-8	
+atn-1 (PPIHubs)		pat-12	gpc-1	Y110A2AL.9	T27A1.3	pbs-5	atn-1	ZK596.2	rad-26	mel-11	abu-15	pbs-3		pdi-3	egl-26	cogc-3	gdi-1	srx-136	zyg-8	prp-21	dyb-1	rpl-7	rpl-5	rgs-7	F14F11.2	vbh-1	K06H7.1	vha-9	let-805	elpc-4	smo-1	elb-1	ubc-9	calf-1	gst-14	C40A11.7	trp-2	cdc-26	zyx-1	npp-1	npp-7	math-39	npp-4	lin-37	npp-8	dlat-1	lin-36	Y17G9B.5	tag-163	Y106G6D.7	pqn-59	F14D7.3	mbk-2	npp-19	K01D12.7	twk-3	mbk-1	Y39E4A.3	ncs-5	F54D5.4	unc-51	col-90	sec-22	alp-1	tlf-1	figl-1	bbs-8	atp-3	pha-4	hrpf-2	aspm-1	pas-1	ZC178.2	rfc-3	ess-2	gpr-1	C50E10.1	rpn-11	C50F2.3	ztf-8	clec-1	tsg-101	mpk-1	F58H1.6	H24G06.1	ZC239.15	sem-5	rga-3	eif-3.D	csn-2	CELE_F54D5.15	B0495.9	Y77E11A.7	imb-2	C06G3.6	knl-3	C23G10.11	lev-11	
+pbs-3 (PPIHubs)		atn-1	prp-21	C16C8.16	mrt-2	snx-1	abu-15	pbs-2		
+lmn-1 (PPIHubs)		inx-8	gst-23	tac-1	cnt-1	sqt-1	rgs-7	vbh-1	cdt-1	npp-19	cul-3		elb-1	mpk-1	klp-11	tlf-1	rga-3	sas-4	eif-3.D	npp-10	lgc-9	pas-7	npp-1	xpo-1	hcp-6	lmn-1	npp-7	ima-3	knl-2	dlat-1	zyg-8	rsa-1	mel-28	
+ikb-1 (PPIHubs)		vha-15	T04F8.7	psf-1	mrt-2	nhl-1	csn-5	bath-41	R02F2.5	ZK1055.7	vacl-14	srx-90	aco-1	Y39B6A.1	ubq-1	meg-4	ikb-1	F52C6.2		
+meg-4 (PPIHubs)		klc-1	C50E3.13	F28D1.2	dsh-2	meg-4	ikb-1	R07B7.2		
+ubq-1 (PPIHubs)		dkf-1	thoc-2	bar-1	grl-1	rpn-1	ikb-1	cav-1	hgrs-1	stam-1	dcn-1		zen-4	
+F52C6.2 (PPIHubs)		C47D12.2	alp-1	uso-1	ZK632.12	spr-5	T04H1.2	ZK849.1	pqn-54	ima-3	ikb-1	lec-1		
+R02F2.5 (PPIHubs)		pat-12	piki-1	fkh-2	snx-1	F59F4.2	nspb-12	CELE_Y63D3A.4	exc-7		mpk-1	T25E4.1	F20B10.3	sex-1	ceh-40	C18B2.4	vab-3	scrm-8	scrm-7	Y18D10A.8	scrm-5	mei-2	ikb-1	mel-26	dcn-1	sup-12	
+rnh-1.3 (PPIHubs)		his-72	nhr-41	rtfo-1	pal-1	rpl-7A		F57B10.5	
+F54D10.7 (PPIHubs)		C05C10.5	mig-5	gad-1	apc-11	T04H1.2	ima-3	nhr-49	CELE_T01B7.5	F54D10.7	F26H11.4		
+hpo-9 (PPIHubs)		Y7A5A.2	gly-4	rad-26	gst-24	dre-1	hpo-9	CELE_F52B11.1		
+C03C10.4 (PPIHubs)		mrps-17	T04H1.2	gei-4	F27C1.6	Y105E8B.5		nhr-91	
+hcp-1 (PPIHubs)		lin-15B	mrps-17	npp-19	nud-2	vpr-1	bath-42		
+snx-1 (PPIHubs)		vps-29	wdfy-2	ced-1	snx-1	cup-2	vps-26	zip-1	snx-6	rme-8	vps-35	R02F2.5	drr-1	ret-1	C36H8.1	C18E9.9	Y38C1AA.7	pbs-3	F17E9.5		
+wdfy-2 (PPIHubs)		yop-1	D2092.1	apc-11	snx-1	acl-9	ret-1	ZK822.4	C06E1.1	F13E6.1	C36H8.1	Y38C1AA.7	F56A8.3	praf-3	F17E9.5		
+F17E9.5 (PPIHubs)		C40A11.2	T03G11.6	wdfy-2	syx-7	snx-1	fard-1		
+ret-1 (PPIHubs)		kin-2	rme-1	wdfy-2	tag-51	Y51H4A.8	snx-1		
+snx-6 (PPIHubs)		vps-29	ced-1	snx-1	dyb-1	vps-26	snx-6	trp-2	vps-35		
+rps-10 (PPIHubs)		C25F9.4	C40H1.2	C42D4.2	crn-1	pah-1	ZK930.4	E02C12.11	nhr-96	C05C12.5	K04C1.5	F28B4.3	C47E8.3	Y57A10A.23		F13C5.3	ZK1307.2	tag-175	psa-3	php-3	CELE_Y57G11C.3	scl-6	eif-3.F	T24B8.5	col-149	abu-1	srh-20	lgc-7	CC8.1	ZC443.1	CELE_M04G7.2	C06E4.2	klf-3	Y105E8B.7	glb-4	Y50E8A.1	
+ndc-80 (PPIHubs)		rpl-9	pal-1	mis-12	kbp-3	kbp-4	him-10	hcp-4	CELE_Y59A8B.10	adr-2	C06E4.2	knl-3	knl-1		
+crt-1 (PPIHubs)		inso-1	nhr-35	mrt-2	ran-1	ubc-1	mat-3	C06E4.2		
+aldo-2 (PPIHubs)		C40A11.2	nhr-35	dli-1	sma-3	gpr-1	aldo-2	T27A3.1		
+nhr-6 (PPIHubs)		Y53G8B.1	Y17G9B.5	rpt-2	tol-1	rpt-6	mom-4	C23G10.8	rpn-1	mat-3	aak-2	gei-4	icp-1	pas-4	pas-7	thoc-2	tap-1	sek-1	rpn-12	zyg-9	F33H2.6		
+act-5 (PPIHubs)		tol-1	nob-1	air-2	mrt-2	cls-2	dlc-1	act-1	hpo-21	act-3	act-2	act-4		elb-1	
+cgh-1 (PPIHubs)		C06A5.3	cutl-14	let-49	C27F2.8	rpl-2	dsh-2	smd-1	mex-1	zfp-3	F14F9.4	zen-4	CELE_T26H5.4	F46H5.3	srd-30	edc-3	skr-2	pdr-1	nhr-113	CELE_D1054.9		
+dsh-2 (PPIHubs)		dlg-1	pat-12	C05C10.5	mig-5	cgh-1	T04H1.2	axl-1	meg-4	gei-4	ess-2	skp-1		
+F14F9.4 (PPIHubs)		alp-1	mig-5	cgh-1	T04H1.2	eya-1	gei-4		
+skr-2 (PPIHubs)		F54D5.9	C14B1.3	cgh-1	fbxa-101	C27D9.1	F02D10.6	let-756	C27F2.7		
+zfp-3 (PPIHubs)		T04C9.1	alp-1	pat-12	sorb-1	uaf-1	cgh-1	abl-1	gei-4	ess-2	eps-8	gad-1	lit-1	cpf-2		mpk-1	
+zyg-11 (PPIHubs)		zyg-11	mut-2	cul-2	pal-1	ftt-2	him-3	W03D8.9	elc-1		
+ftt-2 (PPIHubs)		zyg-11	mat-3	emb-30	tbg-1	gip-1	F08G2.5	mat-1	uso-1	cyp-13A2	sli-1	tap-1	let-756		
+ahcy-1 (PPIHubs)		mig-15	ubq-2	Y54E10A.6	lin-45	arp-6	trp-2		
+nhr-67 (PPIHubs)		erfa-3	nhr-2	unc-37	daf-21	pal-1	F49H12.3	ZK1098.4		
+nhr-2 (PPIHubs)		F47G4.4	lgc-42	Y43C5B.2	gipc-1	npr-21	cks-1	aak-2	Y43B11AR.3	nhr-67	Y51H4A.8	bag-1	clec-258		
+unc-37 (PPIHubs)		hda-1	ces-1	nhr-67	eif-3.C	ceh-45	pop-1	lsy-22		lev-11	
+pqn-11 (PPIHubs)		sipa-1	T05F1.4	cox-15	srx-117	ztf-8	sma-1	dyf-17		npp-10	
+npp-10 (PPIHubs)		KPNB1	lmn-1	npp-7	pqn-11	dnj-10	sas-4	tac-1	T24D1.3	ifa-4	klp-15		bub-3	
+cks-1 (PPIHubs)		ZK1240.2	nhr-2	C39D10.7	CELE_ZC455.1	apc-11	C14C6.3	sel-11	CELE_C06C3.8	ZK1098.4	cdk-1	kat-1	clec-62	nhr-20	eef-1A.1	tatn-1	lin-45	M60.4		F54D5.7	
+C39D10.7 (PPIHubs)		daf-3	alp-1	unc-97	cutl-20	rpy-1	sma-4	cks-1	gei-4	arrd-8	dlc-1	vab-3	scrm-8	scrm-7	arrd-13	vbh-1	apc-2	ZK849.1	pqn-54	Y37D8A.17	lin-37	Y65B4A.7		
+eef-1A.1 (PPIHubs)		alp-1	ric-8	vav-1	rpt-4	cks-1	F08G2.5	rpn-2	ftn-1	uso-1	T04H1.2	pqn-54	R02F11.1	vha-2		
+apc-11 (PPIHubs)		F54D10.7	marb-1	H10E21.4	apc-2	T22F7.5	sqv-4	Y57A10A.24		CELE_Y69H2.3	C16C8.12	wdfy-2	H10D18.5	cks-1	scrm-1	csn-5	nhr-80	pfd-5	ftn-1	inso-1	CC8.1	cfim-2	spk-1	fbl-1	rpl-25.2	dim-1	col-166	Y38C1AA.7	lev-11	
+sel-11 (PPIHubs)		bet-1	scrm-8	bir-1	rpn-11	cks-1	mett-10		
+lin-45 (PPIHubs)		tomm-20	egg-6	rpl-16	mek-2	pal-1	R02F2.1	cks-1	sms-1	lin-42	ahcy-1		
+mes-6 (PPIHubs)		mes-2	rfc-3	K12H4.5	unc-96	F25H8.2		mes-3	
+tra-4 (PPIHubs)		hda-1	C47D12.2	par-6	nasp-1	T04H1.2	lit-1	F08G2.5		
+lin-2 (PPIHubs)		hif-1	unc-87	daf-2	F59C6.5	rnp-8	K04H4.2	coq-5	C05C8.1	tyr-1	sumv-1	eps-8	mep-1	perm-4	C06G3.6	lin-7	gmeb-3		gpd-3	lin-10	
+Y51H4A.8 (PPIHubs)		swsn-1	nhr-2	lsy-27	pal-1	sax-2	par-5	H10E21.4	ret-1	nhr-41	dpf-7	npr-3	klf-3	C03G6.17	clec-232	T28F4.4		
+CELE_C12D8.1 (PPIHubs)		swsn-1	F59E12.9	mex-6	oma-2	tfg-1	szy-20	C16B8.3	col-74	cfim-2	rad-26	ZK643.5	ZK849.1	moe-3		cids-2	
+mex-6 (PPIHubs)		alp-1	pat-12	vbh-1	ZC317.7	C14C11.2	CELE_C12D8.1	mex-6	emb-9	gei-4		
+C16B8.3 (PPIHubs)		vab-3	uso-1	W03D8.8	CELE_C12D8.1	T04H1.2	eya-1	gei-4		
+cfim-2 (PPIHubs)		vab-3	alp-1	uso-1	W03D8.8	pha-4	cfim-1	cfim-2	apc-11	CELE_C12D8.1	eya-1		
+F59E12.9 (PPIHubs)		alp-1	pat-12	uso-1	vbh-1	CELE_C12D8.1	Y106G6H.14	gei-4		
+ccm-3 (PPIHubs)		tbc-9	Y66D12A.9	C06E7.4	flp-9	F09F7.5	gck-1	ZK792.4		
+C06E7.4 (PPIHubs)		alp-1	pat-12	uso-1	ccm-3	T04H1.2	pqn-54	lit-1	sma-4		
+F09F7.5 (PPIHubs)		sdpn-1	ccm-3	pqn-54	phat-1	lec-1	lec-3		
+plk-1 (PPIHubs)		spd-2	F46B6.5	spat-1	bub-1	sas-4	pqn-59	npp-11	asp-2	ZK809.5	Y51F10.2	npp-19	cpz-1	knl-2	noca-1	mesp-1	kca-1		
+pqn-59 (PPIHubs)		vab-3	atn-1	eya-1	imb-2	eif-3.D	mett-10	plk-1		
+R06F6.8 (PPIHubs)		lin-15B	Y38H6C.14	mig-5	gst-23	Y71G12B.27	rpl-21	M01E5.2	T22C1.4	ubl-1	gip-1	zyg-8		
+sem-5 (PPIHubs)		src-2	soc-1	C11E4.6	rme-4	T20F5.6	CELE_F54D5.5	CELE_F54D5.15	R08E3.3	sos-1	atn-1	sli-1	eva-1	ftn-2	sip-1		
+sli-1 (PPIHubs)		C31C9.2	sorb-1	ubxn-1	rbd-1	sem-5	pal-1	lec-1	rpl-7	atg-7	ftt-2	Y105E8B.5	rpl-11.2		
+pas-1 (PPIHubs)		pas-6	syx-16	pas-7	atn-1	F52G2.3	vet-1		W07G4.5	
+pas-7 (PPIHubs)		Y42H9AR.1	rpt-4	T28C6.7	W02G9.3	T07F8.4	T08A11.1	pas-6	pas-7	tpst-2	lmn-1	lin-46	pas-1		nhr-6	lev-11	
+bath-42 (PPIHubs)		hcp-1	cul-3	C16A3.5	rad-26	cye-1	bath-42	pah-1		
+thoc-2 (PPIHubs)		C17H12.8	F56D3.1	pal-1	pgp-14	H02I12.5	F44B9.8	act-1	nhr-41	C45G9.6	rack-1	ubq-1	rpl-12		nhr-6	cyc-2.1	
+rack-1 (PPIHubs)		ugt-41	mig-15	thoc-2	Y43F4B.5	tag-232	unc-115	dnc-2	sma-4	ess-2		
+klc-2 (PPIHubs)		T10B11.6	Y18D10A.11	unc-116	tag-298	unc-16	F28E10.1	M04F3.3	Y39G10AR.8	csn-5	F46C5.9	rpl-7	cpr-1	Y24D9A.8	klc-2	rnf-1	pqn-52	dli-1	rga-1	C17E4.2	kca-1	C32E8.1		
+rnf-1 (PPIHubs)		rpl-28	mig-5	rpl-36	T20H4.5	gei-4	F27C1.6	gip-1	klc-2	gad-1	T07D4.2	ces-1	T04H1.2	F31E3.2	M01E11.2		
+C17E4.2 (PPIHubs)		klc-2	Y38H6C.14	rad-23	npp-7	mig-32	dnc-2	gei-4	F27C1.6		
+unc-16 (PPIHubs)		klc-2	C47D12.2	C36B1.11	cap-2	dli-1	F46G11.1	gei-4		
+rpy-1 (PPIHubs)		C06A6.2	strd-1	F59C6.5	Y42H9AR.1	W02G9.3	mua-3	cpr-6	F54C9.11	E04F6.6	nhr-12	tbc-17		nhr-114	vab-19	C39D10.7	sqst-2	atp-5	K10D3.4	D1054.5	wve-1	ZK1098.4	abi-1	uso-1	siah-1	Y119C1A.1	C16B8.2	lst-1	rps-18	ham-2	
+abi-1 (PPIHubs)		M04F3.5	alp-1	pat-12	ceh-17	M57.1	rpy-1	F32B4.4	dyb-1	vab-3	Y50D4A.4	F41B4.1	mig-10		
+F59C6.5 (PPIHubs)		vab-3	pbs-6	pat-12	rpy-1	lin-2	T04H1.2	ZK849.1	dyb-1	nhr-111	lec-1	zyg-8		
+uso-1 (PPIHubs)		ZK632.10	pat-12	F59E12.9	nlp-42	unc-87	rpy-1	ztf-17	rnp-7	Y40H4A.2	grl-5	CELE_Y57G11C.15	nhl-1	gei-4	F10E9.3	F49H12.5	CELE_Y43F8C.6	npp-19	dpl-1	col-98	rad-26	mel-11	F17C11.1	F52C6.2	exc-7		F33H2.3	CELE_H28G03.2	klp-3	zyg-1	gly-4	tag-210	hsp-1	W06A7.2	CELE_E01G4.3	arrd-4	tba-4	ttr-28	tfg-1	rpl-7A	F08F8.10	T01B6.1	T05A7.3	vab-3	cah-4	R03A10.1	eef-1B.1	uso-1	C16B8.3	ZK813.3	ZK1073.2	pqn-32	lin-8	sec-16	spdl-1	xnd-1	Y38H6C.14	fbxb-1	C06E7.4	asp-6	sma-3	cnt-2	ess-2	rpl-7	F56A11.5	LLC1.2	got-2.1	vbh-1	C09G1.4	pqn-87	fah-1	rpl-11.1	rpl-30	lin-65	mrpl-47	T09F5.10	rsy-1	sas-4	eif-3.D	eef-1A.1	npp-1	npp-7	cfim-2	ces-1	eya-1	lst-1	T05E11.8	ucr-1	ftt-2	dlat-1	F46G11.1	
+Y119C1A.1 (PPIHubs)		vab-3	pat-12	taf-9	rpy-1	eya-1	ima-3	lit-1	nhr-111	F46G11.1	gei-4		
+siah-1 (PPIHubs)		bet-1	Y48G1C.1	rpy-1	ebp-2	klp-7	let-413	tir-1	ZK849.1	bir-1	mrpl-18	F31C3.2		nhr-19	
+sqst-2 (PPIHubs)		vab-3	alp-1	pat-12	mig-5	rpy-1	T04H1.2	ZK849.1		
+Y42H9AR.1 (PPIHubs)		C56C10.7	rpy-1	gst-36	gei-4	arrd-13	pas-7	cfim-1	inso-1	mksr-2	pas-2		elb-1	mpk-1	
+rpn-2 (PPIHubs)		cyk-4	pkc-3	eef-1A.1	rps-30	cpl-1	sup-17	hsp-3	let-767	C56G2.7	Y62E10A.14		ZK829.7	
+cyk-4 (PPIHubs)		mrg-1	glp-1	F48E3.8	CELE_F02H6.3	crm-1	hpr-9		rpn-2	
+cpl-1 (PPIHubs)		spo-7	mig-5	scc-1	ZK849.1	uba-1	dcr-1	eif-3.D	fars-3		rpn-2	
+Y62E10A.14 (PPIHubs)		T22C8.3	rpn-7	pha-4	nhr-111	sex-1		rpn-2	ZK131.11	
+C23G10.8 (PPIHubs)		pbs-6	paa-1	rpl-36	rsp-8	ceh-48	sca-1	gei-4	dlc-1		nhr-6	
+paa-1 (PPIHubs)		C23G10.8	pal-1	T22D1.5	pptr-2		rsa-1	T09B9.4	
+dlc-1 (PPIHubs)		pgl-3	rpt-3	nhr-4	chc-1	dyci-1	rps-1	T23F11.4	spat-1	F10G8.8	lrr-1	pal-1	cbd-1	brc-1	rla-0	nhr-31	hmgr-1	col-154	act-5	col-178		smo-1	egal-1	C39D10.7	sao-1	F13D12.8	C23G10.8	eif-3.D	dnc-4	dlc-1	T07C4.10	cco-2	CELE_R10D12.13	ugt-29	col-20	rsa-2	ceh-100	fbxa-88	R07B7.2	rps-14	C50H11.13	F26F4.5	Y38C1AA.9	
+C23H3.3 (PPIHubs)		acdh-1	mig-6	T21B6.3	F30H5.3	scrm-1	aps-1		
+acdh-1 (PPIHubs)		C23H3.3	unc-15	tir-1	mat-3	gei-4	arrd-8		
+aps-1 (PPIHubs)		C23H3.3	pat-12	mig-5	gei-4	F27C1.6	arrd-8	mdf-2		mpk-1	
+goa-1 (PPIHubs)		ric-8	F53A10.2	prx-14	ags-3	F38H4.3	rpl-6	gpr-1		
+gpr-1 (PPIHubs)		atn-1	goa-1	col-181	lin-5	C13F10.2	aldo-2	gpd-4		
+rpl-6 (PPIHubs)		goa-1	umps-1	tag-231	let-756	alh-1	Y62E10A.2	gip-1		
+C27A2.5 (PPIHubs)		W09G12.7	ram-2	Y39B6A.1	rps-19	rpl-3	sodh-1	Y73F8A.5		
+rpl-3 (PPIHubs)		F26B1.2	apc-2	zyg-1	cyp-31A2	T04H1.2	C27A2.5	aap-1	CELE_F30B5.4	Y106G6H.14		
+ant-1.1 (PPIHubs)		daf-3	unc-97	pdl-1	phb-1	ZK849.1	pqn-54	mat-3	daf-22	dnc-2		cyp-14A5	
+ifb-1 (PPIHubs)		T04C9.1	klp-11	pph-4.1	dnc-2	nex-3	gei-4		
+dnc-2 (PPIHubs)		swsn-1	ant-1.1	npp-21	pph-4.1	rack-1	tsg-101	C17E4.2		ifb-1	san-1	dnc-1	dnc-2	T05A8.3	dnc-3	art-1	atp-2	csn-5	lec-1	arp-1	pas-4	par-6	snr-2	imb-2	R02F11.4	tct-1	
+atp-2 (PPIHubs)		daf-4	ruvb-1	ttx-1	vps-39	F13D12.6	F28D1.2	dnc-2	rps-0	kel-8	aqp-2	ech-2	aap-1		
+lec-1 (PPIHubs)		yop-1	ifo-1	unc-43	F59C6.5	F09F7.5	Y47H9C.7	rpl-2	C14F11.4	T07C4.3	sma-1	cnp-2	ZC247.1	nex-1	nhr-111	Y39G10AL.1	F52C6.2	unc-93		F39G3.5	sar-1	sgt-1	pfd-2	plk-3	dnc-2	csn-5	lec-1	C56C10.9	C07E3.3	ech-6	ajm-1	hpo-34	sli-1	F09B9.4	frm-1	car-1	nhr-66	pqn-54	C34F6.9	F26F2.3	rps-9	unc-84	ikke-1	
+dnc-3 (PPIHubs)		dnc-5	cap-1	dnc-6	cap-2	pph-4.1	dnc-1	dnc-2	dnc-4	arp-6	arp-11	arp-1		
+arp-1 (PPIHubs)		pph-4.1	dnc-1	pfd-2	dnc-2	dnc-3		Y105C5B.14	
+pxl-1 (PPIHubs)		alp-1	deb-1	uig-1	F57G12.2	hum-6	lim-8	unc-95	unc-96		
+F57G12.2 (PPIHubs)		vab-3	alp-1	unc-97	mig-5	pxl-1	nob-1	eya-1	ZK849.1	pqn-54	ebp-2	gei-4		
+alp-1 (PPIHubs)		aptf-3	pat-12	CELE_Y116A8C.26	F59E12.9	C04C11.1	tag-163	unc-87	rps-7	ztf-17	mex-6	F10A3.4	F49E2.2	daf-21	ceh-54	dsh-1	gei-4	F10A3.1	brc-2	rnp-1	gei-8	atn-1	rad-26	mel-11	CELE_Y63D3A.4	F52C6.2	D2005.3	Y62H9A.6		cids-2	C16C8.12	alp-1	C39D10.7	mrpl-24	comt-3	C27H2.2	ani-3	abi-1	klp-7	ajm-1	eps-8	hrpf-1	ZK121.2	F57G12.2	hrpf-2	flp-19	sec-16	unc-84	magi-1	ztf-1	C06E7.4	K01A2.10	pxl-1	rpl-2	rpl-1	F14F9.4	magu-4	F27C1.2	ZC247.1	gars-1	C16C8.5	C09G1.4	col-73	nos-3	F41B4.1	rpl-32	ztf-9	ZK1307.9	mig-5	afd-1	CELE_Y45F10B.13	sqst-2	eif-3.D	sta-1	F53B3.3	abl-1	F53B3.6	sas-5	zfp-3	lin-15B	eef-1A.1	hpo-34	sipa-1	zyx-1	W07B8.3	cfim-2	lst-1	F08F8.9	mek-2	cey-2	lim-8	gld-3	yap-1	par-3	
+dpff-1 (PPIHubs)		C44C10.4	tag-260	F36G3.1	mig-5	Y39B6A.1	cpr-5	dsh-1		
+F36G3.1 (PPIHubs)		pas-4	dpff-1	pat-12	psr-1	mig-5	kars-1	gei-4		
+tag-260 (PPIHubs)		ddo-3	cnt-2	gei-4	klp-7	nhr-91	dpff-1	nhr-69	pha-4	T04H1.2	ZK849.1	atf-2	mdf-2		
+mig-5 (PPIHubs)		pat-12	rps-3	cpl-1	ztf-17	nsf-1	F56D1.2	dsh-2	gei-18	F54D10.7	dsh-1	gei-4	bath-41	Y42A5A.3	K03H6.2	rnf-1	F53F10.1	T04H1.2	axl-1	ssp-33	Y46G5A.20	aagr-4		alp-1	klp-3	C17E7.4	plk-3	rsp-4	vps-52	CELE_Y57G11C.9	F08F8.10	ZK1098.4	R06F6.8	ceh-92	eps-8	C34D1.4	F57G12.2	szy-4	T26C12.3	M151.7	sec-16	Y38C1AB.7	zyg-8	nspd-5	F36G3.1	ztf-1	tac-1	C16A11.2	crp-1	rpl-7	F14F9.4	ifa-1	C18B2.5	ZK849.1	unc-101	mlc-2	ifa-4	mpk-1	H06I04.1	mig-5	pry-1	ncl-1	F09E5.7	F28D1.2	Y43H11AL.1	sqst-2	F53B3.3	abl-1	aps-1	CELE_F54D5.15	mspn-1	CELE_W05H9.1	sas-6	dpff-1	F01D5.1	ZK945.8	pqn-52	cyp-33B1	Y77E11A.7	mua-6	C06G3.6	W04A8.6	B0336.7	lin-36	
+cpr-5 (PPIHubs)		dpff-1	tir-1	cif-1	npp-11	klp-15	Y105E8B.5		Y76A2B.5	
+rad-51 (PPIHubs)		C02F5.6	CELE_Y116A8C.13	alh-11	hsp-12.2	abl-1	rad-54	rad-51		helq-1	
+F28D1.2 (PPIHubs)		pat-12	syp-3	mig-5	ZK484.4	meg-4	H02I12.5	gei-4	F27C1.6	atp-2	skp-1	F26H11.4		
+ubc-1 (PPIHubs)		crt-1	ubc-13	ZK742.3	ubr-1	abu-11	hum-6	rfp-1	F29D10.2	asp-6	mdf-1		gpd-3	
+gpd-3 (PPIHubs)		pqn-60	apc-2	lin-2	abu-10	ubc-1	T06E6.10	dyb-1	nekl-2	lec-3		T28C12.4	
+vav-1 (PPIHubs)		eef-1A.1	php-3	T28C6.7	egg-1	inx-12	pal-1		
+T28C6.7 (PPIHubs)		pat-12	vav-1	zyg-1	rpt-6	akt-2	rpn-1	F27C1.6	cup-5	icp-1	C54E10.6	mtss-1	mig-15	pas-7	tap-1		
+php-3 (PPIHubs)		gst-7	rps-10	psr-1	vav-1	F47G4.4	gipc-1	fkh-2	gcn-2	lgc-37	pept-3	pik-1		
+pas-4 (PPIHubs)		F36G3.1	C56C10.7	nsf-1	rpt-4	W02G9.3	pal-1	dnc-2	arl-13	C48B6.3	kel-8	zen-4	pas-4	pas-5	adr-1	hmgr-1	pas-2	F39H12.1		nhr-6	lev-11	
+pas-2 (PPIHubs)		Y42H9AR.1	rpt-5	nsf-1	rpt-4	W02G9.3	kel-8	pas-4	pbs-5	pas-6	adr-1	spk-1	pas-2		
+rpt-4 (PPIHubs)		pas-4	eef-1A.1	pas-7	rpt-5	rpt-4	dyb-1	pas-2		lev-11	
+F39H12.1 (PPIHubs)		pas-4	let-413	pat-12	rpl-9	nhr-111	gei-4		
+klc-1 (PPIHubs)		unc-116	arx-2	atp-5	meg-4	tsg-101	kca-1		
+R07B7.2 (PPIHubs)		htp-1	dnj-10	meg-4	mett-10	R07B7.2	dlc-1		
+asd-2 (PPIHubs)		F26B1.2	acdh-5	eya-1	emb-30	sup-12	exc-7	unc-60		
+nhr-91 (PPIHubs)		tag-260	klp-3	syd-9	ztf-26	uev-1	C03C10.4	dve-1	rla-0	rgr-1	R144.10		ham-2	abce-1	
+tag-325 (PPIHubs)		src-2	F21H7.3	C34D4.2	prk-1	pen-2	R09B3.2	T10E10.4	mlc-4	ZK938.1	nhr-251		
+dli-1 (PPIHubs)		klc-2	san-1	pbs-7	mtx-1	sqt-2	unc-16	daam-1	col-143	aldo-2	CELE_Y57G11C.22	Y113G7A.13		
+pbs-7 (PPIHubs)		glp-1	cyk-3	T10E10.4	dli-1	pdr-1	Y57A10A.24	scrm-1	T05B11.1	pbs-2		
+C40A11.2 (PPIHubs)		F21D5.6	col-10	Y39B6A.1	abu-8	C18E9.9	aldo-2	F17E9.5		
+tap-1 (PPIHubs)		ain-1	his-74	mom-4	T28C6.7	rpl-2	pal-1	ccg-1	F46H5.3	ufd-2	ftt-2	rps-9		nhr-6	
+aspm-1 (PPIHubs)		atn-1	R02F11.4	lin-24	cmd-1	act-4	spdl-1	B0353.1		lev-11	
+C45G9.7 (PPIHubs)		F59E12.11	hmp-2	T20F5.4	nfm-1	tyr-4	ZK1128.7		
+phat-1 (PPIHubs)		sdpn-1	ZK484.1	acca-2	F09F7.5	Y39B6A.1	wwp-1	ima-3		eif-3.B	
+ima-3 (PPIHubs)		cdd-2	cdc-6	arrd-19	lag-1	gei-4	F54D10.7	cdl-1	npp-16	C54E10.6	arrd-13	ran-2	C53D5.5	parn-2	F31C3.2	F52C6.2		Y105C5B.19	CELE_Y69H2.3	C16C8.12	tlf-1	C27D9.1	sld-2	phat-1	scrm-2	scrm-1	ZK1098.4	nhr-20	Y119C1A.1	dod-6	lmn-1	npp-7	CC8.1	ftn-2	F20C5.6	F46G10.1	lir-1	C36C5.5	
+wwp-1 (PPIHubs)		pdk-1	mlcd-1	cyb-1	ify-1	phat-1	gei-4	arrd-7	vab-3	vbh-1	pqn-54	nhr-111	D2013.6		
+C47D12.2 (PPIHubs)		M106.4	unc-16	T23F11.2	Y43C5B.2	CELE_Y105E8A.1	lsm-3	bath-41	C31H5.4	CELE_F52E1.13	gdi-1	B0391.10	pes-1	col-120	Y106G6H.14	wts-1	unc-96	F52C6.2	dut-1	tra-4		
+eya-1 (PPIHubs)		Y54G2A.26	fox-1	sec-31	F54C8.7	C02B10.5	dyc-1	C35E7.2	pqn-59	pop-1	taf-1	T04H1.5	nhr-13	rad-26	rle-1	fozi-1	atf-2	nap-1		CELE_H28G03.2	sel-8	tag-173	T25E4.1	F54D8.6	tfg-1	unc-39	egl-27	uso-1	clpf-1	C16B8.3	Y119C1A.1	ZK121.2	F57G12.2	dmd-6	mab-5	asd-1	asd-2	gla-3	ham-2	wrt-2	ptb-1	M106.4	swsn-1	K02E10.4	F53E4.1	ZK973.9	ceh-33	kin-10	F14F9.4	srd-73	C09G1.4	lin-66	unc-11	tag-153	C14C11.2	afd-1	lys-6	sem-4	ntl-4	lec-10	ntl-2	scrm-7	B0478.3	F20A1.6	W08E12.8	cfim-2	C02F12.8	lst-1	imb-2	C53C7.3	brp-1	gld-3	mec-8	npp-9	meg-2	meg-1	
+C09G1.4 (PPIHubs)		vab-3	T04C9.1	alp-1	sorb-1	uso-1	eya-1	pqn-54	gei-18		
+meg-2 (PPIHubs)		vab-3	let-413	pat-12	W03D8.8	eya-1	imb-2		
+atf-2 (PPIHubs)		tag-260	kin-10	gei-4	zip-2	atf-8	pha-4	T04H1.2	ces-2	eya-1	cebp-2	cept-2	atf-2		
+imb-2 (PPIHubs)		hlh-2	emb-9	pqn-59	atn-1	sqv-4	Y57A10A.24	hgrs-1	exc-7		T28C12.4	dab-1	C17E7.4	dnc-2	hmg-3	sas-5	npp-1	tir-1	npp-7	attf-4	npp-4	hrpf-2	eya-1	lst-1	spk-1	brp-1	gld-1	meg-2	
+kin-10 (PPIHubs)		vab-3	pat-12	mbk-2	let-756	eya-1	atf-2	gei-4		
+pop-1 (PPIHubs)		hda-1	unc-37	bar-1	pop-1	F08G2.5	egl-5	par-5	cbp-1	EP300	wrm-1	eya-1	lit-1	sys-1		
+C49G7.1 (PPIHubs)		unc-23	C05C8.7	F54B11.5	dyn-1	F33E11.3	mup-2	CELE_Y57G11C.9		
+inso-1 (PPIHubs)		crt-1	pat-12	Y42H9AR.1	gst-15	apc-11	W02G9.3	rpn-1	gei-4	ceh-40	vab-3	let-413	F54C9.11	psr-1	col-119	inso-1	cul-3	T04H1.2	sdz-38		
+hda-1 (PPIHubs)		unc-37	sec-15	F55A11.1	prp-8	pop-1	asp-2	nasp-1	rps-30	F32A11.1	mep-1	pie-1	T22F3.2	lin-53	tra-4		
+F52C6.3 (PPIHubs)		gad-1	gst-23	npr-10	zim-3	gip-1	F52C6.3		
+par-5 (PPIHubs)		Y51H4A.8	let-756	lag-1	pop-1	C53D6.6	zyg-8		
+ifb-2 (PPIHubs)		lin-15B	klp-11	pat-12	C54E10.6	tpst-2	npp-7	rsa-2	dyb-1	Y39G10AR.8	lin-36		
+npp-11 (PPIHubs)		npp-1	nhr-171	imb-3	rad-54	cpr-5	csn-4	plk-1		
+rfc-4 (PPIHubs)		rpn-9	rfc-3	rfc-1	K09A11.1	CELE_Y57G11C.22	F44B9.8	hpr-17		
+pcn-1 (PPIHubs)		set-1	rfc-1	cbp-2	mrt-2	pcn-1	mel-32	kin-20	col-146	pho-11		
+unc-15 (PPIHubs)		lin-15B	acdh-1	cogc-3	pat-12	npp-7	T04H1.2	tac-1	dyb-1	lin-36	gei-4		
+F37C4.5 (PPIHubs)		mdt-18	scrm-8	scrm-7	scrm-5	gst-23	sta-1		
+icd-1 (PPIHubs)		Y65B4BR.5	prx-19	rsp-8	nob-1	C16A3.5	aak-2	let-60		
+let-767 (PPIHubs)		rpl-18	mdt-15	T28H10.2	uri-1	ebp-2		rpn-2	ubh-4	
+pas-6 (PPIHubs)		pas-7	F09E5.7	W02G9.3	vab-23	brp-1	mthf-1	pas-1	ZK1098.4	Y39G10AR.15	pas-2		kel-8	
+npp-20 (PPIHubs)		D1007.5	vps-39	F49E10.4	flh-1	spk-1	sec-16	csn-5		
+CC8.1 (PPIHubs)		syp-3	gsk-3	apc-11	Y71G12B.27	daf-22	F08G2.5	sel-10	app-1	Y65B4BR.5	rps-10	ubq-2	ima-3	gld-1		mpk-1	
+lit-1 (PPIHubs)		pat-12	C06E7.4	F37A4.6	srz-6	nfi-1	pop-1	Y44E3A.6	T27A3.1	act-1	hsd-3	smg-6	Y15E3A.5		R02D5.1	ztf-27	F28H1.1	F32H2.7	chdp-1	zfp-3	B0393.3	elks-1	ZK1055.7	spe-44	Y57G7A.5	Y119C1A.1	flh-1	wrm-1	ftn-2	lit-1	brp-1	dlat-1	lir-1	gla-3	tra-4	
+secs-1 (PPIHubs)		C27A12.2	cnx-1	T04H1.2	F53G12.4	F46G11.1	abl-1	secs-1		
+cul-1 (PPIHubs)		sgt-1	asna-1	Y37D8A.16	skr-1	ubql-1	zer-1		asp-3	
+ubql-1 (PPIHubs)		arrd-11	taf-9	cul-1	ubq-2	gcl-1	cpf-2	nhr-111		
+asna-1 (PPIHubs)		cul-1	cee-1	apy-1	F40H3.2	pqn-54	Y71G12B.27	M01H9.2		ZC434.8	
+pkc-2 (PPIHubs)		col-77	par-6	clec-76	gst-39	cbs-2	oac-1	CELE_C30H7.2		
+par-6 (PPIHubs)		pkc-2	H06I04.1	pkc-3	ZK849.1	dnc-2	fem-1	noca-1	fem-2	tra-4		fem-3	
+nhr-49 (PPIHubs)		nhr-105	F54D10.7	nhr-71	nhr-76	nhr-73	scd-1	nhr-13	nhr-79	ttr-27	nhr-22	nhr-66	hmbx-1	nhr-243	nhr-49	nhr-234	nhr-256	nhr-247		nhr-19	
+cif-1 (PPIHubs)		rnr-2	apy-1	tcc-1	csn-1	cpr-5	csn-2	eif-3.F	csn-5	csn-4	pccb-1	cul-3	npp-4	egl-21		
+T27A3.1 (PPIHubs)		pat-12	mtx-2	dnc-5	ces-1	dyb-1	lit-1	gei-4	aldo-2		
+rabn-5 (PPIHubs)		cdc-26	rabx-5	F01G12.6	F07C6.4	C06G3.6	F46G11.1	nhr-111	gei-4	rfl-1		
+scrm-8 (PPIHubs)		F37C4.5	F41E6.11	calu-2	C39D10.7	brp-1	cnt-1	sel-11	R02F2.5		ZK1055.7	
+vps-39 (PPIHubs)		ZK287.1	rps-7	snr-7	1-Sep	ptl-1	npp-20	pbs-5	calu-2	F31A9.2	sur-6	asah-1	gad-1	vha-9	mlc-4	ife-3	F13E6.1	T22F3.3		vha-16	skr-9	arx-1	eef-1G	atp-2	trp-2	egl-26	xpo-1	nlr-1	let-92	R166.2	spn-4	pas-3	
+vps-52 (PPIHubs)		ifp-1	chc-1	syx-16	mig-5	vps-54	vps-53	vps-52	Y17G9B.9	T18D3.7	R01B10.4	memb-1	memb-2	F54B11.7	syx-5	vps-51	lst-1	rab-6.1	rab-6.2	R107.5		
+chc-1 (PPIHubs)		chc-1	uaf-1	zyg-1	sas-4	csn-2	vps-52	itsn-1	dlc-1	trp-2	ehs-1	npp-1	vbh-1	K06H7.1	npp-7	hgrs-1	rpa-2		
+nhr-41 (PPIHubs)		ric-8	F30A10.3	copd-1	skr-10	C01G6.4	gei-4	ZK131.11	thoc-2	taf-9	Y51H4A.8	acl-6	rnh-1.3		
+F08G2.5 (PPIHubs)		R10E4.1	cbd-1	pop-1	rpl-7	rpl-4	vdac-1	ncs-5	nhr-111	W03G1.5		rpl-19	mrpl-20	CELE_K08E7.5	lec-11	ugt-46	CELE_Y57G11C.9	eef-1B.1	eef-1A.1	CC8.1	T01B7.8	numr-1	Y39B6A.1	ccdc-47	ftt-2	T05B11.1	tra-4	
+ztf-17 (PPIHubs)		alp-1	ubxn-1	uso-1	mig-5	mrt-2	T04H1.2	F09F7.7		
+mat-3 (PPIHubs)		gly-8	crt-1	acdh-1	vps-33.2	ant-1.1	col-181	pal-1	rla-0	rps-20	fum-1	vit-2	tmem-135	CELE_F14E5.2	ftt-2	tct-1	ZK1248.15	rpl-12	M60.2	C06E1.9		nhr-6	
+rla-0 (PPIHubs)		del-4	rla-1	ZK849.1	mat-3	T06E6.10	dlc-1		nhr-91	
+scc-1 (PPIHubs)		atl-1	ragc-1	gba-3	B0024.11	F13D12.6	cpl-1	F57F5.1	K08F8.1	vig-1	scc-3	C30F2.3		
+tir-1 (PPIHubs)		set-18	acdh-1	siah-1	tir-1	F59A2.6	prp-21	imb-2	Y42G9A.1	Y43B11AR.1	cpr-5	kgb-1		
+glp-1 (PPIHubs)		cyk-4	dylt-1	gars-1	pbs-7	cpsf-4	lis-1	lag-1	rps-15	zyg-8		
+unc-97 (PPIHubs)		F54B11.7	C39D10.7	ant-1.1	F57G12.2	Y39B6A.1	rsu-1	F46F11.7	unc-95		
+vab-3 (PPIHubs)		C02B10.5	pqn-59	gei-18	Y44E3A.6	F53F10.2	nhr-13	CELE_T06G6.3	rad-26	wwp-1	C26G2.2	nhr-111	hgrs-1		C39D10.7	rpl-7A	abi-1	uso-1	inso-1	C16B8.3	Y119C1A.1	ZK121.2	F57G12.2	let-92	mel-28	sorb-1	magu-1	F59C6.5	pal-1	kin-10	msp-142	C09G1.4	lin-66	T04C9.1	H06I04.1	tag-153	unc-98	mdt-15	sqst-2	scrm-2	scrm-1	abl-1	R02F2.5	tam-1	cfim-2	C02F12.8	lst-1	brp-1	gld-3	npp-9	meg-2	
+hgrs-1 (PPIHubs)		chc-1	dpy-23	itsn-1	csn-4	vab-3	vbh-1	ehs-1	clic-1	npp-4	imb-2	ubq-1	hgrs-1	tsg-101	stam-1	apa-2	apb-1	sec-24.1		
+let-92 (PPIHubs)		vab-3	vps-39	ZK849.1	ppfr-4	gei-4	trp-2		rsa-1	
+H06I04.1 (PPIHubs)		vab-3	par-6	pat-12	Y38H6C.14	mig-5	ZK849.1	eif-3.D	F46G11.1	gei-4	zyg-8		
+Y44E3A.6 (PPIHubs)		vab-3	pat-12	pha-4	npp-19	lit-1	gei-4		
+ceh-40 (PPIHubs)		mdt-29	swsn-1	inso-1	col-20	unc-62	R02F2.5		
+mep-1 (PPIHubs)		hda-1	egl-27	mep-1	pie-1	lin-2	lin-1	mog-4	let-418	mog-1		smo-1	mog-5	
+eps-8 (PPIHubs)		alp-1	pat-12	sorb-1	Y38H6C.14	mig-5	eif-3.D	abl-1	gei-4	ess-2	vps-24	zfp-3	lin-2	lin-36		
+zyg-9 (PPIHubs)		CELE_T04A8.7	Y37E3.1	C53B7.3	tac-1	F58F12.1		nhr-6	
+lin-5 (PPIHubs)		mrpl-11	dlg-1	pkc-3	pat-12	hsp-4	retr-1	lin-5	gpr-1	rpl-4	spe-26		
+ubxn-1 (PPIHubs)		ero-1	prx-5	ztf-17	fbxb-118	gst-42	sli-1	cdc-48.1	cdc-48.2	C13G5.2	nhr-111	dbn-1	C25E10.8		
+cdc-48.1 (PPIHubs)		ubxn-1	ubxn-2	mrt-2	atx-3	ubxn-3	ubxn-4	ubxn-5	ubxn-6	cdt-1	cdc-48.1	ufd-1	ufd-2	cdc-48.2	ima-1		
+cdc-48.2 (PPIHubs)		ubxn-1	ubxn-2	cdc-48.1	ufd-1	atx-3	cdc-48.2	ubxn-3	vms-1	ubxn-4	ubxn-5		ubxn-6	
+F26B1.2 (PPIHubs)		npl-4.1	CELE_Y59A8B.10	pie-1	vha-8	C25A1.4	xrn-2	rpl-3	mec-8	asd-2	prp-4		
+CELE_Y59A8B.10 (PPIHubs)		F26B1.2	snr-2	ndc-80	gad-1	rsa-2	knl-3	cye-1		
+let-413 (PPIHubs)		W07G1.5	T11B7.1	siah-1	swsn-1	inso-1	CELE_T06G6.3	nhr-111	ZK1128.7	meg-2	F39H12.1		
+T11B7.1 (PPIHubs)		K05B2.4	let-413	sorb-1	R11A8.2	T04H1.2	pqn-54	F31E3.2		
+C13F10.2 (PPIHubs)		xbp-1	cogc-2	cco-1	dnc-1	tac-1	gpr-1	spdl-1		lev-11	
+F27C1.6 (PPIHubs)		bed-2	jmjd-2	rnf-1	F28D1.2	T28C6.7	math-14	tac-1	C03C10.4	F14B6.3	aps-1	C17E4.2		
+tac-1 (PPIHubs)		pat-12	Y38H6C.14	gei-4	brd-1	dlg-1	klp-15		ddl-1	hsp-6	mig-5	unc-15	zyg-1	rga-3	csn-1	eif-3.D	F27C1.6	ntl-3	npp-10	F36A2.7	lin-15B	psr-1	cogc-4	lmn-1	npp-7	spk-1	rpl-24.2	lin-37	dlat-1	lin-36	C13F10.2	zyg-9	
+akt-2 (PPIHubs)		ppgn-1	T28C6.7	gsp-3	pal-1	K08C7.1	rpl-7		
+psr-1 (PPIHubs)		F36G3.1	CELE_Y39B6A.34	inso-1	ced-12	php-3	tac-1	ced-5		
+sqv-4 (PPIHubs)		vha-16	R07E3.7	apc-11	sqv-4	imb-2		smo-1	
+rpn-1 (PPIHubs)		rpt-2	inso-1	hsp-1	T28C6.7	B0252.3	ubq-1		nhr-6	
+F31C3.2 (PPIHubs)		Y46G5A.15	siah-1	tatn-1	F32B4.4	ZK849.1	ima-3	dlat-1	mel-26		nmy-2	
+dlat-1 (PPIHubs)		pdhb-1	ric-8	tac-1	CELE_Y57G11C.22	uso-1	atn-1	cyk-1	xpo-2	gad-1	npp-19	lmn-1	imb-3	lit-1	dlat-1	F31C3.2	mdf-2	act-4		
+mel-26 (PPIHubs)		unc-89	ztf-16	pal-1	mat-2	arl-13	gop-1	cul-3	rad-26	cpz-1	F31C3.2		smo-1	ztf-4	C16C8.12	Y51H7C.3	tag-298	mdt-15	C02F5.12	ntl-4	ned-8	R02F2.5	klp-8	ehs-1	F19B10.1	pcf-11	mei-1	mel-26	Y105C5A.1	F16B12.6	rbx-1	unc-83	
+F31E3.2 (PPIHubs)		unc-23	T11B7.1	T19D12.5	T21B6.3	rnf-1	srx-41	unc-62	F19C7.5		
+figl-1 (PPIHubs)		T04C9.1	sorb-1	atn-1	mrt-2	T04H1.2	gei-18	figl-1		smo-1	mpk-1	
+spd-2 (PPIHubs)		col-139	T07C4.10	unc-129	spd-5	col-97	cyld-1	plk-1		
+mpk-1 (PPIHubs)		unc-43	Y42H9AR.1	nfm-1	haly-1	nfya-1	eftu-2	F10E9.3	atn-1	K06H6.1	K04G7.1	dhps-1	mel-11	F33H2.6	F26E4.7		F54D5.7	rskn-1	figl-1	gls-1	C30B5.4	deb-1	lmn-1	lin-1	C49A9.6	gla-3	spdl-1	ifo-1	W02G9.3	gck-1	git-1	CELE_F54D5.5	ess-2	K04G2.10	ifa-1	W10D9.3	B0464.9	mlc-4	Y57A10A.24	skp-1	ifc-2	cku-80	unc-98	mig-5	dnj-10	csn-5	aps-1	CELE_Y57G11C.22	sas-5	zfp-3	R02F2.5	nhr-64	sipa-1	nhr-69	flh-1	CC8.1	col-20	mua-6	lst-1	mek-2	npp-9	gld-1	C49C3.7	
+abu-10 (PPIHubs)		mig-6	F30H5.3	CELE_K08E7.5	Y39B6A.1	fbl-1	T21D12.11	abu-14		gpd-3	
+fbl-1 (PPIHubs)		mcm-6	apc-11	ZK849.1	abu-10	lin-37	zyg-8		
+apc-2 (PPIHubs)		hsp-110	unc-87	C39D10.7	apc-11	Y71G12B.27	pal-1	rpl-3	rpl-21		gpd-3	
+exc-7 (PPIHubs)		C33E10.10	unc-75	etr-1	R02F2.5	uso-1	rad-26	F46H5.7	imb-2	C50D2.1	asd-1	brp-1	mec-8	asd-2		
+pha-4 (PPIHubs)		tag-260	swsn-1	rps-1	fox-1	letm-1	rps-6	rpl-16	asp-6	Y44E3A.6	atn-1	tam-1	cfim-2	lst-1	asd-1	brp-1	atf-2	Y62E10A.14		
+arrd-11 (PPIHubs)		mrpl-54	piki-1	dnj-27	epn-1	alx-1	ubql-1		
+uev-1 (PPIHubs)		ubc-13	eef-2	ndk-1	K08E3.5	B0432.8	lin-35	K12D12.5		nhr-91	
+add-1 (PPIHubs)		F08F3.4	unc-116	rps-6	rps-5	R05G6.10	lin-7	C35C5.3		
+syp-3 (PPIHubs)		syp-1	C47D2.1	sfxn-1.1	CC8.1	grl-24	F28D1.2	gras-1	F54D10.5		
+anmt-2 (PPIHubs)		W09C5.8	men-1	lst-1	W02G9.3	daf-21	syg-1	H02I12.5	par-3		
+mkk-4 (PPIHubs)		jnk-1	nhr-13	W03C9.2	W02G9.3	kgb-1	F54A3.6		
+act-4 (PPIHubs)		act-1	act-2	dlat-1	ptl-1	tnc-2	act-5	aspm-1		
+ess-2 (PPIHubs)		unc-57	col-140	pfd-2	dsh-2	ZK1098.4	zfp-3	eps-8	uso-1	atn-1	T04H1.2	rack-1		mpk-1	
+pfd-2 (PPIHubs)		pal-1	lec-1	ess-2	arp-1		smo-1	pfd-5	
+spdl-1 (PPIHubs)		cogc-3	pat-12	uso-1	zyg-1	npp-7	gei-4	C13F10.2	aspm-1	spdl-1		mpk-1	
+F10E9.3 (PPIHubs)		uso-1	T04H1.2	R02F11.1	T01G9.2	mdf-2		mpk-1	
+ifa-1 (PPIHubs)		lin-15B	pat-12	mig-5	lin-36	gei-4	zyg-8		mpk-1	
+nhr-69 (PPIHubs)		tag-260	taf-9	nhr-69	rad-26	F14B6.6		mpk-1	
+mua-6 (PPIHubs)		lin-15B	mrg-1	cogc-3	pat-12	mig-5	mrt-2	lin-36		mpk-1	
+ces-1 (PPIHubs)		uso-1	unc-37	rnf-1	F30H5.3	B0507.1	sgt-1	ZK849.1	crm-1	T27A3.1	F33G12.5		
+F33G12.5 (PPIHubs)		lin-15B	pat-12	npp-7	ces-1	gei-4	lin-36		
+cfim-1 (PPIHubs)		cfim-1	Y42H9AR.1	cfim-2	W02G9.3	D1054.8	cey-2	chp-1	eef-1G		
+zyx-1 (PPIHubs)		alp-1	atn-1	zyx-1	deb-1	uig-1	dyc-1	lim-9	lim-8	scpl-1	sex-1		
+lin-36 (PPIHubs)		lam-2	T21B6.3	vet-1	F10G8.8	eor-1	pgrn-1	tac-1	vab-23	CELE_F54D5.5	gei-4	Y82E9BR.13	ifa-1	lin-40	atn-1	haao-1	exo-1	ifa-4	F33G12.5	ifb-2		CELE_Y69H2.3	mig-5	unc-15	iars-1	F41H10.4	sodh-1	eps-8	mua-6	T05B11.1	ZK1127.4	
+ifa-4 (PPIHubs)		npp-2	mig-5	kars-1	fars-3	gei-4	lin-36		npp-10	
+hsp-1 (PPIHubs)		mig-15	uso-1	chn-1	rpn-1	bag-1	nhr-111		
+spd-5 (PPIHubs)		F59E12.11	spd-2	air-1	spd-5	rsa-2	nhr-111	csn-5		
+pdr-1 (PPIHubs)		ttr-54	CELE_Y53H1A.2	pbs-7	cgh-1	rps-8	Y39B6A.1	rpl-2	tbb-2	ttm-1	nhr-111	zyg-8		
+flh-1 (PPIHubs)		vha-16	flh-3	lit-1	lag-1	nhr-111	R05H5.3	npp-20	sdz-38		mpk-1	
+F46G11.1 (PPIHubs)		H06I04.1	F43G6.8	uso-1	Y119C1A.1	unc-16	C06G3.6	secs-1		ZK1055.7	rabn-5	
+hmg-1.2 (PPIHubs)		ceh-92	pqn-62	pqn-20	C27A12.2	M151.7	ima-1	lir-1	nmy-1	C34C12.2		
+dyb-1 (PPIHubs)		nft-1	ifp-1	F59C6.5	CELE_F57C2.5	rpt-4	ctn-1	snx-6	F57B10.3	zip-3	T27A3.1	magu-4	efl-2	atn-1	F33D4.6	T04H1.2	B0303.7	F59C12.3	ifc-2	ifd-1	ifb-2		acly-2	tag-153	pdi-3	epg-2	unc-15	C44B9.2	tag-199	C50E3.13	abi-1	C06G3.6	alx-1	brp-1	stn-1	C34B2.4	gpd-3	
+arrd-24 (PPIHubs)		mig-6	swsn-1	M03F4.6	K04H4.2	T21B6.3	dmd-6	CELE_Y53F4B.11	K04G2.10	Y55F3BR.2		bra-2	
+mom-4 (PPIHubs)		tap-1	K11G9.5	rpl-7	C42D4.1		nhr-6	ucr-2.1	
+emb-30 (PPIHubs)		C01H6.9	mcm-2	pal-1	ftt-2	asd-2	C14B9.2	prx-12	gpdh-2		lec-2	
+sel-10 (PPIHubs)		ifo-1	zyg-1	CC8.1	CELE_R10D12.13	nhr-12	nhr-22	CELE_Y41C4A.12	lin-12	skr-1		sel-10	
+skr-1 (PPIHubs)		xbp-1	C14B1.3	cul-1	C27D9.1	cyp-31A2	fsn-1	C27F2.7	F46F11.6	fbxa-196	dre-1		sel-10	
+mei-2 (PPIHubs)		ttr-54	san-1	gei-17	mat-2	mei-1	R02F2.5		
+mei-1 (PPIHubs)		rpl-17	gars-1	rpl-18	F47G4.4	srd-7	mei-2	mei-1	mel-26	rpl-4		
+tbg-1 (PPIHubs)		dad-1	prp-8	C44B7.5	tbb-2	pal-1	gip-2	ftt-2	hmgr-1	C45G3.3	tre-1	rps-13	myo-1		
+rps-8 (PPIHubs)		rfc-2	cri-3	pdr-1	gst-23	zyg-8	CELE_Y63D3A.4		
+ddl-1 (PPIHubs)		ddl-2	hsb-1	pafo-1	tac-1	F59B1.2	wve-1	F57B10.4		
+zyg-1 (PPIHubs)		chc-1	pab-1	H28O16.1	tcc-1	T28C6.7	pal-1	rpl-3	tac-1	sel-10	uso-1	tag-30	nex-1	unc-120	mesp-1	spdl-1		lev-11	
+gip-1 (PPIHubs)		CELE_Y69H2.3	dpy-17	K09H11.1	pal-1	crm-1	rpl-1	rpl-6	frg-1	DH11.2	R06F6.8	abu-1	rnf-1	CELE_F23C8.5	Y42G9A.1	rpl-32	ftt-2	fbxa-11	R151.6	abu-8	C14B9.3	ubl-1	abu-15	F52C6.3		
+mrt-2 (PPIHubs)		W07G1.5	rps-3	grd-12	ztf-17	pcn-1	T23F11.2	fbxb-118	nmur-2	brc-2	F53G12.11	C45B2.1	tbp-1	haao-1	cwn-1	nhr-111	sss-1	pbs-3		pdi-2	C14C10.5	prx-5	dad-1	Y43F4B.5	cul-5	comt-2	T12G3.1	C18D1.2	figl-1	C32E8.4	Y45G12B.2	cdc-48.1	szy-4	W02D7.5	F41G4.4	hus-1	ikb-1	C25E10.8	crt-1	Y54G11A.11	sri-51	T01C3.3	R11E3.1	magu-4	chw-1	ZC477.2	T22B3.3	R08A2.2	Y45F10B.3	Y67A10A.7	F49E12.9	hpr-9	act-5	panl-3	nhr-178	nhr-213	unc-54	gadr-3	H02I12.5	pnk-1	C40A11.8	fahd-1	cct-1	mua-6	pqn-54	C06G3.6	dmsr-13	
+rnf-113 (PPIHubs)		fcd-2	T04F8.8	Y38F1A.8	grl-5	B0035.6	gst-41	srt-42	C35E7.5	C32D5.12	top-2	srj-14	cyp-14A2	glb-14	lin-40	K09C6.2	glb-17	pqe-1	ztf-7	twk-39	lbp-1		ttyh-1	C08G9.2	daf-16	UBE2D3	cin-4	F53F4.12	apl-1	msp-113	R11F4.1	elo-2	inx-14	math-39	M03B6.3	
+top-2 (PPIHubs)		rnf-113	K06H7.1	fln-1	him-6		lev-11	pfd-5	
+ran-1 (PPIHubs)		crt-1	ragc-1	rps-2	W02G9.3	rpl-1	rps-0	tsr-1	F10C5.2	C16A11.5	act-1	D2045.2	toe-2	vit-5	D2005.4		rab-1	mrck-1	tba-1	rps-11	png-1	B0019.2	samp-1	imp-1	cpg-2	col-144	npp-9	kle-2	
+lin-37 (PPIHubs)		F45D11.15	C39D10.7	F10G8.8	tac-1	csn-5	K04G2.10	btbd-10	far-2	atn-1	cri-3	fbl-1	brp-1	lin-53	clec-112		
+air-1 (PPIHubs)		spd-5	tpxl-1	W02G9.3	pal-1	B0545.4	fib-1	bath-41	icp-1	C05E11.3	btbd-10	fbxa-88	saps-1	mdf-2		
+rpn-11 (PPIHubs)		rpn-9	rpn-8	rpl-19	atn-1	rps-7	rpn-11	sel-11	nhr-70		
+lag-1 (PPIHubs)		C06A6.2	csn-5	asp-1	F25D1.5	par-5	glp-1	C05C10.5	asah-1	sma-9	flh-1	lst-1	ima-3	col-81	ima-2		
+ttm-1 (PPIHubs)		pat-3	bli-4	CELE_K08E7.5	mup-4	mua-3	pdr-1	lrp-2	ttm-1		F13E6.5	
+npp-4 (PPIHubs)		copa-1	cif-1	dnc-1	eftu-2	csn-5	atn-1	npp-4	imb-2	imb-3	npp-9	hgrs-1	lin-41		lev-11	
+klp-3 (PPIHubs)		sorb-1	uso-1	ZK105.1	mig-5	hsb-1	nos-1	gei-4		nhr-91	T28C12.4	
+sec-16 (PPIHubs)		alp-1	uso-1	uaf-1	mig-5	pqn-54	gei-4	csn-4	npp-20		
+unc-101 (PPIHubs)		R03C1.1	mig-5	hpo-34	zip-8	T04H1.2	arrd-19	tufm-2		
+klp-7 (PPIHubs)		alp-1	tag-260	klp-12	siah-1	ram-2	rpb-11	dnj-10	sss-1	nfyb-1		
+klp-15 (PPIHubs)		K07E1.1	rol-8	ebp-3	hrp-2	F26G1.1	tac-1	cpr-5		npp-10	
+rpa-2 (PPIHubs)		C33E10.10	chc-1	C18A11.1	wrn-1	mau-8	nhr-111	rpa-1		
+sek-1 (PPIHubs)		gln-3	pas-5	alh-9	mfb-1	snt-4	pal-1	ZK1098.4		nhr-6	hke-4.2	
+ehs-1 (PPIHubs)		T04C9.1	sorb-1	chc-1	gei-18	abl-1	itsn-1	ehs-1	clic-1	R05G6.10	hgrs-1	mel-26	stam-1	apa-2	apb-1		
+trp-2 (PPIHubs)		C06A6.2	chc-1	vps-39	atn-1	Y77E11A.7	sec-8	let-92	snx-6	ahcy-1		
+Y77E11A.7 (PPIHubs)		pat-12	atn-1	mig-5	gei-4	CELE_Y63D3A.4	trp-2		
+arrd-13 (PPIHubs)		C39D10.7	Y42H9AR.1	arrd-19	scpl-1	H02I12.5	ZK1098.4	arrd-13	C18B2.5	drp-1	rad-23	npp-5	lst-1	ima-3		
+rad-23 (PPIHubs)		arrd-13	btb-6	C01G5.6	jtr-1	hum-8	mdf-1	C17E4.2	rpn-10		
+kin-2 (PPIHubs)		C14B1.8	ebp-3	sodh-1	F01G4.6	CELE_Y69H2.7	F38E9.1	ret-1	kbp-5	Y40D12A.2	C18B2.5	T04F3.1	M142.5	Y102A11A.3	nhr-48	Y102A11A.2	F21F12.1	nhr-137		
+eif-3.D (PPIHubs)		alp-1	H06I04.1	cpl-1	vab-23	tac-1	pqn-59	eif-3.E	K04G2.10	dlc-1	Y82E9BR.13	eps-8	F42A10.5	uso-1	atn-1	lmn-1		
+pqn-54 (PPIHubs)		tag-163	C06E7.4	ubc-18	ant-1.1	mrt-2	F09F7.5	rps-5	W02G9.3	F49E2.2	pqn-57	asp-5	M02G9.1	rpl-1	rpl-7	brc-2	rpl-5	K03H4.2	nos-3	C09G1.4	wwp-1	abu-11	vit-6	B0272.4	mdh-1	abu-15	F52C6.2		lys-1	C39D10.7	sgt-1	asna-1	ZK792.4	ani-3	rsu-1	F46F11.7	F53B3.3	lec-1	C05C10.3	T11B7.1	eef-1A.1	F54B11.7	F57G12.2	Y39B6A.1	pqn-54	sec-16	lys-8	abu-8	F26F4.2	
+gst-23 (PPIHubs)		rpt-3	F37C4.5	rps-8	tag-53	gst-1	marb-1	F08G5.1	M02D8.1	R06F6.8	Y40D12A.2	lmn-1	lon-3	B0454.8	abu-7	abu-6	dim-1	abu-8	wee-1.3	abu-15	F52C6.3		
+pqn-60 (PPIHubs)		rpb-8	F32D8.4	sgt-1	F01G4.6	rpl-4		gpd-3	
+sma-4 (PPIHubs)		unc-44	gpd-1	rps-2	C06E7.4	col-181	col-140	C50F2.5	daf-21	1-Sep	grl-7	F58G1.3	ifta-1	asp-1	clec-73	sqt-3	fat-3	rack-1	dpyd-1	T05H10.3		T05H10.4	Y48E1B.3	pdi-3	C39D10.7	rab-8	CELE_B0281.5	elt-3	col-106	F20C5.6	mog-4	asd-1	brp-1	C25H3.8	col-143	
+him-10 (PPIHubs)		Y34B4A.6	hcp-4	etr-1	sucl-2	ndc-80	pal-1	knl-3	mis-12	knl-1		smgl-1	C32D5.11	
+sma-3 (PPIHubs)		daf-3	W02G9.3	pal-1	ZK1055.7	xbx-9	btbd-10	arf-6	uso-1	ufd-2	CELE_C17E4.10	npp-8	nap-1	aldo-2	mtch-1		
+daf-3 (PPIHubs)		C25A1.5	lap-1	swsn-1	C39D10.7	ant-1.1	cpt-5	sma-3	scrm-1	arf-1.2	eef-2	daf-5		ufm-1	rpl-24.1	
+npp-8 (PPIHubs)		gsy-1	vbh-1	atn-1	npp-19	F07A11.2	spk-1	dnj-10	Y57A10A.24	sma-3	eftu-2	lin-41		
+aak-2 (PPIHubs)		Y65B4BR.5	unc-42	nhr-2	F54B11.7	F49E8.6	icd-1		nhr-6	C54D10.3	
+Y65B4BR.5 (PPIHubs)		Y65B4BR.5	CC8.1	F49E8.6	C02B8.3	icd-1	aak-2		
+pdhb-1 (PPIHubs)		qdpr-1	Y39E4A.3	abu-11	dlat-1	mdf-2	sdz-38		
+pqn-71 (PPIHubs)		CELE_Y69H2.3	rps-3	daf-4	mig-6	sgt-1	pqn-13	M02G9.1	scrm-1	abu-1	vit-2	pqn-74	Y39B6A.1	abu-11	lys-8	abu-8	abu-14	W03G1.5		
+T01G9.2 (PPIHubs)		F56C9.10	clec-63	hum-1	D2063.1	F20C5.6	F41C3.5	gfm-1	F10E9.3	ZK1098.4		
+T04H1.2 (PPIHubs)		C06A6.2	tag-241	gei-14	ztf-17	vab-23	dsh-2	grl-7	F10E9.3	F54D10.7	dsh-1	ZK1067.3	brc-2	T16H12.4	rnf-1	T04H1.2	atf-6	D2045.8	Y46G5A.20	abu-13	atf-2	nhr-111	mrpl-4	F52C6.2		nhr-114	F57C9.4	C03C10.4	nab-1	F08F8.10	ZK1098.4	figl-1	CELE_C12D8.9	Y38E10A.14	T11B7.1	lntl-1	C30B5.4	C16B8.3	F52H3.4	inso-1	F57F5.1	Y39B6A.1	F23H11.5	let-858	F46G10.1	tra-4	tag-260	C06E7.4	K01A2.10	F59C6.5	dyb-1	rpl-3	CELE_C47E8.4	ess-2	F14F9.4	asp-3	magu-4	F54C9.11	sor-1	W03F9.10	acl-4	C27A12.2	fat-2	unc-101	ztf-8	vha-1	cebp-1	mig-5	ZC239.15	unc-15	ZK1053.3	ncl-1	C39E9.11	Y43H11AL.1	sqst-2	F53G12.4	ZC15.3	ZK1240.9	C13F10.7	eef-1A.1	mig-15	tam-1	F23H12.5	lst-1	C06G3.6	W04A8.6	Y42G9A.1	spk-1	rpl-23	secs-1	
+mig-15 (PPIHubs)		ZK484.1	hst-2	ttx-1	T28D9.1	uaf-1	T28C6.7	hsp-1	ZK858.7	dnj-10	pal-1	csn-5	ahcy-1	F36A2.10	T04H1.2	dct-1	rack-1	fmo-3		F11E6.3	
+lrx-1 (PPIHubs)		col-180	unc-87	CELE_K08E7.5	T08H10.1	cpi-2	pfd-3	rsp-4	eef-1G	CELE_Y69A2AR.18	CELE_F52E1.13	wht-7	F46H5.3	F54B11.7	perm-4	Y39B6A.1	nmt-1	col-122	cpg-1	clec-266		
+iff-1 (PPIHubs)		uggt-1	K07A1.1	snr-4	dhps-1	spk-1	csn-5	cysl-2		F27C8.2	ssp-31	
+gad-1 (PPIHubs)		vps-39	Y66D12A.16	F54D10.7	H02I12.5	zfp-3	spe-44	CELE_Y59A8B.10	rnf-1	dlat-1	nhr-111	F52C6.3		cyc-2.1	
+T07D4.2 (PPIHubs)		npp-3	rnf-1	CELE_ZC455.1	blos-4	axl-1	Y48G1BL.4	dyc-1	cat-4	col-159		T18D3.7	dyf-3	
+axl-1 (PPIHubs)		GSK3B	mig-5	T07D4.2	bar-1	gsk-3	pry-1	dsh-2		
+lim-8 (PPIHubs)		alp-1	pat-12	sorb-1	zyx-1	pxl-1	ZK849.1		
+sas-5 (PPIHubs)		npp-2	alp-1	sorb-1	npp-13	imb-2	imb-3	zyg-8	sas-5		mpk-1	sas-6	
+pat-12 (PPIHubs)		ifp-1	ain-2	F59E12.9	CELE_F53C11.5	T28C6.7	nuo-2	eor-1	vab-23	Y44E3A.6	pbs-5	W09B7.2	lfi-1	atn-1	F59C12.3		lbp-6	C17E7.4	C33G3.6	elks-1	eps-8	T26C12.3	lin-5	zyg-8	F36G3.1	C06E7.4	F59C6.5	tac-1	Y22D7AL.10	CELE_T02B11.3	magu-4	ifa-1	dyf-17	rpl-11.2	F33G12.5	ZK1240.2	mig-5	rsy-1	F28D1.2	Y71H2AM.15	drh-1	aps-1	zfp-3	myo-3	gsy-1	F01G12.6	gfi-1	mua-6	lst-1	F13A7.11	lim-8	brp-1	C34D10.2	tag-163	F15E6.3	C01G6.4	mex-6	dsh-2	CELE_Y51A2D.15	Y82E9BR.13	T27A3.1	syd-2	F53F10.2	nmy-1	eat-6	C03A7.13	ifb-2	F39H12.1	alp-1	CELE_K08E7.5	tbc-2	abi-1	hrpf-1	uso-1	inso-1	Y119C1A.1	hrpf-2	F20C5.6	lit-1	spdl-1	R148.3	feh-1	sorb-1	kin-10	R11G11.6	flap-1	T05F1.4	ZK849.1	stip-1	H06I04.1	H24G06.1	unc-15	C27H5.2	F53B1.3	sqst-2	abl-1	R02F2.5	CELE_F54D5.15	F29G6.2	C02F12.8	Y77E11A.7	Y42G9A.1	cpi-1	ZK686.3	gld-3	meg-2	F22E12.1	F01G10.5	
+taf-9 (PPIHubs)		gsy-1	nhr-31	nhr-41	nhr-69	Y119C1A.1	umps-1	ubql-1	taf-12		
+sand-1 (PPIHubs)		rabx-5	vps-18	pat-6	rab-7	vps-11	ccz-1		
+sup-12 (PPIHubs)		etr-1	toe-4	asd-1	mec-8	asd-2	unc-60	R02F2.5		
+ces-2 (PPIHubs)		atf-8	T22C8.3	zip-7	ces-2	cebp-2	atf-2	zip-3		
+gld-1 (PPIHubs)		C06A8.3	Y75B12A.2	F46F5.9	col-19	eef-1G	cut-2	clec-62	CELE_K02E2.7	CC8.1	ucr-1	imb-2	vit-6	T06E4.10	C18E9.9		mpk-1	
+elb-1 (PPIHubs)		atn-1	lmn-1	Y42H9AR.1	W02G9.3	spk-1	lrr-1	agef-1	act-5	elc-1		
+bir-1 (PPIHubs)		F43C11.7	ZK1240.2	air-2	vab-23	csn-5	sel-11	C16A11.2	eif-1.A	ZK1098.4	icp-1	bra-2	nhr-10	gsy-1	siah-1	nhr-66	spk-1	CELE_F23C8.5	nhr-111	Y119C1B.5	R12B2.2	csc-1		rps-23	
+T28C12.4 (PPIHubs)		klp-3	emc-3	C37C3.2	rpt-6	got-2.2	imb-2		gpd-3	
+ebp-2 (PPIHubs)		crls-1	siah-1	H28O16.1	F57G12.2	T20B12.7	mboa-6	let-767	W02G9.3	mdf-2		F54D5.7	
+mdf-2 (PPIHubs)		tag-260	air-1	W02G9.3	H05C05.2	ebp-2	F10E9.3	cpr-4	sop-2	tbp-1	mdf-1		pdhb-1	epg-2	Y37E3.11	csn-5	aps-1	wdr-23	ech-6	mrps-30	tcl-2	F23H12.5	hum-5	dlat-1	mthf-1	T19B4.5	
+W03D8.8 (PPIHubs)		C16B8.3	cfim-2	rad-26	lst-1	brp-1	unc-39	npp-9	meg-2		
+app-1 (PPIHubs)		rnp-4	T27A8.2	nhr-129	CC8.1	str-173	nas-22	cytb-5.1	vps-36		F29A7.3	
+rad-54 (PPIHubs)		rpn-8	eef-2	F13D12.6	lst-1	tag-52	Y102A11A.2	npp-11	ZK1067.3	rad-51	C34E7.4		F37A4.1	
+lev-11 (PPIHubs)		apc-11	rpt-4	gei-4	vps-4	top-2	ran-4	vbh-1	atn-1	npp-19	K06H7.1	cye-1		smo-1	pabp-2	unc-37	zyg-1	pyk-1	F33D11.10	inx-14	pas-4	npp-3	mcm-6	pas-7	npp-4	kars-1	C13F10.2	rps-15	aspm-1	
+prp-21 (PPIHubs)		CELE_T24E12.6	swsn-1	lin-38	vab-23	T18D3.7	bed-1	T13H5.4	atn-1	tir-1	F54D1.1	math-39	repo-1	ifg-1	ima-2	R12B2.2	pbs-3		
+cdc-37 (PPIHubs)		W02G9.3	daf-21	F01G4.6	bed-1	T07D10.3	mbk-2	lst-3	arrd-14	cdk-9	C15A11.7	col-146	K04A8.3		pyc-1	
+skr-10 (PPIHubs)		pdi-1	nhr-41	nlr-1	W02G9.3	C31H1.5	F22E5.17		
+aap-1 (PPIHubs)		tsp-10	Y46E12BR.1	Y45G5AL.1	pal-1	rpl-3	pgp-6	atp-2	F37H8.3		mog-5	F23F1.7	
+arrd-8 (PPIHubs)		CELE_Y69H2.3	acdh-1	mig-6	K04H4.2	T21B6.3	C39D10.7	CELE_F08D12.4	BE0003N10.3	tyr-4	scrm-1	aps-1		
+gsk-3 (PPIHubs)		ztf-26	pry-1	CC8.1	T24H7.3	axl-1	sld-2	AXIN1	T12G3.1	madf-5		mac-1	gst-20	
+Y18D10A.8 (PPIHubs)		shw-3	F44A2.5	ife-3	ife-2	F46G10.1	ife-1	rpl-4	R02F2.5		
+mes-4 (PPIHubs)		Y7A5A.1	cnx-1	Y39B6A.1	phat-4	lon-1	oma-2	dao-2	ZK795.1	ile-2	asp-2		cyc-2.1	
+mrg-1 (PPIHubs)		cyk-4	smn-1	rps-3	npp-1	mua-6	F41H10.4	rfp-1	F54D11.4	ZK1127.3		
+npp-1 (PPIHubs)		mrg-1	chc-1	uso-1	vbh-1	atn-1	lmn-1	imb-2	csn-5	npp-11		
+Y38H6C.14 (PPIHubs)		cut-5	R06F6.8	eps-8	H06I04.1	uso-1	mdt-8	tac-1	K04G2.10	C17E4.2	pah-1		
+elc-1 (PPIHubs)		zyg-11	lrr-1	CUL2	zer-1	tra-1	vhl-1	cul-2	ebax-1	fem-1	fem-2		elb-1	fem-3	
+csp-1 (PPIHubs)		ctg-1	pmp-3	F46H5.7	F54D7.2	B0511.6	scc-3		lpd-7	
+ttx-1 (PPIHubs)		sorb-1	mig-15	rpt-6	cdc-25.3	gei-18	atp-2	rrc-1		rpl-24.1	
+sta-1 (PPIHubs)		C06A6.2	F37C4.5	alp-1	lpd-5	rpl-19	hsp-4	sptl-3	pal-1	sta-1	T08G11.4	csn-5	rpl-7	rpl-4	Y77E11A.2	nex-1	col-80		
+stam-1 (PPIHubs)		lov-1	ehs-1	ubq-1	hgrs-1	itsn-1	stam-1	rab-5	Y54G9A.4		
+bub-3 (PPIHubs)		san-1	rpl-9	B0035.1	E02D9.1	bub-1	CELE_Y57G11C.9	npp-10	K12H4.7	CELE_F10G7.9	CELE_Y53C10A.6	R02F11.1	madf-2		
+csn-4 (PPIHubs)		cif-1	C14F11.4	pal-1	sas-4	gcl-1	sec-16	hgrs-1	csn-2	csn-5	npp-11		csn-6	
+gcl-1 (PPIHubs)		his-4	F07A11.2	rad-26	pyk-1	gcl-1	ubql-1	unc-62	F22H10.3	F41C6.6	csn-4		
+daf-22 (PPIHubs)		prx-5	CELE_T11B7.2	ant-1.1	CC8.1	pinn-4	B0238.12	hpl-1		
+csn-1 (PPIHubs)		cul-3	cif-1	tac-1	csn-3	csn-2	csn-5		
+csn-2 (PPIHubs)		chc-1	atn-1	cif-1	csn-1	csn-3	csn-2	csn-5	csn-4		csn-6	
+CELE_Y63D3A.4 (PPIHubs)		lys-2	alp-1	rps-8	dhhc-9	gst-39	daf-21	exos-8	csn-5	F53F4.11	R02F2.5	acl-9	sqt-3	Y51F10.2	Y48A6B.9	tofu-1	isp-1	F46F5.15	mel-32	Y57A10A.8	Y77E11A.7	lin-42		CELE_H28G03.2	
+Y65B4A.7 (PPIHubs)		CELE_Y69H2.3	efl-1	T21B6.3	C39D10.7	F30H5.3	F35A5.4	lst-1	crm-1	R02F11.1	F46F11.7		
+ric-8 (PPIHubs)		C31C9.2	nhr-41	eef-1A.1	tsp-8	goa-1	rps-18	dlat-1	asp-1		
+Y71G12B.27 (PPIHubs)		mmcm-1	asna-1	ify-1	ctn-1	F14B6.3	rpl-5	K01G5.5	ZK370.8	R06F6.8	vbh-1	apc-2	tatn-1	CC8.1	nhr-111	ZK632.2		
+vbh-1 (PPIHubs)		chc-1	F59E12.9	mut-16	mex-6	emb-9	Y71G12B.27	cpsf-4	eftu-2	mex-1	dlg-1	vbh-1	atn-1	wwp-1	hgrs-1	lin-41		cids-2	pabp-2	C39D10.7	F38B7.3	F53B3.6	gls-1	uso-1	npp-1	lmn-1	hrpf-2	lst-1	brp-1	npp-8	lev-11	
+pph-4.1 (PPIHubs)		F25B3.5	EEED8.3	dnc-2	dnc-3	ppfr-4	arp-1		ifb-1	
+Y76A2B.5 (PPIHubs)		ztf-1	ZK863.4	cdd-2	pccb-1	cpr-5	metr-1		
+zyg-8 (PPIHubs)		hmg-1.1	gpd-1	pat-12	CELE_F55D12.2	F59C6.5	rps-8	K04H4.2	T21B6.3	ebp-3	rpn-3	Y24D9A.8	hke-4.2	ifa-1	atn-1	pdr-1	abu-11	T02C5.1	Y57A10A.24	hmgr-1	lin-41		H06I04.1	ZK484.1	mig-5	pdi-3	tag-210	rsp-8	athp-1	sas-5	par-5	glp-1	btbd-10	R06F6.8	lmn-1	F30H5.3	fbl-1	tct-1	B0336.7	kle-2	
+uaf-1 (PPIHubs)		uaf-2	chc-1	mig-15	W02G9.3	daf-21	mel-11	sec-16	teg-1	F29G9.7	zfp-3	asp-2		
+ZC434.8 (PPIHubs)		rps-3	pqn-83	men-1	asna-1	daf-21	F33D11.10		
+dnj-10 (PPIHubs)		mig-15	npp-7	CELE_R102.5	dnj-10	npp-8	R07B7.2	klp-7		mpk-1	npp-10	
+ubq-2 (PPIHubs)		W05B5.1	prx-5	prx-14	CC8.1	W02G9.3	ubql-1	ahcy-1		CELE_F38B7.2	
+lap-1 (PPIHubs)		daf-3	W02H5.1	ZK632.10	lap-1	lbp-6	T11G6.7	F12F6.1		
+ZK632.12 (PPIHubs)		pat-10	gst-24	C13F10.7	btbd-10	Y116F11A.1	Y39B6A.1	dct-15	Y67D2.6	W04A8.5	D2045.8	F42F12.3	F52C6.2		
+tnc-2 (PPIHubs)		tni-3	tni-4	tni-1	unc-27	Y39B6A.1	vit-5	R01H10.5	act-4		
+lin-15B (PPIHubs)		alp-1	C27H5.2	unc-15	vet-1	tac-1	R06F6.8	hcp-1	ifa-1	mua-6	F33G12.5	ifb-2		rpl-24.1	
+lec-3 (PPIHubs)		ZK666.8	hpo-34	F09F7.5	hsp-43	C14F11.4	F26F2.3	T07C4.3		gpd-3	
+sdz-38 (PPIHubs)		gsy-1	pdhb-1	C56C10.7	T21B6.3	ZC123.1	inso-1	flh-1	rga-1	K10D3.4	nhr-111	scrm-2		
+knl-3 (PPIHubs)		mis-12	kbp-3	kbp-4	him-10	kbp-2	kbp-5	CELE_Y59A8B.10	atn-1	hcp-4	ndc-80	knl-3	knl-1		
+mis-12 (PPIHubs)		kbp-5	hcp-4	ndc-80	knl-3	mis-12	knl-1	kbp-4	him-10		kbp-2	
+hcp-4 (PPIHubs)		kbp-5	ndc-80	knl-3	mis-12	knl-1	mesp-1	him-10		
+let-756 (PPIHubs)		kin-3	hsp-6	F35A5.4	umps-1	daf-21	C15C8.3	pal-1	kin-10	rpl-6	par-5	C18A3.3	col-129	C15C6.2	CELE_F14E5.2	skr-2	ftt-2	rps-16		
+daf-4 (PPIHubs)		C04G6.10	F45D3.4	DAXX	T21B6.3	daf-21	col-19	scrm-1	atp-2	pqn-71	abu-1	col-119	F30H5.3	edc-3	abu-14		
+ubc-9 (PPIHubs)		sop-2	atn-1	ran-2	arl-13	brd-1	tbx-2		smo-1	ubc-9	
+bar-1 (PPIHubs)		1-Apr	daf-16	pry-1	axl-1	ubq-1	lin-23	pop-1		
+pry-1 (PPIHubs)		1-Apr	GSK3B	mig-5	bar-1	gsk-3	axl-1		
+ced-2 (PPIHubs)		1-Apr	PXN	ced-12	ced-5	ABL1		BCAR1	
+cul-2 (PPIHubs)		tra-1	zyg-11	lrr-1	fem-1	elc-1		rbx-1	
+dnc-1 (PPIHubs)		npp-4	dnc-2	dnc-3	C13F10.2	arp-1		atp-3	
+mbk-2 (PPIHubs)		cdc-37	egg-5	atn-1	egg-4	hpo-40	egg-3	kin-10	kle-2		smo-1	
+CELE_M05D6.5 (PPIHubs)		COX5A	COX9	COX6	COX4	COX3	COX12	COX2	COX1	COX5B		
+mfap-1 (PPIHubs)		C05C8.2	rps-6	mig-10	prp-38	F43C11.9		CELE_Y39F10B.1	K04G7.11	
+tsg-101 (PPIHubs)		W04B5.3	atn-1	klc-1	mvb-12	dnc-2	hgrs-1	vps-37		zen-4	
+fem-1 (PPIHubs)		tra-1	par-6	cul-2	CUL2	cdl-1	elc-1	fem-2		fem-3	
+fem-2 (PPIHubs)		par-6	FEM1B	CAMK2A	fem-1	elc-1		fem-3	
+fem-3 (PPIHubs)		tra-1	par-6	fem-1	PPM1F	elc-1	fem-2		
+cul-3 (PPIHubs)		ZC239.15	C17F4.8	bath-15	cif-1	csn-1	ned-8	csn-5	bath-42	bath-41	bath-40	CELE_B0281.5	btb-20	inso-1	lmn-1	cul-3	D2045.8	mel-26	dcn-1		
+npp-7 (PPIHubs)		chc-1	unc-15	dnj-10	tac-1	F32A11.3	npp-10	T07C4.10	npp-16	ran-4	vacl-14	uso-1	npp-13	atn-1	lmn-1	spk-1	imb-2	ima-3	nmy-1	C17E4.2	ifb-2	spdl-1	F33G12.5		
+T22F3.3 (PPIHubs)		vps-39	samp-1	Y39B6A.1	npp-9	kle-2		smo-1	
+kle-2 (PPIHubs)		ran-4	capg-2	pab-1	mbk-2	ran-1	imb-3	npp-9	T22F3.3	vps-4	zyg-8		
+npp-19 (PPIHubs)		F28H7.2	cbd-1	Y44E3A.6	csn-5	pah-1	ZK1098.4	plk-1	hcp-1	dlg-1	uso-1	npp-13	atn-1	npp-19	lmn-1	C15H9.4	vit-6	npp-8	dlat-1		lev-11	
+mesp-1 (PPIHubs)		hcp-4	zyg-1	tpxl-1	klp-19	mesp-1	plk-1		plk-2	
+lin-41 (PPIHubs)		let-99	hcp-3	vbh-1	K06H7.1	inx-8	npp-4	cpsf-4	npp-8	zyg-8		emb-1	
+Y57A10A.24 (PPIHubs)		pbs-7	apc-11	Y39B6A.1	imb-2	npp-8	rps-15	zyg-8		mpk-1	emb-1	
+rsa-2 (PPIHubs)		CELE_Y59A8B.10	ebp-3	spd-5	ebp-1	dlc-1	ifb-2		rsa-1	
+sas-4 (PPIHubs)		T07C4.10	chc-1	uso-1	epg-2	lmn-1	R02F11.4	cpg-3	sas-4	csn-4	plk-1		npp-10	
+cogc-3 (PPIHubs)		cogc-2	atn-1	unc-15	mua-6	F33E11.3	spdl-1		CELE_W05H9.1	
+mcm-6 (PPIHubs)		mcm-4	mcm-2	F32D8.4	fbl-1	vit-6		lev-11	
+K06H7.1 (PPIHubs)		chc-1	atn-1	F07A11.2	R151.2	ran-2	csn-5	lin-41	ZK1098.4		lev-11	top-2	
+cye-1 (PPIHubs)		cki-2	CELE_Y59A8B.10	hlh-2	aars-2	bath-42		lev-11	
+rps-15 (PPIHubs)		glp-1	pdi-2	CELE_Y69H2.3	mig-6	F56B3.2	F57F4.4	Y57A10A.24	csn-5	abu-15		lev-11	
+T04C9.1 (PPIHubs)		fkh-8	M57.1	mpst-5	rde-4	figl-1	zfp-3	vab-3	F23C8.8	sop-3	hum-10	ehs-1	hpo-34	C09G1.4	toe-2	F08F8.9	F23H11.4	abu-11	F09C8.2	T02H6.5	ztf-2		nhr-114	ifb-1	
+M57.1 (PPIHubs)		T04C9.1	sorb-1	magu-1	gei-18	abl-1	abi-1		
+gei-18 (PPIHubs)		F34D10.4	unc-23	Y41D4A.5	ttx-1	ceh-17	mig-5	M57.1	dyn-1	egl-9	figl-1	vab-3	ehs-1	wsp-1	C09G1.4	mbk-1	C49H3.6	pcf-11		lin-10	Y55B1BR.2	
+abl-1 (PPIHubs)		alp-1	pat-12	swsn-1	mig-5	M57.1	mdt-15	rsy-1	zfp-3	vab-3	eps-8	ehs-1	wsp-1	szy-4	C06G1.5	rad-51	secs-1		lin-65	C05D10.4	
+sorb-1 (PPIHubs)		ddl-2	pat-12	grd-7	ceh-17	M57.1	K04F10.2	nhl-1	rnp-1	cyk-1	wsp-1	mab-10		exc-6	ttx-1	klp-3	sap-49	R11F4.3	figl-1	vab-3	eps-8	T11B7.1	ehs-1	deb-1	B0507.3	lin-10	ubc-15	dhs-5	C06A5.8	tag-343	C09G1.4	F41B4.1	F45B8.3	C49H3.6	CELE_C17E4.10	T12D8.9	K10H10.4	unc-11	srt-36	F32B4.4	athp-1	C11E4.6	wve-1	sas-5	zfp-3	Y50D4A.4	sli-1	F52E10.4	mig-10	C06G3.6	lim-8	C06G1.5	snn-1	
+magu-1 (PPIHubs)		vab-3	unc-11	ceh-17	ZK1240.1	M57.1	ztf-2		
+itsn-1 (PPIHubs)		chc-1	ehs-1	clic-1	dpy-23	hgrs-1	itsn-1	stam-1	apa-2	apb-1		
+cebp-2 (PPIHubs)		atf-8	zip-5	zip-11	zip-9	atf-5	ces-2	cebp-2	atf-2	atfs-1	zip-2	zip-3		
+arl-13 (PPIHubs)		pas-4	rps-4	UBE2I	dim-1	daf-14	mel-26	ubc-9	

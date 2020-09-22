@@ -128,3 +128,4 @@ easyVizR/add/up_nhr-49hypoxia_vs_normoxia.csv
 easyVizR/add/z_efk1starved_vs_fed.csv
 easyVizR/add/z_N2starved_vs_fed.csv
 easyVizR/add/z_zip2starved_vs_fed.csv
+*.gmt
