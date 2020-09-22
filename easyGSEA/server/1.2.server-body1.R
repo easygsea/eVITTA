@@ -120,7 +120,7 @@ output$feedback_filecontent_deg <- renderUI({
             width = 4,
             radioButtons(
                 inputId = "p_column",
-                label = "P column:",
+                label = "P value column:",
                 choices = colnames(rv$data_head_o),
                 selected = match_colnames(col_p_names,colnames(rv$data_head_o))
             )
