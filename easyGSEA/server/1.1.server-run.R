@@ -604,16 +604,20 @@
           )
         ),
         column(
-          width = 2, #offset = 6,
-          bsButton(
-            inputId = "gene_list_clear",
-            label = "Reset",
-            style = "default"
+          width = 6, align="right",
+          div(
+            style="display: inline-block;vertical-align:top;",
+            bsButton(
+              inputId = "gene_list_clear",
+              label = "Reset",
+              style = "default"
+            )
           )
-        ),
-        column(
-          width = 4, align="right",
-          uiOutput("glist_add_button")
+          ,div(
+            style="display: inline-block;vertical-align:top;",
+            uiOutput("glist_add_button")
+            
+          )
         )
         
       )
@@ -906,9 +910,9 @@
                   #print(head(fgseaRes))
                   rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
                   # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
-                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.01&fgseaRes$ES>0,na.rm=TRUE)
+                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
                   rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
-                  rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.01&fgseaRes$ES<0,na.rm=TRUE)
+                  rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
                   rv$no_down_05 = rv$no_down_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
                   # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
                   incProgress(0.2)
@@ -1028,7 +1032,7 @@
                   db <- rep(catnames[[i]], nrow(fgseaRes))
                   fgseaRes <- cbind(db,fgseaRes)
                   rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
-                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.01,na.rm=TRUE)
+                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25,na.rm=TRUE)
                   rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
                   incProgress(0.2)
                 }

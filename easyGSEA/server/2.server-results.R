@@ -540,16 +540,7 @@ output$bar_box <- renderUI({
                                    choices = rv$dbs,
                                    selected = rv$bar_pathway,
                                    multiple = TRUE),
-                    splitLayout(
-                        numericInput("n_up_bar",
-                                     "# of top up",
-                                     rv$bar_up, min=1,
-                                     width = "90%"),
-                        numericInput("n_down_bar",
-                                     "# of top down (GSEA run only)",
-                                     rv$bar_down, min=1,
-                                     width = "90%")
-                    ),
+                    uiOutput("bar_top"),
                     
                     splitLayout(
                         sliderTextInput("cutoff_bar_p",
@@ -628,6 +619,27 @@ output$ui_bar_abb_n <- renderUI({
     )
 })
 
+# UI bar top # of GSs
+output$bar_top <- renderUI({
+    if(rv$run_mode == "gsea"){
+        splitLayout(
+            numericInput("n_up_bar",
+                         "# of top up",
+                         rv$bar_up, min=1,
+                         width = "90%"),
+            numericInput("n_down_bar",
+                         "# of top down",
+                         rv$bar_down, min=1,
+                         width = "90%")
+        )
+    }else{
+        numericInput("n_up_bar",
+                     "# of top enriched gene sets to display",
+                     rv$bar_up, min=1,
+                     )
+    }
+})
+
 # UI bubble --------------------
 output$bubble_box <- renderUI({
     req(input$plot_type=="bubble")
@@ -650,16 +662,7 @@ output$bubble_box <- renderUI({
                                    choices = rv$dbs,
                                    selected = rv$bar_pathway,
                                    multiple = TRUE),
-                    splitLayout(
-                        numericInput("n_up_bubble",
-                                     "# of top up",
-                                     rv$bar_up, min=1,
-                                     width = "90%"),
-                        numericInput("n_down_bubble",
-                                     "# of top down (GSEA run only)",
-                                     rv$bar_down, min=1,
-                                     width = "90%")
-                    ),
+                    uiOutput("bubble_top"),
                     splitLayout(
                         sliderTextInput("cutoff_p_bubble",
                                         label = "Adjust P threshold:",
@@ -732,7 +735,7 @@ output$bubble_box <- renderUI({
     )
 })
 
-# UI bar abbreviation length
+# UI bubble abbreviation length
 output$ui_bubble_abb_n <- renderUI({
     req(input$abb_bubble == "y")
     numericInput(
@@ -740,6 +743,26 @@ output$ui_bubble_abb_n <- renderUI({
         label = "String length",
         value = rv$bar_abb_n,min=1
     )
+})
+
+# UI bubble top # of GSs
+output$bubble_top <- renderUI({
+    if(rv$run_mode == "gsea"){
+        splitLayout(
+            numericInput("n_up_bubble",
+                         "# of top up",
+                         rv$bar_up, min=1,
+                         width = "90%"),
+            numericInput("n_down_bubble",
+                         "# of top down",
+                         rv$bar_down, min=1,
+                         width = "90%")
+        )
+    }else{
+        numericInput("n_up_bubble",
+                     "# of top enriched gene sets to display",
+                     rv$bar_up, min=1)
+    }
 })
 
 # UI volcano --------------------------

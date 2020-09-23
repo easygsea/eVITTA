@@ -54,7 +54,7 @@ output$feedback_filename <- renderUI({
     HTML(
         "Your query file:<br/><b>",
         rv$infile_name,
-        "</b><br/><br/>"
+        "</b><br/>"
     )
 })
 
@@ -360,7 +360,7 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("Gene set size filters min=",rv$gmin," max=",rv$gmax," results in ",rv$gmts_length," / ",length(rv$gmts)," gene sets")),
                         tags$li(HTML("Number of permutation=",rv$gperm)),
                         tags$li(HTML("<b>",rv$no_down_05,"</b> (down) <b>",rv$no_up_05,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.05")),
-                        tags$li(HTML("<b>",rv$no_down_01,"</b> (down) <b>",rv$no_up_01,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.01"))
+                        tags$li(HTML("<b>",rv$no_down_01,"</b> (down) <b>",rv$no_up_01,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.25"))
                     )
                 ),
                 guide_box("msg1")
@@ -381,7 +381,7 @@ output$run_summary_gsea <- renderUI({
                         tags$li(HTML("Databases: <b>",db_selected,"</b>")),
                         tags$li(HTML("Gene set size filters min=",rv$gmin," max=",rv$gmax," results in ",rv$gmts_length," / ",length(rv$gmts)," gene sets")),
                         tags$li(HTML("<b>",rv$no_up_05,"</b> gene sets are significantly enriched at P.adj < 0.05")),
-                        tags$li(HTML("<b>",rv$no_up_01,"</b> gene sets are significantly enriched at P.adj < 0.01"))
+                        tags$li(HTML("<b>",rv$no_up_01,"</b> gene sets are significantly enriched at P.adj < 0.25"))
                     )
                 ),
                 guide_box("msg1")
