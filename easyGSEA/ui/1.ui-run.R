@@ -59,7 +59,8 @@ bodyGSEA <- tabItem(tabName = "gsea",
                         selected = "other",
                         inline = TRUE
                     ),
-                    bsTooltip("gene_identifier_q", "Select identifier of your input genes", placement = "top"),
+                    bsTooltip("gene_identifier_q", HTML("The identifier of your input genes. If unsure, select <b>Other/Mixed</b>"), placement = "top"),
+                    uiOutput("ui_num"),
                     
                     # GSEA UI - uploading RNK file
                     uiOutput("ui_rnk"),

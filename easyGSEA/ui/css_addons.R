@@ -29,6 +29,9 @@ css_addons <-
       # reset button
       ,"#reset {margin-top:-25px;margin-bottom:5px;}"
       
+      # numeric identifier
+      ,"#num_acc_hp {height:}"
+      
       
     )))
   )

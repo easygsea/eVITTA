@@ -266,8 +266,24 @@
         }
     })
     
-
-# ------------ 2.1.1 Upload & reset RNK ---------------
+# ------------ 2.2 select numeric namespace -----------
+    output$ui_num <- renderUI({
+      req(input$gene_identifier == "other")
+      req(input$selected_species != "")
+      
+      div(
+        selectizeInput(
+          "num_acc",
+          HTML(paste0("Numeric IDs treated as:",add_help("num_acc_hp", style="padding:3px 0 0 0;position:absolute;right:0.4em;"))),
+          choices = num_space[input$selected_species][[1]],
+          selected = num_space[input$selected_species][[1]][grepl('ENTREZGENE',num_space[input$selected_species][[1]])]
+        )
+        ,bsTooltip("num_acc_hp","The identifier for fully numeric IDs. For most purposes, select ENTREZGENE or ENTREZGENE_ACC"
+                   ,placement = "top")
+      )
+    })
+    
+# ------------ 3.1.1 Upload & reset RNK ---------------
     # UI file input
     output$ui_rnk <- renderUI({
         req(input$selected_mode == "gsea")
@@ -336,7 +352,7 @@
         }
     })
 
-# ------------- 2.1.2 select corresponding table columns -----------------
+# ------------- 3.1.2 select corresponding table columns -----------------
     # UI: select columns to 
     # output$feedbacks <- renderUI
     observe({
@@ -391,7 +407,7 @@
       
     })
         
-# ------------- 2.1.3 Upload and reset example RNK/DE --------------
+# ------------- 3.1.3 Upload and reset example RNK/DE --------------
     observeEvent(input$loadExampleRNK,{
         rv$example_file = NULL
         if(input$selected_species == ""){
@@ -441,7 +457,7 @@
     })
 
     
-# ----------------- 2.1.4 check and store input file content into rv$data_head -----------------------
+# ----------------- 3.1.4 check and store input file content into rv$data_head -----------------------
     observe({
         req(is.null(rv$infile_name)==F)
         rv$infile_check=NULL
@@ -473,7 +489,7 @@
         rv$data_head_o = ranks
     })
     
-    # ----------------- 2.1.5 Return RNK -----------------------
+    # ----------------- 3.1.5 Return RNK -----------------------
     observeEvent(input$filecontent_confirm,{
       # rename query
       if(input$f_name != ""){rv$rnkll = input$f_name}
@@ -552,7 +568,7 @@
         }
     })
 
-    # ----------------- 2.1.6 check if duplicated genes -----------------------
+    # ----------------- 3.1.6 check if duplicated genes -----------------------
     
     observeEvent(input$confirm_duplicate_rnk,{
       if(input$confirm_duplicate_rnk){
@@ -571,7 +587,7 @@
     },ignoreInit = T)
     
 #====================================================#
-######      2.2.1 GList mode: input gene lists  ######
+######      3.2.1 GList mode: input gene lists  ######
 #====================================================#
     output$ui_glist <- renderUI({
         req(input$selected_mode == "glist")
@@ -633,7 +649,7 @@
       )
     })
     
-    #---------------- 2.2.2 read in GList-----------------
+    #---------------- 3.2.2 read in GList-----------------
     # from input field
     observeEvent(input$gene_list_add,{
         species = isolate(input$selected_species)  
@@ -708,7 +724,7 @@
         # }
     })
     
-    # -------------- 2.2.3 clear GList input ---------------------------
+    # -------------- 3.2.3 clear GList input ---------------------------
     observeEvent(input$gene_list_clear, {
         # rv$run = NULL
         
@@ -727,7 +743,7 @@
         # )
     })
     
-    #----------- 2.2.4 Example GList --------------
+    #----------- 3.2.4 Example GList --------------
     observeEvent(input$load_example_glist,{
         if(input$selected_species == ""){
           shinyalert("Please select your species of interest.")
@@ -742,7 +758,7 @@
 
     
 
-#---------- 3. run parameters & confirm buttons ---------
+#---------- 4. run parameters & confirm buttons ---------
     # clear Glist rv when switching to gsea mode
     observe({
         req(input$selected_mode == "gsea")
