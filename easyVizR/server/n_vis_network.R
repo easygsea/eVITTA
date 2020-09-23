@@ -47,8 +47,9 @@ output$vis_network_panel <- renderUI({
     box(
       title = span(icon("chart-area"), "Network"), status = "primary", solidHeader = F, width=12,
       
+      div(id="n_nw_p",
       visNetworkOutput("vis_network", height = "660px"),
-      
+      ),
       
       div(style = "position: absolute; left: 1em; bottom: 1em;",
           dropdown(
@@ -112,7 +113,10 @@ output$vis_network_panel <- renderUI({
     
     box(
       title = span( icon("chart-area"), "Network"), status = "warning", solidHeader = F, width=12,
-      paste0("Network is not available for the current selection.")
+      div(id="n_nw_p",
+          paste0("Network is not available for the current selection.")
+          )
+      
     )
   }
   

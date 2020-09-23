@@ -1,7 +1,8 @@
 element	intro
-	The network visualization is only applicable to GSEA results with the leadingEdge column.
-n_filter_cuts	Start first by applying filters. <br><br>Filters are applied dynamically to each dataset, yielding gene lists.
-n_filter_names	You can also filter manually by entering a list of names.
-ui_intersections	Use these options to find terms contained in your desired intersection. <br><br>Tip: check if the number of terms match the Venn count.
-n_ins_tbl	Terms contained in this intersection are shown here. <br><br>You can change the selected intersection any time. 
-n_nw_select	Select a dataset with an applicable column (e.g. leadingEdge), and specify the separator. Network will be shown on the right. 
+	The <b>network</b> visualization is only applicable if the <b>leading edge</b> column is loaded (i.e. for data involving <b>gene sets</b>). <br><br>For an <b>intersection of interest</b> made of <b>gene sets</b>, the network is helpful to visualize the similarities between the <b>leading edges</b> of those <b>gene sets</b>.
+n_nw_select	Select a dataset with an applicable character column (e.g. <b>leadingEdge</b>), and specify the <b>separator</b>. 
+n_nw_p	An interactive <b>network</b> will be shown here for the current <b>intersection of interest</b> in the selected dataset. <br><br>Each node represents a <b>gene set</b>; edges are drawn for <b>gene sets</b> sharing a fixed percentage of the <b>leading edge</b>.
+ins_table_panel	You can change the currently selected <b>intersection of interest</b> here. <br><br>For more details on available intersections, navigate to <b>Select Intersection</b> tab.
+customize_filters	You can change the <b>active filters</b> any time using the <b>Gene list filters</b> button.
+view_genelists	You can view <b>active gene lists</b> using the <b>Gene lists</b> button.
+enter_genes	You can also manually enter <b>a list of terms</b> to view them in the visualization. <br><br>Note: If terms are missing, remove all active filters and try again.

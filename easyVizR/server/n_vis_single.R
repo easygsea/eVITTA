@@ -7,7 +7,10 @@ output$nx_bar_panel <- renderUI({
   if (nrow(n_ins_full())<= nmax_bar) {
     box(
       title = span( icon("chart-area"), "Bar"), status = "primary", solidHeader = F, width=12,
-      plotlyOutput("nx_bar", width = "100%", height = "400px"),
+      div(id="nx_barp",
+          plotlyOutput("nx_bar", width = "100%", height = "400px"),
+          ),
+      
       
       div(style = "position: absolute; left: 1em; bottom: 1em; width:300px;",
           dropdown(
@@ -39,7 +42,9 @@ output$nx_bar_panel <- renderUI({
   } else {
     box(
       title = span( icon("chart-area"), "Bar"), status = "warning", solidHeader = F, width=12,
+      div(id="nx_barp",
       paste0("Bar plot is only available for ", nmax_bar," or less entries.")
+      )
     )
     
   }
