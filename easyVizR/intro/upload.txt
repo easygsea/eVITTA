@@ -1,5 +1,4 @@
 element	intro
-	In this view you can upload and delete files.
-u_1	"Here you can upload a single file. <br><br> Please note that files must contain at least 4 columns: Gene, statistic (i.e. logFC or ES), PValue, and FDR. <br><br>After uploading, you can specify the essential columns."
-u_1b	"Here you can upload a folder containing multiple files in csv format.<br><br>After uploading, you can specify the essential columns. <br><br>(Note that all files must contain all specified columns, named in the same manner; incorrectly formatted files will be omitted.)"
+u_1	"Here you can upload a <b>single file</b>. <br><br> Please note that files must contain at least 4 columns: Name, Main statistic (i.e. logFC or ES), PValue, and FDR. <br><br>After uploading, you can specify the essential columns."
+u_1b	"Here you can upload a <b>folder</b> containing multiple files in csv format.<br><br>After uploading, you can specify the essential columns. <br><br>(Note that all files must contain all specified columns, named in the same manner; incorrectly formatted files will be omitted.)"
 u_2	"Here you can view loaded files, and delete unneeded files to free up space."

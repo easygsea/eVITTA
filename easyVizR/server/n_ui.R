@@ -34,7 +34,7 @@ heatmap_panel <- reactive({
           up = TRUE, width=300
         )
     ),
-    div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;", id="n1_3c",
+    div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;", id="n1_3d",
         dropdown(
           materialSwitch(
             inputId = "n_hm_ylabs", label = "Show y labels?", status="primary",
@@ -336,7 +336,7 @@ output$n_ui_single <- renderUI({
                title = span( icon("chart-area"), "Volcano"), status = "primary", solidHeader = F, width=12,
                plotlyOutput("nx_vol"),
                
-               div(style = "position: absolute; left: 1em; bottom: 1em; width:400px;",
+               div(id="nx_vol_opt", style = "position: absolute; left: 1em; bottom: 1em; width:400px;",
                    dropdown(
                      radioButtons(
                        inputId = "nx_vol_plotmode",
@@ -366,7 +366,7 @@ output$n_ui_single <- renderUI({
                    )
                ),
                
-               div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;",
+               div(id="nx_vol_aes", style = "position: absolute; left: 4em; bottom: 1em; width:300px;",
                    dropdown(
                      selectInput("nx_vol_c1", "Primary color:",
                        choices = default_colors,
@@ -387,7 +387,7 @@ output$n_ui_single <- renderUI({
                    )
                ),
                
-               div(style = "position: absolute; left: 7em; bottom: 1em",
+               div(id="nx_vol_dl", style = "position: absolute; left: 7em; bottom: 1em",
                    dropdown(
                      downloadButton("nx_vol_dl", "Download plot"),
                      

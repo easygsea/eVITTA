@@ -162,37 +162,67 @@ output$batch_opt <- renderUI({
       column(3,
              radioButtons(
                inputId = "batch_gene_column",
-               label = "Gene column:",
+               label = HTML(paste0(
+                 "Name column:",
+                 add_help("u_name_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_batch_colscheme,
                selected = firstmatch(gene_alias,rv$upload_batch_colscheme)
              ),
+             bsTooltip("u_name_help", 
+                       "Gene, GeneName, Pathway, etc; an identifier.", 
+                       placement = "top"),
              radioButtons(
                inputId = "batch_p_column",
-               label = "P column:",
+               label = HTML(paste0(
+                 "PValue column:",
+                 add_help("u_p_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_batch_colscheme,
                selected = firstmatch(p_alias,rv$upload_batch_colscheme)
              ),
+             bsTooltip("u_p_help", 
+                       "PValue, pval, etc; the p-value.", 
+                       placement = "top"),
       ),
       column(3,
              radioButtons(
                inputId = "batch_Stat_column",
-               label = "Stat column:",
+               label = HTML(paste0(
+                 "Stat column:",
+                 add_help("u_stat_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_batch_colscheme,
                selected = firstmatch(stat_alias,rv$upload_batch_colscheme)
              ),
+             bsTooltip("u_stat_help", 
+                       "logFC, ES, etc; a main statistic that describes the magnitude of expression change.", 
+                       placement = "top"),
              radioButtons(
                inputId = "batch_q_column",
-               label = "FDR column:",
+               label = HTML(paste0(
+                 "FDR column:",
+                 add_help("u_q_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_batch_colscheme,
                selected = firstmatch(q_alias,rv$upload_batch_colscheme)
-             )
+             ),
+             bsTooltip("u_q_help", 
+                       "FDR, q-value, padj, etc; a corrected p-value.", 
+                       placement = "top"),
       ),
       column(6,
              textInput(
                inputId = "batch_Stat_name",
-               label = "Name the main statistic:",
+               label = HTML(paste0(
+                 "Name the Stat column:",
+                 add_help("u_namestat_help", style="margin-left: 5px;"))
+               ),
                value = firstmatch(stat_alias,rv$upload_batch_colscheme),
              ),
+             bsTooltip("u_namestat_help", 
+                       "This will be shown in place of \"Stat\" (to be implemented)", 
+                       placement = "top"),
              uiOutput("batch_additional_cols"),
              
       ),
@@ -236,6 +266,7 @@ output$batch_additional_cols <- renderUI({
   multiInput(inputId = "batch_load_other_cols",
              label = "Load additional columns:",
              choices = additional_cols,
+             selected = firstmatch(le_alias, additional_cols),
              width = "500px",
              options = list(
                enable_search = FALSE,
@@ -499,30 +530,54 @@ output$upload_opt <- renderUI({
       column(3,
              radioButtons(
                inputId = "gene_column",
-               label = "Gene column:",
+               label = HTML(paste0(
+                 "Name column:",
+                 add_help("us_name_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_columns,
                selected = firstmatch(gene_alias,rv$upload_columns) 
              ),
+             bsTooltip("us_name_help", 
+                       "Gene, GeneName, Pathway, etc; an identifier.", 
+                       placement = "top"),
              radioButtons(
                inputId = "p_column",
-               label = "P column:",
+               label = HTML(paste0(
+                 "PValue column:",
+                 add_help("us_p_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_columns,
                selected = firstmatch(p_alias,rv$upload_columns)
              ),
+             bsTooltip("us_p_help", 
+                       "PValue, pval, etc; the p-value.", 
+                       placement = "top"),
       ),
       column(3,
              radioButtons(
                inputId = "Stat_column",
-               label = "Stat column:",
+               label = HTML(paste0(
+                 "Stat column:",
+                 add_help("us_stat_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_columns,
                selected = firstmatch(stat_alias,rv$upload_columns)
              ),
+             bsTooltip("us_stat_help", 
+                       "logFC, ES, etc; a main statistic that describes the magnitude of expression change.", 
+                       placement = "top"),
              radioButtons(
                inputId = "q_column",
-               label = "FDR column:",
+               label = HTML(paste0(
+                 "FDR column:",
+                 add_help("us_q_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_columns,
                selected = firstmatch(q_alias,rv$upload_columns)
-             )
+             ),
+             bsTooltip("us_q_help", 
+                       "FDR, q-value, padj, etc; a corrected p-value.", 
+                       placement = "top"),
              
         
       ),
@@ -534,10 +589,16 @@ output$upload_opt <- renderUI({
              
              textInput(
                inputId = "Stat_name",
-               label = "Name the main statistic:",
+               label = HTML(paste0(
+                 "Name the Stat column:",
+                 add_help("us_namestat_help", style="margin-left: 5px;"))
+               ),
                #value = itemmatched(stat_alias,rv$upload_columns))
                value = firstmatch(stat_alias,rv$upload_columns)
                ),
+             bsTooltip("us_namestat_help", 
+                       "This will be shown in place of \"Stat\" (to be implemented)", 
+                       placement = "top"),
              uiOutput("load_other_cols"),
       
       ),

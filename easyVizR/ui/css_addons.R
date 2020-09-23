@@ -34,6 +34,10 @@ css_addons <- tags$head(
         background-color: #2c6eaf;
         border-color: #184d82;
         color: white;
+      }",
+    # fixed delete deg panel top margin
+    "#delete_deg .shiny-input-container{
+        margin-top: -20px;
       }"
     
     
