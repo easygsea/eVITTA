@@ -9,7 +9,7 @@
 mem = mem_used()
 #This is the part to decide the threshold, and we can try different values later
 #if(mem < 50000 & FirstTimeMemLimitMessage()){
-if(mem > 80000){
+if(mem < 80000){
   rv$mem_n = 1
   
   showModal(modalDialog(

@@ -1,5 +1,4 @@
    rv <- reactiveValues(
-           mem_n=NULL,
         run_mode=NULL, #gsea glist
         
         db_status=NULL, # selected
