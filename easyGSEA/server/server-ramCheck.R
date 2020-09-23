@@ -33,10 +33,17 @@ if(mem < 80000){
 }
 
 observeEvent(rv$mem_n,{
+  app = "GSEA"
+  # send notification email to evitta@cmmt.ubc.ca
+  e_src = sprintf("echo '%s;%s;%s' | mail -s 'eVITTA - out of memory %s' evitta@cmmt.ubc.ca"
+                  ,Sys.time(),app,mem,Sys.time()
+                  )
+  system(e_src)
+  
   # record the disconnection and write out to report table
   odir = paste0(getwd(),"/bug_report/")
   ofile = paste0(odir,"out_of_ram_report.csv")
-  oline = paste0("\"",Sys.time(),"\"",",\"GSEA\",\"OOR\",\"",mem,"\"") # OOR = Out Of RAM
+  oline = paste0("\"",Sys.time(),"\"",",\"",app,"\",\"OOR\",\"",mem,"\"") # OOR = Out Of RAM
   write(oline, file=ofile, append = T)
   
   # # simulate closing sessions
