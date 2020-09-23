@@ -4,11 +4,13 @@ output$confirm_matrix_ui <- renderUI({
     uiOutput("confirm_matrix_feedback"),
     radioButtons(
       inputId = "data_type",
-      label = "Select the type of data provided by the authors:",
+      label = HTML("Select the type of data provided by the authors:",add_help("q_dtype")),
       choices = c("Raw counts"="raw", "Normalized counts"="normalized"),
       selected = "normalized",
       inline=T
-    )
+    ),
+    bsTooltip("q_dtype",HTML("<b>Microarray</b>: select normalized counts<br><br><b>RNA-seq</b>: select according to the data provided by the authors")
+              ,placement = "right")
   )
   
 })

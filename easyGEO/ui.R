@@ -149,7 +149,8 @@ body <- dashboardBody(
                                # status = "primary",
                                direction = "horizontal"
                              ),
-                             bsTooltip("ui_select", "Note: You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full. \"Manual selection\" is for any combination of samples. You may manually select samples in the control and the experimental groups."),
+                             # bsTooltip("ui_select", HTML("<b>By design matrix</b> is applicable when the authors have uploaded their study design in full.<br><br><b>Manual selection</b> is for any combination of samples. You may manually select samples in the control and the experimental groups.")
+                             #           ,placement = "right"),
                              
                              # tabPanel(
                              #   value = "sp",
@@ -183,7 +184,6 @@ body <- dashboardBody(
                            column(
                              width = 12,
                              uiOutput("confirm_run"),
-                             br()
                            ),
                            
                            fluidRow(

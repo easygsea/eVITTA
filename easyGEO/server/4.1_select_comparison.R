@@ -74,17 +74,22 @@ output$select_params_ui <- renderUI({
         column(6,
                selectInput(
                  inputId = "sp_select_var",
-                 label = "Select variable to analyze:",
+                 label = HTML("Select variable to analyze:",add_help("v_hp")),
                  choices = choices
-               ),
+               )
+               ,bsTooltip("v_hp","The experimental factor, e.g. condition, treatment, mutant, etc."
+                          ,placement = "right")
         ),
         column(6,
                selectInput(
                  inputId = "sp_batch_col",
-                 label = "Batch effect column:",
+                 label = HTML("Batch effect variable:",add_help("batch_hp")),
                  choices = c("Not applicable"="na", choices),
                  selected= batch_selected#"na"
                )
+               ,bsTooltip("batch_hp","Select to eliminate batch effect (if any)"
+                          ,placement = "right")
+
         ),
       ),
       
@@ -116,11 +121,14 @@ output$sp_select_levels <- renderUI({
   
   fddf <- rv$fddf
   levels <- unique(fddf[[input$sp_select_var]])
-  checkboxGroupInput(
+  div(checkboxGroupInput(
     inputId = "sp_select_levels",
-    label = "Select two levels to compare:",
+    label = HTML("Select two levels to compare:",add_help("tl_hp")),
     choices = levels,
     inline=T
+  )
+  ,bsTooltip("tl_hp", "Select the control and the experimental groups"
+             ,placement = "right")
   )
 })
 
@@ -134,11 +142,13 @@ output$sp_select_levels_rel <- renderUI({
       # select base level
       radioButtons(
         inputId = "sp_select_levels_base",
-        label = "Select control level:",
+        label = HTML("Select control level:",add_help("ct_hp")),
         choices = input$sp_select_levels,
         selected = input$sp_select_levels[1],
         inline = T
       )
+      ,bsTooltip("ct_hp","The control group"
+                 ,placement = "right")
     )
   )
 })
@@ -170,13 +180,16 @@ output$sp_select_levels_rel_fb <- renderUI({
   
   # fluidRow(
   #   box(title=textx, width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=F,
-  #       radioGroupButtons(
-  #         "names_toggle",
-  #         "Show sample names as",
-  #         choices = list("GEO accession"="accession","Sample name"="title"),
-  #         selected = "title"
-  #       ),
-        uiOutput("ui_samples_fb")
+        div(radioGroupButtons(
+          "names_toggle",
+          HTML("Show sample names as",add_help("ss_hp")),
+          choices = list("GEO accession"="accession","Sample name"="title"),
+          selected = "title"
+        )
+        ,bsTooltip("ss_hp",HTML("<b>GEO accession</b>: GSM ids in NCBI GEO database<br><br><b>Sample name</b>: names provided by the authors")
+                   ,placement = "right")
+        
+        ,uiOutput("ui_samples_fb"))
   #   )
   # )
   
@@ -194,13 +207,13 @@ output$ui_samples_fb <- renderUI({
   samples_t = samples_t()
   
   # # determine input source GSM or title
-  # if(input$names_toggle == "title"){
+  if(input$names_toggle == "title"){
     titles_c = translate_sample_names(samples_c,  rv$pdata[c("title", "geo_accession")],  "title")
     titles_t = translate_sample_names(samples_t,  rv$pdata[c("title", "geo_accession")],  "title")
     
     names(samples_c) = titles_c
     names(samples_t) = titles_t
-  # }
+  }
   
   fluidRow(
     box(
@@ -267,11 +280,14 @@ output$coerce_ui <- renderUI({
       # ),
       radioGroupButtons(
         "names_toggle2",
-        "Show sample names as",
+        HTML("Show sample names as",add_help("ss_hp2")),
         choices = list("GEO accession"="accession","Sample name"="title"),
         selected = "title"
-      ),
-      uiOutput("ui_samples_fb2")
+      )
+      ,bsTooltip("ss_hp2",HTML("<b>GEO accession</b>: GSM ids in NCBI GEO database<br><br><b>Sample name</b>: names provided by the authors")
+                 ,placement = "right")
+      
+      ,uiOutput("ui_samples_fb2")
     )
   )
 })

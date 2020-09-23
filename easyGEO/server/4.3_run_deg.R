@@ -5,17 +5,27 @@ output$confirm_run <- renderUI({
   if(input$ui_select == "sp"){
     req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
     # req(length(input$samples_c_deg)>0 && length(input$samples_t_deg)>0)
-    actionBttn("run_deg", "4.3. Run DEG Analysis!",
-             icon = icon("play-circle"), 
-             style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
-             block = TRUE)
+    div(
+      actionBttn("run_deg", "4.3. Run DEG Analysis!",
+                 icon = icon("play-circle"), 
+                 style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+                 block = TRUE)
+      ,br()
+      
+    )
+    
   }else if(input$ui_select == "coerce"){
     req(rv$matrix_ready==T)
     req(is.null(input$samples_c_deg2)==F & is.null(input$samples_t_deg2)==F)
-    actionBttn("run_deg2", "4.3. Run DEG Analysis!",
-             icon = icon("play-circle"), 
-             style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
-             block = TRUE)
+    div(
+      actionBttn("run_deg2", "4.3. Run DEG Analysis!",
+                 icon = icon("play-circle"), 
+                 style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+                 block = TRUE)
+      ,br()
+      
+    )
+    
   }
 })
 
