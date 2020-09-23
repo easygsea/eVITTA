@@ -21,6 +21,9 @@ library(htmltools)
 library(AnnotationDbi)
 library(waiter)
 library(shinyalert)
+library(shinydisconnect)
+library(lobstr)
+
 
 options(repos = BiocManager::repositories())
 

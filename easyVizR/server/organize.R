@@ -149,26 +149,8 @@
 
 
 
-####================= multiple upload modal (show when file uploaded) =====================####
+####================= multiple upload modal elements (show when file uploaded) =====================####
 
-# show modal (experimental)
-observeEvent(input$fileIn,{
-  showModal(modalDialog(
-    title = "File upload",
-    
-    uiOutput("batch_feedback_1"),
-    
-    
-    
-    uiOutput("batch_opt"),
-    
-    uiOutput("batch_feedback_2"),
-    uiOutput("batch_feedback_3"),
-    
-    easyClose = F, size="l",
-    footer = uiOutput("batch_buttons")
-  ))
-})  
 
 # select columns
 output$batch_opt <- renderUI({
@@ -180,37 +162,67 @@ output$batch_opt <- renderUI({
       column(3,
              radioButtons(
                inputId = "batch_gene_column",
-               label = "Gene column:",
+               label = HTML(paste0(
+                 "Name column:",
+                 add_help("u_name_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_batch_colscheme,
                selected = firstmatch(gene_alias,rv$upload_batch_colscheme)
              ),
+             bsTooltip("u_name_help", 
+                       "Gene, GeneName, Pathway, etc; an identifier.", 
+                       placement = "top"),
              radioButtons(
                inputId = "batch_p_column",
-               label = "P column:",
+               label = HTML(paste0(
+                 "PValue column:",
+                 add_help("u_p_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_batch_colscheme,
                selected = firstmatch(p_alias,rv$upload_batch_colscheme)
              ),
+             bsTooltip("u_p_help", 
+                       "PValue, pval, etc; the p-value.", 
+                       placement = "top"),
       ),
       column(3,
              radioButtons(
                inputId = "batch_Stat_column",
-               label = "Stat column:",
+               label = HTML(paste0(
+                 "Stat column:",
+                 add_help("u_stat_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_batch_colscheme,
                selected = firstmatch(stat_alias,rv$upload_batch_colscheme)
              ),
+             bsTooltip("u_stat_help", 
+                       "logFC, ES, etc; a main statistic that describes the magnitude of expression change.", 
+                       placement = "top"),
              radioButtons(
                inputId = "batch_q_column",
-               label = "FDR column:",
+               label = HTML(paste0(
+                 "FDR column:",
+                 add_help("u_q_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_batch_colscheme,
                selected = firstmatch(q_alias,rv$upload_batch_colscheme)
-             )
+             ),
+             bsTooltip("u_q_help", 
+                       "FDR, q-value, padj, etc; a corrected p-value.", 
+                       placement = "top"),
       ),
       column(6,
              textInput(
                inputId = "batch_Stat_name",
-               label = "Name the main statistic:",
+               label = HTML(paste0(
+                 "Name the Stat column:",
+                 add_help("u_namestat_help", style="margin-left: 5px;"))
+               ),
                value = firstmatch(stat_alias,rv$upload_batch_colscheme),
              ),
+             bsTooltip("u_namestat_help", 
+                       "This will be shown in place of \"Stat\" (to be implemented)", 
+                       placement = "top"),
              uiOutput("batch_additional_cols"),
              
       ),
@@ -221,9 +233,6 @@ output$batch_opt <- renderUI({
 })
 
 
-
-
-# ======================= other modal elements ==========================
 
 # if there are other shared cols, also enable them to load those
 output$batch_additional_cols <- renderUI({
@@ -257,6 +266,7 @@ output$batch_additional_cols <- renderUI({
   multiInput(inputId = "batch_load_other_cols",
              label = "Load additional columns:",
              choices = additional_cols,
+             selected = firstmatch(le_alias, additional_cols),
              width = "500px",
              options = list(
                enable_search = FALSE,
@@ -401,6 +411,23 @@ observeEvent(input$fileIn, {
   
   rv$folder_upload_state <- 'uploaded'
   
+  # show col selection modal
+  showModal(modalDialog(
+    title = "File upload",
+    
+    uiOutput("batch_feedback_1"),
+    
+    
+    
+    uiOutput("batch_opt"),
+    
+    uiOutput("batch_feedback_2"),
+    uiOutput("batch_feedback_3"),
+    
+    easyClose = F, size="l",
+    footer = uiOutput("batch_buttons")
+  ))
+  
 })
 
 
@@ -491,22 +518,7 @@ observeEvent(input$upload_batch_q,{
 
 
 
-####================= single upload modal (show when file uploaded) =====================####
-
-# show modal (experimental)
-observeEvent(input$file,{
-  showModal(modalDialog(
-    title = "File upload",
-    uiOutput("uploaded_file"),
-    uiOutput("upload_opt"),
-    uiOutput("upload_feedback"),
-    
-    
-    easyClose = F, size="l",
-    footer = uiOutput("upload_buttons")
-  ))
-
-})  
+####================= single upload modal elements (show when file uploaded) =====================####
 
 # select columns
 output$upload_opt <- renderUI({
@@ -518,30 +530,54 @@ output$upload_opt <- renderUI({
       column(3,
              radioButtons(
                inputId = "gene_column",
-               label = "Gene column:",
+               label = HTML(paste0(
+                 "Name column:",
+                 add_help("us_name_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_columns,
                selected = firstmatch(gene_alias,rv$upload_columns) 
              ),
+             bsTooltip("us_name_help", 
+                       "Gene, GeneName, Pathway, etc; an identifier.", 
+                       placement = "top"),
              radioButtons(
                inputId = "p_column",
-               label = "P column:",
+               label = HTML(paste0(
+                 "PValue column:",
+                 add_help("us_p_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_columns,
                selected = firstmatch(p_alias,rv$upload_columns)
              ),
+             bsTooltip("us_p_help", 
+                       "PValue, pval, etc; the p-value.", 
+                       placement = "top"),
       ),
       column(3,
              radioButtons(
                inputId = "Stat_column",
-               label = "Stat column:",
+               label = HTML(paste0(
+                 "Stat column:",
+                 add_help("us_stat_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_columns,
                selected = firstmatch(stat_alias,rv$upload_columns)
              ),
+             bsTooltip("us_stat_help", 
+                       "logFC, ES, etc; a main statistic that describes the magnitude of expression change.", 
+                       placement = "top"),
              radioButtons(
                inputId = "q_column",
-               label = "FDR column:",
+               label = HTML(paste0(
+                 "FDR column:",
+                 add_help("us_q_help", style="margin-left: 5px;"))
+               ),
                choices = rv$upload_columns,
                selected = firstmatch(q_alias,rv$upload_columns)
-             )
+             ),
+             bsTooltip("us_q_help", 
+                       "FDR, q-value, padj, etc; a corrected p-value.", 
+                       placement = "top"),
              
         
       ),
@@ -553,10 +589,16 @@ output$upload_opt <- renderUI({
              
              textInput(
                inputId = "Stat_name",
-               label = "Name the main statistic:",
+               label = HTML(paste0(
+                 "Name the Stat column:",
+                 add_help("us_namestat_help", style="margin-left: 5px;"))
+               ),
                #value = itemmatched(stat_alias,rv$upload_columns))
                value = firstmatch(stat_alias,rv$upload_columns)
                ),
+             bsTooltip("us_namestat_help", 
+                       "This will be shown in place of \"Stat\" (to be implemented)", 
+                       placement = "top"),
              uiOutput("load_other_cols"),
       
       ),
@@ -566,8 +608,6 @@ output$upload_opt <- renderUI({
   
 })
 
-
-# ======================= other modal elements ==========================
 
 # multiselect to load other columns
 output$load_other_cols <- renderUI({
@@ -654,6 +694,18 @@ observeEvent(input$file, {
   inFile <- input$file
   rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1))
   rv$upload_state <- 'uploaded'
+  
+  # show col selection modal
+  showModal(modalDialog(
+    title = "File upload",
+    uiOutput("uploaded_file"),
+    uiOutput("upload_opt"),
+    uiOutput("upload_feedback"),
+    
+    
+    easyClose = F, size="l",
+    footer = uiOutput("upload_buttons")
+  ))
 })
 # when user presses reset, update state
 observeEvent(input$reset, {
@@ -721,14 +773,13 @@ observeEvent(input$delete_deg_confirm, {
 #---------------------- Sidebar UI ---------------------------#
 
 output$delete_deg <- renderUI({
-  req(length(rv$ll) >= 1)
-  
-  div(
-    tags$head(
-      tags$style(".multi-wrapper {height: fit-content;}"), 
-      tags$style(".multi-wrapper .non-selected-wrapper, .multi-wrapper .selected-wrapper {height: 100%;}")
-    ),
+  if(length(rv$ll) >= 1){
     div(
+      tags$head(
+        tags$style(".multi-wrapper {height: fit-content;}"), 
+        tags$style(".multi-wrapper .non-selected-wrapper, .multi-wrapper .selected-wrapper {height: 100%;}")
+      ),
+      div(
         multiInput(inputId = "delete_deg",
                    label = NULL,
                    choices = rv$ll,
@@ -738,8 +789,13 @@ output$delete_deg <- renderUI({
                      non_selected_header = "Loaded dataset(s):",
                      selected_header = "Delete dataset(s):")
         )
-        )
-  )
+      )
+    )
+  } else {
+    HTML("No data currently loaded.")
+  }
+  
+
   
   
 })

@@ -1,6 +1,9 @@
 element	intro
-n_filter_cuts	Start first by applying filters. <br><br>Filters are applied dynamically to each dataset, yielding gene lists.
-n_filter_names	You can also filter manually by entering a list of names.
-ui_intersections	Use these options to find terms contained in your desired intersection. <br><br>Tip: check if the number of terms match the Venn count.
-n_ins_tbl	Terms contained in this intersection are shown here. <br><br>You can change the selected intersection any time. 
-n_heatmap	Heatmap of the selected intersection is shown here. Parameters are shown on the bottom left.
+	In the <b>Visualize Intersection</b> tab, you can visualize your <b>intersection of interest</b> in a variety of ways.
+n_heatmap	This interactive <b>heatmap</b> shows all the terms in the current <b>intersection of interest</b>. Hover over the cells to see more details. 
+n1_3b	More options for the visualization are found on the bottom left corner.
+n1_3c	Download this visualization here.
+ins_table_panel	You can change the currently selected <b>intersection of interest</b> here. <br><br>For more details on available intersections, navigate to <b>Select Intersection</b> tab.
+customize_filters	You can change the <b>active filters</b> any time using the <b>Gene list filters</b> button.
+view_genelists	You can view <b>active gene lists</b> using the <b>Gene lists</b> button.
+enter_genes	You can also manually enter <b>a list of terms</b> to view them in the visualization. <br><br>Note: If terms are missing, remove all active filters and try again.

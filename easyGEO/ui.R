@@ -8,7 +8,7 @@ sidebar <- dashboardSidebar(
                 
                 menuItem("2. Data matrix", tabName="tab3", icon=icon("table")),
                 
-                menuItem("3. Review/filter design matrix", tabName="tab2", icon=icon("pencil-ruler")),
+                menuItem("3. Filter/review design matrix", tabName="tab2", icon=icon("pencil-ruler")),
 
                 menuItem("4. Run DEG analysis", tabName="tab4", icon=icon("calculator")),
                 
@@ -40,7 +40,8 @@ body <- dashboardBody(
   
     # apply specific css adjustments additionally
     css_addons,
-      
+  
+  useShinyalert(),  # Set up shinyalert
 
     # verbatimTextOutput("debug0"),
     tabItems(
@@ -55,12 +56,12 @@ body <- dashboardBody(
                 fluidRow(
                     column(4,
                            
-                           box(title=span(icon("search"), "Input GEO accession"), width = 12, solidHeader=F, status = "primary",
+                           box(title=span(HTML("<b>1.1.</b>"),icon("search"), "Input GEO accession"), width = 12, solidHeader=F, status = "primary",
                                uiOutput("geo_accession_ui"),
                                
                            ),
                            
-                           box(title=span(icon("hdd"),"Select Platform"), width = 12, solidHeader=F, status = "primary",
+                           box(title=span(HTML("<b>1.2.</b>"),icon("hdd"),"Select Platform"), width = 12, solidHeader=F, status = "primary",
                                uiOutput("geo_platform_ui")
                            ),
                            
@@ -148,7 +149,8 @@ body <- dashboardBody(
                                # status = "primary",
                                direction = "horizontal"
                              ),
-                             bsTooltip("ui_select", "Note: You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full. \"Manual selection\" is for any combination of samples. You may manually select samples in the control and the experimental groups."),
+                             # bsTooltip("ui_select", HTML("<b>By design matrix</b> is applicable when the authors have uploaded their study design in full.<br><br><b>Manual selection</b> is for any combination of samples. You may manually select samples in the control and the experimental groups.")
+                             #           ,placement = "right"),
                              
                              # tabPanel(
                              #   value = "sp",
@@ -182,7 +184,6 @@ body <- dashboardBody(
                            column(
                              width = 12,
                              uiOutput("confirm_run"),
-                             br()
                            ),
                            
                            fluidRow(

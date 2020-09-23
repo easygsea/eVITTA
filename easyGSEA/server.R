@@ -4,13 +4,14 @@ options(shiny.maxRequestSize=500*1024^2)
 
 server <- function(input, output, session) {
     waiter_hide() # will hide *on_load waiter
-    
+
     # addClass(selector = "body", class = "sidebar-collapse")
     runjs("$('#rnkfile').parent().removeClass('btn-default').addClass('btn-danger');")
     
     # js$hidehead('none')
     
     source("server/server-rv.R", local = TRUE)
+    source("server/server-ramCheck.R", local = TRUE)
     source("server/server-functions.R", local = TRUE)
     source("server/1.1.server-run.R", local = TRUE)
     source("server/1.2.server-body1.R", local = TRUE)
@@ -84,5 +85,4 @@ server <- function(input, output, session) {
     gmt_collections_selected = split(gmt_collections_selected,test$V1)
     
     remove(test); remove(dbs)
-    
 }

@@ -17,13 +17,16 @@ sidebar <- dashboardSidebar(
         a_download
         # ,menuItem("Help", tabName = "help", icon = icon("info-circle"))
 
-    )
+    ),
+    disconnectMessage(text = "Your session has timed out. Please refresh page and start again. For bug report, email us at evitta@cmmt.ubc.ca. Thank you for your support.")
 )
 
 loadMsg = "easyGSEA - gene set enrichment analysis, interpretation & visualization"
 
 shinyUI(
     dashboardPage(
+        #Added a Disconnect Message here: 2020-09-18
+        
         title="easyGSEA - gene set enrichment analysis, interpretation & visualization",
 
         dashboardHeader(title = "easyGSEA",
@@ -44,6 +47,11 @@ shinyUI(
                 HTML("<script type='text/javascript' language='javascript' src='https://reactome.org/DiagramJs/diagram/diagram.nocache.js'></script>"),
                 tags$script(src = "reactome.js")
             ),
+            
+            # # this is used to reset input values
+            # example usage: session$sendCustomMessage(type = "resetValue", message = "gene_column")
+            tags$script("Shiny.addCustomMessageHandler('resetValue', function(variableName) {
+            Shiny.onInputChange(variableName, null);});"),
             
             useShinyalert(),  # Set up shinyalert
             useShinyjs(), # Set up shinyjs
@@ -73,6 +81,7 @@ shinyUI(
         )
 
     )
+    
 
 
 )

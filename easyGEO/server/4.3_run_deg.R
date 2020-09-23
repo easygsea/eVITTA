@@ -5,17 +5,27 @@ output$confirm_run <- renderUI({
   if(input$ui_select == "sp"){
     req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
     # req(length(input$samples_c_deg)>0 && length(input$samples_t_deg)>0)
-    actionBttn("run_deg", "4.3. Run DEG Analysis!",
-             icon = icon("play-circle"), 
-             style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
-             block = TRUE)
+    div(
+      actionBttn("run_deg", "4.3. Run DEG Analysis!",
+                 icon = icon("play-circle"), 
+                 style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+                 block = TRUE)
+      ,br()
+      
+    )
+    
   }else if(input$ui_select == "coerce"){
     req(rv$matrix_ready==T)
     req(is.null(input$samples_c_deg2)==F & is.null(input$samples_t_deg2)==F)
-    actionBttn("run_deg2", "4.3. Run DEG Analysis!",
-             icon = icon("play-circle"), 
-             style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
-             block = TRUE)
+    div(
+      actionBttn("run_deg2", "4.3. Run DEG Analysis!",
+                 icon = icon("play-circle"), 
+                 style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+                 block = TRUE)
+      ,br()
+      
+    )
+    
   }
 })
 
@@ -23,7 +33,7 @@ output$run_deg_ui <- renderUI({
   req(is.null(rv$deg)==F)
   
   box(
-    width = 12, title = span(HTML("<b>4.4.</b>"),icon("book-open"),HTML("Review & "),icon("download"),HTML("download DEG analysis results")), status = "primary",
+    width = 12, title = span(HTML("<b>4.4.</b>"),icon("book-open"),HTML("Review & download DEG analysis results")), status = "primary",
     
     
       fluidRow(
@@ -39,7 +49,9 @@ output$run_deg_ui <- renderUI({
             )
             ,br(),
             HTML("<br><br>Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
-                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons."),
+                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons."
+                 ),
+            
             
             # tags$hr(style="border-color:grey;"),
             # 
@@ -83,7 +95,10 @@ output$run_deg_ui <- renderUI({
         column(
           width = 12,
           br(),
-          uiOutput("ui_deg_table")
+          uiOutput("ui_deg_table"),
+          br(),
+          guide_box("guide4", "Navigate to <b>5. Visualize results</b> for visualizations"),
+          br()
         )
       )
   )
@@ -106,11 +121,11 @@ observeEvent(input$run_deg,{
   msg = paste0("Running DEG analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. Please wait a minute...")
   
   if(is.null(samples_c) && is.null(samples_t)){
-    showNotification("Select at least 1 control and 1 experimental samples.", type = "error", duration=4)
+    shinyalert("Select at least 1 control and 1 experimental samples.")
   }else if(is.null(samples_c)){
-    showNotification("Select at least 1 control sample.", type = "error", duration=4)
+    shinyalert("Select at least 1 control sample.")
   }else if(is.null(samples_t)){
-    showNotification("Select at least 1 experimental sample.", type = "error", duration=4)
+    shinyalert("Select at least 1 experimental sample.")
   }else{
     withProgress(message = msg, value = 1, {
       ## 1) create design matrix
@@ -261,14 +276,13 @@ observeEvent(input$run_deg2,{
   
   if(length(overlap)>0){
     overlap_names = translate_sample_names(overlap,rv$pdata[c("title", "geo_accession")],  "title")
-    print(overlap_names)
-    
+
     w_msg = paste0("You have selected ",abbreviate_vector(overlap)
                    , " (", abbreviate_vector(overlap_names),")"
                    , "(n = ",length(overlap),")"
                    ," in both control and experimental group. Please re-select.")
 
-    showNotification(w_msg, type = "error", duration=5)
+    shinyalert(w_msg)
   }else{
     withProgress(message = msg, value = 1, {
       ## 1) create design matrix
@@ -399,10 +413,18 @@ output$deg_table <- DT::renderDataTable({
   req(is.null(rv$deg)==F)
   
   mutate_df(df=rv$deg)
-}, options = list(pageLength = 9))
+}, options = list(pageLength = 5))
 
 # download DEG table
 output$deg_table_download <- downloadHandler(
+  filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,".csv")},
+  content = function(file) {
+    write.csv(rv$deg, file)
+  }
+)
+
+# download DEG table
+output$deg_table_download2 <- downloadHandler(
   filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,".csv")},
   content = function(file) {
     write.csv(rv$deg, file)
@@ -452,8 +474,15 @@ observeEvent(rv$runs,{
       fluidRow(
         column(12,
            h3("DEG analysis complete!"),
-           br(),p("Download DEG table and explore the results.")
-           ,br(),p("If you'd like to run DEG analysis for another comparison, re-select samples and re-click \"4.3. Run DEG Analysis!\".")
+           HTML("<br>Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
+                  and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.
+                <br>"
+           ),
+           downloadBttn("deg_table_download2",label = "Download entire DEG table (.csv)"
+                        , style = rv$dbtn_style
+                        , color = rv$dbtn_color
+                        ,size="md")
+           ,br(),br(),p("If you'd like to run DEG analysis for another comparison, re-select samples and re-click \"4.3. Run DEG Analysis!\".")
         )
       )
     ),
@@ -461,3 +490,8 @@ observeEvent(rv$runs,{
     , footer = modalButton('Got it!')
   ))
 },ignoreInit = T)
+
+# ------------ guide to 5. visualize results page ------------
+observeEvent(input$guide4,{
+  updateTabItems(session, "menu1", "tab5")
+})

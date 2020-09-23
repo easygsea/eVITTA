@@ -144,7 +144,7 @@
       }
       
       if(length(dbs)<1){
-        showNotification("Select at least one database", type = "error", duration = 3)
+        shinyalert("Select at least one database")
       }else{
         removeModal()
       }
@@ -352,7 +352,13 @@
           column(12,
             wellPanel(
               # shiny::HTML("<p style='font-style:italic'>Select corresponding columns</p>"),
-              h4("Select corresponding columns"),
+              materialSwitch(
+                inputId = "mcol",
+                label = HTML("<span style='font-size:110%'>Missing column names in your query file?</span>"),
+                value = F, inline = TRUE, width = "100%",
+                status = "danger"
+              ),
+              
               uiOutput("feedback_filecontent_deg"),
               uiOutput("feedback_filecontent_rnk"),
               # uiOutput("feedback_filecontent_confirm"),
@@ -360,10 +366,19 @@
             )
           ),
           column(12,
+                 div(
+                   style="display: inline-block;vertical-align:baseline;margin-right:5px",
+                   h4("Name your query:")
+                 ),
+                 div(
+                   style="display: inline-block;vertical-align:baseline;",
+                   textInput("f_name",label = NULL,value = rv$rnkll,width = "100%")
+                 )
+                 ,
                  p("Your query file content:"),
                  uiOutput("feedback_filecontent")
           )
-        ),,
+        ),
           
         easyClose = F,
         footer = bsButton(
@@ -380,8 +395,10 @@
     observeEvent(input$loadExampleRNK,{
         rv$example_file = NULL
         if(input$selected_species == ""){
-            showNotification("Please select your species of interest.",type="error",duration=2)
+          shinyalert("Please select your species of interest.")
         }else{
+          reset_rnk()
+          
           updateRadioButtons(
             session,
             "gene_identifier",
@@ -402,15 +419,14 @@
     observeEvent(input$loadExampleDE,{
         rv$example_file = NULL
         if(input$selected_species == ""){
-            showNotification("Please select your species of interest.",type="error",duration=2)
+          shinyalert("Please select your species of interest.")
         }else{
+          reset_rnk()
+          
           updateRadioButtons(
             session,
             "gene_identifier",
-            "2. Gene identifier",
-            choices = gene_identifiers,
-            selected = "symbol",
-            inline = TRUE
+            selected = "symbol"
           )
             sampleDE_file <- paste0(getwd(),"/inc/",input$selected_species,".csv")
             rv$infile_name = paste0(input$selected_species,".csv")
@@ -449,22 +465,25 @@
         }else if(ncol(ranks)>2){
             rv$rnk_or_deg = "deg"
         }else{
-            showNotification("You uploaded a file with < 2 columns. Please click the help button for accepted file formats.",type = "error",duration = 3)
+            shinyalert("You uploaded a file with < 2 columns. Please click the help button for accepted file formats.")
         }
         
         # save had data into RV
         rv$data_head = ranks
+        rv$data_head_o = ranks
     })
     
     # ----------------- 2.1.5 Return RNK -----------------------
     observeEvent(input$filecontent_confirm,{
-      removeModal()
-        data = rv$data_head
+      # rename query
+      if(input$f_name != ""){rv$rnkll = input$f_name}
+      
+      # read in file data
+        data = rv$data_head_o
         wtext = tags$b(
           "Duplicated genes found in your uploaded file. Only the first duplicate(s) will be kept. Do you want to continue?",
           style = "color: #FA5858;"
         )
-        
         if(ncol(data)==2){
           if(is.null(input$rank_column) && is.null(input$gene_column)){
             shinyalert("Please select the rank and the gene columns.")
@@ -473,6 +492,8 @@
           }else if(is.null(input$gene_column)){
             shinyalert("Please select the gene column.")
           }else{
+            removeModal()
+            
             all_genes = data[[input$gene_column]]
             duplicates = duplicated(all_genes)
 
@@ -507,6 +528,8 @@
           }else if(is.null(input$p_column)){
             shinyalert("Please select the p-value column.")
           }else{
+            removeModal()
+            
             all_genes = data[[input$gene_column]]
             duplicates = duplicated(all_genes)
             
@@ -581,16 +604,20 @@
           )
         ),
         column(
-          width = 2, #offset = 6,
-          bsButton(
-            inputId = "gene_list_clear",
-            label = "Reset",
-            style = "default"
+          width = 6, align="right",
+          div(
+            style="display: inline-block;vertical-align:top;",
+            bsButton(
+              inputId = "gene_list_clear",
+              label = "Reset",
+              style = "default"
+            )
           )
-        ),
-        column(
-          width = 4, align="right",
-          uiOutput("glist_add_button")
+          ,div(
+            style="display: inline-block;vertical-align:top;",
+            uiOutput("glist_add_button")
+            
+          )
         )
         
       )
@@ -668,10 +695,10 @@
                     }
                 }
             }else{
-                showNotification("Please input your query. Click example data for a trial run.",type="error",duration=3)
+              shinyalert("Please input your query. Click example data for a trial run.")
             }
         }else{
-            showNotification("Please select species that matches your query.",type="error",duration=3)
+          shinyalert("Please select species that matches your query.")
         }
         # }else{
         #     rv$gene_lists = rv$data_glist
@@ -703,7 +730,7 @@
     #----------- 2.2.4 Example GList --------------
     observeEvent(input$load_example_glist,{
         if(input$selected_species == ""){
-            showNotification("Please select your species of interest.",type="error",duration=2)
+          shinyalert("Please select your species of interest.")
         }else{
             updateTextAreaInput(session,
                                 inputId = "gene_list",
@@ -883,9 +910,9 @@
                   #print(head(fgseaRes))
                   rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
                   # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
-                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.01&fgseaRes$ES>0,na.rm=TRUE)
+                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
                   rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
-                  rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.01&fgseaRes$ES<0,na.rm=TRUE)
+                  rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
                   rv$no_down_05 = rv$no_down_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
                   # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
                   incProgress(0.2)
@@ -1005,7 +1032,7 @@
                   db <- rep(catnames[[i]], nrow(fgseaRes))
                   fgseaRes <- cbind(db,fgseaRes)
                   rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
-                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.01,na.rm=TRUE)
+                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25,na.rm=TRUE)
                   rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
                   incProgress(0.2)
                 }

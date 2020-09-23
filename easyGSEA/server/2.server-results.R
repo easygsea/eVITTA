@@ -7,24 +7,29 @@ output$ui_bodyResults <- renderUI({
         panel_null()
     }else{
         fluidRow(
-            column(8,
-                radioGroupButtons(
-                    inputId = "plot_type",
-                    choiceNames = list(span(icon("chart-bar"),"Bar plot"),span(icon("first-order-alt"),"Bubble plot"),span(icon("file-word"),"Keywords"),span(icon("braille"),"Manhattan plot"),span(icon("fire-alt"),"Volcano plot")), #,
-                    choiceValues = list("bar", "bubble","word","manhattan","volcano"), #,
-                    selected = "bar",
-                    status = "primary",
-                    size = "normal",
-                    direction = "horizontal"
+            column(
+                8,
+                div(
+                    style="display: inline-block;vertical-align:top;",
+                    radioGroupButtons(
+                        inputId = "plot_type",
+                        choiceNames = list(span(icon("chart-bar"),"Bar plot"),span(icon("first-order-alt"),"Bubble plot"),span(icon("file-word"),"Keywords"),span(icon("braille"),"Manhattan plot"),span(icon("fire-alt"),"Volcano plot")), #,
+                        choiceValues = list("bar", "bubble","word","manhattan","volcano"), #,
+                        selected = "bar",
+                        status = "primary",
+                        size = "normal",
+                        direction = "horizontal"
+                    )
+                ) 
+                ,
+                # Button that breifly explain P.value and p.adjusted Version 1
+                div(id="p_value_div", style="display: inline-block;vertical-align:top;position: absolute; right: 1em;",
+                    uiOutput("ui_p_help")
                 )
             ),
             column(4,
                 # align="right",
-                # Button that breifly explain P.value and p.adjusted Version 1
-                div(
-                    div(id="p_value_div", style="display: inline-block;margin-right: 5px;", p_value_help()),
-                    bsTooltip("p_value_help","P value introduction")
-                )
+                
             ),
             column(
                 width = 8,
@@ -535,16 +540,7 @@ output$bar_box <- renderUI({
                                    choices = rv$dbs,
                                    selected = rv$bar_pathway,
                                    multiple = TRUE),
-                    splitLayout(
-                        numericInput("n_up_bar",
-                                     "# of top up",
-                                     rv$bar_up, min=1,
-                                     width = "90%"),
-                        numericInput("n_down_bar",
-                                     "# of top down (GSEA run only)",
-                                     rv$bar_down, min=1,
-                                     width = "90%")
-                    ),
+                    uiOutput("bar_top"),
                     
                     splitLayout(
                         sliderTextInput("cutoff_bar_p",
@@ -623,6 +619,27 @@ output$ui_bar_abb_n <- renderUI({
     )
 })
 
+# UI bar top # of GSs
+output$bar_top <- renderUI({
+    if(rv$run_mode == "gsea"){
+        splitLayout(
+            numericInput("n_up_bar",
+                         "# of top up",
+                         rv$bar_up, min=1,
+                         width = "90%"),
+            numericInput("n_down_bar",
+                         "# of top down",
+                         rv$bar_down, min=1,
+                         width = "90%")
+        )
+    }else{
+        numericInput("n_up_bar",
+                     "# of top enriched gene sets to display",
+                     rv$bar_up, min=1,
+                     )
+    }
+})
+
 # UI bubble --------------------
 output$bubble_box <- renderUI({
     req(input$plot_type=="bubble")
@@ -645,19 +662,10 @@ output$bubble_box <- renderUI({
                                    choices = rv$dbs,
                                    selected = rv$bar_pathway,
                                    multiple = TRUE),
-                    splitLayout(
-                        numericInput("n_up_bubble",
-                                     "# of top up",
-                                     rv$bar_up, min=1,
-                                     width = "90%"),
-                        numericInput("n_down_bubble",
-                                     "# of top down (GSEA run only)",
-                                     rv$bar_down, min=1,
-                                     width = "90%")
-                    ),
+                    uiOutput("bubble_top"),
                     splitLayout(
                         sliderTextInput("cutoff_p_bubble",
-                                        label = "Adjust P.adj threshold:",
+                                        label = "Adjust P threshold:",
                                         choices= cutoff_slider,
                                         selected=rv$bar_p_cutoff, grid=T, force_edges=T
                         ),
@@ -727,7 +735,7 @@ output$bubble_box <- renderUI({
     )
 })
 
-# UI bar abbreviation length
+# UI bubble abbreviation length
 output$ui_bubble_abb_n <- renderUI({
     req(input$abb_bubble == "y")
     numericInput(
@@ -735,6 +743,26 @@ output$ui_bubble_abb_n <- renderUI({
         label = "String length",
         value = rv$bar_abb_n,min=1
     )
+})
+
+# UI bubble top # of GSs
+output$bubble_top <- renderUI({
+    if(rv$run_mode == "gsea"){
+        splitLayout(
+            numericInput("n_up_bubble",
+                         "# of top up",
+                         rv$bar_up, min=1,
+                         width = "90%"),
+            numericInput("n_down_bubble",
+                         "# of top down",
+                         rv$bar_down, min=1,
+                         width = "90%")
+        )
+    }else{
+        numericInput("n_up_bubble",
+                     "# of top enriched gene sets to display",
+                     rv$bar_up, min=1)
+    }
 })
 
 # UI volcano --------------------------
@@ -1116,29 +1144,30 @@ output$ui_gsea_plots_radio <- renderUI({
 
 
 # Observe click event pass to rv$es_term -----------
+clear_plot_rv <- function(){
+    rv$kegg_status = NULL
+    rv$kegg_status_g = NULL
+    
+    rv$kegg_yes = NULL
+    rv$kegg_confirm = NULL
+    
+    rv$reactome_yes = NULL
+    rv$reactome_confirm=NULL
+    
+    rv$wp_yes = NULL
+    rv$wp_confirm=NULL
+}
+
 # manhattan click
 observeEvent(event_data("plotly_click", source = "manhattan_plot_click"),{
     # req(rv$run == "success")
     # req(input$plot_type=="manhattan")
     clickData <- event_data("plotly_click", source = "manhattan_plot_click")
     # print(clickData)
-    
-    # if(is.null(clickData)==F){
-        rv$es_term = rv$manhattan_pathway_list[round(clickData$x + 1)]
-        # print(rv$es_term)
-        # rv$es_term = clickData$y
-        rv$kegg_status = NULL
-        rv$kegg_status_g = NULL
-        
-        rv$kegg_yes = NULL
-        rv$kegg_confirm = NULL
-        
-        rv$reactome_yes = NULL
-        rv$reactome_confirm=NULL
-        
-        rv$wp_yes = NULL
-        rv$wp_confirm=NULL
-    # }
+    rv$es_term = rv$manhattan_pathway_list[round(clickData$x + 1)]
+    # print(rv$es_term)
+    # rv$es_term = clickData$y
+    clear_plot_rv()
 })
 
 # bar click
@@ -1147,23 +1176,10 @@ observeEvent(event_data("plotly_click", source = "bar_plot_click"),{
     # req(input$plot_type=="bar")
     clickData <- event_data("plotly_click", source = "bar_plot_click")
     # print(clickData)
-
-    # if(is.null(clickData)==F){
-        rv$es_term = rv$bar_pathway_list[round(clickData$y)]
-        # print(rv$es_term)
-        # rv$es_term = clickData$y
-        rv$kegg_status = NULL
-        rv$kegg_status_g = NULL
-        
-        rv$kegg_yes = NULL
-        rv$kegg_confirm = NULL
-        
-        rv$reactome_yes = NULL
-        rv$reactome_confirm=NULL
-        
-        rv$wp_yes = NULL
-        rv$wp_confirm=NULL
-    # }
+    rv$es_term = rv$bar_pathway_list[round(clickData$y)]
+    # print(rv$es_term)
+    # rv$es_term = clickData$y
+    clear_plot_rv()
 })
 
 # bubble click
@@ -1171,22 +1187,9 @@ observeEvent(event_data("plotly_click", source = "bubble_plot_click"),{
     # req(rv$run == "success")
     # req(input$plot_type=="bubble")
     clickData <- event_data("plotly_click", source = "bubble_plot_click")
-    # if(is.null(clickData)==F){
-        rv$es_term = rv$bubble_pathway_list[round(clickData$y)]
-        
-        # rv$es_term = clickData$y
-        rv$kegg_status = NULL
-        rv$kegg_status_g = NULL
-        
-        rv$kegg_yes = NULL
-        rv$kegg_confirm = NULL
-        
-        rv$reactome_yes = NULL
-        rv$reactome_confirm=NULL
-        
-        rv$wp_yes = NULL
-        rv$wp_confirm=NULL
-    # }
+    rv$es_term = rv$bubble_pathway_list[round(clickData$y)]
+    
+    clear_plot_rv()
 })
 
 # full volcano click
@@ -1196,21 +1199,9 @@ observeEvent(event_data("plotly_click", source = "volcano_plot_click"),{
     # req(rv$volcano_mode == "plotly")
     clickData <- event_data("plotly_click", source = "volcano_plot_click")
     # print(str(clickData))
-    # if(is.null(clickData)==F){
-        rv$es_term = rv$volcano_pathway_list[clickData$pointNumber + 1]
-        # print(str(rv$es_term))
-        rv$kegg_status = NULL
-        rv$kegg_status_g = NULL
-        
-        rv$kegg_yes = NULL
-        rv$kegg_confirm = NULL
-        
-        rv$reactome_yes = NULL
-        rv$reactome_confirm=NULL
-        
-        rv$wp_yes = NULL
-        rv$wp_confirm=NULL
-    # }
+    rv$es_term = rv$volcano_pathway_list[clickData$pointNumber + 1]
+    # print(str(rv$es_term))
+    clear_plot_rv()
 })
 
 # discrete volcano click
@@ -1220,25 +1211,12 @@ observeEvent(event_data("plotly_click", source = "volcano_plot_click2"),{
     # req(rv$volcano_mode == "plotly2")
     clickData <- event_data("plotly_click", source = "volcano_plot_click2")
     # print(str(clickData))
-    # if(is.null(clickData)==F){
-        rv$es_term = rv$volcano_pathway_list[clickData$pointNumber + 1]
-        # print(str(rv$es_term))
-        rv$kegg_status = NULL
-        rv$kegg_status_g = NULL
-        
-        rv$kegg_yes = NULL
-        rv$kegg_confirm = NULL
-        
-        rv$reactome_yes = NULL
-        rv$reactome_confirm=NULL
-        
-        rv$wp_yes = NULL
-        rv$wp_confirm=NULL
-    # }
+    rv$es_term = rv$volcano_pathway_list[clickData$pointNumber + 1]
+    # print(str(rv$es_term))
+    clear_plot_rv()
 })
 
-observe({
-    req(rv$es_term)
+observeEvent(rv$es_term,{
     x <- rv$gmts[rv$es_term][[1]]
     
     ranks2 <- rv$rnkgg[x]
@@ -1255,7 +1233,6 @@ observe({
     if((startsWith(rv$es_term,"KEGG"))==TRUE){rv$kegg_yes = "yes"}
     if((startsWith(rv$es_term,"RA_"))==TRUE){rv$reactome_yes = "yes"}
     if((startsWith(rv$es_term,"WP_"))==TRUE){rv$wp_yes = "yes"}
-    
 })
 
 # UI enrichment plot ----------------------
@@ -1859,34 +1836,39 @@ observeEvent(input$confirm_kegg_plot,{
         
     })
     
-    #help button for p.value and p.adj
-    p_value_help <- reactive({
-        actionBttn(inputId="p_value_help", 
-                 # align="right",
-                 # 
-                 # tags$h3("Enter genes"),
-                 # 
-                 # 
-                 # textAreaInput("p_value_explanation", 
-                 #               "Enter genes of interest (separated by new line):",
-                 #               placeholder="efk-1\nzip-2\ncep-1",
-                 #               value="efk-1\nzip-2\ncep-1"
-                 # ),
-                 # icon = icon("font"),
-                 icon = icon("product-hunt"),
-                 style = "material-circle",
-                 # color = ""
-                 #status = "default", width = "250px",right=T,
-        )
+    # --------------- help button for p.value and p.adj --------------
+    output$ui_p_help <- renderUI({
+        req(rv$run_mode == "gsea")
+        div(actionBttn(inputId="p_value_help", 
+                   # align="right",
+                   # 
+                   # tags$h3("Enter genes"),
+                   # 
+                   # 
+                   # textAreaInput("p_value_explanation", 
+                   #               "Enter genes of interest (separated by new line):",
+                   #               placeholder="efk-1\nzip-2\ncep-1",
+                   #               value="efk-1\nzip-2\ncep-1"
+                   # ),
+                   # icon = icon("font"),
+                   icon = icon("product-hunt"),
+                   style = "material-circle",
+                   size = "sm"
+                   # color = ""
+                   #status = "default", width = "250px",right=T,
+        ),
+        bsTooltip("p_value_help","Click to learn tips on choosing P & P.adj thresholds"))
+        
     })
+    
     
     observeEvent(input$p_value_help,{
         showModal(modalDialog(
             inputId = "p_help_modal",
-            #title = "What is p value and p adjusted",
-            div("A brief overview of P value: ", style="font-size:200%"),
-            #easyClose = TRUE,size="l"
-            footer = modalButton("Close")
+            title = "Choosing P and P.adj thresholds for pre-ranked GSEA runs",
+            includeMarkdown(paste0(getwd(),"/inc/p_explaination.md")),
+            easyClose = TRUE,size="m"
+            ,footer = modalButton("Close")
         ))
     })
     

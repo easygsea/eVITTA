@@ -37,38 +37,39 @@ server <- function(input, output, session) {
 
     
     
+
     
-    #======================================================================#
-    ####                         SINGLE WAY                             ####
-    #======================================================================#
+    # single way and two way are obsolete now
     
     # source("server/x_events.R", local = TRUE)
     # source("server/x_ui.R", local = TRUE)
     # source("server/x_vis.R", local = TRUE)
-    
-    
-    
-    
-    
-    
-    
-    # # two-way is obsolete for now
     # source("server/xy.R", local = TRUE)
     
+    #======================================================================#
+    ####                        MULTIPLE ANALYSIS                       ####
+    #======================================================================#
+    
+    source("server/multi_events.R", local = TRUE) # data processing
+    source("server/multi_shared_widgets.R", local = TRUE) # filter button and ins table
+    
+    #========================= SELECT FILTERS ==============================#
+    
+    source("server/f_gls.R", local = TRUE)
+    
+    
+    #========================= INTERSECTION ==============================#
+    
+    source("server/i_ins.R", local = TRUE)
     
 
-    
-    #======================================================================#
-    ####                        MULTIPLE WAY                            ####
-    #======================================================================#
-    
-    source("server/n_events.R", local = TRUE)
+    #========================= VISUALIZATIONS ==============================#
+
     source("server/n_ui.R", local = TRUE)
     
     
-    # 3 tabs:
+    # vis tabs:
     source("server/n_vis_heatmap.R", local = TRUE)
-    source("server/n_vis_intersect.R", local = TRUE)
     source("server/n_vis_scatter.R", local = TRUE)
     source("server/n_vis_single.R", local = TRUE)
     source("server/n_vis_network.R", local = TRUE)

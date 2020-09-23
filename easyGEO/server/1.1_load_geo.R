@@ -11,8 +11,8 @@ output$geo_accession_ui <- renderUI({
     textInput(
       inputId = "geo_accession",
       label = "GSE Accession Number:", 
-      value = "GSE147507",
-      placeholder = "GSE137355",
+      # value = "GSE147507",
+      placeholder = "GSE147507",
       width = "100%"
     ),
     "Note: only RNA-seq and single_channel microarray datasets are currently accepted.", br(), br(),
@@ -257,7 +257,7 @@ observeEvent(input$geo_platform, {
 # ---------- when all is done, show guide box to next page ---------
 output$guide_1a <- renderUI({
   if (is.null(rv$plat_id)==F){ # user already selected a platform
-    msg = "Navigate to <b>2. Data matrix</b> to proceed."
+    msg = "Navigate to <b>2. Data matrix</b> to proceed"
     guide_box("guide1", msg)
   } else {
     return(NULL)
