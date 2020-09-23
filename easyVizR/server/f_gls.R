@@ -84,16 +84,19 @@ observe({
 output$f_apply_filters_panel <- renderUI({
   if(is.null(rv$nx_n)==F){
     div(
-      HTML("<b>Filter presets:</b><br>Click to load one or multiple presets:<br>"),
-      hr(),
-      # dynamically render the list of presets as buttons
-      tagList(lapply(1:length(filter_presets), function(i) {
-        name <- names(filter_presets)[[i]]
-        preset <- filter_presets[[i]]
-        actionButton(inputId = paste0("fpreset_", preset[[1]]),
-                     label = name
-        )
-      })),
+      div(id="f_presets_panel",
+          HTML("<b>Filter presets:</b><br>Click to load one or multiple presets:<br>"),
+          hr(),
+          # dynamically render the list of presets as buttons
+          tagList(lapply(1:length(filter_presets), function(i) {
+            name <- names(filter_presets)[[i]]
+            preset <- filter_presets[[i]]
+            actionButton(inputId = paste0("fpreset_", preset[[1]]),
+                         label = name
+            )
+          })),
+          ),
+      
       
       
       hr(),
@@ -381,59 +384,62 @@ output$f_filtering_ui <- renderUI({
       "No data selected."
     )
   } else {
-    tagList(lapply(1:length(rv$nx_n), function(i) {
-      box(
-        title = NULL, status = "primary", solidHeader = F, width=12,
-        
-        column(4, 
-               div(style="word-break: break-all;",
-                   HTML(paste0("<b>",rv$nx_n[[i]],"</b>")),br(),
-               ),
-               
-               hr(),
-               wellPanel( align = "left",
-                          
-                          fluidRow(
-                            column(6, align = "left", 
-                                   numericInput(inputId = paste0("f_p_",i), 
-                                                "P <=:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
-                            column(6, align = "left",
-                                   numericInput(paste0("f_Stat_",i), 
-                                                "|Stat| >=:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
-                          ),
-                          fluidRow(
-                            column(6, align = "left",
-                                   numericInput(inputId = paste0("f_q_",i), 
-                                                "FDR <=:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
-                            column(6, align = "left",
-                                   radioGroupButtons(inputId = paste0("f_sign_",i), 
-                                                     label = "Direction:",
-                                                     choices=c("All"="All", "+"="Positive", "-"="Negative"),
-                                                     selected="All",size="s",direction = "horizontal"),
-                            ),
-                          )
-                          ,style = "padding: 15px;margin-top:10px;")
-        ),
-          column(4,style="padding-right:17px;",
-                 HTML("<b>Filter preview:</b>"),
-                 uiOutput(paste0("T_info",i)),
-                 div(dataTableOutput(paste0('T', i)), style="font-size:90%;"),
-                 div(style="position: absolute;top: 150px;right: -15px;color: cornflowerblue;font-size: 23px;",
-                   icon("arrow-right")
-                 )
-          ),
-        
-      
-          column(4,style="padding-left:17px;",
-                 HTML("<b>Applied filters:</b>"),br(),
-                 HTML(paste0("<i>", length(n_ins_gls()[[i]]),
-                             " out of ", nrow(rv$df_n), " total</i>")),
-                 div(dataTableOutput(paste0('TT', i)), style="font-size:90%;")
+    div(id="f_filtering_panels",
+        tagList(lapply(1:length(rv$nx_n), function(i) {
+          box(
+            title = NULL, status = "primary", solidHeader = F, width=12,
+            
+            column(4, 
+                   div(style="word-break: break-all;",
+                       HTML(paste0("<b>",rv$nx_n[[i]],"</b>")),br(),
+                   ),
+                   
+                   hr(),
+                   wellPanel(id=paste0("f_panel_",i),align = "left",
+                              
+                              fluidRow(
+                                column(6, align = "left", 
+                                       numericInput(inputId = paste0("f_p_",i), 
+                                                    "P <=:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
+                                column(6, align = "left",
+                                       numericInput(paste0("f_Stat_",i), 
+                                                    "|Stat| >=:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
+                              ),
+                              fluidRow(
+                                column(6, align = "left",
+                                       numericInput(inputId = paste0("f_q_",i), 
+                                                    "FDR <=:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
+                                column(6, align = "left",
+                                       radioGroupButtons(inputId = paste0("f_sign_",i), 
+                                                         label = "Direction:",
+                                                         choices=c("All"="All", "+"="Positive", "-"="Negative"),
+                                                         selected="All",size="s",direction = "horizontal"),
+                                ),
+                              )
+                              ,style = "padding: 15px;margin-top:10px;")
+            ),
+            column(4,style="padding-right:17px;",
+                   HTML("<b>Filter preview:</b>"),
+                   uiOutput(paste0("T_info",i)),
+                   div(dataTableOutput(paste0('T', i)), style="font-size:90%;"),
+                   div(style="position: absolute;top: 150px;right: -15px;color: cornflowerblue;font-size: 23px;",
+                       icon("arrow-right")
+                   )
+            ),
+            
+            
+            column(4,style="padding-left:17px;",
+                   HTML("<b>Applied filters:</b>"),br(),
+                   HTML(paste0("<i>", length(n_ins_gls()[[i]]),
+                               " out of ", nrow(rv$df_n), " total</i>")),
+                   div(dataTableOutput(paste0('TT', i)), style="font-size:90%;")
+            )
+            
+            
           )
-        
-        
-      )
-    }))
+        }))
+        )
+    
   }
 
 })

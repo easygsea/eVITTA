@@ -1,8 +1,0 @@
-element	intro
-n_filter_cuts	Start first by applying filters. <br><br>Filters are applied dynamically to each dataset, yielding gene lists.
-n_filter_gls	Genelists are shown here.
-n_filter_names	You can also filter manually by entering a list of names.
-n_venn_ui	Analyze the Venn diagram and find your desired intersection.
-ui_intersections	Use these options to find terms contained in your desired intersection. <br><br>Tip: check if the number of terms match the Venn count.
-n_ins_tbl	Terms contained in this intersection are shown here. These will be used for plotting all other visualizations. <br><br>You can change the selected intersection any time. 
-n1_1	Navigate to other tabs to see other visualizations.

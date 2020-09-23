@@ -7,7 +7,7 @@ body_filters <- tabItem(tabName = "tab_filters",
                                  box(id="select_n_panel",
                                    title = span(icon("vials"),"Select datasets"), status = "primary", solidHeader = F, width=12, collapsible=T,
                                    
-                                   div(id="n0_1", uiOutput("select_df_p2")),
+                                   div(id="n0_1", uiOutput("select_df_p2"), style="word-break:break-all;"),
                                    div(id="n0_2", style="height:60px",
                                        uiOutput("n_shared")
                                    ),

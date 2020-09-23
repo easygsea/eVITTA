@@ -15,50 +15,64 @@
 # intro text are loaded from tab-delimited txt in /intro.
 # 
 
+# ----------------- organize files tab
 observeEvent(input$help_organize, {
-  # print(input$tabs)
   req(input$tabs == "tab1")
   rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
                                             steps = intros$upload)
   )
 })
 
-observeEvent(input$help_x_pre, {
-  # print(input$tabs)
-  req(input$tabs == "tab2")
+# ----------------- filters tab
+# before selecting datasets
+observeEvent(input$help_f_pre, {
+  req(input$tabs == "tab_filters")
   rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$x0
-  ))
-  
+                                            steps = intros$f0)
+  )
 })
 
-observeEvent(input$help_x_post, {
-  # print(input$tabs)
-  req(input$tabs == "tab2")
+# after selecting datasets
+observeEvent(input$help_f_post, {
+  req(input$tabs == "tab_filters")
   rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$x1
-  ))
-  
+                                            steps = intros$f1)
+  )
 })
 
+# ----------------- intersection tab
+# before selecting datasets
+observeEvent(input$help_i_pre, {
+  req(input$tabs == "tab_ins")
+  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                            steps = intros$i0)
+  )
+})
+
+# after selecting datasets
+observeEvent(input$help_i_post, {
+  req(input$tabs == "tab_ins")
+  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                            steps = intros$i1)
+  )
+})
+
+# ----------------- n visualization tab
+# before selecting datasets
 observeEvent(input$help_n_pre, {
   # print(input$tabs)
   req(input$tabs == "tab3")
   rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
                                             steps = intros$n0)
   )
-  
 })
 
+# after selecting datasets
 observeEvent(input$help_n_post, {
   # print(input$tabs)
   req(input$tabs == "tab3")
   
-  if (input$n_ui_showpanel == "Intersection"){
-    rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                              steps = intros$n1)
-    )
-  } else if (input$n_ui_showpanel == "Heatmap"){
+  if (input$n_ui_showpanel == "Heatmap"){
     # updateRadioGroupButtons(session, inputId = "n_ui_showpanel", selected="Intersection")
     rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
                                               steps = intros$n2)
@@ -84,19 +98,49 @@ observeEvent(input$help_n_post, {
 })
 
 
-# initially hide the option panels using shinyjs, to prevent empty white boxes from flashing
-observe({
-  req(input$tabs != "tab1")
-  shinyjs::show("sidebar_opt")
-})
-
 
 
 
 #======================================================================#
 ####                help buttons UI in each page                    ####
 #======================================================================#
+# filter page
+output$f_floating_buttons <- renderUI({
+  if (is.null(rv$df_n)==T){
+    div(style="margin-top:10px",
+        actionBttn(
+          inputId = "help_f_pre", label=NULL, 
+          icon = icon("question"), style="material-circle", color="primary", size="lg"
+        )
+    )
+  } else {
+    div(style="margin-top:10px",
+        actionBttn(
+          inputId = "help_f_post", label=NULL,
+          icon = icon("question"), style="material-circle", color="primary", size="lg"
+        )
+    )
+  }
+})
 
+# intersection page
+output$i_floating_buttons <- renderUI({
+  if (is.null(rv$df_n)==T){
+    div(style="margin-top:10px",
+        actionBttn(
+          inputId = "help_i_pre", label=NULL, 
+          icon = icon("question"), style="material-circle", color="primary", size="lg"
+        )
+    )
+  } else {
+    div(style="margin-top:10px",
+        actionBttn(
+          inputId = "help_i_post", label=NULL,
+          icon = icon("question"), style="material-circle", color="primary", size="lg"
+        )
+    )
+  }
+})
 
 # n page
 output$n_floating_buttons <- renderUI({
@@ -115,8 +159,5 @@ output$n_floating_buttons <- renderUI({
           icon = icon("question"), style="material-circle", color="primary", size="lg"
         )
     )
-    
-    
   }
-  
 })

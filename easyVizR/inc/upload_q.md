@@ -27,3 +27,12 @@ Column names *do not* need to match these terms exactly. You will be asked to sp
 | aagr-4 |  0.78 |   6.31 | 7.23 |   0.03 |    1 |
 
 (Goh et al., *Aging Cell*, 2018)
+
+<br/>
+
+#### File upload limit
+
+- Single file upload: maximum 10 Mb per upload
+- Batch file upload: maximum 50 Mb per upload
+- File storage: maximum 100 Mb per session
+
