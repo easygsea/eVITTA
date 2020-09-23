@@ -11,8 +11,8 @@ output$geo_accession_ui <- renderUI({
     textInput(
       inputId = "geo_accession",
       label = "GSE Accession Number:", 
-      value = "GSE147507",
-      placeholder = "GSE137355",
+      # value = "GSE147507",
+      placeholder = "GSE147507",
       width = "100%"
     ),
     "Note: only RNA-seq and single_channel microarray datasets are currently accepted.", br(), br(),
