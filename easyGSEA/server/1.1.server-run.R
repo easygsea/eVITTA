@@ -265,23 +265,7 @@
             
         }
     })
-    
-# ------------ 2.2 select numeric namespace -----------
-    output$ui_num <- renderUI({
-      req(input$gene_identifier == "other")
-      req(input$selected_species != "")
-      
-      div(
-        selectizeInput(
-          "num_acc",
-          HTML(paste0("Numeric IDs treated as:",add_help("num_acc_hp", style="padding:3px 0 0 0;position:absolute;right:0.4em;"))),
-          choices = num_space[input$selected_species][[1]],
-          selected = num_space[input$selected_species][[1]][grepl('ENTREZGENE',num_space[input$selected_species][[1]])]
-        )
-        ,bsTooltip("num_acc_hp","The identifier for fully numeric IDs. For most purposes, select ENTREZGENE or ENTREZGENE_ACC"
-                   ,placement = "top")
-      )
-    })
+
     
 # ------------ 3.1.1 Upload & reset RNK ---------------
     # UI file input
@@ -381,16 +365,17 @@
               style = paste0("background:",bcol3)
             )
           ),
+          column(6,
+                 textInput("f_name",label = "Name your query:",value = rv$rnkll,width = "100%")
+                 
+            
+          ),
+          column(6,
+                 uiOutput("ui_num")
+                 
+            
+          ),
           column(12,
-                 div(
-                   style="display: inline-block;vertical-align:baseline;margin-right:5px",
-                   h4("Name your query:")
-                 ),
-                 div(
-                   style="display: inline-block;vertical-align:baseline;",
-                   textInput("f_name",label = NULL,value = rv$rnkll,width = "100%")
-                 )
-                 ,
                  p("Your query file content:"),
                  uiOutput("feedback_filecontent")
           )
@@ -405,6 +390,24 @@
         )
       ))
       
+    })
+    
+    # ------------ 3.1.2.2 select numeric namespace -----------
+    output$ui_num <- renderUI({
+      req(input$gene_identifier == "other")
+      req(input$selected_species != "")
+      
+      
+      div(
+        selectizeInput(
+          "num_acc",
+          HTML("Numeric IDs treated as:",add_help("num_acc_hp")),
+          choices = num_space[input$selected_species][[1]],
+          selected = num_space[input$selected_species][[1]][grepl('ENTREZGENE',num_space[input$selected_species][[1]])]
+        )
+        ,bsTooltip("num_acc_hp","The identifier for fully numeric IDs. For most purposes, select ENTREZGENE or ENTREZGENE_ACC"
+                   ,placement = "top")
+      )
     })
         
 # ------------- 3.1.3 Upload and reset example RNK/DE --------------
@@ -781,6 +784,7 @@
       }
       
       fluidRow(
+        br(),
         box(
           width = 12, title = "Advanced run parameters", status = "warning", collapsible = T, collapsed = T,
           wellPanel(
@@ -822,12 +826,13 @@
       req(is.null(rv$rnk_check)==F)
       req(is.null(rv$rnkgg)==F)
         
-      actionBttn("confirm1", 
+      div(br(),
+        actionBttn("confirm1", 
                  "RUN GSEA!",
                style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
                icon = icon("play-circle"),
                block = TRUE
-               )
+               ))
     })
     
     # UI confirm GList
@@ -838,11 +843,11 @@
       req(is.null(rv$glist_check)==F)
       req(is.null(rv$gene_lists_after)==F)
 
-      actionBttn("confirm2", 
+      div(br(),actionBttn("confirm2", 
                "RUN ORA!",
                icon = icon("play-circle"),
                style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
-               block = TRUE)
+               block = TRUE))
         
     })
 
