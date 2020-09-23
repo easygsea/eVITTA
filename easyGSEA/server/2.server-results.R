@@ -3,9 +3,9 @@
 #=============================================================#
 # ------------ Overall bodyResults UI ------------------
 output$ui_bodyResults <- renderUI({
-    # if(is.null(rv$run) || rv$run != "success"){
-    #     panel_null()
-    # }else{
+    if(is.null(rv$run) || rv$run != "success"){
+        panel_null()
+    }else{
         fluidRow(
             column(
                 8,
@@ -68,7 +68,7 @@ output$ui_bodyResults <- renderUI({
             )
             
         )
-    # }
+    }
 })
 
 # feedbacks on no significant enrichment

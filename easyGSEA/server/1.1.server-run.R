@@ -366,6 +366,15 @@
             )
           ),
           column(12,
+                 div(
+                   style="display: inline-block;vertical-align:baseline;margin-right:5px",
+                   h4("Name your query:")
+                 ),
+                 div(
+                   style="display: inline-block;vertical-align:baseline;",
+                   textInput("f_name",label = NULL,value = rv$rnkll,width = "100%")
+                 )
+                 ,
                  p("Your query file content:"),
                  uiOutput("feedback_filecontent")
           )
@@ -466,6 +475,10 @@
     
     # ----------------- 2.1.5 Return RNK -----------------------
     observeEvent(input$filecontent_confirm,{
+      # rename query
+      if(input$f_name != ""){rv$rnkll = input$f_name}
+      
+      # read in file data
         data = rv$data_head_o
         wtext = tags$b(
           "Duplicated genes found in your uploaded file. Only the first duplicate(s) will be kept. Do you want to continue?",
