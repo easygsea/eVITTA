@@ -15,15 +15,13 @@ output$ui_bodyNetwork <- renderUI({
                 title=span( icon("project-diagram"), "Network view of enriched gene sets"), status = "primary",
                 uiOutput("ui_vis_gear"),
                 
-                div(
+                div(id="d_vis",
                     style = "position: absolute; right: 1em; top: 1em;",
-                    dropdown(
-                        size = "xs",
-                        icon = icon("download", class = "opt"),
-                        up = FALSE,
-                        right = TRUE,
-                        downloadButton(outputId = "download_vis", label = "Download network")
-                    )
+                    downloadBttn(
+                        size = "md", style="unite",
+                        outputId = "download_vis", label = NULL
+                    ),
+                    bsTooltip("d_vis","Click to download plot", placement = "bottom")
                 ),
                 div(
                     uiOutput("vis_error")
@@ -104,14 +102,15 @@ observeEvent(input$q_vis_edge_threshold,{
 output$ui_vis_gear <- renderUI({
     div(
         align = "left",
-        style = "position: absolute; right: 4.5em; top: 1em;",
+        style = "position: absolute; right: 5em; top: 1em;",
         dropdown(
-            size = "xs",up = FALSE,right = TRUE,icon = icon("download", class = "opt"),width = "850px",
-    #         # circle = TRUE, tooltip = TRUE, label = "Advanced parameters for creating a network",
-    #         # icon = icon("gear", class = "opt"),
-    #         style = "material-circle", icon = icon("gear"),align = "left",
-    #         status = "default", width = "850px",
-    #         right=T,
+            up = FALSE,right = TRUE,icon = icon("gear"),width = "800px",
+            style = "unite",#status = "primary",#size = "sm",
+            circle = TRUE,
+            tooltip = tooltipOptions(
+                title = "Click to adjust parameters for creating a network"
+                ,placement = "bottom"),
+            
     #         animate = animateOptions(
     #             enter = "slideInRight",
     #             exit = "fadeOutRight", duration = 0.5

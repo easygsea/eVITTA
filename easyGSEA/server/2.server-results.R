@@ -1834,7 +1834,7 @@ observeEvent(input$confirm_kegg_plot,{
                    # color = ""
                    #status = "default", width = "250px",right=T,
         ),
-        bsTooltip("p_value_help","Tips on choosing P & P.adj thresholds"))
+        bsTooltip("p_value_help","Click to learn tips on choosing P & P.adj thresholds"))
         
     })
     
