@@ -1,3 +1,4 @@
+# --------- numeric ID selection ----------
 r_num_acc <- reactive({
   div(
     selectizeInput(
@@ -6,7 +7,8 @@ r_num_acc <- reactive({
       choices = num_space[input$selected_species][[1]],
       selected = num_space[input$selected_species][[1]][grepl('ENTREZGENE',num_space[input$selected_species][[1]])]
     )
-    ,bsTooltip("num_acc_hp","The identifier for fully numeric IDs. For most purposes, select ENTREZGENE or ENTREZGENE_ACC"
+    ,bsTooltip("num_acc_hp","The identifier for fully numeric IDs"
                ,placement = "top")
   )
 })
+

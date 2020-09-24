@@ -216,9 +216,19 @@ output$feedback_converted_rnk <- renderUI({
             fluidRow(
                 column(
                     width = 12,
-                    "Converted RNK for pre-ranked GSEA run:"
-                    ,uiOutput("ui_rnk_download")
-                    ,tableOutput("converted_rnk")
+                    div(
+                        style = "display: inline-block;vertical-align:baseline;",
+                        "Converted RNK for pre-ranked GSEA run:  "
+                    )
+                    ,div(
+                        style = "display: inline-block;vertical-align:baseline;",
+                        uiOutput("ui_rnk_download")
+                    )
+                    
+                ),
+                column(
+                    12,
+                    tableOutput("converted_rnk")
                 ),
                 column(
                     12, align = "right",
@@ -233,9 +243,19 @@ output$feedback_converted_rnk <- renderUI({
             fluidRow(
                 column(
                     width = 12,
-                    "Converted RNK for pre-ranked GSEA run:"
-                    ,uiOutput("ui_rnk_download")
-                    ,tableOutput("converted_rnk")
+                    div(
+                        style = "display: inline-block;vertical-align:baseline;",
+                        "Converted RNK for pre-ranked GSEA run:  "
+                    )
+                    ,div(
+                        style = "display: inline-block;vertical-align:baseline;",
+                        uiOutput("ui_rnk_download")
+                    )
+                    
+                ),
+                column(
+                    12,
+                    tableOutput("converted_rnk")
                 ),
                 column(
                     12, align = "right",
@@ -391,29 +411,6 @@ output$run_error <- renderUI({
     )
 })
 
-# UI ratioGroupButton ----------------------------------------
-    # output$body_1_ui <- renderUI({
-        # if(is.null(rv$run)==T){
-        #     box(title="Notification", status="warning",
-        #         "Results will be shown in this panel."
-        #     )
-        # }
-        # else if(rv$run == "success"){
-    # output$radio_buttons <- renderUI({
-    #     # req(rv$run == "success")
-    #     radioGroupButtons(
-    #         inputId = "summary_type",
-    #         choiceNames = list("Summary", span(icon("align-left"),"ID conversion")), #"Bar plot","Bubble plot","Volcano plot",
-    #         choiceValues = list("summary", "id"), #"bar", "bubble","volcano",
-    #         selected = "summary",
-    #         # checkIcon = list(
-    #         #     yes = icon("check-square"),
-    #         #     no = icon("square-o")
-    #         # ),
-    #         status = "primary",
-    #         direction = "horizontal"
-    #     )
-    # })
 
 # ------------ UI summary text ---------------
 output$summary_txt <- renderUI({
@@ -470,29 +467,30 @@ output$id_box <- renderUI({
     }
     
     box(
-        title = span(icon("align-left"),"ID conversion"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
+        title = span(icon("align-left"),"Gene ID conversion"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
         
-        # uiOutput("id_none"),
-        # div(
-        #     style = "display: inline-block;vertical-align:top;",
-        #     
-        # )
-        uiOutput("ui_mat_download")
-        
+        fluidRow(
+            column(
+                12,
+                div(
+                    style = "display: inline-block;vertical-align:top;",
+                    uiOutput("ui_mat_download")
+                )
+                ,div(
+                    style = "display: inline-block;vertical-align:top;",
+                    uiOutput("ui_deg_download")
+                )
+            )
+        )
         ,br()
-        ,dataTableOutput("id_conversion_table")
+        ,fluidRow(
+            column(
+                12
+                ,dataTableOutput("id_conversion_table")
+            )
+        )
     )
 })
-
-# # UI ID conversion table
-# # box to display if no ID conversion
-# output$id_none <- renderUI({
-#     req(is.null(rv$gene_lists_mat))
-#     
-#     wellPanel(
-#         "ID conversion table available when applicable."
-#     )
-# })
 
 # render ID conversion table
 output$id_conversion_table <- DT::renderDataTable({
@@ -519,8 +517,8 @@ output$id_conversion_table <- DT::renderDataTable({
 # download ID conversion button
 output$ui_mat_download <- renderUI({
     downloadBttn("mat_download",
-                   label = "Download ID conversion table (.csv)", style = rv$dbtn_style,
-                   color = rv$dbtn_color, size=rv$dbtn_size, block = TRUE
+                   label = "Download ID conversions (.csv)", style = rv$dbtn_style,
+                   color = rv$dbtn_color, size=rv$dbtn_size, block = F
     )
 })
 
@@ -538,6 +536,31 @@ output$mat_download <- downloadHandler(
                row.names = F, quote=T)
     })
 
+# ----------- converted DEG download ---------
+output$ui_deg_download <- renderUI({
+    req(rv$rnk_or_deg == "deg")
+    
+    div(id="deg_download_btn",
+        downloadBttn("deg_download",
+                     label = "Download converted DEG table (.csv)", style = rv$dbtn_style,
+                     color = rv$dbtn_color, size=rv$dbtn_size, block = F
+        ),
+        bsTooltip("deg_download_btn","Download converted DEG table and proceed to easyVizR for multiple comparisons"
+                  ,placement = "top")
+    )
+    
+})
+
+# download converted DEG table
+output$deg_download <- downloadHandler(
+    filename = function() {paste0(rv$rnkll,"_convertedDEG.csv")},
+    content = function(file) {
+        
+        fwrite(rv$data_head_o, file, sep=",", 
+               # sep2=c("", ";", ""), 
+               row.names = F, quote=T)
+    })
+
 # UI download RNK --------------
 output$ui_rnk_download <- renderUI({
     req(is.null(rv$rnkgg) == F)
@@ -545,7 +568,7 @@ output$ui_rnk_download <- renderUI({
     
     downloadBttn("rnk_download",
                    label = "Download RNK (.rnk)", style = rv$dbtn_style,
-                 color = rv$dbtn_color, size=rv$dbtn_size, block = TRUE
+                 color = rv$dbtn_color, size=rv$dbtn_size, block = F
     )
 })
 

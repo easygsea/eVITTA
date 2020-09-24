@@ -1176,6 +1176,10 @@
     convert_rank_id <- function(species, ranks){
         genes_o = names(ranks)
         
+        # load original DEG table
+        df = rv$data_head_o
+        df = df %>% dplyr::filter(.data[[input$gene_column]] %in% genes_o)
+
         # gconvert to NCBI ACC #
         results = gconvert(
             genes_o,
@@ -1204,6 +1208,11 @@
                 ranks_after = ranks[tolower(genes_o) %in% tolower(genes_mat$input)]
                 names(ranks_after) = genes_mat$name#[tolower(genes_mat$input) %in% tolower(names(ranks_after))]
                 
+                # # rename DEG table
+                df = df %>% dplyr::filter(tolower(.data[[input$gene_column]]) %in% tolower(genes_mat$input))
+                df[[input$gene_column]] = genes_mat$name
+                rv$data_head_o = df
+
                 # percent of genes maintained after conversion
                 g_perc = length(ranks_after)/length(ranks)
                 
