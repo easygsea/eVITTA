@@ -1307,7 +1307,7 @@
               
               # convert ID and save converted IDs & conversion table into RVs
               rv$rnkgg = lst[[2]]
-              rv$gene_lists_mat = lst[[3]]
+              rv$gene_lists_mat1 = lst[[3]]
               
               # count # of genes after conversion
               rv$total_genes_after = length(rv$rnkgg)
@@ -1353,7 +1353,7 @@
       rv$infile_path = NULL
       rv$file_upload_status = NULL
       rv$rnk_or_deg = NULL
-      rv$gene_lists_mat = NULL
+      rv$gene_lists_mat1 = NULL; rv$gene_lists_mat2 = NULL
       
       shinyjs::reset("rnkfile")
       shinyjs::enable("rnkfile")
@@ -1381,7 +1381,7 @@
     #   )
     # }
     
-    guide_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details",color="warning",size="lg"){
+    guide_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details",color="warning",size="md"){
       actionBttn(
         id,
         HTML(msg),

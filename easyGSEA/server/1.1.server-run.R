@@ -197,7 +197,7 @@
       rv$infile_path = NULL
       rv$file_upload_status = NULL
       rv$rnk_or_deg = NULL
-      rv$gene_lists_mat = NULL
+      rv$gene_lists_mat1 = NULL; rv$gene_lists_mat2 = NULL
       rv$db_modal = NULL
       
       # rest glist UIs
@@ -455,7 +455,7 @@
         req(is.null(rv$infile_name)==F)
         rv$infile_check=NULL
         rv$input_symbol = NULL
-        rv$gene_lists_mat = NULL
+        rv$gene_lists_mat1 = NULL
         rv$run = NULL
         
         rv$rnkll <- strsplit(isolate(rv$infile_name),"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1] # add value to rv
@@ -691,7 +691,7 @@
                           
                           # convert ID and save converted IDs & conversion table into RVs
                           rv$gene_lists_after = lst[[2]]
-                          rv$gene_lists_mat = lst[[3]]
+                          rv$gene_lists_mat2 = lst[[3]]
                           
                         }
                       })

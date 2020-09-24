@@ -45,7 +45,7 @@ output$ui_downloadbox <- renderUI({
                                        style="display: inline-block;vertical-align:top;",
                                        downloadBttn("gs_tbl_dl",
                                                     label = "Download enrichment table (.csv)"
-                                                    , style = rv$dbtn_style, color = rv$dbtn_color
+                                                    , style = rv$dbtn_style, color = "warning"
                                                     , size="md", block = TRUE
                                        )
                                    ),
