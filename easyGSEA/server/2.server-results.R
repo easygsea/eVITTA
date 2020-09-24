@@ -1092,7 +1092,7 @@ output$ui_es <- renderUI({
             ),
             div(
                 style = 'overflow-x: scroll;font-size:75%', 
-                DT::dataTableOutput("gs_stats_tl"),br()
+                DT::dataTableOutput("gs_stats_tl")
             )
             
         )
