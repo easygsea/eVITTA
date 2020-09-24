@@ -169,7 +169,7 @@ observeEvent(rv$ftpy,{
     div(style="font-size:200%",
       tags$strong("Please decompress and check your downloaded data:"),
       br(),br(),
-      tags$li("If they are raw/normalized counts, please tidy them up and upload the right format according to our instructions below."),
+      tags$li("If they are raw/normalized counts (e.g. CPM, FPKM, RPKM), please tidy them up and upload the right format according to our instructions below."),
       br(),
       tags$li(HTML("If they are analyzed, proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><b>easyGSEA</b></a> for enrichment analysis or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><b>easyVizR</b></a> for multiple comparisons.")),
     ),

@@ -1233,6 +1233,7 @@
       
       if(TRUE %in% duplicates){
         data = data[!duplicates, ]
+        rv$data_head_o = data
       }
       
       rv$infile_confirm = "confirm"
@@ -1256,6 +1257,7 @@
       
       if(TRUE %in% duplicates){
         data = data[!duplicates, ]
+        rv$data_head_o = data
       }
       
       rv$infile_confirm = "confirm"

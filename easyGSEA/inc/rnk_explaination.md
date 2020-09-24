@@ -13,7 +13,6 @@ The RNK file contains a single, rank ordered gene list (not gene set) in a simpl
 
 We support both comma- and tab-delimited text files.
 
-<br/>
 
 
 You can try our example RNK file (Goh et al., *Aging Cell*, 2018; Blanco-Melo D et al., *Cell*, 2020) by clicking the `loadExampleRNK` button below. Please make sure you have selected your species of interest. The file will be automatically loaded.
@@ -22,8 +21,6 @@ You can try our example RNK file (Goh et al., *Aging Cell*, 2018; Blanco-Melo D 
 
 <div id="example1" class="shiny-html-output"></div>
 
-
-<br/>
 
 #### **Convert differential gene expression (DEG) analysis file into RNK**
 
