@@ -606,7 +606,7 @@
         ),
         column(
           12,
-          r_num_acc()
+          uiOutput("ora_num")
         ),
         column(
           width = 6,
@@ -634,6 +634,12 @@
         )
         
       )
+    })
+    
+    # numeric identifier
+    output$ora_num <- renderUI({
+      req(input$gene_identifier == "other")
+      r_num_acc()
     })
     
     # Glist add button
@@ -756,13 +762,6 @@
     
 
 #---------- 4. run parameters & confirm buttons ---------
-    # clear Glist rv when switching to gsea mode
-    observe({
-        req(input$selected_mode == "gsea")
-        rv$gene_lists = NULL
-        rv$gene_lists_after = NULL
-    })
-
     # UI confirm GSEA
     output$run_btn <- renderUI({
       req(rv$db_status == "selected")
@@ -779,7 +778,6 @@
 
         
       div(
-        br(),
         actionBttn(aid, 
                    alabel,
                    style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
@@ -787,7 +785,7 @@
                    block = TRUE)
         ,
         div(
-          style="position: absolute; right: 1em; top: 1em;",
+          style="position: absolute; right: 0.8em; top: -0.4em;",
           uiOutput("ui_gsea_par")
           
         )

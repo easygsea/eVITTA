@@ -372,14 +372,23 @@ output$run_summary_gsea <- renderUI({
                 )
             )
         }
-    }else if(rv$run == "failed"){
-        fluidRow(
-            box(
-                background = "red", width = 12,
-                HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if species matches your query and/or if you have selected the right gene identifier & its column and/or if your input file/gene list is correct.")
+    }
+})
+
+# --------- error if no genes found in databases ---------------
+output$run_error <- renderUI({
+    req(rv$run == "failed")
+    fluidRow(
+        box(
+            background = "red", width = 12,
+            HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check whether ")
+            ,tags$ul(
+                tags$li("The selected species matches your query, and/or")
+                ,tags$li("You have selected the right gene identifier as well as its column, and/or")
+                ,tags$li("Your input file/gene list is correct.")
             )
         )
-    }
+    )
 })
 
 # UI ratioGroupButton ----------------------------------------
@@ -441,6 +450,7 @@ output$summary_txt <- renderUI({
                 uiOutput("feedback_converted_rnk"),
                 uiOutput("feedback_glist"),
                 uiOutput("feedback_converted_glist")
+                ,uiOutput("run_error")
                 
             )
             # ,column(
