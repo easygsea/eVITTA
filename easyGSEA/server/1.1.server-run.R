@@ -768,87 +768,92 @@
         rv$gene_lists = NULL
         rv$gene_lists_after = NULL
     })
-    
-    # UI GSEA parameter
-    output$ui_gsea_par <- renderUI({
+
+    # UI confirm GSEA
+    output$run_btn <- renderUI({
       req(rv$db_status == "selected")
-      
+
       if(input$selected_mode == "gsea"){
         req(is.null(rv$rnk_check)==F)
         req(is.null(rv$rnkgg)==F)
-        
+        aid = "confirm1"; alabel = "RUN GSEA!"
       }else if(input$selected_mode == "glist"){
         req(is.null(rv$glist_check)==F)
         req(is.null(rv$gene_lists_after)==F)
-        
+        aid = "confirm2"; alabel = "RUN ORA!"
       }
-      
-      fluidRow(
+
+        
+      div(
         br(),
-        box(
-          width = 12, title = "Advanced run parameters", status = "warning", collapsible = T, collapsed = T,
-          wellPanel(
-            # h4("Run parameters"),
-            splitLayout(
-              numericInput("mymin", 
-                           HTML(paste0("Min:",
-                                       add_help("mymin_q")))
-                           ,rv$gmin),
-              numericInput("mymax", 
-                           HTML(paste0("Max:",
-                                       add_help("mymax_q")))
-                           ,rv$gmax),
-              uiOutput("ui_nperm")
-            )
-            ,style = "background:#e6f4fc;"
-          ),
-          bsTooltip("mymin_q", "Minimum gene set size", placement = "top"),
-          bsTooltip("mymax_q", "Maximum gene set size", placement = "top")
+        actionBttn(aid, 
+                   alabel,
+                   style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+                   icon = icon("play-circle"),
+                   block = TRUE)
+        ,
+        div(
+          style="position: absolute; right: 1em; top: 1em;",
+          uiOutput("ui_gsea_par")
+          
         )
       )
+        
     })
-
+    
+    # --------------- 4a. UI GSEA parameter ---------------
+    output$ui_gsea_par <- renderUI({
+      if(input$selected_mode == "gsea"){
+        req(is.null(rv$rnk_check)==F)
+        req(is.null(rv$rnkgg)==F)
+      }else if(input$selected_mode == "glist"){
+        req(is.null(rv$glist_check)==F)
+        req(is.null(rv$gene_lists_after)==F)
+      }
+      
+      dropdownButton(
+        width = "300px",circle = TRUE, status = "info",
+        size = "xs",
+        icon = icon("gear"),# class = "opt"),
+        up = FALSE,
+        tooltip = tooltipOptions(title = "Click to adjust run parameters"),
+        
+        fluidRow(
+          br(),
+          column(12,
+          #   width = 12, title = "Advanced run parameters", status = "warning", collapsible = T, collapsed = T,
+            wellPanel(
+              h4("Advanced run parameters"),
+              splitLayout(
+                numericInput("mymin", 
+                             HTML(paste0("Min:",
+                                         add_help("mymin_q")))
+                             ,rv$gmin),
+                numericInput("mymax", 
+                             HTML(paste0("Max:",
+                                         add_help("mymax_q")))
+                             ,rv$gmax),
+                uiOutput("ui_nperm")
+              )
+              ,style = "background:#e6f4fc;"
+            ),
+            bsTooltip("mymin_q", "Minimum gene set size", placement = "top"),
+            bsTooltip("mymax_q", "Maximum gene set size", placement = "top")
+          )
+        )
+      )
+      
+      
+    })
+    
     output$ui_nperm <- renderUI({
-        req(input$selected_mode == "gsea")
+      req(input$selected_mode == "gsea")
       div(
         numericInput("nperm", 
                      HTML(paste0("# perm:",add_help("nperm_q")))
                      ,rv$gperm),
         bsTooltip("nperm_q", "No. of permutations", placement = "top")
       )
-    })
-    
-    # UI confirm GSEA
-    output$run_GSEA <- renderUI({
-      req(input$selected_mode == "gsea")
-      req(rv$db_status == "selected")
-      
-      req(is.null(rv$rnk_check)==F)
-      req(is.null(rv$rnkgg)==F)
-        
-      div(br(),
-        actionBttn("confirm1", 
-                 "RUN GSEA!",
-               style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
-               icon = icon("play-circle"),
-               block = TRUE
-               ))
-    })
-    
-    # UI confirm GList
-    output$run_GList <- renderUI({
-      req(input$selected_mode == "glist")
-      req(rv$db_status == "selected")
-      
-      req(is.null(rv$glist_check)==F)
-      req(is.null(rv$gene_lists_after)==F)
-
-      div(br(),actionBttn("confirm2", 
-               "RUN ORA!",
-               icon = icon("play-circle"),
-               style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
-               block = TRUE))
-        
     })
 
     
@@ -963,6 +968,7 @@
               # determine if success or warnings
               if(nrow(rv$fgseagg)>0){
                 rv$run = "success"
+                rv$run_n = rv$run_n + 1
               } else {
                 rv$run = "failed"
               }
@@ -1082,6 +1088,8 @@
               # determine if success or warnings
               if(is.null(rv$fgseagg)==F && nrow(rv$fgseagg)>0){
                 rv$run = "success"
+                rv$run_n = rv$run_n + 1
+                
               } else {
                 rv$run = "failed"
               }
@@ -1090,4 +1098,27 @@
             
 
         })
+    })
+    
+    # ---------------------- 4.3 render Modal upon successful run ----------------
+    observeEvent(rv$run_n,{
+      showModal(modalDialog(
+        easyClose = F,
+        fluidRow(
+          column(
+            12,
+            h2("Analysis complete!")
+            ,br(),column(12,uiOutput("run_summary_gsea"))
+            ,br(),br(),br(),guide_box("msg1")
+            
+          )
+        )
+        ,footer = NULL
+      ))
+    })
+    
+    # ------------ clike button to Enrichment Results tab ------------
+    observeEvent(input$msg1,{
+      removeModal()
+      updateTabItems(session, "tabs", "kegg")
     })

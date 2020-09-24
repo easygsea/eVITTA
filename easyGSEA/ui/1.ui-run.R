@@ -73,43 +73,32 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     fluidRow(
                         column(
                             width = 12, align = "center",
-                            uiOutput("run_GSEA"),
-                            uiOutput("run_GList")
+                            uiOutput("run_btn")
                         )
-                    ),
-                    uiOutput("ui_gsea_par")
+                    )
                     
                 )
             # )
         ),
         column(
             width = 8,
-            fluidRow(
-                tabBox(
-                    title = "Welcome to easyGSEA", width = 12, #span(img(src = "easygsea_bw.tiff", height = 35),)
-                    tabPanel(
-                        "Overview",
-                        uiOutput("summary_box")
-                    ),
-                    tabPanel(
-                        span(icon("list"),"ID conversion"),
-                        uiOutput("id_box")
-                    )
+            box(
+                title = span(icon("seedling"),"Welcome to easyGSEA"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
+                column(
+                    12,
+                    uiOutput("summary_txt")
+                    ,br()
+                    
+                ),
+                column(
+                    12,
+                    uiOutput("summary_box")
+                    
                 )
-            )
-            
-            # fluidRow(
-            #     column(
-            #         width = 8,
-            #         uiOutput("radio_buttons")
-            #     )
-            #     
-            # ),
-            # fluidRow(
-            #     uiOutput("summary_box"),
-            #     uiOutput("id_box")
-            # )
-            
+                
+            ),
+            br(),
+            uiOutput("id_box")
         )
     )
 )
