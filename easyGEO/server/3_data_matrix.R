@@ -322,9 +322,9 @@ observeEvent(input$file, {
   # try to convert the indf headers into gsm format. matching is done in upper case.
   translation_df <- rv$pdata[c("title", "geo_accession")]
   translation_df$title <- toupper(translation_df$title) # convert the translation df to upper case as well
-  indf_coln <- translate_sample_names(toupper(indf_coln),  # translating from (upper case)
+  if(!'Æ' %in% indf_coln){indf_coln <- translate_sample_names(toupper(indf_coln),  # translating from (upper case)
                                       translation_df,  # translation df
-                                      "geo_accession") # translating to
+                                      "geo_accession")} # translating to
   #print(indf_coln)
  
   colnames(indf) <- indf_coln[-1]
