@@ -197,7 +197,7 @@
       rv$infile_path = NULL
       rv$file_upload_status = NULL
       rv$rnk_or_deg = NULL
-      rv$gene_lists_mat = NULL
+      rv$gene_lists_mat1 = NULL; rv$gene_lists_mat2 = NULL
       rv$db_modal = NULL
       
       # rest glist UIs
@@ -455,7 +455,7 @@
         req(is.null(rv$infile_name)==F)
         rv$infile_check=NULL
         rv$input_symbol = NULL
-        rv$gene_lists_mat = NULL
+        rv$gene_lists_mat1 = NULL
         rv$run = NULL
         
         rv$rnkll <- strsplit(isolate(rv$infile_name),"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1] # add value to rv
@@ -606,7 +606,7 @@
         ),
         column(
           12,
-          r_num_acc()
+          uiOutput("ora_num")
         ),
         column(
           width = 6,
@@ -634,6 +634,12 @@
         )
         
       )
+    })
+    
+    # numeric identifier
+    output$ora_num <- renderUI({
+      req(input$gene_identifier == "other")
+      r_num_acc()
     })
     
     # Glist add button
@@ -691,7 +697,7 @@
                           
                           # convert ID and save converted IDs & conversion table into RVs
                           rv$gene_lists_after = lst[[2]]
-                          rv$gene_lists_mat = lst[[3]]
+                          rv$gene_lists_mat2 = lst[[3]]
                           
                         }
                       })
@@ -756,13 +762,6 @@
     
 
 #---------- 4. run parameters & confirm buttons ---------
-    # clear Glist rv when switching to gsea mode
-    observe({
-        req(input$selected_mode == "gsea")
-        rv$gene_lists = NULL
-        rv$gene_lists_after = NULL
-    })
-
     # UI confirm GSEA
     output$run_btn <- renderUI({
       req(rv$db_status == "selected")
@@ -779,7 +778,6 @@
 
         
       div(
-        br(),
         actionBttn(aid, 
                    alabel,
                    style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
@@ -787,7 +785,7 @@
                    block = TRUE)
         ,
         div(
-          style="position: absolute; right: 1em; top: 1em;",
+          style="position: absolute; right: 0.8em; top: -0.4em;",
           uiOutput("ui_gsea_par")
           
         )
