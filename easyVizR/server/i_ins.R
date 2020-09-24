@@ -603,7 +603,7 @@ output$n_ui_intersect <- renderUI({
 
 #----------------- venn --------------------
 ins_venn_panel <- reactive({
-  box(title = span( icon("chart-area"), "Venn Diagram"), status = "primary", solidHeader = F, width=6,
+  box(title = span( strong("3.1a."),icon("chart-area"), "Venn Diagram"), status = "primary", solidHeader = F, width=6,
       
       uiOutput("n_venn_ui"),
       
@@ -648,7 +648,7 @@ ins_venn_panel <- reactive({
 ins_upset_panel <- reactive({
   
   box(
-    title = span( icon("chart-area"), "UpSet Plot"), status = "primary", solidHeader = F, width=6,
+    title = span( strong("3.1b."),icon("chart-area"), "UpSet Plot"), status = "primary", solidHeader = F, width=6,
     
     plotOutput("df_n_upset", width = "100%"),
     
@@ -686,13 +686,13 @@ ins_upset_panel <- reactive({
 
 output$n_venn_placeholder <- renderUI({
   box(
-    title = span( icon("chart-area"), "Venn Diagram"), status = "warning", solidHeader = F, width=6,
+    title = span( strong("3.1a."),icon("chart-area"), "Venn Diagram"), status = "warning", solidHeader = F, width=6,
     paste0("Venn diagram is only available for 5 or less datasets. You have selected ", length(rv$nx_i)," datasets.")
   )
 })
 output$n_upset_placeholder <- renderUI({
   box(
-    title = span( icon("chart-area"), "UpSet Plot"), status = "warning", solidHeader = F, width=6,
+    title = span( strong("3.1b."),icon("chart-area"), "UpSet Plot"), status = "warning", solidHeader = F, width=6,
     paste0("UpSet plot is only available for 5 or less datasets. You have selected ", length(rv$nx_i)," datasets.")
   )
 })
@@ -713,7 +713,7 @@ output$ins_main_panels <- renderUI({
       fluidRow(
         div(style="height: 3.5em;",
             column(6,
-                   HTML("<span style='font-size: 160%;margin-left: 0.5em;'>Intersection analysis</span>"),
+                   HTML("<span style='font-size: 160%;margin-left: 0.5em;'>Select Intersection</span>"),
                    
             ),
             column(6,align= "right",
@@ -745,7 +745,7 @@ output$ins_main_panels <- renderUI({
         column(12,
                box(
                  width = 12, status = "primary",solidHeader = F,
-                 title = span(icon("table"),"Selected Intersection"),
+                 title = span(strong("3.2."),icon("table"),"Intersection of Interest"),
                  div(id= "ins_pg_bottom"),
                )
                

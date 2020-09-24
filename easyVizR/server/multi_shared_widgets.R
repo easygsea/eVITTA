@@ -123,7 +123,7 @@ customize_filters <- reactive({
            
            actionButton("nic_applytorv", "Apply Filters", class = "btn-warning"),
            
-           style = "material-circle", icon = icon("gear"),
+           style = "material-circle", icon = icon("filter"),
            status = "default", width = calc_dropdown_width(length(rv$nx_n)+1, 250, 70, max_per_row=3),
            right=T, 
            animate = animateOptions(

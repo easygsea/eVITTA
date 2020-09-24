@@ -522,7 +522,7 @@ output$n_panels <- renderUI({
         column(12,
                box(
                  width = 12, status = "primary",solidHeader = F,
-                 title = span(icon("table"),"Selected Intersection"),
+                 title = span(icon("table"),"Intersection of Interest"),
                  div(id= "vis_pg_bottom"),
                )
                

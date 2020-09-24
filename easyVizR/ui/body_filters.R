@@ -5,7 +5,7 @@ body_filters <- tabItem(tabName = "tab_filters",
                           
                           column(3,
                                  box(id="select_n_panel",
-                                   title = span(icon("vials"),"Select datasets"), status = "primary", solidHeader = F, width=12, collapsible=T,
+                                   title = span(strong("2.1."),icon("vials"),"Select datasets"), status = "primary", solidHeader = F, width=12, collapsible=T,
                                    
                                    div(id="n0_1", uiOutput("select_df_p2"), style="word-break:break-all;"),
                                    div(id="n0_2", style="height:60px",
@@ -19,7 +19,7 @@ body_filters <- tabItem(tabName = "tab_filters",
                                    ),
                                  
                                  box(id="f_global",
-                                     title = span(icon("cut"),"Apply filters"), status = "primary", solidHeader = F, width=12, collapsible=T, collapsed=T,
+                                     title = span(strong("2.2."),icon("filter"),"Apply filters"), status = "primary", solidHeader = F, width=12, collapsible=T, collapsed=T,
                                      uiOutput("f_apply_filters_panel"),
                                      
                                      
