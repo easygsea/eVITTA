@@ -1,6 +1,6 @@
    rv <- reactiveValues(
         run_mode=NULL, #gsea glist
-        run_n = NULL,
+        run_n = 0,
         
         db_status=NULL, # selected
         db_modal=NULL, # check if modal if used or not

@@ -1326,7 +1326,7 @@
     #===================================================#
 
     reset_rvs <- function(){
-      rv$run = NULL; rv$run_n = NULL
+      rv$run = NULL
       rv$fgseagg=NULL
       rv$gmts=NULL
       
