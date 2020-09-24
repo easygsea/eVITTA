@@ -1107,7 +1107,7 @@
         )
         ,footer = NULL
       ))
-    })
+    },ignoreInit = T)
     
     # ------------ clike button to Enrichment Results tab ------------
     observeEvent(input$msg1,{

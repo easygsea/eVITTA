@@ -399,21 +399,21 @@ output$run_error <- renderUI({
         #     )
         # }
         # else if(rv$run == "success"){
-    output$radio_buttons <- renderUI({
-        # req(rv$run == "success")
-        radioGroupButtons(
-            inputId = "summary_type",
-            choiceNames = list("Summary", span(icon("align-left"),"ID conversion")), #"Bar plot","Bubble plot","Volcano plot",
-            choiceValues = list("summary", "id"), #"bar", "bubble","volcano",
-            selected = "summary",
-            # checkIcon = list(
-            #     yes = icon("check-square"),
-            #     no = icon("square-o")
-            # ),
-            status = "primary",
-            direction = "horizontal"
-        )
-    })
+    # output$radio_buttons <- renderUI({
+    #     # req(rv$run == "success")
+    #     radioGroupButtons(
+    #         inputId = "summary_type",
+    #         choiceNames = list("Summary", span(icon("align-left"),"ID conversion")), #"Bar plot","Bubble plot","Volcano plot",
+    #         choiceValues = list("summary", "id"), #"bar", "bubble","volcano",
+    #         selected = "summary",
+    #         # checkIcon = list(
+    #         #     yes = icon("check-square"),
+    #         #     no = icon("square-o")
+    #         # ),
+    #         status = "primary",
+    #         direction = "horizontal"
+    #     )
+    # })
 
 # ------------ UI summary text ---------------
 output$summary_txt <- renderUI({
@@ -470,7 +470,7 @@ output$id_box <- renderUI({
     }
     
     box(
-        title = span(icon("table"),"ID conversion"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
+        title = span(icon("align-left"),"ID conversion"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
         
         # uiOutput("id_none"),
         # div(
