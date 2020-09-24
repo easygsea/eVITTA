@@ -1138,7 +1138,7 @@
             genes,
             organism = species_names_go[species][[1]],
             target = "ENTREZGENE_ACC", # results$target is ACC, results$name is ACC symbol
-            numeric_ns = "",
+            numeric_ns = input$num_acc,
             mthreshold = Inf,
             filter_na = TRUE
         )
@@ -1181,7 +1181,7 @@
             genes_o,
             organism = species_names_go[species][[1]],
             target = "ENTREZGENE_ACC", # results$target is ACC, results$name is ACC symbol
-            numeric_ns = "",
+            numeric_ns = input$num_acc,
             mthreshold = Inf,
             filter_na = TRUE
         )
@@ -1326,7 +1326,7 @@
     #===================================================#
 
     reset_rvs <- function(){
-      rv$run = NULL
+      rv$run = NULL; rv$run_n = NULL
       rv$fgseagg=NULL
       rv$gmts=NULL
       
@@ -1381,12 +1381,12 @@
     #   )
     # }
     
-    guide_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details"){
+    guide_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details",color="warning",size="lg"){
       actionBttn(
         id,
         HTML(msg),
         icon=icon("angle-double-right"),
-        style = "simple", color="warning", size = "sm",
+        style = "simple", color=color, size = size,
         block = T
       )
     }

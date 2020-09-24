@@ -265,9 +265,9 @@
             
         }
     })
-    
 
-# ------------ 2.1.1 Upload & reset RNK ---------------
+    
+# ------------ 3.1.1 Upload & reset RNK ---------------
     # UI file input
     output$ui_rnk <- renderUI({
         req(input$selected_mode == "gsea")
@@ -336,7 +336,7 @@
         }
     })
 
-# ------------- 2.1.2 select corresponding table columns -----------------
+# ------------- 3.1.2 select corresponding table columns -----------------
     # UI: select columns to 
     # output$feedbacks <- renderUI
     observe({
@@ -365,16 +365,17 @@
               style = paste0("background:",bcol3)
             )
           ),
+          column(6,
+                 textInput("f_name",label = "Name your query:",value = rv$rnkll,width = "100%")
+                 
+            
+          ),
+          column(6,
+                 uiOutput("ui_num")
+                 
+            
+          ),
           column(12,
-                 div(
-                   style="display: inline-block;vertical-align:baseline;margin-right:5px",
-                   h4("Name your query:")
-                 ),
-                 div(
-                   style="display: inline-block;vertical-align:baseline;",
-                   textInput("f_name",label = NULL,value = rv$rnkll,width = "100%")
-                 )
-                 ,
                  p("Your query file content:"),
                  uiOutput("feedback_filecontent")
           )
@@ -390,8 +391,16 @@
       ))
       
     })
+    
+    # ------------ 3.1.2.2 select numeric namespace -----------
+    output$ui_num <- renderUI({
+      req(input$gene_identifier == "other")
+      req(input$selected_species != "")
+
+      r_num_acc()
+    })
         
-# ------------- 2.1.3 Upload and reset example RNK/DE --------------
+# ------------- 3.1.3 Upload and reset example RNK/DE --------------
     observeEvent(input$loadExampleRNK,{
         rv$example_file = NULL
         if(input$selected_species == ""){
@@ -441,7 +450,7 @@
     })
 
     
-# ----------------- 2.1.4 check and store input file content into rv$data_head -----------------------
+# ----------------- 3.1.4 check and store input file content into rv$data_head -----------------------
     observe({
         req(is.null(rv$infile_name)==F)
         rv$infile_check=NULL
@@ -473,7 +482,7 @@
         rv$data_head_o = ranks
     })
     
-    # ----------------- 2.1.5 Return RNK -----------------------
+    # ----------------- 3.1.5 Return RNK -----------------------
     observeEvent(input$filecontent_confirm,{
       # rename query
       if(input$f_name != ""){rv$rnkll = input$f_name}
@@ -552,7 +561,7 @@
         }
     })
 
-    # ----------------- 2.1.6 check if duplicated genes -----------------------
+    # ----------------- 3.1.6 check if duplicated genes -----------------------
     
     observeEvent(input$confirm_duplicate_rnk,{
       if(input$confirm_duplicate_rnk){
@@ -571,7 +580,7 @@
     },ignoreInit = T)
     
 #====================================================#
-######      2.2.1 GList mode: input gene lists  ######
+######      3.2.1 GList mode: input gene lists  ######
 #====================================================#
     output$ui_glist <- renderUI({
         req(input$selected_mode == "glist")
@@ -594,6 +603,10 @@
             placeholder = "Paste your genes here ...",
             height = 110
           )
+        ),
+        column(
+          12,
+          r_num_acc()
         ),
         column(
           width = 6,
@@ -633,7 +646,7 @@
       )
     })
     
-    #---------------- 2.2.2 read in GList-----------------
+    #---------------- 3.2.2 read in GList-----------------
     # from input field
     observeEvent(input$gene_list_add,{
         species = isolate(input$selected_species)  
@@ -708,7 +721,7 @@
         # }
     })
     
-    # -------------- 2.2.3 clear GList input ---------------------------
+    # -------------- 3.2.3 clear GList input ---------------------------
     observeEvent(input$gene_list_clear, {
         # rv$run = NULL
         
@@ -727,7 +740,7 @@
         # )
     })
     
-    #----------- 2.2.4 Example GList --------------
+    #----------- 3.2.4 Example GList --------------
     observeEvent(input$load_example_glist,{
         if(input$selected_species == ""){
           shinyalert("Please select your species of interest.")
@@ -742,92 +755,99 @@
 
     
 
-#---------- 3. run parameters & confirm buttons ---------
+#---------- 4. run parameters & confirm buttons ---------
     # clear Glist rv when switching to gsea mode
     observe({
         req(input$selected_mode == "gsea")
         rv$gene_lists = NULL
         rv$gene_lists_after = NULL
     })
-    
-    # UI GSEA parameter
-    output$ui_gsea_par <- renderUI({
+
+    # UI confirm GSEA
+    output$run_btn <- renderUI({
       req(rv$db_status == "selected")
-      
+
       if(input$selected_mode == "gsea"){
         req(is.null(rv$rnk_check)==F)
         req(is.null(rv$rnkgg)==F)
-        
+        aid = "confirm1"; alabel = "RUN GSEA!"
       }else if(input$selected_mode == "glist"){
         req(is.null(rv$glist_check)==F)
         req(is.null(rv$gene_lists_after)==F)
-        
+        aid = "confirm2"; alabel = "RUN ORA!"
       }
-      
-      fluidRow(
-        box(
-          width = 12, title = "Advanced run parameters", status = "warning", collapsible = T, collapsed = T,
-          wellPanel(
-            # h4("Run parameters"),
-            splitLayout(
-              numericInput("mymin", 
-                           HTML(paste0("Min:",
-                                       add_help("mymin_q")))
-                           ,rv$gmin),
-              numericInput("mymax", 
-                           HTML(paste0("Max:",
-                                       add_help("mymax_q")))
-                           ,rv$gmax),
-              uiOutput("ui_nperm")
-            )
-            ,style = "background:#e6f4fc;"
-          ),
-          bsTooltip("mymin_q", "Minimum gene set size", placement = "top"),
-          bsTooltip("mymax_q", "Maximum gene set size", placement = "top")
+
+        
+      div(
+        br(),
+        actionBttn(aid, 
+                   alabel,
+                   style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
+                   icon = icon("play-circle"),
+                   block = TRUE)
+        ,
+        div(
+          style="position: absolute; right: 1em; top: 1em;",
+          uiOutput("ui_gsea_par")
+          
         )
       )
+        
     })
-
+    
+    # --------------- 4a. UI GSEA parameter ---------------
+    output$ui_gsea_par <- renderUI({
+      if(input$selected_mode == "gsea"){
+        req(is.null(rv$rnk_check)==F)
+        req(is.null(rv$rnkgg)==F)
+      }else if(input$selected_mode == "glist"){
+        req(is.null(rv$glist_check)==F)
+        req(is.null(rv$gene_lists_after)==F)
+      }
+      
+      dropdownButton(
+        width = "300px",circle = TRUE, status = "info",
+        size = "xs",
+        icon = icon("gear"),# class = "opt"),
+        up = FALSE,
+        tooltip = tooltipOptions(title = "Click to adjust run parameters"),
+        
+        fluidRow(
+          br(),
+          column(12,
+          #   width = 12, title = "Advanced run parameters", status = "warning", collapsible = T, collapsed = T,
+            wellPanel(
+              h4("Advanced run parameters"),
+              splitLayout(
+                numericInput("mymin", 
+                             HTML(paste0("Min:",
+                                         add_help("mymin_q")))
+                             ,rv$gmin),
+                numericInput("mymax", 
+                             HTML(paste0("Max:",
+                                         add_help("mymax_q")))
+                             ,rv$gmax),
+                uiOutput("ui_nperm")
+              )
+              ,style = "background:#e6f4fc;"
+            ),
+            bsTooltip("mymin_q", "Minimum gene set size", placement = "top"),
+            bsTooltip("mymax_q", "Maximum gene set size", placement = "top")
+          )
+        )
+      )
+      
+      
+    })
+    
     output$ui_nperm <- renderUI({
-        req(input$selected_mode == "gsea")
+      req(input$selected_mode == "gsea")
       div(
         numericInput("nperm", 
                      HTML(paste0("# perm:",add_help("nperm_q")))
                      ,rv$gperm),
         bsTooltip("nperm_q", "No. of permutations", placement = "top")
       )
-    })
-    
-    # UI confirm GSEA
-    output$run_GSEA <- renderUI({
-      req(input$selected_mode == "gsea")
-      req(rv$db_status == "selected")
-      
-      req(is.null(rv$rnk_check)==F)
-      req(is.null(rv$rnkgg)==F)
-        
-      actionBttn("confirm1", 
-                 "RUN GSEA!",
-               style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
-               icon = icon("play-circle"),
-               block = TRUE
-               )
-    })
-    
-    # UI confirm GList
-    output$run_GList <- renderUI({
-      req(input$selected_mode == "glist")
-      req(rv$db_status == "selected")
-      
-      req(is.null(rv$glist_check)==F)
-      req(is.null(rv$gene_lists_after)==F)
-
-      actionBttn("confirm2", 
-               "RUN ORA!",
-               icon = icon("play-circle"),
-               style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
-               block = TRUE)
-        
     })
 
     
@@ -942,6 +962,7 @@
               # determine if success or warnings
               if(nrow(rv$fgseagg)>0){
                 rv$run = "success"
+                rv$run_n = rv$run_n + 1
               } else {
                 rv$run = "failed"
               }
@@ -1061,6 +1082,8 @@
               # determine if success or warnings
               if(is.null(rv$fgseagg)==F && nrow(rv$fgseagg)>0){
                 rv$run = "success"
+                rv$run_n = rv$run_n + 1
+                
               } else {
                 rv$run = "failed"
               }
@@ -1069,4 +1092,27 @@
             
 
         })
+    })
+    
+    # ---------------------- 4.3 render Modal upon successful run ----------------
+    observeEvent(rv$run_n,{
+      showModal(modalDialog(
+        easyClose = F,
+        fluidRow(
+          column(
+            12,
+            h2("Analysis complete!")
+            ,br(),column(12,uiOutput("run_summary_gsea"))
+            ,br(),br(),br(),guide_box("msg1")
+            
+          )
+        )
+        ,footer = NULL
+      ))
+    })
+    
+    # ------------ clike button to Enrichment Results tab ------------
+    observeEvent(input$msg1,{
+      removeModal()
+      updateTabItems(session, "tabs", "kegg")
     })

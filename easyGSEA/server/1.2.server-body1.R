@@ -13,46 +13,37 @@ output$feedback_species <- renderUI({
     # req(nchar(input$selected_species)>0)
     req(rv$db_status == "selected")
     HTML(
-        "Your species of interest:&nbsp<br/><b><i>",
+        "Species of interest:&nbsp<br/><b><i>",
         species_translate(input$selected_species),
         "</i></b><br/><br/>"
     )
     
 })
 
-# # feedback databases
-# output$feedback_dbs <- renderUI({
-#     req(rv$run == "success")
-#     # req(rv$db_status == "selected")
-#     db_selected = names(rv$dbs)
-#     HTML(
-#         "<br/>Selected databases:<br/><b>",
-#         paste(db_selected,collapse = "; "),
-#         "</b><br/><br/>"
-#     )
-# })
+# feedback databases
+output$feedback_dbs <- renderUI({
+    req(rv$db_status == "selected")
+    db_selected = names(rv$dbs)
+    HTML(
+        "Selected databases:<br/><b>",
+        paste(db_selected,collapse = "; "),
+        "</b>"
+    )
+})
 
 #==========================================#
 #####      FEEDBACKS on GSEA run       #####
 #==========================================#
-# feedback example data
-output$feedback_rnk <- renderUI({
-    req(input$selected_mode == "gsea")
-    req(rv$db_status == "selected")
-    req(is.null(rv$example_file) == F)
-    req(is.null(rv$infile_name) == F)
-    HTML(
-        "You have selected our example data. "
-    )
-})
-
 # feedback file name
 output$feedback_filename <- renderUI({
     req(input$selected_mode == "gsea")
     req(rv$db_status == "selected")
     req(is.null(rv$infile_name) == F)
+    
+    if(is.null(rv$example_file) == F){pref = " (our example data)"}else{pref = ""}
+    
     HTML(
-        "Your query file:<br/><b>",
+        "Query file",pref,":<br/><b>",
         rv$infile_name,
         "</b><br/>"
     )
@@ -225,12 +216,12 @@ output$feedback_converted_rnk <- renderUI({
             fluidRow(
                 column(
                     width = 12,
-                    br(),
-                    "Converted RNK for pre-ranked GSEA run:",
-                    uiOutput("converted_rnk"),
-                    paste0("Total number of genes: ",
-                           rv$total_genes_after, " / ",rv$total_genes),
-                    br()
+                    "RNK for pre-ranked GSEA run:"
+                    ,uiOutput("ui_rnk_download")
+                    ,dataTableOutput("converted_rnk")
+                    ,paste0("No. of genes: ",
+                           rv$total_genes_after, " / ",rv$total_genes)
+                    
                 ),
                 box(
                     background = "red", width=12,
@@ -241,11 +232,11 @@ output$feedback_converted_rnk <- renderUI({
             fluidRow(
                 column(
                     width = 12,
-                    br(),
-                    "Converted RNK for pre-ranked GSEA run:",
-                    uiOutput("converted_rnk"),
-                    paste0("Total number of genes: ",
-                           rv$total_genes_after, " / ",rv$total_genes),
+                    "RNK for pre-ranked GSEA run:"
+                    ,uiOutput("ui_rnk_download")
+                    ,dataTableOutput("converted_rnk")
+                    ,paste0("No. of genes: ",
+                           rv$total_genes_after, " / ",rv$total_genes)
                 )
             )
         }
@@ -253,20 +244,21 @@ output$feedback_converted_rnk <- renderUI({
 })
 
 # RNK table
-output$converted_rnk <- renderTable({
+output$converted_rnk <- DT::renderDataTable({
     req(input$selected_mode == "gsea")
     req(rv$db_status == "selected")
     df = data.frame(GeneName=names(rv$rnkgg),Rank=rv$rnkgg,stringsAsFactors = F) %>%
-        dplyr::top_n(2) %>%
-        dplyr::mutate_if(is.numeric, function(x) as.character(x))
+        dplyr::mutate_if(is.numeric, function(x) round(x, digits=3))
+        # dplyr::top_n(2) %>%
+        # dplyr::mutate_if(is.numeric, function(x) as.character(x))
     
-    if(nrow(df)>1){
-        df = df %>%
-            dplyr::add_row(GeneName="...",Rank="...")
-    }
+    # if(nrow(df)>1){
+    #     df = df %>%
+    #         dplyr::add_row(GeneName="...",Rank="...")
+    # }
     
     df
-})
+}, options=list(scrollX=T, pageLength = 5, dom = 'tpr', pagingType = "simple"), rownames= FALSE)
 
 #==========================================#
 #####      FEEDBACKS on ORA run        #####
@@ -347,59 +339,44 @@ output$run_summary_gsea <- renderUI({
             fluidRow(
                 wellPanel(
                     style = paste0("background:",bcol2),
-                    # style="text-align:center",
-                    # width = 12, status = "warning",
-                    # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
                     h4("Summary Report"),
-                    # br(),
-                    p(paste0("Mode of analysis: ",names(run_modes[run_modes == rv$run_mode]))),
-                    # br(),
+                    # p(paste0("Mode of analysis: ",names(run_modes[run_modes == rv$run_mode]))),
                     tags$ul(
-                        tags$li(HTML("Species: <b><i>",species_translate(input$selected_species),"</b></i>")),
-                        tags$li(HTML("Databases: <b>",db_selected,"</b>")),
+                        # tags$li(HTML("Species: <b><i>",species_translate(input$selected_species),"</b></i>")),
+                        # tags$li(HTML("Databases: <b>",db_selected,"</b>")),
+                        # tags$li(HTML("Query name:<b>",rv$rnkll,"<\b>")),
                         tags$li(HTML("Gene set size filters min=",rv$gmin," max=",rv$gmax," results in ",rv$gmts_length," / ",length(rv$gmts)," gene sets")),
-                        tags$li(HTML("Number of permutation=",rv$gperm)),
+                        # tags$li(HTML("Number of permutation=",rv$gperm)),
                         tags$li(HTML("<b>",rv$no_down_05,"</b> (down) <b>",rv$no_up_05,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.05")),
                         tags$li(HTML("<b>",rv$no_down_01,"</b> (down) <b>",rv$no_up_01,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.25"))
                     )
-                ),
-                guide_box("msg1")
+                )
             )
         }else if(rv$run_mode == "glist"){
             fluidRow(
                 wellPanel(
                     style = paste0("background:",bcol2),
-                    # style="text-align:center",
-                    # width = 12, status = "warning",
-                    # h5(tags$b(paste0("\"",rv$rnkll,"\""))),
                     h4("Summary Report"),
-                    # br(),
-                    p(paste0("Mode of analysis: ",names(run_modes[run_modes == rv$run_mode]))),
-                    # br(),
+                    # p(paste0("Mode of analysis: ",names(run_modes[run_modes == rv$run_mode]))),
                     tags$ul(
-                        tags$li(HTML("Species: <b><i>",species_translate(input$selected_species),"</b></i>")),
-                        tags$li(HTML("Databases: <b>",db_selected,"</b>")),
+                        # tags$li(HTML("Species: <b><i>",species_translate(input$selected_species),"</b></i>")),
+                        # tags$li(HTML("Databases: <b>",db_selected,"</b>")),
+                        # tags$li(HTML("Query name:<b>",rv$rnkll,"<\b>")),
                         tags$li(HTML("Gene set size filters min=",rv$gmin," max=",rv$gmax," results in ",rv$gmts_length," / ",length(rv$gmts)," gene sets")),
                         tags$li(HTML("<b>",rv$no_up_05,"</b> gene sets are significantly enriched at P.adj < 0.05")),
                         tags$li(HTML("<b>",rv$no_up_01,"</b> gene sets are significantly enriched at P.adj < 0.25"))
                     )
-                ),
-                guide_box("msg1")
+                )
             )
         }
     }else if(rv$run == "failed"){
         fluidRow(
             box(
                 background = "red", width = 12,
-                HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if species matches your query and/or if you have selected the right gene identifier and/or if your input file/gene list is correct.")
+                HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if species matches your query and/or if you have selected the right gene identifier & its column and/or if your input file/gene list is correct.")
             )
         )
     }
-})
-
-# ------------ clike button to Enrichment Results tab ------------
-observeEvent(input$msg1,{
-    updateTabItems(session, "tabs", "kegg")
 })
 
 # UI ratioGroupButton ----------------------------------------
@@ -425,89 +402,91 @@ observeEvent(input$msg1,{
             direction = "horizontal"
         )
     })
-    
-# UI summary ----------------
+
+# ------------ UI summary text ---------------
+output$summary_txt <- renderUI({
+    fluidRow(
+        column(
+            4,
+            uiOutput("feedback_runmode")
+        ),
+        column(
+            4,
+            uiOutput("feedback_species")
+        ),
+        column(
+            4,
+            uiOutput("feedback_filename")
+        ),
+        column(
+            12,
+            uiOutput("feedback_dbs")
+        )
+    )
+})
+# ------------ UI summary box ----------------
     output$summary_box <- renderUI({
-        # req(input$summary_type=="summary"||is.null(rv$run)||rv$run != "success")
-        # req(input$plot_type!="bar");req(input$plot_type!="bubble");req(input$plot_type!="volcano");
-        # req(input$summary_type!="id")
-        fluidPage(
-            # style = "position: relative",
-            fluidRow(
-                # # title = "Welcome to easyGSEA",solidHeader=T,
-                # width = 12,align = "left", #height = "670px",
-                # status = "primary", 
-                column(
-                    width = 6,
-                    # h5("Hello!"),
-                    br(),
-                    uiOutput("feedback_runmode"),
-                    uiOutput("feedback_species"),
-                    # uiOutput("feedback_dbs"),
-                    uiOutput("feedback_rnk"),
-                    uiOutput("feedback_filename"),
-                    # uiOutput("feedback_filecontent"),
-                    # uiOutput("feedback_filecontent_deg"),
-                    # uiOutput("feedback_filecontent_rnk"),
-                    # uiOutput("feedback_filecontent_confirm"),
-                    uiOutput("feedback_converted_rnk"),
-                    
-                    uiOutput("feedback_glist"),
-                    uiOutput("feedback_converted_glist")
-                    
-                ),
-                column(
-                    width = 6, #offset = 1,
-                    br(),
-                    uiOutput("run_summary_gsea")
-                )
+        fluidRow(
+            column(
+                width = 12,
+                
+                # uiOutput("feedback_filecontent"),
+                # uiOutput("feedback_filecontent_deg"),
+                # uiOutput("feedback_filecontent_rnk"),
+                # uiOutput("feedback_filecontent_confirm"),
+                
+                uiOutput("feedback_converted_rnk"),
+                uiOutput("feedback_glist"),
+                uiOutput("feedback_converted_glist")
+                
             )
+            # ,column(
+            #     width = 6, offset = 1,
+            #     uiOutput("run_summary_gsea")
+            # )
         )
         
     })
 
 # --------- UI ID conversion ----------
 output$id_box <- renderUI({
-    # req(input$summary_type=="id")
-    fluidPage(
-        # style = "position: relative",
-        fluidRow(
-            width = 12,align = "left",#height = "670px",
-            status = "primary",
-            fluidRow(
-                column(
-                    12,
-                    div(
-                        style="display: inline-block;vertical-align:top;",
-                        uiOutput("ui_rnk_download")
-                    ),
-                    div(
-                        style="display: inline-block;vertical-align:top;",
-                        uiOutput("ui_mat_download")
-                    )
-                )
-            ),
-            br(),
-            uiOutput("id_none"),
-            dataTableOutput("id_conversion_table")
-        )
+    req(is.null(rv$gene_lists_mat)==F)
+    box(
+        title = span(icon("table"),"ID conversion"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
+        
+        # uiOutput("id_none"),
+        # div(
+        #     style = "display: inline-block;vertical-align:top;",
+        #     
+        # )
+        uiOutput("ui_mat_download")
+        
+        ,br()
+        ,dataTableOutput("id_conversion_table")
     )
 })
 
-# UI ID conversion table
-# box to display if no ID conversion
-output$id_none <- renderUI({
-    req(is.null(rv$gene_lists_mat))
-    
-    wellPanel(
-        "ID conversion table available when applicable."
-    )
-})
+# # UI ID conversion table
+# # box to display if no ID conversion
+# output$id_none <- renderUI({
+#     req(is.null(rv$gene_lists_mat))
+#     
+#     wellPanel(
+#         "ID conversion table available when applicable."
+#     )
+# })
 
 # render ID conversion table
 output$id_conversion_table <- DT::renderDataTable({
     rv$gene_lists_mat
-}, plugins="ellipsis",options=dt_options())
+}, plugins="ellipsis", options=list(scrollX=T, pageLength = 5,  pagingType = "simple",
+                                    columnDefs = list(list(
+                                        targets = 5,
+                                        render = JS(
+                                            "function(data, type, row, meta) {",
+                                            "return type === 'display' && data.length > 18 ?",
+                                            "'<span title=\"' + data + '\">' + data.substr(0, 18) + '...</span>' : data;",
+                                            "}")))), rownames= FALSE)
 
 # download ID conversion button
 output$ui_mat_download <- renderUI({

@@ -59,7 +59,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                         selected = "other",
                         inline = TRUE
                     ),
-                    bsTooltip("gene_identifier_q", "Select identifier of your input genes", placement = "top"),
+                    bsTooltip("gene_identifier_q", HTML("The identifier of your input genes. If unsure, select <b>Other/Mixed</b>"), placement = "top"),
                     
                     # GSEA UI - uploading RNK file
                     uiOutput("ui_rnk"),
@@ -70,48 +70,35 @@ bodyGSEA <- tabItem(tabName = "gsea",
                     uiOutput("ui_glist"),
                     
                     
-                    br(),
                     fluidRow(
                         column(
-                            width = 12, align = "right",
-                            uiOutput("run_GSEA"),
-                            uiOutput("run_GList")
+                            width = 12, align = "center",
+                            uiOutput("run_btn")
                         )
-                    ),
-                    br(),
-                    uiOutput("ui_gsea_par")
+                    )
                     
                 )
             # )
         ),
         column(
             width = 8,
-            fluidRow(
-                tabBox(
-                    title = "Welcome to easyGSEA", width = 12, #span(img(src = "easygsea_bw.tiff", height = 35),)
-                    tabPanel(
-                        "Overview",
-                        uiOutput("summary_box")
-                    ),
-                    tabPanel(
-                        span(icon("list"),"ID conversion"),
-                        uiOutput("id_box")
-                    )
+            box(
+                title = span(icon("seedling"),"Welcome to easyGSEA"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
+                column(
+                    12,
+                    uiOutput("summary_txt")
+                    ,br()
+                    
+                ),
+                column(
+                    12,
+                    uiOutput("summary_box")
+                    
                 )
-            )
-            
-            # fluidRow(
-            #     column(
-            #         width = 8,
-            #         uiOutput("radio_buttons")
-            #     )
-            #     
-            # ),
-            # fluidRow(
-            #     uiOutput("summary_box"),
-            #     uiOutput("id_box")
-            # )
-            
+                
+            ),
+            br(),
+            uiOutput("id_box")
         )
     )
 )
