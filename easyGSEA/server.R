@@ -11,6 +11,7 @@ server <- function(input, output, session) {
     # js$hidehead('none')
     
     source("server/server-variables.R", local = TRUE)
+    source("server/server-reactives.R", local = TRUE)
     source("server/server-rv.R", local = TRUE)
     source("server/server-ramCheck.R", local = TRUE)
     source("server/server-functions.R", local = TRUE)
