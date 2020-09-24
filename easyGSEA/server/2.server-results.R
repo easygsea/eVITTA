@@ -1853,7 +1853,7 @@ observeEvent(input$confirm_kegg_plot,{
                    # icon = icon("font"),
                    icon = icon("product-hunt"),
                    style = "material-circle",
-                   size = "sm"
+                   size = "md"
                    # color = ""
                    #status = "default", width = "250px",right=T,
         ),
@@ -1868,7 +1868,7 @@ observeEvent(input$confirm_kegg_plot,{
             title = "Choosing P and P.adj thresholds for pre-ranked GSEA runs",
             includeMarkdown(paste0(getwd(),"/inc/p_explaination.md")),
             easyClose = TRUE,size="m"
-            ,footer = modalButton("Close")
+            ,footer = modalButton("OK")
         ))
     })
     

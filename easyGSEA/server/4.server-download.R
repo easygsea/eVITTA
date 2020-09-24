@@ -37,22 +37,23 @@ output$ui_downloadbox <- renderUI({
                 column(12,
                     wellPanel(
                         style = paste0("background:",bcol1),
-                        p(HTML("Download <b>non-filtered enrichment table</b> and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons")),
                         
                         fluidRow(
                             column(12, align="center",
-                                   div(
-                                       style="display: inline-block;vertical-align:top;",
+                                   p(HTML("Download enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons")),
+                                   
+                                   # div(
+                                   #     style="display: inline-block;vertical-align:top;",
                                        downloadBttn("gs_tbl_dl",
                                                     label = "Download enrichment table (.csv)"
                                                     , style = rv$dbtn_style, color = "warning"
-                                                    , size="md", block = TRUE
+                                                    , size="md", block = F
                                        )
-                                   ),
-                                   div(
-                                       style="display: inline-block;vertical-align:top;",
-                                       uiOutput("ui_tl_cut")
-                                   )
+                                   # ),
+                                   # div(
+                                   #     style="display: inline-block;vertical-align:top;",
+                                   #     uiOutput("ui_tl_cut")
+                                   # )
                             )
                         )
                         
@@ -128,10 +129,13 @@ observeEvent(input$confirm_tl,{
     
 })
 
+#-----------render enrichment data table---------------
+
 output$selected_es_tables <- DT::renderDataTable({
     req(is.null(gs_selected())==FALSE)
     req(rv$run == "success")
-    df = filter_df()
+    # df = filter_df()
+    df = combine_df()
     df <- df %>%
         mutate_if(is.numeric, function(x) round(x, digits=3))
     df
@@ -149,11 +153,15 @@ output$selected_es_tables <- DT::renderDataTable({
 output$gs_tbl_dl <- downloadHandler(
     filename = function() {paste0(rv$rnkll,"_",paste(input$selected_download_gs,collapse="-"),".csv")},
     content = function(file) {
-        df <- filter_df()
+        # df <- filter_df()
+        df = combine_df()
         fwrite(df, file, sep=",", 
                # sep2=c("", ";", ""), 
                row.names = F, quote=T)
     })
+
+
+# ------------ UI GMT download --------------
 
 output$ui_gmt_download <- renderUI({
     if(input$selected_species == ""){

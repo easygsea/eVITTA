@@ -8,12 +8,12 @@ source("ui/css_addons.R")
 
 sidebar <- dashboardSidebar(
     sidebarMenu(id="tabs",
-        menuItem("Run Analysis", tabName = "gsea", icon = icon("play")), #code-branch align-left
+        menuItem("1. Run Analysis", tabName = "gsea", icon = icon("play")), #code-branch align-left
         a_mode,
-        menuItem("Enrichment Results", tabName = "kegg", icon = icon("bar-chart")), #fingerprint
-        menuItem("Enrichment Network", tabName = "network", icon = icon("project-diagram")),
+        menuItem("2. Enrichment Results", tabName = "kegg", icon = icon("bar-chart")), #fingerprint
+        menuItem("3. Enrichment Network", tabName = "network", icon = icon("project-diagram")),
         # menuItem("Enrichment Summary", tabName = "summary", icon = icon("table")),
-        menuItem("Download", tabName = "download", icon = icon("download")),
+        menuItem("4. Download", tabName = "download", icon = icon("download")),
         a_download
         # ,menuItem("Help", tabName = "help", icon = icon("info-circle"))
 
