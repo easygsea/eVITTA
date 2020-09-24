@@ -358,7 +358,8 @@ output$n_ui_single <- renderUI({
                      numericInput("nx_p", 
                                   "P <= :", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),
                      numericInput("nx_Stat", 
-                                  "|Stat| >= :", value = 0, min = 0, max = 1, step=0.001, width="100px"),
+                                  "|Stat| >= :", 
+                                  value = 0, min = 0, max = 1, step=0.001, width="100px"),
                      
                      size = "xs",
                      icon = icon("gear", class = "opt"),
