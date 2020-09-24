@@ -338,6 +338,7 @@ observe({
       colnames(df) <- c("Name", "Stat", "PValue", "FDR")
       rownames(df) <- NULL
       df <- df %>% mutate(across(is.numeric, ~ round(., 3))) # round
+      colnames(df) <- stat_replace1(colnames(df), rv$nx_n[[x]]) # replace stat string
       rv[[paste0("f_temp_rown_",x)]] <- nrow(df)
       df
       
@@ -369,6 +370,7 @@ observe({
       colnames(df) <- c("Name", "Stat", "PValue", "FDR")
       rownames(df) <- NULL
       df <- df %>% mutate(across(is.numeric, ~ round(., 3))) # round
+      colnames(df) <- stat_replace1(colnames(df), rv$nx_n[[x]]) # replace stat string
       rv[[paste0("f_rv_rown_",x)]] <- nrow(df)
       df
       
@@ -403,7 +405,8 @@ output$f_filtering_ui <- renderUI({
                                                     "P <=:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
                                 column(6, align = "left",
                                        numericInput(paste0("f_Stat_",i), 
-                                                    "|Stat| >=:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
+                                                    stat_replace1("|Stat| >=:", rv$nx_n[[i]]),
+                                                    value = 0, min = 0, max = 5, step=0.1, width="100px")),
                               ),
                               fluidRow(
                                 column(6, align = "left",

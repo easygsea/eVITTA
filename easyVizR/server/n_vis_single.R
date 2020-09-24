@@ -5,6 +5,12 @@ output$nx_bar_panel <- renderUI({
   req(is.null(n_ins_full())==F)
   
   if (nrow(n_ins_full())<= nmax_bar) {
+    
+    # prepare choices for plottable columns
+    choices <- rv$hm_numeric_stats
+    names(choices) <- stat_replace1(rv$hm_numeric_stats, input$nx_selected)
+    
+    
     box(
       title = span( icon("chart-area"), "Bar"), status = "primary", solidHeader = F, width=12,
       div(id="nx_barp",
@@ -20,7 +26,7 @@ output$nx_bar_panel <- renderUI({
             selectInput(
               inputId = "nx_bar_to_plot",
               label= "Plot data:",
-              choices = rv$hm_numeric_stats, # this displays all the shared numeric columns, 
+              choices = choices, # this displays all the shared numeric columns, 
               selected = "Stat"
             ),
             

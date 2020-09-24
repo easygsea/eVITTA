@@ -88,11 +88,14 @@ output$select_sortby_p2 <- renderUI({
 # which data column to plot (i.e. Stat, etc)
 output$n_to_plot <- renderUI({
   req(rv$df_n)
+  # prepare choices
+  choices <- rv$hm_numeric_stats
+  names(choices) <- stat_replace1(rv$hm_numeric_stats, rv$nx_n)
   selectInput(
     inputId = "n_to_plot",
     label= shiny::HTML("Plot data: 
-                               <span style='color: gray'>(Note: only shared columns are selectable)</span>"),
-    choices = rv$hm_numeric_stats, # this displays all the shared numeric columns, 
+                               <span style='color: gray'>(Note: only numeric columns are selectable)</span>"),
+    choices = choices, # this displays all the shared numeric columns, 
     selected = "Stat"
   )
 })

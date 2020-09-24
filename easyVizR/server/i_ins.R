@@ -202,6 +202,7 @@ output$n_ins_tbl <- DT::renderDataTable({
   req(length(rv$ins_criteria)>0)
 
   df <- n_ins_df()
+  print(head(n_ins_df()))
   
   rv$df_ins_fullcols <- colnames(df)
   
