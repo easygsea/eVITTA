@@ -18,10 +18,10 @@ if(mem < 2000000){
       column(12, style="font-size:200%;", align = "center",
              p("eVITTA is experiencing high traffic at the moment.")
              ,br(),p("If you have any other unused eVITTA session(s) running, kindly close the window(s).")
-             ,br(),p("Email us at evitta@cmmt.ubc.ca if you continue seeing this message. We appreciate your support.")
+             # ,br(),p("Email us at evitta@cmmt.ubc.ca if you continue seeing this message. We appreciate your support.")
              # ,br(),p("Thank you for your support.")
-             ,br(),p("Please refresh your page and try again")
-             ,HTML("<a href='https://tau.cmmt.ubc.ca/eVITTA/easyGSEA'>Refresh</a>")
+             ,br(),p("Please visit us later. Thank you for your support.")
+             # ,HTML("<a href='https://tau.cmmt.ubc.ca/eVITTA/easyGSEA'>Refresh</a>")
       )
     )
     ,size = "l"
