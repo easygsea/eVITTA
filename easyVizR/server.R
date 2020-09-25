@@ -1,3 +1,7 @@
+# sets max upload size to 100MB, modal appears when it exceeds 50MB for batch upload and 10MB for single upload,
+options(shiny.maxRequestSize=100*1024^2) 
+
+
 # ==== server.R START ===========================================================
 # Define server logic 
 # To access any input use input$[inputId] 
@@ -36,8 +40,6 @@ server <- function(input, output, session) {
     
 
     
-    
-
     
     # single way and two way are obsolete now
     

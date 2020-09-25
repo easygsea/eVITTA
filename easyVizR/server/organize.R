@@ -365,6 +365,23 @@ observeEvent(input$fileIn, {
   # get files
   inFiles <- input$fileIn
   inFiles <- inFiles[grepl(".csv|.txt", inFiles$name),]
+  
+  #if(inFile$size >= 50*1024^2){
+  if((inFiles$size >= 50*1024^2)||(inFiles$size + sum(rv$FileDF$size) >= 50*1024^2)){  
+    
+    showModal(modalDialog(
+      inputId = "size_reminder_modal",
+      # title = "The file size exceeds 50MB.",
+      div("The file you uploaded exceeds 50MB, please modify it to proceed. Try to delete unneeded columns and 
+            only keep the columns that you are interested in. 
+            Then press \"Browse...\" to upload it again. Thank you.",style="font-size:200%"),
+      easyClose = TRUE,size="l"
+      # , footer = modalButton("Close")
+    ))
+  }
+  
+  req((inFiles$size < 50*1024^2)&&(inFiles$size + sum(rv$FileDF$size) < 50*1024^2))
+  
   rv$batch_files <- inFiles
   
   allcols <- vector(mode="list")
@@ -437,13 +454,14 @@ observeEvent(input$batch_submit, {
     
     newname <- tidy_filename(inFiles$name[[i]], rv$ll)
     
-    
     # write in rv
     rv$ll <- c(rv$ll, newname)
     rv$gg <- c(rv$gg, list(in_df))
     rv$tt <- c(rv$tt, input$batch_Stat_name)
-  }
-  
+    #Updated new value in rv: rv$FileDf
+    rv$FileDF[nrow(rv$FileDF)+1,] <- c(inFiles$name[[i]], inFiles$size[[i]], inFiles$type[[i]],inFiles$datapath[[i]], newname)
+    }
+  rv$FileDF$size <- as.numeric(as.character(rv$FileDF$size))
   rv$folder_upload_state <- "reset"
   # shinyjs::reset("fileIn")
   removeModal()
@@ -630,7 +648,25 @@ output$upload_feedback <- renderUI({
 
 # when file is uploaded, update state 
 observeEvent(input$file, {
+  
   inFile <- input$file
+  #Add a file size check and its modal, single upload is 10mb
+  if((inFile$size >= 10*1024^2) || (inFile$size + sum(inFile$size) > 10*1024^2)){
+  #if(inFile$size >= 50){  
+    
+    showModal(modalDialog(
+      inputId = "size_reminder_modal",
+      # title = "The file size exceeds 50MB.",
+      div("The file you uploaded exceeds 50MB, please modify it to proceed. Try to delete unneeded columns and 
+            only keep the columns that you are interested in. 
+            Then press \"Browse...\" to upload it again. Thank you.",style="font-size:200%"),
+      easyClose = TRUE,size="l"
+      # , footer = modalButton("Close")
+    ))
+  }
+  
+  req((inFile$size < 10*1024^2) && (inFile$size + sum(rv$FileDF$size) <= 10*1024^2)) 
+  
   rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1))
   rv$upload_state <- 'uploaded'
   
@@ -682,6 +718,11 @@ observeEvent(input$submit, {
   rv$gg <- c(rv$gg, list(in_df))
   rv$ll <- c(rv$ll, newname)
   rv$tt <- c(rv$tt, isolate(input$Stat_name))
+  # update rv new value 
+  #rv$FileDF <- rbind(rv$FileDF,c(inFile$name, inFile$size, inFile$type,inFile$datapath , newname))
+  rv$FileDF[nrow(rv$FileDF)+1,] <- c(inFile$name, inFile$size, inFile$type,inFile$datapath , newname)
+  #This line is important becasue we need to have size column as numerics so that we can do calculation with total size later.
+  rv$FileDF$size <- as.numeric(as.character(rv$FileDF$size))
   
   rv$upload_state <- "reset"
   
@@ -704,9 +745,15 @@ observeEvent(input$delete_deg_confirm, {
   to_delete_i <- which(rv$ll %in% input$delete_deg)
   #print(to_delete_i)
   # delete the items
+  
   rv$ll <- rv$ll[-to_delete_i]
   rv$gg <- rv$gg[-to_delete_i]
   rv$tt <- rv$tt[-to_delete_i]
+  
+  #Added this one to update rv filedf when there is a delete, and after my test it works!
+  rv$FileDF <-subset(rv$FileDF, !(rv$FileDF$tidiedName %in% input$delete_deg))
+  
+  
 })
 
 #---------------------- Sidebar UI ---------------------------#
