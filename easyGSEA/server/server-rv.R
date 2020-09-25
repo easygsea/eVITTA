@@ -1,6 +1,6 @@
    rv <- reactiveValues(
         run_mode=NULL, #gsea glist
-        run_n = NULL,
+        run_n = 0,
         
         db_status=NULL, # selected
         db_modal=NULL, # check if modal if used or not
@@ -8,7 +8,7 @@
         box_h_a = "594px", box_h = "574px", box_hp = 574, es_h = "245px",
         
         run_btn_color="warning", run_btn_style="simple",
-        dbtn_style="unite", dbtn_color="warning", dbtn_size="xs",
+        dbtn_style="unite", dbtn_color="default", dbtn_size="xs",
 
         #========================================#
         #####      RVs for GSEA run          #####
@@ -45,7 +45,8 @@
         data_glist=NULL,
         gene_lists=NULL, # vector that stores gene IDs input by user
         gene_lists_after=NULL, #converted gene IDs
-        gene_lists_mat=NULL, # df for id conversion (GSEA and ORA share the same rv)
+        gene_lists_mat1=NULL, # df for id conversion (GSEA)
+        gene_lists_mat2=NULL, # df for id conversion (ORA)
         
         
         # input_symbol=NULL, # check if input is SYMBOL, if, "yes"

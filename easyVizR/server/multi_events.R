@@ -360,7 +360,7 @@ n_ins_fgl <- reactive({
   
 })
 
-# full raw df to be used for other visualizations in other tabs
+# 5. full raw df to be used for other visualizations in other tabs
 n_ins_full <- reactive({
   req(length(rv$ins_criteria)>0)
   req(length(rv$ins_criteria)==length(rv$nx_i))
@@ -371,7 +371,7 @@ n_ins_full <- reactive({
   df
 })
 
-# 5. subsets full df based on ss and filtered gl
+# 5b. renders the df to show as datatable
 n_ins_df <- reactive({
   req(length(rv$ins_criteria)>0)
   req(length(rv$ins_criteria)==length(rv$nx_i))
@@ -398,8 +398,9 @@ n_ins_df <- reactive({
   # tidy row names
   if (nrow(df)>0){rownames(df) <- seq(1,nrow(df),1)}
   
-  # to replace the stat col names
-  colnames(df) <- gsub("Stat", rv$tt[[rv$nx_i[[1]]]], colnames(df))
+  # to replace colnames
+  colnames(df) <- stat_replace2(colnames(df))
+  
   
   df
 })

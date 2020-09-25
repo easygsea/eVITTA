@@ -320,7 +320,8 @@ observe({
                                                         "P filter:", value = rv[[paste0("nic_p_",i)]], min = 0, max = 1, step=0.001, width="100px")),
                                     column(6, align = "left",
                                            numericInput(paste0("nic_Stat_",i), 
-                                                        "|Stat| filter:", value = rv[[paste0("nic_Stat_",i)]], min = 0, max = 5, step=0.1, width="100px")),
+                                                        stat_replace1("|Stat| filter:", rv$nx_n[[i]]), 
+                                                        value = rv[[paste0("nic_Stat_",i)]], min = 0, max = 5, step=0.1, width="100px")),
                                   ),
                                   fluidRow(
                                     column(6, align = "left",
@@ -575,17 +576,46 @@ output$n_gls_ui <- renderUI({
 # report genes that are not found
 df_n_basic_nm <- reactive({
   if (nchar(rv$n_igl)>0){
-    igl <- isolate(as.list(strsplit(rv$n_igl, '\\n+')))
-    notfound <- setdiff(igl[[1]], df_n_basic()$Name)
+    igl <- isolate(as.list(strsplit(toupper(rv$n_igl), '\\n+')))[[1]] # this is the gene list
+    df <- rv$df_n
+    df <- df[df$Name %in% igl,] # this is the  dataframe filtered by that gene list
+    
+    # if anything is found
+    if (nrow(df)>0){
+      notfound <- setdiff(igl, df$Name) # these are not found in df_n
+      found <- setdiff(igl, notfound)
+      notshown <- setdiff(found, n_ins_full()$Name) # these are found but not shown due to cutoffs
+    } else { # if nothing is found
+      notfound <- igl
+      notshown <- vector()
+    }
   }
-  else{notfound=vector()}
-  return(notfound)
+  else{
+    notfound=vector()
+    notshown=vector()
+  }
+  out <- list("notfound"=notfound, "notshown"=notshown)
+  out
+  print(out)
 })
 output$n_igl_nm <- renderUI({
-  req(length(df_n_basic_nm())>0)
-  nl <- paste(df_n_basic_nm(), collapse=", ")
+  req(length(df_n_basic_nm()$notfound)>0 | length(df_n_basic_nm()$notshown)>0)
+  notfound <- df_n_basic_nm()$notfound
+  notshown <- df_n_basic_nm()$notshown
+  msg=vector()
+  if (length(notfound)>0){
+    nf <- paste(notfound, collapse=", ")
+    msg1 <- paste0("<strong>Not found</strong> (",length(notfound),"): ", nf)
+    msg <- c(msg, msg1)
+  } 
+  if (length(notshown)>0){
+    ns <- paste(notshown, collapse=", ")
+    msg2 <- paste0("<strong>Not shown because excluded by filters</strong> (",length(notshown),"): ", ns)
+    msg <- c(msg, msg2)
+  }
+  print(msg)
   box(width=12,
-      shiny::HTML(paste0("<strong>Not found</strong> (",length(df_n_basic_nm()),"): ", nl)),
+      shiny::HTML(paste0(msg, sep="<br>")),
   )
 })
 observeEvent(input$n_igl_update,{

@@ -216,12 +216,23 @@ output$feedback_converted_rnk <- renderUI({
             fluidRow(
                 column(
                     width = 12,
-                    "RNK for pre-ranked GSEA run:"
-                    ,uiOutput("ui_rnk_download")
-                    ,dataTableOutput("converted_rnk")
-                    ,paste0("No. of genes: ",
-                           rv$total_genes_after, " / ",rv$total_genes)
+                    div(
+                        style = "display: inline-block;vertical-align:baseline;",
+                        "Converted RNK for pre-ranked GSEA run:  "
+                    )
+                    ,div(
+                        style = "display: inline-block;vertical-align:baseline;",
+                        uiOutput("ui_rnk_download")
+                    )
                     
+                ),
+                column(
+                    12,
+                    tableOutput("converted_rnk")
+                ),
+                column(
+                    12, align = "right",
+                    paste0("Total number of genes: ", rv$total_genes_after, " / ",rv$total_genes)
                 ),
                 box(
                     background = "red", width=12,
@@ -232,33 +243,45 @@ output$feedback_converted_rnk <- renderUI({
             fluidRow(
                 column(
                     width = 12,
-                    "RNK for pre-ranked GSEA run:"
-                    ,uiOutput("ui_rnk_download")
-                    ,dataTableOutput("converted_rnk")
-                    ,paste0("No. of genes: ",
-                           rv$total_genes_after, " / ",rv$total_genes)
+                    div(
+                        style = "display: inline-block;vertical-align:baseline;",
+                        "Converted RNK for pre-ranked GSEA run:  "
+                    )
+                    ,div(
+                        style = "display: inline-block;vertical-align:baseline;",
+                        uiOutput("ui_rnk_download")
+                    )
+                    
+                ),
+                column(
+                    12,
+                    tableOutput("converted_rnk")
+                ),
+                column(
+                    12, align = "right",
+                    paste0("Total number of genes: ", rv$total_genes_after, " / ",rv$total_genes)
                 )
             )
         }
     }
 })
 
-# RNK table
-output$converted_rnk <- DT::renderDataTable({
+# ----------- RNK table --------------
+output$converted_rnk <- renderTable({
     req(input$selected_mode == "gsea")
     req(rv$db_status == "selected")
     df = data.frame(GeneName=names(rv$rnkgg),Rank=rv$rnkgg,stringsAsFactors = F) %>%
-        dplyr::mutate_if(is.numeric, function(x) round(x, digits=3))
-        # dplyr::top_n(2) %>%
-        # dplyr::mutate_if(is.numeric, function(x) as.character(x))
+        dplyr::mutate_if(is.numeric, function(x) round(x, digits=3)) %>%
+        dplyr::mutate_if(is.numeric, function(x) as.character(x))
     
-    # if(nrow(df)>1){
-    #     df = df %>%
-    #         dplyr::add_row(GeneName="...",Rank="...")
-    # }
+    if(nrow(df)>2){
+        df = df %>%
+            dplyr::top_n(2) %>%
+            dplyr::add_row(GeneName="... ...",Rank="... ...")
+    }
     
     df
-}, options=list(scrollX=T, pageLength = 5, dom = 'tpr', pagingType = "simple"), rownames= FALSE)
+},width = "100%") #, options=list(scrollX=T, pageLength = 5, dom = 'tpr', pagingType = "simple"), rownames= FALSE
 
 #==========================================#
 #####      FEEDBACKS on ORA run        #####
@@ -369,39 +392,25 @@ output$run_summary_gsea <- renderUI({
                 )
             )
         }
-    }else if(rv$run == "failed"){
-        fluidRow(
-            box(
-                background = "red", width = 12,
-                HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if species matches your query and/or if you have selected the right gene identifier & its column and/or if your input file/gene list is correct.")
-            )
-        )
     }
 })
 
-# UI ratioGroupButton ----------------------------------------
-    # output$body_1_ui <- renderUI({
-        # if(is.null(rv$run)==T){
-        #     box(title="Notification", status="warning",
-        #         "Results will be shown in this panel."
-        #     )
-        # }
-        # else if(rv$run == "success"){
-    output$radio_buttons <- renderUI({
-        # req(rv$run == "success")
-        radioGroupButtons(
-            inputId = "summary_type",
-            choiceNames = list("Summary", span(icon("align-left"),"ID conversion")), #"Bar plot","Bubble plot","Volcano plot",
-            choiceValues = list("summary", "id"), #"bar", "bubble","volcano",
-            selected = "summary",
-            # checkIcon = list(
-            #     yes = icon("check-square"),
-            #     no = icon("square-o")
-            # ),
-            status = "primary",
-            direction = "horizontal"
+# --------- error if no genes found in databases ---------------
+output$run_error <- renderUI({
+    req(rv$run == "failed")
+    fluidRow(
+        box(
+            background = "red", width = 12,
+            HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check whether ")
+            ,tags$ul(
+                tags$li("The selected species matches your query, and/or")
+                ,tags$li("You have selected the right gene identifier as well as its column, and/or")
+                ,tags$li("Your input file/gene list is correct.")
+            )
         )
-    })
+    )
+})
+
 
 # ------------ UI summary text ---------------
 output$summary_txt <- renderUI({
@@ -438,6 +447,7 @@ output$summary_txt <- renderUI({
                 uiOutput("feedback_converted_rnk"),
                 uiOutput("feedback_glist"),
                 uiOutput("feedback_converted_glist")
+                ,uiOutput("run_error")
                 
             )
             # ,column(
@@ -450,50 +460,65 @@ output$summary_txt <- renderUI({
 
 # --------- UI ID conversion ----------
 output$id_box <- renderUI({
-    req(is.null(rv$gene_lists_mat)==F)
+    if(input$selected_mode == "gsea"){
+        req(is.null(rv$gene_lists_mat1)==F)
+    }else if(input$selected_mode == "glist"){
+        req(is.null(rv$gene_lists_mat2)==F)
+    }
+    
     box(
-        title = span(icon("table"),"ID conversion"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
+        title = span(icon("align-left"),"Gene ID conversion"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
         
-        # uiOutput("id_none"),
-        # div(
-        #     style = "display: inline-block;vertical-align:top;",
-        #     
-        # )
-        uiOutput("ui_mat_download")
-        
+        fluidRow(
+            column(
+                12,
+                div(
+                    style = "display: inline-block;vertical-align:top;",
+                    uiOutput("ui_mat_download")
+                )
+                ,div(
+                    style = "display: inline-block;vertical-align:top;",
+                    uiOutput("ui_deg_download")
+                )
+            )
+        )
         ,br()
-        ,dataTableOutput("id_conversion_table")
+        ,fluidRow(
+            column(
+                12
+                ,dataTableOutput("id_conversion_table")
+            )
+        )
     )
 })
 
-# # UI ID conversion table
-# # box to display if no ID conversion
-# output$id_none <- renderUI({
-#     req(is.null(rv$gene_lists_mat))
-#     
-#     wellPanel(
-#         "ID conversion table available when applicable."
-#     )
-# })
-
 # render ID conversion table
 output$id_conversion_table <- DT::renderDataTable({
-    rv$gene_lists_mat
-}, plugins="ellipsis", options=list(scrollX=T, pageLength = 5,  pagingType = "simple",
-                                    columnDefs = list(list(
-                                        targets = 5,
-                                        render = JS(
-                                            "function(data, type, row, meta) {",
-                                            "return type === 'display' && data.length > 18 ?",
-                                            "'<span title=\"' + data + '\">' + data.substr(0, 18) + '...</span>' : data;",
-                                            "}")))), rownames= FALSE)
+    
+    if(input$selected_mode == "gsea"){
+        df = rv$gene_lists_mat1
+    }else if(input$selected_mode == "glist"){
+        df = rv$gene_lists_mat2
+    }
+    
+    df
+    
+}, plugins="ellipsis", options = dt_options()
+# options=list(scrollX=T, pageLength = 5,  pagingType = "simple",
+#                                     columnDefs = list(list(
+#                                         targets = 5,
+#                                         render = JS(
+#                                             "function(data, type, row, meta) {",
+#                                             "return type === 'display' && data.length > 18 ?",
+#                                             "'<span title=\"' + data + '\">' + data.substr(0, 18) + '...</span>' : data;",
+#                                             "}")))), rownames= FALSE
+)
 
 # download ID conversion button
 output$ui_mat_download <- renderUI({
-    req(is.null(rv$gene_lists_mat) == F)
     downloadBttn("mat_download",
-                   label = "Download ID conversion table (.csv)", style = rv$dbtn_style,
-                   color = rv$dbtn_color, size=rv$dbtn_size, block = TRUE
+                   label = "Download ID conversions (.csv)", style = rv$dbtn_style,
+                   color = rv$dbtn_color, size=rv$dbtn_size, block = F
     )
 })
 
@@ -501,8 +526,37 @@ output$ui_mat_download <- renderUI({
 output$mat_download <- downloadHandler(
     filename = function() {paste0(rv$rnkll,"_id_conversion.csv")},
     content = function(file) {
-        df = rv$gene_lists_mat
+        if(input$selected_mode == "gsea"){
+            df = rv$gene_lists_mat1
+        }else if(input$selected_mode == "glist"){
+            df = rv$gene_lists_mat2
+        }
         fwrite(df, file, sep=",", 
+               # sep2=c("", ";", ""), 
+               row.names = F, quote=T)
+    })
+
+# ----------- converted DEG download ---------
+output$ui_deg_download <- renderUI({
+    req(rv$rnk_or_deg == "deg")
+    
+    div(id="deg_download_btn",
+        downloadBttn("deg_download",
+                     label = "Download converted DEG table (.csv)", style = rv$dbtn_style,
+                     color = rv$dbtn_color, size=rv$dbtn_size, block = F
+        ),
+        bsTooltip("deg_download_btn",HTML("Download converted DEG table and proceed to <b>easyVizR</b> for multiple comparisons")
+                  ,placement = "top")
+    )
+    
+})
+
+# download converted DEG table
+output$deg_download <- downloadHandler(
+    filename = function() {paste0(rv$rnkll,"_convertedDEG.csv")},
+    content = function(file) {
+        
+        fwrite(rv$data_head_o, file, sep=",", 
                # sep2=c("", ";", ""), 
                row.names = F, quote=T)
     })
@@ -514,7 +568,7 @@ output$ui_rnk_download <- renderUI({
     
     downloadBttn("rnk_download",
                    label = "Download RNK (.rnk)", style = rv$dbtn_style,
-                 color = rv$dbtn_color, size=rv$dbtn_size, block = TRUE
+                 color = rv$dbtn_color, size=rv$dbtn_size, block = F
     )
 })
 

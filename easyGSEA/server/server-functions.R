@@ -1176,6 +1176,10 @@
     convert_rank_id <- function(species, ranks){
         genes_o = names(ranks)
         
+        # load original DEG table
+        df = rv$data_head_o
+        df = df %>% dplyr::filter(.data[[input$gene_column]] %in% genes_o)
+
         # gconvert to NCBI ACC #
         results = gconvert(
             genes_o,
@@ -1204,6 +1208,11 @@
                 ranks_after = ranks[tolower(genes_o) %in% tolower(genes_mat$input)]
                 names(ranks_after) = genes_mat$name#[tolower(genes_mat$input) %in% tolower(names(ranks_after))]
                 
+                # # rename DEG table
+                df = df %>% dplyr::filter(tolower(.data[[input$gene_column]]) %in% tolower(genes_mat$input))
+                df[[input$gene_column]] = genes_mat$name
+                rv$data_head_o = df
+
                 # percent of genes maintained after conversion
                 g_perc = length(ranks_after)/length(ranks)
                 
@@ -1307,7 +1316,7 @@
               
               # convert ID and save converted IDs & conversion table into RVs
               rv$rnkgg = lst[[2]]
-              rv$gene_lists_mat = lst[[3]]
+              rv$gene_lists_mat1 = lst[[3]]
               
               # count # of genes after conversion
               rv$total_genes_after = length(rv$rnkgg)
@@ -1326,7 +1335,7 @@
     #===================================================#
 
     reset_rvs <- function(){
-      rv$run = NULL; rv$run_n = NULL
+      rv$run = NULL
       rv$fgseagg=NULL
       rv$gmts=NULL
       
@@ -1353,7 +1362,7 @@
       rv$infile_path = NULL
       rv$file_upload_status = NULL
       rv$rnk_or_deg = NULL
-      rv$gene_lists_mat = NULL
+      rv$gene_lists_mat1 = NULL; rv$gene_lists_mat2 = NULL
       
       shinyjs::reset("rnkfile")
       shinyjs::enable("rnkfile")
@@ -1381,7 +1390,7 @@
     #   )
     # }
     
-    guide_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details",color="warning",size="lg"){
+    guide_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details",color="warning",size="md"){
       actionBttn(
         id,
         HTML(msg),
