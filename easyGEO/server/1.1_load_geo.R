@@ -59,6 +59,7 @@ observeEvent(input$search_geo, {
             HTML(DisplayText),
             size = "l",
             easyClose = TRUE
+            ,footer = modalButton("OK")
           ))
         }
       if(ErrorMessage == "HTTP error 400."){
@@ -68,24 +69,24 @@ observeEvent(input$search_geo, {
           HTML(DisplayText),
           size = "l",
           easyClose = TRUE
+          ,footer = modalButton("OK")
         ))
       }
       if((ErrorMessage != "object 'destfile' not found")&(ErrorMessage != "object 'destfile' not found")){
-        DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
+        # DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
+        DisplayText <- paste0("Unable to retrieve ",rv$geo_accession," data from NCBI server.", "<br>", ErrorMessage)
         showModal(modalDialog( 
           title = "Data fetching error",
           HTML(DisplayText),
           size = "l",
           easyClose = TRUE
+          ,footer = modalButton("OK")
         ))
       }
-      
     }
-    
-    
+
     req(!inherits(rv$gse_all, "try-error"))
-    
-    
+
     rv$platforms <- tabulate(rv$gse_all, annotation)
     rv$gpl_summary <- summarize_gpl(rv$gse_all)
     # initialize gpl selection choices
