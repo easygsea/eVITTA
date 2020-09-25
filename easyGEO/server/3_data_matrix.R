@@ -340,6 +340,7 @@ observeEvent(input$file, {
     #indf_coln <- indf_coln[validUTF8(indf_coln)]
     whether_contains_invalid <- TRUE
     for(i in seq_along(indf_coln)){
+      #delete the unrecognized character
       indf_coln[i] <- stringr::str_replace_all(indf_coln[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
       # print(indf_coln[i])
     }
