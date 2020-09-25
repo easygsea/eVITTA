@@ -27,7 +27,8 @@ Different sets of thresholds for P value (P) and adjusted P value (P.adj) are su
 * P.adj < 0.05
 
 <br/>
-To learn more, see [Tips on Parameter Choice - P-vale and FDR thresholds](https://readthedocs.org/projects/enrichmentmap/downloads/pdf/latest/)
-<br/><br/>
+To learn more, see <a href="https://readthedocs.org/projects/enrichmentmap/downloads/pdf/latest/" target="_blank">Tips on Parameter Choice - P-value and FDR thresholds</a>
+
+<br/>
 Reference:  
 Merico, D., Isserlin, R., Stueker, O., Emili, A. and Bader, G.D., 2010. Enrichment map: a network-based method for gene-set enrichment visualization and interpretation. *PloS one*, 5(11), p.e13984.

@@ -2,13 +2,13 @@
     observeEvent(input$q1,{
         showModal(modalDialog(
             inputId = "rank_md",
-            title = "Ranked list file format (*.rnk)",
+            title = "Ranked list file format (*.rnk) for pre-ranked GSEA runs",
              # includeHTML(paste0(getwd(),"/inc/rnk_explanation.html")),
             # dataTableOutput('example_data1'),
             includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
             # includeMarkdown(knitr::knit(paste0(getwd(),"/inc/rnk_explaination.Rmd"),quiet=T)),
             easyClose = TRUE,size="l"
-            # , footer = modalButton("Close")
+            , footer = modalButton("OK")
         ))
     })
 
@@ -86,6 +86,8 @@
                          # ,`data-toggle`="collapse"
                          # ,`data-target` = "#showdbs_collapsible"
                          ),
+    bsTooltip("showdbs","Default selection: Biological processes and pathways. Click for more options."
+              ,placement = "top"),
                 br(),br(),
                 # conditionalPanel('input.showdbs % 2 == 1', id="showdbs_panel",
                 #                  rv$v[[species]],
@@ -276,7 +278,7 @@
 
       
             fileInput("rnkfile",
-                      label = p("3. Upload RNK file:",
+                      label = p("3. Upload RNK or DEG file:",
                                 tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
                                 bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                       buttonLabel = "Upload...",
@@ -289,7 +291,7 @@
                       
 
             ),
-            bsTooltip("q1", "DEG file also supported! Click to learn more", placement = "top")
+            bsTooltip("q1", "Click to learn more!", placement = "top")
             
             
         )
@@ -323,15 +325,15 @@
         rv$infile_path = input$rnkfile$datapath
         shinyjs::disable("rnkfile")
         # the modal that appears whent the file user upload exceeds 50MB, Version1
-        if(input$rnkfile$size >= 50*1024^2){
+        if(input$rnkfile$size >= 10*1024^2){
           showModal(modalDialog(
             inputId = "size_reminder_modal",
-            # title = "The file size exceeds 50MB.",
-            div("The file you uploaded exceeds 50MB, please modify it to proceed. Try to delete unneeded columns and 
-            only keep gene name, p value, and expression/counts. 
-            Then press \"reset file\" to upload it again. Thank you.",style="font-size:200%"),
+            # title = "The file size exceeds 10MB.",
+            div("The file you have uploaded exceeds 10MB. Please delete unneeded columns and 
+            only keep gene names, log fold changes (logFC), and p values. 
+            Then press \"reset file\" and upload the trimmed file again. Thank you.",style="font-size:200%"),
             easyClose = TRUE,size="l"
-            # , footer = modalButton("Close")
+            , footer = modalButton("OK")
           ))
         }
     })
@@ -425,7 +427,7 @@
         }
     })
     
-    observeEvent(input$loadExampleDE,{
+    observeEvent(input$loadExampleDEG,{
         rv$example_file = NULL
         if(input$selected_species == ""){
           shinyalert("Please select your species of interest.")
@@ -1063,13 +1065,14 @@
               # ErrorMessage <- conditionMessage(attr(frun, "condition"))  # the error message
               #show a modal dialog if there is an error reading files causing crash
               showModal(modalDialog(
-                title = h3(HTML("Please click and adjust <b>Advanced run parameters</b>")),
+                title = h3(HTML("Please click the gear button to adjust <b>run parameters</b>")),
                 tags$li(h4(paste0("Database(s): ",db_selected))),
                 tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
                                   ," and max=",rv$gmax))),
 
                 size = "l",
                 easyClose = TRUE
+                ,footer = modalButton("OK")
               ))
             }else{
               # count number of filtered GSs in GMTs
