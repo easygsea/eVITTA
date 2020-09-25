@@ -38,4 +38,4 @@ An edge represents the degree of gene overlap that exists between two gene sets.
 
 
 <br/>
-To learn more, see [Using networks to measure similarity between genes: association index selection](https://pubmed.ncbi.nlm.nih.gov/24296474/), [Tips on Parameter Choice](https://enrichmentmap.readthedocs.io/en/latest/Parameters.html).
+To learn more, see <a href="https://pubmed.ncbi.nlm.nih.gov/24296474/" target="_blank">Using networks to measure similarity between genes: association index selection</a>, <a href="https://enrichmentmap.readthedocs.io/en/latest/Parameters.html" target="_blank">Tips on Parameter Choice</a>

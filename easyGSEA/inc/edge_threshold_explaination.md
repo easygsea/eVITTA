@@ -6,7 +6,7 @@ output: html_document
 runtime: shiny
 ---
 
-#### Use a *heigher* (more conservative) threshold if you find enriched terms are too connected with each other. Likewise, switch to a *lower* (more permissive) threshold if you hardly find any connections between enriched terms.
+#### Use a *heigher* (more conservative) threshold if you find the enriched gene sets are too connected with each other. Likewise, switch to a *lower* (more permissive) threshold if you hardly find any connections between enriched terms.
 
 
 <br/>

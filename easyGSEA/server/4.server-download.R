@@ -81,7 +81,7 @@ gs_selected <- reactive({
 
 output$menu_download_table <- renderUI({
     req(rv$run == "success")
-    checkboxGroupInput("selected_download_gs", label = tags$b("Select to download:"),
+    checkboxGroupInput("selected_download_gs", label = NULL,#tags$b("Select to download:"),
                        choices = rv$dbs,
                        selected = rv$dbs)
 })
