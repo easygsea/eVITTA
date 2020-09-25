@@ -197,7 +197,7 @@ nxy_sc_plt <- reactive({
     
     print(head(df))
     
-    
+    stat_replacements <- stat_replace1(rep("Stat",2), selected, mode="each")
     
     fig <- plot_ly(
       data = df, 
@@ -207,18 +207,18 @@ nxy_sc_plt <- reactive({
       mode = 'markers', 
       marker = marker_settings,
       hoverinfo="text",
-      text=c(paste(df$Name, 
-                   "<br>Stat(x):", round(df[[xstat]], 3),
-                   "<br>p(x):", round(df[[xp]], 3),
-                   ", q(x):", round(df[[xq]], 3),
-                   "<br>Stat(y):", round(df[[ystat]], 3),
-                   "<br>p(y):", round(df[[yp]], 3),
-                   ", q(y):", round(df[[yq]], 3)
+      text=c(paste0(df$Name, 
+                   "<br>",stat_replacements[[1]],"(x): ", round(df[[xstat]], 3),
+                   "<br>p(x): ", round(df[[xp]], 3),
+                   ", q(x): ", round(df[[xq]], 3),
+                   "<br>",stat_replacements[[2]],"(y): ", round(df[[ystat]], 3),
+                   "<br>p(y): ", round(df[[yp]], 3),
+                   ", q(y): ", round(df[[yq]], 3)
       ))
     )
     fig <- fig %>% layout(title = paste0(rv$nxy_selected_x, " vs ", rv$nxy_selected_x, " (n=",nrow(df),")"),
-                          yaxis = list(zeroline = T, title=paste0("Stat_",rv$nxy_selected_y)),
-                          xaxis = list(zeroline = T, title=paste0("Stat_",rv$nxy_selected_x))
+                          yaxis = list(zeroline = T, title=stat_replace1(paste0("Stat_",rv$nxy_selected_y),rv$nxy_selected_y)),
+                          xaxis = list(zeroline = T, title=stat_replace1(paste0("Stat_",rv$nxy_selected_x),rv$nxy_selected_x))
     )
     
   })
@@ -344,7 +344,8 @@ output$nxyz_colormode_options <- renderUI({
       fluidRow(
         column(6,
                numericInput("n_3ds_Stat", 
-                            "|Stat| >:", value = 0, min = 0, max = 10, step=0.1, width="100px"),
+                            stat_replace1("|Stat| >:",c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z)),
+                            value = 0, min = 0, max = 10, step=0.1, width="100px"),
                ),
         column(6,
                radioGroupButtons("nxyz_sc_logic",
@@ -419,14 +420,17 @@ n_3ds_plt <- reactive({
     
     incProgress(0.2)
     
+    stat_replacements <- stat_replace1(rep("Stat",3), selected, mode="each")
+    
     fig <- plot_ly(df, x = df[[statcols[[1]]]], y = df[[statcols[[2]]]], z = df[[statcols[[3]]]], marker = list(color = df$color, size=rv$nxyz_sc_size-1),
                    hoverinfo="text",
-                   text=c(paste(df$Name, 
-                                "<br>logFC(x):", round(df[[statcols[[1]]]], 3),
+                   text=c(paste0(
+                     df$Name, 
+                                "<br>",stat_replacements[[1]],"(x):", round(df[[statcols[[1]]]], 3),
                                 "<br>p=", round(df[[pcols[[1]]]], 3),", q=", round(df[[qcols[[1]]]], 3),
-                                "<br>logFC(y):", round(df[[statcols[[2]]]], 3),
+                                "<br>",stat_replacements[[2]],"(y):", round(df[[statcols[[2]]]], 3),
                                 "<br>p=", round(df[[pcols[[2]]]], 3),", q=", round(df[[qcols[[2]]]], 3),
-                                "<br>logFC(z):", round(df[[statcols[[3]]]], 3),
+                                "<br>",stat_replacements[[3]],"(z):", round(df[[statcols[[3]]]], 3),
                                 "<br>p=", round(df[[pcols[[3]]]], 3),", q=", round(df[[qcols[[3]]]], 3)
                    )))
     

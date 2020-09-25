@@ -329,11 +329,11 @@ vis <- function(){
     
     # node hover
     hovertexts <- df$Name
-      hovertexts <- paste0("<b>", df$Name,"</b><br>
+      hovertexts <- stat_replace1(paste0("<b>", df$Name,"</b><br>
                      PValue = ",round(as.numeric(df[[pcol]]),3),
-                           ";FDR = ",round(as.numeric(df[[qcol]]),3),
+                           "; FDR = ",round(as.numeric(df[[qcol]]),3),
                            "; Stat = ",round(as.numeric(df[[statcol]]),3),
-                           "<br>","Leading edge (",sizes,")",":<br>", addlinebreaks_vis(df[[le_coln]]))
+                           "<br>","Leading edge (",sizes,")",":<br>", addlinebreaks_vis(df[[le_coln]])), input$nw_selected_n)
       
     
     

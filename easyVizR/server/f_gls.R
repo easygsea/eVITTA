@@ -568,7 +568,7 @@ output$f_filtering_ui <- renderUI({
             
             # temp table
             column(4,style="padding-right:17px;",
-                   HTML("<b>Filter preview:</b>"),
+                   HTML("<b>Preview gene list:</b>"),
                    uiOutput(paste0("T_info",i)),
                    div(dataTableOutput(paste0('T', i)), style="font-size:90%;"),
                    div(style="position: absolute;top: 150px;right: -15px;color: cornflowerblue;font-size: 23px;",
@@ -578,7 +578,7 @@ output$f_filtering_ui <- renderUI({
             
             # saved table
             column(4,style="padding-left:17px;",
-                   HTML("<b>Applied filters:</b>"),br(),
+                   HTML("<b>Saved gene list:</b>"),br(),
                    HTML(paste0("<i>", length(n_ins_gls()[[i]]),
                                " out of ", nrow(rv$df_n), " total</i>")),
                    div(dataTableOutput(paste0('TT', i)), style="font-size:90%;")

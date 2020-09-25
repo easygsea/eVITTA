@@ -110,7 +110,7 @@ filter_presets <- list(
 # example output: "|logFC| >=:"
 # if there are multiple names with different rv$tt values, will return sth like "|logFC/ES| >=:"
 
-stat_replace1 <- function(vec, selected_x, ll=rv$ll, tt=rv$tt){
+stat_replace1 <- function(vec, selected_x, mode="one", ll=rv$ll, tt=rv$tt){
   # require ll and tt to exist and be of sufficient length
   if (is.null(ll)==F & length(ll)>0 & is.null(tt)==F & length(tt)>0){
     # turn names into rv$ll indices
@@ -119,16 +119,23 @@ stat_replace1 <- function(vec, selected_x, ll=rv$ll, tt=rv$tt){
     }))
     # print(selected_i)
     replace_strings <- unlist(tt[selected_i]) # get replace strings corresponding to selected indices
-    # print(replace_strings)
-    replace_strings <- names(table(replace_strings)) # take unique and order by frequency
-    # print(replace_strings)
-    stat_replacement <- paste(replace_strings, collapse="/") # render as single string
-    out <- gsub("Stat", stat_replacement, vec)
+    
+    if (mode =="one"){ # replace all instances of stat by one string
+      replace_strings <- names(table(replace_strings)) # take unique and order by frequency
+      stat_replacement <- paste(replace_strings, collapse="/") # render as single string
+      out <- gsub("Stat", stat_replacement, vec)
+    } else if (mode=="each"){ # replace each instance by differnet strings
+      # print(vec)
+      # print(replace_strings)
+      out <- unlist(lapply(seq_along(vec), function(i){ gsub("Stat", replace_strings[[i]], vec[[i]]) }))
+    }
     return(out)
   } else {
     return(vec)
   }
 }
+
+
 
 # function 2: replace the "Stat" colnames in a df
 #------------------------------------------------------
@@ -152,4 +159,34 @@ stat_replace2 <- function(colnames, ll=rv$ll, tt=rv$tt){
   } else {
     return(colnames)
   }
+}
+
+
+
+# or just replace with fixed string 
+#------------------------------------------------------
+stat_replace_string <- "Value"
+
+# # for single string or vector (comment this out if using dynamic solution)
+# stat_replace1 <- function(vec, selected_x){
+#   gsub("Stat", stat_replace_string, vec)
+# }
+# 
+# # for table colnames (comment this out if using dynamic solution)
+# stat_replace2 <- function(colnames){
+#     unlist(lapply(colnames, function(x){ # replace the Stat substring based on the attached dataset name
+#       if (grepl("^Stat_", x)==T){ # if colname contains stat, change it
+#         gsub("^Stat", stat_replace_string, x)
+#       } else { # if no, leave it be
+#         x
+#       }
+#     }))
+# }
+
+
+
+
+# a general string replacement function 
+stat_replace <- function(vec){
+  gsub("Stat", stat_replace_string, vec)
 }
