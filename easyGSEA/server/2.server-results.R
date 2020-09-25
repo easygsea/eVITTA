@@ -28,8 +28,11 @@ output$ui_bodyResults <- renderUI({
                 )
             ),
             column(4,
-                # align="right",
-                
+                #align="right",
+                #Buttons that navigate to the last tab and the next tab. Version 1
+                div(id="two_arrow_div", style="display: inline-block;vertical-align:top;position: absolute; right: 1em;",
+                    uiOutput("results_tab_control"),
+                )
             ),
             column(
                 width = 8,
@@ -1872,7 +1875,42 @@ observeEvent(input$confirm_kegg_plot,{
         ))
     })
     
-  
+  # create two buttons, the left arrow go to the last tab while the right arrow go to the next tab
+  # version 1
+    output$results_tab_control <- renderUI({
+        div(actionBttn(inputId="results_last_tab", 
+                         icon = icon("angle-double-left"),
+                         style = "fill",
+                         size = "lg"
+                        ),
+        actionBttn(inputId="results_next_tab", 
+                       icon = icon("angle-double-right"),
+                       style = "fill",
+                       size = "lg"
+                        ),
+        bsTooltip("results_last_tab","Click to go to \"Run Analysis\""),
+        bsTooltip("results_next_tab","Click to go to the next tab"))
+        
+    })
+    #the two observeEvent function that control the two buttons
+    observeEvent(input$results_last_tab,{
+        updateTabItems(session, "tabs", "gsea")
+    })
+    observeEvent(input$results_next_tab,{
+        updateTabItems(session, "tabs", "network")
+    })
+    
+    # output$results_last_tab <- renderUI({
+    #     div(actionBttn(inputId="results_last_tab", 
+    #                    icon = icon("unite"),
+    #                    style = "simple",
+    #                    size = "lg"
+    #                    # color = ""
+    #                    #status = "default", width = "250px",right=T,
+    #     ),
+    #     bsTooltip("results_last_tab","Click to go to \"Run Analysis\""))
+    #     
+    # })
 # # UI manhattan tables & words ---------------
 #     output$ui_manhattan_table <- renderUI({
 #         fluidRow(
