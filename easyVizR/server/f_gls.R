@@ -1,5 +1,78 @@
 #========================= APPLY FILTERS TAB ==============================#
 
+# min amount of shared cols and rows for dataset selection (default: 1 row/ 3 cols)
+min_shared_rows <- 1
+min_shared_cols <- 3 # this excludes the name column
+
+
+# observe the changes made to the boxes. if there are unsaved changes (i.e. not equal to rv value), highlight them red.
+
+# css red shadowy border effect on inputs and radiogroupbuttons:
+# box-shadow: 0 0 3px red;
+# border: 0.1em solid red;
+# normal:
+# box-shadow: none;
+# border: 1px solid #d2d6de;
+
+observe({
+  highlights <- vector()
+  for (i in 1:length(rv$nx_n)){
+    req(input[[paste0("f_p_",i)]])
+    req(input[[paste0("f_q_",i)]])
+    req(input[[paste0("f_Stat_",i)]])
+    req(input[[paste0("f_sign_",i)]])
+    req(rv[[paste0("nic_p_",i)]])
+    req(rv[[paste0("nic_q_",i)]])
+    req(rv[[paste0("nic_Stat_",i)]])
+    req(rv[[paste0("nic_sign_",i)]])
+    
+    warning_style <- "{box-shadow: 0 0 3px red;border: 0.1em solid red;}"
+    normal_textinput_style <- "{box-shadow: none;border: 1px solid #d2d6de;}"
+    normal_radiogroupbuttons_style <- "{box-shadow: none;border: #f4f4f4;}"
+    
+    # observe p, q, stat, sign and apply highlights if diff from saved rv value
+    if (input[[paste0("f_p_",i)]] != rv[[paste0("nic_p_",i)]]){
+      obs <- paste0("#", paste0("f_p_",i), warning_style)
+      highlights <- c(highlights, obs)
+    } else {
+      obs <- paste0("#", paste0("f_p_",i), normal_textinput_style)
+      highlights <- c(highlights, obs)
+    }
+    if (input[[paste0("f_q_",i)]] != rv[[paste0("nic_q_",i)]]){
+      obs <- paste0("#", paste0("f_q_",i), warning_style)
+      highlights <- c(highlights, obs)
+    } else {
+      obs <- paste0("#", paste0("f_q_",i), normal_textinput_style)
+      highlights <- c(highlights, obs)
+    }
+    if (input[[paste0("f_Stat_",i)]] != rv[[paste0("nic_Stat_",i)]]){
+      obs <- paste0("#", paste0("f_Stat_",i), warning_style)
+      highlights <- c(highlights, obs)
+    } else {
+      obs <- paste0("#", paste0("f_Stat_",i), normal_textinput_style)
+      highlights <- c(highlights, obs)
+    }
+    if (input[[paste0("f_sign_",i)]] != rv[[paste0("nic_sign_",i)]]){
+      obs <- paste0("#", paste0("f_sign_",i), warning_style)
+      highlights <- c(highlights, obs)
+    } else {
+      obs <- paste0("#", paste0("f_sign_",i), normal_radiogroupbuttons_style)
+      highlights <- c(highlights, obs)
+    }
+  }
+  
+  rv$f_css_highlights <- tags$head(tags$style(HTML(
+    paste0(highlights, sep=" ")
+    )))
+  
+})
+
+output$f_highlights <- renderUI({
+  rv$f_css_highlights
+})
+
+
+
 ####---------------------- SELECT DATASETS ---------------------------####
 
 # select data
@@ -7,8 +80,7 @@ output$select_df_p2 <- renderUI({
   req(length(rv$ll) >= 1)
   checkboxGroupInput(
     inputId = "heatmap_dfs",
-    label= shiny::HTML("Select from uploaded datasets: 
-                               <span style='color: gray'>(2 or more required)</span>"),
+    label= shiny::HTML("Select 2 or more datasets:"),
     choices = rv$ll)
 })
 
@@ -17,60 +89,47 @@ output$n_shared <- renderUI({
   # req(is.null(rv$n_sharedcols)==F)
   # req(is.null(rv$n_sharedrows)==F)
   
-  if (length(rv$n_sharedcols)>=1){msgx=" (ok)"}
-  else{ msgx=""}
-  if (length(rv$n_sharedrows)>=1){msgy=" (ok)"}
-  else{ msgy=""}
+  msg <- vector()
+  if(length(input$heatmap_dfs) < 2){ # first check if enough n is selected
+    boxcolor <- "black"
+    msg <- c(msg, "Please select 2 or more datasets.")
+  } else { # if enough n is selected, check sharedcols
+    errors <- 0
+    if (length(rv$n_sharedcols)<min_shared_cols){ # check if enough shared cols
+      msg <- c(msg, 
+               paste0("You only have ", length(rv$n_sharedcols), " shared columns: ", 
+                      paste(rv$n_sharedcols, sep=", "), " (",min_shared_cols," needed)."
+                      )
+               )
+      errors <- errors+1
+    }
+    if (length(rv$n_sharedrows)<min_shared_rows){ # check if enough shared rows
+      msg <- c(msg, 
+               paste0("No term overlaps detected in selected datasets; <br>please check if the same gene identifiers are used."
+               )
+      )
+      errors <- errors+1
+    }
+    if (errors >0){
+      boxcolor="red"
+    } else { 
+      boxcolor = "green"
+      msg <- c(msg, "Datasets ok!")
+    }
+  }
   
+  sharemsg <- paste(msg, sep="<br>")
   
-  if(length(input$heatmap_dfs) < 2){
-    box(
-      title = NULL, background = "black", solidHeader = TRUE, width=12,
-      "Not enough datasets selected."
-    )
-  }
-  else if (msgx==" (ok)" & msgy==" (ok)"){
-    box(
-      title = NULL, background = "green", solidHeader = TRUE, width=12,
-      paste0("Shared columns: ",length(rv$n_sharedcols), msgx),br(),
-      paste0("Shared rows: ",length(rv$n_sharedrows), msgy)
-    )
-  }
-  else{
-    box(
-      title = NULL, background = "red", solidHeader = TRUE, width=12,
-      paste0("Shared columns: ",length(rv$n_sharedcols), msgx),br(),
-      paste0("Shared rows: ",length(rv$n_sharedrows), msgy)
-    )
-  }
+  box(
+    title = NULL, background = boxcolor, solidHeader = TRUE, width=12,
+    HTML(sharemsg)
+  )
 })
 
-output$n_shared_cols <- renderText({
-  req(length(rv$ll) >= 1)
-  if(length(input$heatmap_dfs) >= 2){
-    if (length(rv$n_sharedcols)>=1){msg=" (ok)"}
-    else{msg=" (x)"}
-    paste0("Shared columns: ",length(rv$n_sharedcols), msg)
-  }
-  
-  else{ "Shared columns: "}
-  
-  
-})
-output$n_shared_rows <- renderText({
-  req(length(rv$ll) >= 1)
-  if(length(input$heatmap_dfs) >= 2){
-    if (length(rv$n_sharedrows)>=1){msg=" (ok)"}
-    else{msg=" (x)"}
-    paste0("Shared rows: ",length(rv$n_sharedrows), msg)
-  }
-  
-  else{ "Shared rows: "}
-})
 
 # only enable the button if all requirements satisfied
 observe({
-  if (length(rv$ll) >= 2 & length(rv$heatmap_i) > 1 & length(rv$n_sharedrows)>=1 & length(rv$n_sharedcols)>=1){
+  if (length(rv$ll) >= 2 & length(rv$heatmap_i) > 1 & length(rv$n_sharedrows)>=min_shared_rows & length(rv$n_sharedcols)>=min_shared_cols){
     shinyjs::enable("n_use_data")
   } else {
     shinyjs::disable("n_use_data")
@@ -84,28 +143,74 @@ observe({
 output$f_apply_filters_panel <- renderUI({
   if(is.null(rv$nx_n)==F){
     div(
+      ######
+      # div(id="f_show_current",
+      #     
+      #     div(
+      #       # style="margin-bottom:10px;",
+      #         HTML(paste0(
+      #           "<b>Filters</b>:",
+      #           add_help("f_presets_current", style="margin-left: 5px;"))
+      #         )
+      #     ),
+      #     bsTooltip("f_presets_current", 
+      #               "These are your unsaved filter selections.", 
+      #               placement = "top"),
+      #     
+      #     # HTML("p <= 0.05 in <b><i>all</i></b>")
+      #     
+      #     ),
+      # 
+      # 
+      # hr(),
+      ######
       div(id="f_presets_panel",
-          HTML("<b>Filter presets:</b><br>Click to load one or multiple presets:<br>"),
-          hr(),
+          
+          HTML(paste0(
+            "<b>Filter preset shortcuts</b>:",
+            add_help("f_presets_help", style="margin-left: 5px;"))
+          ),
+          bsTooltip("f_presets_help", 
+                    "Click on these buttons to apply filter presets to all datasets (effects are stackable).<br>Click on <b>No Filter</b> to remove all filters.", 
+                    placement = "top"),
+          ######
+          # dropdown(
+          #   
+          # 
+          #   size = "xs",
+          #   icon = icon("gear", class = "opt")
+          # ),
+          ######
+          
+          
           # dynamically render the list of presets as buttons
           tagList(lapply(1:length(filter_presets), function(i) {
             name <- names(filter_presets)[[i]]
             preset <- filter_presets[[i]]
             actionButton(inputId = paste0("fpreset_", preset[[1]]),
-                         label = name
+                         label = name, 
+                         icon(preset[[7]]),
+                         style=paste0("color:",preset[[8]],";background-color:",preset[[9]],";")
             )
           })),
+          # dynamically render the preset tooltips
+          tagList(lapply(1:length(filter_presets), function(i) {
+            preset <- filter_presets[[i]]
+            bsTooltip(id=paste0("fpreset_", preset[[1]]), 
+                      title=preset[[6]], 
+                      placement = "top")
+          })),
+          
+          
           ),
       
       
       
       hr(),
-      actionButton("f_applytorv", "Apply Filters", class = "btn-warning"),
-      bsTooltip("f_applytorv","You can change these filters anytime in the Gene List Filters dropdown", "right"),
+      
       
       uiOutput("f_msg"),br(),
       
-      HTML("Note: You can change these filters in the Gene List Filters dropdown in later tabs.")
     )
   } else {
     HTML("Please select datasets to continue.")
@@ -234,28 +339,65 @@ observeEvent(input[[paste0("fpreset_",filter_presets[[12]][[1]])]], {
     if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
   }
 })
+observeEvent(input[[paste0("fpreset_",filter_presets[[13]][[1]])]], {
+  req(is.null(rv$nx_n)==F)
+  preset=filter_presets[[13]]
+  for (x in 1:length(rv$nx_n)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
+  }
+})
 
 
 # show a message if there are unapplied filters
 output$f_msg <- renderUI({
   req(nrow(rv$df_n)>0)
-  req(length(f_temp_gls())>0)
-  req(length(n_ins_gls())>0)
+  # req(length(f_temp_gls())>0)
+  # req(length(n_ins_gls())>0)
   
-  temp <- f_temp_gls()
-  rvgl <- n_ins_gls()
+  # temp <- f_temp_gls()
+  # rvgl <- n_ins_gls()
   notequal <- vector()
   for (i in 1:length(rv$nx_n)){
-    if (setequal(temp[[i]],rvgl[[i]])==F){
+    # # observe by gene list
+    # if (setequal(temp[[i]],rvgl[[i]])==F){
+    #   notequal <- c(notequal, rv$nx_n[[i]])
+    # }
+    
+    # observe by filter values
+    req(input[[paste0("f_p_",i)]])
+    req(input[[paste0("f_q_",i)]])
+    req(input[[paste0("f_Stat_",i)]])
+    req(input[[paste0("f_sign_",i)]])
+    req(rv[[paste0("nic_p_",i)]])
+    req(rv[[paste0("nic_q_",i)]])
+    req(rv[[paste0("nic_Stat_",i)]])
+    req(rv[[paste0("nic_sign_",i)]])
+    
+    if (input[[paste0("f_p_",i)]] != rv[[paste0("nic_p_",i)]] |
+        input[[paste0("f_q_",i)]] != rv[[paste0("nic_q_",i)]] |
+        input[[paste0("f_Stat_",i)]] != rv[[paste0("nic_Stat_",i)]] |
+        input[[paste0("f_sign_",i)]] != rv[[paste0("nic_sign_",i)]]
+    ) {
       notequal <- c(notequal, rv$nx_n[[i]])
     }
   }
   
   if(length(notequal)>0){
+    div(
+      actionButton("f_applytorv", "Save Filters", class = "btn-warning"),
+      bsTooltip("f_applytorv","You can change these filters in later panels.", "right"),
+      HTML(paste0(
+        "<br><br><b><i>You have unsaved changes in:</b></i><br>",
+        paste(notequal, collapse=", "),
+        "<br><b><i>These will be lost when you leave this page.</b></i>"
+      ))
+    )
+  } else {
     HTML(paste0(
-      "<br><b><i>You have unapplied changes in:</b></i><br>",
-      paste(notequal, collapse=", "),
-      "<br><b><i>These will be lost when you leave this page.</b></i>"
+      "<b><i>All changes saved.</b></i>"
     ))
   }
 })
@@ -419,8 +561,12 @@ output$f_filtering_ui <- renderUI({
                                                          selected="All",size="s",direction = "horizontal"),
                                 ),
                               )
-                              ,style = "padding: 15px;margin-top:10px;")
+                              ,style = "padding: 15px;margin-top:10px;"),
+                   
             ),
+            
+            
+            # temp table
             column(4,style="padding-right:17px;",
                    HTML("<b>Filter preview:</b>"),
                    uiOutput(paste0("T_info",i)),
@@ -430,7 +576,7 @@ output$f_filtering_ui <- renderUI({
                    )
             ),
             
-            
+            # saved table
             column(4,style="padding-left:17px;",
                    HTML("<b>Applied filters:</b>"),br(),
                    HTML(paste0("<i>", length(n_ins_gls()[[i]]),
@@ -440,7 +586,10 @@ output$f_filtering_ui <- renderUI({
             
             
           )
-        }))
+        })),
+        
+        uiOutput("f_highlights")
+        
         )
     
   }
