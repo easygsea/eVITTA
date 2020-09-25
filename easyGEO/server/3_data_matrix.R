@@ -164,16 +164,18 @@ output$sup_links <- renderUI({
     
 # ------------ observe rv$ftpy, render reminder modal -------------
 observeEvent(rv$ftpy,{
+  # hlink = paste0(getwd(),"/inc/uploading_GEO_data_matrix.png")
   showModal(modalDialog(
     title = h2(paste0("Successfully downloaded ",rv$ftpy)),
     div(style="font-size:200%",
-      tags$strong("Please decompress and check your downloaded data:"),
+      tags$strong("Please decompress and check the downloaded file(s):"),
       br(),br(),
-      tags$li("If they are raw/normalized counts (e.g. CPM, FPKM, RPKM), please tidy them up and upload the right format according to our instructions below."),
+      tags$li(HTML("If downloaded data files contain raw/normalized counts (e.g. CPM, FPKM, RPKM), please tidy them up according to our <a href='https://tau.cmmt.ubc.ca/bu/uploading_GEO_data_matrix.png' target='_blank'><b>instructions</b></a>. Then upload the processed file in step <b>2.2. Upload tidied matrix</b>.")),
       br(),
-      tags$li(HTML("If they are analyzed, proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><b>easyGSEA</b></a> for enrichment analysis or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><b>easyVizR</b></a> for multiple comparisons.")),
+      tags$li(HTML("If downloaded data are analyzed data (e.g. logFC, p value, FDR), you can proceed directly to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><b>easyGSEA</b></a> for enrichment analysis or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><b>easyVizR</b></a> for multiple comparisons.")),
+      
     ),
-    size = "l", easyClose = T, footer = modalButton("Got it!")
+    size = "l", easyClose = T, footer = modalButton("OK")
     
   ))
 })  
@@ -241,7 +243,7 @@ observeEvent(input$file_help,{
     # includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
     # includeMarkdown(knitr::knit(paste0(getwd(),"/inc/rnk_explaination.Rmd"),quiet=T)),
     easyClose = TRUE,size="l",
-    footer = modalButton("Close")
+    footer = modalButton("OK")
   ))
 })
 
@@ -253,15 +255,15 @@ observeEvent(input$file, {
   inFile <- input$file
   
   # the modal that appears when the file user upload exceeds 50MB, Version1
-  if(inFile$size >= 50*1024^2){
+  if(inFile$size >= 100*1024^2){
     showModal(modalDialog(
       inputId = "size_reminder_modal",
-      # title = "The file size exceeds 50MB.",
-      div("The file you uploaded exceeds 50MB, please modify it to proceed. Try to delete unneeded columns and 
+      # title = "The file size exceeds 100MB.",
+      div("The file you uploaded exceeds 100MB, please modify it to proceed. Try to delete unneeded columns and 
             only keep the columns that you are interested in. 
             Then press \"Browse...\" to upload it again. Thank you.",style="font-size:200%"),
       easyClose = TRUE,size="l"
-      # , footer = modalButton("Close")
+      , footer = modalButton("OK")
     ))
   }
   
@@ -291,6 +293,7 @@ observeEvent(input$file, {
       "Please revise your input file according to our notes and reupload the file.")),
     size = "l",
     easyClose = TRUE
+    ,footer = modalButton("OK")
     ))
     }
   
@@ -304,11 +307,12 @@ observeEvent(input$file, {
   DuplicateRows <- which(DuplicateCheck == TRUE, arr.ind=TRUE)
   if(length(DuplicateRows) > 0){ # if there are duplicate rows
     showModal(modalDialog( 
-      title = "Warning: Your input file contains duplicate gene names",
-      HTML(paste0("Duplicate entries were omitted.<br>",
-                  "If this is not what you intend, please double check and try again.")),
+      title = "Warning: The file you uploaded contains duplicate gene names",
+      HTML(paste0("Only the first duplicate(s) will be kept.<br>",
+                  "If this is not what you intend, please double check your input file and re-upload.")),
       size = "l",
       easyClose = TRUE
+      ,footer = modalButton("OK")
     ))
   }
   ###
@@ -426,14 +430,14 @@ observeEvent(input$file, {
           span(" columns successfully read; ",style = "font-size:200%"),
           span("your file's column names contain: ",style = "font-size:200%"),
           span(match_deg_cols_one_character, style = "font-size:200%"),
-          span(". Your file has probably already been processed and analyzed. Please Check it again;
+          span(". Your file probably has already been processed and analyzed. Please Check it again;
                if it has been processed, proceed to ",style = "font-size:200%"),
           HTML("<a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank' style = 'font-size:200%'><u><b>easyGSEA</b></u></a>"),
           span(" or ", style = "font-size:200%"),
           HTML("<a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank' style = 'font-size:200%'><u><b>easyVizR</b></u></a>"),
           span(" for further analysis. Thank you.", style = "font-size:200%"),
           easyClose = TRUE,size="l"
-          # , footer = modalButton("Close")
+          , footer = modalButton("OK")
         ))
       }
       else{
@@ -451,7 +455,7 @@ observeEvent(input$file, {
           span("). Please check your file, column names as well as the platform, and then try again.",style = "font-size:200%"),
           #2 columns successfully read; 2 columns omitted because column name does not match existing sample names (C, D). Please check your file and try again.
           easyClose = TRUE,size="l"
-          # , footer = modalButton("Close")
+          , footer = modalButton("OK")
         ))}
     }
   }else{
@@ -460,6 +464,8 @@ observeEvent(input$file, {
       inputId = "invalid_character_modal",
       span("IMPORTANT: Your file contains unrecognized characters, please check your file's column names and convert it to GSM format. Thank you.", style = "font-size:200%"),
       easyClose = TRUE, size = "l"
+      , footer = modalButton("OK")
+      
     ))}
   })
 

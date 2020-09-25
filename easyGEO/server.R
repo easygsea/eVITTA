@@ -1,5 +1,5 @@
 
-options(shiny.maxRequestSize=50*1024^2) # sets max upload size to 50 mb
+options(shiny.maxRequestSize=100*1024^2) # sets max upload size to 100 mb
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
