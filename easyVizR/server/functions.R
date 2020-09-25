@@ -49,19 +49,47 @@ progress_box <- function(id, prompt, msg, condition, bttn_id, bttn_text="Continu
 
 # initialize filter presets
 # ------------------------------------------
+sig_icon <- "star-of-life"
+both_icon <- "sort"
+up_icon <- "arrow-up"
+down_icon <- "arrow-down"
+no_icon <- "times"
+
+sig_txt_color <- "#c463dc"
+sig_bg_color <- "#efe7ff"
+both_txt_color <- "#217120"
+both_bg_color <- "#d6fcd0"
+up_txt_color <- "#dd4b39"
+up_bg_color <- "#fd8"
+down_txt_color <- "#1976d2"
+down_bg_color <- "#b7e2ff"
+no_txt_color <- "#f4f4f4"
+no_bg_color <- "#444"
 filter_presets <- list(
-  "p significant" = c("psig", 0.05, NA, NA, NA),
-  "q significant" = c("qsig", NA, 0.05, NA, NA),
-  "Changed 0.5x" = c("c0.5", NA, NA, 0.5, "All"),
-  "Changed 1x" = c("c1", NA, NA, 1, "All"),
-  "Changed 1.5x" = c("c1.5", NA, NA, 1.5, "All"),
-  "Up 0.5x" = c("up0.5", NA, NA, 0.5, "Positive"),
-  "Up 1x" = c("up1", NA, NA, 1, "Positive"),
-  "Up 1.5x" = c("up1.5", NA, NA, 1.5, "Positive"),
-  "Down 0.5x" = c("down0.5", NA, NA, 0.5, "Negative"),
-  "Down 1x" = c("down1", NA, NA, 1, "Negative"),
-  "Down 1.5x" = c("down1.5", NA, NA, 1.5, "Negative"),
-  "No filter" = c("nofilter", 1, 1, 0, "All")
+  "p significant" = c("psig", 0.05, NA, NA, NA, "<b>p</b> <= 0.05", 
+                      sig_icon, sig_txt_color, sig_bg_color),
+  "q significant" = c("qsig", NA, 0.05, NA, NA, "<b>FDR</b> <= 0.05", 
+                      sig_icon, sig_txt_color, sig_bg_color),
+  "Changed 0.5x" = c("c0_5", NA, NA, 0.5, "All", "<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: All", 
+                     both_icon, both_txt_color, both_bg_color),
+  "Changed 1x" = c("c1", NA, NA, 1, "All", "<b>|Stat|</b> >= 1 <br><b>Direction</b>: All",
+                   both_icon, both_txt_color, both_bg_color),
+  "Changed 1.5x" = c("c1_5", NA, NA, 1.5, "All", "<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: All",
+                     both_icon, both_txt_color, both_bg_color),
+  "Up 0.5x" = c("up0_5", NA, NA, 0.5, "Positive", "<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: +",
+                up_icon, up_txt_color, up_bg_color),
+  "Up 1x" = c("up1", NA, NA, 1, "Positive", "<b>|Stat|</b> >= 1 <br><b>Direction</b>: +",
+              up_icon, up_txt_color, up_bg_color),
+  "Up 1.5x" = c("up1_5", NA, NA, 1.5, "Positive", "<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: +",
+                up_icon, up_txt_color, up_bg_color),
+  "Down 0.5x" = c("down0_5", NA, NA, 0.5, "Negative", "<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: -",
+                  down_icon, down_txt_color, down_bg_color),
+  "Down 1x" = c("down1", NA, NA, 1, "Negative", "<b>|Stat|</b> >= 1 <br><b>Direction</b>: -",
+                down_icon, down_txt_color, down_bg_color),
+  "Down 1.5x" = c("down1_5", NA, NA, 1.5, "Negative", "<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: -",
+                  down_icon, down_txt_color, down_bg_color),
+  "No filter" = c("nofilter", 1, 1, 0, "All", "Remove all filters",
+                  no_icon, no_txt_color, no_bg_color)
 )
 
 
