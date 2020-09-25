@@ -813,7 +813,7 @@ observeEvent(input$delete_deg_confirm, {
   
   #Added this one to update rv filedf when there is a delete, and after my test it works!
   rv$FileDF <-subset(rv$FileDF, !(rv$FileDF$tidiedName %in% input$delete_deg))
-  
+  #View(rv$FileDF)
   
 })
 
