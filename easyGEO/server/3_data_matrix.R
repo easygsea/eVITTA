@@ -322,9 +322,27 @@ observeEvent(input$file, {
   # try to convert the indf headers into gsm format. matching is done in upper case.
   translation_df <- rv$pdata[c("title", "geo_accession")]
   translation_df$title <- toupper(translation_df$title) # convert the translation df to upper case as well
-  if(!'Æ' %in% indf_coln){indf_coln <- translate_sample_names(toupper(indf_coln),  # translating from (upper case)
+  
+  #print(indf_coln)
+  #print(validUTF8(indf_coln))
+  #print(prod(validUTF8(indf_coln)))
+  #adding a IF statement to ensure that the characters in the column names are encoded correctly,
+  #which means there is no invalid characters inside the column names
+  if(prod(validUTF8(indf_coln))){
+    whether_contains_invalid <- FALSE
+  }
+  else{
+    #delete the column names that contain invalid characters
+    indf_coln <- indf_coln[validUTF8(indf_coln)]
+    whether_contains_invalid <- TRUE
+  }
+  print(indf_coln)
+  # if(prod(validUTF8(indf_coln))){indf_coln <- translate_sample_names(toupper(indf_coln),  # translating from (upper case)
+  #                                     translation_df,  # translation df
+  #   
+  indf_coln <- translate_sample_names(toupper(indf_coln),  # translating from (upper case)
                                       translation_df,  # translation df
-                                      "geo_accession")} # translating to
+                                      "geo_accession") # translating to
   #print(indf_coln)
  
   colnames(indf) <- indf_coln[-1]
@@ -371,7 +389,11 @@ observeEvent(input$file, {
   deg_colnames <- c("logfc","fc","log2_fold_change"
                     ,"p","pval","pvalue","p.value","p_value"
                     ,"fdr","padj","adj.p.val","q_value")
- 
+  
+  #Check if the users file containg invalid characters, if yes, display a specific modal
+  #without running the code that process the columns Version 1
+  #if(prod(validUTF8(indf_coln))){
+  if(!whether_contains_invalid){
   # Check to see if there is some column names matched the potential terms in DEG file
   match_deg_cols <- intersect(tolower(deg_colnames),tolower(unmatched_cols))
   match_deg_cols_one_character <- glue_collapse(match_deg_cols, sep = ", ", last = " and ")
@@ -427,7 +449,14 @@ observeEvent(input$file, {
           easyClose = TRUE,size="l"
           # , footer = modalButton("Close")
         ))}
-      }
+    }
+  }else{
+    #the modal that reminds the user their file contains invalid characters Version 1
+    showModal(modalDialog(
+      inputId = "invalid_character_modal",
+      span("IMPORTANT: Your file contains unrecognized characters, please check your file's column names and convert it to GSM format. Thank you.", style = "font-size:200%"),
+      easyClose = TRUE, size = "l"
+    ))}
   })
 
 # --------------- show data matrix df ---------------
