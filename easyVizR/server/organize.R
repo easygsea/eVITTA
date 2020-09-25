@@ -1,6 +1,17 @@
 #======================================================================#
 ####                      ORGANIZE FILES                            ####
 #======================================================================#
+
+# specify the upload limits here (in mb)
+batch_mb_limit <- 50
+single_mb_limit <- 10
+total_mb_limit <- 100
+
+# calculate upload limits in bytes
+batch_upload_limit <- batch_mb_limit*1024^2
+single_upload_limit <- single_mb_limit*1024^2
+total_upload_limit <- total_mb_limit*1024^2
+
 # 
 # 
 # ####---------------------- From existing data --------------------------####
@@ -396,6 +407,35 @@ observeEvent(input$fileIn, {
   # get files
   inFiles <- input$fileIn
   inFiles <- inFiles[grepl(".csv|.txt", inFiles$name),]
+  
+  #if(inFile$size >= 50*1024^2){
+  if(sum(inFiles$size) >= batch_upload_limit){  
+    showModal(modalDialog(
+      inputId = "size_reminder_modal1",
+      div(
+      paste0("The files you uploaded exceed ",batch_mb_limit,"MB, please modify it to proceed. Try to delete unneeded columns and 
+            only keep the columns that you are interested in. 
+            Then press \"Browse...\" to upload again. Thank you.")
+             ,style="font-size:200%"),
+      easyClose = TRUE,size="l"
+      # , footer = modalButton("Close")
+    ))
+    shinyjs::reset("fileIn")
+  } else if (sum(inFiles$size) + sum(rv$FileDF$size) >= total_upload_limit) {
+    showModal(modalDialog(
+      inputId = "size_reminder_modal2",
+      div(
+        paste0("You have exceeded your storage limit of ",total_mb_limit,"MB. Please delete the unneeded files. 
+            Then press \"Browse...\" to upload again. Thank you.")
+        ,style="font-size:200%"),
+      easyClose = TRUE,size="l"
+      # , footer = modalButton("Close")
+    ))
+    shinyjs::reset("fileIn")
+  }
+  
+  req((sum(inFiles$size) < batch_upload_limit)&&(sum(inFiles$size) + sum(rv$FileDF$size) < total_upload_limit))
+  
   rv$batch_files <- inFiles
   
   allcols <- vector(mode="list")
@@ -468,13 +508,14 @@ observeEvent(input$batch_submit, {
     
     newname <- tidy_filename(inFiles$name[[i]], rv$ll)
     
-    
     # write in rv
     rv$ll <- c(rv$ll, newname)
     rv$gg <- c(rv$gg, list(in_df))
     rv$tt <- c(rv$tt, input$batch_Stat_name)
-  }
-  
+    #Updated new value in rv: rv$FileDf
+    rv$FileDF[nrow(rv$FileDF)+1,] <- c(inFiles$name[[i]], inFiles$size[[i]], inFiles$type[[i]],inFiles$datapath[[i]], newname)
+    }
+  rv$FileDF$size <- as.numeric(as.character(rv$FileDF$size))
   rv$folder_upload_state <- "reset"
   # shinyjs::reset("fileIn")
   removeModal()
@@ -691,7 +732,40 @@ output$upload_feedback <- renderUI({
 
 # when file is uploaded, update state 
 observeEvent(input$file, {
+  
   inFile <- input$file
+  #Add a file size check and its modal, single upload is 10mb
+  if(inFile$size >= single_upload_limit){
+  #if(inFile$size >= 50){  
+    
+    showModal(modalDialog(
+      inputId = "size_reminder_modal3",
+      # title = "The file size exceeds 50MB.",
+      div(
+      paste0("The file you uploaded exceeds ",single_mb_limit,"MB, please modify it to proceed. Try to delete unneeded columns and 
+            only keep the columns that you are interested in. 
+            Then press \"Browse...\" to upload it again. Thank you.")
+             ,style="font-size:200%"),
+      easyClose = TRUE,size="l"
+      # , footer = modalButton("Close")
+    ))
+    shinyjs::reset("file")
+  } else if (inFile$size + sum(rv$FileDF$size) > total_upload_limit){
+    showModal(modalDialog(
+      inputId = "size_reminder_modal4",
+      # title = "The file size exceeds 50MB.",
+      div(
+        paste0("You have exceeded your storage limit of ",total_mb_limit,"MB. Please delete the unneeded files. 
+            Then press \"Browse...\" to upload again. Thank you.")
+        ,style="font-size:200%"),
+      easyClose = TRUE,size="l"
+      # , footer = modalButton("Close")
+    ))
+    shinyjs::reset("file")
+  }
+  
+  req((inFile$size < single_upload_limit) && (inFile$size + sum(rv$FileDF$size) <= total_upload_limit)) 
+  
   rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1))
   rv$upload_state <- 'uploaded'
   
@@ -743,6 +817,11 @@ observeEvent(input$submit, {
   rv$gg <- c(rv$gg, list(in_df))
   rv$ll <- c(rv$ll, newname)
   rv$tt <- c(rv$tt, isolate(input$Stat_name))
+  # update rv new value 
+  #rv$FileDF <- rbind(rv$FileDF,c(inFile$name, inFile$size, inFile$type,inFile$datapath , newname))
+  rv$FileDF[nrow(rv$FileDF)+1,] <- c(inFile$name, inFile$size, inFile$type,inFile$datapath , newname)
+  #This line is important becasue we need to have size column as numerics so that we can do calculation with total size later.
+  rv$FileDF$size <- as.numeric(as.character(rv$FileDF$size))
   
   rv$upload_state <- "reset"
   
@@ -765,9 +844,15 @@ observeEvent(input$delete_deg_confirm, {
   to_delete_i <- which(rv$ll %in% input$delete_deg)
   #print(to_delete_i)
   # delete the items
+  
   rv$ll <- rv$ll[-to_delete_i]
   rv$gg <- rv$gg[-to_delete_i]
   rv$tt <- rv$tt[-to_delete_i]
+  
+  #Added this one to update rv filedf when there is a delete, and after my test it works!
+  rv$FileDF <-subset(rv$FileDF, !(rv$FileDF$tidiedName %in% input$delete_deg))
+  #View(rv$FileDF)
+  
 })
 
 #---------------------- Sidebar UI ---------------------------#

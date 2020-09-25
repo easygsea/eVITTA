@@ -7,7 +7,7 @@ a_mode <- conditionalPanel(
                
                radioButtons(
                    inputId = "selected_mode",
-                   label = "Select mode of analysis",
+                   label = NULL,
                    choices = run_modes,
                    selected = "gsea"
                ),
@@ -41,7 +41,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                             onInitialize = I('function() { this.setValue(""); }')
                         )
                     ),
-                    bsTooltip("selected_species_q", "Select species, then click \"Confirm selection\"", placement = "top"),
+                    bsTooltip("selected_species_q", HTML("Select species, then click <b>Confirm selection</b> to proceed"), placement = "top"),
                     
                     # database selection
                     uiOutput("test_db"),

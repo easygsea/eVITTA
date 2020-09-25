@@ -209,7 +209,12 @@ output$feedback_converted_rnk <- renderUI({
             fluidRow(
                 box(
                     background = "red", width=12,
-                    "No ID detected in ",species_translate(species),"'s database. Please check if your query file is correct and/or if you have selected the right gene identifier and/or if your selected species matches your query."
+                    HTML("No ID detected in <i><b>",species_translate(species),"</b></i>'s database. Please check if"),
+                    tags$ul(
+                        tags$li("The selected species matches your query, and/or")
+                        ,tags$li("You have selected the right gene identifier, and/or")
+                        ,tags$li("The uploaded file is correct")
+                    )
                 )
             )
         }else if(rv$rnk_check == "low"){
@@ -236,7 +241,7 @@ output$feedback_converted_rnk <- renderUI({
                 ),
                 box(
                     background = "red", width=12,
-                    "Fewer than 50% of your query genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
+                    HTML("Fewer than 50% of your query genes detected in <i><b>",species_translate(species),"</b></i>'s database. Please check if your selected species matches your query."),
                 )
             )
         }else if(rv$rnk_check == "pass"){
@@ -314,7 +319,12 @@ output$feedback_converted_glist <- renderUI({
         fluidRow(
             box(
                 background = "red", width=12,
-                "No ID detected in ",species_translate(species),"'s database. Please check if your gene list is correct and/or if your selected species matches your query."
+                HTML("No ID detected in <i><b>",species_translate(species),"</b></i>'s database. Please check if"),
+                tags$ul(
+                    tags$li("The selected species matches your query, and/or")
+                    ,tags$li("Your input gene list is correct")
+                    
+                    )
             )
         )
     }else if(rv$glist_check == "low"){
@@ -333,7 +343,7 @@ output$feedback_converted_glist <- renderUI({
             ),
             box(
                 background = "red", width=12,
-                "Fewer than 50% of genes detected in ",species_translate(species),"'s database. Please check if your selected species matches your query.",
+                HTML("Fewer than 50% of genes detected in <i><b>",species_translate(species),"</b></i>'s database. Please check if your selected species matches your query."),
             ),
             br(),br()
         )
@@ -401,7 +411,7 @@ output$run_error <- renderUI({
     fluidRow(
         box(
             background = "red", width = 12,
-            HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check whether ")
+            HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if ")
             ,tags$ul(
                 tags$li("The selected species matches your query, and/or")
                 ,tags$li("You have selected the right gene identifier as well as its column, and/or")
@@ -539,6 +549,7 @@ output$mat_download <- downloadHandler(
 # ----------- converted DEG download ---------
 output$ui_deg_download <- renderUI({
     req(rv$rnk_or_deg == "deg")
+    req(input$selected_mode == "gsea")
     
     div(id="deg_download_btn",
         downloadBttn("deg_download",
