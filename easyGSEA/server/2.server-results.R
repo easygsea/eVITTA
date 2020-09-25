@@ -28,11 +28,9 @@ output$ui_bodyResults <- renderUI({
                 )
             ),
             column(4,
-                #align="right",
+                align="right",
                 #Buttons that navigate to the last tab and the next tab. Version 1
-                div(id="two_arrow_div", style="display: inline-block;vertical-align:top;position: absolute; right: 1em;",
-                    uiOutput("results_tab_control"),
-                )
+                uiOutput("results_tab_control")
             ),
             column(
                 width = 8,
@@ -1878,25 +1876,16 @@ observeEvent(input$confirm_kegg_plot,{
   # create two buttons, the left arrow go to the last tab while the right arrow go to the next tab
   # version 1
     output$results_tab_control <- renderUI({
-        div(actionBttn(inputId="results_last_tab", 
-                         icon = icon("angle-double-left"),
-                         style = "fill",
-                         size = "lg"
-                        ),
-        actionBttn(inputId="results_next_tab", 
-                       icon = icon("angle-double-right"),
-                       style = "fill",
-                       size = "lg"
-                        ),
-        bsTooltip("results_last_tab","Click to go to \"Run Analysis\""),
-        bsTooltip("results_next_tab","Click to go to the next tab"))
-        
+        div(nav_btn_b("results_b"),
+            nav_btn_f("results_f"),
+        bsTooltip("results_b",HTML("Return to <b>Run Analysis</b>")),
+        bsTooltip("results_f",HTML("Proceed to <b>Enrichment Network</b>")))
     })
     #the two observeEvent function that control the two buttons
-    observeEvent(input$results_last_tab,{
+    observeEvent(input$results_b,{
         updateTabItems(session, "tabs", "gsea")
     })
-    observeEvent(input$results_next_tab,{
+    observeEvent(input$results_f,{
         updateTabItems(session, "tabs", "network")
     })
     

@@ -14,6 +14,20 @@
 
   output$example1 <- renderTable({(example_data1 <- read.csv(paste0(getwd(),"/inc/cel2_example1.rnk"),header = TRUE, sep = "\t"))},escape = FALSE)
   output$example2 <- renderTable({(example_data2 <- read.csv(paste0(getwd(),"/inc/cel2_example2.csv")))},escape = TRUE)
+  
+  # Navigation button to next tab -------------
+  output$nav_btn_run <- renderUI({
+    req(rv$run == "success")
+    
+    div(
+      nav_btn_f("gsea_f")
+      ,bsTooltip("gsea_f", HTML("Proceed to <b>Enrichment Results</b>"))
+    )
+  })
+  
+  observeEvent(input$gsea_f,{
+    updateTabItems(session, "tabs","kegg")
+  })
 
     # --------------  1.1 select databases --------------------
     

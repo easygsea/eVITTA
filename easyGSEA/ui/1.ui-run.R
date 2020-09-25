@@ -77,11 +77,20 @@ bodyGSEA <- tabItem(tabName = "gsea",
                         )
                     )
                     
-                )
+                ),
             # )
         ),
         column(
             width = 8,
+            div(
+                style="position:relative;z-index:1000",
+                absolutePanel(
+                    uiOutput("nav_btn_run"),
+                    right = 25,
+                    top = 10
+                )
+            )
+            ,
             box(
                 title = span(icon("seedling"),"Welcome to easyGSEA"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
                 column(

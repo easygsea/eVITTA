@@ -1415,6 +1415,20 @@
       )
     }
     
+    nav_btn_b <- function(id, color=rv$nav_btn_color, style=rv$nav_btn_style, size=rv$nav_btn_size){
+      actionBttn(inputId=id, 
+                 icon = icon("angle-double-left"),
+                 color = color, style = style, size = size
+      )
+    }
+    
+    nav_btn_f <- function(id, color=rv$nav_btn_color, style=rv$nav_btn_style, size=rv$nav_btn_size){
+      actionBttn(inputId=id, 
+                 icon = icon("angle-double-right"),
+                 color = color, style = style, size = size
+      )
+    }
+    
     #========================================================#
     ######  set colnames as first row, rename colnames #######
     #========================================================#

@@ -1,11 +1,11 @@
 # Overall bodyNetwork UI ------------------
 output$ui_bodyNetwork <- renderUI({
-    if(is.null(rv$run) || rv$run != "success"){
-        box(
-            title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
-            "Visualization available upon successful run."
-        )
-    }else{
+    # if(is.null(rv$run) || rv$run != "success"){
+    #     box(
+    #         title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
+    #         "Visualization available upon successful run."
+    #     )
+    # }else{
         fluidRow(
             # uiOutput("ui_vis_gear"),
             
@@ -13,29 +13,55 @@ output$ui_bodyNetwork <- renderUI({
                 width = 12,
                 #<i class="fas fa-chart-network"></i>
                 title=span( icon("project-diagram"), "Network view of enriched gene sets"), status = "primary",
-                uiOutput("ui_vis_gear"),
                 
-                div(id="d_vis",
-                    style = "position: absolute; right: 1em; top: 1em;",
-                    downloadBttn(
-                        size = "md", style="unite",
-                        outputId = "download_vis", label = NULL
-                    ),
-                    bsTooltip("d_vis","Click to download plot", placement = "bottom")
-                ),
+                
                 div(
                     uiOutput("vis_error")
                 ),
                 div(
                     visNetworkOutput("vis_network", height = "660px")
                 )
-                
+                ,absolutePanel(
+                    fluidRow(
+                        div(
+                            style="display: inline-block;vertical-align:top;margin-right:5px;",
+                            uiOutput("ui_vis_gear")
+                        ),
+                        div(id="d_vis", style="display: inline-block;vertical-align:top;margin-right:5px;",
+                            
+                            # style = "position: absolute; right: 1em; top: 1em;",
+                            downloadBttn(
+                                size = "md", style="unite",
+                                outputId = "download_vis", label = NULL
+                            )
+                        ),
+                        nav_btn_b("net_b"),
+                        nav_btn_f("net_f"),
+                        
+                        bsTooltip("d_vis","Click to download plot", placement = "bottom")
+                        ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
+                                   ,placement = "bottom")
+                        ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
+                                   ,placement = "bottom")
+                    ),
+                    right = 25,
+                    top = 12
+                )
             )
         )
-    }
+    # }
 })
 
-# vis network--------------
+# ------------ nav buttons to previous/next tab -----------
+observeEvent(input$net_b,{
+    updateTabItems(session, "tabs", "kegg")
+})
+
+observeEvent(input$net_f,{
+    updateTabItems(session, "tabs", "download")
+})
+
+# -------------- vis network--------------
 output$vis_error <- renderUI({
     req(rv$vis_status == "failed")
     HTML(
@@ -100,9 +126,9 @@ observeEvent(input$q_vis_edge_threshold,{
 
 #  ============UI vis parameter =============
 output$ui_vis_gear <- renderUI({
-    div(
-        align = "left",
-        style = "position: absolute; right: 5em; top: 1em;",
+    # div(
+    #     align = "left",
+    #     style = "position: absolute; right: 5em; top: 1em;",
         dropdown(
             up = FALSE,right = TRUE,icon = icon("gear"),width = "800px",
             style = "unite",#status = "primary",#size = "sm",
@@ -203,6 +229,6 @@ output$ui_vis_gear <- renderUI({
             
             
         )
-    )
+    # )
     
 })

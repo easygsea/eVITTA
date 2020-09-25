@@ -190,5 +190,18 @@ output$ui_gmt_download <- renderUI({
         )
     }
 })
+
+# --------- navigation button to return to network --------
+output$download_b_btn <- renderUI({
+    req(rv$run == "success")
     
+    div(
+        nav_btn_b("download_b")
+        ,bsTooltip("download_b",HTML("Return to <b>Enrichment Network</b>"))
+    )
+})
+
+observeEvent(input$download_b,{
+    updateTabItems(session, "tabs", "network")
+})
     

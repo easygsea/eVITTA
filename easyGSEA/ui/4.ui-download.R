@@ -22,6 +22,14 @@ bodyDownload <- tabItem(tabName = "download",
                )
             
         )
-        
+        ,div( id="btn_download",
+
+            style="position:relative;z-index:1000",
+            absolutePanel(
+                uiOutput("download_b_btn"),
+                right = 35,
+                top = 10
+            )
+        )
     )
 )

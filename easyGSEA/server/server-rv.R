@@ -9,6 +9,7 @@
         
         run_btn_color="warning", run_btn_style="simple",
         dbtn_style="unite", dbtn_color="default", dbtn_size="xs",
+        nav_btn_color="warning", nav_btn_style="fill", nav_btn_size="md",
 
         #========================================#
         #####      RVs for GSEA run          #####
@@ -89,7 +90,7 @@
         reactome_yes=NULL,reactome_confirm=NULL,reactome_id=NULL,reactome_genes=NULL,#reactome_genes=paste0("['",paste(c("MED15","FYN"),collapse = "','"),"']"),
         wp_yes = NULL,wp_confirm=NULL,wp_id=NULL,wp_src=NULL,
         
-        run=NULL, #
+        run=NULL, #success
         
         v=vector("list"), # dynamic UIs to display databases
         
