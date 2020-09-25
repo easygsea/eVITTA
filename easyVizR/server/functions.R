@@ -53,6 +53,7 @@ sig_icon <- "star-of-life"
 both_icon <- "sort"
 up_icon <- "arrow-up"
 down_icon <- "arrow-down"
+default_icon <- "circle-notch"
 no_icon <- "times"
 
 sig_txt_color <- "#c463dc"
@@ -88,8 +89,11 @@ filter_presets <- list(
                 down_icon, down_txt_color, down_bg_color),
   "Down 1.5x" = c("down1_5", NA, NA, 1.5, "Negative", "<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: -",
                   down_icon, down_txt_color, down_bg_color),
-  "No filter" = c("nofilter", 1, 1, 0, "All", "Remove all filters",
+  "Default" = c("default", 0.05, 1, 0, "All", "Default:<br><b>p</b> <= 0.05 <br><b>FDR</b> <= 1<br><b>|Stat|</b> >= 0<br><b>Direction</b>: All",
+                default_icon, no_txt_color, no_bg_color),
+  "No filter" = c("nofilter", 1, 1, 0, "All", "Remove all filters:<br><b>p</b> <= 1 <br><b>FDR</b> <= 1<br><b>|Stat|</b> >= 0<br><b>Direction</b>: All",
                   no_icon, no_txt_color, no_bg_color)
+  
 )
 
 
