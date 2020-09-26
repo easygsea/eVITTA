@@ -47,62 +47,29 @@ progress_box <- function(id, prompt, msg, condition, bttn_id, bttn_text="Continu
 }
 
 
-# initialize filter presets
-# ------------------------------------------
-sig_icon <- "star-of-life"
-both_icon <- "sort"
-up_icon <- "arrow-up"
-down_icon <- "arrow-down"
-default_icon <- "circle-notch"
-no_icon <- "times"
-
-sig_txt_color <- "#c463dc"
-sig_bg_color <- "#efe7ff"
-both_txt_color <- "#217120"
-both_bg_color <- "#d6fcd0"
-up_txt_color <- "#dd4b39"
-up_bg_color <- "#fd8"
-down_txt_color <- "#1976d2"
-down_bg_color <- "#b7e2ff"
-no_txt_color <- "#f4f4f4"
-no_bg_color <- "#444"
-filter_presets <- list(
-  "p significant" = c("psig", 0.05, NA, NA, NA, "<b>p</b> <= 0.05", 
-                      sig_icon, sig_txt_color, sig_bg_color),
-  "q significant" = c("qsig", NA, 0.05, NA, NA, "<b>FDR</b> <= 0.05", 
-                      sig_icon, sig_txt_color, sig_bg_color),
-  "Changed 0.5x" = c("c0_5", NA, NA, 0.5, "All", "<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: All", 
-                     both_icon, both_txt_color, both_bg_color),
-  "Changed 1x" = c("c1", NA, NA, 1, "All", "<b>|Stat|</b> >= 1 <br><b>Direction</b>: All",
-                   both_icon, both_txt_color, both_bg_color),
-  "Changed 1.5x" = c("c1_5", NA, NA, 1.5, "All", "<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: All",
-                     both_icon, both_txt_color, both_bg_color),
-  "Up 0.5x" = c("up0_5", NA, NA, 0.5, "Positive", "<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: +",
-                up_icon, up_txt_color, up_bg_color),
-  "Up 1x" = c("up1", NA, NA, 1, "Positive", "<b>|Stat|</b> >= 1 <br><b>Direction</b>: +",
-              up_icon, up_txt_color, up_bg_color),
-  "Up 1.5x" = c("up1_5", NA, NA, 1.5, "Positive", "<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: +",
-                up_icon, up_txt_color, up_bg_color),
-  "Down 0.5x" = c("down0_5", NA, NA, 0.5, "Negative", "<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: -",
-                  down_icon, down_txt_color, down_bg_color),
-  "Down 1x" = c("down1", NA, NA, 1, "Negative", "<b>|Stat|</b> >= 1 <br><b>Direction</b>: -",
-                down_icon, down_txt_color, down_bg_color),
-  "Down 1.5x" = c("down1_5", NA, NA, 1.5, "Negative", "<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: -",
-                  down_icon, down_txt_color, down_bg_color),
-  "Default" = c("default", 0.05, 1, 0, "All", "Default:<br><b>p</b> <= 0.05 <br><b>FDR</b> <= 1<br><b>|Stat|</b> >= 0<br><b>Direction</b>: All",
-                default_icon, no_txt_color, no_bg_color),
-  "No filter" = c("nofilter", 1, 1, 0, "All", "Remove all filters:<br><b>p</b> <= 1 <br><b>FDR</b> <= 1<br><b>|Stat|</b> >= 0<br><b>Direction</b>: All",
-                  no_icon, no_txt_color, no_bg_color)
-  
-)
-
 
 
 # ================================================= #
 #           Stat display replacement                #
 # ================================================= #
+# note on "Stat": 
+# internally, all data is saved and processed with the Stat column
+# however, we do not display "Stat" to the user, because it's confusing
+# instead, there are 2 alternatives:
+# 1) dynamic: let user tell us what the "Stat" variable is, e.g. logFC/ ES, then we render the corresponding one to them
+# 2) static: we decide an arbitrary string to display instead of Stat (i.e. "Value")
+# to use the 1st solution, enable the first 2 functions
+#       stat_replace1() and stat_replace2()
+# to use the 2nd solution, enable the alternative ver of those 2 functions written below
+# note: for the "Stat" instances before user specifies it, we will apply a cosmetic change regardless of solution 1 or 2 is used.
+#       see the function "stat_replace()"
+# to change the default string substitute for "Stat", change this:
+stat_replace_string <- "Value"      # <<<-----
 
-# function 1: replacing the "Stat" substring
+
+############## DYNAMIC STAT
+
+# function 1: replacing the "Stat" substring dynamically
 #----------------------------------------------------
 # input a string vector to be replaced.
 # example: stat_replace1("|Stat| >=:", "dataset1")
@@ -110,7 +77,7 @@ filter_presets <- list(
 # example output: "|logFC| >=:"
 # if there are multiple names with different rv$tt values, will return sth like "|logFC/ES| >=:"
 
-stat_replace1 <- function(vec, selected_x, ll=rv$ll, tt=rv$tt){
+stat_replace1 <- function(vec, selected_x, mode="one", ll=rv$ll, tt=rv$tt){
   # require ll and tt to exist and be of sufficient length
   if (is.null(ll)==F & length(ll)>0 & is.null(tt)==F & length(tt)>0){
     # turn names into rv$ll indices
@@ -119,18 +86,25 @@ stat_replace1 <- function(vec, selected_x, ll=rv$ll, tt=rv$tt){
     }))
     # print(selected_i)
     replace_strings <- unlist(tt[selected_i]) # get replace strings corresponding to selected indices
-    # print(replace_strings)
-    replace_strings <- names(table(replace_strings)) # take unique and order by frequency
-    # print(replace_strings)
-    stat_replacement <- paste(replace_strings, collapse="/") # render as single string
-    out <- gsub("Stat", stat_replacement, vec)
+    
+    if (mode =="one"){ # replace all instances of stat by one string
+      replace_strings <- names(table(replace_strings)) # take unique and order by frequency
+      stat_replacement <- paste(replace_strings, collapse="/") # render as single string
+      out <- gsub("Stat", stat_replacement, vec)
+    } else if (mode=="each"){ # replace each instance by differnet strings
+      # print(vec)
+      # print(replace_strings)
+      out <- unlist(lapply(seq_along(vec), function(i){ gsub("Stat", replace_strings[[i]], vec[[i]]) }))
+    }
     return(out)
   } else {
     return(vec)
   }
 }
 
-# function 2: replace the "Stat" colnames in a df
+
+
+# function 2: replace the "Stat" colnames in a df dynamically
 #------------------------------------------------------
 # simply input the colnames. elements should be in the format: "Stat_dataset1"
 # it will match the name behind the underscore to rv$ll and replace the stat substring with corresponding rv$tt value
@@ -153,3 +127,96 @@ stat_replace2 <- function(colnames, ll=rv$ll, tt=rv$tt){
     return(colnames)
   }
 }
+
+############## STATIC STAT
+
+# or just replace with fixed string 
+#------------------------------------------------------
+
+# for single string or vector (comment this out if using dynamic solution)
+stat_replace1 <- function(vec, selected_x, mode="one"){
+  gsub("Stat", stat_replace_string, vec)
+}
+
+# for table colnames (comment this out if using dynamic solution)
+stat_replace2 <- function(colnames){
+    unlist(lapply(colnames, function(x){ # replace the Stat substring based on the attached dataset name
+      if (grepl("^Stat_", x)==T){ # if colname contains stat, change it
+        gsub("^Stat", stat_replace_string, x)
+      } else { # if no, leave it be
+        x
+      }
+    }))
+}
+
+
+# a general string replacement function  for static instances (static)
+stat_replace <- function(vec){
+  gsub("Stat", stat_replace_string, vec)
+}
+
+
+
+
+# initialize filter presets
+# ------------------------------------------
+sig_icon <- "star-of-life"
+both_icon <- "sort"
+up_icon <- "arrow-up"
+down_icon <- "arrow-down"
+default_icon <- "circle-notch"
+no_icon <- "times"
+
+sig_txt_color <- "#c463dc"
+sig_bg_color <- "#efe7ff"
+both_txt_color <- "#217120"
+both_bg_color <- "#d6fcd0"
+up_txt_color <- "#dd4b39"
+up_bg_color <- "#fd8"
+down_txt_color <- "#1976d2"
+down_bg_color <- "#b7e2ff"
+no_txt_color <- "#f4f4f4"
+no_bg_color <- "#444"
+filter_presets <- list(
+  "p significant" = c("psig", 0.05, NA, NA, NA, 
+                      "<b>p</b> <= 0.05", 
+                      sig_icon, sig_txt_color, sig_bg_color),
+  "q significant" = c("qsig", NA, 0.05, NA, NA, 
+                      "<b>FDR</b> <= 0.05", 
+                      sig_icon, sig_txt_color, sig_bg_color),
+  "Changed 0.5x" = c("c0_5", NA, NA, 0.5, "All", 
+                     stat_replace("<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: All"), 
+                     both_icon, both_txt_color, both_bg_color),
+  "Changed 1x" = c("c1", NA, NA, 1, "All", 
+                   stat_replace("<b>|Stat|</b> >= 1 <br><b>Direction</b>: All"),
+                   both_icon, both_txt_color, both_bg_color),
+  "Changed 1.5x" = c("c1_5", NA, NA, 1.5, "All", 
+                     stat_replace("<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: All"),
+                     both_icon, both_txt_color, both_bg_color),
+  "Up 0.5x" = c("up0_5", NA, NA, 0.5, "Positive", 
+                stat_replace("<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: +"),
+                up_icon, up_txt_color, up_bg_color),
+  "Up 1x" = c("up1", NA, NA, 1, "Positive", 
+              stat_replace("<b>|Stat|</b> >= 1 <br><b>Direction</b>: +"),
+              up_icon, up_txt_color, up_bg_color),
+  "Up 1.5x" = c("up1_5", NA, NA, 1.5, "Positive", 
+                stat_replace("<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: +"),
+                up_icon, up_txt_color, up_bg_color),
+  "Down 0.5x" = c("down0_5", NA, NA, 0.5, "Negative", 
+                  stat_replace("<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: -"),
+                  down_icon, down_txt_color, down_bg_color),
+  "Down 1x" = c("down1", NA, NA, 1, "Negative", 
+                stat_replace("<b>|Stat|</b> >= 1 <br><b>Direction</b>: -"),
+                down_icon, down_txt_color, down_bg_color),
+  "Down 1.5x" = c("down1_5", NA, NA, 1.5, "Negative", 
+                  stat_replace("<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: -"),
+                  down_icon, down_txt_color, down_bg_color),
+  "Default" = c("default", 0.05, 1, 0, "All", 
+                stat_replace("Default:<br><b>p</b> <= 0.05 <br><b>FDR</b> <= 1<br><b>|Stat|</b> >= 0<br><b>Direction</b>: All"),
+                default_icon, no_txt_color, no_bg_color),
+  "No filter" = c("nofilter", 1, 1, 0, "All", 
+                  stat_replace("Remove all filters:<br><b>p</b> <= 1 <br><b>FDR</b> <= 1<br><b>|Stat|</b> >= 0<br><b>Direction</b>: All"),
+                  no_icon, no_txt_color, no_bg_color)
+  
+)
+

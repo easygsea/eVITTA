@@ -353,13 +353,7 @@ output$n_ui_single <- renderUI({
                      
                      
                      br(),
-                     strong("Color threshold:"),
-                     br(),
-                     numericInput("nx_p", 
-                                  "P <= :", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),
-                     numericInput("nx_Stat", 
-                                  "|Stat| >= :", 
-                                  value = 0, min = 0, max = 1, step=0.001, width="100px"),
+                     uiOutput("nx_vol_colthresh_opt"),
                      
                      size = "xs",
                      icon = icon("gear", class = "opt"),

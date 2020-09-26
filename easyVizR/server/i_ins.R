@@ -94,12 +94,12 @@ output$intersection_summary <- renderUI({
       
       if (cur_sign=="All"){ # if FALSE and ALL
         if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
-          stat_text <- paste0("|Stat| < ", cur_Stat)
+          stat_text <- stat_replace1(paste0("|Stat| < ", cur_Stat), rv$nx_n[[i]])
         } else {stat_text <- NA} 
       } else if (cur_sign=="Positive"){ # if FALSE and POS
-        stat_text <- paste0("Stat < ", cur_Stat)
+        stat_text <- stat_replace1(paste0("Stat < ", cur_Stat), rv$nx_n[[i]])
       } else if (cur_sign=="Negative") { # if FALSE and NEG
-        stat_text <- paste0("Stat >  ", cur_Stat)
+        stat_text <- stat_replace1(paste0("Stat >  ", cur_Stat), rv$nx_n[[i]])
       }
     } else if (criteria[[name]]==T){ # if TRUE
       if (cur_p<1){
@@ -111,12 +111,12 @@ output$intersection_summary <- renderUI({
       
       if (cur_sign=="All"){ # if TRUE and ALL
         if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
-          stat_text <- paste0("|Stat| >= ", cur_Stat) 
+          stat_text <- stat_replace1(paste0("|Stat| >= ", cur_Stat) , rv$nx_n[[i]])
         } else {stat_text <- NA} 
       } else if (cur_sign=="Positive"){ # if TRUE and POS
-        stat_text <- paste0("Stat >= ", cur_Stat)
+        stat_text <- stat_replace1(paste0("Stat >= ", cur_Stat), rv$nx_n[[i]])
       } else if (cur_sign=="Negative") { # if TRUE and NEG
-        stat_text <- paste0("Stat <=  ", cur_Stat)
+        stat_text <- stat_replace1(paste0("Stat <=  ", cur_Stat), rv$nx_n[[i]])
       }
     } 
     
