@@ -100,7 +100,7 @@
                          # ,`data-toggle`="collapse"
                          # ,`data-target` = "#showdbs_collapsible"
                          ),
-    bsTooltip("showdbs","Default selection: Biological processes and pathways. Click for more options."
+    bsTooltip("showdbs","Default selection: Biological processes and pathways. <i>Click</i> for more options."
               ,placement = "top"),
                 br(),br(),
                 # conditionalPanel('input.showdbs % 2 == 1', id="showdbs_panel",
@@ -305,7 +305,7 @@
                       
 
             ),
-            bsTooltip("q1", "Click to learn more!", placement = "top")
+            bsTooltip("q1", "<i>Click</i> to learn more and load our <u>sample data</u> for a trial run", placement = "top")
             
             
         )
@@ -959,7 +959,7 @@
               # ErrorMessage <- conditionMessage(attr(frun, "condition"))  # the error message
               #show a modal dialog if there is an error reading files causing crash
               showModal(modalDialog(
-                title = h3(HTML("Please click and adjust <b>Advanced run parameters</b>")),
+                title = h3(HTML("Please click the gear button and adjust <b>Advanced run parameters</b>")),
                 tags$li(h4(paste0("Database(s): ",db_selected))),
                 tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
                                   ," and max=",rv$gmax))),
