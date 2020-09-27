@@ -16,9 +16,11 @@ output$nw_set_le_ui <- renderUI({
       ),
       radioButtons("nw_le_sep", "Separator:", 
                    choices=c(
+                     "semicolon"=";",
                      "space" = "\\s+",
                      "comma" = ","
-                   )
+                   ),
+                   selected=";"
       ),
       uiOutput("nw_feedback"),
     )

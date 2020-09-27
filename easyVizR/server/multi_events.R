@@ -199,7 +199,7 @@ observeEvent(input$n_use_data,{
     
     # network options
     rv$nw_selected_n <- rv$nx_n[[1]]
-    rv$nw_le_sep <- "\\s+"
+    rv$nw_le_sep <- ";"
     rv$nw_selected_col <- firstmatch(le_alias,rv$nw_char_stats)
     # rv$cutoff_vis_p <- 0.05
     # rv$cutoff_vis_q <- 1
