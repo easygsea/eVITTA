@@ -248,7 +248,13 @@ output$scatter_nxy_dl <- downloadHandler(
 output$nxy_color_summary_panel <- renderUI({
   if (rv$nxy_colormode!="Color and size"){
     div(
-      strong("Color Summary:"),
+      HTML(paste0(
+        "<b>Color summary</b>:",
+        add_help("nxy_cdf_help", style="margin-left: 5px;"))
+      ),
+      bsTooltip("nxy_cdf_help", 
+                "Summarizes terms by their displayed color", 
+                placement = "top"),
       dataTableOutput("nxy_color_tbl"),
       br(),
       downloadButton("download_nxy_color_df", "Download color summary"),

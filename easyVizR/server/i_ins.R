@@ -6,6 +6,8 @@
 # generates dynamic ui for selection
 observe({
   req(nrow(rv$df_n)>0)
+  req_filter_ns("nic",rv)
+  
   criteria <- rv$ins_criteria
   criteria <- as.character(criteria)
   criteria[is.na(criteria)] <- "Ignore"
@@ -18,10 +20,22 @@ observe({
                                        label = rv$nx_n[[i]], size="s",
                                        choices = c("True", "False", "Ignore"),
                                        selected =criteria[[i]],
-                                       status = "info"))
+                                       status = "info"),
+                     
+                     radioTooltip(id = paste0("ins_",i), choice = "True", 
+                                  title = paste0("Included in the Venn circle.","<br>(",summarize_filter("nic",rv,rv$nx_n[[i]],T,include_name=F)," in this dataset)"), 
+                                  placement = "bottom"),
+                     radioTooltip(id = paste0("ins_",i), choice = "False", 
+                                  title = paste0("Excluded from the Venn circle.","<br>(",summarize_filter("nic",rv,rv$nx_n[[i]],F,include_name=F)," in this dataset)"), 
+                                  placement = "bottom"),
+                     radioTooltip(id = paste0("ins_",i), choice = "Ignore", 
+                                  title = "Filters ignored", 
+                                  placement = "bottom"),
+
+                     )
   }
   rv$s_button[[1]] <- div(style="display: inline-block;margin-top: 1.55em; width: 280px;",
-                     actionButton("ins_applytorv", "Apply selection", class = "btn-warning")
+                     actionButton("ins_applytorv", "Save selection", class = "btn-warning")
                      )
     
   
@@ -67,82 +81,18 @@ output$intersection_summary <- renderUI({
   
   desc <-list()
   criteria <- rv$ins_criteria
+  req_filter_ns("nic", rv)
   
+  # generate a description for every dataset and put into list
   for (i in 1:length(rv$nx_n)){
-    req(is.null(rv[[paste0("nic_p_",i)]])==F)
-    req(is.null(rv[[paste0("nic_q_",i)]])==F)
-    req(is.null(rv[[paste0("nic_Stat_",i)]])==F)
-    req(is.null(rv[[paste0("nic_sign_",i)]])==F)
-    
-    name <- rv$nx_n[[i]]
-    cur_p <- rv[[paste0("nic_p_",i)]]
-    cur_q <- rv[[paste0("nic_q_",i)]]
-    cur_Stat <- rv[[paste0("nic_Stat_",i)]]
-    cur_sign <- rv[[paste0("nic_sign_",i)]]
-    
-    
-    req(is.null(criteria[[name]])==F)
-    if (is.na(criteria[[name]])==T){ # if NA
-      stat_text=""
-    } else if (criteria[[name]]==F){ # if FALSE
-      if (cur_p<1){ # p cutoff is only meaningful if <1
-        p_text <- paste0("p > ",cur_p)
-      } else {p_text <- NA}
-      if (cur_q<1){ # q cutoff is only meaningful if <1
-        q_text <- paste0("q > ",cur_q)
-      } else {q_text <- NA}
-      
-      if (cur_sign=="All"){ # if FALSE and ALL
-        if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
-          stat_text <- stat_replace1(paste0("|Stat| < ", cur_Stat), rv$nx_n[[i]])
-        } else {stat_text <- NA} 
-      } else if (cur_sign=="Positive"){ # if FALSE and POS
-        stat_text <- stat_replace1(paste0("Stat < ", cur_Stat), rv$nx_n[[i]])
-      } else if (cur_sign=="Negative") { # if FALSE and NEG
-        stat_text <- stat_replace1(paste0("Stat >  ", cur_Stat), rv$nx_n[[i]])
-      }
-    } else if (criteria[[name]]==T){ # if TRUE
-      if (cur_p<1){
-        p_text <- paste0("p <= ",cur_p)
-      } else {p_text <- NA}
-      if (cur_q<1){
-        q_text <- paste0("q <= ",cur_q)
-      } else {q_text <- NA}
-      
-      if (cur_sign=="All"){ # if TRUE and ALL
-        if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
-          stat_text <- stat_replace1(paste0("|Stat| >= ", cur_Stat) , rv$nx_n[[i]])
-        } else {stat_text <- NA} 
-      } else if (cur_sign=="Positive"){ # if TRUE and POS
-        stat_text <- stat_replace1(paste0("Stat >= ", cur_Stat), rv$nx_n[[i]])
-      } else if (cur_sign=="Negative") { # if TRUE and NEG
-        stat_text <- stat_replace1(paste0("Stat <=  ", cur_Stat), rv$nx_n[[i]])
-      }
-    } 
-    
-    if (is.na(criteria[[name]])==F){
-      if (criteria[[name]]==T){
-        cond_string <- paste(
-          paste0("<strong>", na.omit(c(p_text, q_text, stat_text)), "</strong>")
-          , collapse=" AND ")
-        adddesc <- paste(
-          cond_string,
-          " in ", "<i>",name,"</i>",
-          sep="")
-      } else if (criteria[[name]]==F){
-        cond_string <- paste(
-          paste0("<strong>", na.omit(c(p_text, q_text, stat_text)), "</strong>")
-          , collapse=" OR ")
-        adddesc <- paste(
-          cond_string,
-          " in ", "<i>",name,"</i>",
-          sep="")
-      } 
-      # only append a description when it's not on ignore
+    # only append a description when it's not on ignore
+    adddesc <- summarize_filter("nic", rv, rv$nx_n[[i]], criteria[[rv$nx_n[[i]]]])
+    if (is.na(adddesc)==F){
       desc <- c(desc, adddesc)
     }
   }
-  # print(desc)
+  
+  # make into html unordered list
   if (length(desc)>0){
     text <- paste0("<ul>", paste(paste0("<li>",desc,"</li>"), collapse=""), "</ul>")
     HTML(text)
@@ -490,16 +440,15 @@ output$ins_table_panel <- renderUI({
         wellPanel(
           HTML(paste0(
             "Combine options below to select an intersection of interest:",
-            add_help("ins_help", style="margin-left: 5px;"))
+            add_help("ins_help", style="margin-left: 5px;margin-bottom:10px;"))
           ),
           bsTooltip("ins_help", 
-                    "TRUE: fulfills the filters and contained in the gene list;<br>FALSE: NOT contained in the gene list and NOT fulfilling the filters.", 
+                    "Hover over the options to see the corresponding filters.", 
                     placement = "top"),
-          br(),br(),
           uiOutput("ui_intersections"),
           
           HTML(paste0(
-            "Active filters:",
+            "Filtering conditions for current intersection:",
             add_help("active_filters_help", style="margin-left: 5px;"))
           ),
           bsTooltip("active_filters_help", 
@@ -526,10 +475,19 @@ output$ins_table_panel <- renderUI({
           size = "xs",
           icon = icon("gear", class = "opt"),
           up = TRUE
-        )
+        ),
+        radioTooltip(id = "n_ins_view", choice = "Full", 
+                     title = "Show all columns for datasets", 
+                     placement = "right"),
+        radioTooltip(id = "n_ins_view", choice = "Minimized", 
+                     title = stat_replace1("Only show the essential columns (Name, Stat, PValue, FDR)", rv$nx_n), 
+                     placement = "right"),
+        radioTooltip(id = "n_ins_view", choice = "T/F Matrix", 
+                     title = "Show true/false value depending on if the corresponding filters conditions are met", 
+                     placement = "right"),
         
     ),
-    bsTooltip("n_wc_dropdown", "Text enrichment for selected terms", placement = "top"),
+    bsTooltip("n_wc_dropdown", "Text enrichment wordcloud (for gene set-type terms)", placement = "top"),
     div(style = "position: absolute; left: 4em; bottom: 1em", id="n2_4b",
         dropdown(inputId="n_wc_dropdown",
                  column(8,

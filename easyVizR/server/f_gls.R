@@ -5,71 +5,6 @@ min_shared_rows <- 1
 min_shared_cols <- 3 # this excludes the name column
 
 
-# observe the changes made to the boxes. if there are unsaved changes (i.e. not equal to rv value), highlight them red.
-
-# css red shadowy border effect on inputs and radiogroupbuttons:
-# box-shadow: 0 0 3px red;
-# border: 0.1em solid red;
-# normal:
-# box-shadow: none;
-# border: 1px solid #d2d6de;
-
-observe({
-  highlights <- vector()
-  for (i in 1:length(rv$nx_n)){
-    req(input[[paste0("f_p_",i)]])
-    req(input[[paste0("f_q_",i)]])
-    req(input[[paste0("f_Stat_",i)]])
-    req(input[[paste0("f_sign_",i)]])
-    req(rv[[paste0("nic_p_",i)]])
-    req(rv[[paste0("nic_q_",i)]])
-    req(rv[[paste0("nic_Stat_",i)]])
-    req(rv[[paste0("nic_sign_",i)]])
-    
-    warning_style <- "{box-shadow: 0 0 3px red;border: 0.1em solid red;}"
-    normal_textinput_style <- "{box-shadow: none;border: 1px solid #d2d6de;}"
-    normal_radiogroupbuttons_style <- "{box-shadow: none;border: #f4f4f4;}"
-    
-    # observe p, q, stat, sign and apply highlights if diff from saved rv value
-    if (input[[paste0("f_p_",i)]] != rv[[paste0("nic_p_",i)]]){
-      obs <- paste0("#", paste0("f_p_",i), warning_style)
-      highlights <- c(highlights, obs)
-    } else {
-      obs <- paste0("#", paste0("f_p_",i), normal_textinput_style)
-      highlights <- c(highlights, obs)
-    }
-    if (input[[paste0("f_q_",i)]] != rv[[paste0("nic_q_",i)]]){
-      obs <- paste0("#", paste0("f_q_",i), warning_style)
-      highlights <- c(highlights, obs)
-    } else {
-      obs <- paste0("#", paste0("f_q_",i), normal_textinput_style)
-      highlights <- c(highlights, obs)
-    }
-    if (input[[paste0("f_Stat_",i)]] != rv[[paste0("nic_Stat_",i)]]){
-      obs <- paste0("#", paste0("f_Stat_",i), warning_style)
-      highlights <- c(highlights, obs)
-    } else {
-      obs <- paste0("#", paste0("f_Stat_",i), normal_textinput_style)
-      highlights <- c(highlights, obs)
-    }
-    if (input[[paste0("f_sign_",i)]] != rv[[paste0("nic_sign_",i)]]){
-      obs <- paste0("#", paste0("f_sign_",i), warning_style)
-      highlights <- c(highlights, obs)
-    } else {
-      obs <- paste0("#", paste0("f_sign_",i), normal_radiogroupbuttons_style)
-      highlights <- c(highlights, obs)
-    }
-  }
-  
-  rv$f_css_highlights <- tags$head(tags$style(HTML(
-    paste0(highlights, sep=" ")
-    )))
-  
-})
-
-output$f_highlights <- renderUI({
-  rv$f_css_highlights
-})
 
 
 
@@ -140,6 +75,7 @@ observe({
 
 ####---------------------- APPLY FILTERS ---------------------------####
 
+# ========== assemble apply filter left panel ==============
 output$f_apply_filters_panel <- renderUI({
   if(is.null(rv$nx_n)==F){
     div(
@@ -168,7 +104,7 @@ output$f_apply_filters_panel <- renderUI({
           
           HTML(paste0(
             "<b>Filter preset shortcuts</b>:",
-            add_help("f_presets_help", style="margin-left: 5px;"))
+            add_help("f_presets_help", style="margin-left: 5px;margin-bottom:0.8em;"))
           ),
           bsTooltip("f_presets_help", 
                     "Click on these buttons to apply filter presets to all datasets (effects are stackable).<br>Click on <b>No Filter</b> to remove all filters.", 
@@ -201,6 +137,15 @@ output$f_apply_filters_panel <- renderUI({
                       placement = "top")
           })),
           
+          # reset all changes button
+          actionButton(inputId = "f_reset",
+                       label = "Reset changes", 
+                       icon("undo-alt"),
+                       style=paste0("color:#f4f4f4; background-color:#444;")
+          ),
+          bsTooltip(id="f_reset", 
+                    title="Reset all unsaved changes", 
+                    placement = "top")
           
           ),
       
@@ -218,164 +163,88 @@ output$f_apply_filters_panel <- renderUI({
   
 })
 
-# observe these buttons and update filters when any is pressed
+# ========== preset buttons ==============
+
+# observe preset buttons and update filters when any is pressed
+#----------------------------------------------------------------
 observeEvent(input[[paste0("fpreset_",filter_presets[[1]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[1]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(1, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[2]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[2]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(2, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[3]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[3]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(3, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[4]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[4]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(4, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[5]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[5]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(5, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[6]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[6]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(6, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[7]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[7]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(7, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[8]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[8]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(8, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[9]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[9]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(9, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[10]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[10]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(10, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[11]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[11]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(11, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[12]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[12]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(12, "f", presets=filter_presets)
 })
 observeEvent(input[[paste0("fpreset_",filter_presets[[13]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[13]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("f_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("f_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("f_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("f_sign_",x), selected=preset[[5]]) }
-  }
+  apply_presets_to_filterinputs(13, "f", presets=filter_presets)
 })
+
+
+
+
+# observe the reset changes button
+#-------------------------------------
+observeEvent(input$f_reset, {
+  update_filters("f", "nic", rv)
+})
+
+# ========== unsaved highlights ==============
+
+# observe the changes made to the filters, and highlight unsaved changes (i.e. different from rv)
+#-----------------------------------------
+observe({
+  req_filter_ns("f", input)
+  req_filter_ns("nic", rv)
+  
+  rv$f_css_highlights <- observe_filter_highlights("f", input, "nic", rv)
+})
+
+output$f_highlights <- renderUI({
+  rv$f_css_highlights
+})
+
 
 
 # show a message if there are unapplied filters
+#-----------------------------------------------
 output$f_msg <- renderUI({
   req(nrow(rv$df_n)>0)
-  # req(length(f_temp_gls())>0)
-  # req(length(n_ins_gls())>0)
-  
-  # temp <- f_temp_gls()
-  # rvgl <- n_ins_gls()
+
   notequal <- vector()
+  
+  # require filter namespaces to exist
+  req_filter_ns("f", input)
+  req_filter_ns("nic", rv)
+  
   for (i in 1:length(rv$nx_n)){
-    # # observe by gene list
-    # if (setequal(temp[[i]],rvgl[[i]])==F){
-    #   notequal <- c(notequal, rv$nx_n[[i]])
-    # }
-    
-    # observe by filter values
-    req(input[[paste0("f_p_",i)]])
-    req(input[[paste0("f_q_",i)]])
-    req(input[[paste0("f_Stat_",i)]])
-    req(input[[paste0("f_sign_",i)]])
-    req(rv[[paste0("nic_p_",i)]])
-    req(rv[[paste0("nic_q_",i)]])
-    req(rv[[paste0("nic_Stat_",i)]])
-    req(rv[[paste0("nic_sign_",i)]])
-    
     if (input[[paste0("f_p_",i)]] != rv[[paste0("nic_p_",i)]] |
         input[[paste0("f_q_",i)]] != rv[[paste0("nic_q_",i)]] |
         input[[paste0("f_Stat_",i)]] != rv[[paste0("nic_Stat_",i)]] |
@@ -403,34 +272,20 @@ output$f_msg <- renderUI({
 })
 
 
+# ========== save filters ==============
+
 # UPON CLICKING APPLY BUTTON in the FILTER TAB, update filter values into rv
+# ----------------------------------------------------
 observeEvent(input$f_applytorv, {
   req(is.null(rv$nx_n)==F)
   
-  for (i in 1:length(rv$nx_n)){
-    req(is.null(input[[paste0("f_p_",i)]])==F)
-    req(is.null(input[[paste0("f_q_",i)]])==F)
-    req(is.null(input[[paste0("f_Stat_",i)]])==F)
-    req(is.null(input[[paste0("f_sign_",i)]])==F)
-    
-    rv[[paste0("nic_p_",i)]] <- input[[paste0("f_p_",i)]]
-    rv[[paste0("nic_q_",i)]] <- input[[paste0("f_q_",i)]]
-    rv[[paste0("nic_Stat_",i)]] <- input[[paste0("f_Stat_",i)]]
-    rv[[paste0("nic_sign_",i)]] <- input[[paste0("f_sign_",i)]]
-    
-    updateNumericInput(session, paste0("f_p_",i),
-                       value = rv[[paste0("nic_p_",i)]]
-    )
-    updateNumericInput(session, paste0("f_q_",i),
-                       value = rv[[paste0("nic_q_",i)]]
-    )
-    updateNumericInput(session, paste0("f_Stat_",i),
-                       value = rv[[paste0("nic_Stat_",i)]]
-    )
-    updateRadioGroupButtons(session, paste0("f_sign_",i),
-                            selected = rv[[paste0("nic_sign_",i)]]
-    )
-  }
+  req_filter_ns("f", input)
+  req_filter_ns("nic", rv)
+  
+  update_filters_rv("nic", "f")
+  # update the input by rv again to prevent reverting to input defaults.
+  update_filters("f", "nic")
+
 })
 
 
@@ -440,50 +295,26 @@ observeEvent(input$f_applytorv, {
 # --------------- show temporary filtered tables ----------------
 # apply cutoffs and generate temporary genelists
 f_temp_gls <- reactive({
-  req(nrow(rv$df_n)>0) # master df must not be empty
-  # req(length(rv$s)==length(rv$nx_i)) # make sure selections are fully rendered
+  req_filter_ns("f", input)
   
-  df <- rv$df_n # start from master df, not the one cut by names
-  
-  gls <- vector(mode="list") # initialize gls as empty list
-  
-  # cutoff according to filters provided for each 
-  for (i in 1:length(rv$nx_n)){
-    req(input[[paste0("f_p_",i)]])
-    req(input[[paste0("f_q_",i)]])
-    req(input[[paste0("f_Stat_",i)]])
-    req(input[[paste0("f_sign_",i)]])
-    
-    n <- rv$nx_n[[i]] # name
-    ss <- df
-    ss <- ss[ss[[paste0("PValue","_", n)]]<=input[[paste0("f_p_",i)]], ] # filter by p
-    ss <- ss[ss[[paste0("FDR","_", n)]]<=input[[paste0("f_q_",i)]], ] # filter by q
-    ss <- ss[abs(ss[[paste0("Stat","_", n)]])>=input[[paste0("f_Stat_",i)]], ] # filter by stat
-    ss <- filter_by_sign(ss, paste0("Stat","_", n), input[[paste0("f_sign_",i)]], tolerate=T) # filter by stat sign
-    
-    gl <- as.character(na.omit(ss$Name)) # format into vector genelist
-    gls[[n]] <- gl # write into list as named vector
-  }
-  
-  return(gls)
+  filter_to_gls("f",input,rv$df_n)
 })
+
+
+
+
 # show the filtered tables based on the generated gene lists
 observe({
   req(is.null(rv$nx_n)==F)
   lapply(1:length(rv$nx_n), function(x) {
     output[[paste0('T', x)]] <- DT::renderDataTable({
       
-      df <- rv$df_n
-      gl <- f_temp_gls()[[x]]
-      show_cols <- c("Name", paste0(c("Stat_", "PValue_", "FDR_"), rv$nx_n[[x]]))
-      df <- df[df$Name %in% gl, show_cols]
-      colnames(df) <- c("Name", "Stat", "PValue", "FDR")
-      rownames(df) <- NULL
-      df <- df %>% mutate(across(is.numeric, ~ round(., 3))) # round
-      colnames(df) <- stat_replace1(colnames(df), rv$nx_n[[x]]) # replace stat string
+      df <- gl_to_table(name = rv$nx_n[[x]], 
+                        gl = f_temp_gls()[[x]], 
+                        master_df = rv$df_n, 
+                        round=3)
       rv[[paste0("f_temp_rown_",x)]] <- nrow(df)
       df
-      
       
     }, options=list(scrollX=T, pageLength = 5, dom = 'tpr', pagingType = "simple"), rownames= FALSE)
   })
@@ -505,14 +336,11 @@ observe({
   lapply(1:length(rv$nx_n), function(x) {
     output[[paste0('TT', x)]] <- DT::renderDataTable({
       
-      df <- rv$df_n
-      gl <- n_ins_gls()[[x]]
-      show_cols <- c("Name", paste0(c("Stat_", "PValue_", "FDR_"), rv$nx_n[[x]]))
-      df <- df[df$Name %in% gl, show_cols]
-      colnames(df) <- c("Name", "Stat", "PValue", "FDR")
-      rownames(df) <- NULL
-      df <- df %>% mutate(across(is.numeric, ~ round(., 3))) # round
-      colnames(df) <- stat_replace1(colnames(df), rv$nx_n[[x]]) # replace stat string
+      df <- gl_to_table(name = rv$nx_n[[x]], 
+                        gl = n_ins_gls()[[x]], 
+                        master_df = rv$df_n, 
+                        round=3)
+      
       rv[[paste0("f_rv_rown_",x)]] <- nrow(df)
       df
       
@@ -547,8 +375,17 @@ output$f_filtering_ui <- renderUI({
                                                     "P <=:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
                                 column(6, align = "left",
                                        numericInput(paste0("f_Stat_",i), 
-                                                    stat_replace1("|Stat| >=:", rv$nx_n[[i]]),
+                                                    stat_replace1(
+                                                      HTML(paste0(
+                                                        "<b>|Stat| >=</b>:",
+                                                        add_help(paste0("f_stat_help",i), style="margin-left: 5px;"))
+                                                      )
+                                                      , rv$nx_n[[i]]),
                                                     value = 0, min = 0, max = 5, step=0.1, width="100px")),
+                                
+                                bsTooltip(paste0("f_stat_help",i), 
+                                          paste0(stat_replace1("Stat type: <b>", rv$nx_n[[i]]),rv$tt[[rv$nx_i[[i]]]],"</b>"), 
+                                          placement = "top"),
                               ),
                               fluidRow(
                                 column(6, align = "left",
@@ -568,7 +405,13 @@ output$f_filtering_ui <- renderUI({
             
             # temp table
             column(4,style="padding-right:17px;",
-                   HTML("<b>Preview gene list:</b>"),
+                   HTML(paste0(
+                     "<b>Preview gene list</b>:",
+                     add_help(paste0("f_previewdf_help",i), style="margin-left: 5px;"))
+                   ),
+                   bsTooltip(paste0("f_previewdf_help",i), 
+                             "Gene list generated by your current (unsaved) filters.", 
+                             placement = "top"),
                    uiOutput(paste0("T_info",i)),
                    div(dataTableOutput(paste0('T', i)), style="font-size:90%;"),
                    div(style="position: absolute;top: 150px;right: -15px;color: cornflowerblue;font-size: 23px;",
@@ -578,7 +421,14 @@ output$f_filtering_ui <- renderUI({
             
             # saved table
             column(4,style="padding-left:17px;",
-                   HTML("<b>Saved gene list:</b>"),br(),
+                   HTML(paste0(
+                     "<b>Saved gene list</b>:",
+                     add_help(paste0("f_saveddf_help",i), style="margin-left: 5px;"))
+                   ),
+                   bsTooltip(paste0("f_saveddf_help",i), 
+                             "Gene list from the saved filters. <br>(these are used for visualizations)", 
+                             placement = "top"),
+                   br(),
                    HTML(paste0("<i>", length(n_ins_gls()[[i]]),
                                " out of ", nrow(rv$df_n), " total</i>")),
                    div(dataTableOutput(paste0('TT', i)), style="font-size:90%;")

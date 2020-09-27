@@ -38,7 +38,20 @@ css_addons <- tags$head(
     # fixed delete deg panel top margin
     "#delete_deg .shiny-input-container{
         margin-top: -20px;
-      }"
+      }",
+    
+    # fixes guide button left/right margins
+    "#guide_1a {margin: 0 1em 0 1em;}",
+    
+    # fixes word wrap of input gene list widget
+    "#n_igl_nm {word-break: break-word;}",
+    
+    # fix some tooltips width within narrow divs
+    "#ui_intersections .tooltip.bottom{
+      width:120px;} 
+      #n_ins_view .tooltip.right{
+      width:180px;} 
+    "
     
     
   )))

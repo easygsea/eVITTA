@@ -890,3 +890,16 @@ output$delete_deg_confirm <- renderUI({
   actionButton("delete_deg_confirm", "Confirm and delete")
 })
 
+
+# ---------- when all is done, show guide box to next page ---------
+output$guide_1a <- renderUI({
+  if (length(rv$ll)>=2){ # 2 or more datasets loaded
+    msg = "Navigate to <b>2. Select Filters</b> to proceed"
+    guide_box("guide1", msg)
+  } else {
+    return(NULL)
+  }
+})
+observeEvent(input$guide1,{
+  updateTabItems(session, "tabs", "tab_filters")
+})

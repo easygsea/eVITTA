@@ -278,37 +278,14 @@ df_n_basic <- reactive({
 })
 
 
+
+
+
 # 1. generate gene lists (gls) according to individual cutoffs
 n_ins_gls <- reactive({
-  # req(length(rv$nx_n)<=5) # too many datasets may eat up memory
-  req(nrow(rv$df_n)>0) # master df must not be empty
   req(length(rv$s)>0)
   req(length(rv$s)==length(rv$nx_i)) # make sure selections are fully rendered
-  
-  df <- df_n_basic()
-  
-  gls <- vector(mode="list") # initialize gls as empty list
-  
-  
-  # cutoff according to filters provided for each 
-  for (i in 1:length(rv$nx_n)){
-    req(rv[[paste0("nic_p_",i)]])
-    req(rv[[paste0("nic_q_",i)]])
-    req(rv[[paste0("nic_Stat_",i)]])
-    req(rv[[paste0("nic_sign_",i)]])
-    
-    n <- rv$nx_n[[i]] # name
-    ss <- df
-    ss <- ss[ss[[paste0("PValue","_", n)]]<=rv[[paste0("nic_p_",i)]], ] # filter by p
-    ss <- ss[ss[[paste0("FDR","_", n)]]<=rv[[paste0("nic_q_",i)]], ] # filter by q
-    ss <- ss[abs(ss[[paste0("Stat","_", n)]])>=rv[[paste0("nic_Stat_",i)]], ] # filter by stat
-    ss <- filter_by_sign(ss, paste0("Stat","_", n), rv[[paste0("nic_sign_",i)]], tolerate=T) # filter by stat sign
-    
-    gl <- as.character(na.omit(ss$Name)) # format into vector genelist
-    gls[[n]] <- gl # write into list as named vector
-  }
-  
-  return(gls)
+  filter_to_gls("nic", rv, df_n_basic())
 })
 
 

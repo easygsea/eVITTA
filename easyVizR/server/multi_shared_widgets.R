@@ -7,79 +7,22 @@
 observeEvent(input$tabs, {
   req(is.null(rv$nx_n)==F)
   # print(input$tabs)
-  if (input$tabs == "tab_filters"){
+  if (input$tabs == "tab_filters"){ # filter tab
     
-    # ---------------------update FILTER VALUES
-    for (i in 1:length(rv$nx_n)){
-      updateNumericInput(session, paste0("f_p_",i),
-                         value = rv[[paste0("nic_p_",i)]]
-      )
-      updateNumericInput(session, paste0("f_q_",i),
-                         value = rv[[paste0("nic_q_",i)]]
-      )
-      updateNumericInput(session, paste0("f_Stat_",i),
-                         value = rv[[paste0("nic_Stat_",i)]]
-      )
-      updateNumericInput(session, paste0("f_sign_",i),
-                         value = rv[[paste0("nic_sign_",i)]]
-      )
-    }
-  } else if (input$tabs == "tab_ins"){
+    # initalize the filter inputs with saved values
+    update_filters("f","nic", rv)
     
-    # ---------------------move INS TABLE to current tab
-    removeUI(
-      selector = "#ins_table_panel"
-    )
-    # print("removed ui")
-    insertUI(
-      selector = "#ins_pg_bottom",
-      where = "afterEnd",
-      ui = uiOutput("ins_table_panel")
-    )
-    # print("inserted ui in p3")
+  } else if (input$tabs == "tab_ins"){ # intersection tab
     
+    move_ui("ins_table_panel", "ins_pg_bottom", "afterEnd")
+    move_ui("n_filters", "ins_filters_here", "afterEnd")
     
-    # ---------------------move DROPDOWN BUTTONS to current tab
-    removeUI(
-      selector = "#n_filters"
-    )
-    # print("removed ui")
-    insertUI(
-      selector = "#ins_filters_here",
-      where = "afterEnd",
-      ui = uiOutput("n_filters")
-    )
-    # print("inserted ui in p4")
+  } else if (input$tabs == "tab3"){ # vis tab
     
-  } else if (input$tabs == "tab3"){
-    
-    # --------------------- move INS TABLE to current tab
-    removeUI(
-      selector = "#ins_table_panel"
-    )
-    # print("removed ui")
-    insertUI(
-      selector = "#vis_pg_bottom",
-      where = "afterEnd",
-      ui = uiOutput("ins_table_panel")
-    )
-    # print("inserted ui in p4")
-    
-    # ---------------------move DROPDOWN BUTTONS to current tab
-    removeUI(
-      selector = "#n_filters"
-    )
-    # print("removed ui")
-    insertUI(
-      selector = "#n_filters_here",
-      where = "afterEnd",
-      ui = uiOutput("n_filters")
-    )
-    # print("inserted ui in p4")
-    
+    move_ui("ins_table_panel", "vis_pg_bottom", "afterEnd")
+    move_ui("n_filters", "n_filters_here", "afterEnd")
     
   }
-  
 })
 
 
@@ -96,7 +39,7 @@ observeEvent(input$tabs, {
 output$n_filters <- renderUI({
   div(
     div(id="n_filter_cuts", style="display: inline-block;margin-right: 5px;", customize_filters()),
-    bsTooltip("customize_filters", "Gene list filters"),
+    bsTooltip("customize_filters", "Apply Filters"),
     div(id="n_filter_gls", style="display: inline-block;margin-right: 5px;", view_genelists()),
     bsTooltip("view_genelists", "View filtered gene lists"),
     div(id="n_filter_names", style="display: inline-block;margin-right: 5px;", enter_genes()),
@@ -110,7 +53,7 @@ output$n_filters <- renderUI({
 customize_filters <- reactive({
   dropdown(inputId="customize_filters", align="right",
            
-           tags$h3("Gene list filters"),
+           tags$h3("Apply Filters"),
            
            fluidRow(
              column(3, 
@@ -121,7 +64,9 @@ customize_filters <- reactive({
              )
            ),
            
-           actionButton("nic_applytorv", "Apply Filters", class = "btn-warning"),
+           actionButton("nic_applytorv", "Save Filters", class = "btn-warning"),
+           
+           uiOutput("n_highlights"),
            
            style = "material-circle", icon = icon("filter"),
            status = "default", width = calc_dropdown_width(length(rv$nx_n)+1, 250, 70, max_per_row=3),
@@ -136,7 +81,7 @@ customize_filters <- reactive({
 view_genelists <- reactive({
   dropdown(inputId="view_genelists", align="right",
            
-           tags$h3("Filtered gene lists"),
+           tags$h3("Saved gene lists"),
            # downloadButton("gls_dl", "Download"),
            uiOutput("n_gls_ui"),
            
@@ -152,6 +97,8 @@ view_genelists <- reactive({
 
 
 enter_genes <- reactive({
+  placeholder <- paste0(head(rv$df_n,3)$Name, collapse="\n")
+  
   dropdown(inputId="enter_genes", align="right",
            
            tags$h3("Enter genes"),
@@ -159,21 +106,16 @@ enter_genes <- reactive({
            
            textAreaInput("n_igl", 
                          "Enter genes of interest (separated by new line):",
-                         placeholder="efk-1\nzip-2\ncep-1",
-                         value="efk-1\nzip-2\ncep-1"
+                         placeholder=placeholder
            ),
-           actionButton("n_igl_update", "Apply"),
-           bsTooltip("n_igl_update", "Only view selected genes"),
+           actionButton("n_igl_update", "View genes", class = "btn-warning"),
+           bsTooltip("n_igl_update", "Only view entered genes of interest"),
            
            actionButton("n_igl_reset", "Reset"),
            bsTooltip("n_igl_reset", "Reset entry and view all data"),
            
            br(),br(),
            uiOutput("n_igl_nm"),
-           div(style="text-align:left;",
-               HTML("<i>NOTE: If you are not seeing all the selected genes, 
-                remove the filters in the \"Gene list filters\" dropdown.</i>")
-           ),
            
            style = "material-circle", icon = icon("font"),
            status = "default", width = "250px",
@@ -187,120 +129,142 @@ enter_genes <- reactive({
 
 
 
-####================= FILTERING DROPDOWN =====================####
-
-# generates dynamic ui for selection
-
-output$ui_n_gls_opt <- renderUI({
-  req(nrow(rv$df_n)>0)
-  
-  rv$nic
-  # append(rv$nic, rv$global_nic, 0) # add the global box to first item when output
-})
-
-# observeEvent(input$nic_applytoall, {
-#   for (i in 1:length(rv$nx_n)){
-#     updateNumericInput(session, paste0("nic_p_",i), value=input$nic_p)
-#     updateNumericInput(session, paste0("nic_q_",i), value=input$nic_q)
-#     updateNumericInput(session, paste0("nic_Stat_",i), value=input$nic_Stat)
-#     updateRadioGroupButtons(session, paste0("nic_sign_",i), selected=input$nic_sign)
-#     updateCheckboxInput(session, paste0("nic_apply_",i), value=input$nic_apply)
-#     updateCheckboxInput(session, paste0("nic_na_",i), value=input$nic_na)
-#   }
-# })
-# observeEvent(input$nic_remove_filters, {
-#   for (i in 1:length(rv$nx_n)){
-#     updateNumericInput(session, paste0("nic_p_",i), value=1)
-#     updateNumericInput(session, paste0("nic_q_",i), value=1)
-#     updateNumericInput(session, paste0("nic_Stat_",i), value=0)
-#     updateRadioGroupButtons(session, paste0("nic_sign_",i), selected="All")
-#     updateCheckboxInput(session, paste0("nic_apply_",i), value=T)
-#     updateCheckboxInput(session, paste0("nic_na_",i), value=T)
-#     updateNumericInput(session, "nic_p", value=1)
-#     updateNumericInput(session, "nic_q", value=1)
-#     updateNumericInput(session, "nic_Stat", value=0)
-#     updateRadioGroupButtons(session, "nic_sign", selected="All")
-#     updateCheckboxInput(session, "nic_apply", value=T)
-#     updateCheckboxInput(session, "nic_na", value=T)
-#   }
-# })
+####================= FILTER DROPDOWN =====================####
 
 
+# ========== assemble filter preset left panel ==============
 output$n_presets <- renderUI({
   div(style="display: inline-block;vertical-align:top; width: 250px;",
       wellPanel(align = "left",
-                HTML("<b>Filter presets:</b><br>Click to load one or multiple presets:<br>"),
-                hr(),
+                HTML(paste0(
+                  "<b>Filter preset shortcuts</b>:",
+                  add_help("n_presets_help", style="margin-left: 5px;margin-bottom:0.8em;"))
+                ),
+                bsTooltip("n_presets_help", 
+                          "Click on these buttons to apply filter presets to all datasets (effects are stackable).<br>Click on <b>No Filter</b> to remove all filters.", 
+                          placement = "top"),
+                
                 # dynamically render the list of presets as buttons
                 tagList(lapply(1:length(filter_presets), function(i) {
                   name <- names(filter_presets)[[i]]
                   preset <- filter_presets[[i]]
                   actionButton(inputId = paste0("npreset_", preset[[1]]),
-                               label = name
+                               label = name, 
+                               icon(preset[[7]]),
+                               style=paste0("color:",preset[[8]],";background-color:",preset[[9]],";")
                   )
                 })),
+                # dynamically render the preset tooltips
+                tagList(lapply(1:length(filter_presets), function(i) {
+                  preset <- filter_presets[[i]]
+                  bsTooltip(id=paste0("npreset_", preset[[1]]), 
+                            title=preset[[6]], 
+                            placement = "top")
+                })),
+                
+                # reset all changes button
+                actionButton(inputId = "n_reset",
+                             label = "Reset changes", 
+                             icon("undo-alt"),
+                             style=paste0("color:#f4f4f4; background-color:#444;")
+                ),
+                bsTooltip(id="n_reset", 
+                          title="Reset all unsaved changes", 
+                          placement = "top")
+                
+      
       )
       
   )
 })
 
+
+# ========== preset buttons ==============
+
+# observe these buttons and update filters when any is pressed
+#----------------------------------------------------------------
+observeEvent(input[[paste0("npreset_",filter_presets[[1]][[1]])]], {
+  apply_presets_to_filterinputs(1, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[2]][[1]])]], {
+  apply_presets_to_filterinputs(2, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[3]][[1]])]], {
+  apply_presets_to_filterinputs(3, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[4]][[1]])]], {
+  apply_presets_to_filterinputs(4, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[5]][[1]])]], {
+  apply_presets_to_filterinputs(5, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[6]][[1]])]], {
+  apply_presets_to_filterinputs(6, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[7]][[1]])]], {
+  apply_presets_to_filterinputs(7, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[8]][[1]])]], {
+  apply_presets_to_filterinputs(8, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[9]][[1]])]], {
+  apply_presets_to_filterinputs(9, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[10]][[1]])]], {
+  apply_presets_to_filterinputs(10, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[11]][[1]])]], {
+  apply_presets_to_filterinputs(11, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[12]][[1]])]], {
+  apply_presets_to_filterinputs(12, "nic", presets=filter_presets)
+})
+observeEvent(input[[paste0("npreset_",filter_presets[[13]][[1]])]], {
+  apply_presets_to_filterinputs(13, "nic", presets=filter_presets)
+})
+
+# observe the reset changes button
+#-------------------------------------
+observeEvent(input$n_reset, {
+  update_filters("nic", "nic", rv)
+})
+
+
+
+# ========== unsaved highlights ==============
+
+# observe the changes made to the filters, and highlight unsaved changes (i.e. different from rv)
+#-----------------------------------------
+observe({
+  req_filter_ns("nic", input)
+  req_filter_ns("nic", rv)
+  
+  rv$n_css_highlights <- observe_filter_highlights("nic", input, "nic", rv)
+})
+
+output$n_highlights <- renderUI({
+  rv$n_css_highlights
+})
+
+
+# ========== save filters ==============
+
+# UPON CLICKING APPLY BUTTON in the DROPDOWN, update filter values into rv
+#-------------------------------------
+observeEvent(input$nic_applytorv, {
+  req(is.null(rv$nx_n)==F)
+  
+  req_filter_ns("nic",input)
+  update_filters_rv("nic", "nic", input)
+  update_filters("nic", "nic", rv)
+  
+})
+
+
+# ========== assemble filter ui ==============
 observe({
   req(nrow(rv$df_n)>0)
   
-  rv$global_nic[[1]] <- div(style="display: inline-block;vertical-align:top; width: 250px;",
-                            wellPanel( align = "left",
-                                       
-                                       
-                                       
-                                       #    tags$head(
-                                       #      tags$style(HTML(paste0("
-                                       #   #nic_p {height: 40px;}
-                                       #   #nic_q {height: 40px;}
-                                       #   #nic_Stat {height: 40px;}
-                                       #   #nic_sign {height: 40px;}
-                                       #   #nic_applytoall {height: 40px; line-height: 10px;}
-                                       #   #nic_remove_filters {height: 40px;line-height: 10px;}
-                                       # ")))
-                                       #    ),
-                                       #    fluidRow(
-                                       #      column(6, align = "left", 
-                                       #             numericInput("nic_p", 
-                                       #                          "P filter:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
-                                       #      column(6, align = "left",
-                                       #             numericInput("nic_Stat", 
-                                       #                          "|Stat| filter:", value = 0, min = 0, max = 5, step=0.1, width="100px")),
-                                       #    ),
-                                       #    fluidRow(
-                                       #      column(6, align = "left",
-                                       #             numericInput("nic_q", 
-                                       #                          "FDR filter:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
-                                       #      column(6, align = "left",
-                                       #             radioGroupButtons("nic_sign", 
-                                       #                               label = "Filter by sign:",
-                                       #                               choices=c("All"="All", "+"="Positive", "-"="Negative"),
-                                       #                               selected="All",size="s",direction = "horizontal"),
-                                       #      ),
-                                       #      
-                                       #    ),
-                                       # fluidRow(
-                                       #   column(4,offset=1, align = "left",
-                                       #          checkboxInput(
-                                       #            inputId= "nic_apply",
-                                       #            label = "Apply",
-                                       #            value = T)),
-                                       #   column(7, align = "left",
-                                       #          checkboxInput(
-                                       #            inputId= "nic_na",
-                                       #            label = "Show NAs",
-                                       #            value = T, ))
-                                       # 
-                                       # ),
-                                       # actionButton("nic_applytoall", "Apply to all"),
-                                       # actionButton("nic_remove_filters", "Remove filters"),
-                                       
-                                       style = "padding: 15px;")
-                            
-  )
   for (i in 1:length(rv$nx_n)){
     rv$nic[[i]] <- div(style="display: inline-block;vertical-align:top; width: 250px;",
                        tags$head(
@@ -317,197 +281,45 @@ observe({
                                   fluidRow(
                                     column(6, align = "left", 
                                            numericInput(inputId = paste0("nic_p_",i), 
-                                                        "P filter:", value = rv[[paste0("nic_p_",i)]], min = 0, max = 1, step=0.001, width="100px")),
+                                                        "P <=:", value = rv[[paste0("nic_p_",i)]], min = 0, max = 1, step=0.001, width="100px")),
                                     column(6, align = "left",
                                            numericInput(paste0("nic_Stat_",i), 
-                                                        stat_replace1("|Stat| filter:", rv$nx_n[[i]]), 
+                                                        stat_replace1(
+                                                          HTML(paste0(
+                                                            "<b>|Stat| >=</b>:",
+                                                            add_help(paste0("n_stat_help",i), style="margin-left: 5px;"))
+                                                          )
+                                                          , rv$nx_n[[i]]),
                                                         value = rv[[paste0("nic_Stat_",i)]], min = 0, max = 5, step=0.1, width="100px")),
+                                    bsTooltip(paste0("n_stat_help",i), 
+                                              paste0(stat_replace1("Stat type: <b>", rv$nx_n[[i]]),rv$tt[[rv$nx_i[[i]]]],"</b>"), 
+                                              placement = "top"),
                                   ),
                                   fluidRow(
                                     column(6, align = "left",
                                            numericInput(inputId = paste0("nic_q_",i), 
-                                                        "FDR filter:", value = rv[[paste0("nic_q_",i)]], min = 0, max = 1, step=0.001, width="100px")),
+                                                        "FDR <=:", value = rv[[paste0("nic_q_",i)]], min = 0, max = 1, step=0.001, width="100px")),
                                     column(6, align = "left",
                                            radioGroupButtons(inputId = paste0("nic_sign_",i), 
-                                                             label = "Filter by sign:",
+                                                             label = "Direction:",
                                                              choices=c("All"="All", "+"="Positive", "-"="Negative"),
                                                              selected=rv[[paste0("nic_sign_",i)]],size="s",direction = "horizontal"),
                                     ),
                                     
                                   )
-                                  # ,
-                                  # fluidRow(
-                                  #   column(4,offset=1, align = "left",
-                                  #          checkboxInput(
-                                  #            inputId= paste0("nic_apply_",i),
-                                  #            label = "Apply",
-                                  #            value = T)),
-                                  #   column(7, align = "left",
-                                  #          checkboxInput(
-                                  #            inputId= paste0("nic_na_",i),
-                                  #            label = "Show NAs",
-                                  #            value = T, ))
-                                  # 
-                                  # )
                                   ,style = "padding: 15px;background:#e6f4fc;")
     )
   }
 })
 
 
-# observe the presets one by one
-# observe these buttons and update filters when any is pressed
-observeEvent(input[[paste0("npreset_",filter_presets[[1]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[1]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-observeEvent(input[[paste0("npreset_",filter_presets[[2]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[2]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-observeEvent(input[[paste0("npreset_",filter_presets[[3]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[3]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-observeEvent(input[[paste0("npreset_",filter_presets[[4]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[4]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-observeEvent(input[[paste0("npreset_",filter_presets[[5]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[5]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-observeEvent(input[[paste0("npreset_",filter_presets[[6]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[6]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-observeEvent(input[[paste0("npreset_",filter_presets[[7]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[7]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-observeEvent(input[[paste0("npreset_",filter_presets[[8]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[8]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-observeEvent(input[[paste0("npreset_",filter_presets[[9]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[9]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-observeEvent(input[[paste0("npreset_",filter_presets[[10]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[10]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-observeEvent(input[[paste0("npreset_",filter_presets[[11]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[11]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-observeEvent(input[[paste0("npreset_",filter_presets[[12]][[1]])]], {
-  req(is.null(rv$nx_n)==F)
-  preset=filter_presets[[12]]
-  for (x in 1:length(rv$nx_n)){
-    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0("nic_p_",x), value=preset[[2]]) }
-    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0("nic_q_",x), value=preset[[3]]) }
-    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0("nic_Stat_",x), value=preset[[4]]) }
-    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0("nic_sign_",x), selected=preset[[5]]) }
-  }
-})
-
-
-# UPON CLICKING APPLY BUTTON in the DROPDOWN, update filter values into rv
-observeEvent(input$nic_applytorv, {
-  req(is.null(rv$nx_n)==F)
+# generates dynamic ui for selection
+output$ui_n_gls_opt <- renderUI({
+  req(nrow(rv$df_n)>0)
   
-  for (i in 1:length(rv$nx_n)){
-    req(is.null(input[[paste0("nic_p_",i)]])==F)
-    req(is.null(input[[paste0("nic_q_",i)]])==F)
-    req(is.null(input[[paste0("nic_Stat_",i)]])==F)
-    req(is.null(input[[paste0("nic_sign_",i)]])==F)
-    
-    rv[[paste0("nic_p_",i)]] <- input[[paste0("nic_p_",i)]]
-    rv[[paste0("nic_q_",i)]] <- input[[paste0("nic_q_",i)]]
-    rv[[paste0("nic_Stat_",i)]] <- input[[paste0("nic_Stat_",i)]]
-    rv[[paste0("nic_sign_",i)]] <- input[[paste0("nic_sign_",i)]]
-    
-    updateNumericInput(session, paste0("nic_p_",i),
-                       value = rv[[paste0("nic_p_",i)]]
-    )
-    updateNumericInput(session, paste0("nic_q_",i),
-                       value = rv[[paste0("nic_q_",i)]]
-    )
-    updateNumericInput(session, paste0("nic_Stat_",i),
-                       value = rv[[paste0("nic_Stat_",i)]]
-    )
-    updateRadioGroupButtons(session, paste0("nic_sign_",i),
-                            selected = rv[[paste0("nic_sign_",i)]]
-    )
-  }
+  rv$nic
 })
+
 
 ####================= GENELISTS DROPDOWN =====================####
 
@@ -596,7 +408,7 @@ df_n_basic_nm <- reactive({
   }
   out <- list("notfound"=notfound, "notshown"=notshown)
   out
-  print(out)
+  # print(out)
 })
 output$n_igl_nm <- renderUI({
   req(length(df_n_basic_nm()$notfound)>0 | length(df_n_basic_nm()$notshown)>0)
@@ -610,12 +422,19 @@ output$n_igl_nm <- renderUI({
   } 
   if (length(notshown)>0){
     ns <- paste(notshown, collapse=", ")
-    msg2 <- paste0("<strong>Not shown because excluded by filters</strong> (",length(notshown),"): ", ns)
+    msg2 <- HTML(paste0(
+      paste0("<strong>Not shown because excluded by filters</strong> (",length(notshown),"): ", ns),
+      add_help("n_gls_notshown", style="margin-left: 5px;"))
+    )
+      
     msg <- c(msg, msg2)
   }
-  print(msg)
+  # print(msg)
   box(width=12,
       shiny::HTML(paste0(msg, sep="<br>")),
+      bsTooltip("n_gls_notshown",
+                "To view these, remove all filters in the \"Apply Filters\" dropdown.", 
+                placement = "top"),
   )
 })
 observeEvent(input$n_igl_update,{

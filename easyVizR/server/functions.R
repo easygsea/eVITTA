@@ -1,3 +1,8 @@
+# ================================================= #
+#                     Info box                      ####
+# ================================================= #
+
+
 # ------------- enhanced page progress infobox ------------------
 # call in renderUI on the server side. you need to wrap this in a box
 # 
@@ -47,10 +52,28 @@ progress_box <- function(id, prompt, msg, condition, bttn_id, bttn_text="Continu
 }
 
 
+# ------- Function to draw an info box to guide the user along the pipeline ---------
+# You can pass html string into msg, e.g. : guide_box("<strong>This is a bold message</strong>")
+# default color is blue
+# default width is 12 (maximum), must be is an integer value
+# To make it appear on condition, call it in a conditional renderUI({})
+# Then, observeEvent to next tab:
+# observeEvent(input$guide1,{updateTabItems(session, "menu1", "tab3")})
+
+guide_box <- function(id,msg, color="warning", size="sm"){
+  actionBttn(
+    id,
+    HTML(msg),
+    icon=icon("angle-double-right"),
+    style = "simple", color=color, size = size
+    , block = T
+  )
+}
+
 
 
 # ================================================= #
-#           Stat display replacement                #
+#           Stat display replacement                ####
 # ================================================= #
 # note on "Stat": 
 # internally, all data is saved and processed with the Stat column
@@ -156,6 +179,35 @@ stat_replace <- function(vec){
 }
 
 
+# ================================================= #
+#                  UI manipulation                  ####
+# ================================================= #
+
+
+# move ui to a certain place
+# -----------------------------------
+# provide the uiOutput id, id of a selector in desired place, and the relative position
+
+move_ui <- function(uiOutput_id, to_where, relative_pos){
+  # remove ui
+  removeUI(
+    selector = paste0("#", uiOutput_id)
+  )
+  # print("removed ui")
+  
+  # insert ui in new location
+  insertUI(
+    selector = paste0("#", to_where),
+    where = relative_pos,
+    ui = uiOutput(uiOutput_id)
+  )
+  # print("inserted ui")
+}
+
+
+# ================================================= #
+#                  Filter presets                   ####
+# ================================================= #
 
 
 # initialize filter presets
@@ -220,3 +272,316 @@ filter_presets <- list(
   
 )
 
+# apply filter presets to a namespace of filter inputs
+#----------------------------------------------------------
+# call this in observeEvent to update all the filter inputs under a namespace with values from the presets.
+# example: 
+# observeEvent(input[[paste0("fpreset_",filter_presets[[1]][[1]])]], {
+#   apply_presets_to_filterinputs(1, "f", presets=filter_presets)
+# })
+
+apply_presets_to_filterinputs <- function(preset_id, input_ns, presets=filter_presets, input_range=rv$nx_n){
+  req(is.null(input_range)==F)
+  preset=presets[[preset_id]]
+  for (x in 1:length(input_range)){
+    if (is.na(preset[[2]])==F){ updateNumericInput(session, inputId=paste0(input_ns,"_p_",x), value=preset[[2]]) }
+    if (is.na(preset[[3]])==F){ updateNumericInput(session, inputId=paste0(input_ns,"_q_",x), value=preset[[3]]) }
+    if (is.na(preset[[4]])==F){ updateNumericInput(session, inputId=paste0(input_ns,"_Stat_",x), value=preset[[4]]) }
+    if (is.na(preset[[5]])==F){ updateRadioGroupButtons(session, inputId=paste0(input_ns,"_sign_",x), selected=preset[[5]]) }
+  }
+}
+
+# ================================================= #
+#                   Filter update                   ####
+# ================================================= #
+# there are 4 filters: p, q, Stat, sign. first 3 are numericInputs, last is radioGroupButton
+# variable name structure is like this:
+# nic_p_1, nic_q_1, nic_Stat_1, nic_sign_1...
+# Saved filters: rv$nic_...
+# filter inputs: input$f_... and input$nic...
+
+
+# require all filter inputs/ rvs under a namespace
+# ------------------------------------------
+# can use this inside a observer or render block.
+# req call will trigger an error that propagates all the way up to whatever render block or observer is executing.
+# example:
+# req_filter_ns("f", input) # requires input$f_p_1,...etc
+# req_filter_ns("nic", rv) # requires rv$nic_p_1,...etc
+
+req_filter_ns <- function(namespace, var, input_range=rv$nx_n){
+  req(is.null(input_range)==F)
+  for (i in 1:length(rv$nx_n)){
+    req(is.null(var[[paste0(namespace,"_p_",i)]])==F)
+    req(is.null(var[[paste0(namespace,"_q_",i)]])==F)
+    req(is.null(var[[paste0(namespace,"_Stat_",i)]])==F)
+    req(is.null(var[[paste0(namespace,"_sign_",i)]])==F)
+  }
+}
+
+
+
+# update filter inputs using values from given namespace
+#----------------------------------------------------------------
+# usually rv --> input
+# example:
+# observeEvent(input$f_reset, {
+#   update_filters("f", "nic", rv)
+# })
+# this basically pulls values in rv$nic_p_1...etc namespace and applies them to the 
+# numericInputs and radiogroupbuttons under the input$f_p_1... namespace
+
+update_filters <- function(target_namespace, from_namespace, from_var=rv, input_range=rv$nx_n){
+  req(is.null(input_range)==F)
+  for (i in 1:length(input_range)){
+    updateNumericInput(session, paste0(target_namespace, "_p_",i),
+                       value = from_var[[paste0(from_namespace, "_p_",i)]]
+    )
+    updateNumericInput(session, paste0(target_namespace, "_q_",i),
+                       value = from_var[[paste0(from_namespace, "_q_",i)]]
+    )
+    updateNumericInput(session, paste0(target_namespace, "_Stat_",i),
+                       value = from_var[[paste0(from_namespace, "_Stat_",i)]]
+    )
+    updateRadioGroupButtons(session, paste0(target_namespace, "_sign_",i),
+                            selected = from_var[[paste0(from_namespace, "_sign_",i)]]
+    )
+  }
+}
+
+# update rv filters using values from given namespace
+# ---------------------------------------------------- 
+# usually input --> rv
+update_filters_rv <- function(target_namespace, from_namespace, from_var=input, 
+                              input_range=rv$nx_n){
+  req(is.null(input_range)==F)
+  for (i in 1:length(input_range)){
+    rv[[paste0(target_namespace, "_p_",i)]] <- from_var[[paste0(from_namespace, "_p_",i)]]
+    rv[[paste0(target_namespace, "_q_",i)]] <- from_var[[paste0(from_namespace, "_q_",i)]]
+    rv[[paste0(target_namespace, "_Stat_",i)]] <- from_var[[paste0(from_namespace, "_Stat_",i)]]
+    rv[[paste0(target_namespace, "_sign_",i)]] <- from_var[[paste0(from_namespace, "_sign_",i)]]
+  }
+}
+
+
+# apply css highlights to a namespace of filter inputs based on comparing with another namespace of filter inputs
+# ----------------------------------------------
+# for instance, to compare input$f_p_1...etc to rv$nic_p_1... etc and apply a highlight,
+# we just call this function to get a css object. this must be written into rv:
+# rv$f_css_highlights <- observe_filter_highlights("f", input, "nic", rv)
+# and then it must be rendered via renderUI/ uiOutput.
+# ----------- highlight:
+# box-shadow: 0 0 3px red;
+# border: 0.1em solid red;
+# ----------- normal:
+# box-shadow: none;
+# border: 1px solid #d2d6de;
+
+observe_filter_highlights <- function(target_namespace, target_var, ref_namespace, ref_var, input_range=rv$nx_n,
+                                      # specify css styles
+                                      warning_style="{box-shadow: 0 0 3px red;border: 0.1em solid red;}",
+                                      normal_textinput_style = "{box-shadow: none;border: 1px solid #d2d6de;}",
+                                      normal_radiogroupbuttons_style = "{box-shadow: none;border: #f4f4f4;}"
+                                      ){
+  highlights <- vector()
+  
+  for (i in 1:length(input_range)){
+    # observe p, q, stat, sign and apply highlights if diff from saved rv value
+    if (target_var[[paste0(target_namespace, "_p_",i)]] != ref_var[[paste0(ref_namespace, "_p_",i)]]){
+      obs <- paste0("#", paste0(target_namespace, "_p_",i), warning_style)
+      highlights <- c(highlights, obs)
+    } else {
+      obs <- paste0("#", paste0(target_namespace, "_p_",i), normal_textinput_style)
+      highlights <- c(highlights, obs)
+    }
+    if (target_var[[paste0(target_namespace, "_q_",i)]] != ref_var[[paste0(ref_namespace, "_q_",i)]]){
+      obs <- paste0("#", paste0(target_namespace, "_q_",i), warning_style)
+      highlights <- c(highlights, obs)
+    } else {
+      obs <- paste0("#", paste0(target_namespace, "_q_",i), normal_textinput_style)
+      highlights <- c(highlights, obs)
+    }
+    if (target_var[[paste0(target_namespace, "_Stat_",i)]] != ref_var[[paste0(ref_namespace, "_Stat_",i)]]){
+      obs <- paste0("#", paste0(target_namespace, "_Stat_",i), warning_style)
+      highlights <- c(highlights, obs)
+    } else {
+      obs <- paste0("#", paste0(target_namespace, "_Stat_",i), normal_textinput_style)
+      highlights <- c(highlights, obs)
+    }
+    if (target_var[[paste0(target_namespace, "_sign_",i)]] != ref_var[[paste0(ref_namespace, "_sign_",i)]]){
+      obs <- paste0("#", paste0(target_namespace, "_sign_",i), warning_style)
+      highlights <- c(highlights, obs)
+    } else {
+      obs <- paste0("#", paste0(target_namespace, "_sign_",i), normal_radiogroupbuttons_style)
+      highlights <- c(highlights, obs)
+    }
+  }
+  # output a css object
+  tags$head(tags$style(HTML(
+    paste0(highlights, sep=" ")
+  )))
+}
+
+# ================================================= #
+#                   Filter processing               ####
+# ================================================= #
+
+# apply a namespace of filters to an input dataframe to get gene lists
+#--------------------------------------------------------------------
+# example: filter_to_gls("nic", rv, df_n_basic())
+
+filter_to_gls <- function(filter_namespace, filter_var, filtered_df, input_range=rv$nx_n){
+  req(is.null(filtered_df)==F)
+  req(nrow(filtered_df)>0) # filtered df must not be empty
+  req_filter_ns(filter_namespace, filter_var) # check if values exist under filter namespace
+  
+  df <- filtered_df
+  gls <- vector(mode="list") # initialize gls as empty list
+  # cutoff according to filters provided for each 
+  for (i in 1:length(input_range)){
+    n <- input_range[[i]] # name
+    ss <- df
+    ss <- ss[ss[[paste0("PValue","_", n)]]<=filter_var[[paste0(filter_namespace,"_p_",i)]], ] # filter by p
+    ss <- ss[ss[[paste0("FDR","_", n)]]<=filter_var[[paste0(filter_namespace,"_q_",i)]], ] # filter by q
+    ss <- ss[abs(ss[[paste0("Stat","_", n)]])>=filter_var[[paste0(filter_namespace,"_Stat_",i)]], ] # filter by stat
+    ss <- filter_by_sign(ss, paste0("Stat","_", n), filter_var[[paste0(filter_namespace,"_sign_",i)]], tolerate=T) # filter by stat sign
+    
+    gl <- as.character(na.omit(ss$Name)) # format into vector genelist
+    gls[[n]] <- gl # write into list as named vector
+  }
+  
+  return(gls)
+}
+
+# filters a mini table from a gene list
+# ------------------------------------
+# provide the name of the dataset, gene list, the df to filter
+# example: df <- gl_to_table(name = rv$nx_n[[1]], gl = f_temp_gls()[[1]], master_df = rv$df_n, round=3)
+
+gl_to_table <- function(name, gl, master_df, round=3, keep_stat=F){
+  req(is.null(master_df)==F)
+  df <- master_df
+  show_cols <- c("Name", paste0(c("Stat_", "PValue_", "FDR_"), name))
+  df <- df[df$Name %in% gl, show_cols]
+  colnames(df) <- c("Name", "Stat", "PValue", "FDR")
+  rownames(df) <- NULL
+  df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., round)) # round
+  # whether stat is kept or changed into a replacement value
+  if (keep_stat==F){
+    colnames(df) <- stat_replace1(colnames(df), name) # replace stat string
+  }
+  df
+}
+
+
+# ================================================= #
+#                   Filter summary                  ####
+# ================================================= #
+
+
+# tooltip for radiogroupbutton and radiobuttons
+#-----------------------------------------------------
+
+radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hover", options = NULL){
+  
+  options = shinyBS:::buildTooltipOrPopoverOptionsList(title, placement, trigger, options)
+  # options <- c(options, width="100px")
+  options = paste0("{'", paste(names(options), options, sep = "': '", collapse = "', '"), "'}")
+  bsTag <- shiny::tags$script(shiny::HTML(paste0("
+    $(document).ready(function() {
+      setTimeout(function() {
+        $('input', $('#", id, "')).each(function(){
+          if(this.getAttribute('value') == '", choice, "') {
+            opts = $.extend(", options, ", {html: true});
+            $(this.parentElement).tooltip('destroy');
+            $(this.parentElement).tooltip(opts);
+          }
+        })
+      }, 500)
+    });
+  ")))
+  htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
+}
+
+
+
+# gathers filters about 1 dataset from namespace and summarizes them with a line of HTML text
+# -------------------------------------------------
+# call this inside HTML()
+# name: the name of the dataset
+# status: T/F/NA
+
+summarize_filter <- function(filter_namespace, filter_var, name, status, include_name=T, input_range=rv$nx_n){
+  req_filter_ns(filter_namespace, filter_var)
+  
+  i <- match(name, input_range)
+  cur_p <- filter_var[[paste0(filter_namespace, "_p_",i)]]
+  cur_q <- filter_var[[paste0(filter_namespace, "_q_",i)]]
+  cur_Stat <- filter_var[[paste0(filter_namespace, "_Stat_",i)]]
+  cur_sign <- filter_var[[paste0(filter_namespace, "_sign_",i)]]
+  
+  
+  req(is.null(status)==F)
+  if (is.na(status)==T){ # if NA
+    stat_text=""
+  } else if (status==F){ # if FALSE
+    if (cur_p<1){ # p cutoff is only meaningful if <1
+      p_text <- paste0("p > ",cur_p)
+    } else {p_text <- NA}
+    if (cur_q<1){ # q cutoff is only meaningful if <1
+      q_text <- paste0("q > ",cur_q)
+    } else {q_text <- NA}
+    
+    if (cur_sign=="All"){ # if FALSE and ALL
+      if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
+        stat_text <- stat_replace1(paste0("|Stat| < ", cur_Stat), name)
+      } else {stat_text <- NA} 
+    } else if (cur_sign=="Positive"){ # if FALSE and POS
+      stat_text <- stat_replace1(paste0("Stat < ", cur_Stat), name)
+    } else if (cur_sign=="Negative") { # if FALSE and NEG
+      stat_text <- stat_replace1(paste0("Stat >  ", cur_Stat), name)
+    }
+  } else if (status==T){ # if TRUE
+    if (cur_p<1){
+      p_text <- paste0("p <= ",cur_p)
+    } else {p_text <- NA}
+    if (cur_q<1){
+      q_text <- paste0("q <= ",cur_q)
+    } else {q_text <- NA}
+    
+    if (cur_sign=="All"){ # if TRUE and ALL
+      if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
+        stat_text <- stat_replace1(paste0("|Stat| >= ", cur_Stat) , name)
+      } else {stat_text <- NA} 
+    } else if (cur_sign=="Positive"){ # if TRUE and POS
+      stat_text <- stat_replace1(paste0("Stat >= ", cur_Stat), name)
+    } else if (cur_sign=="Negative") { # if TRUE and NEG
+      stat_text <- stat_replace1(paste0("Stat <=  ", cur_Stat), name)
+    }
+  } 
+  
+  if (is.na(status)==F){
+    if (status==T){
+      cond_string <- paste(
+        paste0("<strong>", na.omit(c(p_text, q_text, stat_text)), "</strong>")
+        , collapse=" AND ")
+      
+    } else if (status==F){
+      cond_string <- paste(
+        paste0("<strong>", na.omit(c(p_text, q_text, stat_text)), "</strong>")
+        , collapse=" OR ")
+    } 
+    
+    # assemble into string
+    if (include_name==T){
+      adddesc <- paste(cond_string, " in ", "<i>",name,"</i>", sep="")
+    } else {
+      adddesc <- paste(cond_string, sep="")
+    }
+    
+    
+  } else {
+    adddesc <- NA
+  }
+  adddesc
+}
