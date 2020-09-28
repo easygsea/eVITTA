@@ -423,13 +423,13 @@ output$deg_table_download <- downloadHandler(
   }
 )
 
-# download DEG table
-output$deg_table_download2 <- downloadHandler(
-  filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,".csv")},
-  content = function(file) {
-    write.csv(rv$deg, file)
-  }
-)
+# # download DEG table
+# output$deg_table_download2 <- downloadHandler(
+#   filename = function() {paste0(rv$geo_accession,"_",rv$c_level,"_vs_",rv$t_level,".csv")},
+#   content = function(file) {
+#     write.csv(rv$deg, file)
+#   }
+# )
 
 # -------------filter DEG Table, download------------
 output$tl_summary <- renderUI({
@@ -477,11 +477,11 @@ observeEvent(rv$runs,{
            HTML("<br>Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
                   and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.
                 <br>"
-           ),
-           downloadBttn("deg_table_download2",label = "Download entire DEG table (.csv)"
-                        , style = rv$dbtn_style
-                        , color = rv$dbtn_color
-                        ,size="md")
+           )
+           # ,downloadBttn("deg_table_download2",label = "Download entire DEG table (.csv)"
+           #              , style = rv$dbtn_style
+           #              , color = rv$dbtn_color
+           #              ,size="md")
            ,br(),br(),p("If you'd like to run DEG analysis for another comparison, re-select samples and re-click \"4.3. Run DEG Analysis!\".")
         )
       )
