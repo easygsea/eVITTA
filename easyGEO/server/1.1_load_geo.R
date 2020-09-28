@@ -17,7 +17,7 @@ output$geo_accession_ui <- renderUI({
       placeholder = "GSE147507",
       width = "100%"
     ),
-    bsTooltip("q1", HTML("Begins with GSE. Click to <i>load</i> an <u>example GEO accession number</u>"), placement = "top")
+    bsTooltip("q1", HTML("Begins with GSE. <i>Click</i> to load an <u>example GEO accession number</u>"), placement = "top")
     
     ,"Note: only RNA-seq and single_channel microarray datasets are currently accepted.", br(), br(),
     
