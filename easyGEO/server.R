@@ -6,6 +6,9 @@ shinyServer(function(input, output, session) {
     
     waiter_hide() # will hide *on_load waiter
     
+    # ram check on initialization
+    source("server/server-ramCheck.R", local = TRUE)
+
     ####---------------------- REACTIVE VALUES---------------------------####
     
     # initialize reactive values
