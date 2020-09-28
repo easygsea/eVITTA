@@ -200,7 +200,7 @@ output$batch_opt <- renderUI({
              radioButtons(
                inputId = "batch_Stat_column",
                label = HTML(paste0(
-                 "Stat column:",
+                 stat_replace("Stat column:"),
                  add_help("u_stat_help", style="margin-left: 5px;"))
                ),
                choices = rv$upload_batch_colscheme,
@@ -226,13 +226,13 @@ output$batch_opt <- renderUI({
              textInput(
                inputId = "batch_Stat_name",
                label = HTML(paste0(
-                 "Name the Stat column:",
+                 stat_replace("Name the Stat column:"),
                  add_help("u_namestat_help", style="margin-left: 5px;"))
                ),
                value = firstmatch(stat_alias,rv$upload_batch_colscheme),
              ),
              bsTooltip("u_namestat_help", 
-                       "This will be shown in place of \"Stat\" (to be implemented)", 
+                       stat_replace("Tell us what kind of value is \"Stat\", e.g. logFC"), 
                        placement = "top"),
              uiOutput("batch_additional_cols"),
              
@@ -598,7 +598,7 @@ output$upload_opt <- renderUI({
              radioButtons(
                inputId = "Stat_column",
                label = HTML(paste0(
-                 "Stat column:",
+                 stat_replace("Stat column:"),
                  add_help("us_stat_help", style="margin-left: 5px;"))
                ),
                choices = rv$upload_columns,
@@ -631,14 +631,14 @@ output$upload_opt <- renderUI({
              textInput(
                inputId = "Stat_name",
                label = HTML(paste0(
-                 "Name the Stat column:",
+                 stat_replace("Name the Stat column:"),
                  add_help("us_namestat_help", style="margin-left: 5px;"))
                ),
                #value = itemmatched(stat_alias,rv$upload_columns))
                value = firstmatch(stat_alias,rv$upload_columns)
                ),
              bsTooltip("us_namestat_help", 
-                       "This will be shown in place of \"Stat\" (to be implemented)", 
+                       stat_replace("Tell us what kind of value is \"Stat\", i.e. logFC"), 
                        placement = "top"),
              uiOutput("load_other_cols"),
       

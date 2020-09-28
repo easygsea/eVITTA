@@ -196,13 +196,19 @@ n_hm_plt <- reactive({
       else if (is.character(le)){
         le <- addlinebreaks(le,30,"<br>")
       }
-      addlabel <- paste(addlabel, paste0(coln, ": ", le), sep="<br>")
+      if (coln == "Stat"){
+        replace_stat <- stat_replace1(rep("Stat", length(rv$nx_n)), rv$nx_n, mode="each")
+        replace_coln <- rep(replace_stat, nrow(df))
+        addlabel <- paste(addlabel, paste0(replace_coln, ": ", le), sep="<br>")
+      } else {
+        addlabel <- paste(addlabel, paste0(coln, ": ", le), sep="<br>")
+      }
+      
     }
     # incProgress(0.2)
-    
+    # print(addlabel)
     # define the hovertext
     textt <- ~paste(dat$y, addlabel)
-    
     
     fig <- plot_ly() %>%
       add_trace(data = dat, x = ~x, y = ~y, z = ~z, type = "heatmap",

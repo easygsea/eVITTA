@@ -84,12 +84,14 @@ nx_bar_plt <- reactive({
       colorbar=list(title=paste0("-log10(",rv$nx_bar_sig, ")")),
       cauto = F,cmin = 0,cmax = 3
     ),
-    text=c(paste(df$Name, 
+    text=c(stat_replace1(
+      paste(df$Name, 
                  "<br>Stat:", as.character(round(df[[statcol]], 3)),
                  "<br>PValue:", as.character(round(df[[pcol]], 3)),
-                 "<br>FDR:", as.character(round(df[[qcol]], 3))))
-    
-    
+                 "<br>FDR:", as.character(round(df[[qcol]], 3))
+                 ),
+      rv$nx_selected)
+      )
   )
   fig <- fig %>% layout(title = paste0(name, " (n=",nrow(df),")")
   )
@@ -112,6 +114,23 @@ output$nx_bar_dl <- downloadHandler(
 
 
 ####-----------------single volcano ----------------####
+
+
+output$nx_vol_colthresh_opt <- renderUI({
+  req(rv$n_ui_showpanel == "Single")
+  req(is.null(rv$nx_selected)==F)
+  div(
+    strong("Color threshold:"),
+    br(),
+    numericInput("nx_p", 
+                 "P <= :", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),
+    numericInput("nx_Stat", 
+                 stat_replace1("|Stat| >= :", rv$nx_selected), 
+                 value = 0, min = 0, max = 1, step=0.001, width="100px"),
+  )
+  
+})
+
 
 
 # volcano graph 
@@ -162,17 +181,19 @@ nx_vol_plt <- reactive({
     mode = 'markers', 
     marker = list(color = df$color),
     hoverinfo="text",
-    text=c(paste(df$Name, 
+    text=c(
+      stat_replace1(paste(df$Name, 
                  "<br>Stat:", as.character(round(df[[statcol]], 3)),
                  "<br>PValue:", as.character(round(df[[pcol]], 3)),
                  "<br>FDR:", as.character(round(df[[qcol]], 3))
-    ))
+    ), rv$nx_selected)
+    )
   )
   
   fs_volcano <- fs_volcano %>% layout(title = paste0(name, " (n=",nrow(df),")"),
                                       yaxis = list(zeroline = T, title="-log10(PValue)",
                                                    range=c(0,volcano_ymax)),
-                                      xaxis = list(zeroline = T, title="Stat",
+                                      xaxis = list(zeroline = T, title=stat_replace1("Stat", rv$nx_selected),
                                                    range=c(-volcano_xmax,volcano_xmax)))
   
   return(fs_volcano)

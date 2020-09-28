@@ -487,7 +487,7 @@ observeEvent(rv$runs,{
       )
     ),
     easyClose = T,size="m"
-    , footer = modalButton('Got it!')
+    , footer = modalButton('OK')
   ))
 },ignoreInit = T)
 
