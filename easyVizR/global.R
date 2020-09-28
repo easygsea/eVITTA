@@ -30,6 +30,8 @@ library(rintrojs)
 library(visNetwork)
 library(markdown)
 library(V8)
+library(lobstr)
+
 # library(dashboardthemes)
 options(repos = BiocManager::repositories())
 futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger") # to suppress creation of log file
