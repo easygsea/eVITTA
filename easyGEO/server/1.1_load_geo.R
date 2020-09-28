@@ -10,24 +10,37 @@ output$geo_accession_ui <- renderUI({
   div(
     textInput(
       inputId = "geo_accession",
-      label = "GSE Accession Number:", 
+      label = p("GSE Accession Number:"
+                   ,tags$style(type = "text/css", "#q1 {display: inline-block;width: 16px;height: 16px;padding: 0 0 0 1px;border-radius: 50%;vertical-align: baseline;font-size:10px;}"),
+                   bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
       # value = "GSE147507",
       placeholder = "GSE147507",
       width = "100%"
     ),
-    "Note: only RNA-seq and single_channel microarray datasets are currently accepted.", br(), br(),
+    bsTooltip("q1", HTML("Begins with GSE. Click to <i>load</i> an <u>example GEO accession number</u>"), placement = "top")
+    
+    ,"Note: only RNA-seq and single_channel microarray datasets are currently accepted.", br(), br(),
     
     uiOutput("search_geo")
     
   )
 })
 
+# update text box when q1 actionbutton clicked
+observeEvent(input$q1,{
+  updateTextInput(session,
+    inputId = "geo_accession",
+    value = "GSE147507"
+  )
+})
+
 output$search_geo <- renderUI({
-  if (nchar(input$geo_accession)>0){
+  req(nchar(input$geo_accession)>0)
+  # if (nchar(input$geo_accession)>0){
     actionButton("search_geo", "Search")
-  } else {
-    "Enter a valid GEO accession number."
-  }
+  # } else {
+  #   "Enter a valid GEO accession number."
+  # }
   
 })
 
@@ -113,10 +126,12 @@ output$geo_platform_ui <- renderUI({
   div(id="select_plat",
     radioButtons(
       inputId = "plat",
-      label = "Platforms available:",
+      label = HTML("Platforms available:",add_help("q2")),
       # choices = rv$platforms
       choices = rv$gpl_choices
     ),
+    bsTooltip("q2",HTML("GEO platforms represent a diverse range of technologies, molecule types, and annotation conventions.<br><br>Select the platform you are interested in and <i>click</i> <b>Select to proceed</b>")
+              ,placement = "top"),
     uiOutput("gpl_tooltips"),
     uiOutput("study_type_feedback"),
     uiOutput("select_geo_platform")
