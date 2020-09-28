@@ -31,6 +31,8 @@ library(visNetwork)
 library(markdown)
 library(V8)
 library(lobstr)
+library(shinydisconnect)
+
 
 # library(dashboardthemes)
 options(repos = BiocManager::repositories())
