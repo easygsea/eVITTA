@@ -892,12 +892,9 @@
         
         withProgress(message = "Running GSEA analysis...",value = 0.2, {
 
-            # ------ read GMTs into list ------ #
-            # gmts are temporarily stored in list and will be looped over during gsea run.
-            
+            # ------ read GMTs & run fgsea ------ #
             # initialize
-            gmts=list()
-            catnames=list()
+            errors = 0
             
             for(collection in sort(names(gmt_collections_paths[[species]]))){
                 db_id = paste0(species,gsub(" ","_",collection))
@@ -910,46 +907,38 @@
                 for(cat_name in inputs){
                   gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
                   m_list <- gmtPathways(gmt_path)
-                  
-                  gmts = c(gmts,list(m_list))
-                  catnames <- c(catnames, cat_name)
-                  incProgress(0.1)
-                }
-            }
-            
-            # save GMTs to rv
-            rv$gmts = unlist(gmts,recursive = F)
+                  m_list <- lapply(m_list, function(x) toupper(x))
 
-            # ------ run fgsea ------ #
-            errors = 0
-            for (i in seq_along(gmts)){
-                # uppercase genes
-                m_list = lapply(gmts[[i]], function(x) toupper(x))
-                
-                a_lens = lengths(m_list)
-                              
-                if(max(a_lens)<rv$gmin || min(a_lens)>rv$gmax){errors = errors + 1}
-                
-                frun <- try(fgseaRes <- fgsea(pathways = m_list,
-                                  stats    = ranks,
-                                  minSize  = rv$gmin,
-                                  maxSize  = rv$gmax,
-                                  nperm = rv$gperm))
-                
-                if(inherits(frun, "try-error")) {        
-                  errors = errors + 1
-                }else{
-                  db <- rep(catnames[[i]], nrow(fgseaRes))
-                  fgseaRes <- cbind(db,fgseaRes)
-                  #print(head(fgseaRes))
-                  rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
-                  # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
-                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
-                  rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
-                  rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
-                  rv$no_down_05 = rv$no_down_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
-                  # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
-                  incProgress(0.2)
+                  # save GMT into RV
+                  rv$gmts = c(rv$gmts,m_list)
+                  incProgress(0.1)
+                  
+                  # calculate gene #s in each term
+                  a_lens = lengths(m_list)
+                  
+                  if(max(a_lens)<rv$gmin || min(a_lens)>rv$gmax){errors = errors + 1}
+                  
+                  frun <- try(fgseaRes <- fgsea(pathways = m_list,
+                                                stats    = ranks,
+                                                minSize  = rv$gmin,
+                                                maxSize  = rv$gmax,
+                                                nperm = rv$gperm))
+                  
+                  if(inherits(frun, "try-error")) {        
+                    errors = errors + 1
+                  }else{
+                    db <- rep(cat_name, nrow(fgseaRes))
+                    fgseaRes <- cbind(db,fgseaRes)
+                    #print(head(fgseaRes))
+                    rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
+                    # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
+                    rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
+                    rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
+                    rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
+                    rv$no_down_05 = rv$no_down_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
+                    # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
+                    incProgress(0.2)
+                  }
                 }
             }
             
@@ -1009,14 +998,10 @@
 
         withProgress(message = "Running overrepresentation analysis...",value = 0.2, {
             
-            # ------ read GMTs into list ------ #
-            # gmts are temporarily stored in list and will be looped over during gsea run.
-            
+            # ------ read GMTs & run fgsea ------ #
             # initialize
-            gmts=list()
-            catnames=list()
-            all_genes=list()
-            
+            errors = 0
+
             for(collection in sort(names(gmt_collections_paths[[species]]))){
                 db_id = paste0(species,gsub(" ","_",collection))
                 if(is.null(rv$db_modal)==F){
@@ -1028,51 +1013,41 @@
                 for(cat_name in inputs){
                   gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
                   m_list <- gmtPathways(gmt_path)
+                  m_list <- lapply(m_list, function(x) toupper(x))
 
                   # get all genes
                   a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
-                  all_genes <- c(all_genes, list(a_genes))
-                  
-                  gmts = c(gmts,list(m_list))
-                  catnames <- c(catnames, cat_name)
+
+                  # save GMT into RV
+                  rv$gmts = c(rv$gmts,m_list)
                   incProgress(0.1)
+                  
+                  # genes present in the database
+                  in_genes = genelist[genelist %in% a_genes]
+                  
+                  if(identical(in_genes,character(0))){incProgress(0.2);next}
+                  
+                  frun <- try(fgseaRes <- fora(pathways = m_list,
+                                               genes    = in_genes,
+                                               universe = a_genes,
+                                               minSize  = rv$gmin,
+                                               maxSize  = rv$gmax
+                  ))
+                  
+                  if(inherits(frun, "try-error")) {        
+                    errors = errors + 1
+                  }else{
+                    db <- rep(cat_name, nrow(fgseaRes))
+                    fgseaRes <- cbind(db,fgseaRes)
+                    rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
+                    rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25,na.rm=TRUE)
+                    rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
+                    incProgress(0.2)
+                  }
                 }
                 
             }
 
-            # save GMTs to rv
-            rv$gmts = unlist(gmts,recursive = F)
-
-            # ------ run fgsea ------ #
-            errors = 0
-            for (i in seq_along(gmts)){
-                # uppercase genes
-                m_list = lapply(gmts[[i]], function(x) toupper(x))
-                
-                # genes present in the database
-                in_genes = genelist[genelist %in% all_genes[[i]]]
-
-                if(identical(in_genes,character(0))){incProgress(0.2);next}
-                
-                frun <- try(fgseaRes <- fora(pathways = m_list,
-                                  genes    = in_genes,
-                                  universe = all_genes[[i]],
-                                  minSize  = rv$gmin,
-                                  maxSize  = rv$gmax
-                                  ))
-                
-                if(inherits(frun, "try-error")) {        
-                  errors = errors + 1
-                }else{
-                  db <- rep(catnames[[i]], nrow(fgseaRes))
-                  fgseaRes <- cbind(db,fgseaRes)
-                  rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
-                  rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25,na.rm=TRUE)
-                  rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
-                  incProgress(0.2)
-                }
-            }
-            
             if(errors > 0 && is.null(rv$fgseagg)){
               db_selected = names(rv$dbs)
               db_selected = paste(db_selected,collapse = "; ")
