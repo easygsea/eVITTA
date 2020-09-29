@@ -457,6 +457,7 @@ filter_to_gls <- function(filter_namespace, filter_var, filtered_df, input_range
 # ------------------------------------
 # provide the name of the dataset, gene list, the df to filter
 # example: df <- gl_to_table(name = rv$nx_n[[1]], gl = f_temp_gls()[[1]], master_df = rv$df_n, round=3)
+# set round to 0 for no rounding
 
 gl_to_table <- function(name, gl, master_df, round=3, keep_stat=F){
   req(is.null(master_df)==F)
@@ -465,7 +466,9 @@ gl_to_table <- function(name, gl, master_df, round=3, keep_stat=F){
   df <- df[df$Name %in% gl, show_cols]
   colnames(df) <- c("Name", "Stat", "PValue", "FDR")
   rownames(df) <- NULL
-  df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., round)) # round
+  if (round>0){ 
+    df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., round)) # round
+  }
   # whether stat is kept or changed into a replacement value
   if (keep_stat==F){
     colnames(df) <- stat_replace1(colnames(df), name) # replace stat string
