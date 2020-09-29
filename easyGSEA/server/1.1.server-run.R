@@ -911,8 +911,7 @@
 
                   # save GMT into RV
                   rv$gmts = c(rv$gmts,m_list)
-                  incProgress(0.1)
-                  
+
                   # calculate gene #s in each term
                   a_lens = lengths(m_list)
                   
@@ -960,8 +959,7 @@
               # count number of filtered GSs in GMTs
               l = unlist(lapply(rv$gmts, function(x){return(length(x)>=rv$gmin && length(x)<=rv$gmax)}))
               rv$gmts_length = sum(l)
-              incProgress(0.1)
-              
+
               # determine if success or warnings
               if(nrow(rv$fgseagg)>0){
                 rv$run = "success"
@@ -1020,8 +1018,7 @@
 
                   # save GMT into RV
                   rv$gmts = c(rv$gmts,m_list)
-                  incProgress(0.1)
-                  
+
                   # genes present in the database
                   in_genes = genelist[genelist %in% a_genes]
                   
@@ -1067,8 +1064,7 @@
               # count number of filtered GSs in GMTs
               l = unlist(lapply(rv$gmts, function(x){return(length(x)>=rv$gmin && length(x)<=rv$gmax)}))
               rv$gmts_length = sum(l)
-              incProgress(0.1)
-              
+
               # determine if success or warnings
               if(is.null(rv$fgseagg)==F && nrow(rv$fgseagg)>0){
                 rv$run = "success"
