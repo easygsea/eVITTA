@@ -475,13 +475,32 @@
         rv$run = NULL
         
         rv$rnkll <- strsplit(isolate(rv$infile_name),"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1] # add value to rv
-        ranks <- read_delim(isolate(rv$infile_path), ",")# , escape_double = FALSE, trim_ws = TRUE)
+        ranks <- read_delim(isolate(rv$infile_path), ",", locale = locale(encoding = 'ISO-8859-1'))# , escape_double = FALSE, trim_ws = TRUE)
 
-        # print(str(head(ranks)))
+         print(str(head(ranks)))
         if(ncol(ranks)==1){
-            ranks <- read_delim(isolate(rv$infile_path), "\t")# , escape_double = FALSE, trim_ws = TRUE)
+            ranks <- read_delim(isolate(rv$infile_path), "\t", locale = locale(encoding = 'ISO-8859-1'))# , escape_double = FALSE, trim_ws = TRUE)
         }
-        ranks =  ranks %>% #[complete.cases(ranks), ]
+        # print(prod(validUTF8(ranks$GeneName)))
+        # # Check all the GeneName if they contain invalid characters
+        # if(!prod(validUTF8(ranks$GeneName))){
+        #   for(i in seq_along(ranks$GeneName)){
+        #     #delete the unrecognized character
+        #     ranks$GeneName[i] <- stringr::str_replace_all(ranks$GeneName[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+        #     # print(indf_coln[i])
+        #   }
+        # }
+        # Check all the column names if they contain invalid Characters
+        #print(prod(validUTF8(colnames(ranks))))
+          for(i in seq_along(colnames(ranks))){
+            #delete the unrecognized character
+            colnames(ranks)[i] <- stringr::str_replace_all(colnames(ranks)[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+            print(ranks[[i]])
+            if(is.character(ranks[[i]])){
+              ranks[[i]] <- stringr::str_replace_all(colnames(ranks)[[i]],"[^(a-z0-9A-Z)|[:punct:]]", "")
+            }
+          }
+          ranks =  ranks %>% #[complete.cases(ranks), ]
           dplyr::select_if(~sum(!is.na(.)) > 0)
 
         # detect if RNK or DEG
