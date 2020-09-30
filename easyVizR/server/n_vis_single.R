@@ -120,7 +120,13 @@ output$nx_vol_colthresh_opt <- renderUI({
   req(rv$n_ui_showpanel == "Single")
   req(is.null(rv$nx_selected)==F)
   div(
-    strong("Color threshold:"),
+    HTML(paste0(
+      "<b>Color threshold:</b>",
+      add_help("nx_vol_thresh_help", style="margin-left: 5px;"))
+    ),
+    bsTooltip("nx_vol_thresh_help", 
+              "Terms fulfilling these thresholds will highlighted with the primary color.", 
+              placement = "top"),
     br(),
     numericInput("nx_p", 
                  "P <= :", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),

@@ -41,7 +41,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                             onInitialize = I('function() { this.setValue(""); }')
                         )
                     ),
-                    bsTooltip("selected_species_q", HTML("Select species, then click <b>Confirm selection</b> to proceed"), placement = "top"),
+                    bsTooltip("selected_species_q", HTML("Select species, then <i>click</i> <b>Confirm selection</b> to proceed"), placement = "top"),
                     
                     # database selection
                     uiOutput("test_db"),

@@ -16,6 +16,7 @@ source("ui/sideopt3.R")
 source("ui/css_addons.R")
 
 
+
 #======================================================================#
 ####                           SIDEBAR                              ####
 #======================================================================#
@@ -53,6 +54,8 @@ sidebar <- dashboardSidebar(
                 # )
                 
     )
+    ,disconnectMessage(text = "Your session has timed out. Please refresh page and start again. For bug report, email us at evitta@cmmt.ubc.ca. Thank you for your support.")
+    
 
 )
 

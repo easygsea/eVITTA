@@ -257,7 +257,13 @@ output$nxy_3ds_panel <- renderUI({
     ),
     div(style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
-          strong("Color Summary:"),
+          HTML(paste0(
+            "<b>Color summary</b>:",
+            add_help("nxyz_cdf_help", style="margin-left: 5px;"))
+          ),
+          bsTooltip("nxyz_cdf_help", 
+                    "Summarizes terms by their displayed color", 
+                    placement = "top"),
           dataTableOutput("n_3ds_prop_tbl"),br(),
           downloadButton("download_3ds_df", "Download color summary"),
           
@@ -363,18 +369,41 @@ output$n_ui_single <- renderUI({
                
                div(id="nx_vol_aes", style = "position: absolute; left: 4em; bottom: 1em; width:300px;",
                    dropdown(
-                     selectInput("nx_vol_c1", "Primary color:",
+                     selectInput("nx_vol_c1", 
+                                 HTML(paste0(
+                                   "<b>Primary color:</b>",
+                                   add_help("nx_vol_col1_help", style="margin-left: 5px;"))
+                                 ),
                        choices = default_colors,
                        selected="red"
                        ),
-                     selectInput("nx_vol_c2", "Secondary color:",
+                     selectInput("nx_vol_c2", 
+                                 HTML(paste0(
+                                   "<b>Secondary color:</b>",
+                                   add_help("nx_vol_col2_help", style="margin-left: 5px;"))
+                                 ),
                                  choices = default_colors,
                                  selected="black"
                      ),
-                     selectInput("nx_vol_c3", "Tertiary color:",
+                     selectInput("nx_vol_c3", 
+                                 HTML(paste0(
+                                   "<b>Tertiary color:</b>",
+                                   add_help("nx_vol_col3_help", style="margin-left: 5px;"))
+                                 ),
                                  choices = default_colors,
                                  selected="gray"
                      ),
+                     
+                     
+                     bsTooltip("nx_vol_col1_help", 
+                               "Highlight color for intersection terms within the threshold.", 
+                               placement = "top"),
+                     bsTooltip("nx_vol_col2_help", 
+                               "Color for intersection terms that are NOT within the threshold.", 
+                               placement = "top"),
+                     bsTooltip("nx_vol_col3_help", 
+                               "Color for terms that are NOT in the intersection. (only applicable for Context mode)", 
+                               placement = "top"),
                      
                      size = "xs",
                      icon = icon("palette", class = "opt"),

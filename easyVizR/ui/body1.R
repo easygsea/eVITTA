@@ -90,6 +90,8 @@ body1 <- tabItem(tabName = "tab1",
                           #     ))
                           # ),
                           
+                          uiOutput("guide_1a"),
+                          
                    ),
                    
                    column(6,
@@ -102,7 +104,8 @@ body1 <- tabItem(tabName = "tab1",
                                                            uiOutput("delete_deg"),
                                                            uiOutput("delete_deg_confirm"),
                                                   )
-                                              )
+                                              ),
+                                              
                               ))
                           )
                           
