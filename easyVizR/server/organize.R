@@ -259,6 +259,12 @@ output$batch_additional_cols <- renderUI({
   # print(rv$upload_batch_sharedcols)
   additional_cols <- setdiff(rv$upload_batch_sharedcols,j)
   
+  for(f in seq_along(additional_cols)){
+    #delete the unrecognized character
+    additional_cols[f] <- stringr::str_replace_all(additional_cols[f],"[^(a-z0-9A-Z)|[:punct:]]", "")
+  }
+  print(additional_cols)
+  
   
   # pickerInput(
   #   inputId = "batch_load_other_cols",
@@ -289,17 +295,17 @@ output$batch_additional_cols <- renderUI({
 
 # render confirm and reset buttons
 output$batch_buttons <- renderUI({
-
+  
   
   fluidRow(
     div(style="display:inline-block;",
-      uiOutput("batch_confirm_button")
-           ),
+        uiOutput("batch_confirm_button")
+    ),
     div(style="display:inline-block;",
-      actionButton('g_reset', 'Reset upload')
+        actionButton('g_reset', 'Reset upload')
     )
   )        
-          
+  
 })
 
 output$batch_confirm_button <- renderUI({
@@ -314,7 +320,7 @@ output$batch_confirm_button <- renderUI({
   # print(length(unique(c(input$batch_gene_column, input$batch_Stat_column, input$batch_p_column, input$batch_q_column))))
   # print(rv$batch_failed)
   # print(rv$batch_files)
-
+  
   actionButton('batch_submit', 'Confirm and add', class = "btn-primary")
 })
 
@@ -413,10 +419,10 @@ observeEvent(input$fileIn, {
     showModal(modalDialog(
       inputId = "size_reminder_modal1",
       div(
-      paste0("The files you uploaded exceed ",batch_mb_limit,"MB, please modify it to proceed. Try to delete unneeded columns and 
+        paste0("The files you uploaded exceed ",batch_mb_limit,"MB, please modify it to proceed. Try to delete unneeded columns and 
             only keep the columns that you are interested in. 
             Then press \"Browse...\" to upload again. Thank you.")
-             ,style="font-size:200%"),
+        ,style="font-size:200%"),
       easyClose = TRUE,size="l"
       # , footer = modalButton("Close")
     ))
@@ -444,10 +450,26 @@ observeEvent(input$fileIn, {
     cols <- colnames(read.csv(inFiles$datapath[[i]],nrows=1))
     allcols <- c(allcols, list(cols))
   }
-  
+  print(head(allcols))
+  print(rv$upload_batch_columns)
   rv$upload_batch_columns <- allcols # get all col names as list
   rv$upload_batch_colscheme <- allcols[[1]] # the standard now is the first file's columns. will change later
   rv$upload_batch_sharedcols <- Reduce(intersect, allcols) # get all shared col names as vector
+  # version1 remove invalid characters from the batch column names
+  for(i in seq_along(rv$upload_batch_colscheme)){
+    #delete the unrecognized character
+    rv$upload_batch_colscheme[i] <- stringr::str_replace_all(rv$upload_batch_colscheme[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+  }
+  for(i in seq_along(rv$upload_batch_columns[[1]])){
+    #delete the unrecognized character
+    rv$upload_batch_columns[[1]][i] <- stringr::str_replace_all(rv$upload_batch_columns[[1]][i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+  }
+  print(rv$upload_batch_columns[[1]])
+  
+  for(i2 in seq_along(rv$upload_batch_sharedcols)){
+    #delete the unrecognized character
+    rv$upload_batch_sharedcols[i2] <- stringr::str_replace_all(rv$upload_batch_sharedcols[i2],"[^(a-z0-9A-Z)|[:punct:]]", "")
+  }
   
   rv$folder_upload_state <- 'uploaded'
   
@@ -476,7 +498,7 @@ observeEvent(input$g_reset, {
   rv$folder_upload_state <- 'reset'
   shinyjs::reset("fileIn")
   removeModal()
-  })
+})
 
 
 # upon submitting, add file to list of dataframes to select from
@@ -495,6 +517,25 @@ observeEvent(input$batch_submit, {
     # print(inFiles$datapath[[i]]) # path of of file
     
     in_df <- read.csv(inFiles$datapath[[i]])
+    print(in_df)
+    
+    #Remove the invalid characters from the content
+    show_reminder2 <- FALSE
+    for(k in seq_along(colnames(in_df))){
+      #detect and delete the unrecognized character Version1
+      if(stringr::str_detect(colnames(in_df)[k], "[^(a-z0-9A-Z)|[:punct:]]")){
+        show_reminder2 <- TRUE
+        colnames(in_df)[k]<- stringr::str_replace_all(colnames(in_df)[k],"[^(a-z0-9A-Z)|[:punct:]]", "")
+      }
+      if(is.character(in_df[[k]])){
+        if(!prod(stringr::str_detect(in_df[[k]], "[^(a-z0-9A-Z)|[:punct:]]"))){
+          show_reminder2 <- TRUE 
+          in_df[[k]] <- stringr::str_replace_all(in_df[[k]],"[^(a-z0-9A-Z)|[:punct:]]", "")
+        }
+      }
+    }
+    print(head(in_df))
+    
     colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$batch_gene_column, "Name")
     colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$batch_Stat_column, "Stat")
     colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$batch_p_column, "PValue")
@@ -503,6 +544,13 @@ observeEvent(input$batch_submit, {
     # load only the essential columns (is it worth it to enable them to load more?)
     load_cols_list <- c(c("Name", "Stat", "PValue", "FDR"), unlist(input$batch_load_other_cols))
     # print(load_cols_list)
+    # #rv$upload_columns <- colnames(read.csv(inFile$datapath, fileEncoding = "Latin1", check.names = F, nrows=1))
+    # for(i in seq_along(load_cols_list)){
+    #   #delete the unrecognized character
+    #   load_cols_list[i] <- stringr::str_replace_all(load_cols_list[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+    # }
+    # print(load_cols_list)
+    
     in_df <- in_df[,load_cols_list]
     in_df$Name <- toupper(in_df$Name)
     
@@ -514,7 +562,7 @@ observeEvent(input$batch_submit, {
     rv$tt <- c(rv$tt, input$batch_Stat_name)
     #Updated new value in rv: rv$FileDf
     rv$FileDF[nrow(rv$FileDF)+1,] <- c(inFiles$name[[i]], inFiles$size[[i]], inFiles$type[[i]],inFiles$datapath[[i]], newname)
-    }
+  }
   rv$FileDF$size <- as.numeric(as.character(rv$FileDF$size))
   rv$folder_upload_state <- "reset"
   # shinyjs::reset("fileIn")
@@ -620,7 +668,7 @@ output$upload_opt <- renderUI({
                        "FDR, q-value, padj, etc; a corrected p-value.", 
                        placement = "top"),
              
-        
+             
       ),
       column(6,
              textInput(
@@ -636,12 +684,12 @@ output$upload_opt <- renderUI({
                ),
                #value = itemmatched(stat_alias,rv$upload_columns))
                value = firstmatch(stat_alias,rv$upload_columns)
-               ),
+             ),
              bsTooltip("us_namestat_help", 
                        stat_replace("Tell us what kind of value is \"Stat\", i.e. logFC"), 
                        placement = "top"),
              uiOutput("load_other_cols"),
-      
+             
       ),
     )
   )
@@ -657,6 +705,11 @@ output$load_other_cols <- renderUI({
   
   other_cols <- setdiff(rv$upload_columns, c(input$gene_column, input$Stat_column,
                                              input$p_column,input$q_column))
+  for(f in seq_along(other_cols)){
+    #delete the unrecognized character
+    other_cols[f] <- stringr::str_replace_all(other_cols[f],"[^(a-z0-9A-Z)|[:punct:]]", "")
+  }
+  print(other_cols)
   multiInput(inputId = "load_other_cols",
              label = "Load additional columns:",
              choices = other_cols,
@@ -671,7 +724,7 @@ output$load_other_cols <- renderUI({
 
 # upload / reset buttons
 output$upload_buttons <- renderUI({
-
+  
   
   fluidRow(
     div(style="display:inline-block;",
@@ -736,16 +789,16 @@ observeEvent(input$file, {
   inFile <- input$file
   #Add a file size check and its modal, single upload is 10mb
   if(inFile$size >= single_upload_limit){
-  #if(inFile$size >= 50){  
+    #if(inFile$size >= 50){  
     
     showModal(modalDialog(
       inputId = "size_reminder_modal3",
       # title = "The file size exceeds 50MB.",
       div(
-      paste0("The file you uploaded exceeds ",single_mb_limit,"MB, please modify it to proceed. Try to delete unneeded columns and 
+        paste0("The file you uploaded exceeds ",single_mb_limit,"MB, please modify it to proceed. Try to delete unneeded columns and 
             only keep the columns that you are interested in. 
             Then press \"Browse...\" to upload it again. Thank you.")
-             ,style="font-size:200%"),
+        ,style="font-size:200%"),
       easyClose = TRUE,size="l"
       # , footer = modalButton("Close")
     ))
@@ -766,7 +819,18 @@ observeEvent(input$file, {
   
   req((inFile$size < single_upload_limit) && (inFile$size + sum(rv$FileDF$size) <= total_upload_limit)) 
   
-  rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1))
+  # rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1, encoding = 'UTF-8', stringsAsFactors=FALSE))
+  
+  # rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1,local = locale(encoding = "latin1")))
+  rv$upload_columns <- colnames(read.csv(inFile$datapath, fileEncoding = "Latin1", check.names = F, nrows=1))
+  print(rv$upload_columns)
+  
+  for(i in seq_along(rv$upload_columns)){
+    #delete the unrecognized character
+    rv$upload_columns[i] <- stringr::str_replace_all(rv$upload_columns[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+  }
+  print(rv$upload_columns)
+  
   rv$upload_state <- 'uploaded'
   
   # show col selection modal
@@ -792,6 +856,23 @@ observeEvent(input$reset, {
 observeEvent(input$submit, {
   inFile <- input$file
   in_df <- read.csv(inFile$datapath)
+  show_reminder <- FALSE
+  
+  # the for loop that loop through the file and remove invalid characters
+  for(i in seq_along(colnames(in_df))){
+    #detect and delete the unrecognized character Version1
+    if(stringr::str_detect(colnames(in_df)[i], "[^(a-z0-9A-Z)|[:punct:]]")){
+      show_reminder <- TRUE
+      colnames(in_df)[i]<- stringr::str_replace_all(colnames(in_df)[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+    }
+    if(is.character(in_df[[i]])){
+      if(stringr::str_detect(in_df[[i]], "[^(a-z0-9A-Z)|[:punct:]]")){
+        show_reminder <- TRUE 
+        in_df[[i]] <- stringr::str_replace_all(in_df[[i]],"[^(a-z0-9A-Z)|[:punct:]]", "")
+      }
+    }
+  }
+  print(in_df)
   
   # replace the important column names to prevent error later on
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$gene_column, "Name")
@@ -799,7 +880,8 @@ observeEvent(input$submit, {
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$p_column, "PValue")
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$q_column, "FDR")
   load_cols_list <- c(c("Name", "Stat", "PValue", "FDR"),input$load_other_cols)
-  #print(load_cols_list)
+  print(load_cols_list)
+  print(in_df)
   
   
   in_df <- in_df[,load_cols_list]
@@ -827,6 +909,14 @@ observeEvent(input$submit, {
   
   # shinyjs::reset("file")
   removeModal()
+  if(show_reminder == TRUE){
+    showModal(modalDialog(
+      inputId = "invalid reminder",
+      span("IMPORTANT: Your file contains invalid characters. Please be aware of them. Thank you. ", style = "font-size:200%"),
+      easyClose = TRUE,size="l"
+      , footer = modalButton("OK")
+    ))
+  }
 })
 
 
@@ -880,7 +970,7 @@ output$delete_deg <- renderUI({
     HTML("No data currently loaded.")
   }
   
-
+  
   
   
 })
@@ -890,3 +980,16 @@ output$delete_deg_confirm <- renderUI({
   actionButton("delete_deg_confirm", "Confirm and delete")
 })
 
+
+# ---------- when all is done, show guide box to next page ---------
+output$guide_1a <- renderUI({
+  if (length(rv$ll)>=2){ # 2 or more datasets loaded
+    msg = "Navigate to <b>2. Select Filters</b> to proceed"
+    guide_box("guide1", msg)
+  } else {
+    return(NULL)
+  }
+})
+observeEvent(input$guide1,{
+  updateTabItems(session, "tabs", "tab_filters")
+})

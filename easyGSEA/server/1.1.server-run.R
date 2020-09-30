@@ -495,10 +495,11 @@
           for(i in seq_along(colnames(ranks))){
             #delete the unrecognized character
             colnames(ranks)[i] <- stringr::str_replace_all(colnames(ranks)[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
-            print(ranks[[i]])
+            
             if(is.character(ranks[[i]])){
-              ranks[[i]] <- stringr::str_replace_all(colnames(ranks)[[i]],"[^(a-z0-9A-Z)|[:punct:]]", "")
+              ranks[[i]] <- stringr::str_replace_all(ranks[[i]],"[^(a-z0-9A-Z)|[:punct:]]", "")
             }
+            print(head(ranks[[i]]))
           }
           ranks =  ranks %>% #[complete.cases(ranks), ]
           dplyr::select_if(~sum(!is.na(.)) > 0)
