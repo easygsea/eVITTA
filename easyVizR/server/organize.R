@@ -263,8 +263,6 @@ output$batch_additional_cols <- renderUI({
     #delete the unrecognized character
     additional_cols[f] <- stringr::str_replace_all(additional_cols[f],"[^(a-z0-9A-Z)|[:punct:]]", "")
   }
-  print(additional_cols)
-  
   
   # pickerInput(
   #   inputId = "batch_load_other_cols",
@@ -450,8 +448,8 @@ observeEvent(input$fileIn, {
     cols <- colnames(read.csv(inFiles$datapath[[i]],nrows=1))
     allcols <- c(allcols, list(cols))
   }
-  print(head(allcols))
-  print(rv$upload_batch_columns)
+  # print(head(allcols))
+  # print(rv$upload_batch_columns)
   rv$upload_batch_columns <- allcols # get all col names as list
   rv$upload_batch_colscheme <- allcols[[1]] # the standard now is the first file's columns. will change later
   rv$upload_batch_sharedcols <- Reduce(intersect, allcols) # get all shared col names as vector
@@ -464,7 +462,6 @@ observeEvent(input$fileIn, {
     #delete the unrecognized character
     rv$upload_batch_columns[[1]][i] <- stringr::str_replace_all(rv$upload_batch_columns[[1]][i],"[^(a-z0-9A-Z)|[:punct:]]", "")
   }
-  print(rv$upload_batch_columns[[1]])
   
   for(i2 in seq_along(rv$upload_batch_sharedcols)){
     #delete the unrecognized character
@@ -517,24 +514,24 @@ observeEvent(input$batch_submit, {
     # print(inFiles$datapath[[i]]) # path of of file
     
     in_df <- read.csv(inFiles$datapath[[i]])
-    print(in_df)
+    
     
     #Remove the invalid characters from the content
     show_reminder2 <- FALSE
     for(k in seq_along(colnames(in_df))){
       #detect and delete the unrecognized character Version1
-      if(stringr::str_detect(colnames(in_df)[k], "[^(a-z0-9A-Z)|[:punct:]]")){
+      if(stringr::str_detect(colnames(in_df)[k], "[^(a-z0-9A-Z+><)|[:punct:]]")){
         show_reminder2 <- TRUE
-        colnames(in_df)[k]<- stringr::str_replace_all(colnames(in_df)[k],"[^(a-z0-9A-Z)|[:punct:]]", "")
+        colnames(in_df)[k]<- stringr::str_replace_all(colnames(in_df)[k],"[^(a-z0-9A-Z+><)|[:punct:]]", "")
       }
       if(is.character(in_df[[k]])){
-        if(!prod(stringr::str_detect(in_df[[k]], "[^(a-z0-9A-Z)|[:punct:]]"))){
+        if(any(stringr::str_detect(in_df[[k]], "[^(a-z0-9A-Z+><)|[:punct:]]"))){
           show_reminder2 <- TRUE 
-          in_df[[k]] <- stringr::str_replace_all(in_df[[k]],"[^(a-z0-9A-Z)|[:punct:]]", "")
+          in_df[[k]] <- stringr::str_replace_all(in_df[[k]],"[^(a-z0-9A-Z+><)|[:punct:]]", "")
         }
       }
     }
-    print(head(in_df))
+    
     
     colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$batch_gene_column, "Name")
     colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$batch_Stat_column, "Stat")
@@ -567,6 +564,15 @@ observeEvent(input$batch_submit, {
   rv$folder_upload_state <- "reset"
   # shinyjs::reset("fileIn")
   removeModal()
+  # a modal that remind the user their file containin invalid characters Version 1
+  if(show_reminder2 == TRUE){
+    showModal(modalDialog(
+      inputId = "invalid_reminder_2 ",
+      span("IMPORTANT: Your file contains invalid characters. Please be aware of them. Thank you. ", style = "font-size:200%"),
+      easyClose = TRUE,size="l"
+      , footer = modalButton("OK")
+    ))
+  }
 })
 
 
@@ -709,7 +715,6 @@ output$load_other_cols <- renderUI({
     #delete the unrecognized character
     other_cols[f] <- stringr::str_replace_all(other_cols[f],"[^(a-z0-9A-Z)|[:punct:]]", "")
   }
-  print(other_cols)
   multiInput(inputId = "load_other_cols",
              label = "Load additional columns:",
              choices = other_cols,
@@ -823,13 +828,13 @@ observeEvent(input$file, {
   
   # rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1,local = locale(encoding = "latin1")))
   rv$upload_columns <- colnames(read.csv(inFile$datapath, fileEncoding = "Latin1", check.names = F, nrows=1))
-  print(rv$upload_columns)
+
   
   for(i in seq_along(rv$upload_columns)){
     #delete the unrecognized character
     rv$upload_columns[i] <- stringr::str_replace_all(rv$upload_columns[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
   }
-  print(rv$upload_columns)
+  #print(rv$upload_columns)
   
   rv$upload_state <- 'uploaded'
   
@@ -861,18 +866,17 @@ observeEvent(input$submit, {
   # the for loop that loop through the file and remove invalid characters
   for(i in seq_along(colnames(in_df))){
     #detect and delete the unrecognized character Version1
-    if(stringr::str_detect(colnames(in_df)[i], "[^(a-z0-9A-Z)|[:punct:]]")){
+    if(stringr::str_detect(colnames(in_df)[i], "[^(a-z0-9A-Z+><)|[:punct:]|[:space:]]")){
       show_reminder <- TRUE
-      colnames(in_df)[i]<- stringr::str_replace_all(colnames(in_df)[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+      colnames(in_df)[i]<- stringr::str_replace_all(colnames(in_df)[i],"[^(a-z0-9A-Z+><)|[:punct:]]", "")
     }
     if(is.character(in_df[[i]])){
-      if(stringr::str_detect(in_df[[i]], "[^(a-z0-9A-Z)|[:punct:]]")){
+      if(any(stringr::str_detect(in_df[[i]], "[^(a-z0-9A-Z+><)|[:punct:]|[:space:]]"))){
         show_reminder <- TRUE 
-        in_df[[i]] <- stringr::str_replace_all(in_df[[i]],"[^(a-z0-9A-Z)|[:punct:]]", "")
+        in_df[[i]] <- stringr::str_replace_all(in_df[[i]],"[^(a-z0-9A-Z+><)|[:punct:]]", "")
       }
     }
   }
-  print(in_df)
   
   # replace the important column names to prevent error later on
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$gene_column, "Name")
@@ -880,8 +884,8 @@ observeEvent(input$submit, {
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$p_column, "PValue")
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$q_column, "FDR")
   load_cols_list <- c(c("Name", "Stat", "PValue", "FDR"),input$load_other_cols)
-  print(load_cols_list)
-  print(in_df)
+  # print(load_cols_list)
+  # print(in_df)
   
   
   in_df <- in_df[,load_cols_list]
@@ -910,8 +914,9 @@ observeEvent(input$submit, {
   # shinyjs::reset("file")
   removeModal()
   if(show_reminder == TRUE){
+    # a modal that reminds the user that their file contains invalid characters
     showModal(modalDialog(
-      inputId = "invalid reminder",
+      inputId = "invalid_reminder",
       span("IMPORTANT: Your file contains invalid characters. Please be aware of them. Thank you. ", style = "font-size:200%"),
       easyClose = TRUE,size="l"
       , footer = modalButton("OK")
