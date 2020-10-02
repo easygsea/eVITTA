@@ -123,6 +123,7 @@ observeEvent(input$n_use_data,{
     rv$nx_i <- isolate(rv$heatmap_i) # indices
     rv$nx_n <- isolate(input$heatmap_dfs) # names
     # rv$iso_sharedcols<- isolate(rv$n_sharedcols) # shared cols (used for hm)
+    rv$n_sharedcols <- detect_shared_dimensions(rv$nx_i, rv$gg, rv$ll, input_mode="indices")$shared_cols
     rv$hm_numeric_stats <- get_cols_by_class(df_n, is.numeric, output_type="statnames")
     rv$all_char_stats <- get_cols_by_class(df_n, is.character, output_type="statnames")
     rv$nw_char_stats <- rv$all_char_stats[-which(rv$all_char_stats %in% c("Name"))] # without name col

@@ -156,6 +156,8 @@ nx_vol_plt <- reactive({
   qcol <- paste0("FDR_", name)
   statcol <- paste0("Stat_", name)
   
+  req_cols(df, c("Name", pcol, qcol, statcol))
+  
   df <- df[, c("Name",pcol,qcol,statcol)]
   
   df[[pcol]][df[[pcol]]==0]<-0.00001 # replace 0 with 0.001

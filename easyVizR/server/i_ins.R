@@ -492,7 +492,7 @@ output$ins_table_panel <- renderUI({
         dropdown(inputId="n_wc_dropdown",
                  column(8,
                         column(2, textInput("n_ins_wc_sep", "Separator:", value="_")),
-                        column(10, textInput("n_ins_Wc_ignore", "Ignore strings: (separated by spaces)", value="and or of GO KEGG WP")),
+                        column(10, textInput("n_ins_Wc_ignore", "Ignore strings: (separated by spaces)", value="and or of GO KEGG WP RA C2")),
                         
                         plotOutput("n_ins_wc"),
                  ),

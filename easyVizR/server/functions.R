@@ -588,3 +588,21 @@ summarize_filter <- function(filter_namespace, filter_var, name, status, include
   }
   adddesc
 }
+
+
+
+
+
+# req multiple cols in a df
+req_cols <- function(df, col_list){
+  for (i in col_list){
+    req(df[[i]])
+  }
+}
+
+# req multiple vars to be not null
+req_vars <- function(df, var_list){
+  for (i in var_list){
+    req(is.null(var)==F)
+  }
+}

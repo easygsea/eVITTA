@@ -134,7 +134,7 @@ nxy_sc_plt <- reactive({
     xq <- paste("FDR", selected[[1]], sep="_")
     yq <- paste("FDR", selected[[2]], sep="_")
     
-    
+    req_cols(df, c(xsig, ysig, xstat, ystat, xp, yp, xq, yq))
     
     df[df==0]<-0.00001 # replace 0 with 0.001
     df <- remove_nas(df)
