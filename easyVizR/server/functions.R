@@ -478,33 +478,8 @@ gl_to_table <- function(name, gl, master_df, round=3, keep_stat=F){
 
 
 # ================================================= #
-#                   Filter summary                  ####
+#        Convert filters to verbal summary          ####
 # ================================================= #
-
-
-# tooltip for radiogroupbutton and radiobuttons
-#-----------------------------------------------------
-
-radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hover", options = NULL){
-  
-  options = shinyBS:::buildTooltipOrPopoverOptionsList(title, placement, trigger, options)
-  # options <- c(options, width="100px")
-  options = paste0("{'", paste(names(options), options, sep = "': '", collapse = "', '"), "'}")
-  bsTag <- shiny::tags$script(shiny::HTML(paste0("
-    $(document).ready(function() {
-      setTimeout(function() {
-        $('input', $('#", id, "')).each(function(){
-          if(this.getAttribute('value') == '", choice, "') {
-            opts = $.extend(", options, ", {html: true});
-            $(this.parentElement).tooltip('destroy');
-            $(this.parentElement).tooltip(opts);
-          }
-        })
-      }, 500)
-    });
-  ")))
-  htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
-}
 
 
 
@@ -590,19 +565,127 @@ summarize_filter <- function(filter_namespace, filter_var, name, status, include
 }
 
 
+# ================================================= #
+#           More convenience functions              ####
+# ================================================= #
 
 
+# tooltip for radiogroupbutton and radiobuttons
+#-----------------------------------------------------
+# lets you put separate tooltips on radiogroupbutton and radiobutton choices
+# Call this instead of bsTooltip 
 
+radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hover", options = NULL){
+  
+  options = shinyBS:::buildTooltipOrPopoverOptionsList(title, placement, trigger, options)
+  # options <- c(options, width="100px")
+  options = paste0("{'", paste(names(options), options, sep = "': '", collapse = "', '"), "'}")
+  bsTag <- shiny::tags$script(shiny::HTML(paste0("
+    $(document).ready(function() {
+      setTimeout(function() {
+        $('input', $('#", id, "')).each(function(){
+          if(this.getAttribute('value') == '", choice, "') {
+            opts = $.extend(", options, ", {html: true});
+            $(this.parentElement).tooltip('destroy');
+            $(this.parentElement).tooltip(opts);
+          }
+        })
+      }, 500)
+    });
+  ")))
+  htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
+}
+
+# Multiple reqs
+#-----------------------------------------------------
 # req multiple cols in a df
+# example: req_cols(df, c("Name_data1", "Stat_data1", "PValue_data1", "FDR_data1"))
 req_cols <- function(df, col_list){
   for (i in col_list){
     req(df[[i]])
   }
 }
 
-# req multiple vars to be not null
-req_vars <- function(df, var_list){
+# req multiple vars to be not NULL
+# example: req_vars(c(input$a, input$b, input$c), check_len=T, FUN=length)
+# check_len: checks if lengths are >0
+req_vars <- function(var_list, check_len=F, FUN=length){
   for (i in var_list){
     req(is.null(var)==F)
+    if(check_len==T){
+      req(FUN(var)>0)
+    }
   }
 }
+
+# req a df to exist and contain things
+req_df <- function(df){
+  req(is.null(df)==F) # exists
+  req(nrow(df)>0) # enough rows
+  req(ncol(df)>0) # enough cols
+}
+
+
+
+# update vars from input to rv
+#----------------------------------------------------
+input2rv <- function(var_list){
+  for (var in var_list){
+    if(is.null(input[[var]])==F){ 
+      rv[[var]] <- input[[var]] 
+      }
+  }
+}
+
+
+
+# ================================================= #
+#           Intersection extraction                ####
+# ================================================= #
+
+# extract intersection of several gene lists from a df
+#-------------------------------------------------
+# out types: "Full"= all the columns; 
+# "Minimized"=only Name, Stat, PValue, FDR columns;
+# "T/F Matrix"= a true/false matrix only
+# include background: whether to include genes not in any gene list
+
+extract_intersection <- function(gls, criteria, df, out_type="Full", include_background=T){
+  
+  if (include_background==T){
+    all_genes <- df$Name
+  } else if (include_background==F){
+    all_genes <- unique(unlist(gls))
+  }
+  
+  # turn gls into list of T/F vectors
+  xx <- lapply(seq_along(names(gls)),function(x){
+    all_genes %in% gls[[names(gls)[[x]]]]
+  })
+  names(xx) <- names(gls)
+  
+  # assemble into a T/F df (the gls matrix)
+  glm <- data.frame(xx, row.names = all_genes)
+  
+  # get subset of genes based on t/f table
+  subset <- glm[apply(glm,1,function(x) {
+    match_skipna(x,rv$ins_criteria)
+  }),]
+  
+  genelist <- rownames(subset) # these are gene list
+  
+  if (out_type=="Full"){
+    out <- df[df$Name %in% genelist,] # extract the rows from full df
+  } else if (out_type=="Minimized"){
+    xx <- dplyr::select(df, contains(c("Name","Stat", "PValue", "FDR")))
+    # print(head(xx))
+    out <- xx[xx$Name %in% genelist,]
+  } else if (out_type=="T/F Matrix"){
+    out <- as.data.frame(subset)
+    out <- cbind(rownames(out),out)
+    colnames(out)[[1]] <- "Name"
+  }
+  out
+}
+
+

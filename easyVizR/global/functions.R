@@ -1,4 +1,6 @@
-# ------------- Miscellaneous functions ------------------
+# ================================================= #
+#                   Calculation                   ####
+# ================================================= #
 
 # calculate and append rank
 append_rank = function(x){
@@ -8,7 +10,38 @@ append_rank = function(x){
 remove_nas = function(x){return (x[complete.cases(x), ])}
 
 
+
+# ================================================= #
+#                Numeric processing                 ####
+# ================================================= #
+
+# round down to an integer or decimal value
+#----------------------------------------------
+roundDown <- function(x,to=0.01)
+{
+  to*(x%/%to - as.logical(x%%to))+to
+}
+
+# function to generate a input scale from max value
+#----------------------------------------------
+generate_scale <- function(n, ivs=10){
+  logscale = 10^floor(log10(n/ivs))
+  step = roundDown(n/ivs,logscale)
+  max=roundDown(n,step)
+  seq(0,max,step)
+}
+
+
+
+# ================================================= #
+#                Text processing                    ####
+# ================================================= #
+
+
 # tidy filenames and prevent duplicates
+#--------------------------------------------
+# duplicate filenames will be appended with (2)
+
 tidy_filename <- function(name, ll){
   # get rid of extension
   name <- gsub(".csv","",name)
@@ -24,31 +57,27 @@ tidy_filename <- function(name, ll){
   return(name)
 }
 
+# add line breaks to long texts
+#-----------------------------------------------
+# use to break long hovertexts
+
 addlinebreaks <- function(x, max, lbtype="<br>"){
   # this cuts at spaces/ ;/ underscore/ period
   gsub(paste0('(.{1,',max,'})(\\s|;|_|\\.|$)'), paste0('\\1',lbtype), x)
 }
 
-# pattern matching of t/f vector. in the pattern, na is what you don't care about.
-match_skipna <- function(x,pattern){
-  match <- na.omit(x==pattern)
-  return(all(match))
-}
 
 
-roundDown <- function(x,to=0.01)
-{
-  to*(x%/%to - as.logical(x%%to))+to
-}
 
-generate_scale <- function(n, ivs=10){
-  logscale = 10^floor(log10(n/ivs))
-  step = roundDown(n/ivs,logscale)
-  max=roundDown(n,step)
-  seq(0,max,step)
-}
+
+# ================================================= #
+#                 Matching functions                ####
+# ================================================= #
+
 
 # match string to list and return first match in list. if not found, return null
+# (use this to detect and match column names)
+#----------------------------------------------
 # input (string, list_of_strings)
 firstmatch <- function(x,y){
   matches <- lapply(x, function(i){
@@ -61,6 +90,7 @@ firstmatch <- function(x,y){
 }
 
 # match string to list and return the string that is matched
+#---------------------------------------------
 itemmatched <- function(x,y){
   matches <- lapply(x, function(i){
     grep(i,y)
@@ -74,8 +104,24 @@ itemmatched <- function(x,y){
   else return(x[[t]])
 }
 
-# ------------- Database management functions ------------------
 
+# pattern matching of TF vector to a specified pattern (also a TF vector)
+# use this for finding genes in an intersection 
+#-----------------------------------------------
+# input: c(T,F,F), c(T, NA, F)
+# output: TRUE
+match_skipna <- function(x,pattern){
+  match <- na.omit(x==pattern)
+  return(all(match))
+}
+
+
+
+# ================================================= #
+#                Dataframe functions                ####
+# ================================================= #
+
+# MASTER DATAFRAME BUILDING
 # given a vector of df names, merge those dfs and annotate the columns with df names
 #-----------------------------
 # example: df_n <- build_df_n(input$heatmap_dfs, rv$gg, rv$ll, input_mode="names")
@@ -106,6 +152,7 @@ build_df_n <- function(input, gg, ll, input_mode){
   return(df)
 }
 
+# SHARED DIMENSIONS
 # given a vector of df names, detect number of shared cols and rows
 #-----------------------------
 # example: detect_shared_dimensions(rv$heatmap_i, rv$gg, rv$ll, input_mode="indices")
@@ -137,8 +184,45 @@ detect_shared_dimensions <- function(input, gg, ll, input_mode){
 }
 
 
+# get cols or colnames by class
+#------------------------------------
+# output_type: statnames = the statistic name only, (e.g. PValue)
+# colnames = full names of all the fitting cols
+# cols = Name column, plus all the fitting cols content
+# example: get_cols_by_class(df, is.numeric, output_type="cols")
 
-# ------------- filtering functions ------------------
+get_cols_by_class <- function(df, FUN, output_type="statnames"){
+  # get all numeric columns
+  num_cols <- lapply(seq_along(df), function(x){
+    if (FUN(df[[x]])){
+      colnames(df)[[x]]
+    }
+  })
+  num_cols <- na.omit(unlist(num_cols))
+  
+  if (output_type=="statnames"){
+    # get the strings before underscore and filter out the unique ones
+    out <- unique(unlist(lapply(num_cols, function(x){
+      strsplit(x, "_")[[1]][[1]]
+    })))
+    
+  } else if (output_type=="colnames"){
+    out <- num_cols
+  } else if (output_type=="cols"){
+    # get the Name column and the cols content
+    out <- df[,unique(c("Name", num_cols))]
+  }
+  
+  out
+}
+
+
+
+
+
+# ================================================= #
+#                Dataframe FILTERING                ####
+# ================================================= #
 
 # apply cutoffs globally
 #-----------------------------
@@ -168,15 +252,12 @@ apply_n_cutoffs <- function(df, p, q, stat, tolerate=F){
       filter(m > stat)
     df <- df[1:(length(df)-1)] # delete last helper column
   }
-  
-  
-  
   return(df)
 }
 
 
 
-# apply cutoffs to a single dataset
+# apply cutoffs to a single dataset (USE THIS)
 #-----------------------------
 # example: apply_single_cutoff(df_n, "efk1SvF", p=0.05, q=0.05, stat=1, tolerate=F)
 # this applies the cutoff to cols named "PValue_efk1SvF", "FDR_efk1SvF", "Stat_efk1SvF"
@@ -201,7 +282,7 @@ apply_single_cutoff <- function(df, colname, p, q, stat, tolerate=F){
 }
 
 
-# filter column by sign.
+# filter column by sign. (USE THIS)
 #-----------------------------
 # example: filter_by_sign(df_n, "Stat_efk1SvF", sign="Positive", tolerate=F)
 # df: the df you want filtered; 
@@ -233,40 +314,10 @@ filter_by_sign <- function(df, colname, sign, tolerate=F){
 }
 
 
-# get cols or colnames by class
-#------------------------------------
-# output_type: statnames = the statistic name only, (e.g. PValue)
-# colnames = full names of all the fitting cols
-# cols = Name column, plus all the fitting cols content
 
-get_cols_by_class <- function(df, FUN, output_type="statnames"){
-  # get all numeric columns
-  num_cols <- lapply(seq_along(df), function(x){
-    if (FUN(df[[x]])){
-      colnames(df)[[x]]
-    }
-  })
-  num_cols <- na.omit(unlist(num_cols))
-  
-  if (output_type=="statnames"){
-    # get the strings before underscore and filter out the unique ones
-    out <- unique(unlist(lapply(num_cols, function(x){
-      strsplit(x, "_")[[1]][[1]]
-    })))
-    
-  } else if (output_type=="colnames"){
-    out <- num_cols
-  } else if (output_type=="cols"){
-    # get the Name column and the cols content
-    out <- df[,unique(c("Name", num_cols))]
-  }
-  
-  out
-}
-
-# example: get_cols_by_class(df, is.numeric, output_type="cols")
-
-
+# ================================================= #
+#                Data summarizing                   ####
+# ================================================= #
 
 
 # generate summary df for factor column (e.g. color)
@@ -291,6 +342,10 @@ summarize_factor_column <- function(df, colname="color"){
 
 
 
+# ================================================= #
+#                CSS / HTML styling                 ####
+# ================================================= #
+
 
 # calculate dropdown ui width when containing multiple divs
 # -------------------------------------------
@@ -308,25 +363,27 @@ calc_dropdown_width <- function(box_n, box_width, margin_width, max_per_row=3, u
 
 
 
-# add help buttons to labels (need to wrap again in HTML)
+# LABELS WITH HELP BUTTONS 
+#----------------------------------------------------------
+# (need to wrap in HTML)
 # example of use: label=HTML("Label here", add_help("id1", style="padding:1px 1px 1px 1px;") )
 add_help <- function(id, color="#00c0ef", style=""){
   out <- paste0("<i class='fa fa-question-circle' 
                 style = 'color:",color,";
                 font-size:medium;",style,"' 
                 id='",id,"'></i>")
-  
   HTML(out)
 }
 
 
+# LABELS WITH CLICKABLE BS BUTTON 
+#----------------------------------------------------------
 # construct a label with a clickable help bs button
 label_with_help_bttn <- function(label_text, bttn_id, bttn_status="info", bttn_style=""){
   p(style="margin-block-end: 2px;",
     label_text,
     tags$style(type = "text/css", paste0("#",bttn_id,"{display: inline-block;width: 17px;height: 17px;padding: 0;border-radius: 50%;vertical-align: text-top;margin-left: 3px;font-size: 10px;padding-top: 1px;",bttn_style,"}")),
     bsButton(bttn_id, label = "", icon = icon("question"), style = bttn_status, size = "extra-small"))
-  
 }
 
 
@@ -347,7 +404,8 @@ guide_box <- function(msg, color="blue", width=12){
 
 
 
-# function to detect if box is collapsed
+# function to detect if box is collapsed (keep in global)
+#-------------------------------------------------------
 # need to call in ui  like so: collapseInput(inputId = "iscollapsebox1", boxId = "box1"),
 # access the value using input$iscollapsebox1
 collapseInput <- function(inputId, boxId) {

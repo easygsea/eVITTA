@@ -152,7 +152,7 @@ output$n_ins_tbl <- DT::renderDataTable({
   req(length(rv$ins_criteria)>0)
 
   df <- n_ins_df()
-  print(head(n_ins_df()))
+  # print(head(n_ins_df()))
   
   rv$df_ins_fullcols <- colnames(df)
   
@@ -207,7 +207,7 @@ output$download_ins_gl <- downloadHandler(
   filename = function() {
     paste("names", "-", "multiple", "-", Sys.Date(), ".txt", sep="")},
   content = function(file) {
-    ins <- n_ins_fgl()
+    ins <- n_ins_full()$Name
     fwrite(list(ins), file, sep=",", 
            row.names = F, quote=F)
   }
@@ -368,7 +368,7 @@ map2color<-function(x,pal,limits=NULL){
 
 # compute the frequency table
 n_ins_wc_df <- reactive({
-  vc <- n_ins_fgl()
+  vc <- n_ins_full()$Name
   sep <- input$n_ins_wc_sep
   words <- unlist(lapply(vc, function(x){
     toupper(unlist(strsplit(x, sep)))
@@ -408,7 +408,7 @@ n_ins_wc_plt <- reactive({
 })
 
 output$n_ins_wc <- renderPlot({
-  req(length(n_ins_fgl())>0)
+  req(length(n_ins_full()$Name)>0)
   
   n_ins_wc_plt()
 })
