@@ -643,6 +643,23 @@ input2rv <- function(var_list){
 #           Intersection extraction                ####
 # ================================================= #
 
+# pattern matching of TF vector to a specified pattern (also a TF vector)
+# use this for finding genes in an intersection 
+#-----------------------------------------------
+# input: c(T,F,F), c(T, NA, F)
+# output: TRUE
+match_skipna <- function(x,pattern, mode="all"){
+  match <- na.omit(x==pattern)
+  if (mode=="all"){
+    return(all(match))
+  } else if (mode=="any"){
+    return(any(match))
+  }
+  
+}
+
+
+
 # extract intersection of several gene lists from a df
 #-------------------------------------------------
 # out types: "Full"= all the columns; 
@@ -650,7 +667,9 @@ input2rv <- function(var_list){
 # "T/F Matrix"= a true/false matrix only
 # include background: whether to include genes not in any gene list
 
-extract_intersection <- function(gls, criteria, df, out_type="Full", include_background=T){
+extract_intersection <- function(gls, criteria, df, out_type="Full", include_background=T, partial_match=F){
+  req_vars(c(gls, criteria, df))
+  req(length(gls)==length(criteria))
   
   if (include_background==T){
     all_genes <- df$Name
@@ -669,7 +688,12 @@ extract_intersection <- function(gls, criteria, df, out_type="Full", include_bac
   
   # get subset of genes based on t/f table
   subset <- glm[apply(glm,1,function(x) {
-    match_skipna(x,rv$ins_criteria)
+    if (partial_match==F){
+      match_skipna(x,criteria, mode="all")
+    } else if (partial_match==T){
+      match_skipna(x,criteria, mode="any")
+    }
+    
   }),]
   
   genelist <- rownames(subset) # these are gene list
@@ -689,3 +713,35 @@ extract_intersection <- function(gls, criteria, df, out_type="Full", include_bac
 }
 
 
+
+# filter df according to a specified dflogic
+#-------------------------------------------
+# Ins: current intersection
+# Both: common intersection in all
+# Either: contained in any gene list
+# this returns a df that can be used by a plotting function
+get_df_by_dflogic <- function(selected, dflogic, gls, user_criteria, starting_df, ref=rv$nx_n){
+  # replace all the values in user criteria to get a dummy, all-true criteria
+  all_true_criteria <- replace(user_criteria, names(user_criteria), TRUE)
+  
+  if (dflogic=="Ins"){
+    to_plot_df <- extract_intersection(gls = gls, 
+                                       criteria = user_criteria, 
+                                       df = starting_df, 
+                                       out_type = "Full", partial_match=F)
+    # print(rv$ins_criteria)
+  } else if (dflogic=="Both"){ 
+    to_plot_df <- extract_intersection(gls = gls, 
+                                       criteria = all_true_criteria, 
+                                       df = starting_df, 
+                                       out_type = "Full", partial_match=F)
+    # print(all_true_criteria)
+  } else if (dflogic=="Either"){
+    to_plot_df <- extract_intersection(gls = gls, 
+                                       criteria = all_true_criteria, 
+                                       df = starting_df, 
+                                       out_type = "Full", partial_match=T)
+    # print(all_true_criteria)
+  }
+  to_plot_df
+}

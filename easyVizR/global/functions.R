@@ -105,15 +105,7 @@ itemmatched <- function(x,y){
 }
 
 
-# pattern matching of TF vector to a specified pattern (also a TF vector)
-# use this for finding genes in an intersection 
-#-----------------------------------------------
-# input: c(T,F,F), c(T, NA, F)
-# output: TRUE
-match_skipna <- function(x,pattern){
-  match <- na.omit(x==pattern)
-  return(all(match))
-}
+
 
 
 

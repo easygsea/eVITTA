@@ -27,14 +27,17 @@ observe({
   # 2D scatter
   input2rv(c(
     "nxy_selected_x","nxy_selected_y","nxy_selected_z",
-    "nxy_colormode","nxy_sig","nxy_thresh","nxy_sc_size","n_sc_logic"
+    "nxy_colormode","nxy_sig","nxy_thresh","nxy_sc_size","n_sc_logic",
+    "nxy_p", "nxy_q", "nxy_stat",
+    "nxy_sc_plotmode", "nxy_sc_dflogic"
   ))
   
   # 3D scatter
   input2rv(c(
     "nxyz_colormode","nxyz_sc_logic",
     "n_3ds_p","n_3ds_q","n_3ds_Stat",
-    "nxyz_sc_size"
+    "nxyz_sc_size",
+    "nxyz_sc_plotmode","nxyz_sc_dflogic"
   ))
   
   # single volcano
@@ -160,7 +163,12 @@ observeEvent(input$n_use_data,{
     rv$nxy_sig <- "PValue"
     rv$nxy_thresh <- 0.01
     rv$nxy_sc_size <- 3
+    rv$nxy_p <- 0.05
+    rv$nxy_q <- 1
+    rv$nxy_stat <- 0.5
     rv$n_sc_logic <- "Both"
+    rv$nxy_sc_plotmode <- "Focus"
+    rv$nxy_sc_dflogic <- "Ins"
     
     # 3d scatter
     rv$nxyz_sc_logic <- "Both"
@@ -169,6 +177,8 @@ observeEvent(input$n_use_data,{
     rv$n_3ds_q <- 1
     rv$n_3ds_Stat <- 0
     rv$nxyz_sc_size <- 3
+    rv$nxyz_sc_plotmode <- "Focus"
+    rv$nxyz_sc_dflogic <- "Ins"
     
     
     # --------------- single options
@@ -278,9 +288,6 @@ n_ins_gls <- reactive({
 
 # 2. find intersection according to gene lists and criteria, and output as df
 n_ins_full <- reactive({
-  req_df(df_n_basic())
-  req_vars(c(n_ins_gls(), rv$ins_criteria), check_len=T, FUN=length)
-  req(length(rv$ins_criteria)==length(rv$nx_i))
   
   out <- extract_intersection(gls = n_ins_gls(), 
                               criteria = rv$ins_criteria, 

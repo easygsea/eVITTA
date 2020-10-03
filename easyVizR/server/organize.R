@@ -827,8 +827,8 @@ observeEvent(input$file, {
   # rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1, encoding = 'UTF-8', stringsAsFactors=FALSE))
   
   # rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1,local = locale(encoding = "latin1")))
-  rv$upload_columns <- colnames(read.csv(inFile$datapath, fileEncoding = "Latin1", check.names = F, nrows=1))
-
+  rv$upload_columns <- colnames(read.csv(inFile$datapath, fileEncoding = "Latin1", check.names = T, nrows=1))
+  
   
   for(i in seq_along(rv$upload_columns)){
     #delete the unrecognized character

@@ -72,20 +72,59 @@ output$nxy_colormode_options <- renderUI({
   req(rv$nxy_colormode !="None")
   if(rv$nxy_colormode =="Two colors"){
     div(
-      radioButtons(
-        inputId = "nxy_sig",
-        label = "Significance:",
-        choices = c("PValue", "FDR"),
-        selected="PValue", inline=T),
-      numericInput("nxy_thresh", 
-                   "Threshold:", value = 0.01, min = 0, max = 1, step=0.001, width="100px"),
-      radioGroupButtons("n_sc_logic",
-                        label = "Cutoff mode:",
-                        choices=c("OR" ="Either", "AND" = "Both"),
-                        selected="Both",size="s")
-      , 
-      uiOutput("nxy_logic_caption")
+      "Color threshold options:",
+      fluidRow(
+        column(6,
+               numericInput("nxy_p", 
+                            "P <:", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),
+        ),
+        column(6,
+               numericInput("nxy_q", 
+                            "FDR <:", value = 1, min = 0, max = 1, step=0.001, width="100px"),
+        ),
+      ),
+      fluidRow(
+        column(6,
+               numericInput("nxy_stat", 
+                            stat_replace1("|Stat| >:",c(rv$nxy_selected_x, rv$nxy_selected_y)),
+                            value = 0.5, min = 0, max = 10, step=0.1, width="100px"),
+        ),
+        column(6,
+               radioGroupButtons("n_sc_logic",
+                                 label = HTML(paste0(
+                                   "Color logic:",
+                                   add_help("n_sc_logic_help", style="margin-left: 5px;"))
+                                 ),
+                                 choices=c("OR" ="Either", "AND" = "Both"),
+                                 selected="Both",size="s"), 
+               bsTooltip("n_sc_logic_help", 
+                         "<b>AND</b>: highlights if conditions are met for <b>ALL</b> datasets.<br><b>OR</b>: highlights if conditions are met for <b>ANY</b> dataset.", 
+                         placement = "right"),
+        )
+      ),
+      
+      # uiOutput("nxyz_logic_caption"),
     )
+    # div(
+    #   radioButtons(
+    #     inputId = "nxy_sig",
+    #     label = "Significance:",
+    #     choices = c("PValue", "FDR"),
+    #     selected="PValue", inline=T),
+    #   numericInput("nxy_thresh", 
+    #                "Threshold:", value = 0.01, min = 0, max = 1, step=0.001, width="100px"),
+    #   radioGroupButtons("n_sc_logic",
+    #                     label = HTML(paste0(
+    #                       "Color logic:",
+    #                       add_help("nxy_sc_logic_help", style="margin-left: 5px;"))
+    #                     ),
+    #                     choices=c("OR" ="Either", "AND" = "Both"),
+    #                     selected="Both",size="s"), 
+    #   bsTooltip("nxy_sc_logic_help", 
+    #             "<b>AND</b>: highlights if conditions are met for <b>ALL</b> datasets.<br><b>OR</b>: highlights if conditions are met for <b>ANY</b> dataset.", 
+    #             placement = "right"),
+    #   # uiOutput("nxy_logic_caption")
+    # )
   } else if (rv$nxy_colormode =="Color and size"){
     radioButtons(
       inputId = "nxy_sig",
@@ -118,13 +157,30 @@ nxy_sc_plt <- reactive({
   req(is.null(rv$nxy_selected_x)==F)
   req(is.null(rv$nxy_selected_y)==F)
   
-  withProgress(message = 'Making graph...', value = 0, {
+  # withProgress(message = 'Making graph...', value = 0, {
+  
+  selected <- c(rv$nxy_selected_x, rv$nxy_selected_y)
+  to_plot_df <- get_df_by_dflogic(selected, dflogic = rv$nxy_sc_dflogic, 
+                                  gls = n_ins_gls(),
+                                  user_criteria = rv$ins_criteria,
+                                  starting_df =df_n_basic()
+                                  )
+  # print(nrow(to_plot_df))
     
-    # df <- n_nxy_df()
-    df <- n_ins_full()
-    print(head(df))
     
-    selected <- c(rv$nxy_selected_x, rv$nxy_selected_y)
+    # these are the plotted genes
+    df_ins <- to_plot_df$Name 
+    
+    if (rv$nxy_sc_plotmode=="Focus"){ # plot intersection only
+      df <- to_plot_df
+    } else if (rv$nxy_sc_plotmode=="Context"){ # plot all genes
+      df <- to_plot_df
+      df <- rbind(rv$df_n[-which(rv$df_n$Name %in% df_ins),], df) # make sure the ins is plotted first
+    }
+    
+    # initialize colnames
+    sig= rv$nxy_sig
+    thresh <- rv$nxy_thresh
     xsig <- paste(rv$nxy_sig, selected[[1]], sep="_")
     ysig <- paste(rv$nxy_sig, selected[[2]], sep="_")
     xstat <- paste("Stat", selected[[1]], sep="_")
@@ -133,55 +189,91 @@ nxy_sc_plt <- reactive({
     yp <- paste("PValue", selected[[2]], sep="_")
     xq <- paste("FDR", selected[[1]], sep="_")
     yq <- paste("FDR", selected[[2]], sep="_")
+    print(c(rv$nxy_p, rv$nxy_q, rv$nxy_stat))
+    pthresh <- rv$nxy_p
+    qthresh <- rv$nxy_q
+    statthresh <- rv$nxy_stat
     
     req_cols(df, c(xsig, ysig, xstat, ystat, xp, yp, xq, yq))
     
+    # initialize df
     df[df==0]<-0.00001 # replace 0 with 0.001
     df <- remove_nas(df)
     
     req(nrow(df)>0)
     
+    # initialize custom variables
+    discrete_c1 = "red"
+    discrete_c2 = "black"
+    discrete_c3 = "lightgray"
+    size = rv$nxy_sc_size
+    size1 = size+2 # default dot size, initialized to 5
+    size2 = (rv$nxy_sc_size-1) + 3 # size multiplier for the color & size option; initialized to 2+3
+    linewidth = 1
+    linecolor="white"
+    opacity=0.7
+    
+    
     incProgress(0.2)
     
     # initialize marker settings as none
-    df$color <- "black"
+    df$color <- discrete_c3
     df$color <- as.factor(df$color)
-    df$size <- rv$nxy_sc_size+2 # initialized to 5
-    marker_settings <- list(
-      color= df$color, size= df$size, 
-      line = list(color = 'white', width = 0))
+    df$size <- size1
     
     incProgress(0.2)
-    
-    if (rv$nxy_colormode== "Two colors"){ 
-      #print(head(df))
+    if (rv$nxy_colormode== "None"){
+      df$color <- as.character(df$color)
+      df$color[which(df$Name %in% df_ins)] <- discrete_c2
+      df$color <- as.factor(df$color)
       
+      marker_settings <- list(
+        color= df$color, size= df$size, opacity=opacity,
+        line = list(color = linecolor, width = linewidth))
+      
+    } else if (rv$nxy_colormode== "Two colors"){ 
+
       # color by AND or OR logic
       df$color <- as.character(df$color)
+      df$color[which(df$Name %in% df_ins)] <- discrete_c2 # dots in the genelist
+      
+      # highlighted dots
       if (rv$n_sc_logic == "Both"){
-        df$color[which(df[[xsig]] < rv$nxy_thresh & df[[ysig]] < rv$nxy_thresh)] <- "red"
+        df$color[which(
+          df[[xp]] < pthresh & df[[xq]] < qthresh & abs(df[[xstat]]) > statthresh &
+            df[[yp]] < pthresh & df[[yq]] < qthresh & abs(df[[ystat]]) > statthresh
+          )] <- discrete_c1
       } else if (rv$n_sc_logic == "Either"){
-        df$color[which(df[[xsig]] < rv$nxy_thresh | df[[ysig]] < rv$nxy_thresh)] <- "red"
+        df$color[which(
+          (df[[xp]] < pthresh & df[[xq]] < qthresh & abs(df[[xstat]]) > statthresh) |
+            (df[[yp]] < pthresh & df[[yq]] < qthresh & abs(df[[ystat]]) > statthresh)
+          )] <- discrete_c1
       }
       
       df$color <- as.factor(df$color)
+      df$size <- size1
       
-      df$size <- rv$nxy_sc_size+2 # initialized to 5
       marker_settings <- list(
-        color= df$color, size= df$size, 
-        line = list(color = 'white', width = 1))
+        color= df$color, size= df$size, opacity=opacity,
+        line = list(color = linecolor, width = linewidth))
     }
     else if (rv$nxy_colormode== "Color and size"){
+      
       df[df==0]<-0.00001 # replace 0 with 0.001
       df$color <- -log10(as.numeric(df[[xsig]]))
       df$color <- as.numeric(df$color)
-      df$size <- -log10(as.numeric(df[[ysig]]))* (rv$nxy_sc_size-1) + 3 # initialized to 2+3
+      df$size <- -log10(as.numeric(df[[ysig]]))* size2
       #print(head(df))
+      
+      # background dots color
+      df$color[-which(df$Name %in% df_ins)] <- discrete_c3
+      df$size[-which(df$Name %in% df_ins)] <- size1
+      
       marker_settings <- list(
         color= df$color, size= df$size,
-        opacity=.7, line = list(color = 'white', width = 1),
+        opacity=opacity, line = list(color = linecolor, width = linewidth),
         colorscale=cscale, cauto=F, cmin=0, cmax=3,
-        colorbar=list(title=paste0('-log10(',rv$nxy_sig,'(x))')))
+        colorbar=list(title=paste0('-log10(',sig,'(x))')))
     }
     
     # generate properties table only when two color mode is selected
@@ -195,7 +287,7 @@ nxy_sc_plt <- reactive({
     lm_fun <- paste0("`", xstat, "` ~ `", ystat, "`")
     rv$fit_nxy <- lm(lm_fun, data = df)
     
-    print(head(df))
+    # print(head(df))
     
     stat_replacements <- stat_replace1(rep("Stat",2), selected, mode="each")
     
@@ -217,11 +309,11 @@ nxy_sc_plt <- reactive({
       ))
     )
     fig <- fig %>% layout(title = paste0(rv$nxy_selected_x, " vs ", rv$nxy_selected_x, " (n=",nrow(df),")"),
-                          yaxis = list(zeroline = T, title=stat_replace1(paste0("Stat_",rv$nxy_selected_y),rv$nxy_selected_y)),
-                          xaxis = list(zeroline = T, title=stat_replace1(paste0("Stat_",rv$nxy_selected_x),rv$nxy_selected_x))
+                          yaxis = list(zeroline = T, title=stat_replace1(paste0("Stat_",selected[[2]]),selected[[2]])),
+                          xaxis = list(zeroline = T, title=stat_replace1(paste0("Stat_",selected[[1]]),selected[[1]]))
     )
     
-  })
+  # })
   return(fig)
 })
 
@@ -355,13 +447,19 @@ output$nxyz_colormode_options <- renderUI({
                ),
         column(6,
                radioGroupButtons("nxyz_sc_logic",
-                                 label = "Cutoff mode:",
+                                 label = HTML(paste0(
+                                   "Color logic:",
+                                   add_help("nxyz_sc_logic_help", style="margin-left: 5px;"))
+                                 ),
                                  choices=c("OR" ="Either", "AND" = "Both"),
                                  selected="Both",size="s"), 
-               )
+               bsTooltip("nxyz_sc_logic_help", 
+                         "<b>AND</b>: highlights if conditions are met for <b>ALL</b> datasets.<br><b>OR</b>: highlights if conditions are met for <b>ANY</b> dataset.", 
+                         placement = "right"),
+        )
       ),
 
-      uiOutput("nxyz_logic_caption"),
+      # uiOutput("nxyz_logic_caption"),
     )
   } 
 })
@@ -370,17 +468,32 @@ output$nxyz_colormode_options <- renderUI({
 # main graph
 n_3ds_plt <- reactive({
   req(nrow(n_ins_full())>0)
-  req(is.null(rv$nxy_selected_x)==F)
-  req(is.null(rv$nxy_selected_y)==F)
-  req(is.null(rv$nxy_selected_z)==F)
+  req_vars(c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z))
   req(rv$nxy_selected_z!="None")
   
-  withProgress(message = 'Making 3D Scatter...', value = 0, {
+  # withProgress(message = 'Making 3D Scatter...', value = 0, {
+  selected <- c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z)
+  to_plot_df <- get_df_by_dflogic(selected, dflogic = rv$nxyz_sc_dflogic, 
+                                  gls = n_ins_gls(),
+                                  user_criteria = rv$ins_criteria,
+                                  starting_df =df_n_basic()
+  )
+  # print(nrow(to_plot_df))
+  
+  
+  # these are the plotted genes
+  df_ins <- to_plot_df$Name 
     
-    df <- n_ins_full()
+    if (rv$nxyz_sc_plotmode=="Focus"){ # plot intersection only
+      df <- to_plot_df
+    } else if (rv$nxyz_sc_plotmode=="Context"){ # plot all genes
+      df <- to_plot_df
+      df <- rbind(rv$df_n[-which(rv$df_n$Name %in% df_ins),], df) # make sure the ins is plotted first
+    }
+  
     df <- remove_nas(df)
     
-    selected <- c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z)
+    
     # get col names
     statcols <- paste("Stat_", selected, sep="")
     pcols <- paste("PValue_", selected, sep="")
@@ -389,12 +502,18 @@ n_3ds_plt <- reactive({
     qq <- rv$n_3ds_q
     ss <- rv$n_3ds_Stat
     
+    discrete_c1a <- "red"
+    discrete_c1b <- "blue"
+    discrete_c2 <- "black"
+    discrete_c3 <- "lightgray"
+    size1 <- rv$nxyz_sc_size-1 # default size
+    
     
     incProgress(0.2)
     
-    # default color is black. conditionally color by threshold.
-    df$color <- "black"
-    
+    # default color is here. conditionally color by threshold.
+    df$color <- discrete_c3
+    df$color[which(df$Name %in% df_ins)] <- discrete_c2
     # assign color by certain criteria
     if (rv$nxyz_colormode == "Two colors"){
       if (rv$nxyz_sc_logic == "Both"){
@@ -403,23 +522,23 @@ n_3ds_plt <- reactive({
           (df[[pcols[[1]]]] < pp & df[[qcols[[1]]]] < qq & df[[statcols[[1]]]] > ss) &
             (df[[pcols[[2]]]] < pp & df[[qcols[[2]]]] < qq & df[[statcols[[2]]]] > ss) &
             (df[[pcols[[3]]]] < pp & df[[qcols[[3]]]] < qq & df[[statcols[[3]]]] > ss), 
-          "red", "gray")
+          discrete_c1a, df$color)
         df$color <- ifelse(
           (df[[pcols[[1]]]] < pp & df[[qcols[[1]]]] < qq & df[[statcols[[1]]]] < -ss) &
             (df[[pcols[[2]]]] < pp & df[[qcols[[2]]]] < qq & df[[statcols[[2]]]] < -ss) &
             (df[[pcols[[3]]]] < pp & df[[qcols[[3]]]] < qq & df[[statcols[[3]]]] < -ss), 
-          "blue", df$color)
+          discrete_c1b, df$color)
       } else if (rv$nxyz_sc_logic == "Either"){
         df$color <- ifelse(
           (df[[pcols[[1]]]] < pp & df[[qcols[[1]]]] < qq & df[[statcols[[1]]]] > ss) |
             (df[[pcols[[2]]]] < pp & df[[qcols[[2]]]] < qq & df[[statcols[[2]]]] > ss) |
             (df[[pcols[[3]]]] < pp & df[[qcols[[3]]]] < qq & df[[statcols[[3]]]] > ss), 
-          "red", "gray")
+          discrete_c1a, df$color)
         df$color <- ifelse(
           (df[[pcols[[1]]]] < pp & df[[qcols[[1]]]] < qq & df[[statcols[[1]]]] < -ss) |
             (df[[pcols[[2]]]] < pp & df[[qcols[[2]]]] < qq & df[[statcols[[2]]]] < -ss) |
             (df[[pcols[[3]]]] < pp & df[[qcols[[3]]]] < qq & df[[statcols[[3]]]] < -ss), 
-          "blue", df$color)
+          discrete_c1b, df$color)
       }
       df$color <- as.factor(df$color)
     }
@@ -428,7 +547,7 @@ n_3ds_plt <- reactive({
     
     stat_replacements <- stat_replace1(rep("Stat",3), selected, mode="each")
     
-    fig <- plot_ly(df, x = df[[statcols[[1]]]], y = df[[statcols[[2]]]], z = df[[statcols[[3]]]], marker = list(color = df$color, size=rv$nxyz_sc_size-1),
+    fig <- plot_ly(df, x = df[[statcols[[1]]]], y = df[[statcols[[2]]]], z = df[[statcols[[3]]]], marker = list(color = df$color, size=size1),
                    hoverinfo="text",
                    text=c(paste0(
                      df$Name, 
@@ -452,7 +571,7 @@ n_3ds_plt <- reactive({
                                        yaxis = list(title = paste0(statcols[[2]])),
                                        zaxis = list(title = paste0(statcols[[3]]))))
     
-  })
+  # })
   fig
 })
 
