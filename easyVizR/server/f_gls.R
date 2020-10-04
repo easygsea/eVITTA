@@ -340,11 +340,30 @@ observe({
                         gl = n_ins_gls()[[x]], 
                         master_df = rv$df_n, 
                         round=3)
-      
-      rv[[paste0("f_rv_rown_",x)]] <- nrow(df)
+      rv[[paste0("f_rv_rown_",x)]] <- nrow(df) # save the rown into rv for display
       df
       
     }, options=list(scrollX=T, pageLength = 5, dom = 'tpr', pagingType = "simple"), rownames= FALSE)
+  })
+})
+
+# show the filtered tables based on the stable rv
+observe({
+  req(is.null(rv$nx_n)==F)
+  lapply(1:length(rv$nx_n), function(x) {
+    output[[paste0('TT_dl', x)]] <- downloadHandler( # needs to be exactly the same as table render
+      filename = function() {
+        paste("genelist", "-", rv$nx_n[[x]], "-", Sys.Date(), ".csv", sep="")},
+      content = function(file) {
+        write.csv({
+          
+          df <- gl_to_table(name = rv$nx_n[[x]], 
+                            gl = n_ins_gls()[[x]], 
+                            master_df = rv$df_n, 
+                            round=0) # no rounding
+          df
+          
+        }, file, row.names = F, quote=TRUE)})
   })
 })
 
@@ -414,6 +433,7 @@ output$f_filtering_ui <- renderUI({
                              placement = "top"),
                    uiOutput(paste0("T_info",i)),
                    div(dataTableOutput(paste0('T', i)), style="font-size:90%;"),
+                   
                    div(style="position: absolute;top: 150px;right: -15px;color: cornflowerblue;font-size: 23px;",
                        icon("arrow-right")
                    )
@@ -431,7 +451,19 @@ output$f_filtering_ui <- renderUI({
                    br(),
                    HTML(paste0("<i>", length(n_ins_gls()[[i]]),
                                " out of ", nrow(rv$df_n), " total</i>")),
-                   div(dataTableOutput(paste0('TT', i)), style="font-size:90%;")
+                   div(dataTableOutput(paste0('TT', i)), style="font-size:90%;"),
+                   
+                   # dropdowns
+                   div(style = "position: absolute; left: 1em; bottom: 0.5em",
+                       dropdown(
+                         downloadButton(paste0('TT_dl', i), "Download saved gene list")
+                         ,
+                         size = "xs",
+                         icon = icon("download", class = "opt"),
+                         up = TRUE
+                       )
+                   )
+                   
             )
             
             

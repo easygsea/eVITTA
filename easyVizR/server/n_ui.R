@@ -1,3 +1,10 @@
+plotmode_label <- "Show excluded datapoints in the background?"
+plotmode_explanation <- "Whether or not to plot excluded datapoints in the background."
+dflogic_choices <- c("Current intersection" ="Ins", "Common Intersection" = "Both", "Any Intersection" ="Either")
+dflogic_explanation <- "Determine which data to show in this plot."
+dflogic_explanation_1 <- "Show currently selected intersection"
+dflogic_explanation_2 <- "Show those fulfilling filters in ALL datasets (= the intersection shared between ALL Venn circles)"
+dflogic_explanation_3 <- "Show those fulfilling filters in ANY dataset (= contained in ANY one of the Venn circles)"
 
 #======================================================================#
 ####                        Heatmap UI                              ####
@@ -154,20 +161,64 @@ output$nxy_sc_panel <- renderUI({
     ,
     div(style = "position: absolute; left: 1em; bottom: 1em",
         dropdown(
+          
+          
+          radioGroupButtons("nxy_sc_dflogic",
+                            label = HTML(paste0(
+                              "Plot which data?",
+                              add_help("nxy_sc_dflogic_help", style="margin-left: 5px;"))
+                            ),
+                            choices=dflogic_choices,
+                            selected="Ins",size="s", direction="vertical"), 
+          bsTooltip("nxy_sc_dflogic_help",
+                    dflogic_explanation,
+                    placement = "right"),
+          radioTooltip(id = "nxy_sc_dflogic", choice = "Ins", 
+                       title = dflogic_explanation_1, 
+                       placement = "right"),
+          radioTooltip(id = "nxy_sc_dflogic", choice = "Both", 
+                       title = dflogic_explanation_2, 
+                       placement = "right"),
+          radioTooltip(id = "nxy_sc_dflogic", choice = "Either", 
+                       title = dflogic_explanation_3, 
+                       placement = "right"),
+          
+          
+          
+          radioButtons(
+            inputId = "nxy_sc_plotmode",
+            HTML(paste0(
+              plotmode_label,
+              add_help("nxy_sc_plotmode_help", style="margin-left: 5px;"))
+            ),
+            choices = c("No"="Focus","Yes"="Context")
+          ),
+          bsTooltip("nxy_sc_plotmode_help", 
+                    plotmode_explanation, 
+                    placement = "right"),
+          
+          size = "xs",
+          icon = icon("gear", class = "opt"),
+          up = TRUE, width=300
+        )
+    ),
+    div(style = "position: absolute; left: 4em; bottom: 1em",
+        dropdown(
+          
           radioButtons(
             inputId = "nxy_colormode",
-            label = "Represent significance by:",
-            choices = c("None", "Two colors", "Color and size")
+            label = "Conditional coloring:",
+            choices = c("None"="None", "Discrete colors"="Two colors", "Color and size"="Color and size")
             ),
           uiOutput("nxy_colormode_options"),
           
 
           size = "xs",
-          icon = icon("gear", class = "opt"),
-          up = TRUE, width=230
+          icon = icon("fill-drip", class = "opt"),
+          up = TRUE, width=300
         )
     ),
-    div(style = "position: absolute; left: 4em; bottom: 1em",
+    div(style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
           
           numericInput(
@@ -180,16 +231,16 @@ output$nxy_sc_panel <- renderUI({
           up = TRUE, width=200
         )
     ),
-    div(style = "position: absolute; left: 7em; bottom: 1em",
+    div(style = "position: absolute; left: 10em; bottom: 1em",
         dropdown(
           uiOutput("nxy_color_summary_panel"),
           
           size = "xs",
-          icon = icon("eye-dropper", class = "opt"),
+          icon = icon("table", class = "opt"),
           up = TRUE, width=300
         )
     ),
-    div(style = "position: absolute; left: 10em; bottom: 1em",
+    div(style = "position: absolute; left: 13em; bottom: 1em",
         dropdown(
           downloadButton("scatter_nxy_dl", "Download plot"),
           
@@ -226,17 +277,41 @@ output$nxy_3ds_panel <- renderUI({
     plotlyOutput("df_n_3ds",
                  width = "100%",height = "600px"),
     
-
     div(style = "position: absolute; left: 1em; bottom: 1em",
+
         dropdown(
-          radioButtons(
-            inputId = "nxyz_colormode",
-            label = "Represent significance by:",
-            choices = c("None", "Two colors"), 
-            selected = "None"
-          ),
-          uiOutput("nxyz_colormode_options"),
+          radioGroupButtons("nxyz_sc_dflogic",
+                            label = HTML(paste0(
+                              "Plot which data?",
+                              add_help("nxyz_sc_dflogic_help", style="margin-left: 5px;"))
+                            ),
+                            choices=dflogic_choices,
+                            selected="Ins",size="s", direction="vertical"), 
+          bsTooltip("nxyz_sc_dflogic_help",
+                    dflogic_explanation,
+                    placement = "right"),
+          radioTooltip(id = "nxyz_sc_dflogic", choice = "Ins", 
+                       title = dflogic_explanation_1, 
+                       placement = "right"),
+          radioTooltip(id = "nxyz_sc_dflogic", choice = "Both", 
+                       title = dflogic_explanation_2, 
+                       placement = "right"),
+          radioTooltip(id = "nxyz_sc_dflogic", choice = "Either", 
+                       title = dflogic_explanation_3, 
+                       placement = "right"),
           
+          
+          radioButtons(
+            inputId = "nxyz_sc_plotmode",
+            HTML(paste0(
+              plotmode_label,
+              add_help("nxyz_sc_plotmode_help", style="margin-left: 5px;"))
+            ),
+            choices = c("No"= "Focus", "Yes"= "Context")
+          ),
+          bsTooltip("nxyz_sc_plotmode_help", 
+                    plotmode_explanation, 
+                    placement = "right"),
           
           size = "xs",
           icon = icon("gear", class = "opt"),
@@ -244,6 +319,23 @@ output$nxy_3ds_panel <- renderUI({
         )
     ),
     div(style = "position: absolute; left: 4em; bottom: 1em",
+        dropdown(
+          
+          radioButtons(
+            inputId = "nxyz_colormode",
+            label = "Conditional coloring:",
+            choices = c("None"="None", "Discrete colors"="Two colors"), 
+            selected = "None"
+          ),
+          uiOutput("nxyz_colormode_options"),
+          
+          
+          size = "xs",
+          icon = icon("fill-drip", class = "opt"),
+          up = TRUE, width=300
+        )
+    ),
+    div(style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
           numericInput(
             inputId = "nxyz_sc_size",
@@ -255,7 +347,7 @@ output$nxy_3ds_panel <- renderUI({
           up = TRUE, width=200
         )
     ),
-    div(style = "position: absolute; left: 7em; bottom: 1em",
+    div(style = "position: absolute; left: 10em; bottom: 1em",
         dropdown(
           HTML(paste0(
             "<b>Color summary</b>:",
@@ -268,11 +360,11 @@ output$nxy_3ds_panel <- renderUI({
           downloadButton("download_3ds_df", "Download color summary"),
           
           size = "xs",
-          icon = icon("eye-dropper", class = "opt"),
+          icon = icon("table", class = "opt"),
           up = TRUE, width=300
         )
     ),
-    div(style = "position: absolute; left: 10em; bottom: 1em",
+    div(style = "position: absolute; left: 13em; bottom: 1em",
         dropdown(
           downloadButton("n_3ds_dl", "Download plot"),
           
@@ -347,14 +439,14 @@ output$n_ui_single <- renderUI({
                      radioButtons(
                        inputId = "nx_vol_plotmode",
                        HTML(paste0(
-                         "Plotting mode:",
+                         plotmode_label,
                          add_help("vol_plotmode_help", style="margin-left: 5px;"))
                        ),
-                       choices = c("Focus", "Context")
+                       choices = c("No"="Focus","Yes"="Context")
                      ),
                      
                      bsTooltip("vol_plotmode_help", 
-                               "Focus: only plot genes in intersection;<br>Context: plot all genes.", 
+                               plotmode_explanation, 
                                placement = "right"),
                      
                      

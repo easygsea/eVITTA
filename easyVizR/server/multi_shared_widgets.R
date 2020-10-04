@@ -13,7 +13,7 @@ observeEvent(input$tabs, {
     update_filters("f","nic", rv)
     
   } else if (input$tabs == "tab_ins"){ # intersection tab
-    
+    move_ui("ins_main_panels", "ins_main_panels_here", "afterEnd")
     move_ui("ins_table_panel", "ins_pg_bottom", "afterEnd")
     move_ui("n_filters", "ins_filters_here", "afterEnd")
     

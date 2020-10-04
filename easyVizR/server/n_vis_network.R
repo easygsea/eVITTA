@@ -14,15 +14,16 @@ output$nw_set_le_ui <- renderUI({
         choices = rv$nw_char_stats,
         selected = available_cols
       ),
-      radioButtons("nw_le_sep", "Separator:", 
+      radioButtons("nw_le_sep", "Separator:",
                    choices=c(
-                     "semicolon"=";",
-                     "space" = "\\s+",
-                     "comma" = ","
+                     "semicolon (;)"=";",
+                     "space ( )" = "\\s+",
+                     "comma (,)" = ",",
+                     "vertical bar (|)" = "\\|"
                    ),
                    selected=";"
       ),
-      uiOutput("nw_feedback"),
+      uiOutput("nw_feedback")
     )
   } else {
     box(
@@ -128,6 +129,7 @@ output$vis_network_panel <- renderUI({
 
 # plot
 output$vis_network <- renderVisNetwork({
+  req(nchar(rv$nw_le_sep)>0)
   withProgress(message = 'Generating plots ...',value = 1, {
     rv$vis = vis()
     return(rv$vis)
