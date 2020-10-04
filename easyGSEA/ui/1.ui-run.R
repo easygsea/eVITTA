@@ -7,14 +7,26 @@ a_mode <- conditionalPanel(
                
                radioButtons(
                    inputId = "selected_mode",
-                   label = NULL,
+                   label = div(style = "font-weight:400;", "Select mode of analysis:"),
                    choices = run_modes,
                    selected = "gsea"
-               ),
-               tags$hr(style="border-color: #48617b;margin: 8px;")
+               )
+               # ,bsButton("loadx","Example Run")
+               ,tags$hr(style="border-color: #48617b;margin: 8px;")
         )
     )
 )
+
+# a_example <- conditionalPanel(
+#     condition = "input.tabs == 'gsea'",
+#     
+#     fluidRow(
+#         column(12,
+#             tags$hr(style="border-color: #48617b;margin: 8px;")
+#             ,bsButton("loadx","Example Run")
+#         )
+#     )
+# )
 
 # ====================== Body GSEA ======================
 bodyGSEA <- tabItem(tabName = "gsea",
