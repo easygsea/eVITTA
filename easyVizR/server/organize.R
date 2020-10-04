@@ -297,7 +297,6 @@ output$batch_buttons <- renderUI({
   
   fluidRow(
     div(style="display:inline-block;",
-           ),
         uiOutput("batch_confirm_button")
     ),
     div(style="display:inline-block;",
@@ -1046,3 +1045,4 @@ output$guide_1a <- renderUI({
 observeEvent(input$guide1,{
   updateTabItems(session, "tabs", "tab_filters")
 })
+
