@@ -5,68 +5,60 @@
 observe({
   req(is.null(rv$nx_n)==F)
   
-  if(is.null(input$n_ui_showpanel)==F){ rv$n_ui_showpanel <- input$n_ui_showpanel }
+  # vis panel selection
+  input2rv("n_ui_showpanel")
   
-  
-  
-  if(is.null(input$n_ins_view)==F){ rv$n_ins_view <- input$n_ins_view }
-  
+  # ins table settings
+  input2rv(c("n_ins_view"))
+
   # heatmap
-  if(is.null(input$n_to_plot)==F){ rv$n_to_plot <- input$n_to_plot }
-  if(is.null(input$heatmap_sortby)==F){ rv$heatmap_sortby <- input$heatmap_sortby }
-  if(is.null(input$n_hm_ylabs)==F){ rv$n_hm_ylabs <- input$n_hm_ylabs }
-  
-  
+  input2rv(c(
+    "n_to_plot",
+    "heatmap_sortby", "n_hm_ylabs"
+    ))
   
   # venn and upset
-  if(is.null(input$n_venn_label)==F){ rv$n_venn_label <- input$n_venn_label }
-  if(is.null(input$n_venn_type)==F){ rv$n_venn_type <- input$n_venn_type }
-  if(is.null(input$n_upset_sortby)==F){ rv$n_upset_sortby <- input$n_upset_sortby }
-  if(is.null(input$n_upset_showempty)==F){ rv$n_upset_showempty <- input$n_upset_showempty }
+  input2rv(c(
+    "n_venn_label","n_venn_type",
+    "n_upset_sortby","n_upset_showempty"
+    ))
   
   
-  # scatter
-  if(is.null(input$nxy_selected_x)==F){ rv$nxy_selected_x <- input$nxy_selected_x }
-  if(is.null(input$nxy_selected_y)==F){ rv$nxy_selected_y <- input$nxy_selected_y }
-  if(is.null(input$nxy_selected_z)==F){ rv$nxy_selected_z <- input$nxy_selected_z }
-  if(is.null(input$nxy_colormode)==F){rv$nxy_colormode <- input$nxy_colormode}
-  if(is.null(input$nxy_sig)==F){rv$nxy_sig <- input$nxy_sig}
-  if(is.null(input$nxy_thresh)==F){rv$nxy_thresh <- input$nxy_thresh}
-  if(is.null(input$nxy_sc_size)==F){rv$nxy_sc_size <- input$nxy_sc_size}
-  if(is.null(input$n_sc_logic)==F){rv$n_sc_logic <- input$n_sc_logic}
+  # 2D scatter
+  input2rv(c(
+    "nxy_selected_x","nxy_selected_y","nxy_selected_z",
+    "nxy_colormode","nxy_sig","nxy_thresh","nxy_sc_size","n_sc_logic",
+    "nxy_p", "nxy_q", "nxy_stat",
+    "nxy_sc_plotmode", "nxy_sc_dflogic"
+  ))
   
-  if(is.null(input$nxyz_colormode)==F){rv$nxyz_colormode <- input$nxyz_colormode}
-  if(is.null(input$nxyz_sc_logic)==F){rv$nxyz_sc_logic <- input$nxyz_sc_logic}
-  if(is.null(input$n_3ds_p)==F){ rv$n_3ds_p <- input$n_3ds_p }
-  if(is.null(input$n_3ds_q)==F){ rv$n_3ds_q <- input$n_3ds_q }
-  if(is.null(input$n_3ds_Stat)==F){ rv$n_3ds_Stat <- input$n_3ds_Stat }
-  if(is.null(input$nxyz_sc_size)==F){rv$nxyz_sc_size <- input$nxyz_sc_size}
+  # 3D scatter
+  input2rv(c(
+    "nxyz_colormode","nxyz_sc_logic",
+    "n_3ds_p","n_3ds_q","n_3ds_Stat",
+    "nxyz_sc_size",
+    "nxyz_sc_plotmode","nxyz_sc_dflogic"
+  ))
   
-  # single
-  if(is.null(input$nx_vol_plotmode)==F){rv$nx_vol_plotmode <- input$nx_vol_plotmode}
-  if(is.null(input$nx_selected)==F){rv$nx_selected <- input$nx_selected}
-  if(is.null(input$nx_p)==F){rv$nx_p <- input$nx_p}
-  if(is.null(input$nx_Stat)==F){rv$nx_Stat <- input$nx_Stat}
-  if(is.null(input$nx_vol_c1)==F){rv$nx_vol_c1 <- input$nx_vol_c1}
-  if(is.null(input$nx_vol_c2)==F){rv$nx_vol_c2 <- input$nx_vol_c2}
-  if(is.null(input$nx_vol_c3)==F){rv$nx_vol_c3 <- input$nx_vol_c3}
+  # single volcano
+  input2rv(c(
+    "nx_vol_plotmode","nx_selected",
+    "nx_p","nx_Stat",
+    "nx_vol_c1","nx_vol_c2","nx_vol_c3"
+  ))
   
-  
-  if(is.null(input$nx_bar_sig)==F){rv$nx_bar_sig <- input$nx_bar_sig}
-  if(is.null(input$nx_bar_to_plot)==F){rv$nx_bar_to_plot <- input$nx_bar_to_plot}
+  # single bar
+  input2rv(c(
+    "nx_bar_sig","nx_bar_to_plot"
+  ))
   
   
   # network
+  input2rv(c(
+    "nw_selected_n","nw_le_sep","nw_selected_col",
+    "p_or_q_vis","vis_percent","vis_percent_cutoff","combined_k"
+  ))
   
-  if(is.null(input$nw_selected_n)==F){rv$nw_selected_n <- input$nw_selected_n}
-  if(is.null(input$nw_le_sep)==F){rv$nw_le_sep <- input$nw_le_sep}
-  if(is.null(input$nw_selected_col)==F){rv$nw_selected_col <- input$nw_selected_col}
-  # if(is.null(input$cutoff_vis_p)==F){rv$cutoff_vis_p <- input$cutoff_vis_p}
-  # if(is.null(input$cutoff_vis_q)==F){rv$cutoff_vis_q <- input$cutoff_vis_q}
-  if(is.null(input$p_or_q_vis)==F){rv$p_or_q_vis <- input$p_or_q_vis}
-  if(is.null(input$vis_percent)==F){rv$vis_percent <- input$vis_percent}
-  if(is.null(input$vis_percent_cutoff)==F){rv$vis_percent_cutoff <- input$vis_percent_cutoff}
-  if(is.null(input$combined_k)==F){rv$combined_k <- input$combined_k}
 })
 
 
@@ -123,35 +115,34 @@ observeEvent(input$n_use_data,{
     rv$nx_i <- isolate(rv$heatmap_i) # indices
     rv$nx_n <- isolate(input$heatmap_dfs) # names
     # rv$iso_sharedcols<- isolate(rv$n_sharedcols) # shared cols (used for hm)
+    rv$n_sharedcols <- detect_shared_dimensions(rv$nx_i, rv$gg, rv$ll, input_mode="indices")$shared_cols
     rv$hm_numeric_stats <- get_cols_by_class(df_n, is.numeric, output_type="statnames")
     rv$all_char_stats <- get_cols_by_class(df_n, is.character, output_type="statnames")
     rv$nw_char_stats <- rv$all_char_stats[-which(rv$all_char_stats %in% c("Name"))] # without name col
     
-    # current panel
+    # ---------------  current panel
     rv$n_ui_showpanel <- "Heatmap"
     
-    # input genelist
+    # ---------------  input genelist
     rv$n_igl <- ""
 
-    # initialize filters
+    # ---------------  initialize filters
     for (i in 1:length(rv$nx_n)){
       rv[[paste0("nic_p_",i)]] <- 0.05
       rv[[paste0("nic_q_",i)]] <- 1
       rv[[paste0("nic_Stat_",i)]] <- 0
       rv[[paste0("nic_sign_",i)]] <- "All"
-      rv[[paste0("nic_apply_",i)]] <- T
-      rv[[paste0("nic_na_",i)]] <- T
     }
     
     
     
-    # heatmap options
+    # ---------------  heatmap options
     rv$n_to_plot <- "Stat"
     rv$heatmap_sortby <- rv$nx_n[[1]]
     rv$n_hm_ylabs <- F
 
     
-    # intersection options
+    # ---------------  intersection options
     rv$n_ins_view == "Full"
     # venn
     rv$n_venn_label <- "counts"
@@ -161,9 +152,8 @@ observeEvent(input$n_use_data,{
     rv$n_upset_sortby <- "freq"
     rv$n_upset_showempty <- FALSE
     
-
     
-    # scatter options
+    # --------------- scatter options
     
     # 2d scatter
     rv$nxy_selected_x <- rv$nx_n[[1]]
@@ -173,7 +163,12 @@ observeEvent(input$n_use_data,{
     rv$nxy_sig <- "PValue"
     rv$nxy_thresh <- 0.01
     rv$nxy_sc_size <- 3
+    rv$nxy_p <- 0.05
+    rv$nxy_q <- 1
+    rv$nxy_stat <- 0.5
     rv$n_sc_logic <- "Both"
+    rv$nxy_sc_plotmode <- "Focus"
+    rv$nxy_sc_dflogic <- "Ins"
     
     # 3d scatter
     rv$nxyz_sc_logic <- "Both"
@@ -182,9 +177,11 @@ observeEvent(input$n_use_data,{
     rv$n_3ds_q <- 1
     rv$n_3ds_Stat <- 0
     rv$nxyz_sc_size <- 3
+    rv$nxyz_sc_plotmode <- "Focus"
+    rv$nxyz_sc_dflogic <- "Ins"
     
     
-    # single options
+    # --------------- single options
     rv$nx_vol_plotmode <- "Focus"
     rv$nx_selected <- rv$nx_n[[1]]
     rv$nx_p <- 0.05
@@ -197,7 +194,7 @@ observeEvent(input$n_use_data,{
     rv$nx_bar_to_plot <- "Stat"
     
     
-    # network options
+    # ---------------  network options
     rv$nw_selected_n <- rv$nx_n[[1]]
     rv$nw_le_sep <- ";"
     rv$nw_selected_col <- firstmatch(le_alias,rv$nw_char_stats)
@@ -208,16 +205,19 @@ observeEvent(input$n_use_data,{
     rv$vis_percent_cutoff <- 0.25
     rv$combined_k <- 0.5
     
+    
+    #  --------------- initialize intersection
     rv$ins_criteria <- rep(T,length(rv$nx_n))
     names(rv$ins_criteria) <- rv$nx_n
     
+    
+    #  --------------- initialize dynamic ui
     
     if (length(rv$nx_i) <= 5){rv$n_venn_status <- "ok"}
     else{ rv$n_venn_status <- "no" }
     if (length(rv$nx_i) == 3){rv$n_3ds_status <- "ok"}
     else{ rv$n_3ds_status <- "no" }
     
-    # initialize dynamic ui
     rv$s <- vector(mode="list", length=length(rv$nx_i))
     rv$nic <- vector(mode="list", length=length(rv$nx_i))
     rv$v <- vector(mode="list", length=length(rv$nx_i))
@@ -233,9 +233,7 @@ observeEvent(input$n_use_data,{
   # # find max stat and generate scale
   # statmax <- max(dplyr::select(df_n, contains("Stat_")), na.rm=TRUE)
   # rv$n_stat_scale <- round(generate_scale(statmax, 10),2)
-  
 
-  
   
   js$collapse("select_n_panel")
   if(is.null(input$f_global_iscollapsed)==T){ # uncollapse this box
@@ -243,8 +241,7 @@ observeEvent(input$n_use_data,{
   } else if (input$f_global_iscollapsed==T){
     js$collapse("f_global")
   }
-  
-  
+
   
   shinyjs::enable("n_use_data")
 })
@@ -289,88 +286,31 @@ n_ins_gls <- reactive({
 })
 
 
-# 2. turns gls into matrix
-n_ins_glm <- reactive({
-  req(nrow(rv$df_n)>0)
-  req(length(n_ins_gls())>0)
-  
-  df <- df_n_basic()
-  
-  gls <- n_ins_gls()
-  
-  # genes we are considering = only the ones present in gls (doesn't show anything if F/F/F)
-  # all_genes <- unique(unlist(gls))
-  # or, genes we are considering = all genes (shows unconsidered things in F/F/F)
-  all_genes <- df$Name
-  
-  # turn gls into list of T/F vectors
-  xx <- lapply(seq_along(names(gls)),function(x){
-    all_genes %in% gls[[names(gls)[[x]]]]
-  })
-  names(xx) <- names(gls)
-  
-  # assemble into a T/F df (the gls matrix)
-  glm <- data.frame(xx, row.names = all_genes)
-  
-  glm
-})
-
-# 3. filters gls matrix by criteria (T/F/Ignore)
-n_ins_ss <- reactive({ 
-  req(nrow(n_ins_glm())>0)
-  
-  glm <- n_ins_glm()
-  
-  # get subset of genes based on t/f table
-  subset <- glm[apply(glm,1,function(x) {
-    match_skipna(x,rv$ins_criteria)
-  }),] 
-  subset
-  
-})
-
-# 4. turns ss into filtered gl
-n_ins_fgl <- reactive({
-  subset <- n_ins_ss()
-  genelist <- rownames(subset) # these are gene list
-  genelist
-  
-})
-
-# 5. full raw df to be used for other visualizations in other tabs
+# 2. find intersection according to gene lists and criteria, and output as df
 n_ins_full <- reactive({
-  req(length(rv$ins_criteria)>0)
-  req(length(rv$ins_criteria)==length(rv$nx_i))
   
-  df <- df_n_basic() # full df to subset
-  genelist <- n_ins_fgl() # list of genes to show in table
-  df <- df[df$Name %in% genelist,] # extract the rows from full df
-  df
+  out <- extract_intersection(gls = n_ins_gls(), 
+                              criteria = rv$ins_criteria, 
+                              df = df_n_basic(), 
+                              out_type = "Full",
+                              include_background = T)
+  
+  out
 })
+
+
 
 # 5b. renders the df to show as datatable
 n_ins_df <- reactive({
   req(length(rv$ins_criteria)>0)
   req(length(rv$ins_criteria)==length(rv$nx_i))
+
+  df <- extract_intersection(gls = n_ins_gls(), 
+                              criteria = rv$ins_criteria, 
+                              df = df_n_basic(), 
+                              out_type = rv$n_ins_view,
+                              include_background = T)
   
-  df <- df_n_basic() # full df to subset
-  genelist <- n_ins_fgl() # list of genes to show in table
-  
-  if(rv$n_ins_view == "Full"){
-    df <- df[df$Name %in% genelist,] # extract the rows from full df
-  }
-  else if (rv$n_ins_view == "Minimized"){
-    xx <- dplyr::select(df, contains(c("Name","Stat", "PValue", "FDR")))
-    print(head(xx))
-    df <- xx[xx$Name %in% genelist,]
-  }
-  else if (rv$n_ins_view == "T/F Matrix"){
-    df <- as.data.frame(n_ins_ss())
-    
-    # turn row names into identifying column
-    df <- cbind(rownames(df),df)
-    colnames(df)[[1]] <- "Name"
-  }
   
   # tidy row names
   if (nrow(df)>0){rownames(df) <- seq(1,nrow(df),1)}
