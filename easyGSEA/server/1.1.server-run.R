@@ -28,6 +28,7 @@
   observeEvent(input$gsea_f,{
     updateTabItems(session, "tabs","kegg")
   })
+  
 
     # --------------  1.1 select databases --------------------
     
@@ -46,7 +47,7 @@
     # --------------  1.2 select GMTs ---------------------------
     
     observe({
-        req(nchar(input$selected_species)>0)
+        req(nchar(input$selected_species)>0 && input$selected_species != "other")
         req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
         
         species <- input$selected_species
@@ -75,7 +76,7 @@
     })
     
     output$test_db <- renderUI({
-        req(nchar(input$selected_species)>0)
+        req(nchar(input$selected_species)>0  && input$selected_species != "other")
         req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
         
         species = input$selected_species
@@ -112,6 +113,64 @@
         )
     })
     
+    # -------------- 1.2b upload GMT -------------------
+    output$gmt_upload <- renderUI({
+      req(input$selected_species == "other")
+      req(is.null(rv$db_status)==T || rv$db_status == "modify")
+
+      div(class="box__input",id="drop-area", align="center",
+          div(class="form-group shiny-input-container",id="drag_gmt",
+              HTML('<label class="control-label" for="gmt_c"></label>')
+              ,div(class="input-group",
+                   HTML('<label class="input-group-btn input-group-prepend"><span class="btn btn-success">')
+                   ,HTML('<img src="upload.tiff" width="18%" class="mx-2"><br>Drag your <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
+                   ,HTML('
+        <input id="gmt_c" name="gmt_c" type="file" style="display: none;" multiple="multiple" accept="text/tab-separated-values,.txt,.tab,.tsv,.gmt"/>
+    ')
+              )
+              ,HTML('</span></label>')
+          )
+          ,bsTooltip("drop-area",HTML("Upload your own gene set database file (GMT) for custom analysis")
+                     ,placement = "top")
+      )
+      # ,div(id="gmt_c_progress", class="progress progress-striped active shiny-file-input-progress",
+      #      div(class="progress-bar")
+      # )
+    })
+    
+    # read in GMTs
+    observeEvent(input$gmt_c,{
+      df = input$gmt_c
+      
+      gmt_names = list()
+      gmt_paths = list()
+      for(i in 1:nrow(df)){
+        gmt = df[i,]
+        gmt_name = gmt$name
+        gmt_path = gmt$datapath
+        
+        gmt_names = c(gmt_names,gmt_name)
+        gmt_paths = c(gmt_paths,gmt_path)
+        
+        if(!gmt_name %in% rv$gmt_cs){
+          rv$gmt_cs = c(rv$gmt_cs, gmt_name)
+          rv$gmt_cs_paths = c(rv$gmt_cs_paths, gmt_path)
+        }
+      }
+      
+      showModal(modalDialog(
+        fluidRow(
+          column(12, style="font-size:150%;",
+            HTML("You have uploaded <b>",length(gmt_names),"</b> file(s):<br><br>")
+            ,HTML(paste0(gmt_names,collapse = "<br>"))
+          )
+        )
+        ,easyClose = T
+        ,footer = modalButton("OK")
+      ))
+    })
+
+
     # --------------  1.2.2 show databases in a modal ---------------------------
     observeEvent(input$showdbs,{
       species = input$selected_species
@@ -174,17 +233,27 @@
         
         species<-input$selected_species
         
-        if(is.null(rv$db_modal)){
-          for(collection in sort(names(gmt_collections_paths[[species]]))){
-            db_id = paste0(species,gsub(" ","_",collection))
-            rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% gmt_collections_selected[[species]][[collection]])])
+        if(species == "other"){
+          if(length(rv$gmt_cs)<1){
+            shinyalert("Please upload a GMT file to proceed")
+          }else{
+            rv$db_status <- "selected"
           }
         }else{
-          for(collection in sort(names(gmt_collections_paths[[species]]))){
-            db_id = paste0(species,gsub(" ","_",collection))
-            rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% input[[db_id]])])
+          if(is.null(rv$db_modal)){
+            for(collection in sort(names(gmt_collections_paths[[species]]))){
+              db_id = paste0(species,gsub(" ","_",collection))
+              rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% gmt_collections_selected[[species]][[collection]])])
+            }
+          }else{
+            for(collection in sort(names(gmt_collections_paths[[species]]))){
+              db_id = paste0(species,gsub(" ","_",collection))
+              rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% input[[db_id]])])
+            }
           }
+          rv$db_status <- "selected"
         }
+        
         # for(collection in sort(names(gmt_collections_paths[[species]]))){
         #     db_id = paste0(species,gsub(" ","_",collection))
         #     # db_name = input[[db_id]]
@@ -195,7 +264,6 @@
         #     }
         # }
         
-        rv$db_status <- "selected"
     })
     
     # reset species, at the same time reset rnk/glist
@@ -215,6 +283,7 @@
       rv$rnk_or_deg = NULL
       rv$gene_lists_mat1 = NULL; rv$gene_lists_mat2 = NULL
       rv$db_modal = NULL
+      rv$gmt_cs = NULL
       
       # rest glist UIs
       shinyjs::reset("gene_list")
@@ -237,7 +306,7 @@
               width = 12,
               bsButton(
                 inputId = "add_db", 
-                label = "Confirm selection",
+                label = "Confirm to proceed",
                 style = "primary",
                 type = "button"),
               br(),br()
@@ -288,14 +357,20 @@
     output$ui_rnk <- renderUI({
         req(input$selected_mode == "gsea")
         # req(rv$db_status == "selected")
+      
+      if(input$selected_species == "other"){
+        noo = "2"
+      }else{
+        noo = "3"
+      }
         div(
 
       
             fileInput("rnkfile",
-                      label = p("3. Upload RNK or DEG file:",
+                      label = p(paste0(noo,". Upload RNK or DEG file:"),
                                 tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
                                 bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")),
-                      buttonLabel = "Upload...",
+                      # buttonLabel = "Upload...",
                       accept = c(
                           "text/tab-separated-values",
                           "text/comma-separated-values",
@@ -411,7 +486,7 @@
     # ------------ 3.1.2.2 select numeric namespace -----------
     output$ui_num <- renderUI({
       req(input$gene_identifier == "other")
-      req(input$selected_species != "")
+      req(input$selected_species != "" && input$selected_species != "other")
 
       r_num_acc()
     })
@@ -421,6 +496,8 @@
         rv$example_file = NULL
         if(input$selected_species == ""){
           shinyalert("Please select your species of interest.")
+        }else if(input$selected_species == "other"){
+          shinyalert("Example data unavailable for custom GMT. Select a supported species for a trial run.")
         }else{
           reset_rnk()
           
@@ -445,6 +522,8 @@
         rv$example_file = NULL
         if(input$selected_species == ""){
           shinyalert("Please select your species of interest.")
+        }else if(input$selected_species == "other"){
+          shinyalert("Example data unavailable for custom GMT. Select a supported species for a trial run.")
         }else{
           reset_rnk()
           
@@ -611,13 +690,19 @@
         req(input$selected_mode == "glist")
         # req(input$selected_species != "")
         # req(is.null(rv$dbs)==F)
+      if(input$selected_species == "other"){
+        noo = "2"
+      }else{
+        noo = "3"
+      }
+      
       fluidRow(
         column(
           width = 12,
           bsTooltip("gene_list_q", "Input newline-delimited gene list", placement = "top"),
           textAreaInput(
             inputId = "gene_list",
-            label = p("3. Input your genes (",
+            label = p(paste0(noo,". Input your genes ("),
                       tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
                       add_help("gene_list_q", style="font-size:medium;padding:3px 0 0 0;position:absolute;right:0.8em;"),
                       actionLink("load_example_glist", label = tags$u("example data")
@@ -664,6 +749,7 @@
     # numeric identifier
     output$ora_num <- renderUI({
       req(input$gene_identifier == "other")
+      req(input$selected_species != "other")
       r_num_acc()
     })
     
@@ -775,6 +861,8 @@
     observeEvent(input$load_example_glist,{
         if(input$selected_species == ""){
           shinyalert("Please select your species of interest.")
+        }else if(input$selected_species == "other"){
+          shinyalert("Example data unavailable for custom GMT. Select a supported species for a trial run.")
         }else{
             updateTextAreaInput(session,
                                 inputId = "gene_list",

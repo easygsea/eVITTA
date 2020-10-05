@@ -93,6 +93,19 @@ Sidebar text: #a3bcd6;
     border-color: #184d82;
 }
 
+.btn-success {
+    color: black;
+    background-color: #ffffe6;
+    border-color: #ffffe6;
+    display: inline-block;
+}
+
+.btn-success:hover {
+    color: black;
+    background-color: #ffffe6;
+    border-color: #ffffe6;
+}
+
 .box-primary{
     border-color: #184d82;
 }
@@ -115,4 +128,9 @@ changes all text colors to light blue;
 .main-sidebar .user-panel, .sidebar-menu, .sidebar-menu>li.header {
     word-break: break-word;
     color: #c0d3e7;
+}
+
+.note {
+  font-size: 120%;
+  color: red;
 }

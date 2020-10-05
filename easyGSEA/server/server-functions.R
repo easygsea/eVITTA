@@ -1442,3 +1442,8 @@
       return(df)
     }
     
+    
+    area_upload <- function(...,label=""){
+      tmp = fileInput(...,label=label)
+      print(tmp)
+    }

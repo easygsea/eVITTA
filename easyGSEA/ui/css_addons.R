@@ -32,6 +32,19 @@ css_addons <-
       # numeric identifier
       ,"#num_acc_hp {height:}"
       
+      # GMT upload area
+      ,"#drop-area {
+      background-color:#ffffe6;
+      border:1px dashed #48617b;
+      border-radius:25px;
+      height:90px;
+      overflow:auto;
+      margin-bottom:10px;
+      }"
       
+      # file upload in GMT area
+      ,"#drag_gmt {
+      margin-top:-8px;
+      }"
     )))
   )
