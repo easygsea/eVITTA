@@ -143,15 +143,13 @@
       df = input$gmt_c
       
       gmt_names = list()
-      gmt_paths = list()
       for(i in 1:nrow(df)){
         gmt = df[i,]
         gmt_name = gmt$name
         gmt_path = gmt$datapath
         
         gmt_names = c(gmt_names,gmt_name)
-        gmt_paths = c(gmt_paths,gmt_path)
-        
+
         if(!gmt_name %in% rv$gmt_cs){
           rv$gmt_cs = c(rv$gmt_cs, gmt_name)
           rv$gmt_cs_paths = c(rv$gmt_cs_paths, gmt_path)
@@ -556,7 +554,6 @@
         rv$rnkll <- strsplit(isolate(rv$infile_name),"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1] # add value to rv
         ranks <- read_delim(isolate(rv$infile_path), ",", locale = locale(encoding = 'ISO-8859-1'))# , escape_double = FALSE, trim_ws = TRUE)
 
-        print(str(head(ranks)))
         if(ncol(ranks)==1){
             ranks <- read_delim(isolate(rv$infile_path), "\t", locale = locale(encoding = 'ISO-8859-1'))# , escape_double = FALSE, trim_ws = TRUE)
         }
@@ -980,12 +977,22 @@
         
         # reset RVs
         reset_rvs()
-
-        rv$bar_pathway = rv$dbs
-        rv$bubble_pathway = rv$dbs
-        rv$volcano_pathway = rv$dbs
         
         species <- isolate(input$selected_species)
+        
+        # save dbs for plots
+        if(species != "other"){
+          rv$bar_pathway = rv$dbs
+          rv$bubble_pathway = rv$dbs
+          rv$volcano_pathway = rv$dbs
+        }else{
+          rv$gmt_cs = lapply(rv$gmt_cs,function(x) {strsplit(x,"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1]})
+          
+          rv$bar_pathway = rv$gmt_cs
+          rv$bubble_pathway = rv$gmt_cs
+          rv$volcano_pathway = rv$gmt_cs
+        }
+
         
         withProgress(message = "Running GSEA analysis...",value = 0.2, {
 
@@ -993,65 +1000,59 @@
             # initialize
             errors = 0
             
-            for(collection in sort(names(gmt_collections_paths[[species]]))){
+            if(species != "other"){
+              for(collection in sort(names(gmt_collections_paths[[species]]))){
                 db_id = paste0(species,gsub(" ","_",collection))
                 if(is.null(rv$db_modal)==F){
                   inputs = input[[db_id]]
                 }else{
                   inputs = gmt_collections_selected[[species]][[collection]]
                 }
-                    
+                
                 for(cat_name in inputs){
                   gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
-                  m_list <- gmtPathways(gmt_path)
-                  m_list <- lapply(m_list, function(x) toupper(x))
-
-                  # save GMT into RV
-                  rv$gmts = c(rv$gmts,m_list)
-
-                  # calculate gene #s in each term
-                  a_lens = lengths(m_list)
-                  
-                  if(max(a_lens)<rv$gmin || min(a_lens)>rv$gmax){errors = errors + 1}
-                  
-                  frun <- try(fgseaRes <- fgsea(pathways = m_list,
-                                                stats    = ranks,
-                                                minSize  = rv$gmin,
-                                                maxSize  = rv$gmax,
-                                                nperm = rv$gperm))
-                  
-                  if(inherits(frun, "try-error")) {        
-                    errors = errors + 1
-                  }else{
-                    db <- rep(cat_name, nrow(fgseaRes))
-                    fgseaRes <- cbind(db,fgseaRes)
-                    #print(head(fgseaRes))
-                    rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
-                    # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
-                    rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
-                    rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
-                    rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
-                    rv$no_down_05 = rv$no_down_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
-                    # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
-                    incProgress(0.2)
-                  }
+                                    
+                  run_gsea(cat_name, gmt_path, ranks)
                 }
+              }
+            }else{
+              for(i in seq_along(rv$gmt_cs)){
+                gmt_path = rv$gmt_cs_paths[[i]]
+                run_gsea(rv$gmt_cs[[i]], gmt_path, ranks)
+              }
             }
             
+            
             if(errors > 0 && nrow(rv$fgseagg)<1){
-              db_selected = names(rv$dbs)
-              db_selected = paste(db_selected,collapse = "; ")
-              # ErrorMessage <- conditionMessage(attr(frun, "condition"))  # the error message
-              #show a modal dialog if there is an error reading files causing crash
-              showModal(modalDialog(
-                title = h3(HTML("Please click the gear button and adjust <b>Advanced run parameters</b>")),
-                tags$li(h4(paste0("Database(s): ",db_selected))),
-                tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
-                                  ," and max=",rv$gmax))),
+              if(species != "other"){
+                db_selected = names(rv$dbs)
+                db_selected = paste(db_selected,collapse = "; ")
+                # ErrorMessage <- conditionMessage(attr(frun, "condition"))  # the error message
+                #show a modal dialog if there is an error reading files causing crash
+                showModal(modalDialog(
+                  title = h3(HTML("Please click the gear button and adjust <b>Advanced run parameters</b>")),
+                  tags$li(h4(paste0("Database(s): ",db_selected))),
+                  tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
+                                    ," and max=",rv$gmax))),
+                  
+                  size = "l",
+                  easyClose = TRUE
+                ))
+              }else{
+                db_selected = paste(rv$gmt_cs,collapse = "; ")
                 
-                size = "l",
-                easyClose = TRUE
-              ))
+                showModal(modalDialog(
+                  title = h3(HTML("Analysis failed")),
+                  h4(HTML("Please check if the uploaded GMTs are in correct format. If yes, click the gear button and adjust <b>Advanced run parameters</b>")),
+                  tags$li(h4(paste0("Database(s): ",db_selected))),
+                  tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
+                                    ," and max=",rv$gmax))),
+                  
+                  size = "l",
+                  easyClose = TRUE
+                ))
+              }
+              
             }else{
               # count number of filtered GSs in GMTs
               l = unlist(lapply(rv$gmts, function(x){return(length(x)>=rv$gmin && length(x)<=rv$gmax)}))
@@ -1086,8 +1087,16 @@
         if(is.null(input$mymin)==F){rv$gmin=input$mymin}
         if(is.null(input$mymax)==F){rv$gmax=input$mymax}
 
-        rv$bar_pathway = rv$dbs
-        rv$bubble_pathway = rv$dbs
+        # save dbs for plots
+        if(species != "other"){
+          rv$bar_pathway = rv$dbs
+          rv$bubble_pathway = rv$dbs
+        }else{
+          rv$gmt_cs = lapply(rv$gmt_cs,function(x) {strsplit(x,"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1]})
+          
+          rv$bar_pathway = rv$gmt_cs
+          rv$bubble_pathway = rv$gmt_cs
+        }
 
         species <- isolate(input$selected_species)
 

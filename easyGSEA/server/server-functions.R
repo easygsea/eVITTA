@@ -1292,7 +1292,7 @@
         # # clear rv which was used to store input file data
         # rv$data_head = NULL
         
-        if(input$gene_identifier=="other"){
+        if(input$gene_identifier=="other" && input$selected_species !="other"){
           # autodetect and convert into SYMBOL (if applicable) using gprofiler2
           species = isolate(input$selected_species)
           
@@ -1442,7 +1442,44 @@
       return(df)
     }
     
+    #========================================================#
+    ######             run GSEA or ORA                 #######
+    #========================================================#
     
+    run_gsea <- function(cat_name,gmt_path,ranks){
+      m_list <- gmtPathways(gmt_path)
+      m_list <- lapply(m_list, function(x) toupper(x))
+      
+      # save GMT into RV
+      rv$gmts = c(rv$gmts,m_list)
+      
+      # calculate gene #s in each term
+      a_lens = lengths(m_list)
+      
+      if(max(a_lens)<rv$gmin || min(a_lens)>rv$gmax){errors = errors + 1}
+      
+      frun <- try(fgseaRes <- fgsea(pathways = m_list,
+                                    stats    = ranks,
+                                    minSize  = rv$gmin,
+                                    maxSize  = rv$gmax,
+                                    nperm = rv$gperm))
+      
+      if(inherits(frun, "try-error")) {        
+        errors = errors + 1
+      }else{
+        db <- rep(cat_name, nrow(fgseaRes))
+        fgseaRes <- cbind(db,fgseaRes)
+        #print(head(fgseaRes))
+        rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
+        # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
+        rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
+        rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
+        rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
+        rv$no_down_05 = rv$no_down_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
+        # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
+        incProgress(0.2)
+      }
+    }
     area_upload <- function(...,label=""){
       tmp = fileInput(...,label=label)
       print(tmp)

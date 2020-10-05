@@ -97,12 +97,18 @@ p_man <- reactive({
     req(rv$run == "success")
     req(input$plot_type=="manhattan")
     
+    if(input$selected_species != "other"){
+        dbs = rv$dbs
+    }else{
+        dbs = rv$gmt_cs
+    }
+    
     data = rv$fgseagg
     pq = rv$volcano_pq
     cutoff = rv$volcano_cutoff
     
     # determine colors
-    color_n = length(rv$dbs)
+    color_n = length(dbs)
     colors = c(addalpha(brewer.pal(n = color_n, name = 'Set2')),brewer.pal(n = color_n, name = 'Set2'))
     
     # reorder rows according to pathway names and filter NA pq
@@ -116,7 +122,7 @@ p_man <- reactive({
         dplyr::mutate(is_significant=paste0(db,is_significant))
     
     # relevel
-    levels_reordered = paste0(rep(rv$dbs,2),c(rep("no",color_n),rep("yes",color_n)))
+    levels_reordered = paste0(rep(dbs,2),c(rep("no",color_n),rep("yes",color_n)))
     data$is_significant = fct_relevel(data$is_significant,levels_reordered)
     
     # name colors and filter
@@ -522,6 +528,13 @@ output$manhattan_box <- renderUI({
 # UI bar ----------
 output$bar_box <- renderUI({
     req(input$plot_type=="bar")
+    
+    if(input$selected_species != "other"){
+        dbs = rv$dbs
+    }else{
+        dbs = rv$gmt_cs
+    }
+    
     div(
         style = "position: relative",
         box(
@@ -538,7 +551,7 @@ output$bar_box <- renderUI({
                 dropdown(
                     selectizeInput("pathway_to_plot_bar",
                                    "Select database(s) to plot",
-                                   choices = rv$dbs,
+                                   choices = dbs,
                                    selected = rv$bar_pathway,
                                    multiple = TRUE),
                     uiOutput("bar_top"),
@@ -644,6 +657,13 @@ output$bar_top <- renderUI({
 # UI bubble --------------------
 output$bubble_box <- renderUI({
     req(input$plot_type=="bubble")
+    
+    if(input$selected_species != "other"){
+        dbs = rv$dbs
+    }else{
+        dbs = rv$gmt_cs
+    }
+    
     div(
         style = "position: relative",
         box(
@@ -660,7 +680,7 @@ output$bubble_box <- renderUI({
                 dropdown(
                     selectizeInput("pathway_to_plot_bubble",
                                    "Select database(s) to plot",
-                                   choices = rv$dbs,
+                                   choices = dbs,
                                    selected = rv$bar_pathway,
                                    multiple = TRUE),
                     uiOutput("bubble_top"),
@@ -769,6 +789,13 @@ output$bubble_top <- renderUI({
 # UI volcano --------------------------
 output$volcano_box <- renderUI({
     req(input$plot_type=="volcano")
+    
+    if(input$selected_species != "other"){
+        dbs = rv$dbs
+    }else{
+        dbs = rv$gmt_cs
+    }
+    
     div(
         style = "position: relative",
         box(
@@ -786,7 +813,7 @@ output$volcano_box <- renderUI({
                     dropdown(
                         selectizeInput("pathway_to_plot_volcano",
                                        "Select database(s) to plot",
-                                       choices = rv$dbs,
+                                       choices = dbs,
                                        selected = rv$volcano_pathway,
                                        multiple = TRUE),
                         fluidRow(
@@ -899,6 +926,13 @@ output$ui_volcano_cutoff <- renderUI({
 # UI bubble --------------------
 output$word_box <- renderUI({
     req(input$plot_type=="word")
+    
+    if(input$selected_species != "other"){
+        dbs = rv$dbs
+    }else{
+        dbs = rv$gmt_cs
+    }
+    
     div(
         style = "position: relative",
         box(
@@ -915,7 +949,7 @@ output$word_box <- renderUI({
                 dropdown(
                     selectizeInput("pathway_to_plot_word",
                                    "Select database(s) to plot",
-                                   choices = rv$dbs,
+                                   choices = dbs,
                                    selected = rv$bar_pathway,
                                    multiple = TRUE),
                     splitLayout(

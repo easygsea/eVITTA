@@ -23,7 +23,11 @@ output$feedback_species <- renderUI({
 # feedback databases
 output$feedback_dbs <- renderUI({
     req(rv$db_status == "selected")
-    db_selected = names(rv$dbs)
+    if(input$selected_species != "other"){
+        db_selected = names(rv$dbs)
+    }else{
+        db_selected = rv$gmt_cs
+    }
     HTML(
         "Selected databases:<br/><b>",
         paste(db_selected,collapse = "; "),
@@ -408,15 +412,32 @@ output$run_summary_gsea <- renderUI({
 # --------- error if no genes found in databases ---------------
 output$run_error <- renderUI({
     req(rv$run == "failed")
-    fluidRow(
-        box(
-            background = "red", width = 12,
+    
+    if(input$selected_species != "other"){
+        msg = div(
             HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if ")
             ,tags$ul(
                 tags$li("The selected species matches your query, and/or")
                 ,tags$li("You have selected the right gene identifier as well as its column, and/or")
                 ,tags$li("Your input file/gene list is correct.")
             )
+        )
+    }else{
+        msg = div(
+            HTML("No enrichment results for <b>",rv$rnkll,"</b>. Please check if ")
+            ,tags$ul(
+                tags$li("Your uploaded GMT(s) is (are) correct, and/or")
+                ,tags$li("Your uploaded GMT(s) match(es) the species in your query, and/or")
+                ,tags$li("The gene identifier of your query matches your uploaded GMT(s), and/or")
+                ,tags$li("Your input file/gene list is correct.")
+            )
+        )
+    }
+    
+    fluidRow(
+        box(
+            background = "red", width = 12,
+            msg
         )
     )
 })
@@ -596,6 +617,7 @@ output$rnk_download <- downloadHandler(
 # UI manage GMTs ----------------
 output$gmt_box <- renderUI({
     req(input$selected_species == "other")
+    req(is.null(rv$db_status)==T || rv$db_status == "modify")
 
     fluidRow(column(12,
                     box(width=12,
@@ -627,7 +649,6 @@ output$delete_gmt <- renderUI({
 
 output$delete_gmt_confirm <- renderUI({
     req(length(rv$gmt_cs) >= 1)
-    req(is.null(rv$db_status)==T || rv$db_status == "modify")
     
     bsButton("delete_gmt_confirm", "Confirm and delete", style = "default")
 })
