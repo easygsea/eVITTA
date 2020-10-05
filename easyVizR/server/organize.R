@@ -378,20 +378,45 @@ output$batch_feedback_3 <- renderUI({
   
   rv$batch_failed <- NULL
   failed=c()
+  missingColumn = c()
   j <- c(input$batch_gene_column, input$batch_Stat_column, input$batch_p_column, input$batch_q_column)
   for (i in seq_along(rv$upload_batch_columns)) {
     if (all(j %in% rv$upload_batch_columns[[i]])){
       next
     }
     else{
+      
+      missingColumn <- c(missingColumn,list(j[!j %in% rv$upload_batch_columns[[i]]]))
       failed <- c(failed, rv$batch_files$name[[i]])
+      
     }
   }
   if (is.null(failed)==F){
     rv$batch_failed <- failed
+    #Add a for loop here to
+    
+    
+    for (i in seq_along(failed)){
+      ColumnsNeeded <- paste(missingColumn[i])
+      #If missing column only has one element, then no need to trim the "c(" and ")" string from it
+      
+      
+      
+      if(length(missingColumn[[i]]) > 1){
+        ColumnsNeeded <- substr(ColumnsNeeded, 3,nchar(ColumnsNeeded)-1)
+        
+      }
+      else{
+        ColumnsNeeded <- toString(dQuote(ColumnsNeeded))
+      }
+      
+      failed[i] <- HTML(paste(failed[i], "misses column(s):", ColumnsNeeded),"<br/>")
+    }
+    
     box(
       title = NULL, background = "yellow", solidHeader = TRUE, width=12,
-      paste0("Omitted because columns do not match: ",paste(failed, collapse=", "))
+      #HTML(paste("Omitted these files because they don't have the corresponding columns:",paste(missingColumn, collapse=", "), " do not match in files: ",paste(failed, collapse="\n"), sep="<br/>"))
+      HTML(paste("Omitted these files because they don't have the corresponding columns:", paste(failed, collapse="\n"), sep="<br/>"))
     )
   }
   else {
@@ -443,15 +468,34 @@ observeEvent(input$fileIn, {
   rv$batch_files <- inFiles
   
   allcols <- vector(mode="list")
+  rv$columnCount <-vector(mode="list")
   # list columns for each file
   for (i in seq_along(inFiles$name)) {
     cols <- colnames(read.csv(inFiles$datapath[[i]],nrows=1))
     allcols <- c(allcols, list(cols))
+    
+    
+    #TODO: Add explanation if this works
+    
+    tempRow <- append(list(cols),1)
+    #tempRow has two parts: the column scheme, and a count of that scheme. If the columnCount already contains such scheme, then the corresponding count + 1, if not create a new schme with count = 1
+    if(tempRow[1] %in% rv$columnCount){
+      #find the index of which the sheme is in
+      index = which(rv$columnCount[] %in% tempRow[1]) + 1
+      #add the corresponding count + 1
+      rv$columnCount[[index]] = rv$columnCount[[index]] + 1
+    }else{
+      #if not contain, add such scheme to the list with a count value of 1
+      rv$columnCount <- c(rv$columnCount,tempRow)
+    }
   }
-  # print(head(allcols))
-  # print(rv$upload_batch_columns)
+  #all even number indices are the counts, and we want to find max of them. The scheme they represent can be accessed by a simple offset
+  countList <- rv$columnCount[c(FALSE, TRUE)]
+
   rv$upload_batch_columns <- allcols # get all col names as list
-  rv$upload_batch_colscheme <- allcols[[1]] # the standard now is the first file's columns. will change later
+    
+  #rv$upload_batch_colscheme <- allcols[[1]] # the standard now is the first file's columns. will change later
+  rv$upload_batch_colscheme <- rv$columnCount[[which.max(countList) *2-1]]
   rv$upload_batch_sharedcols <- Reduce(intersect, allcols) # get all shared col names as vector
   # version1 remove invalid characters from the batch column names
   for(i in seq_along(rv$upload_batch_colscheme)){
@@ -467,6 +511,9 @@ observeEvent(input$fileIn, {
     #delete the unrecognized character
     rv$upload_batch_sharedcols[i2] <- stringr::str_replace_all(rv$upload_batch_sharedcols[i2],"[^(a-z0-9A-Z)|[:punct:]]", "")
   }
+  
+  countList <- NULL
+  rv$columnCount <- NULL
   
   rv$folder_upload_state <- 'uploaded'
   
@@ -998,3 +1045,4 @@ output$guide_1a <- renderUI({
 observeEvent(input$guide1,{
   updateTabItems(session, "tabs", "tab_filters")
 })
+
