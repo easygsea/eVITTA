@@ -688,9 +688,15 @@
         # req(input$selected_species != "")
         # req(is.null(rv$dbs)==F)
       if(input$selected_species == "other"){
-        noo = "2"
+        noo = p("2. Input your genes:",add_help("gene_list_q", style="font-size:medium;padding:3px 0 0 0;position:absolute;right:0.8em;"))
       }else{
-        noo = "3"
+        noo = p("3. Input your genes (",
+    tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
+    add_help("gene_list_q", style="font-size:medium;padding:3px 0 0 0;position:absolute;right:0.8em;"),
+    actionLink("load_example_glist", label = tags$u("example data")
+               
+    ),
+    "):")
       }
       
       fluidRow(
@@ -699,14 +705,7 @@
           bsTooltip("gene_list_q", "Input newline-delimited gene list", placement = "top"),
           textAreaInput(
             inputId = "gene_list",
-            label = p(paste0(noo,". Input your genes ("),
-                      tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
-                      add_help("gene_list_q", style="font-size:medium;padding:3px 0 0 0;position:absolute;right:0.8em;"),
-                      actionLink("load_example_glist", label = tags$u("example data")
-                                 
-                                 ),
-                      "):"
-            ),
+            label = noo,
             placeholder = "Paste your genes here ...",
             height = 110
           )
@@ -783,7 +782,7 @@
                     rv$gene_lists = genelist
                     
                     # autodetect and convert into SYMBOL (if other/mixed identifier) using gprofiler2
-                    if(input$gene_identifier == "other"){
+                    if(input$gene_identifier == "other" && input$selected_species != "other"){
                       withProgress(message = "Autodetecting and converting gene IDs...",{
                         Sys.sleep(0.1)
                         incProgress(1)
@@ -1076,6 +1075,7 @@
     
     observeEvent(input$confirm2, {
         rv$run_mode = "glist"
+        species <- isolate(input$selected_species)
         
         # reset RVs
         reset_rvs()
@@ -1098,15 +1098,15 @@
           rv$bubble_pathway = rv$gmt_cs
         }
 
-        species <- isolate(input$selected_species)
 
         withProgress(message = "Running overrepresentation analysis...",value = 0.2, {
             
             # ------ read GMTs & run fgsea ------ #
             # initialize
             errors = 0
-
-            for(collection in sort(names(gmt_collections_paths[[species]]))){
+            
+            if(species != "other"){
+              for(collection in sort(names(gmt_collections_paths[[species]]))){
                 db_id = paste0(species,gsub(" ","_",collection))
                 if(is.null(rv$db_modal)==F){
                   inputs = input[[db_id]]
@@ -1116,40 +1116,17 @@
                 
                 for(cat_name in inputs){
                   gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
-                  m_list <- gmtPathways(gmt_path)
-                  m_list <- lapply(m_list, function(x) toupper(x))
-
-                  # get all genes
-                  a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
-
-                  # save GMT into RV
-                  rv$gmts = c(rv$gmts,m_list)
-
-                  # genes present in the database
-                  in_genes = genelist[genelist %in% a_genes]
-                  
-                  if(identical(in_genes,character(0))){incProgress(0.2);next}
-                  
-                  frun <- try(fgseaRes <- fora(pathways = m_list,
-                                               genes    = in_genes,
-                                               universe = a_genes,
-                                               minSize  = rv$gmin,
-                                               maxSize  = rv$gmax
-                  ))
-                  
-                  if(inherits(frun, "try-error")) {        
-                    errors = errors + 1
-                  }else{
-                    db <- rep(cat_name, nrow(fgseaRes))
-                    fgseaRes <- cbind(db,fgseaRes)
-                    rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
-                    rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25,na.rm=TRUE)
-                    rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
-                    incProgress(0.2)
-                  }
+                  run_ora(cat_name,gmt_path,genelist)
                 }
                 
+              }
+            }else{
+              for(i in seq_along(rv$gmt_cs)){
+                gmt_path = rv$gmt_cs_paths[[i]]
+                run_ora(rv$gmt_cs[[i]], gmt_path, genelist)
+              }
             }
+
 
             if(errors > 0 && is.null(rv$fgseagg)){
               db_selected = names(rv$dbs)

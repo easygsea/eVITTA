@@ -1480,6 +1480,47 @@
         incProgress(0.2)
       }
     }
+    
+    run_ora <- function(cat_name,gmt_path,genelist){
+      m_list <- gmtPathways(gmt_path)
+      m_list <- lapply(m_list, function(x) toupper(x))
+      
+      # get all genes
+      a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
+      
+      # save GMT into RV
+      rv$gmts = c(rv$gmts,m_list)
+      
+      # genes present in the database
+      in_genes = genelist[genelist %in% a_genes]
+      
+      if(! identical(in_genes,character(0))){
+        frun <- try(fgseaRes <- fora(pathways = m_list,
+                                     genes    = in_genes,
+                                     universe = a_genes,
+                                     minSize  = rv$gmin,
+                                     maxSize  = rv$gmax
+        ))
+        
+        if(inherits(frun, "try-error")) {        
+          errors = errors + 1
+        }else{
+          db <- rep(cat_name, nrow(fgseaRes))
+          fgseaRes <- cbind(db,fgseaRes)
+          rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
+          rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25,na.rm=TRUE)
+          rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
+        }
+        
+        incProgress(0.2)
+        
+      }
+      
+      
+    }
+    
+    
+    
     area_upload <- function(...,label=""){
       tmp = fileInput(...,label=label)
       print(tmp)
