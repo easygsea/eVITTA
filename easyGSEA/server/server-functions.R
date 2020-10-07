@@ -1446,7 +1446,7 @@
     ######             run GSEA or ORA                 #######
     #========================================================#
     
-    run_gsea <- function(cat_name,gmt_path,ranks){
+    run_gsea <- function(cat_name,gmt_path,ranks,errors){
       m_list <- gmtPathways(gmt_path)
       m_list <- lapply(m_list, function(x) toupper(x))
       
@@ -1481,7 +1481,7 @@
       }
     }
     
-    run_ora <- function(cat_name,gmt_path,genelist){
+    run_ora <- function(cat_name,gmt_path,genelist,errors){
       m_list <- gmtPathways(gmt_path)
       m_list <- lapply(m_list, function(x) toupper(x))
       

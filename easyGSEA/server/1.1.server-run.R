@@ -993,7 +993,7 @@
         }
 
         
-        withProgress(message = "Running GSEA analysis...",value = 0.2, {
+        withProgress(message = "Running ORA analysis...",value = 0.2, {
 
             # ------ read GMTs & run fgsea ------ #
             # initialize
@@ -1011,13 +1011,13 @@
                 for(cat_name in inputs){
                   gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
                                     
-                  run_gsea(cat_name, gmt_path, ranks)
+                  run_gsea(cat_name, gmt_path, ranks,errors)
                 }
               }
             }else{
               for(i in seq_along(rv$gmt_cs)){
                 gmt_path = rv$gmt_cs_paths[[i]]
-                run_gsea(rv$gmt_cs[[i]], gmt_path, ranks)
+                run_gsea(rv$gmt_cs[[i]], gmt_path, ranks,errors)
               }
             }
             
@@ -1116,14 +1116,14 @@
                 
                 for(cat_name in inputs){
                   gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
-                  run_ora(cat_name,gmt_path,genelist)
+                  run_ora(cat_name,gmt_path,genelist,errors)
                 }
                 
               }
             }else{
               for(i in seq_along(rv$gmt_cs)){
                 gmt_path = rv$gmt_cs_paths[[i]]
-                run_ora(rv$gmt_cs[[i]], gmt_path, genelist)
+                run_ora(rv$gmt_cs[[i]], gmt_path, genelist,errors)
               }
             }
 
