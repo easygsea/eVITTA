@@ -123,7 +123,7 @@
               HTML('<label class="control-label" for="gmt_c"></label>')
               ,div(class="input-group",
                    HTML('<label class="input-group-btn input-group-prepend"><span class="btn btn-success">')
-                   ,HTML('<img src="upload.tiff" width="18%" class="mx-2"><br>Drag your <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
+                   ,HTML('<img src="upload.png" width="18%" class="mx-2"><br>Drag your <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
                    ,HTML('
         <input id="gmt_c" name="gmt_c" type="file" style="display: none;" multiple="multiple" accept="text/tab-separated-values,.txt,.tab,.tsv,.gmt"/>
     ')
