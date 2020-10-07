@@ -102,7 +102,8 @@ species_names <- list(
   "Mus musculus" = "mmu",
   "Rattus norvegicus" = "rno",
   "Saccharomyces cerevisiae" = "sce",
-  "Sus scrofa" = "ssc"
+  "Sus scrofa" = "ssc",
+  "Other (custom GMT)" = "other"
 )
 
 # species names for gprofiler id autodetection and conversion

@@ -7,14 +7,26 @@ a_mode <- conditionalPanel(
                
                radioButtons(
                    inputId = "selected_mode",
-                   label = NULL,
+                   label = div(style = "font-weight:400;", "Select mode of analysis:"),
                    choices = run_modes,
                    selected = "gsea"
-               ),
-               tags$hr(style="border-color: #48617b;margin: 8px;")
+               )
+               # ,bsButton("loadx","Example Run")
+               ,tags$hr(style="border-color: #48617b;margin: 8px;")
         )
     )
 )
+
+# a_example <- conditionalPanel(
+#     condition = "input.tabs == 'gsea'",
+#     
+#     fluidRow(
+#         column(12,
+#             tags$hr(style="border-color: #48617b;margin: 8px;")
+#             ,bsButton("loadx","Example Run")
+#         )
+#     )
+# )
 
 # ====================== Body GSEA ======================
 bodyGSEA <- tabItem(tabName = "gsea",
@@ -41,26 +53,32 @@ bodyGSEA <- tabItem(tabName = "gsea",
                             onInitialize = I('function() { this.setValue(""); }')
                         )
                     ),
-                    bsTooltip("selected_species_q", HTML("Select species, then <i>click</i> <b>Confirm selection</b> to proceed"), placement = "top"),
+                    bsTooltip("selected_species_q", HTML("Select species of interest, or <b>Other (custom GMT)</b> for custom analysis"), placement = "top"), #, then <i>click</i> <b>Confirm selection</b> to proceed
                     
                     # database selection
                     uiOutput("test_db"),
+                    uiOutput("gmt_upload"),
                     uiOutput("bs_add_db"),
                     
                     
                     # UI select identifier
-                    radioButtons(
-                        "gene_identifier",
-                        HTML(paste0(
-                            "2. Select gene identifier:",
-                            add_help("gene_identifier_q", style="padding:3px 0 0 0;position:absolute;right:0.4em;")
-                        )),
-                        choices = gene_identifiers,
-                        selected = "other",
-                        inline = TRUE
+                    conditionalPanel(
+                        condition = "input.selected_species != 'other'",
+                        
+                        radioButtons(
+                            "gene_identifier",
+                            HTML(paste0(
+                                "2. Select gene identifier:",
+                                add_help("gene_identifier_q", style="padding:3px 0 0 0;position:absolute;right:0.4em;")
+                            )),
+                            choices = gene_identifiers,
+                            selected = "other",
+                            inline = TRUE
+                        ),
+                        bsTooltip("gene_identifier_q", HTML("The identifier of your input genes. If unsure, select <b>Other/Mixed</b>"), placement = "top"),
+                        
                     ),
-                    bsTooltip("gene_identifier_q", HTML("The identifier of your input genes. If unsure, select <b>Other/Mixed</b>"), placement = "top"),
-                    
+                                        
                     # GSEA UI - uploading RNK file
                     uiOutput("ui_rnk"),
                     uiOutput("bs_file_reset"),
@@ -107,6 +125,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                 
             ),
             br(),
+            uiOutput("gmt_box"),
             uiOutput("id_box")
         )
     )

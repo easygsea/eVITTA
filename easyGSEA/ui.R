@@ -16,6 +16,7 @@ sidebar <- dashboardSidebar(
         menuItem("4. Download", tabName = "download", icon = icon("download")),
         a_download
         # ,menuItem("Help", tabName = "help", icon = icon("info-circle"))
+        # ,a_example
 
     ),
     disconnectMessage(text = "Your session has timed out. Please refresh page and start again. For bug report, email us at evitta@cmmt.ubc.ca. Thank you for your support.")

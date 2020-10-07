@@ -81,9 +81,16 @@ gs_selected <- reactive({
 
 output$menu_download_table <- renderUI({
     req(rv$run == "success")
-    checkboxGroupInput("selected_download_gs", label = NULL,#tags$b("Select to download:"),
-                       choices = rv$dbs,
-                       selected = rv$dbs)
+    
+    if(input$selected_species != "other"){
+        dbs = rv$dbs
+    }else{
+        dbs = rv$gmt_cs
+    }
+    
+    checkboxGroupInput("selected_download_gs", label = div(style="font-weight:400;", "Select to download:"),
+                       choices = dbs,
+                       selected = dbs)
 })
 
 # ----------UI table cut-------------
@@ -171,7 +178,8 @@ output$ui_gmt_download <- renderUI({
                 "Select your species of interest to download."
             )
         )
-        
+    }else if(input$selected_species == "other"){
+        p("You have uploaded your own GMT libraries.")
     }else{
         species <- input$selected_species
         species_full <- species_translate(species)
