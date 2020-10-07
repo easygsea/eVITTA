@@ -621,7 +621,7 @@ output$gmt_box <- renderUI({
 
     fluidRow(column(12,
                     box(width=12,
-                        title = span(icon("tasks"), "Review and manage uploaded GMTs (maximum 500MB)"), status = "primary", solidHeader = F,
+                        title = span(icon("tasks"), "Review and manage uploaded GMTs (maximum 300MB)"), status = "primary", solidHeader = F,
                         tabPanel("Loaded files", 
                                  uiOutput("delete_gmt"),
                                  uiOutput("delete_gmt_confirm"),
