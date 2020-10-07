@@ -1,6 +1,8 @@
 rv <- reactiveValues(
   gse_all = NULL,
   
+  demo_acc = NULL, # default accession no
+  
   fpta_ids = list(),
   
   bcol1 = "#e6f4fc", runs = 0,
