@@ -42,6 +42,24 @@ css_addons <-
       margin-bottom:10px;
       }"
       
+      # GMT upload button
+      ,"#gmt_cc {
+      color: black;
+      background-color:#ffffe6;
+      border:1px dashed #48617b;
+      border-radius:25px;
+      height:90px;
+      overflow:auto;
+      }"
+      
+      ,"#gmt_cc:hover {
+      background-color: #f3e5f5;
+      }"
+      
+      # GMT upload progress bar
+      ,"#gmt_c_progress {
+      }"
+      
       # file upload in GMT area
       ,"#drag_gmt {
       margin-top:-8px;

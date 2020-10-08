@@ -118,24 +118,24 @@
       req(input$selected_species == "other")
       req(is.null(rv$db_status)==T || rv$db_status == "modify")
 
-      div(class="box__input",id="drop-area", align="center",
-          div(class="form-group shiny-input-container",id="drag_gmt",
-              HTML('<label class="control-label" for="gmt_c"></label>')
-              ,div(class="input-group",
-                   HTML('<label class="input-group-btn input-group-prepend"><span class="btn btn-success">')
-                   ,HTML('<img src="upload.tiff" width="18%" class="mx-2"><br>Drag your <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
+      div(#class="box__input",id="drop-area", align="center",
+          div(#class="form-group shiny-input-container",id="drag_gmt",
+              div(class="input-group", 
+                   HTML('<span button id="gmt_cc" style="width: 100%;" type="button" class="btn btn-default action-button">')
+                   ,HTML('<img src="upload.jpg" width="18%" class="mx-2"><br>Drag your <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
                    ,HTML('
         <input id="gmt_c" name="gmt_c" type="file" style="display: none;" multiple="multiple" accept="text/tab-separated-values,.txt,.tab,.tsv,.gmt"/>
     ')
               )
-              ,HTML('</span></label>')
+              ,HTML('</span>')
+              ,div(id="gmt_c_progress", class="progress progress-striped active shiny-file-input-progress",
+                   div(class="progress-bar")
+              )
           )
           ,bsTooltip("drop-area",HTML("Upload your own gene set database file (GMT) for custom analysis")
                      ,placement = "top")
       )
-      # ,div(id="gmt_c_progress", class="progress progress-striped active shiny-file-input-progress",
-      #      div(class="progress-bar")
-      # )
+      
     })
     
     # read in GMTs
@@ -993,7 +993,7 @@
         }
 
         
-        withProgress(message = "Running ORA analysis...",value = 0.2, {
+        withProgress(message = "Running GSEA analysis...",value = 0.2, {
 
             # ------ read GMTs & run fgsea ------ #
             # initialize
@@ -1099,7 +1099,7 @@
         }
 
 
-        withProgress(message = "Running overrepresentation analysis...",value = 0.2, {
+        withProgress(message = "Running ORA analysis...",value = 0.2, {
             
             # ------ read GMTs & run fgsea ------ #
             # initialize
