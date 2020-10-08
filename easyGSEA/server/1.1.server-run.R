@@ -14,24 +14,24 @@
 
   output$example1 <- renderTable({(example_data1 <- read.csv(paste0(getwd(),"/inc/cel2_example1.rnk"),header = TRUE, sep = "\t"))},escape = FALSE)
   output$example2 <- renderTable({(example_data2 <- read.csv(paste0(getwd(),"/inc/cel2_example2.csv")))},escape = TRUE)
-  
+
   # Navigation button to next tab -------------
   output$nav_btn_run <- renderUI({
     req(rv$run == "success")
-    
+
     div(
       nav_btn_f("gsea_f")
       ,bsTooltip("gsea_f", HTML("Proceed to <b>Enrichment Results</b>"))
     )
   })
-  
+
   observeEvent(input$gsea_f,{
     updateTabItems(session, "tabs","kegg")
   })
-  
+
 
     # --------------  1.1 select databases --------------------
-    
+
     # disable selection when user confirms gmts; enables upon modify
     # this is to prevent accidentally messing up selections by changing species
     observe({
@@ -45,11 +45,11 @@
     })
 
     # --------------  1.2 select GMTs ---------------------------
-    
+
     observe({
         req(nchar(input$selected_species)>0 && input$selected_species != "other")
         req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
-        
+
         species <- input$selected_species
 
         for(collection in sort(names(gmt_collections_paths[[species]]))){
@@ -74,13 +74,13 @@
             )
         }
     })
-    
+
     output$test_db <- renderUI({
         req(nchar(input$selected_species)>0  && input$selected_species != "other")
         req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
-        
+
         species = input$selected_species
-        
+
         fluidRow(
             column(
                 width = 12,
@@ -92,7 +92,7 @@
     #     $("#showdbs").html("<span class=\\\"glyphicon glyphicon-collapse-up\\\"></span> Advanced database options ...");
     #   });
     # });')),
-                actionButton("showdbs", "Advanced database options ...", 
+                actionButton("showdbs", "Advanced database options ...",
                          icon = icon("book-open")
                          # icon = icon("collapse-down", lib = "glyphicon")
                          # ,style = "default"
@@ -112,42 +112,42 @@
             )
         )
     })
-    
+
     # -------------- 1.2b upload GMT -------------------
     output$gmt_upload <- renderUI({
       req(input$selected_species == "other")
       req(is.null(rv$db_status)==T || rv$db_status == "modify")
 
-      div(class="box__input",id="drop-area", align="center",
-          div(class="form-group shiny-input-container",id="drag_gmt",
-              HTML('<label class="control-label" for="gmt_c"></label>')
-              ,div(class="input-group",
-                   HTML('<label class="input-group-btn input-group-prepend"><span class="btn btn-success">')
-                   ,HTML('<img src="upload.png" width="18%" class="mx-2"><br>Drag your <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
+      div(#class="box__input",id="drop-area", align="center",
+          div(#class="form-group shiny-input-container",id="drag_gmt",
+              div(class="input-group",
+                   HTML('<span button id="gmt_cc" style="width: 100%;" type="button" class="btn btn-default action-button">')
+                   ,HTML('<img src="upload.jpg" width="18%" class="mx-2"><br>Drag your <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
                    ,HTML('
         <input id="gmt_c" name="gmt_c" type="file" style="display: none;" multiple="multiple" accept="text/tab-separated-values,.txt,.tab,.tsv,.gmt"/>
     ')
               )
-              ,HTML('</span></label>')
+              ,HTML('</span>')
+              ,div(id="gmt_c_progress", class="progress progress-striped active shiny-file-input-progress",
+                   div(class="progress-bar")
+              )
           )
           ,bsTooltip("drop-area",HTML("Upload your own gene set database file (GMT) for custom analysis")
                      ,placement = "top")
       )
-      # ,div(id="gmt_c_progress", class="progress progress-striped active shiny-file-input-progress",
-      #      div(class="progress-bar")
-      # )
+
     })
-    
+
     # read in GMTs
     observeEvent(input$gmt_c,{
       df = input$gmt_c
-      
+
       gmt_names = list()
       for(i in 1:nrow(df)){
         gmt = df[i,]
         gmt_name = gmt$name
         gmt_path = gmt$datapath
-        
+
         gmt_names = c(gmt_names,gmt_name)
 
         if(!gmt_name %in% rv$gmt_cs){
@@ -155,7 +155,7 @@
           rv$gmt_cs_paths = c(rv$gmt_cs_paths, gmt_path)
         }
       }
-      
+
       showModal(modalDialog(
         fluidRow(
           column(12, style="font-size:150%;",
@@ -172,7 +172,7 @@
     # --------------  1.2.2 show databases in a modal ---------------------------
     observeEvent(input$showdbs,{
       species = input$selected_species
-      
+
       showModal(modalDialog(id = "db_modal",
         title = HTML(paste0("Available databases for <i>",species_translate(species),"</i>")),
         div(
@@ -188,49 +188,49 @@
         ),
         easyClose = F,size="m"
         , footer = tagList(
-          # modalButton('Cancel'), 
+          # modalButton('Cancel'),
           bsButton('select_db', h4('Select to continue!'), style = "primary", block=TRUE)
         )
       ))
     })
-    
+
     # reset to default selected databases
     output$bs_reset_db <- renderUI({
       req(input$selected_species != "")
       req(is.null(rv$db_status)==T || rv$db_status == "modify")
       bsButton(
-        inputId = "reset_db", 
+        inputId = "reset_db",
         label = "Reset to default selections",
         # style = "primary",
         type = "button")
     })
-    
+
     # observe modal "select" bsbutton, dismiss modal
     observeEvent(input$select_db,{
       dbs = NULL; rv$db_modal = "yes"
       species<-input$selected_species
-      
+
       for(collection in sort(names(gmt_collections_paths[[species]]))){
         db_id = paste0(species,gsub(" ","_",collection))
         # db_name = input[[db_id]]
         dbs = c(dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% isolate(input[[db_id]]))])
       }
-      
+
       if(length(dbs)<1){
         shinyalert("Select at least one database")
       }else{
         removeModal()
       }
     })
-    
+
     #-------------- 1.3 select GMTs ----------------
-    
+
     # write selected databases into RV
     observeEvent(input$add_db, {
         rv$dbs = NULL
-        
+
         species<-input$selected_species
-        
+
         if(species == "other"){
           if(length(rv$gmt_cs)<1){
             shinyalert("Please upload a GMT file to proceed")
@@ -251,7 +251,7 @@
           }
           rv$db_status <- "selected"
         }
-        
+
         # for(collection in sort(names(gmt_collections_paths[[species]]))){
         #     db_id = paste0(species,gsub(" ","_",collection))
         #     # db_name = input[[db_id]]
@@ -261,13 +261,13 @@
         #       rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% input[[db_id]])])
         #     }
         # }
-        
+
     })
-    
+
     # reset species, at the same time reset rnk/glist
     observeEvent(input$add_db_modify, {
       rv$db_status <- "modify"
-      
+
       # clear RVs
       # rv$run = NULL
       rv$glist_check = NULL
@@ -282,19 +282,19 @@
       rv$gene_lists_mat1 = NULL; rv$gene_lists_mat2 = NULL
       rv$db_modal = NULL
       rv$gmt_cs = NULL
-      
+
       # rest glist UIs
       shinyjs::reset("gene_list")
       shinyjs::enable("gene_list")
       shinyjs::reset("glist_name")
       shinyjs::enable("glist_name")
-      
+
       # reset gsea UIs
       shinyjs::reset("rnkfile")
-      shinyjs::enable("rnkfile")  
-        
+      shinyjs::enable("rnkfile")
+
     })
-    
+
     # add / modify button
     output$bs_add_db <- renderUI({
         req(input$selected_species != "")
@@ -303,7 +303,7 @@
             column(
               width = 12,
               bsButton(
-                inputId = "add_db", 
+                inputId = "add_db",
                 label = "Confirm to proceed",
                 style = "primary",
                 type = "button"),
@@ -316,7 +316,7 @@
             column(
               width = 12,
               bsButton(
-                inputId = "add_db_modify", 
+                inputId = "add_db_modify",
                 label = "Modify selection",
                 style = "default",
                 type = "button"),
@@ -324,13 +324,13 @@
             )
           )
         }
-        
+
     })
-    
+
     # reset button
     observeEvent(input$reset_db, {
         rv$run = NULL
-        
+
         species <- input$selected_species
         for(collection in names(gmt_collections_paths[[species]])){
           sel = gmt_collections_selected[[species]][[collection]]
@@ -345,17 +345,17 @@
                                      selected = sel
             )
           }
-            
+
         }
     })
 
-    
+
 # ------------ 3.1.1 Upload & reset RNK ---------------
     # UI file input
     output$ui_rnk <- renderUI({
         req(input$selected_mode == "gsea")
         # req(rv$db_status == "selected")
-      
+
       if(input$selected_species == "other"){
         noo = "2"
       }else{
@@ -363,7 +363,7 @@
       }
         div(
 
-      
+
             fileInput("rnkfile",
                       label = p(paste0(noo,". Upload RNK or DEG file:"),
                                 tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
@@ -374,17 +374,17 @@
                           "text/comma-separated-values",
                           ".csv",".txt",".tab",".tsv",
                           ".rnk")
-                      
-                      
+
+
 
             ),
             bsTooltip("q1", "<i>Click</i> to learn more and load our <u>sample data</u> for a trial run", placement = "top")
-            
-            
+
+
         )
 
     })
-    
+
     # UI reset
     output$bs_file_reset <- renderUI({
         req(input$selected_mode == "gsea")
@@ -396,15 +396,15 @@
             style = "default",
             type = "button"),
         ))
-        
+
     })
 
-    
+
     # reset RNK input widget
     observeEvent(input$reset, {
       reset_rnk()
     })
-    
+
     # read in RNK file path name, disable widget
     observeEvent(input$rnkfile, {
         rv$file_upload_status = "uploaded"
@@ -416,8 +416,8 @@
           showModal(modalDialog(
             inputId = "size_reminder_modal",
             # title = "The file size exceeds 10MB.",
-            div("The file you have uploaded exceeds 10MB. Please delete unneeded columns and 
-            only keep gene names, log fold changes (logFC), and p values. 
+            div("The file you have uploaded exceeds 10MB. Please delete unneeded columns and
+            only keep gene names, log fold changes (logFC), and p values.
             Then press \"reset file\" and upload the trimmed file again. Thank you.",style="font-size:200%"),
             easyClose = TRUE,size="l"
             , footer = modalButton("OK")
@@ -426,17 +426,17 @@
     })
 
 # ------------- 3.1.2 select corresponding table columns -----------------
-    # UI: select columns to 
+    # UI: select columns to
     # output$feedbacks <- renderUI
     observe({
       req(input$selected_mode == "gsea")
       req(rv$db_status == "selected")
       req(rv$file_upload_status == "uploaded")
       req(is.null(rv$infile_confirm) == T)
-      
+
       showModal(modalDialog(
         title = "Select corresponding columns to continue",
-        
+
         fluidRow(
           column(12,
             wellPanel(
@@ -447,7 +447,7 @@
                 value = F, inline = TRUE, width = "100%",
                 status = "danger"
               ),
-              
+
               uiOutput("feedback_filecontent_deg"),
               uiOutput("feedback_filecontent_rnk"),
               # uiOutput("feedback_filecontent_confirm"),
@@ -456,20 +456,20 @@
           ),
           column(6,
                  textInput("f_name",label = "Name your query:",value = rv$rnkll,width = "100%")
-                 
-            
+
+
           ),
           column(6,
                  uiOutput("ui_num")
-                 
-            
+
+
           ),
           column(12,
                  p("Your query file content:"),
                  uiOutput("feedback_filecontent")
           )
         ),
-          
+
         easyClose = F,
         footer = bsButton(
           "filecontent_confirm",
@@ -478,9 +478,9 @@
           style = "primary"
         )
       ))
-      
+
     })
-    
+
     # ------------ 3.1.2.2 select numeric namespace -----------
     output$ui_num <- renderUI({
       req(input$gene_identifier == "other")
@@ -488,7 +488,7 @@
 
       r_num_acc()
     })
-        
+
 # ------------- 3.1.3 Upload and reset example RNK/DE --------------
     observeEvent(input$loadExampleRNK,{
         rv$example_file = NULL
@@ -498,7 +498,7 @@
           shinyalert("Example data unavailable for custom GMT. Select a supported species for a trial run.")
         }else{
           reset_rnk()
-          
+
           updateRadioButtons(
             session,
             "gene_identifier",
@@ -515,7 +515,7 @@
             rv$file_upload_status = "uploaded"
         }
     })
-    
+
     observeEvent(input$loadExampleDEG,{
         rv$example_file = NULL
         if(input$selected_species == ""){
@@ -524,7 +524,7 @@
           shinyalert("Example data unavailable for custom GMT. Select a supported species for a trial run.")
         }else{
           reset_rnk()
-          
+
           updateRadioButtons(
             session,
             "gene_identifier",
@@ -542,7 +542,7 @@
         }
     })
 
-    
+
 # ----------------- 3.1.4 check and store input file content into rv$data_head -----------------------
     observe({
         req(is.null(rv$infile_name)==F)
@@ -550,18 +550,18 @@
         rv$input_symbol = NULL
         rv$gene_lists_mat1 = NULL
         rv$run = NULL
-        
+
         rv$rnkll <- strsplit(isolate(rv$infile_name),"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1] # add value to rv
         ranks <- read_delim(isolate(rv$infile_path), ",", locale = locale(encoding = 'ISO-8859-1'))# , escape_double = FALSE, trim_ws = TRUE)
 
         if(ncol(ranks)==1){
             ranks <- read_delim(isolate(rv$infile_path), "\t", locale = locale(encoding = 'ISO-8859-1'))# , escape_double = FALSE, trim_ws = TRUE)
         }
-    
+
         for(i in seq_along(colnames(ranks))){
             #delete the unrecognized character
             colnames(ranks)[i] <- stringr::str_replace_all(colnames(ranks)[i],"[^(a-z0-9A-Z+><)|[:punct:]]", "")
-            
+
             if(is.character(ranks[[i]])){
               ranks[[i]] <- stringr::str_replace_all(ranks[[i]],"[^(a-z0-9A-Z+><)|[:punct:]]", "")
             }
@@ -577,17 +577,17 @@
         }else{
             shinyalert("You uploaded a file with < 2 columns. Please click the help button for accepted file formats.")
         }
-        
+
         # save had data into RV
         rv$data_head = ranks
         rv$data_head_o = ranks
     })
-    
+
     # ----------------- 3.1.5 Return RNK -----------------------
     observeEvent(input$filecontent_confirm,{
       # rename query
       if(input$f_name != ""){rv$rnkll = input$f_name}
-      
+
       # read in file data
         data = rv$data_head_o
         wtext = tags$b(
@@ -603,7 +603,7 @@
             shinyalert("Please select the gene column.")
           }else{
             removeModal()
-            
+
             all_genes = data[[input$gene_column]]
             duplicates = duplicated(all_genes)
 
@@ -639,10 +639,10 @@
             shinyalert("Please select the p-value column.")
           }else{
             removeModal()
-            
+
             all_genes = data[[input$gene_column]]
             duplicates = duplicated(all_genes)
-            
+
             if(TRUE %in% duplicates){
               shinyWidgets::ask_confirmation(
                 inputId = "confirm_duplicate_deg",
@@ -656,14 +656,14 @@
             }else{
               convert_rnk_from_deg()
               return_rnk()
-              
+
             }
           }
         }
     })
 
     # ----------------- 3.1.6 check if duplicated genes -----------------------
-    
+
     observeEvent(input$confirm_duplicate_rnk,{
       if(input$confirm_duplicate_rnk){
         convert_rnk()
@@ -672,14 +672,14 @@
         reset_rnk()
       }
     },ignoreInit = T)
-    
+
     observeEvent(input$confirm_duplicate_deg,{
       if(input$confirm_duplicate_deg==TRUE){
         convert_rnk_from_deg()
         return_rnk()
       }
     },ignoreInit = T)
-    
+
 #====================================================#
 ######      3.2.1 GList mode: input gene lists  ######
 #====================================================#
@@ -694,11 +694,11 @@
     tags$style(type = "text/css", "#load_example_glist {display: inline-block;height: 20px;padding: 0;vertical-align: baseline;}"),
     add_help("gene_list_q", style="font-size:medium;padding:3px 0 0 0;position:absolute;right:0.8em;"),
     actionLink("load_example_glist", label = tags$u("example data")
-               
+
     ),
     "):")
       }
-      
+
       fluidRow(
         column(
           width = 12,
@@ -735,20 +735,20 @@
           ,div(
             style="display: inline-block;vertical-align:top;",
             uiOutput("glist_add_button")
-            
+
           )
         )
-        
+
       )
     })
-    
+
     # numeric identifier
     output$ora_num <- renderUI({
       req(input$gene_identifier == "other")
       req(input$selected_species != "other")
       r_num_acc()
     })
-    
+
     # Glist add button
     output$glist_add_button <- renderUI({
       req(is.null(rv$gene_lists)|is.null(rv$glist_check))
@@ -758,17 +758,17 @@
         style = "primary"
       )
     })
-    
+
     #---------------- 3.2.2 read in GList-----------------
     # from input field
     observeEvent(input$gene_list_add,{
-        species = isolate(input$selected_species)  
+        species = isolate(input$selected_species)
         # print(input$gene_list)
         if(nchar(species)>2){
             if(input$gene_list != ""){
                 shinyjs::disable("gene_list")
                 shinyjs::disable("glist_name")
-                
+
                 genelist = as.character(input$gene_list)
                 genelist = gsub("\"","",genelist)
                 genelist = strsplit(genelist,"\n")
@@ -776,36 +776,36 @@
                 genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*;\\s*')))
                 genelist = unlist(strsplit(genelist," "))
                 genelist = unique(genelist)
-                
+
                 if(is.null(genelist)==F){
                     # save original gene lists into RV
                     rv$gene_lists = genelist
-                    
+
                     # autodetect and convert into SYMBOL (if other/mixed identifier) using gprofiler2
                     if(input$gene_identifier == "other" && input$selected_species != "other"){
                       withProgress(message = "Autodetecting and converting gene IDs...",{
                         Sys.sleep(0.1)
                         incProgress(1)
                         lst = convert_gene_id(species,genelist)
-                        
+
                         if(is.null(lst)){
                           # no ID detected in database
                           rv$glist_check = "none"
                         }else{
                           # check percentage of IDs found in database
                           g_perc = lst[[1]]
-                          
+
                           # if <30%, reports error
                           if(g_perc < 0.5){
                             rv$glist_check = "low"
                           }else{
                             rv$glist_check = "pass"
                           }
-                          
+
                           # convert ID and save converted IDs & conversion table into RVs
                           rv$gene_lists_after = lst[[2]]
                           rv$gene_lists_mat2 = lst[[3]]
-                          
+
                         }
                       })
                     }else{
@@ -828,20 +828,20 @@
         }
         # }else{
         #     rv$gene_lists = rv$data_glist
-        # 
+        #
         #     # successfully submitted
         #     rv$glist_status = "submitted"
         # }
     })
-    
+
     # -------------- 3.2.3 clear GList input ---------------------------
     observeEvent(input$gene_list_clear, {
         # rv$run = NULL
-        
+
         rv$glist_check = NULL
         rv$gene_lists = NULL
         rv$gene_lists_after = NULL
-        
+
         shinyjs::reset("gene_list")
         shinyjs::enable("gene_list")
         shinyjs::reset("glist_name")
@@ -852,7 +852,7 @@
         #                     placeholder = "Type to input.."
         # )
     })
-    
+
     #----------- 3.2.4 Example GList --------------
     observeEvent(input$load_example_glist,{
         if(input$selected_species == ""){
@@ -866,9 +866,9 @@
             )
         }
     })
-    
 
-    
+
+
 
 #---------- 4. run parameters & confirm buttons ---------
     # UI confirm GSEA
@@ -885,9 +885,9 @@
         aid = "confirm2"; alabel = "RUN ORA!"
       }
 
-        
+
       div(
-        actionBttn(aid, 
+        actionBttn(aid,
                    alabel,
                    style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
                    icon = icon("play-circle"),
@@ -896,12 +896,12 @@
         div(
           style="position: absolute; right: 0.8em; top: -0.4em;",
           uiOutput("ui_gsea_par")
-          
+
         )
       )
-        
+
     })
-    
+
     # --------------- 4a. UI GSEA parameter ---------------
     output$ui_gsea_par <- renderUI({
       if(input$selected_mode == "gsea"){
@@ -911,14 +911,14 @@
         req(is.null(rv$glist_check)==F)
         req(is.null(rv$gene_lists_after)==F)
       }
-      
+
       dropdownButton(
         width = "300px",circle = TRUE, status = "info",
         size = "xs",
         icon = icon("gear"),# class = "opt"),
         up = FALSE,
         tooltip = tooltipOptions(title = "Click to adjust run parameters"),
-        
+
         fluidRow(
           br(),
           column(12,
@@ -926,11 +926,11 @@
             wellPanel(
               h4("Advanced run parameters"),
               splitLayout(
-                numericInput("mymin", 
+                numericInput("mymin",
                              HTML(paste0("Min:",
                                          add_help("mymin_q")))
                              ,rv$gmin),
-                numericInput("mymax", 
+                numericInput("mymax",
                              HTML(paste0("Max:",
                                          add_help("mymax_q")))
                              ,rv$gmax),
@@ -943,42 +943,42 @@
           )
         )
       )
-      
-      
+
+
     })
-    
+
     output$ui_nperm <- renderUI({
       req(input$selected_mode == "gsea")
       div(
-        numericInput("nperm", 
+        numericInput("nperm",
                      HTML(paste0("# perm:",add_help("nperm_q")))
                      ,rv$gperm),
         bsTooltip("nperm_q", "No. of permutations", placement = "top")
       )
     })
 
-    
+
     #===============================================#
     #####           4.1 run GSEA!!!             #####
     #===============================================#
     # runs upon the analysis name is provided.
     observeEvent(input$confirm1, {
-        
+
         rv$run_mode = "gsea"
         ranks = rv$rnkgg
         names(ranks) = toupper(names(ranks))
-        
+
         sd = sd(ranks); rv$sd_high = sd * 2.5
-        
+
         if(is.null(input$mymin)==F){rv$gmin=input$mymin}
         if(is.null(input$mymax)==F){rv$gmax=input$mymax}
         if(is.null(input$nperm)==F){rv$gperm=input$nperm}
-        
+
         # reset RVs
         reset_rvs()
-        
+
         species <- isolate(input$selected_species)
-        
+
         # save dbs for plots
         if(species != "other"){
           rv$bar_pathway = rv$dbs
@@ -986,19 +986,19 @@
           rv$volcano_pathway = rv$dbs
         }else{
           rv$gmt_cs = lapply(rv$gmt_cs,function(x) {strsplit(x,"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1]})
-          
+
           rv$bar_pathway = rv$gmt_cs
           rv$bubble_pathway = rv$gmt_cs
           rv$volcano_pathway = rv$gmt_cs
         }
 
-        
-        withProgress(message = "Running ORA analysis...",value = 0.2, {
+
+        withProgress(message = "Running GSEA analysis...",value = 0.2, {
 
             # ------ read GMTs & run fgsea ------ #
             # initialize
             errors = 0
-            
+
             if(species != "other"){
               for(collection in sort(names(gmt_collections_paths[[species]]))){
                 db_id = paste0(species,gsub(" ","_",collection))
@@ -1007,10 +1007,10 @@
                 }else{
                   inputs = gmt_collections_selected[[species]][[collection]]
                 }
-                
+
                 for(cat_name in inputs){
                   gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
-                                    
+
                   run_gsea(cat_name, gmt_path, ranks,errors)
                 }
               }
@@ -1020,8 +1020,8 @@
                 run_gsea(rv$gmt_cs[[i]], gmt_path, ranks,errors)
               }
             }
-            
-            
+
+
             if(errors > 0 && nrow(rv$fgseagg)<1){
               if(species != "other"){
                 db_selected = names(rv$dbs)
@@ -1033,25 +1033,25 @@
                   tags$li(h4(paste0("Database(s): ",db_selected))),
                   tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
                                     ," and max=",rv$gmax))),
-                  
+
                   size = "l",
                   easyClose = TRUE
                 ))
               }else{
                 db_selected = paste(rv$gmt_cs,collapse = "; ")
-                
+
                 showModal(modalDialog(
                   title = h3(HTML("Analysis failed")),
                   h4(HTML("Please check if the uploaded GMTs are in correct format. If yes, click the gear button and adjust <b>Advanced run parameters</b>")),
                   tags$li(h4(paste0("Database(s): ",db_selected))),
                   tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
                                     ," and max=",rv$gmax))),
-                  
+
                   size = "l",
                   easyClose = TRUE
                 ))
               }
-              
+
             }else{
               # count number of filtered GSs in GMTs
               l = unlist(lapply(rv$gmts, function(x){return(length(x)>=rv$gmin && length(x)<=rv$gmax)}))
@@ -1068,20 +1068,20 @@
             }
         })
     })
-    
+
     #===============================================#
     #####             4.2 run GList!!!          #####
     #===============================================#
-    
+
     observeEvent(input$confirm2, {
         rv$run_mode = "glist"
         species <- isolate(input$selected_species)
-        
+
         # reset RVs
         reset_rvs()
 
         # read in parameters
-        
+
         genelist = toupper(rv$gene_lists_after)
 
         if(is.null(input$mymin)==F){rv$gmin=input$mymin}
@@ -1093,18 +1093,18 @@
           rv$bubble_pathway = rv$dbs
         }else{
           rv$gmt_cs = lapply(rv$gmt_cs,function(x) {strsplit(x,"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1]})
-          
+
           rv$bar_pathway = rv$gmt_cs
           rv$bubble_pathway = rv$gmt_cs
         }
 
 
-        withProgress(message = "Running overrepresentation analysis...",value = 0.2, {
-            
+        withProgress(message = "Running ORA analysis...",value = 0.2, {
+
             # ------ read GMTs & run fgsea ------ #
             # initialize
             errors = 0
-            
+
             if(species != "other"){
               for(collection in sort(names(gmt_collections_paths[[species]]))){
                 db_id = paste0(species,gsub(" ","_",collection))
@@ -1113,12 +1113,12 @@
                 }else{
                   inputs = gmt_collections_selected[[species]][[collection]]
                 }
-                
+
                 for(cat_name in inputs){
                   gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
                   run_ora(cat_name,gmt_path,genelist,errors)
                 }
-                
+
               }
             }else{
               for(i in seq_along(rv$gmt_cs)){
@@ -1152,17 +1152,17 @@
               if(is.null(rv$fgseagg)==F && nrow(rv$fgseagg)>0){
                 rv$run = "success"
                 rv$run_n = rv$run_n + 1
-                
+
               } else {
                 rv$run = "failed"
               }
               incProgress(0.1)
             }
-            
+
 
         })
     })
-    
+
     # ---------------------- 4.3 render Modal upon successful run ----------------
     observeEvent(rv$run_n,{
       showModal(modalDialog(
@@ -1173,13 +1173,13 @@
             h2("Analysis complete!")
             ,br(),column(12,uiOutput("run_summary_gsea"))
             ,br(),br(),br(),guide_box("msg1")
-            
+
           )
         )
         ,footer = NULL
       ))
     },ignoreInit = T)
-    
+
     # ------------ clike button to Enrichment Results tab ------------
     observeEvent(input$msg1,{
       removeModal()
