@@ -48,6 +48,8 @@ bodyGSEA <- tabItem(tabName = "gsea",
                             )),
                         
                         choices = species_names,
+                        #the default value of selected for demo session
+                        selected = "cel",
                         options = list(
                             placeholder = 'Type to search ...',
                             onInitialize = I('function() { this.setValue(""); }')

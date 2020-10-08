@@ -514,6 +514,8 @@ output$dmdf_filter_ui <- renderUI({
         label = "Filtering options:",
         choices = choices,
         selected = "Filtered"
+        #the next line is for demo section Version 1
+        #selected = "Full matrix"
       ),
   )
 })
