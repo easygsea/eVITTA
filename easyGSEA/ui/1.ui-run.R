@@ -51,8 +51,8 @@ bodyGSEA <- tabItem(tabName = "gsea",
                         #the default value of selected for demo session
                         selected = "cel",
                         options = list(
-                            placeholder = 'Type to search ...',
-                            onInitialize = I('function() { this.setValue(""); }')
+                            placeholder = 'Type to search ...'
+                            #,onInitialize = I('function() { this.setValue(""); }')
                         )
                     ),
                     bsTooltip("selected_species_q", HTML("Select species of interest, or <b>Other (custom GMT)</b> for custom analysis"), placement = "top"), #, then <i>click</i> <b>Confirm selection</b> to proceed
