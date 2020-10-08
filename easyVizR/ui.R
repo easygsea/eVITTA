@@ -66,12 +66,14 @@ sidebar <- dashboardSidebar(
 
 
 body <- dashboardBody(
-  
     # -------------- Load Dependencies -------------------
   
     # link to stylesheet
     tags$head(
-      tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
+      #Added get IP here!
+      tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+      ######Added get IP here!
+      tags$script(src="getIP.js")
     ),
     
     # apply specific css adjustments additionally
@@ -104,7 +106,9 @@ body <- dashboardBody(
 #======================================================================#
 
 shinyUI(
+
   dashboardPage(
+    
     title="easyVizR",
     dashboardHeader(title = "easyVizR",
                     tags$li(class = "dropdown", actionButton("home", "eVITTA Home",icon("home"), 
