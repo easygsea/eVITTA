@@ -32,6 +32,7 @@ library(markdown)
 library(V8)
 library(lobstr)
 library(shinydisconnect)
+library(rjson)
 
 
 # library(dashboardthemes)
