@@ -15,7 +15,7 @@ output$ui_bodyResults <- renderUI({
                         inputId = "plot_type",
                         choiceNames = list(span(icon("chart-bar"),"Bar plot"),span(icon("first-order-alt"),"Bubble plot"),span(icon("file-word"),"Keywords"),span(icon("braille"),"Manhattan plot"),span(icon("fire-alt"),"Volcano plot")), #,
                         choiceValues = list("bar", "bubble","word","manhattan","volcano"), #,
-                        selected = "bar",
+                        selected = rv$plot_type,
                         status = "primary",
                         size = "normal",
                         direction = "horizontal"
@@ -70,6 +70,10 @@ output$ui_bodyResults <- renderUI({
             
         )
     }
+})
+
+observeEvent(input$plot_type,{
+    rv$plot_type = input$plot_type
 })
 
 # feedbacks on no significant enrichment
