@@ -1,11 +1,11 @@
 # Overall bodyNetwork UI ------------------
 output$ui_bodyNetwork <- renderUI({
-    # if(is.null(rv$run) || rv$run != "success"){
-    #     box(
-    #         title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
-    #         "Visualization available upon successful run."
-    #     )
-    # }else{
+    if(is.null(rv$run) || rv$run != "success"){
+        box(
+            title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
+            "Visualization available upon successful run."
+        )
+    }else{
         fluidRow(
             # uiOutput("ui_vis_gear"),
             
@@ -49,7 +49,7 @@ output$ui_bodyNetwork <- renderUI({
                 )
             )
         )
-    # }
+    }
 })
 
 # ------------ nav buttons to previous/next tab -----------
