@@ -9,7 +9,9 @@ a_mode <- conditionalPanel(
                    inputId = "selected_mode",
                    label = div(style = "font-weight:400;", "Select mode of analysis:"),
                    choices = run_modes,
-                   selected = "gsea"
+                   #selected = "gsea"
+                   #demo session for ora analysis, where the default selected mode is "glist" please be careful here
+                   selected = "glist"
                )
                # ,bsButton("loadx","Example Run")
                ,tags$hr(style="border-color: #48617b;margin: 8px;")
