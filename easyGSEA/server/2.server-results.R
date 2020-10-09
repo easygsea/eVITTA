@@ -38,9 +38,6 @@ output$ui_bodyResults <- renderUI({
                     box(
                         width = 12,height = rv$box_h_a,align = "center",
                         status = "primary",
-                        uiOutput("plot_bar_none"),
-                        uiOutput("plot_bubble_none"),
-                        uiOutput("plot_word_none"),
                         div(
                             style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
                             uiOutput("plot_area")
@@ -127,13 +124,25 @@ output$plot_area <- renderUI({
     if(input$plot_type=="manhattan"){
         plotlyOutput("plot_manhattan", width = "100%", height = rv$box_h)
     }else if(input$plot_type=="bar"){
-        plotlyOutput("plot_bar", width = "100%", height = rv$box_h)
+        if(is.null(p_bar())){
+            sig_none()
+        }else{
+            plotlyOutput("plot_bar", width = "100%", height = rv$box_h)
+        }
     }else if(input$plot_type=="bubble"){
-        plotlyOutput("plot_bubble", width = "100%",height = rv$box_h)
+        if(is.null(p_bubble())){
+            sig_none()
+        }else{
+            plotlyOutput("plot_bubble", width = "100%",height = rv$box_h)
+        }
     }else if(input$plot_type=="volcano"){
         uiOutput("ui_volcano")
     }else if(input$plot_type=="word"){
-        plotlyOutput("plot_word", width = "100%",height = rv$box_h)
+        if(is.null(word_plot())){
+            sig_none()
+        }else{
+            plotlyOutput("plot_word", width = "100%",height = rv$box_h)
+        }
     }
 })
 
@@ -554,16 +563,6 @@ observeEvent(input$bar_confirm,{
     
 })
 
-# if no significant terms found
-output$plot_bar_none <- renderUI({
-    req(rv$run == "success")
-    req(input$plot_type=="bar")
-    
-    if(is.null(p_bar())){
-        sig_none()
-    }
-})
-
 # bar plot
 p_bar <- reactive({
     if(rv$run_mode == "gsea"){
@@ -607,15 +606,6 @@ observeEvent(input$bubble_confirm,{
     rv$bubble_zmax = input$bubble_slider[2]
 })
 
-# if no significant terms found
-output$plot_bubble_none <- renderUI({
-    req(rv$run == "success")
-    req(input$plot_type=="bubble")
-    
-    if(is.null(p_bubble())){
-        sig_none()
-    }
-})
 
 # bubble plot
 p_bubble <- reactive({
@@ -740,15 +730,6 @@ observeEvent(input$word_confirm,{
     rv$n_word = input$n_word
 })
 
-# if no significant terms found
-output$plot_word_none <- renderUI({
-    req(rv$run == "success")
-    req(input$plot_type=="word")
-    
-    if(is.null(word_plot())){
-        sig_none()
-    }
-})
 
 # word plot
 output$plot_word <- renderPlotly({
