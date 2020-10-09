@@ -131,7 +131,7 @@
       rv$run_mode <- readRDS(paste0(getwd(),"/rvs/run_mode.rds"))
       rv$volcano_pathway <- readRDS(paste0(getwd(),"/rvs/volcano_pathway.rds"))
       rv$infile_name <- readRDS(paste0(getwd(),"/rvs/infile_name.rds"))
-      rv$infile_path <- readRDS(paste0(getwd(),"/rvs/infile_path.rds"))
+      rv$infile_path <- paste0(getwd(),"/inc/cel.rnk")
       rv$infile_confirm <- readRDS(paste0(getwd(),"/rvs/infile_confirm.rds"))
       rv$rnkgg <- readRDS(paste0(getwd(),"/rvs/rnkgg.rds"))
       rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs/bar_pathway.rds"))
@@ -156,6 +156,8 @@
       rv$gene_lists_mat2 <- readRDS(paste0(getwd(),"/rvs/gene_lists_mat2.rds"))
       rv$run_n <- readRDS(paste0(getwd(),"/rvs/run_n.rds"))
       rv$gene_lists <- readRDS(paste0(getwd(),"/rvs/gene_lists.rds"))
+      rv$run == "success"
+      rv$demo = "yes"
       
       req(input$selected_species == "other")
       req(is.null(rv$db_status)==T || rv$db_status == "modify")
@@ -1241,6 +1243,28 @@
     
     # ------------ clike button to Enrichment Results tab ------------
     observeEvent(input$msg1,{
+      removeModal()
+      updateTabItems(session, "tabs", "kegg")
+    })
+    
+    # ------------ demo's nav to next tab UI ----------------
+    output$demo_nav <- renderUI({
+      req(rv$demo == "yes")
+      if(input$selected_mode == "gsea"){
+        req(input$confirm1 == 0)
+        
+      }else{
+        req(input$confirm2 == 0)
+        
+      }
+      
+      column(12,
+        guide_box("msg2")
+        
+      )
+    })
+    
+    observeEvent(input$msg2,{
       removeModal()
       updateTabItems(session, "tabs", "kegg")
     })

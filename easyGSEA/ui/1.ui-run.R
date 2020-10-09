@@ -128,6 +128,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
             ),
             br(),
             uiOutput("gmt_box"),
+            uiOutput("demo_nav"),
             uiOutput("id_box")
         )
     )
