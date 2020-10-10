@@ -33,6 +33,8 @@ library(V8)
 library(lobstr)
 library(shinydisconnect)
 library(rjson)
+library(rgeos)
+library(polyclip)
 
 # library(dashboardthemes)
 options(repos = BiocManager::repositories())

@@ -284,7 +284,7 @@ output$n_venn_dl <- downloadHandler(
 # gl ver (uses the shared reactive)
 n_venn_plt <- reactive({
   gls <- n_ins_gls()
-  names(gls) <- gsub(".csv","",names(gls))
+  # names(gls) <- addlinebreaks2(names(gls), 20, "\n")
   fit2 <- euler(gls)
   venn <- plot(fit2, quantities = list(type = rv$n_venn_label))
   
@@ -300,45 +300,141 @@ output$df_n_venn <- renderPlot({
 })
 
 
+# find closest label to each circle, and use that to match the ins criteria.
+#-------------------------------------------
+# used within draw_venn_with_ins()
+find_closest_label <- function(circle_coords, labs, nx_n, lb_limit){
+  textlabs<-labs[which(labs$label %in% nx_n),] # find the text labels within labs and their xy
+  spts<- SpatialPoints(textlabs[1:2]) # get text label xy
+  grobpts <- SpatialPoints(lapply(circle_coords, function(x){x[seq(1, length(x), 200)]})) # extract every 200th point on the circle, get xy.
+  dmat=gDistance(spts, grobpts, byid = TRUE) # calculate dist matrix of text labels vs circle points
+  closest <- colnames(dmat)[which(dmat == min(dmat), arr.ind = TRUE)[[2]]] # find index of closest text label
+  textlabs[closest, "label"]
+}
+
+
+# draw venn from gene lists and highlight intersection
+#---------------------------------------------
+# for gls: pass in a named list of vectors
+# for ins: pass in a named vector with T/F/NA as true/false/ignore
+draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limit=20){
+  # get needed parameters
+  d <- gls
+  ins <- ins
+  nx_n <- addlinebreaks2(nx_n, lb_limit, "\n")
+  names(d) <- addlinebreaks2(names(d), lb_limit, "\n")
+  names(ins) <- addlinebreaks2(names(ins), lb_limit, "\n")
+  
+  # draw venn diagram
+  vp <- venn.diagram(d, filename = NULL,
+                     lwd = 1, # border width
+                     fontfamily = "sans",
+                     cat.fontface = "bold",
+                     cex = 1, # catname size
+                     # cat.pos = rep(180,len), # catname position
+                     cat.cex = 1, # areaname size
+                     cat.fontfamily = "sans",
+                     fill = "white", # area fill
+                     alpha = 1, # area alpha
+                     ext.text=T, # draw label outside in case no space
+                     ext.line.lty = "dotted", # pattern of extline
+                     sigdigs = 2,
+                     print.mode = print_mode,
+                     category.names=names(d)
+  )
+  
+  # get labels from venn
+  ix <- sapply(vp, function(x) grepl("text", x$name, fixed = TRUE))
+  labs <- do.call(rbind.data.frame, lapply(vp[ix], `[`, c("x", "y", "label")))
+  
+  # get circles and names from venn
+  all_circ <- vector(mode="list", length=length(d))
+  all_names <- vector()
+  
+  # transform the circles into accepted format
+  for (i in 1:length(d)){
+    circ <- list(list(x = as.vector(vp[[2+i]][[1]]), y = as.vector(vp[[2+i]][[2]])))
+    all_circ[[i]] <- circ
+    nn <- find_closest_label(circ[[1]], labs, nx_n, lb_limit)
+    all_names <- c(all_names, nn) # try to find closest label (because the labels are all jumbled.)
+  }
+  names(all_circ) <- all_names
+  t_sections <- all_circ[which(ins[names(all_circ)]==T)]
+  f_sections <- all_circ[which(ins[names(all_circ)]==F)]
+  na_sections <- all_circ[which(is.na(ins[names(all_circ)]))]
+  # find the intersection
+  # op=c("intersection", "union", "minus", "xor")
+  
+  # calculate which intersection to color
+  if (length(t_sections)>0){ # first intersect all the T circles
+    sel_int <- Reduce(function(x, y) polyclip(x, y, op="intersection"), 
+                      t_sections)
+  } else {
+    sel_int <- Reduce(function(x, y) polyclip(x, y, op="union"), 
+                      na_sections)
+  }
+  if (length(f_sections)>0){ # next minus all the F circles
+    sel_int <- Reduce(function(x, y) polyclip(x, y, op="minus"), 
+                      c(sel_int, f_sections))
+  }
+  
+  # replot the diagram
+  grid.newpage()
+  par(mar=c(0, 0, 0, 0), xaxs='i', yaxs='i')
+  plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", axes = FALSE, xlab = "", ylab = ""
+       )
+  if (length(sel_int)>0 & identical(unname(ins), rep(F,length(d)))==F){ # if intersection is valid
+    polygon(sel_int[[1]], col = "red")
+  }
+  for (i in 1:length(d)){ # draw the circles
+    polygon(all_circ[[i]][[1]])
+  }
+  
+  text(x = labs$x, y = labs$y, labels = labs$label)
+}
+
+
+
 # #------------------- VennDiagram non area proportional venn
 n_npvenn_plt <- reactive({
-  req(length(n_ins_gls())>0)
-  req(max(lengths(n_ins_gls()))>0)
-  req(n_ins_gls())
+  # req(length(n_ins_gls())>0)
+  # req(max(lengths(n_ins_gls()))>0)
+  # req(n_ins_gls())
+  # req(length(rv$ins_criteria)==length(rv$nx_n))
   
   grid.newpage()
   gls <- n_ins_gls()
-  names(gls) <- gsub(".csv","",names(gls))
   len <- length(gls)
   palette <- c("white","grey","darkgrey","lightgrey","black")
   palette <- palette[1:len]
-  venn1 <- venn.diagram(gls, filename = NULL,
-                        lwd = 1, # border width
-                        fontfamily = "sans",
-                        cat.fontface = "bold",
-                        cex = 1, # catname size
-                        # cat.pos = rep(180,len), # catname position
-                        cat.cex = 1, # areaname size
-                        cat.fontfamily = "sans",
-                        fill = palette, # area fill
-                        alpha = 0.5, # area alpha
-                        ext.text=T, # draw label outside in case no space
-                        ext.line.lty = "dotted", # pattern of extline
-                        sigdigs = 2,
-                        print.mode = gsub("counts","raw", rv$n_venn_label)
-  )
+  # venn1 <- venn.diagram(gls, filename = NULL,
+  #                       lwd = 1, # border width
+  #                       fontfamily = "sans",
+  #                       cat.fontface = "bold",
+  #                       cex = 1, # catname size
+  #                       # cat.pos = rep(180,len), # catname position
+  #                       cat.cex = 1, # areaname size
+  #                       cat.fontfamily = "sans",
+  #                       fill = palette, # area fill
+  #                       alpha = 0.5, # area alpha
+  #                       ext.text=T, # draw label outside in case no space
+  #                       ext.line.lty = "dotted", # pattern of extline
+  #                       sigdigs = 2,
+  #                       print.mode = gsub("counts","raw", rv$n_venn_label)
+  # )
+  venn1 <- draw_venn_with_ins(n_ins_gls(), rv$ins_criteria, rv$nx_n,
+                              gsub("counts","raw", rv$n_venn_label),
+                              lb_limit=20
+                              )
   venn1
 })
 
 output$df_n_npvenn <- renderPlot({
-  req(length(n_ins_gls())>0)
-  req(max(lengths(n_ins_gls()))>0)
-  req(rv$n_venn_type=="Basic")
-  
-  
-  
+  # req(length(n_ins_gls())>0)
+  # req(max(lengths(n_ins_gls()))>0)
+  # req_vars(rv$n_venn_label)
   grid.draw(n_npvenn_plt())
-  
+
   
 })
 
