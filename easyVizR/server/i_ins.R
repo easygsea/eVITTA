@@ -1,5 +1,5 @@
 ####================= MULTIPLE - INTERSECT =====================####
-
+palette <- c("white","darkgrey","lightgrey","lightblue","darksalmon") # this is the default base palette for venns
 
 ####-------------------- Intersection selection ------------------------####
 
@@ -281,20 +281,72 @@ output$n_venn_dl <- downloadHandler(
 
 
 #------------------- eulerR area proportional venn
+# draws an eulerr diagram with intersection highlighted
+#------------------------------------------
+# gls: named list of vectors
+# ins: named vector
+draw_eulerr_with_ins <- function(gls, ins, print_mode="counts", show_ins=T, ins_color="red", base_colors=palette,
+                                 adjust_labels=T){
+  fit2 <- euler(gls)
+  # get t/f/na subsets
+  t_sections <- names(ins[ins==T & is.na(ins)==F])
+  f_sections <- names(ins[ins==F & is.na(ins)==F])
+  na_sections <- names(ins[is.na(ins)==T])
+  
+  selector <- names(fit2[[2]])
+  # first get the ins that has all the true sections, if any
+  if (length(t_sections)>0){
+    temp=vector(mode="list", length=length(t_sections)) # get the sections that contain ALL the T substrings
+    for (i in 1:length(t_sections)){
+      temp[[i]] <- selector[grep(t_sections[[i]], selector)]
+    }
+    selector <- Reduce(intersect, temp)
+    
+  }
+  # second get rid of any ins that contains the false sections, if any
+  if (length(f_sections)>0){
+    for (f in f_sections){
+      selector <- selector[-grep(f, selector)]
+    }
+  }
+  # we don't care about the na sections
+  
+  # assign colors to venn
+  colors <- fit2[[2]]
+  if (show_ins==T){ # if highlight the ins, will show all else as white
+    colors[which(names(colors) %in% selector)] <- ins_color
+    colors[-which(names(colors) %in% selector)] <- "white"
+  } else { # if don't highlight the ins, will show base colors
+    colors <- palette[1:length(gls)] # assign base circle colors
+  }
+  
+  # draw the venn
+  venn <- plot(fit2, quantities = list(type = print_mode), fills =colors, adjust_labels=adjust_labels)
+  venn
+}
+
+
+
 # gl ver (uses the shared reactive)
 n_venn_plt <- reactive({
-  gls <- n_ins_gls()
-  # names(gls) <- addlinebreaks2(names(gls), 20, "\n")
-  fit2 <- euler(gls)
-  venn <- plot(fit2, quantities = list(type = rv$n_venn_label))
+  # gls <- n_ins_gls()
+  # # names(gls) <- addlinebreaks2(names(gls), 20, "\n")
+  # fit2 <- euler(gls)
+  # venn <- plot(fit2, quantities = list(type = rv$n_venn_label))
   
-  venn
+  
+  draw_eulerr_with_ins(n_ins_gls(), rv$ins_criteria, 
+                       print_mode=rv$n_venn_label, 
+                       show_ins=rv$n_venn_show_ins, ins_color=rv$ins_venn_c1, base_color=palette,
+                       adjust_labels=T)
+  
 })
 
 output$df_n_venn <- renderPlot({
   req(length(n_ins_gls())>0)
   req(max(lengths(n_ins_gls()))>0)
   req(rv$n_venn_type=="Area-proportional")
+  req_vars(rv$ins_criteria)
   
   n_venn_plt()
 })
@@ -317,13 +369,21 @@ find_closest_label <- function(circle_coords, labs, nx_n, lb_limit){
 #---------------------------------------------
 # for gls: pass in a named list of vectors
 # for ins: pass in a named vector with T/F/NA as true/false/ignore
-draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limit=20){
+draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limit=20, show_ins=T, ins_color="red", base_color=palette){
   # get needed parameters
   d <- gls
   ins <- ins
   nx_n <- addlinebreaks2(nx_n, lb_limit, "\n")
   names(d) <- addlinebreaks2(names(d), lb_limit, "\n")
   names(ins) <- addlinebreaks2(names(ins), lb_limit, "\n")
+  
+  if (show_ins==F){
+    fill=base_color[1:length(gls)]
+    alpha=0.5
+  } else if (show_ins==T){
+    fill="white"
+    alpha=1
+  }
   
   # draw venn diagram
   vp <- venn.diagram(d, filename = NULL,
@@ -334,15 +394,14 @@ draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limi
                      # cat.pos = rep(180,len), # catname position
                      cat.cex = 1, # areaname size
                      cat.fontfamily = "sans",
-                     fill = "white", # area fill
-                     alpha = 1, # area alpha
+                     fill = fill, # area fill
+                     alpha = alpha, # area alpha
                      ext.text=T, # draw label outside in case no space
                      ext.line.lty = "dotted", # pattern of extline
                      sigdigs = 2,
                      print.mode = print_mode,
                      category.names=names(d)
   )
-  
   # get labels from venn
   ix <- sapply(vp, function(x) grepl("text", x$name, fixed = TRUE))
   labs <- do.call(rbind.data.frame, lapply(vp[ix], `[`, c("x", "y", "label")))
@@ -359,38 +418,59 @@ draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limi
     all_names <- c(all_names, nn) # try to find closest label (because the labels are all jumbled.)
   }
   names(all_circ) <- all_names
-  t_sections <- all_circ[which(ins[names(all_circ)]==T)]
-  f_sections <- all_circ[which(ins[names(all_circ)]==F)]
-  na_sections <- all_circ[which(is.na(ins[names(all_circ)]))]
-  # find the intersection
-  # op=c("intersection", "union", "minus", "xor")
   
-  # calculate which intersection to color
-  if (length(t_sections)>0){ # first intersect all the T circles
-    sel_int <- Reduce(function(x, y) polyclip(x, y, op="intersection"), 
-                      t_sections)
-  } else {
-    sel_int <- Reduce(function(x, y) polyclip(x, y, op="union"), 
-                      na_sections)
-  }
-  if (length(f_sections)>0){ # next minus all the F circles
-    sel_int <- Reduce(function(x, y) polyclip(x, y, op="minus"), 
-                      c(sel_int, f_sections))
+  if (show_ins==T){
+
+    t_sections <- all_circ[which(ins[names(all_circ)]==T)]
+    f_sections <- all_circ[which(ins[names(all_circ)]==F)]
+    na_sections <- all_circ[which(is.na(ins[names(all_circ)]))]
+    # find the intersection
+    # op=c("intersection", "union", "minus", "xor")
+    
+    # calculate which intersection to color
+    if (length(t_sections)>0){ # first intersect all the T circles
+      sel_int <- Reduce(function(x, y) polyclip(x, y, op="intersection"), 
+                        t_sections)
+    } else {
+      sel_int <- Reduce(function(x, y) polyclip(x, y, op="union"), 
+                        na_sections)
+    }
+    if (length(f_sections)>0){ # next minus all the F circles
+      sel_int <- Reduce(function(x, y) polyclip(x, y, op="minus"), 
+                        c(sel_int, f_sections))
+    }
+    
+    # replot the diagram
+    grid.newpage()
+    par(mar=c(0, 0, 0, 0), xaxs='i', yaxs='i')
+    plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", axes = FALSE, xlab = "", ylab = ""
+    )
+    if (length(sel_int)>0 & identical(unname(ins), rep(F,length(d)))==F){ # if intersection is valid
+      polygon(sel_int[[1]], col = ins_color)
+    }
+    for (i in 1:length(d)){ # draw the circles
+      polygon(all_circ[[i]][[1]])
+    }
+    
+    text(x = labs$x, y = labs$y, labels = labs$label)
+  } else if (show_ins==F){
+
+    
+    # replot the diagram
+    grid.newpage()
+    par(mar=c(0, 0, 0, 0), xaxs='i', yaxs='i')
+    plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", axes = FALSE, xlab = "", ylab = ""
+    )
+    ordered_colors <- unlist(lapply(1:length(all_names),function(x){
+      base_color[[match(all_names[[x]], nx_n)]]
+    }))
+    for (i in 1:length(d)){ # draw the circles
+      polygon(all_circ[[i]][[1]], col=adjustcolor(ordered_colors[[i]],alpha.f=0.5)  )
+    }
+    
+    text(x = labs$x, y = labs$y, labels = labs$label)
   }
   
-  # replot the diagram
-  grid.newpage()
-  par(mar=c(0, 0, 0, 0), xaxs='i', yaxs='i')
-  plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", axes = FALSE, xlab = "", ylab = ""
-       )
-  if (length(sel_int)>0 & identical(unname(ins), rep(F,length(d)))==F){ # if intersection is valid
-    polygon(sel_int[[1]], col = "red")
-  }
-  for (i in 1:length(d)){ # draw the circles
-    polygon(all_circ[[i]][[1]])
-  }
-  
-  text(x = labs$x, y = labs$y, labels = labs$label)
 }
 
 
@@ -403,10 +483,7 @@ n_npvenn_plt <- reactive({
   # req(length(rv$ins_criteria)==length(rv$nx_n))
   
   grid.newpage()
-  gls <- n_ins_gls()
-  len <- length(gls)
-  palette <- c("white","grey","darkgrey","lightgrey","black")
-  palette <- palette[1:len]
+  
   # venn1 <- venn.diagram(gls, filename = NULL,
   #                       lwd = 1, # border width
   #                       fontfamily = "sans",
@@ -424,7 +501,8 @@ n_npvenn_plt <- reactive({
   # )
   venn1 <- draw_venn_with_ins(n_ins_gls(), rv$ins_criteria, rv$nx_n,
                               gsub("counts","raw", rv$n_venn_label),
-                              lb_limit=20
+                              lb_limit=20,
+                              show_ins=rv$n_venn_show_ins, ins_color=rv$ins_venn_c1, base_color=palette
                               )
   venn1
 })
@@ -436,6 +514,23 @@ output$df_n_npvenn <- renderPlot({
   grid.draw(n_npvenn_plt())
 
   
+})
+
+
+
+# ----------------------- exclusion report
+
+output$venn_exclusion_report <- renderUI({
+  req_vars(c(n_ins_gls(),rv$ins_venn_c1,rv$ins_criteria))
+  req_df(rv$df_n)
+  
+  excluded <- nrow(rv$df_n)-length(Reduce(union, n_ins_gls()))
+  
+  if (T %in% rv$ins_criteria ==F & rv$n_venn_show_ins==T){  # only highlight if user selected these excluded genes
+    rgbhl <- paste(as.vector(col2rgb(rv$ins_venn_c1)), collapse = ",")
+    options <- paste0("color:",rv$ins_venn_c1,";text-shadow: 0px 0px 5px rgba(",rgbhl,", 0.3)") # apply a color+dropshadow effect
+  } else {options="color:black"}
+  HTML(paste0("<span style='",options,";'>Not in any circle: ", excluded,"</span>"))
 })
 
 
@@ -656,6 +751,25 @@ output$n_ui_intersect <- renderUI({
 })
 
 #----------------- venn --------------------
+output$n_venn_ins_hl_opt <- renderUI({
+  req_vars(rv$n_venn_show_ins)
+  req(rv$n_venn_show_ins==T)
+  div(
+    selectInput("ins_venn_c1", 
+                HTML(paste0(
+                  "<b>Intersection highlight color:</b>",
+                  add_help("ins_venn_c1_help", style="margin-left: 5px;"))
+                ),
+                choices = default_colors,
+                selected="red"
+    ),
+    bsTooltip("ins_venn_c1_help", 
+              "Highlight color for selected intersection (corresponds to table below)", 
+              placement = "top")
+  )
+})
+
+
 ins_venn_panel <- reactive({
   box(title = span( strong("3.1a."),icon("chart-area"), "Venn Diagram"), status = "primary", solidHeader = F, width=6,
       
@@ -675,8 +789,21 @@ ins_venn_panel <- reactive({
               label = "Venn type:",
               choices = c("Basic","Area-proportional"),
               selected= "Basic", direction="horizontal"
-            )
-            ,
+            ),
+            radioGroupButtons(
+              inputId = "n_venn_show_ins",
+              label = HTML(paste0(
+                "<b>Highlight selected intersection?</b>",
+                add_help("n_venn_show_ins_help", style="margin-left: 5px;"))
+              ),
+              choices = c("Yes"=T,"No"=F),
+              selected= T, direction="horizontal"
+            ),
+            bsTooltip("n_venn_show_ins_help", 
+                      "Whether to highlight selected intersection (corresponds to table below)", 
+                      placement = "top"),
+            uiOutput("n_venn_ins_hl_opt"),
+            
             size = "xs",
             icon = icon("gear", class = "opt"),
             up = TRUE
@@ -692,11 +819,17 @@ ins_venn_panel <- reactive({
             up = TRUE, width=300
           )
           
+      ),
+      div(style = "position: absolute; right: 1em; bottom: 1em", 
+          uiOutput("venn_exclusion_report")
+          
       )
       
       
   )
 })
+
+
 
 #----------------- upset --------------------
 ins_upset_panel <- reactive({
