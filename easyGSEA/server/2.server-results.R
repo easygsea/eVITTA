@@ -703,7 +703,7 @@ output$p3_fs_volcano <- renderPlot({
 
 # volcano download
 output$download_volcano <- downloadHandler(
-    filename = function() {if(is.null(rv$volcano_name)){paste0("volcano_",paste(rv$volcano_pathway,collapse = "-"),"_",paste0(rv$volcano_pq,"_"),rv$rnkll,"_",rv$volcano_mode,".pdf")}else{rv$volcano_name}},
+    filename = function() {if(is.null(rv$volcano_name)){paste0("volcano_",paste(rv$volcano_pathway,collapse = "-"),"_",paste0(rv$volcano_pq,"_"),rv$rnkll,"_",rv$volcano_mode,".html")}else{rv$volcano_name}},
     content = function(file) {
         if(rv$volcano_mode=="ggplot"){
             ggsave(file,rv$p_volcano, device = "pdf", width = 10, height = 8, dpi = 300, units = "in")
