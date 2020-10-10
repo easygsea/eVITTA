@@ -136,7 +136,12 @@ output$plot_area <- renderUI({
             plotlyOutput("plot_bubble", width = "100%",height = rv$box_h)
         }
     }else if(input$plot_type=="volcano"){
-        uiOutput("ui_volcano")
+        if(rv$run_mode == "gsea"){
+            uiOutput("ui_volcano")
+            
+        }else if(rv$run_mode == "glist"){
+            uiOutput("ui_volcano_glist")
+        }
     }else if(input$plot_type=="word"){
         if(is.null(word_plot())){
             sig_none()
