@@ -381,7 +381,7 @@
 
 
             ),
-            bsTooltip("q1", "<i>Click</i> to learn more and load our <u>sample data</u> for a trial run", placement = "top")
+            bsTooltip("q1", "<i>Click</i> to learn more and load our <u>example data</u> for a trial run", placement = "top")
 
 
         )
