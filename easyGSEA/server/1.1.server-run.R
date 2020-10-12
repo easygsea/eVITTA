@@ -119,15 +119,18 @@
       req(is.null(rv$db_status)==T || rv$db_status == "modify")
 
       div(#class="box__input",id="drop-area", align="center",
-          div(#class="form-group shiny-input-container",id="drag_gmt",
+          div(class="form-group shiny-input-container",#id="drag_gmt",
               div(class="input-group",
-                   HTML('<span button id="gmt_cc" style="width: 100%;" type="button" class="btn btn-default action-button">')
-                   ,HTML('<img src="upload.jpg" width="18%" class="mx-2"><br>Drag your <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
-                   ,HTML('
+                  tags$label(class="input-group-btn input-group-prepend",
+                    HTML('<span id="gmt_cc" style="width: 100%;" class="btn btn-default btn-file">')
+                    ,HTML('<img src="upload.jpg" width="18%" class="mx-2"><br>Drag your <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
+                    ,HTML('
         <input id="gmt_c" name="gmt_c" type="file" style="display: none;" multiple="multiple" accept="text/tab-separated-values,.txt,.tab,.tsv,.gmt"/>
     ')
-              )
-              ,HTML('</span>')
+                  )
+                  ,HTML('</span>')
+                  )
+
               ,div(id="gmt_c_progress", class="progress progress-striped active shiny-file-input-progress",
                    div(class="progress-bar")
               )
@@ -378,7 +381,7 @@
 
 
             ),
-            bsTooltip("q1", "<i>Click</i> to learn more and load our <u>sample data</u> for a trial run", placement = "top")
+            bsTooltip("q1", "<i>Click</i> to learn more and load our <u>example data</u> for a trial run", placement = "top")
 
 
         )
