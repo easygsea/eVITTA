@@ -135,7 +135,7 @@
                    div(class="progress-bar")
               )
           )
-          ,bsTooltip("drop-area",HTML("Upload your own gene set database file (GMT) for custom analysis")
+          ,bsTooltip("gmt_cc",HTML("Upload your own gene set database file (GMT) for custom analysis")
                      ,placement = "top")
       )
 
