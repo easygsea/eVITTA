@@ -803,11 +803,11 @@
             return(NULL)
         }else{
             ranks <- rv$rnkgg
+            names(ranks) = toupper(names(ranks))
             x <- rv$gmts[term][[1]]
             ranks2 <- ranks[x]
             ranks2 <- ranks2[!is.na(ranks2)]
             x <- rv$fgseagg[rv$fgseagg$pathway == term]$leadingEdge[[1]]
-            names(ranks) = toupper(names(ranks))
             ranks3 <- ranks[x]
             x = NULL
             
@@ -1446,7 +1446,7 @@
     ######             run GSEA or ORA                 #######
     #========================================================#
     
-    run_gsea <- function(cat_name,gmt_path,ranks){
+    run_gsea <- function(cat_name,gmt_path,ranks,errors){
       m_list <- gmtPathways(gmt_path)
       m_list <- lapply(m_list, function(x) toupper(x))
       
@@ -1481,7 +1481,7 @@
       }
     }
     
-    run_ora <- function(cat_name,gmt_path,genelist){
+    run_ora <- function(cat_name,gmt_path,genelist,errors){
       m_list <- gmtPathways(gmt_path)
       m_list <- lapply(m_list, function(x) toupper(x))
       

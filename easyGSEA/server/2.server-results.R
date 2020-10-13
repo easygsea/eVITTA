@@ -15,7 +15,7 @@ output$ui_bodyResults <- renderUI({
                         inputId = "plot_type",
                         choiceNames = list(span(icon("chart-bar"),"Bar plot"),span(icon("first-order-alt"),"Bubble plot"),span(icon("file-word"),"Keywords"),span(icon("braille"),"Manhattan plot"),span(icon("fire-alt"),"Volcano plot")), #,
                         choiceValues = list("bar", "bubble","word","manhattan","volcano"), #,
-                        selected = "bar",
+                        selected = rv$plot_type,
                         status = "primary",
                         size = "normal",
                         direction = "horizontal"
@@ -35,11 +35,39 @@ output$ui_bodyResults <- renderUI({
             column(
                 width = 8,
                 fluidRow(
-                    uiOutput("manhattan_box"),
-                    uiOutput("bar_box"),
-                    uiOutput("bubble_box"),
-                    uiOutput("volcano_box"),
-                    uiOutput("word_box"),
+                    box(
+                        width = 12,height = rv$box_h_a,align = "center",
+                        status = "primary",
+                        div(
+                            style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
+                            uiOutput("plot_area")
+                        )
+                        ,
+                        div(
+                            align = "left",
+                            style = "position: absolute; left: 1em; bottom: 1em;",
+                            dropdown(
+                                uiOutput("plot_gear"),
+                                size = "xs",
+                                icon = icon("gear", class = "opt"),
+                                up = TRUE,width = "410px"
+                            )
+                        ),
+                        div(
+                            style = "position: absolute; left: 4.5em; bottom: 1em;",
+                            dropdown(
+                                uiOutput("plot_download"),
+                                size = "xs",
+                                icon = icon("download", class = "opt"),
+                                up = TRUE
+                            )
+                        )
+                    ),
+                    # uiOutput("manhattan_box"),
+                    # uiOutput("bar_box"),
+                    # uiOutput("bubble_box"),
+                    # uiOutput("volcano_box"),
+                    # uiOutput("word_box"),
                     uiOutput("kegg_feedback"),
                     uiOutput("reactome_feedback"),
                     uiOutput("wp_feedback")
@@ -72,6 +100,11 @@ output$ui_bodyResults <- renderUI({
     }
 })
 
+# change default plot type
+observeEvent(input$plot_type,{
+    rv$plot_type = input$plot_type
+})
+
 # feedbacks on no significant enrichment
 sig_none <- reactive({
     req(rv$bar_p_cutoff)
@@ -84,6 +117,286 @@ sig_none <- reactive({
         rv$bar_q_cutoff,
         ". Please adjust thresholds by clicking the bottom-right gear button."
     )
+})
+
+# ----------- plots' plots ---------
+output$plot_area <- renderUI({
+    if(input$plot_type=="manhattan"){
+        plotlyOutput("plot_manhattan", width = "100%", height = rv$box_h)
+    }else if(input$plot_type=="bar"){
+        if(is.null(p_bar())){
+            sig_none()
+        }else{
+            plotlyOutput("plot_bar", width = "100%", height = rv$box_h)
+        }
+    }else if(input$plot_type=="bubble"){
+        if(is.null(p_bubble())){
+            sig_none()
+        }else{
+            plotlyOutput("plot_bubble", width = "100%",height = rv$box_h)
+        }
+    }else if(input$plot_type=="volcano"){
+        if(rv$run_mode == "gsea"){
+            uiOutput("ui_volcano")
+            
+        }else if(rv$run_mode == "glist"){
+            uiOutput("ui_volcano_glist")
+        }
+    }else if(input$plot_type=="word"){
+        if(is.null(word_plot())){
+            sig_none()
+        }else{
+            plotlyOutput("plot_word", width = "100%",height = rv$box_h)
+        }
+    }
+})
+
+# ----------- plots' dropdown parameters ---------
+output$plot_gear <- renderUI({
+    if(input$selected_species != "other"){
+        dbs = rv$dbs
+    }else{
+        dbs = rv$gmt_cs
+    }
+    
+    if(input$plot_type=="manhattan"){
+        fluidRow(
+            column(12,
+                   radioGroupButtons(
+                       inputId = "p_or_q_manhattan",
+                       label = "Threshold by P or P.adj",
+                       choiceNames = c("P", "P.adj"),
+                       choiceValues = c("pval", "padj"),
+                       selected = rv$volcano_pq,
+                       direction = "horizontal"
+                   )
+            ),
+            column(
+                width = 9,
+                sliderTextInput("cutoff_manhattan",
+                                label = "Adjust P or P.adj threshold:",
+                                choices= cutoff_slider,
+                                selected=rv$volcano_cutoff, grid=T, force_edges=T
+                )
+            ),
+            column(
+                width = 3,
+                br(),br(),
+                bsButton("manhattan_confirm",tags$b("Replot!"),style = "danger")
+            )
+        )
+    }else if(input$plot_type=="bar"){
+        
+        fluidRow(
+            column(12,
+                   selectizeInput("pathway_to_plot_bar",
+                                  "Select database(s) to plot",
+                                  choices = dbs,
+                                  selected = rv$bar_pathway,
+                                  multiple = TRUE),
+                   uiOutput("bar_top"),
+                   
+                   splitLayout(
+                       sliderTextInput("cutoff_bar_p",
+                                       label = "Adjust P threshold:",
+                                       choices= cutoff_slider,
+                                       selected=rv$bar_p_cutoff, grid=T, force_edges=T
+                       ),
+                       sliderTextInput("cutoff_bar_q",
+                                       label = "Adjust P.adj threshold:",
+                                       choices= cutoff_slider,
+                                       selected=rv$bar_q_cutoff, grid=T, force_edges=T
+                       )
+                   )
+            ),
+            column(
+                width = 4,
+                radioGroupButtons(
+                    inputId = "p_or_q_bar",
+                    label = "Color by P or P.adj",
+                    choiceNames = c("P", "P.adj"),
+                    choiceValues = c("pval", "padj"),
+                    selected = rv$bar_pq,
+                    direction = "horizontal"
+                )
+            ),
+            column(
+                width = 5,
+                radioGroupButtons(
+                    inputId = "abb_bar",
+                    label = "Abbreviate y axis labels",
+                    choiceNames = c("Yes", "No"),
+                    choiceValues = c("y", "n"),
+                    selected = rv$bar_abb,
+                    direction = "horizontal"
+                )
+            ),
+            column(
+                width = 3,
+                uiOutput("ui_bar_abb_n")
+            ),
+            fluidRow(
+                column(
+                    width = 3, offset = 9,
+                    bsButton("bar_confirm",tags$b("Replot!"),style = "danger")
+                )
+            )
+            
+        )
+    }else if(input$plot_type=="bubble"){
+        
+        
+        fluidRow(
+            column(12,
+                   selectizeInput("pathway_to_plot_bubble",
+                                  "Select database(s) to plot",
+                                  choices = dbs,
+                                  selected = rv$bar_pathway,
+                                  multiple = TRUE),
+                   uiOutput("bubble_top"),
+                   splitLayout(
+                       sliderTextInput("cutoff_p_bubble",
+                                       label = "Adjust P threshold:",
+                                       choices= cutoff_slider,
+                                       selected=rv$bar_p_cutoff, grid=T, force_edges=T
+                       ),
+                       sliderTextInput("cutoff_q_bubble",
+                                       label = "Adjust P.adj threshold:",
+                                       choices= cutoff_slider,
+                                       selected=rv$bar_q_cutoff, grid=T, force_edges=T
+                       )
+                   )
+            ),
+            column(
+                width = 4,
+                radioGroupButtons(
+                    inputId = "p_or_q_bubble",
+                    label = "Color by P or P.adj",
+                    choiceNames = c("P", "P.adj"),
+                    choiceValues = c("pval", "padj"),
+                    selected = rv$bar_pq,
+                    direction = "horizontal"
+                )
+            ),
+            column(
+                width = 5,
+                radioGroupButtons(
+                    inputId = "abb_bubble",
+                    label = "Abbreviate y axis labels",
+                    choiceNames = c("Yes", "No"),
+                    choiceValues = c("y", "n"),
+                    selected = rv$bar_abb,
+                    direction = "horizontal"
+                )
+            ),
+            column(
+                width = 3,
+                uiOutput("ui_bubble_abb_n")
+            ),
+            column(
+                width = 9,
+                sliderInput("bubble_slider", "Bubble size range", min = 0.5, max = 30, step = 0.5,
+                            value = c(2.5, 9.5))
+            ),
+            column(
+                width = 3,
+                br(),br(),
+                bsButton("bubble_confirm",tags$b("Replot!"),style = "danger")
+            )
+        )
+        
+    }else if(input$plot_type=="volcano"){
+        fluidRow(
+            column(
+                width = 12,
+                selectizeInput("pathway_to_plot_volcano",
+                               "Select database(s) to plot",
+                               choices = dbs,
+                               selected = rv$volcano_pathway,
+                               multiple = TRUE)
+            ),
+            column(
+                width = 12,
+                radioGroupButtons(
+                    inputId = "p_or_q_volcano",
+                    label = "Color by P or P.adj",
+                    choiceNames = c("P", "P.adj"),
+                    choiceValues = c("pval", "padj"),
+                    selected = rv$volcano_pq,
+                    direction = "horizontal"
+                )
+            ),
+            column(
+                width = 12,
+                radioGroupButtons(
+                    inputId = "volcano_mode",
+                    label = "Mode of plots",
+                    choiceNames = c("Continuous", "Discrete","Static"),
+                    choiceValues = c("plotly", "plotly2","ggplot"),
+                    selected = rv$volcano_mode,
+                    direction = "horizontal"
+                )
+            ),
+            uiOutput("ui_volcano_cutoff"),
+            column(
+                width = 3, offset = 9,
+                br(),
+                bsButton("volcano_confirm",tags$b("Replot!"),style = "danger")
+            )
+        )
+    }else if(input$plot_type=="word"){
+        
+        fluidRow(
+            column(12,
+                   selectizeInput("pathway_to_plot_word",
+                                  "Select database(s) to plot",
+                                  choices = dbs,
+                                  selected = rv$bar_pathway,
+                                  multiple = TRUE)
+            ),
+            column(12,
+                   splitLayout(
+                       sliderTextInput("cutoff_word_p",
+                                       label = "Adjust P.adj threshold:",
+                                       choices= cutoff_slider,
+                                       selected=rv$bar_p_cutoff, grid=T, force_edges=T
+                       ),
+                       sliderTextInput("cutoff_word_q",
+                                       label = "Adjust P.adj threshold:",
+                                       choices= cutoff_slider,
+                                       selected=rv$bar_q_cutoff, grid=T, force_edges=T
+                       )
+                   )
+            ),
+            column(12,
+                   numericInput("n_word",
+                                "# of top words",
+                                rv$n_word, min=1,
+                                width = "50%"
+                   )
+            ),
+            column(
+                width = 12, align = "right",
+                br(),br(),
+                bsButton("word_confirm",tags$b("Replot!"),style = "danger")
+            )
+        )
+    }
+})
+
+# ------------- plots' download btn ids -----------
+output$plot_download <- renderUI({
+    if(input$plot_type=="manhattan"){
+        downloadButton(outputId = "download_manhattan", label = "Download plot")
+    }else if(input$plot_type=="bar"){
+        downloadButton(outputId = "download_bar", label = "Download plot")
+    }else if(input$plot_type=="bubble"){
+        downloadButton(outputId = "download_bubble", label = "Download plot")
+    }else if(input$plot_type=="volcano"){
+        downloadButton(outputId = "download_volcano", label = "Download plot")
+    }else if(input$plot_type=="word"){
+        downloadButton(outputId = "download_word", label = "Download plot")
+    }
 })
 
 # manhattan plot --------------
@@ -255,16 +568,6 @@ observeEvent(input$bar_confirm,{
     
 })
 
-# if no significant terms found
-output$plot_bar_none <- renderUI({
-    req(rv$run == "success")
-    req(input$plot_type=="bar")
-    
-    if(is.null(p_bar())){
-        sig_none()
-    }
-})
-
 # bar plot
 p_bar <- reactive({
     if(rv$run_mode == "gsea"){
@@ -308,15 +611,6 @@ observeEvent(input$bubble_confirm,{
     rv$bubble_zmax = input$bubble_slider[2]
 })
 
-# if no significant terms found
-output$plot_bubble_none <- renderUI({
-    req(rv$run == "success")
-    req(input$plot_type=="bubble")
-    
-    if(is.null(p_bubble())){
-        sig_none()
-    }
-})
 
 # bubble plot
 p_bubble <- reactive({
@@ -414,7 +708,7 @@ output$p3_fs_volcano <- renderPlot({
 
 # volcano download
 output$download_volcano <- downloadHandler(
-    filename = function() {if(is.null(rv$volcano_name)){paste0("volcano_",paste(rv$volcano_pathway,collapse = "-"),"_",paste0(rv$volcano_pq,"_"),rv$rnkll,"_",rv$volcano_mode,".pdf")}else{rv$volcano_name}},
+    filename = function() {if(is.null(rv$volcano_name)){paste0("volcano_",paste(rv$volcano_pathway,collapse = "-"),"_",paste0(rv$volcano_pq,"_"),rv$rnkll,"_",rv$volcano_mode,".html")}else{rv$volcano_name}},
     content = function(file) {
         if(rv$volcano_mode=="ggplot"){
             ggsave(file,rv$p_volcano, device = "pdf", width = 10, height = 8, dpi = 300, units = "in")
@@ -441,15 +735,6 @@ observeEvent(input$word_confirm,{
     rv$n_word = input$n_word
 })
 
-# if no significant terms found
-output$plot_word_none <- renderUI({
-    req(rv$run == "success")
-    req(input$plot_type=="word")
-    
-    if(is.null(word_plot())){
-        sig_none()
-    }
-})
 
 # word plot
 output$plot_word <- renderPlotly({
@@ -468,161 +753,7 @@ output$download_word <- downloadHandler(
     content = function(file) {saveWidget(as_widget(word_plot()), file, selfcontained = TRUE)}
 )
 
-# UI manhattan -----------
-output$manhattan_box <- renderUI({
-    req(input$plot_type=="manhattan")
-    div(
-        style = "position: relative",
-        box(
-            width = 12,height = rv$box_h_a,align = "center",
-            status = "primary", 
-            div(
-                style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
-                plotlyOutput("plot_manhattan", width = "100%", height = rv$box_h)
-            ),
-            div(
-                align = "left",
-                style = "position: absolute; left: 1em; bottom: 1em;",
-                dropdown(
-                    radioGroupButtons(
-                        inputId = "p_or_q_manhattan",
-                        label = "Threshold by P or P.adj",
-                        choiceNames = c("P", "P.adj"),
-                        choiceValues = c("pval", "padj"),
-                        selected = rv$volcano_pq,
-                        direction = "horizontal"
-                    ),
-                    fluidRow(
-                        column(
-                            width = 9,
-                            sliderTextInput("cutoff_manhattan",
-                                            label = "Adjust P or P.adj threshold:",
-                                            choices= cutoff_slider,
-                                            selected=rv$volcano_cutoff, grid=T, force_edges=T
-                            )
-                        ),
-                        column(
-                            width = 3,
-                            br(),br(),
-                            bsButton("manhattan_confirm",tags$b("Replot!"),style = "danger")
-                        )
-                    ),
-                    size = "xs",
-                    icon = icon("gear", class = "opt"),
-                    up = TRUE,width = "410px"
-                )
-            ),
-            div(
-                style = "position: absolute; left: 4.5em; bottom: 1em;",
-                dropdown(
-                    downloadButton(outputId = "download_manhattan", label = "Download plot"),
-                    size = "xs",
-                    icon = icon("download", class = "opt"),
-                    up = TRUE
-                )
-            )
-        )
-    )
-})
-
-# UI bar ----------
-output$bar_box <- renderUI({
-    req(input$plot_type=="bar")
-    
-    if(input$selected_species != "other"){
-        dbs = rv$dbs
-    }else{
-        dbs = rv$gmt_cs
-    }
-    
-    div(
-        style = "position: relative",
-        box(
-            width = 12,height = rv$box_h_a,align = "center",
-            status = "primary", 
-            div(
-                style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
-                uiOutput("plot_bar_none"),
-                plotlyOutput("plot_bar", width = "100%", height = rv$box_h)
-            ),
-            div(
-                align = "left",
-                style = "position: absolute; left: 1em; bottom: 1em;",
-                dropdown(
-                    selectizeInput("pathway_to_plot_bar",
-                                   "Select database(s) to plot",
-                                   choices = dbs,
-                                   selected = rv$bar_pathway,
-                                   multiple = TRUE),
-                    uiOutput("bar_top"),
-                    
-                    splitLayout(
-                        sliderTextInput("cutoff_bar_p",
-                                        label = "Adjust P threshold:",
-                                        choices= cutoff_slider,
-                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
-                        ),
-                        sliderTextInput("cutoff_bar_q",
-                                        label = "Adjust P.adj threshold:",
-                                        choices= cutoff_slider,
-                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
-                        )
-                    ),
-                    fluidRow(
-                        column(
-                            width = 4,
-                            radioGroupButtons(
-                                inputId = "p_or_q_bar",
-                                label = "Color by P or P.adj",
-                                choiceNames = c("P", "P.adj"),
-                                choiceValues = c("pval", "padj"),
-                                selected = rv$bar_pq,
-                                direction = "horizontal"
-                            )
-                        ),
-                        column(
-                            width = 5,
-                            radioGroupButtons(
-                                inputId = "abb_bar",
-                                label = "Abbreviate y axis labels",
-                                choiceNames = c("Yes", "No"),
-                                choiceValues = c("y", "n"),
-                                selected = rv$bar_abb,
-                                direction = "horizontal"
-                            )
-                        ),
-                        column(
-                            width = 3,
-                            uiOutput("ui_bar_abb_n")
-                        ),
-                        fluidRow(
-                            column(
-                                width = 3, offset = 9,
-                                bsButton("bar_confirm",tags$b("Replot!"),style = "danger")
-                            )
-                        )
-                        
-                    )
-                    
-                    ,
-                    size = "xs",
-                    icon = icon("gear", class = "opt"),
-                    up = TRUE,width = "410px"
-                )
-            ),
-            div(
-                style = "position: absolute; left: 4.5em; bottom: 1em;",
-                dropdown(
-                    downloadButton(outputId = "download_bar", label = "Download plot"),
-                    size = "xs",
-                    icon = icon("download", class = "opt"),
-                    up = TRUE
-                )
-            )
-        )
-    )
-})
-
+# --------- UI: bar --------------
 # UI bar abbreviation length
 output$ui_bar_abb_n <- renderUI({
     req(input$abb_bar == "y")
@@ -654,107 +785,7 @@ output$bar_top <- renderUI({
     }
 })
 
-# UI bubble --------------------
-output$bubble_box <- renderUI({
-    req(input$plot_type=="bubble")
-    
-    if(input$selected_species != "other"){
-        dbs = rv$dbs
-    }else{
-        dbs = rv$gmt_cs
-    }
-    
-    div(
-        style = "position: relative",
-        box(
-            width = 12,height = rv$box_h_a,align = "center",
-            status = "primary", 
-            div(
-                style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
-                uiOutput("plot_bubble_none"),
-                plotlyOutput("plot_bubble", width = "100%",height = rv$box_h)
-            ),
-            div(
-                align = "left",
-                style = "position: absolute; left: 1em; bottom: 1em;",
-                dropdown(
-                    selectizeInput("pathway_to_plot_bubble",
-                                   "Select database(s) to plot",
-                                   choices = dbs,
-                                   selected = rv$bar_pathway,
-                                   multiple = TRUE),
-                    uiOutput("bubble_top"),
-                    splitLayout(
-                        sliderTextInput("cutoff_p_bubble",
-                                        label = "Adjust P threshold:",
-                                        choices= cutoff_slider,
-                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
-                        ),
-                        sliderTextInput("cutoff_q_bubble",
-                                        label = "Adjust P.adj threshold:",
-                                        choices= cutoff_slider,
-                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
-                        )
-                    ),
-                    
-                    fluidRow(
-                        column(
-                            width = 4,
-                            radioGroupButtons(
-                                inputId = "p_or_q_bubble",
-                                label = "Color by P or P.adj",
-                                choiceNames = c("P", "P.adj"),
-                                choiceValues = c("pval", "padj"),
-                                selected = rv$bar_pq,
-                                direction = "horizontal"
-                            )
-                        ),
-                        column(
-                            width = 5,
-                            radioGroupButtons(
-                                inputId = "abb_bubble",
-                                label = "Abbreviate y axis labels",
-                                choiceNames = c("Yes", "No"),
-                                choiceValues = c("y", "n"),
-                                selected = rv$bar_abb,
-                                direction = "horizontal"
-                            )
-                        ),
-                        column(
-                            width = 3,
-                            uiOutput("ui_bubble_abb_n")
-                        )
-                    ),
-                    fluidRow(
-                        column(
-                            width = 9,
-                            sliderInput("bubble_slider", "Bubble size range", min = 0.5, max = 30, step = 0.5,
-                                        value = c(2.5, 9.5))
-                        ),
-                        column(
-                            width = 3,
-                            br(),br(),
-                            bsButton("bubble_confirm",tags$b("Replot!"),style = "danger")
-                        )
-                    )
-                    ,
-                    size = "xs",
-                    icon = icon("gear", class = "opt"),
-                    up = TRUE,width = "410px"
-                )
-            ),
-            div(
-                style = "position: absolute; left: 4.5em; bottom: 1em;",
-                dropdown(
-                    downloadButton(outputId = "download_bubble", label = "Download plot"),
-                    size = "xs",
-                    icon = icon("download", class = "opt"),
-                    up = TRUE
-                )
-            )
-        )
-    )
-})
+# --------- UI: bubble --------------
 
 # UI bubble abbreviation length
 output$ui_bubble_abb_n <- renderUI({
@@ -786,92 +817,9 @@ output$bubble_top <- renderUI({
     }
 })
 
-# UI volcano --------------------------
-output$volcano_box <- renderUI({
-    req(input$plot_type=="volcano")
-    
-    if(input$selected_species != "other"){
-        dbs = rv$dbs
-    }else{
-        dbs = rv$gmt_cs
-    }
-    
-    div(
-        style = "position: relative",
-        box(
-            width = 12,height = rv$box_h_a,align = "center",
-            status = "primary", 
-            div(
-                div(
-                    style="overflow-y:scroll; overflow-x:scroll", #max-height:600px; 
-                    uiOutput("ui_volcano_glist"),
-                    uiOutput("ui_volcano")
-                ),
-                div(
-                    align = "left",
-                    style = "position: absolute; left: 1em; bottom: 1em;",
-                    dropdown(
-                        selectizeInput("pathway_to_plot_volcano",
-                                       "Select database(s) to plot",
-                                       choices = dbs,
-                                       selected = rv$volcano_pathway,
-                                       multiple = TRUE),
-                        fluidRow(
-                            column(
-                                width = 12,
-                                radioGroupButtons(
-                                    inputId = "p_or_q_volcano",
-                                    label = "Color by P or P.adj",
-                                    choiceNames = c("P", "P.adj"),
-                                    choiceValues = c("pval", "padj"),
-                                    selected = rv$volcano_pq,
-                                    direction = "horizontal"
-                                )
-                            )
-                            
-                        ),
-                        fluidRow(
-                            column(
-                                width = 12,
-                                radioGroupButtons(
-                                    inputId = "volcano_mode",
-                                    label = "Mode of plots",
-                                    choiceNames = c("Continuous", "Discrete","Static"),
-                                    choiceValues = c("plotly", "plotly2","ggplot"),
-                                    selected = rv$volcano_mode,
-                                    direction = "horizontal"
-                                )
-                            )
-                        ),
-                        uiOutput("ui_volcano_cutoff"),
-                        # uiOutput("ui_volcano_top"),
-                        fluidRow(
-                            column(
-                                width = 3, offset = 9,
-                                br(),
-                                bsButton("volcano_confirm",tags$b("Replot!"),style = "danger")
-                            )
-                        ),
-                        size = "xs",
-                        icon = icon("gear", class = "opt"),
-                        up = TRUE,width = "410px"
-                    ),
-                ),
-                div(
-                    style = "position: absolute;left: 4.5em;bottom: 1em",
-                    dropdown(
-                        downloadButton(outputId = "download_volcano", label="Download plot"),
-                        size = "xs",
-                        icon = icon("download",class="opt"),
-                        up=TRUE
-                    )
-                )
-            )
-        )
-    )
-})
 
-# UI volcano
+
+# ----------- UI: volcano ----------------
 output$ui_volcano <- renderUI({
     if(rv$volcano_mode=="plotly"){
         plotlyOutput("p1_fs_volcano",width = "100%",height = rv$box_h)
@@ -885,112 +833,12 @@ output$ui_volcano <- renderUI({
 # UI volcano p and q cutoffs
 output$ui_volcano_cutoff <- renderUI({
     req(input$volcano_mode=="plotly2" | input$volcano_mode=="ggplot")
-    fluidRow(
-        column(
-            width = 12,
-            sliderTextInput("volcano_cutoff",
-                            label = "Adjust P or P.adj threshold:",
-                            choices= cutoff_slider,
-                            selected=rv$volcano_cutoff, grid=T, force_edges=T
-            )
-        )
-    )
-})
-
-# UI volcano top no if mode is ggplot and is choice top
-# output$ui_volcano_top <- renderUI({
-#     req(input$volcano_mode=="ggplot")
-#     fluidRow(
-#         column(
-#             width = 6,
-#             numericInput(
-#                 inputId = "volcano_top_up",
-#                 label = "# of top up to label",
-#                 value = rv$volcano_top_down,
-#                 min = 1
-#             )
-#         ),
-#         column(
-#             width = 6,
-#             numericInput(
-#                 inputId = "volcano_top_down",
-#                 label = "# of top down to label",
-#                 value = rv$volcano_top_up,
-#                 min = 1
-#             )
-#         )
-#     )
-# })
-
-
-# UI bubble --------------------
-output$word_box <- renderUI({
-    req(input$plot_type=="word")
-    
-    if(input$selected_species != "other"){
-        dbs = rv$dbs
-    }else{
-        dbs = rv$gmt_cs
-    }
-    
-    div(
-        style = "position: relative",
-        box(
-            width = 12,height = rv$box_h_a,align = "center",
-            status = "primary", 
-            div(
-                style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
-                uiOutput("plot_word_none"),
-                plotlyOutput("plot_word", width = "100%",height = rv$box_h)
-            ),
-            div(
-                align = "left",
-                style = "position: absolute; left: 1em; bottom: 1em;",
-                dropdown(
-                    selectizeInput("pathway_to_plot_word",
-                                   "Select database(s) to plot",
-                                   choices = dbs,
-                                   selected = rv$bar_pathway,
-                                   multiple = TRUE),
-                    splitLayout(
-                        sliderTextInput("cutoff_word_p",
-                                        label = "Adjust P.adj threshold:",
-                                        choices= cutoff_slider,
-                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
-                        ),
-                        sliderTextInput("cutoff_word_q",
-                                        label = "Adjust P.adj threshold:",
-                                        choices= cutoff_slider,
-                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
-                        )
-                    ),
-                    numericInput("n_word",
-                                 "# of top words",
-                                 rv$n_word, min=1,
-                                 width = "50%"
-                    ),
-                    fluidRow(
-                        column(
-                            width = 12, align = "right",
-                            br(),br(),
-                            bsButton("word_confirm",tags$b("Replot!"),style = "danger")
-                        )
-                    )
-                    ,
-                    size = "xs",
-                    icon = icon("gear", class = "opt"),
-                    up = TRUE,width = "410px"
-                )
-            ),
-            div(
-                style = "position: absolute; left: 4.5em; bottom: 1em;",
-                dropdown(
-                    downloadButton(outputId = "download_word", label = "Download plot"),
-                    size = "xs",
-                    icon = icon("download", class = "opt"),
-                    up = TRUE
-                )
-            )
+    column(
+        width = 12,
+        sliderTextInput("volcano_cutoff",
+                        label = "Adjust P or P.adj threshold:",
+                        choices= cutoff_slider,
+                        selected=rv$volcano_cutoff, grid=T, force_edges=T
         )
     )
 })
@@ -1254,7 +1102,10 @@ observeEvent(event_data("plotly_click", source = "volcano_plot_click2"),{
 observeEvent(rv$es_term,{
     x <- rv$gmts[rv$es_term][[1]]
     
-    ranks2 <- rv$rnkgg[x]
+    ranks <- rv$rnkgg
+    names(ranks) = toupper(names(ranks))
+    
+    ranks2 <- ranks[x]
     ranks2 <- ranks2[!is.na(ranks2)]
     # rv$rnkgg2 <- ranks2
     

@@ -178,6 +178,8 @@ n_hm_plt <- reactive({
     plotted <- data.frame(t(dplyr::select(df,contains(to_match))))
     req(nrow(plotted) > 0)
     # incProgress(0.1)
+    rownames(plotted) <- stat_replace1(rownames(plotted), rv$nx_n, mode="each")
+    # print(head(plotted))
     
     # make matrix for plot
     dat <- expand.grid(x = rownames(plotted), y = addlinebreaks(names,30,"<br>"))
@@ -212,7 +214,7 @@ n_hm_plt <- reactive({
     
     fig <- plot_ly() %>%
       add_trace(data = dat, x = ~x, y = ~y, z = ~z, type = "heatmap",
-                colorscale  = cscale_simple,zauto = T, zmid= 0, colorbar = list(title = rv$n_to_plot),
+                colorscale  = cscale_simple,zauto = T, zmid= 0, colorbar = list(title = stat_replace1(rv$n_to_plot, rv$nx_n)),
                 hoverinfo = 'text',
                 text = textt)
     # incProgress(0.2)

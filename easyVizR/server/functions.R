@@ -745,3 +745,20 @@ get_df_by_dflogic <- function(selected, dflogic, gls, user_criteria, starting_df
   }
   to_plot_df
 }
+
+
+
+
+# add line breaks (2)
+#-------------------------------------------
+# breaks at any character
+addlinebreaks2 <- function(x, max, lbtype="<br>", break_type="punct"){
+  
+  if (break_type=="any"){
+    gsub(paste0('(.{1,',max,'})()'), paste0('\\1',lbtype), x)
+  } else if (break_type=="punct"){
+    # this cuts at spaces/ ;/ underscore/ period
+    gsub(paste0('(.{1,',max,'})(\\s|;|-|_|\\.|\\W|$)'), paste0('\\1',lbtype), x)
+  }
+  
+}

@@ -32,7 +32,9 @@ library(markdown)
 library(V8)
 library(lobstr)
 library(shinydisconnect)
-
+library(rjson)
+library(rgeos)
+library(polyclip)
 
 # library(dashboardthemes)
 options(repos = BiocManager::repositories())
@@ -43,7 +45,7 @@ futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger") 
 # BiocManager::install("fgsea")
 # setRepositories(addURLs = c(BioC = "https://bioconductor.org/packages/3.8/bioc"))
 
-
+users = reactiveValues(count = 0,ip = c())
 
 source("global/functions.R")
 source("global/init.R")
