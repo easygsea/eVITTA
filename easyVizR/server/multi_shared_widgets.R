@@ -310,6 +310,7 @@ observe({
                                   ,style = "padding: 15px;background:#e6f4fc;")
     )
   }
+  saveRDS(rv$nic, file = "rvs/nic.rds")
 })
 
 
@@ -375,9 +376,11 @@ observe({
                           rv$gls_text[[i]]
     )
   }
+    #saveRDS(rv$gls_ui, file = "rvs/gls_ui.rds")
 })
 
 output$n_gls_ui <- renderUI({
+
   req(nrow(rv$df_n)>0)
   rv$gls_ui
 })

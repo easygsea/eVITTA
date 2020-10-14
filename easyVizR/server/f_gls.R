@@ -18,7 +18,8 @@ output$select_df_p2 <- renderUI({
     label= shiny::HTML("Select 2 or more datasets:"),
     choices = rv$ll
     #default to select all the datasets
-    ,selected = rv$ll)
+    ,selected = rv$ll
+    )
 })
 
 # feedback on whether the data has enough shared rows/cols
