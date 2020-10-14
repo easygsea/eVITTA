@@ -11,7 +11,10 @@
         run_btn_color="warning", run_btn_style="simple",
         dbtn_style="unite", dbtn_color="default", dbtn_size="xs",
         nav_btn_color="warning", nav_btn_style="fill", nav_btn_size="md",
-
+        
+        #loaded GMT info
+        GMTDF = data.frame(matrix(ncol=4,nrow=0, dimnames=list(NULL, c("name", "size", "type", "datapath")))),
+        
         #========================================#
         #####      RVs for GSEA run          #####
         #========================================#

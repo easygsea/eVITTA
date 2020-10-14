@@ -655,7 +655,12 @@ output$delete_gmt_confirm <- renderUI({
 
 observeEvent(input$delete_gmt_confirm,{
     to_delete_i <- which(rv$gmt_cs %in% input$delete_gmt)
-
+    
     rv$gmt_cs <- rv$gmt_cs[-to_delete_i]
     rv$gmt_cs_paths <- rv$gmt_cs_paths[-to_delete_i]
+    
+    #delete GMTDF after the files are removed to free up more space
+    to_delete_GMTDF <- which(rv$GMTDF$name %in% input$delete_gmt)
+    rv$GMTDF <- rv$GMTDF[-to_delete_GMTDF,]
+    
 })

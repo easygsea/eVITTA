@@ -112,6 +112,10 @@
             )
         )
     })
+    
+    # specify the upload limits here (in byte)
+    batch_mb_limit <- 300*(1024^2)
+    total_mb_limit <- 300*(1024^2)
 
     # -------------- 1.2b upload GMT -------------------
     output$gmt_upload <- renderUI({
@@ -140,9 +144,42 @@
       )
 
     })
-
+    
     # read in GMTs
     observeEvent(input$gmt_c,{
+      if(sum(input$gmt_c$size) >= batch_mb_limit){  
+        showModal(modalDialog(
+          inputId = "size_reminder_modal1",
+          div(
+            paste0("The files you uploaded exceed 300 MB, please modify it to proceed. Try to delete unneeded columns and 
+            only keep the columns that you are interested in. 
+            Then upload your files again. Thank you.")
+            ,style="font-size:200%"),
+          easyClose = TRUE,size="l"
+          # , footer = modalButton("Close")
+        ))
+        shinyjs::reset("gmt_c")
+      }else if ((sum(input$gmt_c$size) + sum(rv$GMTDF$size)) >= total_mb_limit) {
+        showModal(modalDialog(
+          inputId = "size_reminder_modal2",
+          div(
+            paste0("You have exceeded your storage limit of 300 MB. Please delete the unneeded files. 
+            Then upload your files again. Thank you.")
+            ,style="font-size:200%"),
+          easyClose = TRUE,size="l"
+          # , footer = modalButton("Close")
+        ))
+        shinyjs::reset("gmt_c")
+      }
+      
+      req(sum(input$gmt_c$size) < batch_mb_limit)
+      req((sum(input$gmt_c$size) + sum(rv$GMTDF$size)) < total_mb_limit)
+      
+      #add new files that are not in df already to the df
+      rv$GMTDF<-rbind(rv$GMTDF,input$gmt_c[!(input$gmt_c$name %in% rv$GMTDF$name)])
+      
+      #IMPORTANT: GMT seems to assume all uploaded GMTs are unique, so we need to drop duplicates
+      
       df = input$gmt_c
 
       gmt_names = list()
