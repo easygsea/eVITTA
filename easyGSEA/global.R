@@ -27,27 +27,6 @@ library(lobstr)
 
 options(repos = BiocManager::repositories())
 
-# p_min to convert p=0
-p_min = 1e-300
-
-# slider cutoffs for p/q
-cutoff_slider = c(0.0001,0.0005,0.001,0.005,0.01,0.05,0.1,0.25,0.3,0.5,1)
-
-# stop words and words with minimum meaning to be filtered for word counts
-data(stop_words)
-useless_words <- read_csv(paste0(getwd(),"/inc/some_words.csv"))
-
-# run modes
-run_modes = list("Pre-ranked GSEA"="gsea","Overrepresentation Analysis"="glist")
-
-# gene identifiers
-gene_identifiers = list("SYMBOL"="symbol","Other/Mixed" = "other")
-
-# wellpanel background colors
-bcol1 = "#e6f4fc" # color for parameters wellpanel
-bcol2 = "#ffffe6" # color for summary box
-bcol3 = "#e6f4fc" # color for column selection wellpanel
-
 # ===================== FUNCTIONS =====================
 # function to abbreviate strings
 abbreviate_string <- function(x){
