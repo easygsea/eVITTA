@@ -26,6 +26,10 @@ samples_t <- function(p_df=deg_pdata(),c_var=input$sp_select_var){
 # --------------- 4.1.1 select variables and levels: fine-tune ---------------
 
 output$select_params_ui <- renderUI({
+  
+  #initialize the choices for demo session function 1
+  init_choices()
+  
   req(is.null(rv$fddf)==F)
   req(input$ui_select == "sp")
   
@@ -119,6 +123,9 @@ output$select_params_ui <- renderUI({
 # UI select levels
 output$sp_select_levels <- renderUI({
   
+  #initialize the choices for demo session function 2
+  init_choices2()
+  
   fddf <- rv$fddf
   levels <- unique(fddf[[input$sp_select_var]])
   div(checkboxGroupInput(
@@ -196,15 +203,20 @@ output$sp_select_levels_rel_fb <- renderUI({
 })
 
 output$ui_samples_fb <- renderUI({
+  #initialize the choices for demo session function 3
+  init_choices3()
+  
   # control level name
   c_level = input$sp_select_levels_base
   
   # samples in control group
   t_level = t_level()
   samples_c = samples_c()
+  print(samples_c)
   
   # samples in treatment group
   samples_t = samples_t()
+  print(samples_t)
   
   # # determine input source GSM or title
   if(input$names_toggle == "title"){
