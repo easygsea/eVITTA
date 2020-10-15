@@ -547,7 +547,9 @@ filtered_data_df <- reactive({
 
 # ---------- guide box to 3. design matrix page -------
 output$guide_box2 <- renderUI({
-  req(filtered_data_df())
+  if(is.null(rv$demo)){
+    req(filtered_data_df())
+  }
   
   column(12,
          guide_box("guide2", "Navigate to <b>3. Filter/review design matrix</b> to proceed"),

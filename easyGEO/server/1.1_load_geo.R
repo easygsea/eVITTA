@@ -7,7 +7,9 @@
 # todo: check if input format is correct (GSEXXXXXX)
 
 output$geo_accession_ui <- renderUI({
-  init_demo()
+  if(rv$demo == "yes"){
+    init_demo()
+  }
   
   div(
     textInput(

@@ -1,4 +1,6 @@
 rv <- reactiveValues(
+  demo = "yes", # "yes" for a demo session, NULL for regular runs
+  
   gse_all = NULL,
   
   demo_acc = NULL, # default accession no

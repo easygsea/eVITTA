@@ -124,7 +124,9 @@ output$select_params_ui <- renderUI({
 output$sp_select_levels <- renderUI({
   
   #initialize the choices for demo session function 2
-  init_choices2()
+  if(rv$demo == "yes"){
+    init_choices2()
+  }
   
   fddf <- rv$fddf
   levels <- unique(fddf[[input$sp_select_var]])
