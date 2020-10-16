@@ -1529,9 +1529,8 @@
     
     # =========== initialize RVs for a demo run ==================
     init_demo_gsea <- function(){
-      updateSelectizeInput(session,"selected_species",selected = "cel")
+      updateSelectizeInput(session,"selected_species",selected = "hsa")
       #Demo session RVs for GSEA data store in rvs folder.
-      #IMPORTANT: please check 1.ui_run.R Line 12 to set the default mode to "gsea"
       rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs/bar_pathway.rds"))
       rv$bubble_pathway <- readRDS(paste0(getwd(),"/rvs/bubble_pathway.rds"))
       rv$data_head_o <- readRDS(paste0(getwd(),"/rvs/data_head_o.rds"))
@@ -1547,7 +1546,7 @@
       rv$run_mode <- readRDS(paste0(getwd(),"/rvs/run_mode.rds"))
       rv$volcano_pathway <- readRDS(paste0(getwd(),"/rvs/volcano_pathway.rds"))
       rv$infile_name <- readRDS(paste0(getwd(),"/rvs/infile_name.rds"))
-      rv$infile_path <- paste0(getwd(),"/inc/cel.rnk")
+      rv$infile_path <- paste0(getwd(),"/inc/hsa.csv")
       rv$infile_confirm <- readRDS(paste0(getwd(),"/rvs/infile_confirm.rds"))
       rv$rnkgg <- readRDS(paste0(getwd(),"/rvs/rnkgg.rds"))
       rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs/bar_pathway.rds"))
@@ -1578,6 +1577,10 @@
     }
     
     init_demo_ora <- function(){
+      updateTextAreaInput(session,
+                          inputId = "gene_list",
+                          value = "mdt-1\nmdt-2\nmdt-3\nmdt-4\nmdt-5\nmdt-6\nmdt-7\nmdt-8\nmdt-9\nmdt-10\nmdt-11\nmdt-12\nmdt-13\nmdt-14\nmdt-15\nmdt-16\nmdt-17\nmdt-18\nmdt-19\nmdt-20\nmdt-21\nmdt-22\nmdt-26\nmdt-31\ncdk-8"
+      )
       updateRadioButtons(session,"selected_mode",selected = "glist")
       updateSelectizeInput(session,"selected_species",selected = "cel")
       #Demo session RVs for ORA. Data stored in rvs2 folder

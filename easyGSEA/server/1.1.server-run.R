@@ -116,8 +116,8 @@
 
     # -------------- 1.2b upload GMT -------------------
     output$gmt_upload <- renderUI({
-      # init_demo_gsea()
-      init_demo_ora()
+      init_demo_gsea()
+      # init_demo_ora()
       req(input$selected_species == "other")
       req(is.null(rv$db_status)==T || rv$db_status == "modify")
 
@@ -864,6 +864,7 @@
 
     #----------- 3.2.4 Example GList --------------
     observeEvent(input$load_example_glist,{
+      print(gsub(";","\n",glist_example[input$selected_species][[1]]))
         if(input$selected_species == ""){
           shinyalert("Please select your species of interest.")
         }else if(input$selected_species == "other"){

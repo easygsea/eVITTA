@@ -28,7 +28,9 @@ samples_t <- function(p_df=deg_pdata(),c_var=input$sp_select_var){
 output$select_params_ui <- renderUI({
   
   #initialize the choices for demo session function 1
-  init_choices()
+  if(rv$demo == "yes"){
+    init_choices()
+  }
   
   req(is.null(rv$fddf)==F)
   req(input$ui_select == "sp")
@@ -206,7 +208,9 @@ output$sp_select_levels_rel_fb <- renderUI({
 
 output$ui_samples_fb <- renderUI({
   #initialize the choices for demo session function 3
-  init_choices3()
+  if(rv$demo == "yes"){
+    init_choices3()
+  }
   
   # control level name
   c_level = input$sp_select_levels_base
