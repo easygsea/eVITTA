@@ -19,7 +19,7 @@ observe({
   
   # venn and upset
   input2rv(c(
-    "n_venn_label","n_venn_type",
+    "n_venn_label","n_venn_type","n_venn_show_ins","ins_venn_c1",
     "n_upset_sortby","n_upset_showempty"
     ))
   
@@ -147,10 +147,14 @@ observeEvent(input$n_use_data,{
     # venn
     rv$n_venn_label <- "counts"
     rv$n_venn_type <- "Basic"
+    rv$n_venn_show_ins <- T
+    rv$ins_venn_c1 <- "red"
     
     # upset
     rv$n_upset_sortby <- "freq"
     rv$n_upset_showempty <- FALSE
+    
+    
     
     
     # --------------- scatter options

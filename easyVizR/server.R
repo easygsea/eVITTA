@@ -1,6 +1,7 @@
 # sets max upload size to 100MB, modal appears when it exceeds 50MB for batch upload and 10MB for single upload,
 options(shiny.maxRequestSize=100*1024^2) 
-
+##Add a RV value for IP Address
+users = reactiveValues(count = 0, ip = c())
 
 # ==== server.R START ===========================================================
 # Define server logic 
@@ -11,6 +12,50 @@ options(shiny.maxRequestSize=100*1024^2)
 
 
 server <- function(input, output, session) {
+    #during the start of the session
+    onSessionStart = isolate({
+        IP <- reactive({ input$getIP })
+        users$count = users$count + 1
+        observeEvent(input$getIP,{
+            result <- toJSON(IP())
+            result <- fromJSON(result)    
+            if(result$geoplugin_request %in% users$ip){
+                showModal(modalDialog(
+                    title = "You already have an open session",
+                    "Please close this session and use your open session",
+                    easyClose = F,
+                    footer = uiOutput("I don't want a footer")
+                ))
+            }else{
+                users$ip<-c(users$ip,result$geoplugin_request)
+            }
+        })
+        #users$ip<-append(users$ip,singleIP())
+    })
+    
+    onSessionEnded(function() {
+        isolate({
+            IP <- reactive({ input$getIP })
+            result <- toJSON(IP())
+            result <- fromJSON(result)
+            #From google IP Address is unique, so we should be good to go
+            users$ip <- users$ip[users$ip != result$geoplugin_request] 
+            users$count = users$count - 1
+        })
+    })
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     waiter_hide() # will hide *on_load waiter
     
