@@ -116,8 +116,14 @@
 
     # -------------- 1.2b upload GMT -------------------
     output$gmt_upload <- renderUI({
-      init_demo_gsea()
-      # init_demo_ora()
+      # initialize RVs for our demo session
+      if(rv$demo_mode == "gsea"){
+        init_demo_gsea()
+      }
+      if(rv$demo_mode == "ora"){
+        init_demo_ora()
+      }
+      
       req(input$selected_species == "other")
       req(is.null(rv$db_status)==T || rv$db_status == "modify")
 

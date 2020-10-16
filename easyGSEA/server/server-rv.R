@@ -1,4 +1,7 @@
    rv <- reactiveValues(
+        demo_mode = "", # "gsea" for a demo session for GSEA mode, "ora" for ORA mode, 
+        #NULL for regular runs
+           
         run_mode=NULL, #gsea glist
         run_n = 0,
         

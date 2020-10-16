@@ -1,6 +1,8 @@
 ####---------------------- REACTIVE VALUES---------------------------####
 
-rv <- reactiveValues(upload_state = NULL, 
+rv <- reactiveValues(
+                     demo = "", # "yes" for a demo session, NULL for regular runs
+                     upload_state = NULL, 
                      # ll=ll, gg=gg, tt=tt,
                      ll=list(), gg=list(), tt=list(),
                      upload_columns=NULL, df=NULL,

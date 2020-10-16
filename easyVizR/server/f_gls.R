@@ -12,13 +12,16 @@ min_shared_cols <- 3 # this excludes the name column
 
 # select data
 output$select_df_p2 <- renderUI({
+  if(rv$demo == "yes"){
+    updateCheckboxGroupInput(session, inputId = "heatmap_dfs", selected = rv$ll)
+  }
   req(length(rv$ll) >= 1)
   checkboxGroupInput(
     inputId = "heatmap_dfs",
     label= shiny::HTML("Select 2 or more datasets:"),
     choices = rv$ll
     #default to select all the datasets
-    ,selected = rv$ll
+    #,selected = rv$ll
     )
 })
 
