@@ -120,12 +120,12 @@ observeEvent(input$run_deg,{
   
   msg = paste0("Running DEG analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. Please wait a minute...")
   
-  if(is.null(samples_c) && is.null(samples_t)){
-    shinyalert("Select at least 1 control and 1 experimental samples.")
-  }else if(is.null(samples_c)){
-    shinyalert("Select at least 1 control sample.")
-  }else if(is.null(samples_t)){
-    shinyalert("Select at least 1 experimental sample.")
+  if((is.null(samples_c)||length(samples_c)<2) && (is.null(samples_t)||length(samples_t)<2)){
+    shinyalert("Select at least 2 control and 2 experimental samples.")
+  }else if(is.null(samples_c)||length(samples_c)<2){
+    shinyalert("Select at least 2 control samples.")
+  }else if(is.null(samples_t)||length(samples_t)<2){
+    shinyalert("Select at least 2 experimental samples.")
   }else{
     withProgress(message = msg, value = 1, {
       ## 1) create design matrix
@@ -283,6 +283,12 @@ observeEvent(input$run_deg2,{
                    ," in both control and experimental group. Please re-select.")
 
     shinyalert(w_msg)
+  }else if((is.null(samples_c)||length(samples_c)<2) && (is.null(samples_t)||length(samples_t)<2)){
+    shinyalert("Select at least 2 control and 2 experimental samples.")
+  }else if(is.null(samples_c)||length(samples_c)<2){
+    shinyalert("Select at least 2 control samples.")
+  }else if(is.null(samples_t)||length(samples_t)<2){
+    shinyalert("Select at least 2 experimental samples.")
   }else{
     withProgress(message = msg, value = 1, {
       ## 1) create design matrix
