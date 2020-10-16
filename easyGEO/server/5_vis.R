@@ -1,5 +1,21 @@
 # ------------ overall visualization tab UI ---------------
 output$ui_vis <- renderUI({
+  # saveRDS(rv$pdata, file = "rvs/pdata.rds")
+  # saveRDS(rv$fddf, file = "rvs/fddf.rds")
+  # saveRDS(rv$sup_source, file = "rvs/sup_source.rds")
+  # saveRDS(rv$suplist, file = "rvs/suplist.rds")
+  # saveRDS(rv$deg, file = "rvs/deg.rds")
+  # saveRDS(rv$deg_counts, file = "rvs/deg_counts.rds")
+  # saveRDS(rv$c_var, file = "rvs/c_var.rds")
+  # saveRDS(rv$c_level, file = "rvs/c_level.rds")
+  # saveRDS(rv$t_level, file = "rvs/t_level.rds")
+  # saveRDS(rv$samples_c, file = "rvs/samples_c.rds")
+  # saveRDS(rv$samples_t, file = "rvs/samples_t.rds")
+  # saveRDS(rv$deg_pdata, file = "rvs/deg_pdata.rds")
+  # saveRDS(rv$gpl_tooltips, file = "rvs/gpl_tooltips.rds")
+  # saveRDS(rv$text, file = "rvs/text.rds")
+  # saveRDS(rv$matrix_ready, file = "rvs/matrix_ready.rds")
+  
   if(is.null(rv$deg)){
     msg = "Visualization available upon successful DEG run."
     panel_null(text = msg)

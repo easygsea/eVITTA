@@ -413,4 +413,53 @@ box_plt <- function(y_label){
   
   rv$a_success = "yes"
   return(p)
+  
+  
+}
+
+# ================ initialize demo RVs =================
+init_demo <- function(){
+ 
+  # initialize all required rv for a demo run
+  rv$demo_acc = "GSE147507"
+  rv$gse_all = readRDS(paste0(getwd(),"/rvs/gse_all.rds"))
+  rv$geo_accession <- "GSE147507"
+  rv$platforms = readRDS(paste0(getwd(),"/rvs/platforms.rds"))
+  rv$plat_id <- 1
+  rv$gpl_summary <- readRDS(paste0(getwd(),"/rvs/gpl_summary.rds"))
+  rv$gpl_choices <- readRDS(paste0(getwd(),"/rvs/gpl_choices.rds"))
+  rv$dmdf <- readRDS(paste0(getwd(),"/rvs/dmdf.rds"))
+  rv$all_samples <- readRDS(paste0(getwd(),"/rvs/all_samples.rds"))
+  rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds"))
+  rv$pdata <- readRDS(paste0(getwd(),"/rvs/pdata.rds"))
+  rv$fddf <- readRDS(paste0(getwd(),"/rvs/fddf.rds"))
+  rv$sup_source <- readRDS(paste0(getwd(),"/rvs/sup_source.rds"))
+  rv$suplist <- readRDS(paste0(getwd(),"/rvs/suplist.rds"))
+  rv$deg <- readRDS(paste0(getwd(),"/rvs/deg.rds"))
+  rv$deg_counts <- readRDS(paste0(getwd(),"/rvs/deg_counts.rds"))
+  rv$c_var <- readRDS(paste0(getwd(),"/rvs/c_var.rds"))
+  rv$c_level <- readRDS(paste0(getwd(),"/rvs/c_level.rds"))
+  rv$t_level <- readRDS(paste0(getwd(),"/rvs/t_level.rds"))
+  rv$samples_c <- readRDS(paste0(getwd(),"/rvs/samples_c.rds"))
+  rv$samples_t <- readRDS(paste0(getwd(),"/rvs/samples_t.rds"))
+  rv$deg_pdata <- readRDS(paste0(getwd(),"/rvs/deg_pdata.rds"))
+  rv$gpl_tooltips <- readRDS(paste0(getwd(),"/rvs/gpl_tooltips.rds"))
+  rv$text <- readRDS(paste0(getwd(),"/rvs/text.rds"))
+  rv$matrix_ready <- readRDS(paste0(getwd(),"/rvs/matrix_ready.rds")) 
+  
+  
+}
+
+init_choices <- function(){
+  updateRadioButtons(session, inputId = "data_type", selected = "raw")
+  updateSelectInput(session, inputId = "sp_select_var", selected = "strain")
+}
+
+init_choices2 <- function(){
+  updateCheckboxGroupInput(session, inputId = "sp_select_levels", selected = c("N/A","USA-WA1/2020"))
+}
+
+init_choices3 <- function(){
+  updatePickerInput(session, inputId = "samples_c_deg", selected = c("GSM4462342", "GSM4462343", "GSM4462344"))
+  updatePickerInput(session, inputId = "samples_t_deg", selected = c("GSM4462345", "GSM4462346", "GSM4462347"))
 }

@@ -162,9 +162,10 @@ total_upload_limit <- total_mb_limit*1024^2
 
 ####================= multiple upload modal elements (show when file uploaded) =====================####
 
-
 # select columns
 output$batch_opt <- renderUI({
+  
+
   req(rv$folder_upload_state == 'uploaded')
   req(length(rv$upload_batch_colscheme)>=4)
   div(
@@ -1000,6 +1001,11 @@ observeEvent(input$delete_deg_confirm, {
 #---------------------- Sidebar UI ---------------------------#
 
 output$delete_deg <- renderUI({
+  # #restoring RVs for the demo session
+  if(rv$demo == "yes"){
+    init_demo()
+  }
+  
   if(length(rv$ll) >= 1){
     div(
       tags$head(

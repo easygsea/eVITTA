@@ -227,6 +227,9 @@ observeEvent(input$n_use_data,{
     rv$v <- vector(mode="list", length=length(rv$nx_i))
     rv$gls_ui <- vector(mode="list", length=length(rv$nx_i))
     
+    # saveRDS(rv$s, file = "rvs/s.rds")
+    # saveRDS(rv$v, file = "rvs/v.rds")
+    # 
     incProgress(0.2)
     # print(tt)
     
@@ -246,7 +249,25 @@ observeEvent(input$n_use_data,{
     js$collapse("f_global")
   }
 
-  
+  # saveRDS(rv$gls_ui, file = "rvs/gls_ui.rds")
+  # saveRDS(rv$gls_text, file = "rvs/gls_text.rds")
+  # saveRDS(rv$n_css_highlights, file = "rvs/n_css_highlights.rds")
+  # saveRDS(rv$nx_i, file = "rvs/nx_i.rds")
+  # saveRDS(rv$hm_numeric_stats, file = "rvs/hm_numeric_stats.rds")
+  # saveRDS(rv$all_char_stats, file = "rvs/all_char_stats.rds")
+  # saveRDS(rv$nw_char_stats, file = "rvs/nw_char_stats.rds")
+  # saveRDS(rv$n_ui_showpanel, file = "rvs/n_ui_showpanel.rds")
+  # saveRDS(rv$n_igl, file = "rvs/n_igl.rds")
+  # saveRDS(rv$ins_criteria, file = "rvs/ins_criteria.rds")
+  # saveRDS(rv$n_venn_status, file = "rvs/n_venn_status.rds")
+  # saveRDS(rv$n_3ds_status, file = "rvs/n_3ds_status.rds")
+  # saveRDS(rv$s, file = "rvs/s.rds")
+  # saveRDS(rv$n_ins_view, file = "rvs/n_ins_view.rds")
+  # 
+  # saveRDS(rv$nx_n, file = "rvs/nx_n.rds")
+  # saveRDS(rv$df_n, file = "rvs/df_n.rds")
+  # saveRDS(rv$nic, file = "rvs/nic.rds")
+  # 
   shinyjs::enable("n_use_data")
 })
 

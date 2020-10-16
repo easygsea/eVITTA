@@ -76,6 +76,7 @@
     })
 
     output$test_db <- renderUI({
+    
         req(nchar(input$selected_species)>0  && input$selected_species != "other")
         req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
 
@@ -119,6 +120,14 @@
 
     # -------------- 1.2b upload GMT -------------------
     output$gmt_upload <- renderUI({
+      # initialize RVs for our demo session
+      if(rv$demo_mode == "gsea"){
+        init_demo_gsea()
+      }
+      if(rv$demo_mode == "ora"){
+        init_demo_ora()
+      }
+      
       req(input$selected_species == "other")
       req(is.null(rv$db_status)==T || rv$db_status == "modify")
 
@@ -553,6 +562,9 @@
             rv$infile_check = NULL
             rv$example_file = "yes"
             rv$file_upload_status = "uploaded"
+            
+            # saveRDS(rv$infile_name, file = "rvs/infile_name.rds")
+            # saveRDS(rv$infile_path, file = "rvs/infile_path.rds")
         }
     })
 
@@ -895,6 +907,7 @@
 
     #----------- 3.2.4 Example GList --------------
     observeEvent(input$load_example_glist,{
+      print(gsub(";","\n",glist_example[input$selected_species][[1]]))
         if(input$selected_species == ""){
           shinyalert("Please select your species of interest.")
         }else if(input$selected_species == "other"){
@@ -1107,6 +1120,20 @@
               incProgress(0.1)
             }
         })
+        # saveRDS(rv$fgseagg, file = "rvs/fgseagg.rds")
+        # saveRDS(rv$gmts, file = "rvs/gmts.rds")
+        # saveRDS(rv$gmts_length, file = "rvs/gmts_length.rds")
+        # saveRDS(rv$gmt_cs_paths, file = "rvs/gmt_cs_paths.rds")
+        # saveRDS(rv$db_modal, file = "rvs/db_modal.rds")
+        # saveRDS(rv$gmt_cs, file = "rvs/gmt_cs.rds")
+        # saveRDS(rv$sd_high, file = "rvs/sd_high.rds")
+        # saveRDS(rv$gmin, file = "rvs/gmin.rds")
+        # saveRDS(rv$gmax, file = "rvs/gmax.rds")
+        # saveRDS(rv$gperm, file = "rvs/gperm.rds")
+        # saveRDS(rv$bar_pathway, file = "rvs/bar_pathway.rds")
+        # saveRDS(rv$bubble_pathway, file = "rvs/bubble_pathway.rds")
+        # saveRDS(rv$run_n, file = "rvs/run_n.rds")
+
     })
 
     #===============================================#
@@ -1222,6 +1249,28 @@
 
     # ------------ clike button to Enrichment Results tab ------------
     observeEvent(input$msg1,{
+      removeModal()
+      updateTabItems(session, "tabs", "kegg")
+    })
+    
+    # ------------ demo's nav to next tab UI ----------------
+    output$demo_nav <- renderUI({
+      req(rv$demo == "yes")
+      if(input$selected_mode == "gsea"){
+        req(input$confirm1 == 0)
+        
+      }else{
+        req(input$confirm2 == 0)
+        
+      }
+      
+      column(12,
+        guide_box("msg2",size="sm")
+        
+      )
+    })
+    
+    observeEvent(input$msg2,{
       removeModal()
       updateTabItems(session, "tabs", "kegg")
     })
