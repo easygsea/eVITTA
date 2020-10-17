@@ -1388,70 +1388,80 @@ observeEvent(input$confirm_kegg_plot,{
         req(input$kegg_type == "native")
         req(rv$kegg_confirm == "yes")
         
-        if(is.null(rv$kegg_status) == T){
-            N = 10
-            withProgress(message = paste0("Generating KEGG native view for ",rv$es_term,"..."),value = 1,{
-                # read in ranks
-                if(rv$run_mode == "gsea"){
-                    ranks = rv$rnkgg
-                }else if(rv$run_mode == "glist"){
-                    ranks = rep(1,length(rv$gene_lists))
-                    names(ranks) = rv$gene_lists
-                }
-                
-                # # rename to ACC, can use org.db package to change later
-                # names(ranks) = rv$input_mat[["target"]][rv$input_mat[["name"]] %in% names(ranks)]
-
-                # species name
-                species <- isolate(input$selected_species)
-                
-                # KEGG gene set name & id
-                term = rv$es_term
-                kegg_id = unlist(strsplit(term,"%"))[[2]]
-                # print(str(kegg_id))
-                
-                
-                
-                if(rv$run_mode=="gsea"){
-                    kegg_output <- pathview(gene.data  = ranks,
-                                            pathway.id = kegg_id,
-                                            species    = species,
-                                            gene.idtype= "SYMBOL",
-                                            kegg.dir = paste0(getwd(),"/www/"),
-                                            # limit      = list(gene=max(abs(ranks))), # list(gene=c(min(ranks),max(ranks))),
-                                            key.pos    = rv$kegg_pos,
-                                            low = "blue", mid = "grey", high = "red", #bins = 20,
-                                            kegg.native=TRUE)
+        if(rv$demo_mode == "gsea"){
+            png_path = paste0(getwd(),"/www/demo/gsea.kegg.png")
+        }else if(rv$demo_mode == "gsea"){
+            png_path = paste0(getwd(),"/www/demo/ora.kegg.png")
+        }else{
+            if(is.null(rv$kegg_status) == T){
+                N = 10
+                withProgress(message = paste0("Generating KEGG native view for ",rv$es_term,"..."),value = 1,{
+                    # read in ranks
+                    if(rv$run_mode == "gsea"){
+                        ranks = rv$rnkgg
+                    }else if(rv$run_mode == "glist"){
+                        ranks = rep(1,length(rv$gene_lists))
+                        names(ranks) = rv$gene_lists
+                    }
                     
-                }else if(rv$run_mode=="glist"){
-                    kegg_output <- pathview(gene.data  = ranks,
-                                            pathway.id = kegg_id,
-                                            species    = species,
-                                            gene.idtype= "SYMBOL",
-                                            kegg.dir = paste0(getwd(),"/www/"),
-                                            # limit      = list(gene=max(abs(ranks))), # list(gene=c(min(ranks),max(ranks))),
-                                            plot.col.key = FALSE,
-                                            low = "green", mid = "green", high = "green", bins = 1,
-                                            kegg.native=TRUE)
+                    # # rename to ACC, can use org.db package to change later
+                    # names(ranks) = rv$input_mat[["target"]][rv$input_mat[["name"]] %in% names(ranks)]
                     
-                }
-                
-                rv$kegg_file_png = paste0(kegg_id,".pathview.png")
-                
-                if(file.exists(rv$kegg_file_png)==T){
-                    cm = paste0("mv ", rv$kegg_file_png," ",getwd(),"/www/")
-                    # print(str(cm))
-                    system(cm)
+                    # species name
+                    species <- isolate(input$selected_species)
                     
-                    rv$kegg_status = "plotted"
-                }else{
-                    return(NULL)
-                }
-            })
-            
+                    # KEGG gene set name & id
+                    term = rv$es_term
+                    kegg_id = unlist(strsplit(term,"%"))[[2]]
+                    # print(str(kegg_id))
+                    
+                    
+                    
+                    if(rv$run_mode=="gsea"){
+                        kegg_output <- pathview(gene.data  = ranks,
+                                                pathway.id = kegg_id,
+                                                species    = species,
+                                                gene.idtype= "SYMBOL",
+                                                kegg.dir = paste0(getwd(),"/www/"),
+                                                # limit      = list(gene=max(abs(ranks))), # list(gene=c(min(ranks),max(ranks))),
+                                                key.pos    = rv$kegg_pos,
+                                                low = "blue", mid = "grey", high = "red", #bins = 20,
+                                                kegg.native=TRUE)
+                        
+                    }else if(rv$run_mode=="glist"){
+                        kegg_output <- pathview(gene.data  = ranks,
+                                                pathway.id = kegg_id,
+                                                species    = species,
+                                                gene.idtype= "SYMBOL",
+                                                kegg.dir = paste0(getwd(),"/www/"),
+                                                # limit      = list(gene=max(abs(ranks))), # list(gene=c(min(ranks),max(ranks))),
+                                                plot.col.key = FALSE,
+                                                low = "green", mid = "green", high = "green", bins = 1,
+                                                kegg.native=TRUE)
+                        
+                    }
+                    
+                    rv$kegg_file_png = paste0(kegg_id,".pathview.png")
+                    
+                    if(file.exists(rv$kegg_file_png)==T){
+                        cm = paste0("mv ", rv$kegg_file_png," ",getwd(),"/www/")
+                        # print(str(cm))
+                        system(cm)
+                        
+                        rv$kegg_status = "plotted"
+                    }else{
+                        return(NULL)
+                    }
+                })
+                
+                png_path = paste0(getwd(),"/www/",rv$kegg_file_png)
+                
+            }
         }
+        
+        
         return(list(
-            src = paste0(getwd(),"/www/",rv$kegg_file_png),
+            src = png_path,
             width="100%",
             align="center",
             contentType = "image/png"

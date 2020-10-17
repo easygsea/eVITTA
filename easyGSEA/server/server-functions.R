@@ -1553,13 +1553,10 @@
       rv$bubble_pathway <- readRDS(paste0(getwd(),"/rvs/bubble_pathway.rds"))
       rv$db_modal <- readRDS(paste0(getwd(),"/rvs/db_modal.rds"))
       rv$fgseagg <- readRDS(paste0(getwd(),"/rvs/fgseagg.rds"))
-      rv$gmax <- readRDS(paste0(getwd(),"/rvs/gmax.rds"))
-      rv$gmin <- readRDS(paste0(getwd(),"/rvs/gmin.rds"))
       rv$gmt_cs <- readRDS(paste0(getwd(),"/rvs/gmt_cs.rds"))
       rv$gmt_cs_paths <- readRDS(paste0(getwd(),"/rvs/gmt_cs_paths.rds"))
       rv$gmts <- readRDS(paste0(getwd(),"/rvs/gmts.rds"))
       rv$gmts_length <- readRDS(paste0(getwd(),"/rvs/gmts_length.rds"))
-      rv$gperm <- readRDS(paste0(getwd(),"/rvs/gperm.rds"))
       rv$sd_high <- readRDS(paste0(getwd(),"/rvs/sd_high.rds"))
       rv$no_up_05 <- readRDS(paste0(getwd(),"/rvs/no_up_05.rds"))
       rv$no_up_01 <- readRDS(paste0(getwd(),"/rvs/no_up_01.rds"))
@@ -1568,11 +1565,13 @@
       rv$infile_check <- readRDS(paste0(getwd(),"/rvs/infile_check.rds"))
       rv$rnk_check <- readRDS(paste0(getwd(),"/rvs/rnk_check.rds"))
       rv$gene_lists_mat1 <- readRDS(paste0(getwd(),"/rvs/gene_lists_mat1.rds"))
-      rv$gene_lists_mat2 <- readRDS(paste0(getwd(),"/rvs/gene_lists_mat2.rds"))
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs/run_n.rds"))
-      rv$gene_lists <- readRDS(paste0(getwd(),"/rvs/gene_lists.rds"))
-      rv$run == "success"
-      rv$demo_mode = "gsea"
+      rv$total_genes_after <- 23710
+      rv$total_genes <- 23710
+      rv$es_term <- "KEGG_TNF_signaling_pathway%hsa04668"
+      rv$kegg_confirm <- "yes"
+      rv$run <- "success"
+      rv$demo_mode <- "gsea"
 
     }
     
@@ -1626,7 +1625,7 @@
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs2/run_n.rds"))
       rv$gene_lists <- readRDS(paste0(getwd(),"/rvs2/gene_lists.rds"))
       rv$run <- "success"
-      rv$demo_mode = "ora"
+      rv$demo_mode <- "ora"
     }
     
     # unload example
@@ -1655,14 +1654,10 @@
       rv$bubble_pathway <- NULL
       rv$db_modal <- NULL
       rv$fgseagg <- NULL
-      rv$gmax <- NULL
-      rv$gmin <- NULL
       rv$gmt_cs <- NULL
       rv$gmt_cs_paths <- NULL
       rv$gmts <- NULL
       rv$gmts_length <- NULL
-      rv$gperm <- NULL
-      rv$sd_high <- NULL
       rv$no_up_05 <- NULL
       rv$no_up_01 <- NULL
       rv$no_down_05 <- NULL
@@ -1670,11 +1665,53 @@
       rv$infile_check <- NULL
       rv$rnk_check <- NULL
       rv$gene_lists_mat1 <- NULL
-      rv$gene_lists_mat2 <- NULL
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs/run_n.rds"))
-      rv$gene_lists <- NULL
+      rv$total_genes_after <- NULL
+      rv$total_genes <- NULL
+      rv$es_term <- NULL
+      rv$kegg_confirm <- NULL
       rv$run <- NULL
-      rv$demo_mode = ""
+      rv$demo_mode <- ""
+    }
+    
+    init_demo_ora_d <- function(){
+      updateTextAreaInput(session,
+                          inputId = "gene_list", value = ""
+      )
+      updateSelectizeInput(session,"selected_species",selected = "")
+      #Demo session RVs for ORA. Data stored in rvs2 folder
+      # #IMPORTANT: please check 1.ui_run.R Line 12 to set the default mode to "glist"
+      rv$bar_pathway <- NULL
+      rv$bubble_pathway <- NULL
+      rv$db_status <- NULL
+      rv$dbs <- NULL
+      rv$gene_lists_after <- NULL
+      rv$glist_check <- NULL
+      rv$rnkll <- NULL
+      rv$run <- NULL
+      rv$volcano_pathway <- NULL
+      rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs2/bar_pathway.rds"))
+      rv$bubble_pathway <- readRDS(paste0(getwd(),"/rvs2/bubble_pathway.rds"))
+      rv$db_modal <- readRDS(paste0(getwd(),"/rvs2/db_modal.rds"))
+      rv$fgseagg <- readRDS(paste0(getwd(),"/rvs2/fgseagg.rds"))
+      rv$gmt_cs <- readRDS(paste0(getwd(),"/rvs2/gmt_cs.rds"))
+      rv$gmt_cs_paths <- readRDS(paste0(getwd(),"/rvs2/gmt_cs_paths.rds"))
+      rv$gmts <- readRDS(paste0(getwd(),"/rvs2/gmts.rds"))
+      rv$gmts_length <- readRDS(paste0(getwd(),"/rvs2/gmts_length.rds"))
+      rv$gperm <- readRDS(paste0(getwd(),"/rvs2/gperm.rds"))
+      rv$sd_high <- readRDS(paste0(getwd(),"/rvs2/sd_high.rds"))
+      rv$no_up_05 <- readRDS(paste0(getwd(),"/rvs2/no_up_05.rds"))
+      rv$no_up_01 <- readRDS(paste0(getwd(),"/rvs2/no_up_01.rds"))
+      rv$no_down_05 <- readRDS(paste0(getwd(),"/rvs2/no_down_05.rds"))
+      rv$no_down_01<- readRDS(paste0(getwd(),"/rvs2/no_down_01.rds"))
+      rv$infile_check <- readRDS(paste0(getwd(),"/rvs2/infile_check.rds"))
+      rv$rnk_check <- readRDS(paste0(getwd(),"/rvs2/rnk_check.rds"))
+      rv$gene_lists_mat1 <- readRDS(paste0(getwd(),"/rvs2/gene_lists_mat1.rds"))
+      rv$gene_lists_mat2 <- readRDS(paste0(getwd(),"/rvs2/gene_lists_mat2.rds"))
+      # rv$run_n <- readRDS(paste0(getwd(),"/rvs2/run_n.rds"))
+      rv$gene_lists <- readRDS(paste0(getwd(),"/rvs2/gene_lists.rds"))
+      rv$run <- "success"
+      rv$demo_mode = "ora"
     }
     
     # =============== demo toggle button ===============
@@ -1698,15 +1735,24 @@
         
       )
     }
-    
+
     btn_demo_e <- function(){
       withProgress(message = 'Updating session ...',
                    value = 1,{
                      rv$demo_n = rv$demo_n + 1
-                     if(rv$demo_n %% 2 == 1){
-                       init_demo_gsea_d()
-                     }else{
-                       init_demo_gsea()
+                     if(input$selected_mode == "gsea"){
+                       if(rv$demo_n %% 2 == 1){
+                         init_demo_gsea_d()
+                       }else{
+                         init_demo_gsea()
+                       }
+                     }else if(input$selected_mode == "glist"){
+                       if(rv$demo_n %% 2 == 1){
+                         init_demo_ora_d()
+                       }else{
+                         init_demo_ora()
+                       }
                      }
+                     
                    })
     }

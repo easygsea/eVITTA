@@ -17,7 +17,7 @@
 
   # Navigation button to next tab -------------
   output$nav_btn_run <- renderUI({
-    req(rv$run == "success")
+    req(rv$run == "success" & rv$demo_mode == "")
 
     div(
       nav_btn_f("gsea_f")
