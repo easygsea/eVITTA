@@ -27,6 +27,12 @@ library(lobstr)
 
 options(repos = BiocManager::repositories())
 
+# run modes
+run_modes = list("Pre-ranked GSEA"="gsea","Overrepresentation Analysis"="glist")
+
+# gene identifiers
+gene_identifiers = list("SYMBOL"="symbol","Other/Mixed" = "other")
+
 # ===================== FUNCTIONS =====================
 # function to abbreviate strings
 abbreviate_string <- function(x){

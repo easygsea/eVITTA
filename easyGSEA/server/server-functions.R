@@ -1531,8 +1531,6 @@
     init_demo_gsea <- function(){
       updateSelectizeInput(session,"selected_species",selected = "hsa")
       #Demo session RVs for GSEA data store in rvs folder.
-      rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs/bar_pathway.rds"))
-      rv$bubble_pathway <- readRDS(paste0(getwd(),"/rvs/bubble_pathway.rds"))
       rv$data_head_o <- readRDS(paste0(getwd(),"/rvs/data_head_o.rds"))
       rv$data_head <- readRDS(paste0(getwd(),"/rvs/data_head_o.rds"))
       rv$db_status <- readRDS(paste0(getwd(),"/rvs/db_status.rds"))
@@ -1568,7 +1566,7 @@
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs/run_n.rds"))
       rv$total_genes_after <- 23710
       rv$total_genes <- 23710
-      rv$es_term <- "KEGG_TNF_signaling_pathway%hsa04668"
+      rv$es_term <- "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"
       rv$kegg_confirm <- "yes"
       rv$run <- "success"
       rv$demo_mode <- "gsea"
@@ -1584,42 +1582,27 @@
       updateSelectizeInput(session,"selected_species",selected = "cel")
       #Demo session RVs for ORA. Data stored in rvs2 folder
       # #IMPORTANT: please check 1.ui_run.R Line 12 to set the default mode to "glist"
-      rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs2/bar_pathway.rds"))
-      rv$bubble_pathway <- readRDS(paste0(getwd(),"/rvs2/bubble_pathway.rds"))
-      rv$data_head_o <- readRDS(paste0(getwd(),"/rvs2/data_head_o.rds"))
-      rv$data_head <- readRDS(paste0(getwd(),"/rvs2/data_head_o.rds"))
       rv$db_status <- readRDS(paste0(getwd(),"/rvs2/db_status.rds"))
       rv$dbs <- readRDS(paste0(getwd(),"/rvs2/dbs.rds"))
-      rv$file_upload_status <- readRDS(paste0(getwd(),"/rvs2/file_upload_status.rds"))
       rv$gene_lists_after <- readRDS(paste0(getwd(),"/rvs2/gene_lists_after.rds"))
       rv$glist_check <- readRDS(paste0(getwd(),"/rvs2/glist_check.rds"))
-      rv$rnk_or_deg <- readRDS(paste0(getwd(),"/rvs2/rnk_or_deg.rds"))
       rv$rnkll <- readRDS(paste0(getwd(),"/rvs2/rnkll.rds"))
       rv$run <- readRDS(paste0(getwd(),"/rvs2/run.rds"))
       rv$run_mode <- readRDS(paste0(getwd(),"/rvs2/run_mode.rds"))
       rv$volcano_pathway <- readRDS(paste0(getwd(),"/rvs2/volcano_pathway.rds"))
-      rv$infile_name <- readRDS(paste0(getwd(),"/rvs2/infile_name.rds"))
-      rv$infile_path <- paste0(getwd(),"/inc/cel.rnk")
-      rv$infile_confirm <- readRDS(paste0(getwd(),"/rvs2/infile_confirm.rds"))
-      rv$rnkgg <- readRDS(paste0(getwd(),"/rvs2/rnkgg.rds"))
       rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs2/bar_pathway.rds"))
       rv$bubble_pathway <- readRDS(paste0(getwd(),"/rvs2/bubble_pathway.rds"))
       rv$db_modal <- readRDS(paste0(getwd(),"/rvs2/db_modal.rds"))
       rv$fgseagg <- readRDS(paste0(getwd(),"/rvs2/fgseagg.rds"))
-      rv$gmax <- readRDS(paste0(getwd(),"/rvs2/gmax.rds"))
-      rv$gmin <- readRDS(paste0(getwd(),"/rvs2/gmin.rds"))
       rv$gmt_cs <- readRDS(paste0(getwd(),"/rvs2/gmt_cs.rds"))
       rv$gmt_cs_paths <- readRDS(paste0(getwd(),"/rvs2/gmt_cs_paths.rds"))
       rv$gmts <- readRDS(paste0(getwd(),"/rvs2/gmts.rds"))
       rv$gmts_length <- readRDS(paste0(getwd(),"/rvs2/gmts_length.rds"))
-      rv$gperm <- readRDS(paste0(getwd(),"/rvs2/gperm.rds"))
       rv$sd_high <- readRDS(paste0(getwd(),"/rvs2/sd_high.rds"))
       rv$no_up_05 <- readRDS(paste0(getwd(),"/rvs2/no_up_05.rds"))
       rv$no_up_01 <- readRDS(paste0(getwd(),"/rvs2/no_up_01.rds"))
       rv$no_down_05 <- readRDS(paste0(getwd(),"/rvs2/no_down_05.rds"))
       rv$no_down_01<- readRDS(paste0(getwd(),"/rvs2/no_down_01.rds"))
-      rv$infile_check <- readRDS(paste0(getwd(),"/rvs2/infile_check.rds"))
-      rv$rnk_check <- readRDS(paste0(getwd(),"/rvs2/rnk_check.rds"))
       rv$gene_lists_mat1 <- readRDS(paste0(getwd(),"/rvs2/gene_lists_mat1.rds"))
       rv$gene_lists_mat2 <- readRDS(paste0(getwd(),"/rvs2/gene_lists_mat2.rds"))
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs2/run_n.rds"))
@@ -1632,8 +1615,6 @@
     init_demo_gsea_d <- function(){
       updateSelectizeInput(session,"selected_species",selected = "")
       #Demo session RVs for GSEA data store in rvs folder.
-      rv$bar_pathway <- NULL
-      rv$bubble_pathway <- NULL
       rv$data_head_o <- NULL
       rv$data_head <- NULL
       rv$db_status <- NULL

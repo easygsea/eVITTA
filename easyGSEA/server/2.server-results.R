@@ -131,8 +131,8 @@ output$ui_bodyResults <- renderUI({
                                 width = 3, align = "right",
                                 uiOutput("es_plot_term_confirm")
                             )
-                        ),
-                        uiOutput("ui_es")
+                        )
+                        ,uiOutput("ui_es")
                     )
                 )
             )
@@ -1007,20 +1007,20 @@ output$ui_es <- renderUI({
     
     fluidRow(
         column(
-            width = 12,
-            div(
+            width = 12
+            ,div(
                 style = "position: relative",
                 uiOutput("ui_gsea_plots"),
                 br(),
                 uiOutput("ui_gsea_plots_radio")
-            ),
-            div(
-                style = 'overflow-x: scroll;font-size:75%', 
+            )
+            ,div(
+                style = 'overflow-x: scroll;font-size:75%',
                 DT::dataTableOutput("gs_stats_tl")
             )
-            
+
         )
-        
+
     )
 })
 
@@ -1069,17 +1069,17 @@ output$ui_gsea_plots_radio <- renderUI({
 
 # Observe click event pass to rv$es_term -----------
 clear_plot_rv <- function(){
-    rv$kegg_status = NULL
-    rv$kegg_status_g = NULL
+    rv$kegg_status <- NULL
+    rv$kegg_status_g <- NULL
     
-    rv$kegg_yes = NULL
-    rv$kegg_confirm = NULL
+    rv$kegg_yes <- NULL
+    rv$kegg_confirm <- NULL
     
-    rv$reactome_yes = NULL
-    rv$reactome_confirm=NULL
+    rv$reactome_yes <- NULL
+    rv$reactome_confirm<-NULL
     
-    rv$wp_yes = NULL
-    rv$wp_confirm=NULL
+    rv$wp_yes <- NULL
+    rv$wp_confirm<-NULL
 }
 
 # manhattan click
@@ -1141,25 +1141,28 @@ observeEvent(event_data("plotly_click", source = "volcano_plot_click2"),{
 })
 
 observeEvent(rv$es_term,{
-    x <- rv$gmts[rv$es_term][[1]]
+    do.call(file.remove, list(list.files(paste0(getwd(),"/www/"),full.names = TRUE)[grepl("pdf$|xml$|png$",list.files(paste0(getwd(),"/www/")))]))
     
-    ranks <- rv$rnkgg
-    names(ranks) = toupper(names(ranks))
-    
-    ranks2 <- ranks[x]
-    ranks2 <- ranks2[!is.na(ranks2)]
-    # rv$rnkgg2 <- ranks2
-    
-    r1 <- data.frame(x=c(rep("All genes",length(rv$rnkgg))),y=rv$rnkgg);row.names(r1) <- NULL
-    r2 <- data.frame(x=c(rep("Genes in gene set",length(ranks2))),y=ranks2);row.names(r2) <- NULL
-    rv$rr <- rbind(r1,r2);r1=NULL;r2=NULL
-    
-    rv$kegg_yes = NULL
-    rv$reactome_yes = NULL
-    rv$wp_yes = NULL
+    clear_plot_rv()
     if((startsWith(rv$es_term,"KEGG"))==TRUE){rv$kegg_yes = "yes"}
     if((startsWith(rv$es_term,"RA_"))==TRUE){rv$reactome_yes = "yes"}
     if((startsWith(rv$es_term,"WP_"))==TRUE){rv$wp_yes = "yes"}
+    
+    
+    if(rv$run_mode == "gsea"){
+        x <- rv$gmts[rv$es_term][[1]]
+        
+        ranks <- rv$rnkgg
+        names(ranks) = toupper(names(ranks))
+        
+        ranks2 <- ranks[x]
+        ranks2 <- ranks2[!is.na(ranks2)]
+        # rv$rnkgg2 <- ranks2
+        
+        r1 <- data.frame(x=c(rep("All genes",length(rv$rnkgg))),y=rv$rnkgg);row.names(r1) <- NULL
+        r2 <- data.frame(x=c(rep("Genes in gene set",length(ranks2))),y=ranks2);row.names(r2) <- NULL
+        rv$rr <- rbind(r1,r2);r1=NULL;r2=NULL
+    }
 })
 
 # UI enrichment plot ----------------------
@@ -1390,8 +1393,6 @@ observeEvent(input$confirm_kegg_plot,{
         
         if(rv$demo_mode == "gsea"){
             png_path = paste0(getwd(),"/www/demo/gsea.kegg.png")
-        }else if(rv$demo_mode == "gsea"){
-            png_path = paste0(getwd(),"/www/demo/ora.kegg.png")
         }else{
             if(is.null(rv$kegg_status) == T){
                 N = 10
@@ -1593,34 +1594,7 @@ observeEvent(input$confirm_kegg_plot,{
     
     # read in ES text input
     observeEvent(input$plot_db_es_confirm,{
-        rv$kegg_status = NULL
-        rv$kegg_status_g = NULL
-        
-        rv$kegg_yes=NULL
-        rv$kegg_confirm=NULL
-        
-        rv$reactome_yes=NULL
-        rv$reactome_confirm=NULL
-        
-        rv$wp_yes=NULL
-        rv$wp_confirm=NULL
-
-        do.call(file.remove, list(list.files(paste0(getwd(),"/www/"),full.names = TRUE)[grepl("pdf$|xml$|png$",list.files(paste0(getwd(),"/www/")))]))
-        
-        rv$es_term = input$selected_es_term
-        x <- rv$gmts[rv$es_term][[1]]
-        
-        ranks2 <- rv$rnkgg[x]
-        ranks2 <- ranks2[!is.na(ranks2)]
-        # rv$rnkgg2 <- ranks2
-        
-        r1 <- data.frame(x=c(rep("All genes",length(rv$rnkgg))),y=rv$rnkgg);row.names(r1) <- NULL
-        r2 <- data.frame(x=c(rep("Genes in gene set",length(ranks2))),y=ranks2);row.names(r2) <- NULL
-        rv$rr <- rbind(r1,r2);r1=NULL;r2=NULL
-        
-        if((startsWith(rv$es_term,"KEGG"))==TRUE){rv$kegg_yes = "yes"}
-        if((startsWith(rv$es_term,"RA_"))==TRUE){rv$reactome_yes = "yes"}
-        if((startsWith(rv$es_term,"WP_"))==TRUE){rv$wp_yes = "yes"}
+        rv$es_term <- input$selected_es_term
     })
     
 # REACTOME =======================
