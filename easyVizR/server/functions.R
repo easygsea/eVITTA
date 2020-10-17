@@ -871,11 +871,14 @@ btn_demo <- function(id){
     icon = "play"
     color = "warning"
     style = "bordered"
+    size = "sm"
   }else{
     label = "Unload Example"
     icon = "trash-alt"
     color = "default"
     style = "minimal"
+    size = "md"
+    
   }
   
   fixedPanel(
@@ -884,7 +887,7 @@ btn_demo <- function(id){
                ,block = TRUE
                ,style = style
                ,color = color
-               ,size = "md"
+               ,size = size
                ,icon = icon(icon)
     )
     

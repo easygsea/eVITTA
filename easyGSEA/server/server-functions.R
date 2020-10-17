@@ -1700,11 +1700,14 @@
         icon = "play"
         color = "warning"
         style = "bordered"
+        size = "sm"
       }else{
         label = "Unload Example"
         icon = "trash-alt"
         color = "default"
         style = "minimal"
+        size = "md"
+        
       }
       
       fixedPanel(
@@ -1713,7 +1716,7 @@
                    ,block = TRUE
                    ,style = style
                    ,color = color
-                   ,size = "md"
+                   ,size = size
                    ,icon = icon(icon)
         )
         
