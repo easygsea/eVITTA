@@ -419,7 +419,6 @@ box_plt <- function(y_label){
 
 # ================ initialize demo RVs =================
 init_demo <- function(){
- 
   # initialize all required rv for a demo run
   rv$demo_acc = "GSE147507"
   rv$gse_all = readRDS(paste0(getwd(),"/rvs/gse_all.rds"))
@@ -446,8 +445,36 @@ init_demo <- function(){
   rv$gpl_tooltips <- readRDS(paste0(getwd(),"/rvs/gpl_tooltips.rds"))
   rv$text <- readRDS(paste0(getwd(),"/rvs/text.rds"))
   rv$matrix_ready <- readRDS(paste0(getwd(),"/rvs/matrix_ready.rds")) 
-  
-  
+}
+
+# unload example
+init_demo_d <- function(){
+  # uninitialize all required rv for a demo run
+  updateTextInput(session,"geo_accession",value="")
+  rv$gse_all = NULL
+  rv$geo_accession <- NULL
+  rv$platforms = NULL
+  rv$plat_id <- NULL
+  rv$gpl_summary <- NULL
+  rv$gpl_choices <- NULL
+  rv$dmdf <- NULL
+  rv$all_samples <- NULL
+  rv$samples <- NULL
+  rv$pdata <- NULL
+  rv$fddf <- NULL
+  rv$sup_source <- NULL
+  rv$suplist <- NULL
+  rv$deg <- NULL
+  rv$deg_counts <- NULL
+  rv$c_var <- NULL
+  rv$c_level <- NULL
+  rv$t_level <- NULL
+  rv$samples_c <- NULL
+  rv$samples_t <- NULL
+  rv$deg_pdata <- NULL
+  rv$gpl_tooltips <- NULL
+  rv$text <- NULL
+  rv$matrix_ready <- NULL
 }
 
 init_choices <- function(){
@@ -462,4 +489,40 @@ init_choices2 <- function(){
 init_choices3 <- function(){
   updatePickerInput(session, inputId = "samples_c_deg", selected = c("GSM4462342", "GSM4462343", "GSM4462344"))
   updatePickerInput(session, inputId = "samples_t_deg", selected = c("GSM4462345", "GSM4462346", "GSM4462347"))
+}
+
+# =============== demo toggle button ===============
+btn_demo <- function(id){
+  if(rv$demo_n %% 2 == 1){
+    label = "Example Run"
+    icon = "play"
+  }else{
+    label = "Unload Example"
+    icon = "trash-alt"
+  }
+  
+  div(
+    style = "position: absolute; bottom: 2.5em",
+    actionBttn(id,label
+               ,block = T
+               ,style = "bordered"
+               ,size = "sm"
+               ,icon = icon(icon)
+               )
+    
+  )
+}
+
+btn_demo_e <- function(){
+  withProgress(message = 'Updating session ...',
+               value = 1,{
+    rv$demo_n = rv$demo_n + 1
+    if(rv$demo_n %% 2 == 1){
+      init_demo_d()
+      rv$demo = ""
+    }else{
+      init_demo()
+      rv$demo = "yes"
+    }
+  })
 }

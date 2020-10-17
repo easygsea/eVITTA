@@ -1,5 +1,6 @@
 rv <- reactiveValues(
   demo = "", # "yes" for a demo session, NULL for regular runs
+  demo_n = 1, # odd for load, even for unload
   
   gse_all = NULL,
   

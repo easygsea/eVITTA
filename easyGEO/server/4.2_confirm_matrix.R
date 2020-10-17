@@ -1,3 +1,86 @@
+# --------------- overall run tab UI ---------------
+output$ui_run <- renderUI({
+  if(is.null(rv$plat_id)){
+    panel_null()
+  }else{
+    fluidRow(
+      column(5,
+             box(
+               title=span(HTML("<b>4.1.</b>"),icon("check-square"),HTML("Confirm data matrix")), width = 12, status = "primary",
+               id = "sp",
+               # tabPanel(
+               # span(icon("clipboard-check"),"Check if data matrix is ready"),
+               uiOutput("confirm_matrix_ui")
+               # )
+             ),
+             br(),
+             box(
+               title = span(HTML("<b>4.2.</b>"),icon("mixer"),HTML("Make contrast")), width = 12, status = "primary",
+               id = "ui_select_box",
+               radioGroupButtons(
+                 inputId = "ui_select",
+                 # label = "Select plot type",
+                 choiceNames = c("By design matrix", "Manual selection"),
+                 choiceValues = c("sp","coerce"),
+                 selected = "sp",
+                 checkIcon = list(
+                   yes = icon("check-square"),
+                   no = icon("square-o")
+                 ),
+                 # status = "primary",
+                 direction = "horizontal"
+               ),
+               # bsTooltip("ui_select", HTML("<b>By design matrix</b> is applicable when the authors have uploaded their study design in full.<br><br><b>Manual selection</b> is for any combination of samples. You may manually select samples in the control and the experimental groups.")
+               #           ,placement = "right"),
+               
+               # tabPanel(
+               #   value = "sp",
+               #   span(icon("check-square"),"By design matrix"),
+               # HTML(paste0("By design matrix",add_help(
+               #   "fine_q"
+               # )))
+               # ), 
+               # bsTooltip("fine_q", "Applicable when design matrix is provided by authors and complete","top"),
+               uiOutput("select_params_ui"),
+               # ),
+               # tabPanel(
+               # value = "coerce",
+               # span(icon("mixer"),"Manual"),
+               # HTML(paste0("Manual selection",add_help(
+               #   "coerce_q"
+               # )))
+               # ),
+               # bsTooltip("coerce_q", "For any combination of samples","top"),
+               # HTML("<b>Note:</b> \"Manual\" is for any combination of samples. You may manually select samples in the control and the experimental groups. 
+               #       Select the comparisons you're interested in and run DEG analysis."),
+               # hr(),
+               
+               uiOutput("coerce_ui")
+               
+               # )
+             )
+             
+      ),
+      column(7,
+             column(
+               width = 12,
+               uiOutput("confirm_run"),
+             ),
+             
+             fluidRow(
+               column(
+                 width = 12,
+                 uiOutput("run_deg_ui")
+                 
+               )
+               
+             )
+             
+      )
+    )
+  }
+})
+
 output$confirm_matrix_ui <- renderUI({
   
   div(
