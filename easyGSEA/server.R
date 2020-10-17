@@ -10,6 +10,15 @@ server <- function(input, output, session) {
     
     # js$hidehead('none')
     
+    # toggle button for a demo run
+    output$btn_demo <- renderUI({
+        btn_demo("ee")
+    })
+    
+    observeEvent(input$ee,{
+        btn_demo_e()
+    })
+    
     source("server/server-variables.R", local = TRUE)
     source("server/server-reactives.R", local = TRUE)
     source("server/server-rv.R", local = TRUE)

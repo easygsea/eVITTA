@@ -1569,10 +1569,10 @@
       rv$rnk_check <- readRDS(paste0(getwd(),"/rvs/rnk_check.rds"))
       rv$gene_lists_mat1 <- readRDS(paste0(getwd(),"/rvs/gene_lists_mat1.rds"))
       rv$gene_lists_mat2 <- readRDS(paste0(getwd(),"/rvs/gene_lists_mat2.rds"))
-      rv$run_n <- readRDS(paste0(getwd(),"/rvs/run_n.rds"))
+      # rv$run_n <- readRDS(paste0(getwd(),"/rvs/run_n.rds"))
       rv$gene_lists <- readRDS(paste0(getwd(),"/rvs/gene_lists.rds"))
       rv$run == "success"
-      rv$demo = "yes"
+      rv$demo_mode = "gsea"
 
     }
     
@@ -1623,8 +1623,90 @@
       rv$rnk_check <- readRDS(paste0(getwd(),"/rvs2/rnk_check.rds"))
       rv$gene_lists_mat1 <- readRDS(paste0(getwd(),"/rvs2/gene_lists_mat1.rds"))
       rv$gene_lists_mat2 <- readRDS(paste0(getwd(),"/rvs2/gene_lists_mat2.rds"))
-      rv$run_n <- readRDS(paste0(getwd(),"/rvs2/run_n.rds"))
+      # rv$run_n <- readRDS(paste0(getwd(),"/rvs2/run_n.rds"))
       rv$gene_lists <- readRDS(paste0(getwd(),"/rvs2/gene_lists.rds"))
-      rv$run == "success"
-      rv$demo = "yes"
+      rv$run <- "success"
+      rv$demo_mode = "ora"
+    }
+    
+    # unload example
+    init_demo_gsea_d <- function(){
+      updateSelectizeInput(session,"selected_species",selected = "")
+      #Demo session RVs for GSEA data store in rvs folder.
+      rv$bar_pathway <- NULL
+      rv$bubble_pathway <- NULL
+      rv$data_head_o <- NULL
+      rv$data_head <- NULL
+      rv$db_status <- NULL
+      rv$dbs <- NULL
+      rv$file_upload_status <- NULL
+      rv$gene_lists_after <- NULL
+      rv$glist_check <- NULL
+      rv$rnk_or_deg <- NULL
+      rv$rnkll <- NULL
+      rv$run <- NULL
+      rv$run_mode <- NULL
+      rv$volcano_pathway <- NULL
+      rv$infile_name <- NULL
+      rv$infile_path <- NULL
+      rv$infile_confirm <- NULL
+      rv$rnkgg <- NULL
+      rv$bar_pathway <- NULL
+      rv$bubble_pathway <- NULL
+      rv$db_modal <- NULL
+      rv$fgseagg <- NULL
+      rv$gmax <- NULL
+      rv$gmin <- NULL
+      rv$gmt_cs <- NULL
+      rv$gmt_cs_paths <- NULL
+      rv$gmts <- NULL
+      rv$gmts_length <- NULL
+      rv$gperm <- NULL
+      rv$sd_high <- NULL
+      rv$no_up_05 <- NULL
+      rv$no_up_01 <- NULL
+      rv$no_down_05 <- NULL
+      rv$no_down_01<- NULL
+      rv$infile_check <- NULL
+      rv$rnk_check <- NULL
+      rv$gene_lists_mat1 <- NULL
+      rv$gene_lists_mat2 <- NULL
+      # rv$run_n <- readRDS(paste0(getwd(),"/rvs/run_n.rds"))
+      rv$gene_lists <- NULL
+      rv$run <- NULL
+      rv$demo_mode = ""
+    }
+    
+    # =============== demo toggle button ===============
+    btn_demo <- function(id){
+      if(rv$demo_n %% 2 == 1){
+        label = "Example Run"
+        icon = "play"
+      }else{
+        label = "Unload Example"
+        icon = "trash-alt"
+      }
+      
+      fixedPanel(
+        bottom = 25,
+        actionBttn(id,label
+                   ,block = TRUE
+                   ,style = "bordered"
+                   ,size = "sm"
+                   ,icon = icon(icon)
+        )
+        
+      )
+    }
+    
+    btn_demo_e <- function(){
+      withProgress(message = 'Updating session ...',
+                   value = 1,{
+                     rv$demo_n = rv$demo_n + 1
+                     if(rv$demo_n %% 2 == 1){
+                       init_demo_gsea_d()
+                     }else{
+                       init_demo_gsea()
+                     }
+                   })
     }

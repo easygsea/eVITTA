@@ -445,6 +445,7 @@ init_demo <- function(){
   rv$gpl_tooltips <- readRDS(paste0(getwd(),"/rvs/gpl_tooltips.rds"))
   rv$text <- readRDS(paste0(getwd(),"/rvs/text.rds"))
   rv$matrix_ready <- readRDS(paste0(getwd(),"/rvs/matrix_ready.rds")) 
+  rv$demo <- "yes"
 }
 
 # unload example
@@ -475,6 +476,7 @@ init_demo_d <- function(){
   rv$gpl_tooltips <- NULL
   rv$text <- NULL
   rv$matrix_ready <- NULL
+  rv$demo <- ""
 }
 
 init_choices <- function(){
@@ -501,10 +503,10 @@ btn_demo <- function(id){
     icon = "trash-alt"
   }
   
-  div(
-    style = "position: absolute; bottom: 2.5em",
+  fixedPanel(
+    bottom = 25,
     actionBttn(id,label
-               ,block = T
+               ,block = TRUE
                ,style = "bordered"
                ,size = "sm"
                ,icon = icon(icon)
@@ -519,10 +521,8 @@ btn_demo_e <- function(){
     rv$demo_n = rv$demo_n + 1
     if(rv$demo_n %% 2 == 1){
       init_demo_d()
-      rv$demo = ""
     }else{
       init_demo()
-      rv$demo = "yes"
     }
   })
 }

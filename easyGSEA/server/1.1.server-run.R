@@ -1255,7 +1255,7 @@
     
     # ------------ demo's nav to next tab UI ----------------
     output$demo_nav <- renderUI({
-      req(rv$demo == "yes")
+      req(rv$demo_mode != "")
       if(input$selected_mode == "gsea"){
         req(input$confirm1 == 0)
         
