@@ -261,7 +261,7 @@ hm_count <- function(df = hm_df(),counts = rv$deg_counts){
     colnames(counts) = samples
   }
   
-  if(rv$plot_label == "top"){
+  if(rv$plot_label_hm == "top"){
     # top up regulated genes
     genes_up = df %>% dplyr::arrange(desc(logFC)) %>% #df[order(-df[["logFC"]],df[["adj.P.Val"]]),]
       head(.,n=rv$volcano_up) %>%

@@ -28,7 +28,8 @@ rv <- reactiveValues(
   
   v_mode = "static", # or "interactive"
   
-  plot_label="top", # options to label/extract genes, other options: threshold manual
+  plot_label="top", # volcano's options to label/extract genes, other options: threshold manual
+  plot_label_hm = "threshold", # heatmap's options to label/extract genes, other options: threshold manual
   
   volcano_up=15, volcano_down=15, # top # of genes to label in volcano & heatmap
   a_k=1.5,# no of sd to show in violin jitter
