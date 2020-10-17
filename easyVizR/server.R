@@ -12,6 +12,15 @@ users = reactiveValues(count = 0, ip = c())
 
 
 server <- function(input, output, session) {
+    # toggle button for a demo run
+    output$btn_demo <- renderUI({
+        btn_demo("ee")
+    })
+    
+    observeEvent(input$ee,{
+        btn_demo_e()
+    })
+    
     #during the start of the session
     onSessionStart = isolate({
         IP <- reactive({ input$getIP })
@@ -43,13 +52,6 @@ server <- function(input, output, session) {
             users$count = users$count - 1
         })
     })
-    
-    
-    
-    
-    
-    
-    
     
     
     

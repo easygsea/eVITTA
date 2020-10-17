@@ -855,3 +855,50 @@ init_demo <- function(){
     rv[[paste0("nic_sign_",i)]] <- "All"
   }
 }
+
+# the function to remove initialized RVs from the demo session
+init_demo_d <- function(){
+  
+  rv$ll <- NULL
+  rv$gg <- NULL
+  rv$tt <- NULL
+}
+
+# =============== demo toggle button ===============
+btn_demo <- function(id){
+  if(rv$demo_n %% 2 == 1){
+    label = "Example Run"
+    icon = "play"
+    color = "warning"
+    style = "bordered"
+  }else{
+    label = "Unload Example"
+    icon = "trash-alt"
+    color = "default"
+    style = "minimal"
+  }
+  
+  fixedPanel(
+    bottom = 25,
+    actionBttn(id,label
+               ,block = TRUE
+               ,style = style
+               ,color = color
+               ,size = "md"
+               ,icon = icon(icon)
+    )
+    
+  )
+}
+
+btn_demo_e <- function(){
+  withProgress(message = 'Updating session ...',
+               value = 1,{
+                 rv$demo_n = rv$demo_n + 1
+                 if(rv$demo_n %% 2 == 1){
+                   init_demo_d()
+                 }else{
+                   init_demo()
+                 }
+               })
+}
