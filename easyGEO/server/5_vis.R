@@ -570,6 +570,10 @@ observeEvent(input$agene_confirm,{
 #---------------one genes: plot----------------
 # gene stats in table
 output$a_stats <- renderTable({
+  if(rv$demo == "yes" && input$agene_confirm==0){
+    init_choices4()
+  }
+  
   req(rv$a_gene)
   
   cols = c("logFC","P.Value","adj.P.Val")

@@ -493,6 +493,11 @@ init_choices3 <- function(){
   updatePickerInput(session, inputId = "samples_t_deg", selected = c("GSM4462345", "GSM4462346", "GSM4462347"))
 }
 
+init_choices4 <- function(){
+  updateSelectizeInput(session, inputId = "aplot_genes", selected = "CXCL2")
+  rv$a_gene = "CXCL2"
+}
+
 # =============== demo toggle button ===============
 btn_demo <- function(id){
   if(rv$demo_n %% 2 == 1){
