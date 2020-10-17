@@ -1698,17 +1698,22 @@
       if(rv$demo_n %% 2 == 1){
         label = "Example Run"
         icon = "play"
+        color = "warning"
+        style = "bordered"
       }else{
         label = "Unload Example"
         icon = "trash-alt"
+        color = "default"
+        style = "minimal"
       }
       
       fixedPanel(
         bottom = 25,
         actionBttn(id,label
                    ,block = TRUE
-                   ,style = "bordered"
-                   ,size = "sm"
+                   ,style = style
+                   ,color = color
+                   ,size = "md"
                    ,icon = icon(icon)
         )
         
@@ -1722,16 +1727,16 @@
                      if(input$selected_mode == "gsea"){
                        if(rv$demo_n %% 2 == 1){
                          init_demo_gsea_d()
+                         clear_plot_rv()
                        }else{
                          init_demo_gsea()
                        }
                      }else if(input$selected_mode == "glist"){
                        if(rv$demo_n %% 2 == 1){
                          init_demo_ora_d()
+                         clear_plot_rv()
                        }else{
                          init_demo_ora()
-                         shinyjs::disable("gene_list")
-                         shinyjs::disable("glist_name")
                        }
                      }
                      

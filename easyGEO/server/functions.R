@@ -498,19 +498,24 @@ btn_demo <- function(id){
   if(rv$demo_n %% 2 == 1){
     label = "Example Run"
     icon = "play"
+    color = "warning"
+    style = "bordered"
   }else{
     label = "Unload Example"
     icon = "trash-alt"
+    color = "default"
+    style = "minimal"
   }
   
   fixedPanel(
     bottom = 25,
     actionBttn(id,label
                ,block = TRUE
-               ,style = "bordered"
-               ,size = "sm"
+               ,style = style
+               ,color = color
+               ,size = "md"
                ,icon = icon(icon)
-               )
+    )
     
   )
 }

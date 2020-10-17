@@ -1391,8 +1391,8 @@ observeEvent(input$confirm_kegg_plot,{
         req(input$kegg_type == "native")
         req(rv$kegg_confirm == "yes")
         
-        if(rv$demo_mode == "gsea"){
-            png_path = paste0(getwd(),"/www/demo/gsea.kegg.png")
+        if(rv$demo_mode == "gsea" && rv$es_term == "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"){
+            rv$png_path = paste0(getwd(),"/www/demo/gsea.kegg.png")
         }else{
             if(is.null(rv$kegg_status) == T){
                 N = 10
@@ -1449,20 +1449,20 @@ observeEvent(input$confirm_kegg_plot,{
                         # print(str(cm))
                         system(cm)
                         
+                        rv$png_path = paste0(getwd(),"/www/",rv$kegg_file_png)
                         rv$kegg_status = "plotted"
                     }else{
                         return(NULL)
                     }
                 })
                 
-                png_path = paste0(getwd(),"/www/",rv$kegg_file_png)
-                
             }
+            
         }
         
         
         return(list(
-            src = png_path,
+            src = rv$png_path,
             width="100%",
             align="center",
             contentType = "image/png"
