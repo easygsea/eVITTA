@@ -1620,6 +1620,12 @@ observeEvent(input$confirm_kegg_plot,{
     # reactome feedback confirm
     observeEvent(input$confirm_reactome_plot,{
         rv$reactome_confirm = "yes"
+    })
+    
+    # reactome widget
+    output$ui_reactome <- renderUI({
+        req(rv$reactome_confirm == "yes")
+        
         rv$reactome_id = unlist(strsplit(rv$es_term,"%"))[2]
         rv$reactome_genes = rv$fgseagg[rv$fgseagg$pathway==rv$es_term,][[ncol(rv$fgseagg)]]
         
@@ -1627,11 +1633,7 @@ observeEvent(input$confirm_kegg_plot,{
         if(length(rv$reactome_genes[[1]])>50){
             rv$reactome_genes[[1]] = rv$reactome_genes[[1]][1:50]
         }
-    })
-    
-    # reactome widget
-    output$ui_reactome <- renderUI({
-        req(rv$reactome_confirm == "yes")
+        
         box(
             title = span(icon("lightbulb"),"Reactome Pathway Diagram"),
             solidHeader = F, status = "primary",width="100%",height=610,align = "center",

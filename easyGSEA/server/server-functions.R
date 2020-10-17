@@ -1574,12 +1574,13 @@
     }
     
     init_demo_ora <- function(){
+      updateRadioButtons(session,"selected_mode",selected = "glist")
+      updateSelectizeInput(session,"selected_species",selected = "cel")
       updateTextAreaInput(session,
                           inputId = "gene_list",
                           value = "mdt-1\nmdt-2\nmdt-3\nmdt-4\nmdt-5\nmdt-6\nmdt-7\nmdt-8\nmdt-9\nmdt-10\nmdt-11\nmdt-12\nmdt-13\nmdt-14\nmdt-15\nmdt-16\nmdt-17\nmdt-18\nmdt-19\nmdt-20\nmdt-21\nmdt-22\nmdt-26\nmdt-31\ncdk-8"
       )
-      updateRadioButtons(session,"selected_mode",selected = "glist")
-      updateSelectizeInput(session,"selected_species",selected = "cel")
+      updateTextInput(session,"glist_name",value="unnamed")
       #Demo session RVs for ORA. Data stored in rvs2 folder
       # #IMPORTANT: please check 1.ui_run.R Line 12 to set the default mode to "glist"
       rv$db_status <- readRDS(paste0(getwd(),"/rvs2/db_status.rds"))
@@ -1603,10 +1604,11 @@
       rv$no_up_01 <- readRDS(paste0(getwd(),"/rvs2/no_up_01.rds"))
       rv$no_down_05 <- readRDS(paste0(getwd(),"/rvs2/no_down_05.rds"))
       rv$no_down_01<- readRDS(paste0(getwd(),"/rvs2/no_down_01.rds"))
-      rv$gene_lists_mat1 <- readRDS(paste0(getwd(),"/rvs2/gene_lists_mat1.rds"))
       rv$gene_lists_mat2 <- readRDS(paste0(getwd(),"/rvs2/gene_lists_mat2.rds"))
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs2/run_n.rds"))
       rv$gene_lists <- readRDS(paste0(getwd(),"/rvs2/gene_lists.rds"))
+      rv$es_term <- "RA_Transcriptional_activity_of_SMAD2/SMAD3:SMAD4_heterotrimer%R-CEL-2173793"
+      rv$reactome_confirm <- "yes"
       rv$run <- "success"
       rv$demo_mode <- "ora"
     }
@@ -1614,6 +1616,7 @@
     # unload example
     init_demo_gsea_d <- function(){
       updateSelectizeInput(session,"selected_species",selected = "")
+      shinyjs::enable("selected_species")
       #Demo session RVs for GSEA data store in rvs folder.
       rv$data_head_o <- NULL
       rv$data_head <- NULL
@@ -1656,14 +1659,14 @@
     }
     
     init_demo_ora_d <- function(){
+      updateSelectizeInput(session,"selected_species",selected = "")
+      shinyjs::enable("selected_species")
       updateTextAreaInput(session,
                           inputId = "gene_list", value = ""
       )
-      updateSelectizeInput(session,"selected_species",selected = "")
+      updateTextInput(session,"glist_name",value="")
       #Demo session RVs for ORA. Data stored in rvs2 folder
       # #IMPORTANT: please check 1.ui_run.R Line 12 to set the default mode to "glist"
-      rv$bar_pathway <- NULL
-      rv$bubble_pathway <- NULL
       rv$db_status <- NULL
       rv$dbs <- NULL
       rv$gene_lists_after <- NULL
@@ -1671,28 +1674,23 @@
       rv$rnkll <- NULL
       rv$run <- NULL
       rv$volcano_pathway <- NULL
-      rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs2/bar_pathway.rds"))
-      rv$bubble_pathway <- readRDS(paste0(getwd(),"/rvs2/bubble_pathway.rds"))
-      rv$db_modal <- readRDS(paste0(getwd(),"/rvs2/db_modal.rds"))
-      rv$fgseagg <- readRDS(paste0(getwd(),"/rvs2/fgseagg.rds"))
-      rv$gmt_cs <- readRDS(paste0(getwd(),"/rvs2/gmt_cs.rds"))
-      rv$gmt_cs_paths <- readRDS(paste0(getwd(),"/rvs2/gmt_cs_paths.rds"))
-      rv$gmts <- readRDS(paste0(getwd(),"/rvs2/gmts.rds"))
-      rv$gmts_length <- readRDS(paste0(getwd(),"/rvs2/gmts_length.rds"))
-      rv$gperm <- readRDS(paste0(getwd(),"/rvs2/gperm.rds"))
-      rv$sd_high <- readRDS(paste0(getwd(),"/rvs2/sd_high.rds"))
-      rv$no_up_05 <- readRDS(paste0(getwd(),"/rvs2/no_up_05.rds"))
-      rv$no_up_01 <- readRDS(paste0(getwd(),"/rvs2/no_up_01.rds"))
-      rv$no_down_05 <- readRDS(paste0(getwd(),"/rvs2/no_down_05.rds"))
-      rv$no_down_01<- readRDS(paste0(getwd(),"/rvs2/no_down_01.rds"))
-      rv$infile_check <- readRDS(paste0(getwd(),"/rvs2/infile_check.rds"))
-      rv$rnk_check <- readRDS(paste0(getwd(),"/rvs2/rnk_check.rds"))
-      rv$gene_lists_mat1 <- readRDS(paste0(getwd(),"/rvs2/gene_lists_mat1.rds"))
-      rv$gene_lists_mat2 <- readRDS(paste0(getwd(),"/rvs2/gene_lists_mat2.rds"))
+      rv$bar_pathway <- NULL
+      rv$bubble_pathway <- NULL
+      rv$db_modal <- NULL
+      rv$fgseagg <- NULL
+      rv$gmt_cs <- NULL
+      rv$gmt_cs_paths <- NULL
+      rv$gmts <- NULL
+      rv$gmts_length <- NULL
+      rv$no_up_05 <- NULL
+      rv$no_up_01 <- NULL
+      rv$no_down_05 <- NULL
+      rv$no_down_01<- NULL
+      rv$gene_lists_mat2 <- NULL
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs2/run_n.rds"))
-      rv$gene_lists <- readRDS(paste0(getwd(),"/rvs2/gene_lists.rds"))
-      rv$run <- "success"
-      rv$demo_mode = "ora"
+      rv$gene_lists <- NULL
+      rv$run <- NULL
+      rv$demo_mode = ""
     }
     
     # =============== demo toggle button ===============
@@ -1732,6 +1730,8 @@
                          init_demo_ora_d()
                        }else{
                          init_demo_ora()
+                         shinyjs::disable("gene_list")
+                         shinyjs::disable("glist_name")
                        }
                      }
                      
