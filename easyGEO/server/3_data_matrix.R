@@ -556,8 +556,7 @@ filtered_data_showdf <- reactive({
 filtered_data_df <- reactive({
   req(is.null(rv$dmdf)==F)
   req(length(rv$samples)>0)
-  req(input$identifier)
-  
+
   dmdf <- rv$dmdf
   dmdf <- dmdf[,c("Name", rv$samples)]
   dmdf[dmdf==""]<-NA # replace empty string with na
@@ -575,7 +574,7 @@ observeEvent(input$identifier,{
     genes <- rownames(rv$identifiers_df)
     df <- rv$identifiers_df[,identifier,drop=F] %>%
       dplyr::mutate(NameN = genes)
-    print(head(df))
+    
     df <- df[!duplicated(df[[identifier]]),]
     
     # dmdf <- dmdf[dmdf[,"Name"] %in% df[["NameN"]],]
