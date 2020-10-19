@@ -59,6 +59,8 @@ observeEvent(input$search_geo, {
   rv$platforms <- NULL
   rv$plat_id <- NULL
   rv$deg <- NULL
+  rv$identifiers_df <- NULL
+  rv$identifiers <- NULL
 
   withProgress(message = 'Getting data. Please wait a minute...', value = 1, {
 

@@ -168,10 +168,11 @@ shinyServer(function(input, output, session) {
     
 
     
-    ####-------------------00: FUNCTIONS: plots -----------------####
+    ####-------------------00: FUNCTIONS: plots && variables-----------------####
     
     
     source("server/functions.R", local = TRUE)
+    source("server/server-variables.R", local = TRUE)
     
     
     

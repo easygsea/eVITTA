@@ -570,12 +570,12 @@ filtered_data_df <- reactive({
 observeEvent(input$identifier,{
   dmdf <- rv$dmdf
   # rename dmdf gene identifiers according to selection
-  identifier = input$identifier
+  identifier = isolate(input$identifier)
   if(identifier != "Default"){
-    genes <- rownames(df)
+    genes <- rownames(rv$identifiers_df)
     df <- rv$identifiers_df[,identifier,drop=F] %>%
       dplyr::mutate(NameN = genes)
-    
+    print(head(df))
     df <- df[!duplicated(df[[identifier]]),]
     
     # dmdf <- dmdf[dmdf[,"Name"] %in% df[["NameN"]],]
