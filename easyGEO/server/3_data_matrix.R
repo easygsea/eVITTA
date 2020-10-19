@@ -116,12 +116,27 @@ output$data_matrix_ui <- renderUI({
   # output report and url links to the user
   div(
     HTML(text), br(), br(),
+    # select identifier, if microarray
+    uiOutput("select_identifier"),
     # where,
     uiOutput("sup_links")
   )
   
 })
 
+# generate selection of gene identifiers, symbol as the default
+output$select_identifier <- renderUI({
+  req(rv$identifiers)
+  
+  div(
+    selectizeInput("identifier",HTML("Select the gene identifier:",add_help("identifier_q"))
+                   ,choices = c("Default",rv$identifiers)
+                   ,selected = rv$identifiers[grepl("symbol",rv$identifiers,ignore.case = T)][1]
+    )
+    ,bsTooltip("identifier_q",HTML("Probe IDs auto-converted to HNGC symbols (if available) on default")
+               ,placement = "top")
+  )
+})
 
 # generates url links
 output$sup_links <- renderUI({
@@ -541,13 +556,35 @@ filtered_data_showdf <- reactive({
 filtered_data_df <- reactive({
   req(is.null(rv$dmdf)==F)
   req(length(rv$samples)>0)
+  req(input$identifier)
   
   dmdf <- rv$dmdf
   dmdf <- dmdf[,c("Name", rv$samples)]
   dmdf[dmdf==""]<-NA # replace empty string with na
   dmdf <- dmdf[complete.cases(dmdf),] # get rid of na values
-  dmdf
   
+  dmdf
+})
+
+# --------- change identifiers according to GPL info --------------
+observeEvent(input$identifier,{
+  dmdf <- rv$dmdf
+  # rename dmdf gene identifiers according to selection
+  identifier = input$identifier
+  if(identifier != "Default"){
+    genes <- rownames(df)
+    df <- rv$identifiers_df[,identifier,drop=F] %>%
+      dplyr::mutate(NameN = genes)
+    
+    df <- df[!duplicated(df[[identifier]]),]
+    
+    # dmdf <- dmdf[dmdf[,"Name"] %in% df[["NameN"]],]
+    dmdf <- dmdf[match(df[["NameN"]],dmdf[,"Name"]),] %>%
+      as.data.frame()
+    dmdf$Name <- df[[identifier]]
+  }
+  
+  rv$dmdf <- dmdf
 })
 
 # ---------- guide box to 3. design matrix page -------

@@ -222,6 +222,8 @@ output$study_type_feedback <- renderUI({
                                   Only data in the first channel will be read.")
       )
       box_color = "yellow"
+    }else{
+      rv$microarray = "yes"
     }
   }
   msg <- paste(msgs, collapse="<br>")
@@ -271,9 +273,23 @@ observeEvent(input$geo_platform, {
 
   # initialize fddf
   rv$fddf <- design_df() # initially unfiltered, will update when filter
+  
+  # initialize gene identifiers
+  if(rv$microarray == "yes"){
+    # GPL probes' info
+    # gset <- rv$gse_all[[match(plat, rv$platforms)]]
+    
+    df <- pData(featureData(gse())) 
+    df <- df %>%
+      dplyr::select(any_of(c(matches(accepted_gene_identifiers, ignore.case = T),ends_with("_id", ignore.case = T))))
+
+    
+    rv$identifiers <- colnames(df)
+    rv$identifiers_df <- df
+    
+  }
 
 })
-
 
 # ---------- when all is done, show guide box to next page ---------
 output$guide_1a <- renderUI({
