@@ -1,1 +1,1 @@
-accepted_gene_identifiers <- c("id","ilmn_gene","gi","accession","symbol")
+accepted_gene_identifiers <- c("id","ilmn_gene","gi","accession","symbol","hugo","hngc")
