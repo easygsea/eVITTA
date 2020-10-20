@@ -15,6 +15,7 @@ server <- function(input, output, session) {
     source("server/server-rv.R", local = TRUE)
     source("server/server-ramCheck.R", local = TRUE)
     source("server/server-functions.R", local = TRUE)
+    source("server/help.R", local = TRUE) #intro tour#
     source("server/1.1.server-run.R", local = TRUE)
     source("server/1.2.server-body1.R", local = TRUE)
     

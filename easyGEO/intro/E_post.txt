@@ -1,0 +1,3 @@
+element	intro
+geo_platform_ui	Select your platform from available platforms and press <b> Select to proceed</b> button to continue.
+summary	Corresponding research information are organized below. Click the tab you are interested in to view it.

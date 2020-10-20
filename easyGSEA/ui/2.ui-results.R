@@ -6,6 +6,11 @@ bodyResults <- tabItem(tabName = "kegg",
     uiOutput("ui_reactome"),
     uiOutput("ui_wp")
     #uiOutput("p_value_help_div")
-    # uiOutput("ui_manhattan_table")
+    # uiOutput("ui_manhattan_table"),
+    ,fixedPanel(
+        uiOutput("floating_button_tab2"),
+        right = 30,
+        bottom = 30
+    )
 )
 

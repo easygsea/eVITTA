@@ -1,0 +1,5 @@
+element	intro
+sp	Select the type of data provided by the authors.
+ui_select_box	Please go through the choices here to run the comparison on the variables that you would like to analyze.
+run_deg	<b>Run DEG Analysis</b> button would be shown to run the analysis
+deg_table_download_bttn	Finally, you could download the whole DEG results on the right

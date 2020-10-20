@@ -1,0 +1,7 @@
+element	intro
+visDEG	Select the plot you are interested in; a Valcano plot is selected as default.
+ui_volcano	Volcano plot with default settings is display here.
+vplot_parameters	You could adjust different parameters through this panel.
+volcano_confirm	Please click <b> Visualize </b> to draw a new Volcano plot.
+v_download	You could download the result volcano plot as PDF and use for further analysis.
+visDEG	You could explore further using different tabs here.

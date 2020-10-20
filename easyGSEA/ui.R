@@ -55,6 +55,7 @@ shinyUI(
             Shiny.onInputChange(variableName, null);});"),
             
             useShinyalert(),  # Set up shinyalert
+            rintrojs::introjsUI(), # introjs
             useShinyjs(), # Set up shinyjs
 
             tabItems(

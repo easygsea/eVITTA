@@ -134,5 +134,10 @@ bodyGSEA <- tabItem(tabName = "gsea",
             uiOutput("gmt_box"),
             uiOutput("id_box")
         )
+    ),
+    fixedPanel(
+        uiOutput("floating_button_tab1"),
+        right = 30,
+        bottom = 30
     )
 )

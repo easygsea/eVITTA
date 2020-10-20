@@ -20,6 +20,7 @@ library(glue)
 library(shinyalert)
 library(lobstr)
 library(shinydisconnect)
+library(rintrojs)
 
 
 
@@ -27,6 +28,19 @@ library(shinydisconnect)
 options(repos = BiocManager::repositories())
 
 source("global/functions.R")
+
+# --------------- Initialize introjs -------------------
+intropath <- paste0(getwd(), "/intro/")
+filepaths <- list.files(intropath, full.names=T)
+intros <- lapply(filepaths, function(x){
+  df <- data.frame(read.csv(x, header=T, sep="\t"))
+  df$element <- sub("^", "#", df$element)
+  df[df=="#"] <- NA
+  df
+})
+names(intros) <- tools::file_path_sans_ext(list.files(intropath, full.names=F))
+rownames(intros) <- NULL
+
 
 # load screen message
 loadMsg = "easyGEO"

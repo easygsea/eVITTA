@@ -28,6 +28,7 @@ sidebar <- dashboardSidebar(
 
 
 body <- dashboardBody(
+  rintrojs::introjsUI(), # introjs
   shinyjs::useShinyjs(),# dependencies
   #shinyjs::extendShinyjs(text = "shinyjs.refresh = function() { location.reload(); }"),# extend by adding a refresh function
   use_waiter(), # dependencies
@@ -102,20 +103,36 @@ body <- dashboardBody(
                     
                     
                 )
+                ,
+                fixedPanel(
+                  uiOutput("floating_button_1"),
+                  right = 30,
+                  bottom = 30
+                )
         ),
         
         # ---------------------2. design matrix ---------------------------
         
         
         tabItem(tabName = "tab2",
-                uiOutput("ui_design")
+                uiOutput("ui_design"),
+                fixedPanel(
+                  uiOutput("floating_button_2"),
+                  right = 30,
+                  bottom = 30
+                )
 
         ),
         
         # ---------------------3. data matrix ---------------------------
         
         tabItem(tabName = "tab3",
-                uiOutput("ui_dm")
+                uiOutput("ui_dm"),
+                fixedPanel(
+                  uiOutput("floating_button_3"),
+                  right = 30,
+                  bottom = 30
+                )
 
         ),
         
@@ -197,12 +214,23 @@ body <- dashboardBody(
                            )
 
                     )
+                ),
+                fixedPanel(
+                  uiOutput("floating_button_4"),
+                  right = 30,
+                  bottom = 30
                 )
         ),
         
         # ---------------------5. Visualization ---------------------------
         tabItem(tabName = "tab5",
                 uiOutput("ui_vis")
+                ,fixedPanel(
+                  uiOutput("floating_button_5"),
+                  right = 30,
+                  bottom = 30
+                )
+                
         )
     )
     

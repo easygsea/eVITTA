@@ -23,9 +23,22 @@ library(waiter)
 library(shinyalert)
 library(shinydisconnect)
 library(lobstr)
+library(rintrojs)
 
 
 options(repos = BiocManager::repositories())
+
+# --------------- Initialize introjs -------------------
+intropath <- paste0(getwd(), "/intro/")
+filepaths <- list.files(intropath, full.names=T)
+intros <- lapply(filepaths, function(x){
+  df <- data.frame(read.csv(x, header=T, sep="\t"))
+  df$element <- sub("^", "#", df$element)
+  df[df=="#"] <- NA
+  df
+})
+names(intros) <- tools::file_path_sans_ext(list.files(intropath, full.names=F))
+rownames(intros) <- NULL
 
 # p_min to convert p=0
 p_min = 1e-300

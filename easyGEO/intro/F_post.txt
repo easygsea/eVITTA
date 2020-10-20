@@ -1,0 +1,4 @@
+element	intro
+filter_vars_levels	Please apply your filter here to get the most accurate samples and results. 
+design_samples	The number of samples you have selected is displayed here.
+filtered_design_df	You could view your filterd design matrix here. Design summary is available as well, please select the corresponding tab <b> Review design summary </b> tab to view it.
