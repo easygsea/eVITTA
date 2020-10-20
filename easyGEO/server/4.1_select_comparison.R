@@ -67,15 +67,15 @@ output$select_params_ui <- renderUI({
     }
     
     div(
-      fluidRow(
-        column(12,
-               #bsTooltip("ui_select", "Note: You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full."),
-          # wellPanel(style = paste0("background:",rv$bcol1),
-          #           HTML("<b>Note:</b> You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full. 
-          #                           ")
-          # )
-        )
-      ),
+      # fluidRow(
+      #   column(12,
+      #          #bsTooltip("ui_select", "Note: You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full."),
+      #     # wellPanel(style = paste0("background:",rv$bcol1),
+      #     #           HTML("<b>Note:</b> You may use \"By design matrix\" to select samples when the authors have uploaded their study design in full. 
+      #     #                           ")
+      #     # )
+      #   )
+      # ),
       fluidRow(
         column(6,
                selectInput(
@@ -369,6 +369,8 @@ output$ui_samples_fb2 <- renderUI({
 
 # --------------- observer selections, update rv$samples ---------------------
 observeEvent(list(input$samples_c_deg, input$samples_t_deg, input$samples_c_deg2, input$samples_t_deg2),{
+  req(input$ui_select)
+
   if(input$ui_select == "sp"){
     rv$samples = c(input$samples_c_deg, input$samples_t_deg)
   }else if(input$ui_select == "coerce"){

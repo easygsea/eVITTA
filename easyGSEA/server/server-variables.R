@@ -1,5 +1,20 @@
 col_f = c("01_WormCat (Holdorf et al. 2020)","02_Pathway","03_Gene Ontology")
 
+# p_min to convert p=0
+p_min = 1e-300
+
+# slider cutoffs for p/q
+cutoff_slider = c(0.0001,0.0005,0.001,0.005,0.01,0.05,0.075,0.1,0.25,0.3,0.5,1)
+
+# stop words and words with minimum meaning to be filtered for word counts
+data(stop_words)
+useless_words <- read_csv(paste0(getwd(),"/inc/some_words.csv"))
+
+# wellpanel background colors
+bcol1 = "#e6f4fc" # color for parameters wellpanel
+bcol2 = "#ffffe6" # color for summary box
+bcol3 = "#e6f4fc" # color for column selection wellpanel
+
 #===================== GMT collections =====================
 # initialize three list vectors
 # 1. a list vector to store paths to database collection (.GMT) files

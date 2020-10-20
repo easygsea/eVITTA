@@ -261,7 +261,7 @@ hm_count <- function(df = hm_df(),counts = rv$deg_counts){
     colnames(counts) = samples
   }
   
-  if(rv$plot_label == "top"){
+  if(rv$plot_label_hm == "top"){
     # top up regulated genes
     genes_up = df %>% dplyr::arrange(desc(logFC)) %>% #df[order(-df[["logFC"]],df[["adj.P.Val"]]),]
       head(.,n=rv$volcano_up) %>%
@@ -419,7 +419,6 @@ box_plt <- function(y_label){
 
 # ================ initialize demo RVs =================
 init_demo <- function(){
- 
   # initialize all required rv for a demo run
   rv$demo_acc = "GSE147507"
   rv$gse_all = readRDS(paste0(getwd(),"/rvs/gse_all.rds"))
@@ -446,8 +445,38 @@ init_demo <- function(){
   rv$gpl_tooltips <- readRDS(paste0(getwd(),"/rvs/gpl_tooltips.rds"))
   rv$text <- readRDS(paste0(getwd(),"/rvs/text.rds"))
   rv$matrix_ready <- readRDS(paste0(getwd(),"/rvs/matrix_ready.rds")) 
-  
-  
+  rv$demo <- "yes"
+}
+
+# unload example
+init_demo_d <- function(){
+  # uninitialize all required rv for a demo run
+  updateTextInput(session,"geo_accession",value="")
+  rv$gse_all = NULL
+  rv$geo_accession <- NULL
+  rv$platforms = NULL
+  rv$plat_id <- NULL
+  rv$gpl_summary <- NULL
+  rv$gpl_choices <- NULL
+  rv$dmdf <- NULL
+  rv$all_samples <- NULL
+  rv$samples <- NULL
+  rv$pdata <- NULL
+  rv$fddf <- NULL
+  rv$sup_source <- NULL
+  rv$suplist <- NULL
+  rv$deg <- NULL
+  rv$deg_counts <- NULL
+  rv$c_var <- NULL
+  rv$c_level <- NULL
+  rv$t_level <- NULL
+  rv$samples_c <- NULL
+  rv$samples_t <- NULL
+  rv$deg_pdata <- NULL
+  rv$gpl_tooltips <- NULL
+  rv$text <- NULL
+  rv$matrix_ready <- NULL
+  rv$demo <- ""
 }
 
 init_choices <- function(){
@@ -462,4 +491,51 @@ init_choices2 <- function(){
 init_choices3 <- function(){
   updatePickerInput(session, inputId = "samples_c_deg", selected = c("GSM4462342", "GSM4462343", "GSM4462344"))
   updatePickerInput(session, inputId = "samples_t_deg", selected = c("GSM4462345", "GSM4462346", "GSM4462347"))
+}
+
+init_choices4 <- function(){
+  updateSelectizeInput(session, inputId = "aplot_genes", selected = "CXCL2")
+  rv$a_gene = "CXCL2"
+}
+
+# =============== demo toggle button ===============
+btn_demo <- function(id){
+  if(rv$demo_n %% 2 == 1){
+    label = "Example Run"
+    icon = "play"
+    color = "warning"
+    style = "bordered"
+    size = "sm"
+  }else{
+    label = "Unload Example"
+    icon = "trash-alt"
+    color = "default"
+    style = "minimal"
+    size = "md"
+    
+  }
+  
+  fixedPanel(
+    bottom = 25,
+    actionBttn(id,label
+               ,block = TRUE
+               ,style = style
+               ,color = color
+               ,size = size
+               ,icon = icon(icon)
+    )
+    
+  )
+}
+
+btn_demo_e <- function(){
+  withProgress(message = 'Updating session ...',
+               value = 1,{
+    rv$demo_n = rv$demo_n + 1
+    if(rv$demo_n %% 2 == 1){
+      init_demo_d()
+    }else{
+      init_demo()
+    }
+  })
 }

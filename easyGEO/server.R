@@ -8,6 +8,15 @@ shinyServer(function(input, output, session) {
     
     # ram check on initialization
     source("server/server-ramCheck.R", local = TRUE)
+    
+    # toggle button for a demo run
+    output$btn_demo <- renderUI({
+        btn_demo("ee")
+    })
+    
+    observeEvent(input$ee,{
+        btn_demo_e()
+    })
 
     ####---------------------- REACTIVE VALUES---------------------------####
     
@@ -164,10 +173,11 @@ shinyServer(function(input, output, session) {
     
 
     
-    ####-------------------00: FUNCTIONS: plots -----------------####
+    ####-------------------00: FUNCTIONS: plots && variables-----------------####
     
     
     source("server/functions.R", local = TRUE)
+    source("server/server-variables.R", local = TRUE)
     
     
     
