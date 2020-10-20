@@ -1626,12 +1626,12 @@ observeEvent(input$confirm_kegg_plot,{
     output$ui_reactome <- renderUI({
         req(rv$reactome_confirm == "yes")
         
-        rv$reactome_id = unlist(strsplit(rv$es_term,"%"))[2]
-        rv$reactome_genes = rv$fgseagg[rv$fgseagg$pathway==rv$es_term,][[ncol(rv$fgseagg)]]
+        reactome_id = unlist(strsplit(rv$es_term,"%"))[2]
+        reactome_genes = rv$fgseagg[rv$fgseagg$pathway==rv$es_term,][[ncol(rv$fgseagg)]]
         
         # if too many genes, select the top 50, otherwise bug in visualizing the pathway
-        if(length(rv$reactome_genes[[1]])>50){
-            rv$reactome_genes[[1]] = rv$reactome_genes[[1]][1:50]
+        if(length(reactome_genes[[1]])>50){
+            reactome_genes[[1]] = reactome_genes[[1]][1:50]
         }
         
         box(
@@ -1639,7 +1639,7 @@ observeEvent(input$confirm_kegg_plot,{
             solidHeader = F, status = "primary",width="100%",height=610,align = "center",
             div(
                 id="diagramHolder",style = 'overflow-x: scroll',
-                tags$script(HTML(sprintf("onReactomeDiagramReady('%s','%s');",rv$reactome_id,rv$reactome_genes)))
+                tags$script(HTML(sprintf("onReactomeDiagramReady('%s','%s');",reactome_id,reactome_genes)))
             )
         )
         
