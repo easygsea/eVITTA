@@ -1698,7 +1698,7 @@
       if(rv$demo_n %% 2 == 1){
         label = "Example Run"
         icon = "play"
-        color = "warning"
+        color = "success"
         style = "bordered"
         size = "sm"
       }else{
