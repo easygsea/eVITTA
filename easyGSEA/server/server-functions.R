@@ -1570,6 +1570,9 @@
       rv$kegg_confirm <- "yes"
       rv$run <- "success"
       rv$demo_mode <- "gsea"
+      
+      rv$bar_q_cutoff <- 0.05
+      rv$vis_q <- 0.05
 
     }
     
@@ -1656,6 +1659,9 @@
       rv$kegg_confirm <- NULL
       rv$run <- NULL
       rv$demo_mode <- ""
+      
+      rv$bar_q_cutoff <- 1
+      rv$vis_q <- 1
     }
     
     init_demo_ora_d <- function(){

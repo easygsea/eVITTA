@@ -45,7 +45,8 @@ futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger") 
 # BiocManager::install("fgsea")
 # setRepositories(addURLs = c(BioC = "https://bioconductor.org/packages/3.8/bioc"))
 
-users = reactiveValues(count = 0,ip = c())
+#users = reactiveValues(count = 0,ip = c())
+ips = c()
 
 source("global/functions.R")
 source("global/init.R")
