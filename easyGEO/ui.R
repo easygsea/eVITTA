@@ -222,7 +222,7 @@ body <- dashboardBody(
                   right = 30,
                   bottom = 30
                 )
-                uiOutput("ui_run")
+                # ,uiOutput("ui_run")
         ),
 
         # ---------------------5. Visualization ---------------------------
