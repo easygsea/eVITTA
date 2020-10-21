@@ -1390,10 +1390,10 @@ observeEvent(input$confirm_kegg_plot,{
         # req(is.null(rv$kegg_yes)==FALSE)
         req(input$kegg_type == "native")
         req(rv$kegg_confirm == "yes")
-        
-        if(rv$demo_mode == "gsea" && rv$es_term == "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"){
-            rv$png_path = paste0(getwd(),"/www/demo/gsea.kegg.png")
-        }else{
+        # 
+        # if(rv$demo_mode == "gsea" && rv$es_term == "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"){
+        #     rv$png_path = paste0(getwd(),"/www/demo/gsea.kegg.png")
+        # }else{
             if(is.null(rv$kegg_status) == T){
                 N = 10
                 withProgress(message = paste0("Generating KEGG native view for ",rv$es_term,"..."),value = 1,{
@@ -1458,7 +1458,7 @@ observeEvent(input$confirm_kegg_plot,{
                 
             }
             
-        }
+        # }
         
         
         return(list(
@@ -1668,30 +1668,37 @@ observeEvent(input$confirm_kegg_plot,{
     # WP feedback confirm
     observeEvent(input$confirm_wp_plot,{
         rv$wp_confirm = "yes"
-        rv$wp_id = unlist(strsplit(rv$es_term,"%"))[2]
         
-        if(rv$run_mode == "gsea"){
+    })
+    
+    # WP widget
+    output$ui_wp <- renderUI({
+        req(rv$wp_confirm == "yes")
+        
+        wp_id = unlist(strsplit(rv$es_term,"%"))[2]
+        
+        if(rv$run_mode == "gsea" || rv$demo_mode == "gsea"){
             # get all genes under a pathway
             wp_genes = unname(unlist(rv$gmts[rv$es_term]))
-
+            
             # all scale transformed ranks
             ranks = rv$rnkgg
-
+            
             # get rank scores for genes in that pathway in that sample
             ranks = ranks[names(ranks) %in% wp_genes]
-
+            
             # get appropriate upper/lower case
             wp_genes = wp_genes[toupper(wp_genes) %in% toupper(names(ranks))]
-
+            
             # transform into appropriate format accepted by WP
             wp_genes = paste(paste("&label[]=",wp_genes,sep=""),collapse = "")
-
+            
             # # coloring the nodes
             # # 1) sd transformation method
             # ii = cut(ranks, breaks = seq(-rv$sd_high,rv$sd_high,len=9), include.lowest = TRUE)
             # wp_colors  = c("darkblue","blue","lightblue","grey","grey","pink","red","brown")[ii]
             # wp_colors = paste(wp_colors,collapse = ",")
-
+            
             # coloring the nodes
             # 2) step wise method
             ranks1 = ranks[ranks < 0]
@@ -1718,8 +1725,8 @@ observeEvent(input$confirm_kegg_plot,{
             # wp_colors = ifelse(ES>0,"red","blue")
             # print(wp_colors)
             
-            rv$wp_src = sprintf("https://www.wikipathways.org/wpi/PathwayWidget.php?id=%s%s&colors=%s",rv$wp_id,wp_genes,wp_colors)
-
+            rv$wp_src = sprintf("https://www.wikipathways.org/wpi/PathwayWidget.php?id=%s%s&colors=%s",wp_id,wp_genes,wp_colors)
+            
         }else if(rv$run_mode == "glist"){
             df = rv$fgseagg
             wp_genes = df[df$pathway==rv$es_term,][[ncol(df)]][[1]]
@@ -1731,14 +1738,9 @@ observeEvent(input$confirm_kegg_plot,{
             # reformat genes into acceptable format
             wp_genes = paste(paste("&label[]=",wp_genes,sep=""),collapse = "")
             
-            rv$wp_src = sprintf("https://www.wikipathways.org/wpi/PathwayWidget.php?id=%s%s&colors=%s",rv$wp_id,wp_genes,wp_colors)
+            rv$wp_src = sprintf("https://www.wikipathways.org/wpi/PathwayWidget.php?id=%s%s&colors=%s",wp_id,wp_genes,wp_colors)
         }
         
-    })
-    
-    # WP widget
-    output$ui_wp <- renderUI({
-        req(rv$wp_confirm == "yes")
         box(
             title = span(icon("seeding"),"WikiPathways Diagram"),
             solidHeader = F, status = "primary",width="100%",height=610,align = "center",
