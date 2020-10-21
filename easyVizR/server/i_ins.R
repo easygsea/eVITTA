@@ -390,6 +390,8 @@ output$df_n_venn <- renderPlot({
 #-------------------------------------------
 # used within draw_venn_with_ins()
 find_closest_label <- function(circle_coords, labs, nx_n, lb_limit){
+  # req_vars(c(circle_coords, labs, nx_n, lb_limit))
+  
   textlabs<-labs[which(labs$label %in% nx_n),] # find the text labels within labs and their xy
   spts<- SpatialPoints(textlabs[1:2]) # get text label xy
   grobpts <- SpatialPoints(lapply(circle_coords, function(x){x[seq(1, length(x), 200)]})) # extract every 200th point on the circle, get xy.
@@ -436,25 +438,35 @@ draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limi
                      print.mode = print_mode,
                      category.names=names(d)
   )
-  # get labels from venn
-  ix <- sapply(vp, function(x) grepl("text", x$name, fixed = TRUE))
-  labs <- do.call(rbind.data.frame, lapply(vp[ix], `[`, c("x", "y", "label")))
   
-  # get circles and names from venn
-  all_circ <- vector(mode="list", length=length(d))
-  all_names <- vector()
-  
-  # transform the circles into accepted format
-  for (i in 1:length(d)){
-    circ <- list(list(x = as.vector(vp[[2+i]][[1]]), y = as.vector(vp[[2+i]][[2]])))
-    all_circ[[i]] <- circ
-    nn <- find_closest_label(circ[[1]], labs, nx_n, lb_limit)
-    all_names <- c(all_names, nn) # try to find closest label (because the labels are all jumbled.)
-  }
-  names(all_circ) <- all_names
-  
-  if (show_ins==T){
-
+  if (show_ins==F){
+    grid.newpage()
+    grid.draw(vp)
+  } else if (show_ins==T){
+    # get labels from venn
+    ix <- sapply(vp, function(x) grepl("text", x$name, fixed = TRUE))
+    labs <- do.call(rbind.data.frame, lapply(vp[ix], `[`, c("x", "y", "label")))
+    
+    # get circles and names from venn
+    all_circ <- vector(mode="list", length=length(d))
+    all_names <- vector()
+    
+    # transform the circles into accepted format
+    for (i in 1:length(d)){
+      
+      # important:
+      # if any expected circle is missing (i.e. due to overlaps), immediately break and don't proceed to highlight intersection
+      if(length(vp[[2+i]][[1]])<2 & length(vp[[2+i]][[2]])<2){
+        return(grid.draw(vp))
+      }
+      
+      circ <- list(list(x = as.vector(vp[[2+i]][[1]]), y = as.vector(vp[[2+i]][[2]]))) # get x and y
+      all_circ[[i]] <- circ # put circle x y into list
+      nn <- find_closest_label(circ[[1]], labs, nx_n, lb_limit)
+      all_names <- c(all_names, nn) # try to find closest label (because the labels are all jumbled.)
+    }
+    names(all_circ) <- all_names
+    
     t_sections <- all_circ[which(ins[names(all_circ)]==T)]
     f_sections <- all_circ[which(ins[names(all_circ)]==F)]
     na_sections <- all_circ[which(is.na(ins[names(all_circ)]))]
@@ -487,23 +499,32 @@ draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limi
     }
     
     text(x = labs$x, y = labs$y, labels = labs$label)
-  } else if (show_ins==F){
-
     
-    # replot the diagram
-    grid.newpage()
-    par(mar=c(0, 0, 0, 0), xaxs='i', yaxs='i')
-    plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", axes = FALSE, xlab = "", ylab = ""
-    )
-    ordered_colors <- unlist(lapply(1:length(all_names),function(x){
-      base_color[[match(all_names[[x]], nx_n)]]
-    }))
-    for (i in 1:length(d)){ # draw the circles
-      polygon(all_circ[[i]][[1]], col=adjustcolor(ordered_colors[[i]],alpha.f=0.5)  )
-    }
-    
-    text(x = labs$x, y = labs$y, labels = labs$label)
   }
+  
+  
+
+  
+  # if (show_ins==T){
+  # 
+  # 
+  # } else if (show_ins==F){
+  # 
+  #   
+  #   # replot the diagram
+  #   grid.newpage()
+  #   par(mar=c(0, 0, 0, 0), xaxs='i', yaxs='i')
+  #   plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", axes = FALSE, xlab = "", ylab = ""
+  #   )
+  #   ordered_colors <- unlist(lapply(1:length(all_names),function(x){
+  #     base_color[[match(all_names[[x]], nx_n)]]
+  #   }))
+  #   for (i in 1:length(d)){ # draw the circles
+  #     polygon(all_circ[[i]][[1]], col=adjustcolor(ordered_colors[[i]],alpha.f=0.5)  )
+  #   }
+  #   
+  #   text(x = labs$x, y = labs$y, labels = labs$label)
+  # }
   
 }
 
@@ -533,6 +554,7 @@ n_npvenn_plt <- reactive({
   #                       sigdigs = 2,
   #                       print.mode = gsub("counts","raw", rv$n_venn_label)
   # )
+  
   venn1 <- draw_venn_with_ins(n_ins_gls(), rv$ins_criteria, rv$nx_n,
                               gsub("counts","raw", rv$n_venn_label),
                               lb_limit=20,
@@ -815,7 +837,7 @@ ins_venn_panel <- reactive({
               inputId = "n_venn_label",
               label= "Show in label:",
               choices = c("Counts"="counts", "Percent"="percent"),
-              selected="counts",
+              selected=rv$n_venn_label,
               inline=T, width="250px"
             ),
             radioGroupButtons(
