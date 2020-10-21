@@ -351,7 +351,7 @@ output$hplot_parameters <- renderUI({
       "h_label_opt",
       "Options to extract genes",
       choices = label_options,
-      selected = rv$plot_label
+      selected = rv$plot_label_hm
     ),
     uiOutput("h_top"),
     uiOutput("h_manual"),
@@ -457,7 +457,7 @@ observeEvent(input$h_confirm,{
   rv$h_y_name = input$h_y_name
   
   # options: threshold top manual
-  rv$plot_label = input$h_label_opt
+  rv$plot_label_hm = input$h_label_opt
   
   # if top
   if(input$h_label_opt == "top"){
@@ -570,6 +570,10 @@ observeEvent(input$agene_confirm,{
 #---------------one genes: plot----------------
 # gene stats in table
 output$a_stats <- renderTable({
+  if(rv$demo == "yes" && input$agene_confirm==0){
+    init_choices4()
+  }
+  
   req(rv$a_gene)
   
   cols = c("logFC","P.Value","adj.P.Val")

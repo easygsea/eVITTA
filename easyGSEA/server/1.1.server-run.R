@@ -17,7 +17,7 @@
 
   # Navigation button to next tab -------------
   output$nav_btn_run <- renderUI({
-    req(rv$run == "success")
+    req(rv$run == "success" & rv$demo_mode == "")
 
     div(
       nav_btn_f("gsea_f")
@@ -816,15 +816,27 @@
     })
 
     #---------------- 3.2.2 read in GList-----------------
+    
+    # observe if genes are uploaded
+    observe({
+      if (is.null(rv$gene_lists)==F){
+        shinyjs::disable("gene_list")
+        shinyjs::disable("glist_name")
+      }
+      else if (is.null(rv$gene_lists)){
+        shinyjs::reset("gene_list")
+        shinyjs::enable("gene_list")
+        shinyjs::reset("glist_name")
+        shinyjs::enable("glist_name")
+      }
+    })
+    
     # from input field
     observeEvent(input$gene_list_add,{
         species = isolate(input$selected_species)
         # print(input$gene_list)
         if(nchar(species)>2){
             if(input$gene_list != ""){
-                shinyjs::disable("gene_list")
-                shinyjs::disable("glist_name")
-
                 genelist = as.character(input$gene_list)
                 genelist = gsub("\"","",genelist)
                 genelist = strsplit(genelist,"\n")
@@ -898,10 +910,6 @@
         rv$gene_lists = NULL
         rv$gene_lists_after = NULL
 
-        shinyjs::reset("gene_list")
-        shinyjs::enable("gene_list")
-        shinyjs::reset("glist_name")
-        shinyjs::enable("glist_name")
         # updateTextAreaInput(session,
         #                     inputId = "gene_list",
         #                     value = "",
@@ -1259,7 +1267,7 @@
     
     # ------------ demo's nav to next tab UI ----------------
     output$demo_nav <- renderUI({
-      req(rv$demo == "yes")
+      req(rv$demo_mode != "")
       if(input$selected_mode == "gsea"){
         req(input$confirm1 == 0)
         

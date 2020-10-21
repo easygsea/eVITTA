@@ -56,11 +56,6 @@ run_modes = list("Pre-ranked GSEA"="gsea","Overrepresentation Analysis"="glist")
 # gene identifiers
 gene_identifiers = list("SYMBOL"="symbol","Other/Mixed" = "other")
 
-# wellpanel background colors
-bcol1 = "#e6f4fc" # color for parameters wellpanel
-bcol2 = "#ffffe6" # color for summary box
-bcol3 = "#e6f4fc" # color for column selection wellpanel
-
 # ===================== FUNCTIONS =====================
 # function to abbreviate strings
 abbreviate_string <- function(x){
@@ -93,11 +88,11 @@ species_translate <- function(x,source_list = species_names){
 # add help buttons to labels (need to wrap again in HTML)
 # example of use: label=HTML("Label here", add_help("id1", style="padding:1px 1px 1px 1px;") )
 add_help <- function(id, color="#00c0ef", style=""){
-  out <- paste0("<i class='fa fa-question-circle' 
+  out <- paste0("<i class='fa fa-question-circle'
                 style = 'color:",color,";
-                font-size:medium;",style,"' 
+                font-size:medium;",style,"'
                 id='",id,"'></i>")
-  
+
   HTML(out)
 }
 

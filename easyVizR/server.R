@@ -1,7 +1,7 @@
 # sets max upload size to 100MB, modal appears when it exceeds 50MB for batch upload and 10MB for single upload,
 options(shiny.maxRequestSize=100*1024^2) 
 ##Add a RV value for IP Address
-users = reactiveValues(count = 0, ip = c())
+#users = reactiveValues(count = 0, ip = c())
 
 # ==== server.R START ===========================================================
 # Define server logic 
@@ -12,14 +12,23 @@ users = reactiveValues(count = 0, ip = c())
 
 
 server <- function(input, output, session) {
+    # toggle button for a demo run
+    output$btn_demo <- renderUI({
+        btn_demo("ee")
+    })
+    
+    observeEvent(input$ee,{
+        btn_demo_e()
+    })
+    
     #during the start of the session
-    onSessionStart = isolate({
+    onSessionStart = {
         IP <- reactive({ input$getIP })
-        users$count = users$count + 1
+        #users$count <<- users$count + 1
         observeEvent(input$getIP,{
             result <- toJSON(IP())
             result <- fromJSON(result)    
-            if(result$geoplugin_request %in% users$ip){
+            if(result$geoplugin_request %in% ips){
                 showModal(modalDialog(
                     title = "You already have an open session",
                     "Please close this session and use your open session",
@@ -27,29 +36,31 @@ server <- function(input, output, session) {
                     footer = uiOutput("I don't want a footer")
                 ))
             }else{
-                users$ip<-c(users$ip,result$geoplugin_request)
+                ips<<-c(ips,result$geoplugin_request)
+                #users$ip<<-c(users$ip,result$geoplugin_request)
             }
+            result <- NULL
         })
         #users$ip<-append(users$ip,singleIP())
-    })
+    }
     
     onSessionEnded(function() {
-        isolate({
-            IP <- reactive({ input$getIP })
-            result <- toJSON(IP())
-            result <- fromJSON(result)
+        {
+            #print(ips)
+            IPtoDelete <- ""
+            isolate({IP <- reactive({ input$getIP })
+            IPtoDelete <- toJSON(IP())
+            IPtoDelete <- fromJSON(IPtoDelete)
+            IPtoDelete <- as.data.frame(IPtoDelete)
+            })
             #From google IP Address is unique, so we should be good to go
-            users$ip <- users$ip[users$ip != result$geoplugin_request] 
-            users$count = users$count - 1
-        })
+            #users$ip <<- users$ip[users$ip != result$geoplugin_request] 
+            #users$count <<- users$count - 1
+            #print(typeof(IPtoDelete))
+            ips<<-ips[ips != IPtoDelete$geoplugin_request]
+            IPtoDelete <- NULL
+        }
     })
-    
-    
-    
-    
-    
-    
-    
     
     
     
