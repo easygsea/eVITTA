@@ -1566,8 +1566,12 @@
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs/run_n.rds"))
       rv$total_genes_after <- 23710
       rv$total_genes <- 23710
-      rv$es_term <- "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"
-      rv$kegg_confirm <- "yes"
+      # rv$es_term <- "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"
+      # rv$kegg_confirm <- "yes"
+      rv$es_term <- "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"
+      rv$wp_confirm <- "yes"
+      # rv$es_term <- "RA_Interferon_Signaling%R-HSA-913531"
+      # rv$reactome_confirm <- "yes"
       rv$run <- "success"
       rv$demo_mode <- "gsea"
       
@@ -1657,6 +1661,8 @@
       rv$total_genes <- NULL
       rv$es_term <- NULL
       rv$kegg_confirm <- NULL
+      rv$wp_confirm <- NULL
+      rv$reactome_confirm <- NULL
       rv$run <- NULL
       rv$demo_mode <- ""
       
@@ -1704,7 +1710,7 @@
       if(rv$demo_n %% 2 == 1){
         label = "Example Run"
         icon = "play"
-        color = "warning"
+        color = "success"
         style = "bordered"
         size = "sm"
       }else{
