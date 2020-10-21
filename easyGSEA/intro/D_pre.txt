@@ -1,0 +1,2 @@
+element	intro
+sidebarCollapsed	Please use the <b>Run Analysis </b> tab first. It is important to follow the order of the tabs to go through the analysis.

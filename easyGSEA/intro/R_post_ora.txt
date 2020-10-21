@@ -1,0 +1,11 @@
+element	intro
+element	intro
+selected_mode	Our app supports two mode of analysis: Pre-ranked GSEA and overrepresentation analysis. Please select the mode you would like to use here.
+run_analysis_box	Our app supports 11 different species; Please go through the choices that matches your input query here.
+selected_box	Our app supports 11 different species; you could search or select the species that matches your input query here.
+gene_identifier	You could choose the identifier of your input genes. If unsure, select <b>Other/Mixed</b>.
+input_list_box	Upload your gene list here; you could load the example gene list as well.
+ora_num_box	The identifier treated as...
+glist_name	name your list
+welcome_to_box	You could review the analysis summary here
+feedback_dbs	IMPORTANT: review you selected databases

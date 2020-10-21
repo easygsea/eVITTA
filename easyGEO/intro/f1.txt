@@ -1,2 +1,0 @@
-element	intro
-	Once you have selected your datasets, you must specify the <b>cutoff filters</b> on each dataset.
