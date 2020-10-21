@@ -1570,6 +1570,8 @@
       # rv$kegg_confirm <- "yes"
       rv$es_term <- "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"
       rv$wp_confirm <- "yes"
+      # rv$es_term <- "RA_Interferon_Signaling%R-HSA-913531"
+      # rv$reactome_confirm <- "yes"
       rv$run <- "success"
       rv$demo_mode <- "gsea"
       
@@ -1659,6 +1661,8 @@
       rv$total_genes <- NULL
       rv$es_term <- NULL
       rv$kegg_confirm <- NULL
+      rv$wp_confirm <- NULL
+      rv$reactome_confirm <- NULL
       rv$run <- NULL
       rv$demo_mode <- ""
       
