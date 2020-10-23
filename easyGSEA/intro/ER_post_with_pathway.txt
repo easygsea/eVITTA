@@ -5,3 +5,4 @@ plot_area	All the plots would be shown in this area, and you could control and m
 setting_button	Dropdown is available here.
 plot_download_button	another button.
 explore_geneset_box	analysis summary and plots for individual gene set is displayed here.
+kegg_reactome_wp	Our app provides three different kinds of diagram for genesets: KEGG plot, reactome pathway diagram and Wikipathway diagram, where you could zoom in and view them here.

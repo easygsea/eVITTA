@@ -1,2 +1,4 @@
 element	intro
 sidebarCollapsed	Please use the <b>Run Analysis </b> tab first. It is important to follow the order of the tabs to go through the analysis.
+result_table_box	After using the <b>Run Analysis </b> tab sucessfully, you could view and download the enrichment table, having columns such as pval and padj, and proceed to easyVizR for further analysis.
+ui_gmt_download	We have our gene libraries available for you to download.

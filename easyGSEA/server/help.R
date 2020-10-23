@@ -36,26 +36,31 @@ observeEvent(input$help_tab1, {
 })
 
 observeEvent(input$help_tab2, {
-  if (is.null(rv$data_head_o)==T){
-    call_introjs(intros$R_pre)
+  if (is.null(rv$fgseagg)==T){
+    call_introjs(intros$ER_pre)
   } else {
-    call_introjs(intros$R_post)
+    # check if any of the diagram exists, if yes, go through them
+    if(!is.null(rv$kegg_confirm)|| !is.null(rv$wp_confirm)|| !is.null(rv$reactome_confirm)){
+      call_introjs(intros$ER_post_with_pathway)
+    } else {
+        call_introjs(intros$ER_post)
+      }
   }
 })
 
 observeEvent(input$help_tab3, {
-  if (is.null(rv$data_head_o)==T){
-    call_introjs(intros$R_pre)
+  if (is.null(rv$fgseagg)==T){
+    call_introjs(intros$EN_pre)
   } else {
-    call_introjs(intros$R_post)
+    call_introjs(intros$EN_post)
   }
 })
 
 observeEvent(input$help_tab4, {
-  if (is.null(rv$data_head_o)==T){
-    call_introjs(intros$R_pre)
+  if (is.null(rv$fgseagg)==T){
+    call_introjs(intros$D_pre)
   } else {
-    call_introjs(intros$R_post)
+    call_introjs(intros$D_post)
   }
 })
 

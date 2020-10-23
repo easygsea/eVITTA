@@ -1,8 +1,8 @@
 element	intro
 selected_mode	Our app supports two mode of analysis: Pre-ranked GSEA and overrepresentation analysis. Please select the mode you would like to use here.
-run_analysis_box	Our app supports 11 different species; you could search or select the species that matches your input query here.
+run_analysis_box	Our app supports 11 different species; you could go through all the selections that matches your input query here.
 selected_box	Our app supports 11 different species; you could search or select the species that matches your input query here.
 gene_identifier	You could choose the identifier of your input genes. If unsure, select <b>Other/Mixed</b>.
 upload_file_box	Upload your file here.
-welcome_to_box	You could review the analysis summary here
+welcome_to_box	You could review the analysis summary here.
 	The analysis may related to a Gene ID conversion table; it would be on the bottom right.

@@ -1,15 +1,16 @@
 # Overall bodyNetwork UI ------------------
 output$ui_bodyNetwork <- renderUI({
     if(is.null(rv$run) || rv$run != "success"){
-        box(
+        # add an id for introjs
+        box(id = "enrichment_network_box",
             title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
             "Visualization available upon successful run."
         )
     }else{
         fluidRow(
             # uiOutput("ui_vis_gear"),
-            
-            box(
+            # add an id for introjs
+            box(id = "enrichment_network_box2",
                 width = 12,
                 #<i class="fas fa-chart-network"></i>
                 title=span( icon("project-diagram"), "Network view of enriched gene sets"), status = "primary",
@@ -23,7 +24,8 @@ output$ui_bodyNetwork <- renderUI({
                 )
                 ,absolutePanel(
                     fluidRow(
-                        div(
+                        # add a id for the gear button in introjs
+                        div(id = "gear_box",
                             style="display: inline-block;vertical-align:top;margin-right:5px;",
                             uiOutput("ui_vis_gear")
                         ),

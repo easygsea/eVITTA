@@ -1,3 +1,5 @@
 element	intro
-sidebarCollapsed	Please use the <b>Run DEG analysis </b> tab first. It is important to follow the order of the tabs to go through the analysis.
-visDEG	After running DEG analysis successfully, you will see plots and different parameters here.
+enrichment_network_box2	Gene set Network diagram. This is helpful when gene sets are redundant in wordings. You could see the groupings and relationship between different gene set clearly throught this diagram.
+nodeSelectvis_network	You could select the id of the geneset you are interested in and explore further.
+gear_box	You could use the button to adjust the parameters, such as adjusted p.values and edge threshold
+d_vis	You could download the network diagram here.

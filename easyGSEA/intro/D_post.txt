@@ -1,3 +1,6 @@
 element	intro
-sidebarCollapsed	Please use the <b>Run DEG analysis </b> tab first. It is important to follow the order of the tabs to go through the analysis.
-visDEG	After running DEG analysis successfully, you will see plots and different parameters here.
+selected_download_gs	Customized download selection.
+result_table_box	You could view and download the enrichment table, having columns such as pval and padj, and proceed to easyVizR for further analysis.
+gs_tbl_dl_bttn	Download all the table you need by one click.
+DataTables_Table_2_wrapper	Preview the result table you download here.
+ui_gmt_download	We have our gene libraries available for you to download.

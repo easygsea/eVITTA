@@ -6,6 +6,7 @@ gene_identifier	You could choose the identifier of your input genes. If unsure, 
 input_list_box	Upload your gene list here; you could load the example gene list as well.
 ora_num_box	The identifier treated as...
 glist_name	name your list
+confirm2	Run ORA by a simple press!!!
 welcome_to_box	You could review the analysis summary here
 feedback_dbs	IMPORTANT: review you selected databases
 mat_download_bttn	download the Gene id conversion table using this button
