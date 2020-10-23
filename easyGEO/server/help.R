@@ -1,181 +1,115 @@
 # trigger the corresponding intro tour while pressing the help button
-observeEvent(input$help_1_pre, {
-  req(input$menu1 == "tab1")
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$E_pre)
-  )
-})
-observeEvent(input$help_1_post, {
-  req(input$menu1 == "tab1")
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$E_post)
-  )
+observeEvent(input$help_1_button, {
+  if (is.null(rv$geo_accession)==T){
+  call_introjs(intros$E_pre)
+  } else {
+    # check to see if the user have pressed the select to proceed button, 
+    # if yes, then we call the function with highlighting summary ui
+    if(is.null(rv$dmdf)){
+      call_introjs(intros$E_post)
+    } else{
+      call_introjs(intros$E_post_with_summary_ui)
+    }
+  }
 })
 
+
 # trigger the corresponding intro tour on the data matrix tab
-observeEvent(input$help_3_pre, {
-  req(input$menu1 == "tab3")
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$D_pre)
-  )
-})
-observeEvent(input$help_3_post, {
-  req(input$menu1 == "tab3")
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$D_post)
-  )
+observeEvent(input$help_3_button, {
+  if (is.null(rv$fddf)==T){
+    call_introjs(intros$D_pre)
+  } else {
+    call_introjs(intros$D_post)
+  }
 })
 
 # trigger the corresponding help tour on the filter matrix tab
-observeEvent(input$help_2_pre, {
-  req(input$menu1 == "tab2")
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$F_pre)
-  )
-})
-observeEvent(input$help_2_post, {
-  req(input$menu1 == "tab2")
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$F_post)
-  )
+observeEvent(input$help_2_button, {
+  if (is.null(rv$dmdf)){
+    call_introjs(intros$F_pre)
+  } else {
+    call_introjs(intros$F_post)
+  }
 })
 
 # trigger the corresponding help tour on the Run DEG tab
-observeEvent(input$help_4_pre, {
-  req(input$menu1 == "tab4")
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$R_pre)
-  )
-})
-observeEvent(input$help_4_post, {
-  req(input$menu1 == "tab4")
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$R_post)
-  )
-})
-# intro tour after running deg analysis
-observeEvent(input$help_4_post_deg, {
-  req(input$menu1 == "tab4")
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$R_post_deg)
-  )
-})
-
-# trigger the corresponding help tour on the visualization tab
-observeEvent(input$help_5_pre, {
-  req(input$menu1 == "tab5")
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$V_pre)
-  )
-})
-observeEvent(input$help_5_post, {
-  req(input$menu1 == "tab5")
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$V_post)
-  )
-})
-
-#introjs help button on the first tab
-output$floating_button_1 <- renderUI({
-  if (is.null(rv$geo_accession)==T){
-    div(style="margin-top:10px",
-        actionBttn(
-          inputId = "help_1_pre", label=NULL, 
-          icon = icon("question"), style="material-circle", color="primary", size="lg"
-        )
-    )
-  } else {
-    div(style="margin-top:10px",
-        actionBttn(
-          inputId = "help_1_post", label=NULL,
-          icon = icon("question"), style="material-circle", color="primary", size="lg"
-        )
-    )
-  }
-})
-
-#introjs button on the filtered matrix tab
-output$floating_button_2 <- renderUI({
-  if (is.null(rv$dmdf)){
-    div(style="margin-top:10px",
-        actionBttn(
-          inputId = "help_2_pre", label=NULL, 
-          icon = icon("question"), style="material-circle", color="primary", size="lg"
-        )
-    )
-  } else {
-    div(style="margin-top:10px",
-        actionBttn(
-          inputId = "help_2_post", label=NULL,
-          icon = icon("question"), style="material-circle", color="primary", size="lg"
-        )
-    )
-  }
-})
-
-#introjs help button on the data matrix tab
-output$floating_button_3 <- renderUI({
-  if (is.null(rv$fddf)==T){
-    div(style="margin-top:10px",
-        actionBttn(
-          inputId = "help_3_pre", label=NULL, 
-          icon = icon("question"), style="material-circle", color="primary", size="lg"
-        )
-    )
-  } else {
-    div(style="margin-top:10px",
-        actionBttn(
-          inputId = "help_3_post", label=NULL,
-          icon = icon("question"), style="material-circle", color="primary", size="lg"
-        )
-    )
-  }
-})
-
-#introjs help button on the fourth tab
-output$floating_button_4 <- renderUI({
+observeEvent(input$help_4_button, {
+  #check if we have run the deg analysis
   if(is.null(rv$deg)){
     if (is.null(rv$matrix_ready)==T || rv$matrix_ready == F){
-      div(style="margin-top:10px",
-          actionBttn(
-            inputId = "help_4_pre", label=NULL, 
-            icon = icon("question"), style="material-circle", color="primary", size="lg"
-          )
-      )
+      call_introjs(intros$R_pre)
     } else {
-      div(style="margin-top:10px",
-          actionBttn(
-            inputId = "help_4_post", label=NULL,
-            icon = icon("question"), style="material-circle", color="primary", size="lg"
-          )
-      )
+      call_introjs(intros$R_post)
     }
-  } else{
-    div(style="margin-top:10px",
-        actionBttn(
-          inputId = "help_4_post_deg", label=NULL,
-          icon = icon("question"), style="material-circle", color="primary", size="lg"
-        )
-    )
+  } else {
+    call_introjs(intros$R_post_deg)
   }
   
 })
 
-#introjs help button on the third tab
-output$floating_button_5 <- renderUI({
+# trigger the corresponding help tour on the visualization tab
+observeEvent(input$help_5_button, {
   if (is.null(rv$deg)){
-    div(style="margin-top:10px",
-        actionBttn(
-          inputId = "help_5_pre", label=NULL, 
-          icon = icon("question"), style="material-circle", color="primary", size="lg"
-        )
-    )
+    call_introjs(intros$V_pre)
   } else {
-    div(style="margin-top:10px",
-        actionBttn(
-          inputId = "help_5_post", label=NULL,
-          icon = icon("question"), style="material-circle", color="primary", size="lg"
-        )
-    )
+    call_introjs(intros$V_post)
   }
 })
+
+
+#introjs help button on the first tab
+output$floating_button_1 <- renderUI({
+    div(style="margin-top:10px",
+        actionBttn(
+          inputId = "help_1_button", label=NULL, 
+          icon = icon("question"), style="material-circle", color="primary", size="lg"
+        )
+    )
+})
+
+#introjs button on the filtered matrix tab
+output$floating_button_2 <- renderUI({
+    div(style="margin-top:10px",
+        actionBttn(
+          inputId = "help_2_button", label=NULL, 
+          icon = icon("question"), style="material-circle", color="primary", size="lg"
+        )
+    )
+})
+
+#introjs help button on the data matrix tab
+output$floating_button_3 <- renderUI({
+    div(style="margin-top:10px",
+        actionBttn(
+          inputId = "help_3_button", label=NULL, 
+          icon = icon("question"), style="material-circle", color="primary", size="lg"
+        )
+    )
+})
+
+#introjs help button on the fourth tab
+output$floating_button_4 <- renderUI({
+      div(style="margin-top:10px",
+          actionBttn(
+            inputId = "help_4_button", label=NULL, 
+            icon = icon("question"), style="material-circle", color="primary", size="lg"
+          )
+      )
+})
+
+#introjs help button on the third tab
+output$floating_button_5 <- renderUI({
+    div(style="margin-top:10px",
+        actionBttn(
+          inputId = "help_5_button", label=NULL, 
+          icon = icon("question"), style="material-circle", color="primary", size="lg"
+        )
+    )
+})
+
+# the function that call rintrojs
+call_introjs <- function(file_name) {
+  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                            steps = file_name)
+  )
+}
