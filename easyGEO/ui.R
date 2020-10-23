@@ -143,7 +143,7 @@ body <- dashboardBody(
 # Put them together into a dashboardPage
 shinyUI(
   dashboardPage(
-    title="easyGEO - GEO expression analysis & visualization",
+    title="easyGEO - NCBI GEO's gene expression data analysis & visualization",
     dashboardHeader(title = "easyGEO",
                     dropdownMenuOutput("dropdown_menu"),
                     tags$li(class = "dropdown", actionButton("home", "eVITTA Home",icon("home"), 
