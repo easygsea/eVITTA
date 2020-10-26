@@ -166,7 +166,6 @@ output$plot_area <- renderUI({
     if(input$plot_type=="manhattan"){
         plotlyOutput("plot_manhattan", width = "100%", height = rv$box_h)
     }else if(input$plot_type=="bar"){
-        print(rv$run_mode)
         if(is.null(p_bar())){
             sig_none()
         }else{
@@ -1286,11 +1285,7 @@ output$kegg_feedback <- renderUI({
     # )
     
     msg = paste0("Click and scroll down to visualize KEGG diagram <b>",rv$es_term,"</b>")
-    div(path_box("confirm_kegg_plot",msg),
-        tags$script(HTML(
-        "document.getElementById('confirm_kegg_plot').onclick = function () {window.location.hash = '#kegg_reactome_wp';};"
-        ))
-    )
+    path_box("confirm_kegg_plot",msg)
     
 })
 
@@ -1349,6 +1344,10 @@ observeEvent(input$confirm_kegg_plot,{
             solidHeader = F, status = "primary",width="100%",height=500,
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
+                # add a scrolling to the plot feature
+                tags$script(HTML(
+                    "document.getElementById('kegg_reactome_wp').scrollIntoView();"
+                )),
                 imageOutput("kegg_output_1")
             ),
             div(
@@ -1371,6 +1370,10 @@ observeEvent(input$confirm_kegg_plot,{
             solidHeader = F, status = "primary",width="100%",height=500,
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
+                # add a scrolling to the plot feature
+                tags$script(HTML(
+                    "document.getElementById('kegg_reactome_wp').scrollIntoView();"
+                )),
                 htmlOutput("kegg_output_2")
             ),
             div(
@@ -1622,11 +1625,7 @@ observeEvent(input$confirm_kegg_plot,{
         #     )
         # )
         msg = paste0("Click and scroll down to visualize Reactome diagram <b>",rv$es_term,"</b>")
-        div(path_box("confirm_reactome_plot",msg),
-            tags$script(HTML(
-                "document.getElementById('confirm_reactome_plot').onclick = function () {window.location.hash = '#kegg_reactome_wp';};"
-            ))
-        )
+        path_box("confirm_reactome_plot",msg)
     })
     
     # reactome feedback confirm
@@ -1651,6 +1650,10 @@ observeEvent(input$confirm_kegg_plot,{
             solidHeader = F, status = "primary",width="100%",height=610,align = "center",
             div(
                 id="diagramHolder",style = 'overflow-x: scroll',
+                # add a scrolling to the plot feature
+                tags$script(HTML(
+                    "document.getElementById('kegg_reactome_wp').scrollIntoView();"
+                )),
                 tags$script(HTML(sprintf("onReactomeDiagramReady('%s','%s');",reactome_id,reactome_genes)))
             )
         )
@@ -1674,11 +1677,7 @@ observeEvent(input$confirm_kegg_plot,{
         #     )
         # )
         msg = paste0("Click and scroll down to visualize WikiPathways diagram <b>",rv$es_term,"</b>")
-        div(path_box("confirm_wp_plot",msg),
-            tags$script(HTML(
-                "document.getElementById('confirm_wp_plot').onclick = function () {window.location.hash = '#kegg_reactome_wp';};"
-            ))
-        )
+        path_box("confirm_wp_plot",msg)
     })
     
     # WP feedback confirm
@@ -1761,6 +1760,10 @@ observeEvent(input$confirm_kegg_plot,{
             title = span(icon("seeding"),"WikiPathways Diagram"),
             solidHeader = F, status = "primary",width="100%",height=610,align = "center",
             div(
+                # add a scrolling to the plot feature
+                tags$script(HTML(
+                "document.getElementById('kegg_reactome_wp').scrollIntoView();"
+            )),
                 tags$iframe(src = rv$wp_src, width="100%", height="550px", style="overflow:hidden;")
             )
         )
