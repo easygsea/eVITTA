@@ -1,5 +1,5 @@
 element	intro
-enrichment_network_box2	Gene set Network diagram. This is helpful when gene sets are redundant in wordings. You could see the groupings and relationship between different gene set clearly throught this diagram.
-nodeSelectvis_network	You could select the id of the geneset you are interested in and explore further.
-gear_box	You could use the button to adjust the parameters, such as adjusted p.values and edge threshold
-d_vis	You could download the network diagram here.
+enrichment_network_box2	Enriched gene sets are visualized in a network. Gene sets describing similar biology are connected together with edges. The similarity is defined using Jaccard, Overlap or Combined coefficient (click the gear button to learn more and adjust parameters). Hover over each node for details about the enrichment statistics. Hover over each edge for details about the overlaps.
+nodeSelectvis_network	You can select the gene set you are interested in and explore further about its location in the network.
+gear_box	Click this button to adjust the parameters for creating the network.
+d_vis	Click this button to download the network diagram.

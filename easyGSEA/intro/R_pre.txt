@@ -1,8 +1,8 @@
 element	intro
 selected_mode	To begin with, select the mode of analysis.
-	You have selected <b>Pre-ranked GSEA</b>
+	<b>Pre-ranked GSEA</b> is selected.
 run_analysis_box	This is the main panel to analyze your data.
 selected_box	First, select the species that matches your input query, or choose <b>Custom analysis</b> to upload your own GMT file(s).
 gene_identifier	Next, select the identifier of your input genes. If unsure, select <b>Other/Mixed</b>.
 upload_file_box	Then, upload your query file. We accept both 1) <b>RNK</b> format, and 2) <b>DEG</b> table from limma/edgeR/DESeq2/etc. Click on the help button to learn more and/or load our example data for a demo run.
-welcome_to_box	This panel will summarize the input and the parameters of your run.
+welcome_to_box	This panel summarizes the input and the parameters of your run.

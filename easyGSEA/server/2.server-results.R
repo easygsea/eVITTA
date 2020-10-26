@@ -109,9 +109,13 @@ output$ui_bodyResults <- renderUI({
                         # uiOutput("bubble_box"),
                         # uiOutput("volcano_box"),
                         # uiOutput("word_box"),
-                        uiOutput("kegg_feedback"),
-                        uiOutput("reactome_feedback"),
-                        uiOutput("wp_feedback") 
+                    column(12, id="feedback_btn_wrap",
+                        uiOutput("feedback_btn")
+                    )
+                    # uiOutput("kegg_feedback"),
+                    # uiOutput("reactome_feedback"),
+                    # uiOutput("wp_feedback") 
+                        
                 )
             ),
             column(
@@ -1266,26 +1270,42 @@ output$violin_plot <- renderUI({
 
 
 
+# ------------- UI KEGG/Reactome/WP confirm btn -----------
+output$feedback_btn <- renderUI({
+    req(is.null(rv$kegg_yes) == F | is.null(rv$reactome_yes) == F | is.null(rv$wp_yes) == F)
+
+    msg = paste0("Click and scroll down to visualize <b>",rv$es_term,"</b>")
+    
+    if(is.null(rv$kegg_yes) == F && rv$kegg_yes == "yes"){
+        bid <- "confirm_kegg_plot"
+    }else if(is.null(rv$reactome_yes) == F && rv$reactome_yes == "yes"){
+        bid <- "confirm_reactome_plot"
+    }else if(is.null(rv$wp_yes) == F && rv$wp_yes == "yes"){
+        bid <- "confirm_wp_plot"
+    }
+    
+    path_box(bid,msg)
+})
 
 # UI KEGG ---------------------
 
-# KEGG feedback
-output$kegg_feedback <- renderUI({
-    req(rv$kegg_yes == "yes")
-    # box(
-    #     title = NULL, background = "orange", solidHeader = TRUE, width=12,
-    #     column(
-    #         width = 10,
-    #         tags$b(paste0("Visualize KEGG pathway for \"",rv$es_term,"\"? ")),
-    #     ),
-    #     column(
-    #         width = 2, align = "right",
-    #         bsButton("confirm_kegg_plot",tags$b("YES!"),style = "danger")
-    #     )
-    # )
-    msg = paste0("Click and scroll down to visualize KEGG diagram <b>",rv$es_term,"</b>")
-    path_box("confirm_kegg_plot",msg)
-})
+# # KEGG feedback
+# output$kegg_feedback <- renderUI({
+#     req(rv$kegg_yes == "yes")
+#     # box(
+#     #     title = NULL, background = "orange", solidHeader = TRUE, width=12,
+#     #     column(
+#     #         width = 10,
+#     #         tags$b(paste0("Visualize KEGG pathway for \"",rv$es_term,"\"? ")),
+#     #     ),
+#     #     column(
+#     #         width = 2, align = "right",
+#     #         bsButton("confirm_kegg_plot",tags$b("YES!"),style = "danger")
+#     #     )
+#     # )
+#     msg = paste0("Click and scroll down to visualize KEGG diagram <b>",rv$es_term,"</b>")
+#     path_box("confirm_kegg_plot",msg)
+# })
 
 # KEGG feedback confirm
 observeEvent(input$confirm_kegg_plot,{
@@ -1598,25 +1618,25 @@ observeEvent(input$confirm_kegg_plot,{
         rv$es_term <- input$selected_es_term
     })
     
-# REACTOME =======================
-    # REACTOME feedback
-    output$reactome_feedback <- renderUI({
-        req(rv$reactome_yes == "yes")
-        # box(
-        #     title = NULL, background = "orange", solidHeader = TRUE, width=12,
-        #     column(
-        #         width = 10,
-        #         tags$b(paste0("Visualize Reactome pathway for \"",rv$es_term,"\"? ")),
-        #     ),
-        #     column(
-        #         width = 2, align = "right",
-        #         bsButton("confirm_reactome_plot",tags$b("YES!"),style = "danger")
-        #         
-        #     )
-        # )
-        msg = paste0("Click and scroll down to visualize Reactome diagram <b>",rv$es_term,"</b>")
-        path_box("confirm_reactome_plot",msg)
-    })
+# UI REACTOME =======================
+    # # REACTOME feedback
+    # output$reactome_feedback <- renderUI({
+    #     req(rv$reactome_yes == "yes")
+    #     # box(
+    #     #     title = NULL, background = "orange", solidHeader = TRUE, width=12,
+    #     #     column(
+    #     #         width = 10,
+    #     #         tags$b(paste0("Visualize Reactome pathway for \"",rv$es_term,"\"? ")),
+    #     #     ),
+    #     #     column(
+    #     #         width = 2, align = "right",
+    #     #         bsButton("confirm_reactome_plot",tags$b("YES!"),style = "danger")
+    #     #         
+    #     #     )
+    #     # )
+    #     msg = paste0("Click and scroll down to visualize Reactome diagram <b>",rv$es_term,"</b>")
+    #     path_box("confirm_reactome_plot",msg)
+    # })
     
     # reactome feedback confirm
     observeEvent(input$confirm_reactome_plot,{
@@ -1646,7 +1666,7 @@ observeEvent(input$confirm_kegg_plot,{
         
     })
     
-# WikiPathways =======================
+# UI WikiPathways =======================
     # WP feedback
     output$wp_feedback <- renderUI({
         req(rv$wp_yes == "yes")

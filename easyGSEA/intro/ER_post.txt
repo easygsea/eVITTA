@@ -1,7 +1,7 @@
 element	intro
-sidebarCollapsed	Please use the <b>Run DEG analysis </b> tab first. It is important to follow the order of the tabs to go through the analysis.
-plot_choice_box	We have provide Bar plot, Bubble plot, Keywords, Manhattan plot and Volcano plot; please select the corresponding tab to view them.
-plot_area	All the plots would be shown in this area, and you could control and make adjustment to them.
-setting_button	Dropdown is available here.
-plot_download_button	another button.
-explore_geneset_box	analysis summary and plots for individual gene set is displayed here.
+plot_choice_box	Click here to explore your results in different ways. <b>Bar</b> and <b>Bubble</b> plots show the top regulations, <b>Keywords</b> mines for the top representing words, <b>Manhattan</b> plot displays all enrichment results and highlights the significant, and <b>Volcano</b> plot can be customized as continuous and static to highlight the significant enrichment.
+plot_area	Plots are interactive. Hover over each gene set for its detailed enrichment statistics. Click on each gene set to zoom into visualizations. 
+setting_button	Click this button to customize the plot.
+plot_download_button	Click to download the plot.
+explore_geneset_box	Visualizations and statistics for individual gene sets are displayed here.
+ui_gsea_plots_radio	Click to navigate the gene set's distributions in the genomic background using different visualizations.

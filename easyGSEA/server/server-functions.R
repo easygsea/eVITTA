@@ -1403,15 +1403,13 @@
     }
     
     path_box <- function(id,msg){
-      column(12,
-             actionBttn(
-               id,
-               HTML(msg),
-               # HTML(paste0("<p style='font-size:110%;word-break:break-all;vertical-align:middle;'>",msg,"</p>")),
-               icon=icon("mouse"),
-               style = "simple", color="primary", size = "md",
-               block = T
-             )
+      actionBttn(
+        id,
+        HTML(msg),
+        # HTML(paste0("<p style='font-size:110%;word-break:break-all;vertical-align:middle;'>",msg,"</p>")),
+        icon=icon("mouse"),
+        style = "simple", color="primary", size = "md",
+        block = T
       )
     }
     
@@ -1569,6 +1567,7 @@
       # rv$es_term <- "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"
       # rv$kegg_confirm <- "yes"
       rv$es_term <- "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"
+      rv$wp_yes <- "yes"
       rv$wp_confirm <- "yes"
       # rv$es_term <- "RA_Interferon_Signaling%R-HSA-913531"
       # rv$reactome_confirm <- "yes"
@@ -1615,6 +1614,7 @@
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs2/run_n.rds"))
       rv$gene_lists <- readRDS(paste0(getwd(),"/rvs2/gene_lists.rds"))
       rv$es_term <- "RA_Transcriptional_activity_of_SMAD2/SMAD3:SMAD4_heterotrimer%R-CEL-2173793"
+      rv$reactome_yes <- "yes"
       rv$reactome_confirm <- "yes"
       rv$run <- "success"
       rv$demo_mode <- "ora"
@@ -1661,6 +1661,7 @@
       rv$total_genes <- NULL
       rv$es_term <- NULL
       rv$kegg_confirm <- NULL
+      rv$wp_yes <- NULL
       rv$wp_confirm <- NULL
       rv$reactome_confirm <- NULL
       rv$run <- NULL
@@ -1701,6 +1702,11 @@
       rv$gene_lists_mat2 <- NULL
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs2/run_n.rds"))
       rv$gene_lists <- NULL
+      rv$es_term <- NULL
+      rv$kegg_confirm <- NULL
+      rv$wp_yes <- NULL
+      rv$wp_confirm <- NULL
+      rv$reactome_confirm <- NULL
       rv$run <- NULL
       rv$demo_mode = ""
     }
@@ -1712,13 +1718,13 @@
         icon = "play"
         color = "success"
         style = "bordered"
-        size = "sm"
+        size = "xs"
       }else{
         label = "Unload Example"
         icon = "trash-alt"
         color = "default"
         style = "minimal"
-        size = "md"
+        size = "sm"
         
       }
       
