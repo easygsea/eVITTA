@@ -166,6 +166,7 @@ output$plot_area <- renderUI({
     if(input$plot_type=="manhattan"){
         plotlyOutput("plot_manhattan", width = "100%", height = rv$box_h)
     }else if(input$plot_type=="bar"){
+        print(rv$run_mode)
         if(is.null(p_bar())){
             sig_none()
         }else{
@@ -1283,8 +1284,14 @@ output$kegg_feedback <- renderUI({
     #         bsButton("confirm_kegg_plot",tags$b("YES!"),style = "danger")
     #     )
     # )
+    
     msg = paste0("Click and scroll down to visualize KEGG diagram <b>",rv$es_term,"</b>")
-    path_box("confirm_kegg_plot",msg)
+    div(path_box("confirm_kegg_plot",msg),
+        tags$script(HTML(
+        "document.getElementById('confirm_kegg_plot').onclick = function () {window.location.hash = '#kegg_reactome_wp';};"
+        ))
+    )
+    
 })
 
 # KEGG feedback confirm
@@ -1615,7 +1622,11 @@ observeEvent(input$confirm_kegg_plot,{
         #     )
         # )
         msg = paste0("Click and scroll down to visualize Reactome diagram <b>",rv$es_term,"</b>")
-        path_box("confirm_reactome_plot",msg)
+        div(path_box("confirm_reactome_plot",msg),
+            tags$script(HTML(
+                "document.getElementById('confirm_reactome_plot').onclick = function () {window.location.hash = '#kegg_reactome_wp';};"
+            ))
+        )
     })
     
     # reactome feedback confirm
@@ -1663,7 +1674,11 @@ observeEvent(input$confirm_kegg_plot,{
         #     )
         # )
         msg = paste0("Click and scroll down to visualize WikiPathways diagram <b>",rv$es_term,"</b>")
-        path_box("confirm_wp_plot",msg)
+        div(path_box("confirm_wp_plot",msg),
+            tags$script(HTML(
+                "document.getElementById('confirm_wp_plot').onclick = function () {window.location.hash = '#kegg_reactome_wp';};"
+            ))
+        )
     })
     
     # WP feedback confirm

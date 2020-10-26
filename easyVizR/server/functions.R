@@ -825,6 +825,9 @@ init_demo <- function(){
   rv$upload_batch_columns <- readRDS(paste0(getwd(), "/rvs/upload_batch_columns.rds"))
   #rv$FileDF <- readRDS(paste0(getwd(), "/rvs/FileDf.rds"))
   rv$ll <- readRDS(paste0(getwd(), "/rvs/ll.rds"))
+  
+  #updateCheckboxGroupInput(session, inputId = "heatmap_dfs", selected = list("A549-ACE2_SARS-CoV-2_HiMOI_KEGG-WkPt-RctP-BlgP"))
+  
   rv$gg <- readRDS(paste0(getwd(), "/rvs/gg.rds"))
   rv$tt <- readRDS(paste0(getwd(), "/rvs/tt.rds"))
   rv$upload_columns <- readRDS(paste0(getwd(), "/rvs/upload_columns.rds"))
@@ -848,6 +851,8 @@ init_demo <- function(){
   rv$n_3ds_status <- readRDS(paste0(getwd(), "/rvs/n_3ds_status.rds"))
   rv$s <- readRDS(paste0(getwd(), "/rvs/s.rds"))
   rv$v <- readRDS(paste0(getwd(), "/rvs/v.rds"))
+  rv$n_to_plot <- readRDS(paste0(getwd(), "/rvs/n_to_plot.rds"))
+  rv$heatmap_sortby <- readRDS(paste0(getwd(), "/rvs/heatmap_sortby.rds"))
   for (i in 1:3){
     rv[[paste0("nic_p_",i)]] <- 0.05
     rv[[paste0("nic_q_",i)]] <- 1
