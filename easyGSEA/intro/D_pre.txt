@@ -1,0 +1,3 @@
+element	intro
+ui_gmt_download	Select your species of interest to download our gene set libraries.
+result_table_box	After successful run in <b>1. Run Analysis </b>, you can review and download the enrichment table, and proceed to <a href='https://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'>easyVizR</a> for multiple comparisons on functional categories.

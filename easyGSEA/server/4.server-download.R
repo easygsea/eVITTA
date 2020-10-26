@@ -40,7 +40,7 @@ output$ui_downloadbox <- renderUI({
                         
                         fluidRow(
                             column(12, align="center",
-                                   p(HTML("Download enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons")),
+                                   p(HTML("Download enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons on functional categories")),
                                    
                                    # div(
                                    #     style="display: inline-block;vertical-align:top;",
@@ -49,6 +49,8 @@ output$ui_downloadbox <- renderUI({
                                                     , style = rv$dbtn_style, color = "warning"
                                                     , size="md", block = F
                                        )
+                                   # ,bsTooltip("gs_tbl_dl",HTML("Download converted DEG table and proceed to <b>easyVizR</b> for multiple comparisons on functional categories")
+                                   #            ,placement = "top")
                                    # ),
                                    # div(
                                    #     style="display: inline-block;vertical-align:top;",

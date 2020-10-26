@@ -1,0 +1,10 @@
+element	intro
+selected_mode	To begin with, select the mode of analysis.
+	You have selected <b>Overrepresentation Analysis</b>
+run_analysis_box	This is the main panel to analyze your data.
+selected_box	First, select the species that matches your input query, or choose <b>Custom analysis</b> to upload your own GMT file(s).
+gene_identifier	Next, select the identifier of your input genes. If unsure, select <b>Other/Mixed</b>.
+input_list_box	Paste your genes, delimited by newlines or spaces.
+ora_num_box	Select the identifier for fully numeric IDs. Default is Entrez Gene IDs.
+namelst_box	Name your query, then click <b>Submit</b> to confirm. Once submitted, your input genes will be automatically converted to HUGO symbols if selected gene identifier is <b>Other/Mixed</b>. Or, click <b>Reset</b> to clear and re-submit.
+welcome_to_box	This panel will summarize the input and the parameters of your run.

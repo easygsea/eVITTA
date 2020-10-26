@@ -766,29 +766,34 @@
           12,
           uiOutput("ora_num")
         ),
-        column(
-          width = 6,
-          textInput(
-            "glist_name",
-            NULL,
-            placeholder = 'Name your list ...'
-          )
-        ),
-        column(
-          width = 6, align="right",
-          div(
-            style="display: inline-block;vertical-align:top;",
-            bsButton(
-              inputId = "gene_list_clear",
-              label = "Reset",
-              style = "default"
+        column(id="namelst_box",
+          width = 12,
+          fluidRow(
+            column(6,
+                   textInput(
+                     "glist_name",
+                     NULL,
+                     placeholder = 'Name your list ...'
+                   )
+            ),
+            column(6, align="right",
+                   div(
+                     style="display: inline-block;vertical-align:top;",
+                     bsButton(
+                       inputId = "gene_list_clear",
+                       label = "Reset",
+                       style = "default"
+                     )
+                   )
+                   ,div(
+                     style="display: inline-block;vertical-align:top;",
+                     uiOutput("glist_add_button")
+                     
+                   )
             )
           )
-          ,div(
-            style="display: inline-block;vertical-align:top;",
-            uiOutput("glist_add_button")
-
-          )
+          
+          
         )
 
       )
