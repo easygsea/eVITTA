@@ -50,7 +50,7 @@ output$ui_bodyResults <- renderUI({
         fluidRow(
             column(
                 8,
-                div(
+                div(id = "plot_choice_box",
                     style="display: inline-block;vertical-align:top;",
                     radioGroupButtons(
                         inputId = "plot_type",
@@ -84,7 +84,7 @@ output$ui_bodyResults <- renderUI({
                             uiOutput("plot_area")
                         )
                         ,
-                        div(
+                        div(id = "setting_button",
                             align = "left",
                             style = "position: absolute; left: 1em; bottom: 1em;",
                             dropdown(
@@ -94,7 +94,7 @@ output$ui_bodyResults <- renderUI({
                                 up = TRUE,width = "410px"
                             )
                         ),
-                        div(
+                        div(id = "plot_download_button",
                             style = "position: absolute; left: 4.5em; bottom: 1em;",
                             dropdown(
                                 uiOutput("plot_download"),
@@ -104,19 +104,20 @@ output$ui_bodyResults <- renderUI({
                             )
                         )
                     ),
-                    # uiOutput("manhattan_box"),
-                    # uiOutput("bar_box"),
-                    # uiOutput("bubble_box"),
-                    # uiOutput("volcano_box"),
-                    # uiOutput("word_box"),
-                    uiOutput("kegg_feedback"),
-                    uiOutput("reactome_feedback"),
-                    uiOutput("wp_feedback")
+                        # uiOutput("manhattan_box"),
+                        # uiOutput("bar_box"),
+                        # uiOutput("bubble_box"),
+                        # uiOutput("volcano_box"),
+                        # uiOutput("word_box"),
+                        uiOutput("kegg_feedback"),
+                        uiOutput("reactome_feedback"),
+                        uiOutput("wp_feedback") 
                 )
             ),
             column(
                 width = 4,
-                fluidRow(
+                # div(
+                fluidRow(id = "explore_geneset_box",
                     box(
                         # title = span(icon("search"),"Individual gene set statistics & visualization"),status="primary", #solidHeader = TRUE,
                         title = span(icon("search"),"Click plot, or manually select a gene set:"),status="primary", #solidHeader = TRUE,

@@ -1,0 +1,6 @@
+element	intro
+sidebarCollapsed	Please run <b>Data matrix </b> first. It is important to follow the order of the tabs to go through the analysis.
+sp	Select the type of data provided by the authors.
+ui_select_box	Please go through the choices here to run the comparison on the variables that you would like to analyze.
+run_deg	<b>Run DEG Analysis</b> button would be shown to run the analysis
+

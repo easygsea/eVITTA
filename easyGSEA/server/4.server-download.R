@@ -21,7 +21,7 @@ output$ui_downloadlist <- renderUI({
 
 # UI download box
 output$ui_downloadbox <- renderUI({
-    box(
+    box(id = "result_table_box",
         title = span(icon("table"),"Enrichment Results Table"), width = 12, status = "primary",
         
         if(is.null(rv$run) || rv$run != "success"){

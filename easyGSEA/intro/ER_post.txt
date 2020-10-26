@@ -1,0 +1,7 @@
+element	intro
+sidebarCollapsed	Please use the <b>Run DEG analysis </b> tab first. It is important to follow the order of the tabs to go through the analysis.
+plot_choice_box	We have provide Bar plot, Bubble plot, Keywords, Manhattan plot and Volcano plot; please select the corresponding tab to view them.
+plot_area	All the plots would be shown in this area, and you could control and make adjustment to them.
+setting_button	Dropdown is available here.
+plot_download_button	another button.
+explore_geneset_box	analysis summary and plots for individual gene set is displayed here.

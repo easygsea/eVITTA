@@ -410,7 +410,7 @@
       }else{
         noo = "3"
       }
-        div(
+        div(id = "upload_file_box",
 
 
             fileInput("rnkfile",
@@ -755,16 +755,20 @@
         column(
           width = 12,
           bsTooltip("gene_list_q", "Input newline-delimited gene list", placement = "top"),
-          textAreaInput(
-            inputId = "gene_list",
-            label = noo,
-            placeholder = "Paste your genes here ...",
-            height = 110
+          div(
+            id = "input_list_box",
+              textAreaInput(
+              inputId = "gene_list",
+              label = noo,
+              placeholder = "Paste your genes here ...",
+              height = 110
+            )
           )
         ),
         column(
           12,
-          uiOutput("ora_num")
+          div(id = "ora_num_box",
+              uiOutput("ora_num"))
         ),
         column(id="namelst_box",
           width = 12,

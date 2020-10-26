@@ -31,8 +31,8 @@ observeEvent(input$help_tab1, {
           }
         }
     }
-  
-  
+
+
 })
 
 observeEvent(input$help_tab2, {
@@ -68,7 +68,7 @@ observeEvent(input$help_tab4, {
 output$floating_button_tab1 <- renderUI({
     div(style="margin-top:10px",
         actionBttn(
-          inputId = "help_tab1", label=NULL, 
+          inputId = "help_tab1", label=NULL,
           icon = icon("question"), style="material-circle", color="primary", size="lg"
         )
     )
@@ -78,18 +78,18 @@ output$floating_button_tab2 <- renderUI({
   req(is.null(rv$fgseagg)==F)
     div(style="margin-top:10px",
         actionBttn(
-          inputId = "help_tab2", label=NULL, 
+          inputId = "help_tab2", label=NULL,
           icon = icon("question"), style="material-circle", color="primary", size="lg"
         )
     )
-  
+
 })
 
 output$floating_button_tab3 <- renderUI({
   req(is.null(rv$fgseagg)==F)
     div(style="margin-top:10px",
         actionBttn(
-          inputId = "help_tab3", label=NULL, 
+          inputId = "help_tab3", label=NULL,
           icon = icon("question"), style="material-circle", color="primary", size="lg"
         )
     )
@@ -99,7 +99,7 @@ output$floating_button_tab3 <- renderUI({
 output$floating_button_tab4 <- renderUI({
     div(style="margin-top:10px",
         actionBttn(
-          inputId = "help_tab4", label=NULL, 
+          inputId = "help_tab4", label=NULL,
           icon = icon("question"), style="material-circle", color="primary", size="lg"
         )
     )
