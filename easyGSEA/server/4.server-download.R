@@ -40,7 +40,7 @@ output$ui_downloadbox <- renderUI({
                         
                         fluidRow(
                             column(12, align="center",
-                                   p(HTML("Download enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons on functional categories")),
+                                   p(HTML("Download enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons")),
                                    
                                    # div(
                                    #     style="display: inline-block;vertical-align:top;",
