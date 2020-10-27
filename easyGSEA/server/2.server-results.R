@@ -1,9 +1,9 @@
-#=============================================================# 
+#=============================================================#
 ######                 ENRICHMENT RESULTS              ########
 #=============================================================#
 # ------------ Overall bodyResults UI ------------------
 output$ui_bodyResults <- renderUI({
-    
+
     # saveRDS(rv$bar_pathway, file = "rvs/bar_pathway.rds")
     # saveRDS(rv$bubble_pathway, file = "rvs/bubble_pathway.rds")
     # saveRDS(rv$data_head_o, file = "rvs/data_head_o.rds")
@@ -43,7 +43,7 @@ output$ui_bodyResults <- renderUI({
     # saveRDS(rv$gene_lists_mat2, file = "rvs/gene_lists_mat2.rds")
     # saveRDS(rv$run_n, file = "rvs/run_n.rds")
     # saveRDS(rv$gene_lists, file = "rvs/gene_lists.rds")
-    
+
     if(is.null(rv$run) || rv$run != "success"){
         panel_null()
     }else{
@@ -61,7 +61,7 @@ output$ui_bodyResults <- renderUI({
                         size = "normal",
                         direction = "horizontal"
                     )
-                ) 
+                )
                 ,
                 # Button that breifly explain P.value and p.adjusted Version 1
                 div(id="p_value_div", style="display: inline-block;vertical-align:top;position: absolute; right: 1em;",
@@ -114,8 +114,8 @@ output$ui_bodyResults <- renderUI({
                     )
                     # uiOutput("kegg_feedback"),
                     # uiOutput("reactome_feedback"),
-                    # uiOutput("wp_feedback") 
-                        
+                    # uiOutput("wp_feedback")
+
                 )
             ),
             column(
@@ -141,7 +141,7 @@ output$ui_bodyResults <- renderUI({
                     )
                 )
             )
-            
+
         )
     }
 })
@@ -155,7 +155,7 @@ observeEvent(input$plot_type,{
 sig_none <- reactive({
     req(rv$bar_p_cutoff)
     req(rv$bar_q_cutoff)
-    
+
     HTML(
         "No significant term found at pval < ",
         rv$bar_p_cutoff,
@@ -184,7 +184,7 @@ output$plot_area <- renderUI({
     }else if(input$plot_type=="volcano"){
         if(rv$run_mode == "gsea"){
             uiOutput("ui_volcano")
-            
+
         }else if(rv$run_mode == "glist"){
             uiOutput("ui_volcano_glist")
         }
@@ -204,7 +204,7 @@ output$plot_gear <- renderUI({
     }else{
         dbs = rv$gmt_cs
     }
-    
+
     if(input$plot_type=="manhattan"){
         fluidRow(
             column(12,
@@ -232,7 +232,7 @@ output$plot_gear <- renderUI({
             )
         )
     }else if(input$plot_type=="bar"){
-        
+
         fluidRow(
             column(12,
                    selectizeInput("pathway_to_plot_bar",
@@ -241,7 +241,7 @@ output$plot_gear <- renderUI({
                                   selected = rv$bar_pathway,
                                   multiple = TRUE),
                    uiOutput("bar_top"),
-                   
+
                    splitLayout(
                        sliderTextInput("cutoff_bar_p",
                                        label = "Adjust P threshold:",
@@ -287,11 +287,11 @@ output$plot_gear <- renderUI({
                     bsButton("bar_confirm",tags$b("Replot!"),style = "danger")
                 )
             )
-            
+
         )
     }else if(input$plot_type=="bubble"){
-        
-        
+
+
         fluidRow(
             column(12,
                    selectizeInput("pathway_to_plot_bubble",
@@ -350,7 +350,7 @@ output$plot_gear <- renderUI({
                 bsButton("bubble_confirm",tags$b("Replot!"),style = "danger")
             )
         )
-        
+
     }else if(input$plot_type=="volcano"){
         fluidRow(
             column(
@@ -391,7 +391,7 @@ output$plot_gear <- renderUI({
             )
         )
     }else if(input$plot_type=="word"){
-        
+
         fluidRow(
             column(12,
                    selectizeInput("pathway_to_plot_word",
@@ -455,76 +455,76 @@ observeEvent(input$manhattan_confirm,{
 p_man <- reactive({
     req(rv$run == "success")
     req(input$plot_type=="manhattan")
-    
+
     if(input$selected_species != "other"){
         dbs = rv$dbs
     }else{
         dbs = rv$gmt_cs
     }
-    
+
     data = rv$fgseagg
     pq = rv$volcano_pq
     cutoff = rv$volcano_cutoff
-    
+
     # determine colors
     color_n = length(dbs)
     colors = c(addalpha(brewer.pal(n = color_n, name = 'Set2')),brewer.pal(n = color_n, name = 'Set2'))
-    
+
     # reorder rows according to pathway names and filter NA pq
     data = data %>% dplyr::arrange(pathway) %>%
         dplyr::filter(!(is.na(pval)))
 
-    
+
     # Add highlight information
-    data = data %>% 
+    data = data %>%
         dplyr::mutate(is_significant=ifelse(data[[pq]]<cutoff, "yes", "no")) %>%
         dplyr::mutate(is_significant=paste0(db,is_significant))
-    
+
     # relevel
     levels_reordered = paste0(rep(dbs,2),c(rep("no",color_n),rep("yes",color_n)))
     data$is_significant = fct_relevel(data$is_significant,levels_reordered)
-    
+
     # name colors and filter
     names(colors) = levels_reordered
     colors = colors[names(colors) %in% levels(data$is_significant)]
 
     # create data for manhattan
-    data = data %>% 
+    data = data %>%
         # Compute gene set size
-        dplyr::group_by(db) %>% 
-        dplyr::summarise(chr_len=n()) %>% 
-        
+        dplyr::group_by(db) %>%
+        dplyr::summarise(chr_len=n()) %>%
+
         # Calculate cumulative position of each gene set
         dplyr::mutate(tot=cumsum(chr_len)-chr_len) %>%
         dplyr::select(-chr_len) %>%
-        
+
         # Add this info to the initial dataset
         dplyr::left_join(data, ., by=c("db"="db")) %>%
         dplyr::arrange(db) %>%
-        dplyr::group_by(db) %>% 
+        dplyr::group_by(db) %>%
         dplyr::mutate(BPcum=1:n()+tot-1) %>%
-        
+
         dplyr::select(-tot)
 
     X_axis = data %>% dplyr::group_by(db) %>% dplyr::summarize(center=(max(BPcum) +min(BPcum) ) / 2 )
-    
+
     size_g = unlist(lapply(data[[ncol(data)-2]], function(x) length(x)))
-    
+
     rv$manhattan_pathway_list = data[["pathway"]]
 
     if(rv$run_mode == "gsea"){
         ylimp <- abs(floor(log10(min(data[which(data[["ES"]]>0),][[pq]],na.rm=TRUE)))) + 0.1
         ylimn <- abs(floor(log10(min(data[which(data[["ES"]]<0),][[pq]],na.rm=TRUE)))) + 0.1
 
-        
+
         text = paste0("<b>",data$pathway,"</b>\n",
                       "ES=",signif(data[["ES"]],digits=3),"; ",
                       "P=",signif(data[["pval"]],digits=3),"; ",
                       "P.adj=",signif(data[["padj"]],digits=3),"\n",
                       head(tail(colnames(data),n=3),n=1)," (",size_g,"/",data[["size"]],"): \n",addlinebreaks(data[[ncol(data)-2]])
         )
-        
-        p = data %>% 
+
+        p = data %>%
             ggplot(aes(x=BPcum,y=-sign(ES)*log10(data[[pq]]),text=text,color=is_significant,size=-log10(pval))) +
             geom_point(alpha = 0.75) +
             scale_color_manual(values = colors) +
@@ -532,11 +532,11 @@ p_man <- reactive({
             scale_x_continuous(expand = c(0,0), label = X_axis$db, breaks = X_axis$center) +
             scale_y_continuous(expand = c(0,0), limits = c(-ylimn, ylimp)) +
             scale_size_continuous(range = c(0.5,3)) +
-            geom_hline(yintercept = -log10(cutoff), color = "grey40", linetype = "dashed") + 
-            geom_hline(yintercept = log10(cutoff), color = "grey40", linetype = "dashed") + 
+            geom_hline(yintercept = -log10(cutoff), color = "grey40", linetype = "dashed") +
+            geom_hline(yintercept = log10(cutoff), color = "grey40", linetype = "dashed") +
             labs(y=paste0("-log10(",pq,")*sign(ES)")) +
             theme_classic() +
-            theme( 
+            theme(
                 strip.placement = "outside",
                 strip.background = element_rect(fill=NA, colour="grey50"),
                 legend.position="none",
@@ -549,14 +549,14 @@ p_man <- reactive({
             )
     }else{
         ylim <- abs(floor(log10(min(data[[pq]],na.rm=TRUE))))
-        
+
         text = paste0("<b>",data$pathway,"</b>\n",
                       "P=",signif(data[["pval"]],digits=3),"; ",
                       "P.adj=",signif(data[["padj"]],digits=3),"\n",
                       head(tail(colnames(data),n=3),n=1)," (",size_g,"/",data[["size"]],"): \n",addlinebreaks(data[[ncol(data)-2]])
         )
-        
-        p = data %>% 
+
+        p = data %>%
             ggplot(aes(x=BPcum,y=-log10(data[[pq]]),text=text,color=db,size=-log10(pval))) +
             geom_point(alpha = 0.75) +
             scale_color_brewer(palette = "Set2") +
@@ -564,10 +564,10 @@ p_man <- reactive({
             scale_x_continuous(expand = c(0,0), label = X_axis$db, breaks = X_axis$center) +
             scale_y_continuous(expand = c(0,0), limits = c(0, ylim)) +
             scale_size_continuous(range = c(0.5,3)) +
-            geom_hline(yintercept = -log10(cutoff), color = "grey40", linetype = "dashed") + 
+            geom_hline(yintercept = -log10(cutoff), color = "grey40", linetype = "dashed") +
             labs(y=paste0("-log10(",pq,")")) +
             theme_classic() +
-            theme( 
+            theme(
                 strip.placement = "outside",
                 strip.background = element_rect(fill=NA, colour="grey50"),
                 legend.position="none",
@@ -578,7 +578,7 @@ p_man <- reactive({
                 axis.line.x = element_blank()
             )
     }
-    
+
     ggplotly(p, tooltip="text",source = "manhattan_plot_click") %>%
         event_register("plotly_click")
 })
@@ -587,7 +587,7 @@ p_man <- reactive({
 output$plot_manhattan <- renderPlotly({
     req(rv$run == "success")
     req(input$plot_type=="manhattan")
-    
+
     withProgress(message = "Updating Manhattan plot ...",value = 1,{
         p_man()
     })
@@ -608,10 +608,10 @@ observeEvent(input$bar_confirm,{
     rv$bar_q_cutoff = input$cutoff_bar_q
     rv$bar_up = input$n_up_bar
     rv$bar_down = input$n_down_bar
-    
+
     rv$bar_abb = input$abb_bar
     if(rv$bar_abb == "y"){if(is.null(input$abb_bar_n)){rv$bar_abb_n = 40}else{rv$bar_abb_n = input$abb_bar_n}}
-    
+
 })
 
 # bar plot
@@ -627,7 +627,7 @@ output$plot_bar <- renderPlotly({
     req(rv$run == "success")
     req(input$plot_type=="bar")
     req(is.null(rv$bar_pathway)==F)
-    
+
     withProgress(message = "Updating bar plot ...",value = 1,{
         p_bar()
     })
@@ -649,10 +649,10 @@ observeEvent(input$bubble_confirm,{
     rv$bar_p_cutoff = input$cutoff_p_bubble
     rv$bar_up = input$n_up_bubble
     rv$bar_down = input$n_down_bubble
-    
+
     rv$bar_abb = input$abb_bubble
     if(rv$bar_abb == "y"){if(is.null(input$abb_bubble_n)){rv$bar_abb_n = 40}else{rv$bar_abb_n = input$abb_bubble_n}}
-    
+
     rv$bubble_zmin = input$bubble_slider[1]
     rv$bubble_zmax = input$bubble_slider[2]
 })
@@ -686,14 +686,14 @@ output$download_bubble <- downloadHandler(
 observeEvent(input$volcano_confirm,{
     rv$volcano_pathway = input$pathway_to_plot_volcano
     rv$volcano_pq = input$p_or_q_volcano
-    
+
     rv$volcano_mode=input$volcano_mode
 
     if(rv$volcano_mode == "plotly2" | rv$volcano_mode == "ggplot"){
         if(is.null(input$volcano_cutoff)){rv$volcano_cutoff = 0.05}else{rv$volcano_cutoff = input$volcano_cutoff}
         if(is.null(input$volcano_cutoff)){rv$volcano_cutoff = 0.01}else{rv$volcano_cutoff = input$volcano_cutoff}
     }
-    
+
     # if(rv$volcano_mode == "ggplot"){
     #     if(is.null(input$volcano_top_down)){rv$volcano_top_down = 5}else{rv$volcano_top_down = input$volcano_top_down}
     #     if(is.null(input$volcano_top_up)){rv$volcano_top_up = 5}else{rv$volcano_top_up = input$volcano_top_up}
@@ -717,7 +717,7 @@ output$p1_fs_volcano <- renderPlotly({
         rv$p_volcano = volcano_plot()
         return(rv$p_volcano)
     })
-    
+
 })
 
 # discrete plotly volcano
@@ -727,13 +727,13 @@ output$p2_fs_volcano <- renderPlotly({
     req(input$plot_type=="volcano")
     req(rv$run_mode == "gsea")
     req(is.null(rv$volcano_pathway)==F)
-    
-    
+
+
     withProgress(message = "Updating discrete volcano plot ...",value = 1,{
         rv$p_volcano = volcano_plot2()
         return(rv$p_volcano)
     })
-    
+
 })
 
 #static ggplot volcano
@@ -743,13 +743,13 @@ output$p3_fs_volcano <- renderPlot({
     req(input$plot_type=="volcano")
     req(rv$run_mode == "gsea")
     req(is.null(rv$volcano_pathway)==F)
-    
-    
+
+
     withProgress(message = "Updating labelled volcano plot ...",value = 1,{
         rv$p_volcano = volcano_plot3()
         return(rv$p_volcano)
     })
-    
+
 })
 
 # volcano download
@@ -787,7 +787,7 @@ output$plot_word <- renderPlotly({
     req(rv$run == "success")
     req(input$plot_type=="word")
     req(is.null(rv$bar_pathway)==F)
-    
+
     withProgress(message = "Generating word frequency chart..,", value = 1,{
         word_plot()
     })
@@ -894,9 +894,9 @@ output$gs_stats_tl <- DT::renderDataTable({
     # req(input$selected_es_term != "")
     req(rv$es_term)
     df = rv$fgseagg[which((rv$fgseagg)$pathway == rv$es_term)]
-    
+
     df = df %>% mutate_if(is.numeric, function(x) round(x, digits=3))
-    
+
     df = t(df)
     r_names <- names(df[-1,])
     c_names = df[[2]]
@@ -906,7 +906,7 @@ output$gs_stats_tl <- DT::renderDataTable({
     df = df[-1,]
     rownames(df) = r_names
     colnames(df) = c_names
-    
+
 
     DT::datatable(df,
                   extensions=c('Scroller','Buttons'),
@@ -916,7 +916,7 @@ output$gs_stats_tl <- DT::renderDataTable({
                       buttons = c('copy', 'pdf', 'csv'), #, 'excel', 'print'
                       scrollY = "128px",
                       scroller = TRUE,
-                      scrollX=TRUE           
+                      scrollX=TRUE
                   ))
 })
 
@@ -925,13 +925,13 @@ output$gs_stats_tl <- DT::renderDataTable({
 output$plot_db_es <- renderPlot({
     req(rv$run == "success")
     req(rv$es_term)
-    
+
     # req(input$selected_es_term != "")
     req(rv$es_term)
     enrichmentplot()
 })
 
-# download 
+# download
 output$download_gs_es <- downloadHandler(
     filename = function() {paste0(rv$rnkll,"_ESplot_",rv$es_term,".pdf")},
     content = function(file) {
@@ -966,7 +966,7 @@ output$download_density <- downloadHandler(
 output$plot_box <- renderPlot({
     req(rv$run == "success")
     req(rv$es_term)
-    
+
     # req(input$selected_es_term != "")
     req(rv$es_term)
     box_plot()
@@ -987,7 +987,7 @@ output$download_box <- downloadHandler(
 output$plot_violin <- renderPlot({
     req(rv$run == "success")
     req(rv$es_term)
-    
+
     # req(input$selected_es_term != "")
     req(rv$es_term)
     rv$k = input$cutoff_k
@@ -1009,7 +1009,7 @@ output$download_violin <- downloadHandler(
 # ES UI ----------------------------------------------------
 output$ui_es <- renderUI({
     req(rv$es_term)
-    
+
     fluidRow(
         column(
             width = 12
@@ -1033,7 +1033,7 @@ output$ui_es <- renderUI({
 output$ui_gsea_plots <- renderUI({
     req(rv$run_mode=="gsea")
     req(rv$es_term)
-    
+
     div(
         style = "position: relative",
         uiOutput("gs_enrichment_plot"),
@@ -1045,7 +1045,7 @@ output$ui_gsea_plots <- renderUI({
 
 output$ui_gsea_plots_radio <- renderUI({
     req(rv$run_mode=="gsea")
-    
+
     fluidRow(
         column(
             width = 12, align = "center",
@@ -1053,7 +1053,7 @@ output$ui_gsea_plots_radio <- renderUI({
                 inputId = "plot_type_2",
                 # label = "Select plot type",
                 choiceNames = c("Enrichment", "Density","Box","Violin"),
-                choiceValues = c("enrichment", "density", "box","violin"), 
+                choiceValues = c("enrichment", "density", "box","violin"),
                 selected = "enrichment",
                 checkIcon = list(
                     yes = icon("check-square"),
@@ -1064,10 +1064,10 @@ output$ui_gsea_plots_radio <- renderUI({
             ),
             tags$hr(style="border-color: grey; margin:0px;"),br()
         )
-        
+
     )
 
-    
+
 })
 
 
@@ -1076,13 +1076,13 @@ output$ui_gsea_plots_radio <- renderUI({
 clear_plot_rv <- function(){
     rv$kegg_status <- NULL
     rv$kegg_status_g <- NULL
-    
+
     rv$kegg_yes <- NULL
     rv$kegg_confirm <- NULL
-    
+
     rv$reactome_yes <- NULL
     rv$reactome_confirm<-NULL
-    
+
     rv$wp_yes <- NULL
     rv$wp_confirm<-NULL
 }
@@ -1117,7 +1117,7 @@ observeEvent(event_data("plotly_click", source = "bubble_plot_click"),{
     # req(input$plot_type=="bubble")
     clickData <- event_data("plotly_click", source = "bubble_plot_click")
     rv$es_term = rv$bubble_pathway_list[round(clickData$y)]
-    
+
     clear_plot_rv()
 })
 
@@ -1147,23 +1147,23 @@ observeEvent(event_data("plotly_click", source = "volcano_plot_click2"),{
 
 observeEvent(rv$es_term,{
     do.call(file.remove, list(list.files(paste0(getwd(),"/www/"),full.names = TRUE)[grepl("pdf$|xml$|png$",list.files(paste0(getwd(),"/www/")))]))
-    
+
     clear_plot_rv()
     if((startsWith(rv$es_term,"KEGG"))==TRUE){rv$kegg_yes = "yes"}
     if((startsWith(rv$es_term,"RA_"))==TRUE){rv$reactome_yes = "yes"}
     if((startsWith(rv$es_term,"WP_"))==TRUE){rv$wp_yes = "yes"}
-    
-    
+
+
     if(rv$run_mode == "gsea"){
         x <- rv$gmts[rv$es_term][[1]]
-        
+
         ranks <- rv$rnkgg
         names(ranks) = toupper(names(ranks))
-        
+
         ranks2 <- ranks[x]
         ranks2 <- ranks2[!is.na(ranks2)]
         # rv$rnkgg2 <- ranks2
-        
+
         r1 <- data.frame(x=c(rep("All genes",length(rv$rnkgg))),y=rv$rnkgg);row.names(r1) <- NULL
         r2 <- data.frame(x=c(rep("Genes in gene set",length(ranks2))),y=ranks2);row.names(r2) <- NULL
         rv$rr <- rbind(r1,r2);r1=NULL;r2=NULL
@@ -1264,7 +1264,7 @@ output$violin_plot <- renderUI({
                 up = TRUE
             )
         )
-        
+
     )
 })
 
@@ -1275,7 +1275,7 @@ output$feedback_btn <- renderUI({
     req(is.null(rv$kegg_yes) == F | is.null(rv$reactome_yes) == F | is.null(rv$wp_yes) == F)
 
     msg = paste0("Click and scroll down to visualize <b>",rv$es_term,"</b>")
-    
+
     if(is.null(rv$kegg_yes) == F && rv$kegg_yes == "yes"){
         bid <- "confirm_kegg_plot"
     }else if(is.null(rv$reactome_yes) == F && rv$reactome_yes == "yes"){
@@ -1283,7 +1283,7 @@ output$feedback_btn <- renderUI({
     }else if(is.null(rv$wp_yes) == F && rv$wp_yes == "yes"){
         bid <- "confirm_wp_plot"
     }
-    
+
     path_box(bid,msg)
 })
 
@@ -1312,15 +1312,15 @@ observeEvent(input$confirm_kegg_plot,{
     rv$kegg_confirm = "yes"
     rv$kegg_status = NULL
     rv$kegg_status_g = NULL
-    
+
     do.call(file.remove, list(list.files(paste0(getwd(),"/www/"),full.names = TRUE)[grepl("pdf$|xml$|png$",list.files(paste0(getwd(),"/www/")))]))
 })
 
 # KEGG panel
     output$kegg_panel_ui <- renderUI({
         req(rv$kegg_confirm == "yes")
-        
-        
+
+
     #     if(is.null(rv$kegg_yes)==T){
     #         box(title="Notification", status="warning",
     #             "KEGG map is only available for KEGG gene sets.."
@@ -1362,6 +1362,10 @@ observeEvent(input$confirm_kegg_plot,{
             solidHeader = F, status = "primary",width="100%",height=500,
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
+                # add a scrolling to the plot feature
+                tags$script(HTML(
+                    "document.getElementById('kegg_reactome_wp').scrollIntoView();"
+                )),
                 imageOutput("kegg_output_1")
             ),
             div(
@@ -1375,7 +1379,7 @@ observeEvent(input$confirm_kegg_plot,{
             )
         )
     })
-    
+
     # KEGG graphviz layout
     output$ui_kegg_2 <- renderUI({
         req(input$kegg_type == "graphviz")
@@ -1384,6 +1388,10 @@ observeEvent(input$confirm_kegg_plot,{
             solidHeader = F, status = "primary",width="100%",height=500,
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
+                # add a scrolling to the plot feature
+                tags$script(HTML(
+                    "document.getElementById('kegg_reactome_wp').scrollIntoView();"
+                )),
                 htmlOutput("kegg_output_2")
             ),
             div(
@@ -1398,20 +1406,20 @@ observeEvent(input$confirm_kegg_plot,{
         )
     })
 
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
     #KEGG plot ----------------------------------------------
     # pathview draw KEGG native view
     output$kegg_output_1 <- renderImage({
         # req(is.null(rv$kegg_yes)==FALSE)
         req(input$kegg_type == "native")
         req(rv$kegg_confirm == "yes")
-        # 
+        #
         # if(rv$demo_mode == "gsea" && rv$es_term == "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"){
         #     rv$png_path = paste0(getwd(),"/www/demo/gsea.kegg.png")
         # }else{
@@ -1425,20 +1433,20 @@ observeEvent(input$confirm_kegg_plot,{
                         ranks = rep(1,length(rv$gene_lists))
                         names(ranks) = rv$gene_lists
                     }
-                    
+
                     # # rename to ACC, can use org.db package to change later
                     # names(ranks) = rv$input_mat[["target"]][rv$input_mat[["name"]] %in% names(ranks)]
-                    
+
                     # species name
                     species <- isolate(input$selected_species)
-                    
+
                     # KEGG gene set name & id
                     term = rv$es_term
                     kegg_id = unlist(strsplit(term,"%"))[[2]]
                     # print(str(kegg_id))
-                    
-                    
-                    
+
+
+
                     if(rv$run_mode=="gsea"){
                         kegg_output <- pathview(gene.data  = ranks,
                                                 pathway.id = kegg_id,
@@ -1449,7 +1457,7 @@ observeEvent(input$confirm_kegg_plot,{
                                                 key.pos    = rv$kegg_pos,
                                                 low = "blue", mid = "grey", high = "red", #bins = 20,
                                                 kegg.native=TRUE)
-                        
+
                     }else if(rv$run_mode=="glist"){
                         kegg_output <- pathview(gene.data  = ranks,
                                                 pathway.id = kegg_id,
@@ -1460,28 +1468,28 @@ observeEvent(input$confirm_kegg_plot,{
                                                 plot.col.key = FALSE,
                                                 low = "green", mid = "green", high = "green", bins = 1,
                                                 kegg.native=TRUE)
-                        
+
                     }
-                    
+
                     rv$kegg_file_png = paste0(kegg_id,".pathview.png")
-                    
+
                     if(file.exists(rv$kegg_file_png)==T){
                         cm = paste0("mv ", rv$kegg_file_png," ",getwd(),"/www/")
                         # print(str(cm))
                         system(cm)
-                        
+
                         rv$png_path = paste0(getwd(),"/www/",rv$kegg_file_png)
                         rv$kegg_status = "plotted"
                     }else{
                         return(NULL)
                     }
                 })
-                
+
             }
-            
+
         # }
-        
-        
+
+
         return(list(
             src = rv$png_path,
             width="100%",
@@ -1489,7 +1497,7 @@ observeEvent(input$confirm_kegg_plot,{
             contentType = "image/png"
         ))
     }, deleteFile = FALSE)
-    
+
     # download KEGG native
     output$download_kegg_1 <- downloadHandler(
         filename <- function() {
@@ -1500,17 +1508,17 @@ observeEvent(input$confirm_kegg_plot,{
         },
         contentType = "image/png"
     )
-    
+
     # pathview draw graphviz view
     output$kegg_output_2 <- renderUI({
         req(input$kegg_type == "graphviz")
         # req(is.null(rv$kegg_yes)==FALSE)
         req(rv$kegg_confirm == "yes")
-        
+
         if(is.null(rv$kegg_status_g)==T){
             N = 10
             withProgress(message = paste0("Generating KEGG graphviz view for ",rv$es_term,"..."),value = 1,{
-                
+
                 # read in ranks
                 if(rv$run_mode == "gsea"){
                     ranks = rv$rnkgg
@@ -1518,18 +1526,18 @@ observeEvent(input$confirm_kegg_plot,{
                     ranks = rep(1,length(rv$gene_lists))
                     names(ranks) = rv$gene_lists
                 }
-                
+
                 # # rename to ACC, can use org.db package to change later
                 # names(ranks) = rv$input_mat[["target"]][rv$input_mat[["name"]] %in% names(ranks)]
-                
+
                 # species name
                 species <- isolate(input$selected_species)
-                
+
                 # KEGG gene set name & id
                 term = rv$es_term
                 kegg_id = unlist(strsplit(term,"%"))[[2]]
                 # print(str(kegg_id))
-                
+
                 if(rv$run_mode == "gsea"){
                     kegg_output <- pathview(gene.data  = ranks,
                                             pathway.id = kegg_id,
@@ -1551,18 +1559,18 @@ observeEvent(input$confirm_kegg_plot,{
                                             low = "green", mid = "green", high = "green", bins = 1,
                                             kegg.native=FALSE)
                 }
-                
-                
+
+
                 rv$kegg_file_pdf = paste0(kegg_id,".pathview.pdf")
-                
+
                 if(file.exists(rv$kegg_file_pdf)==T){
                     cm = paste0("mv ", rv$kegg_file_pdf," ",getwd(),"/www/")
                     # print(str(cm))
                     system(cm)
-                    
+
                     rv$kegg_status_g = "plotted"
-                    
-                    
+
+
                 }else{
                     return(paste0("KEGG graphviz view unavailable for ",rv$es_term))
                 }
@@ -1570,7 +1578,7 @@ observeEvent(input$confirm_kegg_plot,{
         }
         tags$iframe(style="height:450px; width:100%", src=rv$kegg_file_pdf) #,rv$kegg_file_pdf
     })
-    
+
 
     # download KEGG pdf
     output$download_kegg_2 <- downloadHandler(
@@ -1582,7 +1590,7 @@ observeEvent(input$confirm_kegg_plot,{
         },
         contentType = "image/pdf"
     )
-    
+
     # ==============Manual selection of ES term==============
     # UI text input
     output$es_plot_term <- renderUI({
@@ -1598,26 +1606,26 @@ observeEvent(input$confirm_kegg_plot,{
             )
         )
     })
-    
+
     # UI confirm
     output$es_plot_term_confirm <- renderUI({
         req(rv$run == "success")
         # req(input$selected_es_term != "")
         div(
             actionBttn(
-                "plot_db_es_confirm", 
+                "plot_db_es_confirm",
                 "View!",
                 style = "simple", color="primary", size = "sm",
                 block = TRUE),
             bsTooltip("plot_db_es_confirm", HTML("Select term, then click <b>View!</b> Or, click interactive plots on the left"))
         )
     })
-    
+
     # read in ES text input
     observeEvent(input$plot_db_es_confirm,{
         rv$es_term <- input$selected_es_term
     })
-    
+
 # UI REACTOME =======================
     # # REACTOME feedback
     # output$reactome_feedback <- renderUI({
@@ -1631,41 +1639,45 @@ observeEvent(input$confirm_kegg_plot,{
     #     #     column(
     #     #         width = 2, align = "right",
     #     #         bsButton("confirm_reactome_plot",tags$b("YES!"),style = "danger")
-    #     #         
+    #     #
     #     #     )
     #     # )
     #     msg = paste0("Click and scroll down to visualize Reactome diagram <b>",rv$es_term,"</b>")
     #     path_box("confirm_reactome_plot",msg)
     # })
-    
+
     # reactome feedback confirm
     observeEvent(input$confirm_reactome_plot,{
         rv$reactome_confirm = "yes"
     })
-    
+
     # reactome widget
     output$ui_reactome <- renderUI({
         req(rv$reactome_confirm == "yes")
-        
+
         reactome_id = unlist(strsplit(rv$es_term,"%"))[2]
         reactome_genes = rv$fgseagg[rv$fgseagg$pathway==rv$es_term,][[ncol(rv$fgseagg)]]
-        
+
         # if too many genes, select the top 50, otherwise bug in visualizing the pathway
         if(length(reactome_genes[[1]])>50){
             reactome_genes[[1]] = reactome_genes[[1]][1:50]
         }
-        
+
         box(
             title = span(icon("lightbulb"),"Reactome Pathway Diagram"),
             solidHeader = F, status = "primary",width="100%",height=610,align = "center",
             div(
                 id="diagramHolder",style = 'overflow-x: scroll',
+                # add a scrolling to the plot feature
+                tags$script(HTML(
+                    "document.getElementById('kegg_reactome_wp').scrollIntoView();"
+                )),
                 tags$script(HTML(sprintf("onReactomeDiagramReady('%s','%s');",reactome_id,reactome_genes)))
             )
         )
-        
+
     })
-    
+
 # UI WikiPathways =======================
     # WP feedback
     output$wp_feedback <- renderUI({
@@ -1679,47 +1691,47 @@ observeEvent(input$confirm_kegg_plot,{
         #     column(
         #         width = 2, align = "right",
         #         bsButton("confirm_wp_plot",tags$b("YES!"),style = "danger")
-        #         
+        #
         #     )
         # )
         msg = paste0("Click and scroll down to visualize WikiPathways diagram <b>",rv$es_term,"</b>")
         path_box("confirm_wp_plot",msg)
     })
-    
+
     # WP feedback confirm
     observeEvent(input$confirm_wp_plot,{
         rv$wp_confirm = "yes"
-        
+
     })
-    
+
     # WP widget
     output$ui_wp <- renderUI({
         req(rv$wp_confirm == "yes")
-        
+
         wp_id = unlist(strsplit(rv$es_term,"%"))[2]
-        
+
         if(rv$run_mode == "gsea" || rv$demo_mode == "gsea"){
             # get all genes under a pathway
             wp_genes = unname(unlist(rv$gmts[rv$es_term]))
-            
+
             # all scale transformed ranks
             ranks = rv$rnkgg
-            
+
             # get rank scores for genes in that pathway in that sample
             ranks = ranks[names(ranks) %in% wp_genes]
-            
+
             # get appropriate upper/lower case
             wp_genes = wp_genes[toupper(wp_genes) %in% toupper(names(ranks))]
-            
+
             # transform into appropriate format accepted by WP
             wp_genes = paste(paste("&label[]=",wp_genes,sep=""),collapse = "")
-            
+
             # # coloring the nodes
             # # 1) sd transformation method
             # ii = cut(ranks, breaks = seq(-rv$sd_high,rv$sd_high,len=9), include.lowest = TRUE)
             # wp_colors  = c("darkblue","blue","lightblue","grey","grey","pink","red","brown")[ii]
             # wp_colors = paste(wp_colors,collapse = ",")
-            
+
             # coloring the nodes
             # 2) step wise method
             ranks1 = ranks[ranks < 0]
@@ -1729,59 +1741,63 @@ observeEvent(input$confirm_kegg_plot,{
             wp_colors1 = c("navy","steel","blue","lightblue","grey","grey")[ii]
             wp_colors2 = c("grey","grey","pink","salmon","red","brown")[jj]
             wp_colors = paste(c(wp_colors1,wp_colors2),collapse = ",")
-            
+
             # # coloring the nodes
             # # 3) leadingedge only
             # df = rv$fgseagg
             # ES = df[df$pathway==rv$es_term,][["ES"]]
             # print(ES)
             # wp_genes = df[df$pathway==rv$es_term,][[ncol(df)]]
-            # 
+            #
             # wp_genes = rv$gmts[rv$es_term][[1]][toupper(rv$gmts[rv$es_term][[1]]) %in% wp_genes]
             # print(str(wp_genes))
-            # 
+            #
             # wp_genes = paste(paste("&label[]=",wp_genes,sep=""),collapse = "")
             # print(str(wp_genes))
-            # 
+            #
             # wp_colors = ifelse(ES>0,"red","blue")
             # print(wp_colors)
-            
+
             rv$wp_src = sprintf("https://www.wikipathways.org/wpi/PathwayWidget.php?id=%s%s&colors=%s",wp_id,wp_genes,wp_colors)
-            
+
         }else if(rv$run_mode == "glist"){
             df = rv$fgseagg
             wp_genes = df[df$pathway==rv$es_term,][[ncol(df)]][[1]]
             wp_genes = rv$gmts[rv$es_term][[1]][toupper(rv$gmts[rv$es_term][[1]]) %in% wp_genes]
-            
+
             # replicate green colors to the # of genes
             wp_colors = rep("green",length(wp_genes)) %>% paste(.,collapse = ",")
-            
+
             # reformat genes into acceptable format
             wp_genes = paste(paste("&label[]=",wp_genes,sep=""),collapse = "")
-            
+
             rv$wp_src = sprintf("https://www.wikipathways.org/wpi/PathwayWidget.php?id=%s%s&colors=%s",wp_id,wp_genes,wp_colors)
         }
-        
+
         box(
             title = span(icon("seeding"),"WikiPathways Diagram"),
             solidHeader = F, status = "primary",width="100%",height=610,align = "center",
             div(
+                # add a scrolling to the plot feature
+                tags$script(HTML(
+                "document.getElementById('kegg_reactome_wp').scrollIntoView();"
+            )),
                 tags$iframe(src = rv$wp_src, width="100%", height="550px", style="overflow:hidden;")
             )
         )
-        
+
     })
-    
+
     # --------------- help button for p.value and p.adj --------------
     output$ui_p_help <- renderUI({
         req(rv$run_mode == "gsea")
-        div(actionBttn(inputId="p_value_help", 
+        div(actionBttn(inputId="p_value_help",
                    # align="right",
-                   # 
+                   #
                    # tags$h3("Enter genes"),
-                   # 
-                   # 
-                   # textAreaInput("p_value_explanation", 
+                   #
+                   #
+                   # textAreaInput("p_value_explanation",
                    #               "Enter genes of interest (separated by new line):",
                    #               placeholder="efk-1\nzip-2\ncep-1",
                    #               value="efk-1\nzip-2\ncep-1"
@@ -1794,10 +1810,10 @@ observeEvent(input$confirm_kegg_plot,{
                    #status = "default", width = "250px",right=T,
         ),
         bsTooltip("p_value_help","Click to learn tips on choosing P & P.adj thresholds"))
-        
+
     })
-    
-    
+
+
     observeEvent(input$p_value_help,{
         showModal(modalDialog(
             inputId = "p_help_modal",
@@ -1807,7 +1823,7 @@ observeEvent(input$confirm_kegg_plot,{
             ,footer = modalButton("OK")
         ))
     })
-    
+
   # create two buttons, the left arrow go to the last tab while the right arrow go to the next tab
   # version 1
     output$results_tab_control <- renderUI({
@@ -1823,9 +1839,9 @@ observeEvent(input$confirm_kegg_plot,{
     observeEvent(input$results_f,{
         updateTabItems(session, "tabs", "network")
     })
-    
+
     # output$results_last_tab <- renderUI({
-    #     div(actionBttn(inputId="results_last_tab", 
+    #     div(actionBttn(inputId="results_last_tab",
     #                    icon = icon("unite"),
     #                    style = "simple",
     #                    size = "lg"
@@ -1833,7 +1849,7 @@ observeEvent(input$confirm_kegg_plot,{
     #                    #status = "default", width = "250px",right=T,
     #     ),
     #     bsTooltip("results_last_tab","Click to go to \"Run Analysis\""))
-    #     
+    #
     # })
 # # UI manhattan tables & words ---------------
 #     output$ui_manhattan_table <- renderUI({
@@ -1855,8 +1871,8 @@ observeEvent(input$confirm_kegg_plot,{
 #                         )
 #                     )
 #                 )
-#                 
+#
 #             )
 #         )
 #     })
-#     
+#
