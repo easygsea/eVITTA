@@ -87,7 +87,7 @@ output$confirm_matrix_ui <- renderUI({
     uiOutput("confirm_matrix_feedback"),
     radioButtons(
       inputId = "data_type",
-      label = HTML("Select the type of data provided by the authors:",add_help("q_dtype")),
+      label = HTML("Select the type of expression data provided by the authors:",add_help("q_dtype")),
       choices = c("Raw counts"="raw", "Normalized counts"="normalized"),
       selected = "normalized",
       inline=T

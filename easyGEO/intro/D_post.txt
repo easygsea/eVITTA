@@ -1,6 +1,5 @@
 element	intro
-download_matrix	Please download the data that matches your selected platform here.
-upload_matrix	Please tidy your data and upload it here.
-data_matrix_df	After that, you could briefly review your data matrix shown here to make sure the data is read correctly.
-sidebarCollapsed	Then navigate to <b> Filter/review design matrix</b>tab.
-
+	This tab provides interfaces to retrieve gene expression datasets provided by authors.
+download_matrix	Here you'll see the type of expression data submitted by the authors. If data are submitted as supplementary file(s), download the one(s) that match(es) your interest of query, tidy them up according to our <a href='https://tau.cmmt.ubc.ca/bu/uploading_GEO_data_matrix.png' target='_blank'><b>instructions</b></a>, and upload the processed file in step <b>2.2. Upload tidied matrix</b>. 
+upload_matrix	Upload the tidied up file here.
+data_matrix_df	This panel displays the uploaded/preloaded gene expression data matrix.

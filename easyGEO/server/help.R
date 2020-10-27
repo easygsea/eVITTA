@@ -21,7 +21,6 @@ observeEvent(input$help_1_button, {
 
 # trigger the corresponding intro tour on the data matrix tab
 observeEvent(input$help_3_button, {
-  req(is.null(rv$fddf)==F)
   # if (is.null(rv$fddf)==T){
   #   call_introjs(intros$D_pre)
   # } else {
@@ -40,16 +39,21 @@ observeEvent(input$help_2_button, {
 
 # trigger the corresponding help tour on the Run DEG tab
 observeEvent(input$help_4_button, {
-  #check if we have run the deg analysis
-  if(is.null(rv$deg)){
-    if (is.null(rv$matrix_ready)==T || rv$matrix_ready == F){
-      call_introjs(intros$R_pre)
-    } else {
+  if(rv$demo == "yes"){
+    call_introjs(rbind(intros$R_post,intros$R_post_deg))
+  }else{
+    #check if we have run the deg analysis
+    if(is.null(rv$deg)){
+      # if (is.null(rv$matrix_ready)==T || rv$matrix_ready == F){
+      #   call_introjs(intros$R_pre)
+      # } else {
       call_introjs(intros$R_post)
+      # }
+    } else {
+      call_introjs(intros$R_post_deg)
     }
-  } else {
-    call_introjs(intros$R_post_deg)
   }
+  
   
 })
 

@@ -1,3 +1,3 @@
 element	intro
-geo_accession	To begin with, enter a valid GEO accession.
+geo_accession	To begin with, enter a valid GEO accession. Click the gear button to load an example GEO accession number.
 search_geo	Click <b>Search</b> to retrieve the study's data.

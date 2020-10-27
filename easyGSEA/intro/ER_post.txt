@@ -1,4 +1,5 @@
 element	intro
+	This is the main page to explore and analyze your data in details.
 plot_choice_box	Click here to explore your results in different ways. <b>Bar</b> and <b>Bubble</b> plots show the top regulations, <b>Keywords</b> mines for the top representing words, <b>Manhattan</b> plot displays all enrichment results and highlights the significant, and <b>Volcano</b> plot can be customized as continuous and static to highlight the significant enrichment.
 plot_area	Plots are interactive. Hover over each gene set for its detailed enrichment statistics. Click on each gene set to zoom into visualizations. 
 setting_button	Click this button to customize the plot.
