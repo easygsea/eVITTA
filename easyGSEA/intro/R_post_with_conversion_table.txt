@@ -1,13 +1,4 @@
 element	intro
-selected_mode	Our app supports two mode of analysis: Pre-ranked GSEA and overrepresentation analysis. Please select the mode you would like to use here.
-run_analysis_box	Our app supports 11 different species; you could search or select the species that matches your input query here.
-selected_species-selectized	Our app supports 11 different species; you could search or select the species that matches your input query here.
-gene_identifier	You could choose the identifier of your input genes. If unsure, select <b>Other/Mixed</b>.
-upload_file_box	Upload your file here.
-confirm1	confirm and run.
-welcome_to_box	You could review the analysis summary here
-feedback_dbs	IMPORTANT: review you selected databases
-rnk_download_bttn	Download the convert Rnk for pre-ranked GSEA run. Part of the data is shown below.
-mat_download_bttn	download the Gene id conversion table using this button
-DataTables_Table_0_wrapper	Gene ID conversion table would be on the bottom right.(a brief introduction here)
-
+DataTables_Table_0_wrapper	Input genes are automatically converted to HUGO symbols. <b>input</b> are what you've uploaded, <b>target</b> are Entrez IDs, <b>name</b> are HUGO symbols (the identifier in easyGSEA's databases), and <b>description</b> describes about the gene.
+deg_download_btn	Download the converted DEG table here. You may use it for multiple comparisons in <a href='https://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'>easyVizR</a>.
+mat_download_bttn	Download the entire Gene ID conversion table here.

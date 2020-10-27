@@ -25,7 +25,7 @@ output$ui_vis <- renderUI({
       id = "visDEG", height = "720px",
       
       tabPanel(
-        "Volcano plot",
+        "Volcano plot", value="volcano",
         column(
           width = 8,
           uiOutput("ui_volcano")
@@ -37,7 +37,7 @@ output$ui_vis <- renderUI({
       ),
       
       tabPanel(
-        "Heatmap",
+        "Heatmap", value="heatmap",
         column(
           width = 8,
           plotlyOutput("heatmap_plot",width = "100%", height = "650px")
@@ -49,7 +49,7 @@ output$ui_vis <- renderUI({
       ),
       
       tabPanel(
-        "Explore a gene",
+        "Explore a gene", value="gene",
         column(
           width = 8,
           radioGroupButtons(

@@ -49,6 +49,8 @@ output$ui_downloadbox <- renderUI({
                                                     , style = rv$dbtn_style, color = "warning"
                                                     , size="md", block = F
                                        )
+                                   # ,bsTooltip("gs_tbl_dl",HTML("Download converted DEG table and proceed to <b>easyVizR</b> for multiple comparisons on functional categories")
+                                   #            ,placement = "top")
                                    # ),
                                    # div(
                                    #     style="display: inline-block;vertical-align:top;",
@@ -191,7 +193,7 @@ output$ui_gmt_download <- renderUI({
         
         a_links = paste0("<a href='",gmt_paths,"' download> <i class='fa fa-download'> </i>",gmt_paths_basenames,"</a><br/>")
         
-        div(
+        div(style="width: 100%;word-break: break-word;",
             p("All our gene set libraries (.GMT) are available for download for further analysis and for tool development."),
             p("Please acknowledge our work if you use one of our library files."),
             do.call(HTML,as.list(a_links))

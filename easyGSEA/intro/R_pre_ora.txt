@@ -1,10 +1,10 @@
 element	intro
-selected_mode	Our app supports two mode of analysis: Pre-ranked GSEA and overrepresentation analysis. Please select the mode you would like to use here.
-run_analysis_box	Our app supports 11 different species; Please go through the choices that matches your input query here.
-selected_box	Our app supports 11 different species; you could search or select the species that matches your input query here.
-gene_identifier	You could choose the identifier of your input genes. If unsure, select <b>Other/Mixed</b>.
-input_list_box	Upload your gene list here; you could load the example gene list as well.
-ora_num_box	The identifier treated as...
-glist_name	name your list
-welcome_to_box	You could review the analysis summary here
-	The analysis may related to a Gene ID conversion table; it would be on the bottom right.
+selected_mode	To begin with, select the mode of analysis.
+	<b>Overrepresentation Analysis</b> is selected.
+run_analysis_box	This is the main panel to analyze your data.
+selected_box	First, select the species that matches your input query, or choose <b>Custom analysis</b> to upload your own GMT file(s).
+gene_identifier	Next, select the identifier of your input genes. If unsure, select <b>Other/Mixed</b>.
+input_list_box	Paste your genes, delimited by newlines or spaces.
+ora_num_box	Select the identifier for fully numeric IDs. Default is Entrez Gene IDs.
+namelst_box	Name your query, then click <b>Submit</b> to confirm. Once submitted, your input genes will be automatically converted to HUGO symbols if selected gene identifier is <b>Other/Mixed</b>. Or, click <b>Reset</b> to clear and re-submit.
+welcome_to_box	This panel summarizes the input and the parameters of your run.

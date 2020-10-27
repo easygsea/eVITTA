@@ -1,5 +1,3 @@
 element	intro
-geo_accession	Please enter your GEO accession number here.
-search_geo	You would see the <b>search</b> button here after you enter your GEO accession number. Click it to view the plaforms available.
-geo_platform_ui	Platforms available will appear here. Select your platform to continue.
-summary	Corresponding research information are organized below. Click the tab you are interested in to view it.
+geo_accession	To begin with, enter a valid GEO accession. Click the gear button to load an example GEO accession number.
+search_geo	Click <b>Search</b> to retrieve the study's data.
