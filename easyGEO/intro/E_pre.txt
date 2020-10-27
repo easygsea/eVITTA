@@ -1,5 +1,3 @@
 element	intro
 geo_accession	To begin with, enter a valid GEO accession.
 search_geo	Click <b>Search</b> to retrieve the study's data.
-geo_platform_ui	Each study may include data generated using different platforms. Select the platform you're interested in, then click <b>Select to proceed</b>.
-summary	This panel summarizes about the study, such as the title, experiment type, organism, summary and authors' information.

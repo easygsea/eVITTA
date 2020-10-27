@@ -1,4 +1,2 @@
 element	intro
-geo_accession	Please enter your GEO accession number here.
-geo_platform_ui	Select your platform from available platforms and press <b> Select to proceed</b> button to continue.
-summary	Corresponding research information are organized below. Click the tab you are interested in to view it.
+geo_platform_ui	Each study may include data generated using different platforms. Select the platform you're interested in, then click <b>Select to proceed</b>.
