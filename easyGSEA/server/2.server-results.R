@@ -3,45 +3,6 @@
 #=============================================================#
 # ------------ Overall bodyResults UI ------------------
 output$ui_bodyResults <- renderUI({
-    
-    # saveRDS(rv$bar_pathway, file = "rvs/bar_pathway.rds")
-    # saveRDS(rv$bubble_pathway, file = "rvs/bubble_pathway.rds")
-    # saveRDS(rv$data_head_o, file = "rvs/data_head_o.rds")
-    # saveRDS(rv$data_head, file = "rvs/data_head_o.rds")
-    # saveRDS(rv$db_status, file = "rvs/db_status.rds")
-    # saveRDS(rv$dbs, file = "rvs/dbs.rds")
-    # saveRDS(rv$file_upload_status, file = "rvs/file_upload_status.rds")
-    # saveRDS(rv$gene_lists_after, file = "rvs/gene_lists_after.rds")
-    # saveRDS(rv$glist_check, file = "rvs/glist_check.rds")
-    # saveRDS(rv$rnk_or_deg, file = "rvs/rnk_or_deg.rds")
-    # saveRDS(rv$rnkll, file = "rvs/rnkll.rds")
-    # saveRDS(rv$run, file = "rvs/run.rds")
-    # saveRDS(rv$run_mode, file = "rvs/run_mode.rds")
-    # saveRDS(rv$volcano_pathway, file = "rvs/volcano_pathway.rds")
-    # saveRDS(rv$infile_name, file = "rvs/infile_name.rds")
-    # saveRDS(rv$infile_confirm, file = "rvs/infile_confirm.rds")
-    # saveRDS(rv$rnkgg, file = "rvs/rnkgg.rds")
-    # saveRDS(rv$bar_pathway, file = "rvs/bar_pathway.rds")
-    # saveRDS(rv$bubble_pathway, file = "rvs/bubble_pathway.rds")
-    # saveRDS(rv$db_modal, file = "rvs/db_modal.rds")
-    # saveRDS(rv$fgseagg, file = "rvs/fgseagg.rds")
-    # saveRDS(rv$gmax, file = "rvs/gmax.rds")
-    # saveRDS(rv$gmin, file = "rvs/gmin.rds")
-    # saveRDS(rv$gmt_cs, file = "rvs/gmt_cs.rds")
-    # saveRDS(rv$gmt_cs_paths, file = "rvs/gmt_cs_paths.rds")
-    # saveRDS(rv$gmts, file = "rvs/gmts.rds")
-    # saveRDS(rv$gmts_length, file = "rvs/gmts_length.rds")
-    # saveRDS(rv$gperm, file = "rvs/gperm.rds")
-    # saveRDS(rv$sd_high, file = "rvs/sd_high.rds")
-    # saveRDS(rv$no_up_05, file = "rvs/no_up_05.rds")
-    # saveRDS(rv$no_up_01, file = "rvs/no_up_01.rds")
-    # saveRDS(rv$no_down_05, file = "rvs/no_down_05.rds")
-    # saveRDS(rv$no_down_01, file = "rvs/no_down_01.rds")
-    # saveRDS(rv$infile_check, file = "rvs/infile_check.rds")
-    # saveRDS(rv$rnk_check, file = "rvs/rnk_check.rds")
-    # saveRDS(rv$gene_lists_mat1, file = "rvs/gene_lists_mat1.rds")
-    # saveRDS(rv$gene_lists_mat2, file = "rvs/gene_lists_mat2.rds")
-    # saveRDS(rv$run_n, file = "rvs/run_n.rds")
     # saveRDS(rv$gene_lists, file = "rvs/gene_lists.rds")
     
     if(is.null(rv$run) || rv$run != "success"){
@@ -1343,6 +1304,13 @@ observeEvent(input$confirm_kegg_plot,{
             title = span(icon("dna"),"KEGG native view"),
             solidHeader = F, status = "primary",width="100%",height=500,
             div(
+                absolutePanel(
+                    scroll_up_button(),
+                    right = 25,
+                    top = 10
+                )
+            ),
+            div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
                 # add a scrolling to the plot feature
                 tags$script(HTML(
@@ -1368,6 +1336,13 @@ observeEvent(input$confirm_kegg_plot,{
         box(
             title = span(icon("magnet"),"KEGG graphviz layout"),
             solidHeader = F, status = "primary",width="100%",height=500,
+            div(
+                absolutePanel(
+                    scroll_up_button(),
+                    right = 25,
+                    top = 10
+                )
+            ),
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
                 # add a scrolling to the plot feature
@@ -1654,6 +1629,13 @@ observeEvent(input$confirm_kegg_plot,{
                 tags$script(HTML(
                     "document.getElementById('kegg_reactome_wp').scrollIntoView();"
                 )),
+                #div(
+                    absolutePanel(
+                        scroll_up_button(),
+                        right = 25,
+                        top = 10
+                    )
+                ,
                 tags$script(HTML(sprintf("onReactomeDiagramReady('%s','%s');",reactome_id,reactome_genes)))
             )
         )
@@ -1764,6 +1746,13 @@ observeEvent(input$confirm_kegg_plot,{
                 tags$script(HTML(
                 "document.getElementById('kegg_reactome_wp').scrollIntoView();"
             )),
+            #div(
+                absolutePanel(
+                    scroll_up_button(),
+                    right = 25,
+                    top = 10
+                )
+            ,
                 tags$iframe(src = rv$wp_src, width="100%", height="550px", style="overflow:hidden;")
             )
         )
@@ -1857,4 +1846,20 @@ observeEvent(input$confirm_kegg_plot,{
 #             )
 #         )
 #     })
-#     
+# 
+
+
+# Create a function for the go up buttons in kegg,reactome and wp plots
+    scroll_up_button <- function(){
+        div(
+                actionBttn(
+                    inputId = "up_button", label=NULL, 
+                    icon = icon("angle-double-up"), style="material-circle", color="primary", size="md"
+                ),
+                tags$script(HTML(
+                    "document.getElementById('up_button').onclick= function(){
+                    document.getElementById('plot_choice_box').scrollIntoView()
+                };"
+                ))
+            )
+    }
