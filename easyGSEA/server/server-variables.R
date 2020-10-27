@@ -15,6 +15,11 @@ bcol1 = "#e6f4fc" # color for parameters wellpanel
 bcol2 = "#ffffe6" # color for summary box
 bcol3 = "#e6f4fc" # color for column selection wellpanel
 
+# script to scroll down directly
+src_pathway <- tags$script(HTML(
+  "document.getElementById('kegg_reactome_wp').scrollIntoView();"
+))
+
 #===================== GMT collections =====================
 # initialize three list vectors
 # 1. a list vector to store paths to database collection (.GMT) files

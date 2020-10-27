@@ -1357,15 +1357,22 @@ observeEvent(input$confirm_kegg_plot,{
     # KEGG native layout
     output$ui_kegg_1 <- renderUI({
         req(input$kegg_type == "native")
+        
+        if(rv$demo_mode == "gsea" && rv$es_term == "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"){
+            src <- NULL
+        }else if(rv$demo_mode == "ora" && rv$es_term == "RA_Transcriptional_activity_of_SMAD2/SMAD3:SMAD4_heterotrimer%R-CEL-2173793"){
+            src <- NULL
+        }else{
+            src <- src_pathway
+        }
+        
         box(
             title = span(icon("dna"),"KEGG native view"),
             solidHeader = F, status = "primary",width="100%",height=500,
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
                 # add a scrolling to the plot feature
-                tags$script(HTML(
-                    "document.getElementById('kegg_reactome_wp').scrollIntoView();"
-                )),
+                src,
                 imageOutput("kegg_output_1")
             ),
             div(
@@ -1383,15 +1390,22 @@ observeEvent(input$confirm_kegg_plot,{
     # KEGG graphviz layout
     output$ui_kegg_2 <- renderUI({
         req(input$kegg_type == "graphviz")
+        
+        if(rv$demo_mode == "gsea" && rv$es_term == "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"){
+            src <- NULL
+        }else if(rv$demo_mode == "ora" && rv$es_term == "RA_Transcriptional_activity_of_SMAD2/SMAD3:SMAD4_heterotrimer%R-CEL-2173793"){
+            src <- NULL
+        }else{
+            src <- src_pathway
+        }
+        
         box(
             title = span(icon("magnet"),"KEGG graphviz layout"),
             solidHeader = F, status = "primary",width="100%",height=500,
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
                 # add a scrolling to the plot feature
-                tags$script(HTML(
-                    "document.getElementById('kegg_reactome_wp').scrollIntoView();"
-                )),
+                src,
                 htmlOutput("kegg_output_2")
             ),
             div(
@@ -1662,6 +1676,14 @@ observeEvent(input$confirm_kegg_plot,{
         if(length(reactome_genes[[1]])>50){
             reactome_genes[[1]] = reactome_genes[[1]][1:50]
         }
+        
+        if(rv$demo_mode == "gsea" && rv$es_term == "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"){
+            src <- NULL
+        }else if(rv$demo_mode == "ora" && rv$es_term == "RA_Transcriptional_activity_of_SMAD2/SMAD3:SMAD4_heterotrimer%R-CEL-2173793"){
+            src <- NULL
+        }else{
+            src <- src_pathway
+        }
 
         box(
             title = span(icon("lightbulb"),"Reactome Pathway Diagram"),
@@ -1669,9 +1691,7 @@ observeEvent(input$confirm_kegg_plot,{
             div(
                 id="diagramHolder",style = 'overflow-x: scroll',
                 # add a scrolling to the plot feature
-                tags$script(HTML(
-                    "document.getElementById('kegg_reactome_wp').scrollIntoView();"
-                )),
+                src,
                 tags$script(HTML(sprintf("onReactomeDiagramReady('%s','%s');",reactome_id,reactome_genes)))
             )
         )
@@ -1773,15 +1793,21 @@ observeEvent(input$confirm_kegg_plot,{
 
             rv$wp_src = sprintf("https://www.wikipathways.org/wpi/PathwayWidget.php?id=%s%s&colors=%s",wp_id,wp_genes,wp_colors)
         }
+        
+        if(rv$demo_mode == "gsea" && rv$es_term == "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"){
+            src <- NULL
+        }else if(rv$demo_mode == "ora" && rv$es_term == "RA_Transcriptional_activity_of_SMAD2/SMAD3:SMAD4_heterotrimer%R-CEL-2173793"){
+            src <- NULL
+        }else{
+            src <- src_pathway
+        }
 
         box(
             title = span(icon("seeding"),"WikiPathways Diagram"),
             solidHeader = F, status = "primary",width="100%",height=610,align = "center",
             div(
                 # add a scrolling to the plot feature
-                tags$script(HTML(
-                "document.getElementById('kegg_reactome_wp').scrollIntoView();"
-            )),
+                src,
                 tags$iframe(src = rv$wp_src, width="100%", height="550px", style="overflow:hidden;")
             )
         )
