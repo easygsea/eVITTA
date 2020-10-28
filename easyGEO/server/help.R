@@ -69,11 +69,7 @@ observeEvent(input$help_5_button, {
     call_introjs(intros$V_heatmap)
   }
   else{
-    if(input$a_type == "box"){
-      call_introjs(intros$V_explore_box)
-    } else{
-      call_introjs(intros$V_explore_violin)
-    }
+    call_introjs(intros$V_explore)
   }
   # }
 })
