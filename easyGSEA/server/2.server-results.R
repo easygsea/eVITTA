@@ -1290,7 +1290,7 @@ observeEvent(input$confirm_kegg_plot,{
     #     else if(rv$kegg_yes == "yes"){
             fluidRow(
                     column(
-                        width = 5, #offset = 7,
+                        width = 12, #offset = 7,
                         radioGroupButtons(
                             inputId = "kegg_type",
                             # label = "Select plot type",

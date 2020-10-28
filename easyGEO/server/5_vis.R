@@ -40,7 +40,7 @@ output$ui_vis <- renderUI({
         "Heatmap", value="heatmap",
         column(
           width = 8,
-          plotlyOutput("heatmap_plot",width = "100%", height = "650px")
+          uiOutput("hm_area")
         ),
         column(
           width = 4,
@@ -523,9 +523,25 @@ observeEvent(input$h_confirm,{
 })
 
 # -------------- heatmap: plot ---------------
-output$heatmap_plot <- renderPlotly({
+output$hm_area <- renderUI({
   req(rv$deg)
   
+  df <- hm_count()
+  dfm <- dim(df)
+  dfmi <- dfm[1] * dfm[2]
+  
+  if(dfmi > 10000){
+    HTML(
+      "We support a maximum of <i>10,000</i> data points in heatmaps.",
+      ". Please reduce the number of data points by adjusting <b>thresholds</b> and/or <b>Options to extract genes</b> in the right panel."
+    )
+  }else{
+    plotlyOutput("heatmap_plot",width = "100%", height = "650px")
+  }
+})
+output$heatmap_plot <- renderPlotly({
+  req(rv$deg)
+
   withProgress(message = "Updating heatmap ...", value = 1,{
     hm_plot()
   })
