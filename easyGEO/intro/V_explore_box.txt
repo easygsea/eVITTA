@@ -1,0 +1,8 @@
+element	intro
+	This tab provides visualizations on gene expression changes.
+visDEG	<b>Volcano</b> and <b>Heatmap</b> plots display the top/significant changing genes. <b>Explore a gene</b> allows you to zoom into the trend of a single gene via violin and box plots. 
+ui_aplot	A box plot is highlighted with the top regulated genes.
+aplot_parameters	Parameters to generate the box plot can be adjusted here.
+a_stats	A small table containing logFC, P.value, adj.P.Value
+agene_confirm	Click <b>Visualize</b> to re-draw the box plot.
+a_download	Click to download the volcano plot (PDF) for your record.

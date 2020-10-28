@@ -62,7 +62,19 @@ observeEvent(input$help_5_button, {
   # if (is.null(rv$deg)){
   #   call_introjs(intros$V_pre)
   # } else {
-    call_introjs(intros$V_post)
+  if(input$visDEG == "volcano"){
+    call_introjs(intros$V_volcano)
+  }
+  else if(input$visDEG == "heatmap"){
+    call_introjs(intros$V_heatmap)
+  }
+  else{
+    if(input$a_type == "box"){
+      call_introjs(intros$V_explore_box)
+    } else{
+      call_introjs(intros$V_explore_violin)
+    }
+  }
   # }
 })
 
