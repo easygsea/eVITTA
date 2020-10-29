@@ -23,9 +23,32 @@ library(waiter)
 library(shinyalert)
 library(shinydisconnect)
 library(lobstr)
+library(rintrojs)
 
 
 options(repos = BiocManager::repositories())
+
+# --------------- Initialize introjs -------------------
+intropath <- paste0(getwd(), "/intro/")
+filepaths <- list.files(intropath, full.names=T)
+intros <- lapply(filepaths, function(x){
+  df <- data.frame(read.csv(x, header=T, sep="\t"))
+  df$element <- sub("^", "#", df$element)
+  df[df=="#"] <- NA
+  df
+})
+names(intros) <- tools::file_path_sans_ext(list.files(intropath, full.names=F))
+rownames(intros) <- NULL
+
+# p_min to convert p=0
+p_min = 1e-300
+
+# slider cutoffs for p/q
+cutoff_slider = c(0.0001,0.0005,0.001,0.005,0.01,0.05,0.1,0.25,0.3,0.5,1)
+
+# stop words and words with minimum meaning to be filtered for word counts
+data(stop_words)
+useless_words <- read_csv(paste0(getwd(),"/inc/some_words.csv"))
 
 # run modes
 run_modes = list("Pre-ranked GSEA"="gsea","Overrepresentation Analysis"="glist")
@@ -65,11 +88,11 @@ species_translate <- function(x,source_list = species_names){
 # add help buttons to labels (need to wrap again in HTML)
 # example of use: label=HTML("Label here", add_help("id1", style="padding:1px 1px 1px 1px;") )
 add_help <- function(id, color="#00c0ef", style=""){
-  out <- paste0("<i class='fa fa-question-circle' 
+  out <- paste0("<i class='fa fa-question-circle'
                 style = 'color:",color,";
-                font-size:medium;",style,"' 
+                font-size:medium;",style,"'
                 id='",id,"'></i>")
-  
+
   HTML(out)
 }
 
@@ -160,7 +183,7 @@ gvalues2 = rescale(c(0,-log10(0.25),1,-log10(0.05),2,3))
 # example:
 #   renderDataTable({df}, plugins="ellipsis", options = dt_options(80,F,F,T,T,T,10))
 
-dt_options <- function(max_char=80, scrollX=T, scrollY=F, paging=T, searching=T, info=T, pageLength = 5, autoWidth=T){
+dt_options <- function(max_char=60, scrollX=T, scrollY=F, paging=T, searching=T, info=T, pageLength = 5, autoWidth=T){
   list(scrollX=scrollX, scrollY=scrollY,
        paging=paging, searching=searching, info=info, pageLength = pageLength,
        autoWidth = autoWidth,

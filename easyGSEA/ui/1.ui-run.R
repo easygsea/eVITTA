@@ -36,13 +36,14 @@ bodyGSEA <- tabItem(tabName = "gsea",
         column(
             width = 4,
             # fluidRow(
-                box(
+                box(id= "run_analysis_box",
                     title = span(icon("play-circle"),"RUN Analysis"), solidHeader = F,
                     width = 12,align = "left",
                     status = "primary",
 
                     # select species
-                    selectizeInput(
+                    div(id="selected_box",
+                        selectizeInput(
                         "selected_species",
                         HTML(paste0(
                             "1. Select species that matches your input query:",
@@ -56,7 +57,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                             placeholder = 'Type to search ...'
                             ,onInitialize = I('function() { this.setValue(""); }')
                         )
-                    ),
+                    )),
                     bsTooltip("selected_species_q", HTML("Select species of interest, or <b>Other (custom GMT)</b> for custom analysis"), placement = "top"), #, then <i>click</i> <b>Confirm selection</b> to proceed
                     
                     # database selection
@@ -115,7 +116,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
                 )
             )
             ,
-            box(
+            box(id = "welcome_to_box",
                 title = span(icon("seedling"),"Welcome to easyGSEA"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
                 column(
                     12,
@@ -134,5 +135,10 @@ bodyGSEA <- tabItem(tabName = "gsea",
             uiOutput("gmt_box"),
             uiOutput("id_box")
         )
+    ),
+    fixedPanel(
+        uiOutput("floating_button_tab1"),
+        right = 30,
+        bottom = 30
     )
 )

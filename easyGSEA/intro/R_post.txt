@@ -1,0 +1,3 @@
+element	intro
+rnk_download_bttn	Download the converted RNK for your record or another run.
+confirm1	Click this button to run the analysis. If necessary, click the gear button to adjust run parameters.

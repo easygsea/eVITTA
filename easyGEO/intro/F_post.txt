@@ -1,0 +1,5 @@
+element	intro
+	This tab allows you to review and filter the study design submitted by the authors.
+filter_vars_levels	If the authors have uploaded their study design in full, you may use the options here to exclude unwanted samples from analysis. You will be able to fine-tune your selections in the <b>4. Run DEG analysis</b> tab.
+design_samples	The number of remained samples is displayed here.
+filtered_design_df	Here is the filtered study design matrix.

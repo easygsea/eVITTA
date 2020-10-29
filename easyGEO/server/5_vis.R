@@ -25,7 +25,7 @@ output$ui_vis <- renderUI({
       id = "visDEG", height = "720px",
       
       tabPanel(
-        "Volcano plot",
+        "Volcano plot", value="volcano",
         column(
           width = 8,
           uiOutput("ui_volcano")
@@ -37,10 +37,10 @@ output$ui_vis <- renderUI({
       ),
       
       tabPanel(
-        "Heatmap",
+        "Heatmap", value="heatmap",
         column(
           width = 8,
-          plotlyOutput("heatmap_plot",width = "100%", height = "650px")
+          uiOutput("hm_area")
         ),
         column(
           width = 4,
@@ -49,7 +49,7 @@ output$ui_vis <- renderUI({
       ),
       
       tabPanel(
-        "Explore a gene",
+        "Explore a gene", value="gene",
         column(
           width = 8,
           radioGroupButtons(
@@ -57,6 +57,14 @@ output$ui_vis <- renderUI({
             NULL,
             choices = list("Violin plot"="violin","Box plot"="box")
           ),
+          # tooltips for radioGroupbuttons
+          radioTooltip(id = "a_type", choice = "violin", 
+                       title = "Wiki: violin plot is a box plot with the addition of a rotated kernel density plot on each side.",
+                       placement = "bottom", trigger = "hover"),
+          radioTooltip(id = "a_type", choice = "box",
+                       title = "Wiki: a box plot is a method for graphically depicting groups of numerical data through their quartiles.",
+                       placement = "bottom", trigger = "hover"),
+          
           plotOutput("ui_aplot",width = "100%", height = "600px")
         ),
         column(
@@ -98,6 +106,11 @@ output$vplot_parameters <- renderUI({
       choices = list("Static"="static","Interactive"="interactive"),
       selected = rv$v_mode
     ),
+    # tooltips for radioGroupbuttons
+    radioTooltip(id = "volcano_mode", choice = "static", 
+                 title = "static mode of the volcano plot", placement = "bottom", trigger = "hover"),
+    radioTooltip(id = "volcano_mode", choice = "interactive",
+                 title = "interactive mode of the volcano plot", placement = "bottom", trigger = "hover"),
     # static/interactive UIs
     uiOutput("v_static"),
     uiOutput("v_interactive"),
@@ -130,6 +143,14 @@ output$v_static <- renderUI({
         choices = label_options,
         selected = rv$plot_label
       ),
+      # tooltips for radioGroupbuttons
+      radioTooltip(id = "v_label_opt", choice = "threshold", 
+                   title = "Use thresholds to label genes", placement = "bottom", trigger = "hover"),
+      radioTooltip(id = "v_label_opt", choice = "top",
+                   title = "label the top few genes", placement = "bottom", trigger = "hover"),
+      radioTooltip(id = "v_label_opt", choice = "manual",
+                   title = "Manually label your genes", placement = "bottom", trigger = "hover"),
+      
       uiOutput("v_top"),
       uiOutput("v_manual"),
       uiOutput("v_box")
@@ -345,6 +366,12 @@ output$hplot_parameters <- renderUI({
       choices = list("GEO accession"="accession", "Sample name"="title"),
       selected = rv$h_y_name
     ),
+    # tooltips for radioGroupbuttons
+    radioTooltip(id = "h_y_name", choice = "accession", 
+                 title = "GEO accession method of labelling", placement = "bottom", trigger = "hover"),
+    radioTooltip(id = "h_y_name", choice = "title",
+                 title = "Sample name method of labelling", placement = "bottom", trigger = "hover"),
+    
     tags$hr(style="border-color: grey;"),
     # options to extract matrix
     radioGroupButtons(
@@ -353,6 +380,14 @@ output$hplot_parameters <- renderUI({
       choices = label_options,
       selected = rv$plot_label_hm
     ),
+    # tooltips for radioGroupbuttons
+    radioTooltip(id = "h_label_opt", choice = "threshold", 
+                 title = "Use thresholds to extract genes", placement = "bottom", trigger = "hover"),
+    radioTooltip(id = "h_label_opt", choice = "top",
+                 title = "Extract the top few genes", placement = "bottom", trigger = "hover"),
+    radioTooltip(id = "h_label_opt", choice = "manual",
+                 title = "Manually extract your genes", placement = "bottom", trigger = "hover"),
+    
     uiOutput("h_top"),
     uiOutput("h_manual"),
     uiOutput("h_box"),
@@ -488,9 +523,25 @@ observeEvent(input$h_confirm,{
 })
 
 # -------------- heatmap: plot ---------------
-output$heatmap_plot <- renderPlotly({
+output$hm_area <- renderUI({
   req(rv$deg)
   
+  df <- hm_count()
+  dfm <- dim(df)
+  dfmi <- dfm[1] * dfm[2]
+  
+  if(dfmi > 10000){
+    HTML(
+      "We support a maximum of <i>10,000</i> data points in heatmaps.",
+      ". Please reduce the number of data points by adjusting <b>thresholds</b> and/or <b>Options to extract genes</b> in the right panel."
+    )
+  }else{
+    plotlyOutput("heatmap_plot",width = "100%", height = "650px")
+  }
+})
+output$heatmap_plot <- renderPlotly({
+  req(rv$deg)
+
   withProgress(message = "Updating heatmap ...", value = 1,{
     hm_plot()
   })

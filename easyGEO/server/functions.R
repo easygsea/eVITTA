@@ -505,13 +505,13 @@ btn_demo <- function(id){
     icon = "play"
     color = "success"
     style = "bordered"
-    size = "sm"
+    size = "xs"
   }else{
     label = "Unload Example"
     icon = "trash-alt"
     color = "default"
     style = "minimal"
-    size = "md"
+    size = "sm"
     
   }
   

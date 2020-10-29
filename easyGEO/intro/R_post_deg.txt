@@ -1,0 +1,2 @@
+element	intro
+degs	Review DEG results and download the entire DEG table. Proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'>easyGSEA</a> for gene set enrichment analysis and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'>easyVizR</a> for multiple comparisons.

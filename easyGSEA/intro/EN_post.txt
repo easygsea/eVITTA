@@ -1,0 +1,5 @@
+element	intro
+enrichment_network_box2	Enriched gene sets are visualized in a network. Gene sets describing similar biology are connected together with edges. The similarity is defined using Jaccard, Overlap or Combined coefficient. Click the gear button to learn more and adjust parameters. Hover over each node for details about the enrichment statistics. Hover over each edge for details about the overlaps.
+nodeSelectvis_network	You can select the gene set you are interested in and explore its location in the network.
+gear_box	Click this button to adjust the parameters for creating the network.
+d_vis	Click this button to download the network diagram.

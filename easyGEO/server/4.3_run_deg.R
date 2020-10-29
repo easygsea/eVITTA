@@ -32,7 +32,7 @@ output$confirm_run <- renderUI({
 output$run_deg_ui <- renderUI({
   req(is.null(rv$deg)==F)
   
-  box(
+  box(id="degs",
     width = 12, title = span(HTML("<b>4.4.</b>"),icon("book-open"),HTML("Review & download DEG analysis results")), status = "primary",
     
     

@@ -93,6 +93,15 @@ Sidebar text: #a3bcd6;
     border-color: #184d82;
 }
 
+.bttn-bordered.bttn-success {
+    border-color: rgba(255, 255, 153) !important;
+    color:#FFFF99 !important;
+}
+
+.bttn-bordered.bttn-success:focus, .bttn-bordered.bttn-success:hover {
+    border-color:rgba(255, 255, 0, .7) !important;
+}
+
 /* .btn-success {
     color: black;
     background-color: #ffffe6;

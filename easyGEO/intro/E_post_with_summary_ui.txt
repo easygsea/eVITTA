@@ -1,0 +1,2 @@
+element	intro
+summary	This panel summarizes about the study, such as the title, experiment type, organism, summary and authors' information.

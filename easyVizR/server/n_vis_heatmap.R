@@ -103,6 +103,8 @@ output$n_to_plot <- renderUI({
 
 
 output$n_heatmap <- renderUI({
+  # saveRDS(rv$n_to_plot, file = "rvs/n_to_plot.rds")
+  # saveRDS(rv$heatmap_sortby, file = "rvs/heatmap_sortby.rds")
   #req(length(rv$ll) >= 1)
   req(rv$df_n)
   # req(input$draw_heatmap)

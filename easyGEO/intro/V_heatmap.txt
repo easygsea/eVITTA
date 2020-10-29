@@ -1,0 +1,5 @@
+element	intro
+heatmap_plot	Here's the heatmap plot that highlights the top DEGs.
+hplot_parameters	Parameters to generate the heatmap plot can be adjusted here.
+h_confirm	Click <b>Visualize</b> to re-draw the heatmap plot.
+ui_h_download	Click to download the heatmap plot for your record.

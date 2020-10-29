@@ -31,5 +31,10 @@ bodyDownload <- tabItem(tabName = "download",
                 top = 10
             )
         )
+    ),
+    fixedPanel(
+        uiOutput("floating_button_tab4"),
+        right = 30,
+        bottom = 30
     )
 )

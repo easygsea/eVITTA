@@ -410,7 +410,7 @@
       }else{
         noo = "3"
       }
-        div(
+        div(id = "upload_file_box",
 
 
             fileInput("rnkfile",
@@ -755,40 +755,49 @@
         column(
           width = 12,
           bsTooltip("gene_list_q", "Input newline-delimited gene list", placement = "top"),
-          textAreaInput(
-            inputId = "gene_list",
-            label = noo,
-            placeholder = "Paste your genes here ...",
-            height = 110
+          div(
+            id = "input_list_box",
+              textAreaInput(
+              inputId = "gene_list",
+              label = noo,
+              placeholder = "Paste your genes here ...",
+              height = 110
+            )
           )
         ),
         column(
           12,
-          uiOutput("ora_num")
+          div(id = "ora_num_box",
+              uiOutput("ora_num"))
         ),
-        column(
-          width = 6,
-          textInput(
-            "glist_name",
-            NULL,
-            placeholder = 'Name your list ...'
-          )
-        ),
-        column(
-          width = 6, align="right",
-          div(
-            style="display: inline-block;vertical-align:top;",
-            bsButton(
-              inputId = "gene_list_clear",
-              label = "Reset",
-              style = "default"
+        column(id="namelst_box",
+          width = 12,
+          fluidRow(
+            column(6,
+                   textInput(
+                     "glist_name",
+                     NULL,
+                     placeholder = 'Name your list ...'
+                   )
+            ),
+            column(6, align="right",
+                   div(
+                     style="display: inline-block;vertical-align:top;",
+                     bsButton(
+                       inputId = "gene_list_clear",
+                       label = "Reset",
+                       style = "default"
+                     )
+                   )
+                   ,div(
+                     style="display: inline-block;vertical-align:top;",
+                     uiOutput("glist_add_button")
+                     
+                   )
             )
           )
-          ,div(
-            style="display: inline-block;vertical-align:top;",
-            uiOutput("glist_add_button")
-
-          )
+          
+          
         )
 
       )
