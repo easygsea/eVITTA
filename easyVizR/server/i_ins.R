@@ -1,5 +1,5 @@
 ####================= MULTIPLE - INTERSECT =====================####
-palette <- c("white","darkgrey","lightgrey","lightblue","darksalmon") # this is the default base palette for venns
+palette <- c("aquamarine","beige","darkgrey","darksalmon","red","lightgrey","lightblue","lightgreen","lightyellow","white") # this is the default base palette for venns
 
 ####-------------------- Intersection selection ------------------------####
 
@@ -347,13 +347,13 @@ draw_eulerr_with_ins <- function(gls, ins, print_mode="counts", show_ins=T, ins_
   
   # assign colors to venn
   colors <- fit2[[2]]
+  
   if (show_ins==T){ # if highlight the ins, will show all else as white
     colors[which(names(colors) %in% selector)] <- ins_color
-    colors[-which(names(colors) %in% selector)] <- "white"
+    colors[-which(names(colors) %in% selector)] <- rv$ins_venn_palette
   } else { # if don't highlight the ins, will show base colors
     colors <- palette[1:length(gls)] # assign base circle colors
   }
-  
   # draw the venn
   venn <- plot(fit2, quantities = list(type = print_mode), fills =colors, adjust_labels=adjust_labels)
   venn
@@ -415,9 +415,17 @@ draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limi
   
   if (show_ins==F){
     fill=base_color[1:length(gls)]
+    #print(fill)
     alpha=0.5
   } else if (show_ins==T){
-    fill="white"
+    #fill="white"
+    if(length(rv$ins_venn_palette) <= length(gls)){
+      fill = rv$ins_venn_palette  
+    }else{
+      fill = rv$ins_venn_palette[1:length(gls)]
+    }
+    
+    #print(fill)
     alpha=1
   }
   
@@ -491,12 +499,13 @@ draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limi
     par(mar=c(0, 0, 0, 0), xaxs='i', yaxs='i')
     plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", axes = FALSE, xlab = "", ylab = ""
     )
+    for (i in 1:length(d)){ # draw the circles
+      polygon(all_circ[[i]][[1]],col = rv$ins_venn_palette[i])
+    }
     if (length(sel_int)>0 & identical(unname(ins), rep(F,length(d)))==F){ # if intersection is valid
       polygon(sel_int[[1]], col = ins_color)
     }
-    for (i in 1:length(d)){ # draw the circles
-      polygon(all_circ[[i]][[1]])
-    }
+
     
     text(x = labs$x, y = labs$y, labels = labs$label)
     
@@ -558,7 +567,7 @@ n_npvenn_plt <- reactive({
   venn1 <- draw_venn_with_ins(n_ins_gls(), rv$ins_criteria, rv$nx_n,
                               gsub("counts","raw", rv$n_venn_label),
                               lb_limit=20,
-                              show_ins=rv$n_venn_show_ins, ins_color=rv$ins_venn_c1, base_color=palette
+                              show_ins=rv$n_venn_show_ins, ins_color=rv$ins_venn_c1, base_color=rv$ins_venn_palette
                               )
   venn1
 })
@@ -824,6 +833,25 @@ output$n_venn_ins_hl_opt <- renderUI({
               placement = "top")
   )
 })
+#Newly added graph color selector
+output$n_venn_ins_palette <- renderUI({
+  req_vars(rv$n_venn_show_ins)
+  req(rv$n_venn_show_ins==T)
+  div(
+    selectInput("ins_venn_palette", 
+                HTML(paste0(
+                  "<b>color(s) for parts not in the intersection:</b>",
+                  add_help("ins_venn_palette_help", style="margin-left: 5px;"))
+                ),
+                choices = palette,
+                selected="white",
+                multiple = TRUE
+    ),
+    bsTooltip("ins_venn_palette_help", 
+              "This is a multiple choices color picker, and it colors exceeding available parts could not be rendered", 
+              placement = "top")
+  )
+})
 
 
 ins_venn_panel <- reactive({
@@ -858,7 +886,7 @@ ins_venn_panel <- reactive({
             bsTooltip("n_venn_show_ins_help", 
                       "Whether to highlight selected intersection (corresponds to table below)", 
                       placement = "top"),
-            uiOutput("n_venn_ins_hl_opt"),
+            
             
             size = "xs",
             icon = icon("gear", class = "opt"),
@@ -866,6 +894,27 @@ ins_venn_panel <- reactive({
           )
       ),
       div(style = "position: absolute; left: 4em; bottom: 1em", 
+          dropdown(
+            uiOutput("n_venn_ins_hl_opt"),
+            uiOutput("n_venn_ins_palette"),
+            size = "xs",
+            icon = icon("palette", class = "opt"),
+            up = TRUE, width=300
+          )
+          
+      ),
+      
+      div(style = "position: absolute; left: 7em; bottom: 1em", 
+          dropdown(
+            
+            size = "xs",
+            icon = icon("i-cursor", class = "opt"),
+            up = TRUE, width=300
+          )
+          
+      ),
+      
+      div(style = "position: absolute; left: 10em; bottom: 1em", 
           dropdown(
             downloadButton("n_npvenn_dl", "Download basic"),
             downloadButton("n_venn_dl", "Download area-proportional"),

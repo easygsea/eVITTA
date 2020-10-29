@@ -20,7 +20,7 @@ observe({
   # venn and upset
   input2rv(c(
     "n_venn_label","n_venn_type","n_venn_show_ins","ins_venn_c1",
-    "n_upset_sortby","n_upset_showempty"
+    "n_upset_sortby","n_upset_showempty","ins_venn_palette"
     ))
   
   
@@ -149,6 +149,7 @@ observeEvent(input$n_use_data,{
     rv$n_venn_type <- "Basic"
     rv$n_venn_show_ins <- T
     rv$ins_venn_c1 <- "red"
+    rv$ins_venn_palette <- "white"
     
     # upset
     rv$n_upset_sortby <- "freq"
