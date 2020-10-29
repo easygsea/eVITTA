@@ -20,6 +20,17 @@ src_pathway <- tags$script(HTML(
   "document.getElementById('kegg_reactome_wp').scrollIntoView();"
 ))
 
+src <- reactive({
+  if(rv$demo_mode == "gsea" && rv$es_term == "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"){
+    src <- NULL
+  }else if(rv$demo_mode == "ora" && rv$es_term == "RA_Transcriptional_activity_of_SMAD2/SMAD3:SMAD4_heterotrimer%R-CEL-2173793"){
+    src <- NULL
+  }else{
+    src <- src_pathway
+  }
+  return(src)
+})
+
 #===================== GMT collections =====================
 # initialize three list vectors
 # 1. a list vector to store paths to database collection (.GMT) files
