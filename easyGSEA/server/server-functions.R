@@ -1474,6 +1474,9 @@
         rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
         rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
         rv$no_down_05 = rv$no_down_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
+        
+        sig_no <- rv$no_up_05 + rv$no_down_05
+        if(sig_no >= 1){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
         incProgress(0.2)
       }
@@ -1508,6 +1511,8 @@
           rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
           rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25,na.rm=TRUE)
           rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
+          
+          if(rv$no_up_05 >= 1){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         }
         
         incProgress(0.2)
