@@ -131,7 +131,7 @@ species_names_go <- list(
 
 # ===================== Column names & match for DEG/RNK =====================
 col_gene_names <- c("id","gene","symbol","genesymbol","gene_id","genename","name","x1","x")
-col_fc_names <- c("logfc","fc","log2_fold_change")
+col_fc_names <- c("logfc","fc","log2_fold_change","log2FoldChange")
 col_p_names <- c("p","pval","pvalue","p.value","p_value")
 col_fdr_names <- c("fdr","padj","adj.p.val","q_value")
 col_rank_names <- c("rank","ranks","score")
