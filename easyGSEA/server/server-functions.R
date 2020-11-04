@@ -804,7 +804,7 @@
         }else{
             ranks <- rv$rnkgg
             names(ranks) = toupper(names(ranks))
-            x <- rv$gmts[term][[1]]
+            x <- toupper(rv$gmts[term][[1]])
             ranks2 <- ranks[x]
             ranks2 <- ranks2[!is.na(ranks2)]
             x <- rv$fgseagg[rv$fgseagg$pathway == term]$leadingEdge[[1]]
@@ -1446,11 +1446,12 @@
     
     run_gsea <- function(cat_name,gmt_path,ranks,errors){
       m_list <- gmtPathways(gmt_path)
-      m_list <- lapply(m_list, function(x) toupper(x))
       
       # save GMT into RV
       rv$gmts = c(rv$gmts,m_list)
       
+      m_list <- lapply(m_list, function(x) toupper(x))
+
       # calculate gene #s in each term
       a_lens = lengths(m_list)
       
@@ -1486,14 +1487,15 @@
     
     run_ora <- function(cat_name,gmt_path,genelist,errors){
       m_list <- gmtPathways(gmt_path)
-      m_list <- lapply(m_list, function(x) toupper(x))
-      
-      # get all genes
-      a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
       
       # save GMT into RV
       rv$gmts = c(rv$gmts,m_list)
       
+      m_list <- lapply(m_list, function(x) toupper(x))
+      
+      # get all genes
+      a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
+
       # genes present in the database
       in_genes = genelist[genelist %in% a_genes]
       

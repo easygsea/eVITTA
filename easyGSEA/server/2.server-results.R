@@ -1116,7 +1116,7 @@ observeEvent(rv$es_term,{
 
 
     if(rv$run_mode == "gsea"){
-        x <- rv$gmts[rv$es_term][[1]]
+        x <- toupper(rv$gmts[rv$es_term][[1]])
 
         ranks <- rv$rnkgg
         names(ranks) = toupper(names(ranks))
@@ -1763,7 +1763,7 @@ observeEvent(input$confirm_kegg_plot,{
 
     # --------------- help button for p.value and p.adj --------------
     output$ui_p_help <- renderUI({
-        req(rv$run_mode == "gsea")
+        # req(rv$run_mode == "gsea")
         div(actionBttn(inputId="p_value_help",
                    # align="right",
                    #

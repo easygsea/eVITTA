@@ -915,11 +915,14 @@
         rv$gene_lists = NULL
         rv$gene_lists_after = NULL
 
-        # updateTextAreaInput(session,
-        #                     inputId = "gene_list",
-        #                     value = "",
-        #                     placeholder = "Type to input.."
-        # )
+        updateTextAreaInput(session,
+                            inputId = "gene_list",
+                            value = ""
+        )
+        
+        # updateTextInput(session,
+        #                 inputId = "glist_name",
+        #                 value = NULL)
     })
 
     #----------- 3.2.4 Example GList --------------
