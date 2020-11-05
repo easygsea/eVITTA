@@ -1096,6 +1096,99 @@
         }
     }
     
+    # plot a interative dendrogram
+    plot_dendro <- function(){
+      df = dfNEL()
+      if(nrow(df)<=1){
+        rv$dendro_run = "fail"
+        return(NULL)
+      }else{
+        rv$dendro_run = "success"
+        rv$vis_status = "success"
+        # leading edge genes
+        a = df[[ncol(df)]] #df$leadingEdge
+        names(a) <- df$pathway
+        edges_mat2 = NULL
+        if(nrow(df)>1){
+        # pathway combinations
+        b_combn<-sapply(as.data.frame(combn(names(a),2)), function(x) as.character(x), simplify = FALSE)
+        # calculate a edge matrix for hierarchical clustering
+        edges_mat2 = edges(a,b_combn, cutoff = 0)
+        }
+        # Create a empty distance matrix with names
+        dist_matrix <- matrix(0,nrow(df),nrow(df))
+        colnames(dist_matrix) <- df$pathway
+        rownames(dist_matrix) <- df$pathway
+        
+        # assign the distance matrix with value: dissimilarity percentage
+        disimilarity_vector <- 1-(edges_mat2$percent)
+        dist_matrix[lower.tri(dist_matrix,diag = FALSE)] = disimilarity_vector
+        hclust_matrix <- as.dist(dist_matrix)
+        
+        # Do the hierarchical clustering
+        hc <- hclust(hclust_matrix, method = "complete")
+        
+        # get the cluster id from the cutoff of similarity
+        # create a dataframe for further data mining with cluster id in df_further
+        cutoff_similarity <- 0.3
+        hc2 <- cutree(hc, h = 1 - cutoff_similarity)
+        number_of_clusters <- max(hc2)
+        print(number_of_clusters)
+        hc2_data <- hc2 %>%
+          as.data.frame() %>%
+          rownames_to_column() %>%
+          dplyr::rename("pathway" = "rowname")
+        df_further <- left_join(df, hc2_data, by = "pathway")
+        
+        # two simple denrograms here
+        # plot(hc,labels = FALSE, hang= -1)
+        # plot(hc, cex = 0.5, hang = -1)
+        
+        # plot a dendrogram nicely
+        # convert it to a dendrogram object
+        dhc <- as.dendrogram(hc)
+        
+        # extract the dendrogram data
+        ddata <- dendro_data(dhc, type = "rectangle")
+        
+        #color my dendrogram
+        dendro <- dhc %>%
+          #set("labels", label_short) %>%
+          dendextend::set("branches_k_color", k = number_of_clusters) %>% 
+          dendextend::set("branches_lwd", 0.3) %>%
+          dendextend::set("labels_cex", 0.3) %>% 
+          dendextend::set("labels_colors", k = 15) %>%
+          dendextend::set("leaves_pch", 19) %>% 
+          dendextend::set("leaves_cex", 0.4) 
+        
+        #convert it to a ggplot object
+        gg_dendro <- as.ggdend(dendro)
+        
+        # extract the points that need to have hover function
+        hover_points <- gg_dendro$nodes %>%
+          filter(leaf == TRUE) %>%
+          mutate(name = ddata$labels$label)
+        
+        # plot it out
+        ggplot_dendro <- gg_dendro %>%
+          ggplot(theme = theme_minimal(), labels = FALSE, horiz = TRUE) + 
+          geom_point(data = hover_points, mapping = aes(x = x, y = y, text = name), size = 0.6) +
+          ylab("distance") +
+          theme(axis.text.y = element_blank(),
+                axis.title.y = element_blank()) +
+          geom_hline(yintercept = 1 - cutoff_similarity, linetype="dashed", color = "grey")
+        
+        # convert it to interative plotly diagram
+        ggplotly_dendro <- ggplot_dendro %>%
+          ggplotly(tooltip = c("name","x","y")) %>%
+          layout(showlegend = FALSE)
+        
+        #ggplot_dendro
+        return(ggplotly_dendro)
+      }
+        
+    }
+    
     #=======================================================#
     #####         collapsible multicheckinputbox       ######
     #=======================================================#

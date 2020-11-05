@@ -11,7 +11,7 @@ output$ui_bodyNetwork <- renderUI({
             # uiOutput("ui_vis_gear"),
             # add an id for introjs
             box(id = "enrichment_network_box2",
-                width = 12,
+                width = 7,
                 #<i class="fas fa-chart-network"></i>
                 title=span( icon("project-diagram"), "Network view of enriched gene sets"), status = "primary",
                 
@@ -49,6 +49,17 @@ output$ui_bodyNetwork <- renderUI({
                     right = 25,
                     top = 12
                 )
+            ),
+            box(
+                id = "dendrogram_box",
+                width = 5,
+                title=span( icon("project-diagram"), "Cluster dendrogram"), status = "primary",
+                
+                div(
+                    plotlyOutput("plot_dendrogram", width = "100%", height = '660px'),
+                    if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){tags$h5("Need to have at least two pathways")}
+                )
+                
             )
         )
     }
@@ -82,6 +93,15 @@ output$vis_network <- renderVisNetwork({
         rv$vis = vis()
         return(rv$vis)
     })
+})
+
+# render Plotly Dendrogram
+output$plot_dendrogram <- renderPlotly({
+    req(is.null(rv$fgseagg)==F)
+    withProgress(message = "Generating dendrogram ...",value = 1,{
+        plot_dendro()
+    })
+    
 })
 
 # download

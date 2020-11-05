@@ -24,7 +24,8 @@ library(shinyalert)
 library(shinydisconnect)
 library(lobstr)
 library(rintrojs)
-
+library(dendextend) # for dendrogram
+library(ggdendro) # for dendrogram
 
 options(repos = BiocManager::repositories())
 
