@@ -264,6 +264,7 @@ observeEvent(input$geo_platform, {
   }
   rownames(dmdf) <- c() # remove rownames
   rv$dmdf <- dmdf
+  rv$dmdf_o <- dmdf
 
 
   # initialize samples list

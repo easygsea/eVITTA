@@ -145,6 +145,7 @@ output$selected_es_tables <- DT::renderDataTable({
     req(rv$run == "success")
     # df = filter_df()
     df = combine_df()
+    
     df <- df %>%
         mutate_if(is.numeric, function(x) round(x, digits=3))
     df
@@ -164,6 +165,8 @@ output$gs_tbl_dl <- downloadHandler(
     content = function(file) {
         # df <- filter_df()
         df = combine_df()
+        df[[ncol(df)]] = lapply(df[[ncol(df)]],function(x){paste(x,collapse = ";")})
+        
         fwrite(df, file, sep=",", 
                # sep2=c("", ";", ""), 
                row.names = F, quote=T)
