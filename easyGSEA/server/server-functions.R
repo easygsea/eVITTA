@@ -959,6 +959,8 @@
         # get df
         df = dfNEL()
         
+        rv$df_vis = df
+          
         # print(nrow(df))
         if(nrow(df)<1){
             rv$vis_status = "failed"
@@ -980,7 +982,9 @@
                 
                 # edge pre-matrix
                 # edges_mat = edges(a,a_gmt,b_combn)
-                edges_mat = edges(a,b_combn)
+                rv$edges_mat_zero_cutoff = edges(a,b_combn, cutoff = 0)
+                
+                edges_mat <- filter(rv$edges_mat_zero_cutoff, percent >= rv$percent_cutoff)
                 # rv$hc_edges = edges_mat[,c("from","to","percent")]
                 # edges_mat = edges_mat[edges_mat$percent>rv$percent_cutoff,]
             }
@@ -1096,9 +1100,9 @@
         }
     }
     
-    # plot a interative dendrogram
+    # plot an interative dendrogram
     plot_dendro <- function(){
-      df = dfNEL()
+      df = rv$df_vis
       if(nrow(df)<=1){
         rv$dendro_run = "fail"
         return(NULL)
@@ -1111,9 +1115,9 @@
         edges_mat2 = NULL
         if(nrow(df)>1){
         # pathway combinations
-        b_combn<-sapply(as.data.frame(combn(names(a),2)), function(x) as.character(x), simplify = FALSE)
+        # b_combn<-sapply(as.data.frame(combn(names(a),2)), function(x) as.character(x), simplify = FALSE)
         # calculate a edge matrix for hierarchical clustering
-        edges_mat2 = edges(a,b_combn, cutoff = 0)
+        edges_mat2 = rv$edges_mat_zero_cutoff
         }
         # Create a empty distance matrix with names
         dist_matrix <- matrix(0,nrow(df),nrow(df))
@@ -1156,8 +1160,8 @@
           #set("labels", label_short) %>%
           dendextend::set("branches_k_color", k = number_of_clusters) %>% 
           dendextend::set("branches_lwd", 0.3) %>%
-          dendextend::set("labels_cex", 0.3) %>% 
-          dendextend::set("labels_colors", k = 15) %>%
+          #dendextend::set("labels_cex", 0.3) %>% 
+          #dendextend::set("labels_colors", k = 15) %>%
           dendextend::set("leaves_pch", 19) %>% 
           dendextend::set("leaves_cex", 0.4) 
         
