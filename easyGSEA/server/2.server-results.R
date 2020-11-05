@@ -1116,7 +1116,7 @@ observeEvent(rv$es_term,{
 
 
     if(rv$run_mode == "gsea"){
-        x <- rv$gmts[rv$es_term][[1]]
+        x <- toupper(rv$gmts[rv$es_term][[1]])
 
         ranks <- rv$rnkgg
         names(ranks) = toupper(names(ranks))
@@ -1307,8 +1307,8 @@ observeEvent(input$confirm_kegg_plot,{
                     ),
                     column(
                         width = 12,
-                        uiOutput("ui_kegg_1"),
-                        uiOutput("ui_kegg_2")
+                        uiOutput("ui_kegg_1")
+                        # ,uiOutput("ui_kegg_2")
                     )
             )
     #     }
@@ -1317,36 +1317,32 @@ observeEvent(input$confirm_kegg_plot,{
 
     # KEGG native layout
     output$ui_kegg_1 <- renderUI({
-        req(input$kegg_type == "native")
+        req(input$kegg_type)
         
-        if(rv$demo_mode == "gsea" && rv$es_term == "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"){
-            src <- NULL
-        }else if(rv$demo_mode == "ora" && rv$es_term == "RA_Transcriptional_activity_of_SMAD2/SMAD3:SMAD4_heterotrimer%R-CEL-2173793"){
-            src <- NULL
-        }else{
-            src <- src_pathway
+        if(input$kegg_type == "native"){
+            title <- span(icon("dna"),"KEGG native view")
+            oid <- imageOutput("kegg_output_1")
+            did <- "download_kegg_1"
+        }else if(input$kegg_type == "graphviz"){
+            title <- span(icon("magnet"),"KEGG graphviz layout")
+            oid <- htmlOutput("kegg_output_2")
+            did <- "download_kegg_2"
         }
         
         box(
-            title = span(icon("dna"),"KEGG native view"),
+            title = title,
             solidHeader = F, status = "primary",width="100%",height=500,
-            div(
-                absolutePanel(
-                    scroll_up_button(),
-                    right = 25,
-                    top = 10
-                )
-            ),
+            scroll_up_button(),
             div(
                 style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
                 # add a scrolling to the plot feature
-                src,
-                imageOutput("kegg_output_1")
+                src(),
+                oid
             ),
             div(
                 style = "position: absolute; left: 0.5em; bottom: 0.5em",
                 dropdown(
-                    downloadButton(outputId = "download_kegg_1", label="Download plot"),
+                    downloadButton(outputId = did, label="Download plot"),
                     size = "xs",
                     icon = icon("download",class="opt"),
                     up = TRUE
@@ -1355,45 +1351,32 @@ observeEvent(input$confirm_kegg_plot,{
         )
     })
 
-    # KEGG graphviz layout
-    output$ui_kegg_2 <- renderUI({
-        req(input$kegg_type == "graphviz")
-        
-        if(rv$demo_mode == "gsea" && rv$es_term == "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"){
-            src <- NULL
-        }else if(rv$demo_mode == "ora" && rv$es_term == "RA_Transcriptional_activity_of_SMAD2/SMAD3:SMAD4_heterotrimer%R-CEL-2173793"){
-            src <- NULL
-        }else{
-            src <- src_pathway
-        }
-        
-        box(
-            title = span(icon("magnet"),"KEGG graphviz layout"),
-            solidHeader = F, status = "primary",width="100%",height=500,
-            div(
-                absolutePanel(
-                    scroll_up_button(),
-                    right = 25,
-                    top = 10
-                )
-            ),
-            div(
-                style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
-                # add a scrolling to the plot feature
-                src,
-                htmlOutput("kegg_output_2")
-            ),
-            div(
-                style = "position: absolute; left: 0.5em; bottom: 0.5em",
-                dropdown(
-                    downloadButton(outputId = "download_kegg_2", label="Download plot"),
-                    size = "xs",
-                    icon = icon("download",class="opt"),
-                    up = TRUE
-                )
-            )
-        )
-    })
+    # # KEGG graphviz layout
+    # output$ui_kegg_2 <- renderUI({
+    #     req(input$kegg_type == "graphviz")
+    #     
+    #     box(
+    #         title = span(icon("magnet"),"KEGG graphviz layout"),
+    #         solidHeader = F, status = "primary",width="100%",height=500,
+    #         scroll_up_button(),
+    #         
+    #         div(
+    #             style="margin: 0;padding: 0; overflow-y:scroll; overflow-x:scroll",
+    #             # add a scrolling to the plot feature
+    #             src(),
+    #             htmlOutput("kegg_output_2")
+    #         ),
+    #         div(
+    #             style = "position: absolute; left: 0.5em; bottom: 0.5em",
+    #             dropdown(
+    #                 downloadButton(outputId = "download_kegg_2", label="Download plot"),
+    #                 size = "xs",
+    #                 icon = icon("download",class="opt"),
+    #                 up = TRUE
+    #             )
+    #         )
+    #     )
+    # })
 
 
 
@@ -1651,14 +1634,6 @@ observeEvent(input$confirm_kegg_plot,{
         if(length(reactome_genes[[1]])>50){
             reactome_genes[[1]] = reactome_genes[[1]][1:50]
         }
-        
-        if(rv$demo_mode == "gsea" && rv$es_term == "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"){
-            src <- NULL
-        }else if(rv$demo_mode == "ora" && rv$es_term == "RA_Transcriptional_activity_of_SMAD2/SMAD3:SMAD4_heterotrimer%R-CEL-2173793"){
-            src <- NULL
-        }else{
-            src <- src_pathway
-        }
 
         box(
             title = span(icon("lightbulb"),"Reactome Pathway Diagram"),
@@ -1666,14 +1641,9 @@ observeEvent(input$confirm_kegg_plot,{
             div(
                 id="diagramHolder",style = 'overflow-x: scroll',
                 # add a scrolling to the plot feature
-                src,
-                #div(
-                    absolutePanel(
-                        scroll_up_button(),
-                        right = 25,
-                        top = 10
-                    )
-                ,
+                src(),
+                scroll_up_button(),
+                
                 tags$script(HTML(sprintf("onReactomeDiagramReady('%s','%s');",reactome_id,reactome_genes)))
             )
         )
@@ -1776,27 +1746,15 @@ observeEvent(input$confirm_kegg_plot,{
             rv$wp_src = sprintf("https://www.wikipathways.org/wpi/PathwayWidget.php?id=%s%s&colors=%s",wp_id,wp_genes,wp_colors)
         }
         
-        if(rv$demo_mode == "gsea" && rv$es_term == "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"){
-            src <- NULL
-        }else if(rv$demo_mode == "ora" && rv$es_term == "RA_Transcriptional_activity_of_SMAD2/SMAD3:SMAD4_heterotrimer%R-CEL-2173793"){
-            src <- NULL
-        }else{
-            src <- src_pathway
-        }
-
+        
         box(
             title = span(icon("seeding"),"WikiPathways Diagram"),
             solidHeader = F, status = "primary",width="100%",height=610,align = "center",
             div(
                 # add a scrolling to the plot feature
-                src,
-            #div(
-                absolutePanel(
-                    scroll_up_button(),
-                    right = 25,
-                    top = 10
-                )
-            ,
+                src(),
+                scroll_up_button(),
+                
                 tags$iframe(src = rv$wp_src, width="100%", height="550px", style="overflow:hidden;")
             )
         )
@@ -1805,7 +1763,7 @@ observeEvent(input$confirm_kegg_plot,{
 
     # --------------- help button for p.value and p.adj --------------
     output$ui_p_help <- renderUI({
-        req(rv$run_mode == "gsea")
+        # req(rv$run_mode == "gsea")
         div(actionBttn(inputId="p_value_help",
                    # align="right",
                    #
@@ -1896,6 +1854,7 @@ observeEvent(input$confirm_kegg_plot,{
 # Create a function for the go up buttons in kegg,reactome and wp plots
     scroll_up_button <- function(){
         div(
+            absolutePanel(
                 actionBttn(
                     inputId = "up_button", label=NULL, 
                     icon = icon("angle-double-up"), style="material-circle", color="primary", size="md"
@@ -1904,6 +1863,10 @@ observeEvent(input$confirm_kegg_plot,{
                     "document.getElementById('up_button').onclick= function(){
                     document.getElementById('plot_choice_box').scrollIntoView()
                 };"
-                ))
+                )),
+                right = 20,
+                top = 4
+            )
+               
             )
     }

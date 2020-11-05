@@ -24,7 +24,8 @@ library(shinyalert)
 library(shinydisconnect)
 library(lobstr)
 library(rintrojs)
-
+library(dendextend) # for dendrogram
+library(ggdendro) # for dendrogram
 
 options(repos = BiocManager::repositories())
 
@@ -131,7 +132,7 @@ species_names_go <- list(
 
 # ===================== Column names & match for DEG/RNK =====================
 col_gene_names <- c("id","gene","symbol","genesymbol","gene_id","genename","name","x1","x")
-col_fc_names <- c("logfc","fc","log2_fold_change")
+col_fc_names <- c("logfc","fc","log2_fold_change","log2FoldChange")
 col_p_names <- c("p","pval","pvalue","p.value","p_value")
 col_fdr_names <- c("fdr","padj","adj.p.val","q_value")
 col_rank_names <- c("rank","ranks","score")
@@ -183,7 +184,7 @@ gvalues2 = rescale(c(0,-log10(0.25),1,-log10(0.05),2,3))
 # example:
 #   renderDataTable({df}, plugins="ellipsis", options = dt_options(80,F,F,T,T,T,10))
 
-dt_options <- function(max_char=60, scrollX=T, scrollY=F, paging=T, searching=T, info=T, pageLength = 5, autoWidth=T){
+dt_options <- function(max_char=20, scrollX=T, scrollY=F, paging=T, searching=T, info=T, pageLength = 5, autoWidth=T){
   list(scrollX=scrollX, scrollY=scrollY,
        paging=paging, searching=searching, info=info, pageLength = pageLength,
        autoWidth = autoWidth,

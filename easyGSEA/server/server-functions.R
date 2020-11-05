@@ -804,7 +804,7 @@
         }else{
             ranks <- rv$rnkgg
             names(ranks) = toupper(names(ranks))
-            x <- rv$gmts[term][[1]]
+            x <- toupper(rv$gmts[term][[1]])
             ranks2 <- ranks[x]
             ranks2 <- ranks2[!is.na(ranks2)]
             x <- rv$fgseagg[rv$fgseagg$pathway == term]$leadingEdge[[1]]
@@ -1091,6 +1091,99 @@
                 return(vis)
             }
         }
+    }
+    
+    # plot a interative dendrogram
+    plot_dendro <- function(){
+      df = dfNEL()
+      if(nrow(df)<=1){
+        rv$dendro_run = "fail"
+        return(NULL)
+      }else{
+        rv$dendro_run = "success"
+        rv$vis_status = "success"
+        # leading edge genes
+        a = df[[ncol(df)]] #df$leadingEdge
+        names(a) <- df$pathway
+        edges_mat2 = NULL
+        if(nrow(df)>1){
+        # pathway combinations
+        b_combn<-sapply(as.data.frame(combn(names(a),2)), function(x) as.character(x), simplify = FALSE)
+        # calculate a edge matrix for hierarchical clustering
+        edges_mat2 = edges(a,b_combn, cutoff = 0)
+        }
+        # Create a empty distance matrix with names
+        dist_matrix <- matrix(0,nrow(df),nrow(df))
+        colnames(dist_matrix) <- df$pathway
+        rownames(dist_matrix) <- df$pathway
+        
+        # assign the distance matrix with value: dissimilarity percentage
+        disimilarity_vector <- 1-(edges_mat2$percent)
+        dist_matrix[lower.tri(dist_matrix,diag = FALSE)] = disimilarity_vector
+        hclust_matrix <- as.dist(dist_matrix)
+        
+        # Do the hierarchical clustering
+        hc <- hclust(hclust_matrix, method = "complete")
+        
+        # get the cluster id from the cutoff of similarity
+        # create a dataframe for further data mining with cluster id in df_further
+        cutoff_similarity <- 0.3
+        hc2 <- cutree(hc, h = 1 - cutoff_similarity)
+        number_of_clusters <- max(hc2)
+        print(number_of_clusters)
+        hc2_data <- hc2 %>%
+          as.data.frame() %>%
+          rownames_to_column() %>%
+          dplyr::rename("pathway" = "rowname")
+        df_further <- left_join(df, hc2_data, by = "pathway")
+        
+        # two simple denrograms here
+        # plot(hc,labels = FALSE, hang= -1)
+        # plot(hc, cex = 0.5, hang = -1)
+        
+        # plot a dendrogram nicely
+        # convert it to a dendrogram object
+        dhc <- as.dendrogram(hc)
+        
+        # extract the dendrogram data
+        ddata <- dendro_data(dhc, type = "rectangle")
+        
+        #color my dendrogram
+        dendro <- dhc %>%
+          #set("labels", label_short) %>%
+          dendextend::set("branches_k_color", k = number_of_clusters) %>% 
+          dendextend::set("branches_lwd", 0.3) %>%
+          dendextend::set("labels_cex", 0.3) %>% 
+          dendextend::set("labels_colors", k = 15) %>%
+          dendextend::set("leaves_pch", 19) %>% 
+          dendextend::set("leaves_cex", 0.4) 
+        
+        #convert it to a ggplot object
+        gg_dendro <- as.ggdend(dendro)
+        
+        # extract the points that need to have hover function
+        hover_points <- gg_dendro$nodes %>%
+          filter(leaf == TRUE) %>%
+          mutate(name = ddata$labels$label)
+        
+        # plot it out
+        ggplot_dendro <- gg_dendro %>%
+          ggplot(theme = theme_minimal(), labels = FALSE, horiz = TRUE) + 
+          geom_point(data = hover_points, mapping = aes(x = x, y = y, text = name), size = 0.6) +
+          ylab("distance") +
+          theme(axis.text.y = element_blank(),
+                axis.title.y = element_blank()) +
+          geom_hline(yintercept = 1 - cutoff_similarity, linetype="dashed", color = "grey")
+        
+        # convert it to interative plotly diagram
+        ggplotly_dendro <- ggplot_dendro %>%
+          ggplotly(tooltip = c("name","x","y")) %>%
+          layout(showlegend = FALSE)
+        
+        #ggplot_dendro
+        return(ggplotly_dendro)
+      }
+        
     }
     
     #=======================================================#
@@ -1446,11 +1539,12 @@
     
     run_gsea <- function(cat_name,gmt_path,ranks,errors){
       m_list <- gmtPathways(gmt_path)
-      m_list <- lapply(m_list, function(x) toupper(x))
       
       # save GMT into RV
       rv$gmts = c(rv$gmts,m_list)
       
+      m_list <- lapply(m_list, function(x) toupper(x))
+
       # calculate gene #s in each term
       a_lens = lengths(m_list)
       
@@ -1474,6 +1568,11 @@
         rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
         rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
         rv$no_down_05 = rv$no_down_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
+        
+        sig_no <- rv$no_up_05 + rv$no_down_05
+        if(sig_no >= 1){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+        # sig_no <- rv$no_up_01 + rv$no_down_01
+        # if(sig_no >= 1){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
         incProgress(0.2)
       }
@@ -1481,14 +1580,15 @@
     
     run_ora <- function(cat_name,gmt_path,genelist,errors){
       m_list <- gmtPathways(gmt_path)
-      m_list <- lapply(m_list, function(x) toupper(x))
-      
-      # get all genes
-      a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
       
       # save GMT into RV
       rv$gmts = c(rv$gmts,m_list)
       
+      m_list <- lapply(m_list, function(x) toupper(x))
+      
+      # get all genes
+      a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
+
       # genes present in the database
       in_genes = genelist[genelist %in% a_genes]
       
@@ -1508,6 +1608,9 @@
           rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
           rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25,na.rm=TRUE)
           rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
+          
+          if(rv$no_up_05 >= 1){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+          # if(rv$no_up_01 >= 1){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         }
         
         incProgress(0.2)

@@ -568,13 +568,17 @@ filtered_data_df <- reactive({
 
 # --------- change identifiers according to GPL info --------------
 observeEvent(input$identifier,{
-  dmdf <- rv$dmdf
+  dmdf <- rv$dmdf_o
+  
   # rename dmdf gene identifiers according to selection
   identifier = isolate(input$identifier)
   if(identifier != "Default"){
     genes <- rownames(rv$identifiers_df)
     df <- rv$identifiers_df[,identifier,drop=F] %>%
-      dplyr::mutate(NameN = genes)
+      dplyr::mutate(NameN = genes) %>%
+      dplyr::filter(complete.cases(.)) %>%
+      dplyr::filter(.data[[identifier]] != "")
+    print(head(as_tibble(df)))
     
     df <- df[!duplicated(df[[identifier]]),]
     
