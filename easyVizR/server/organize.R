@@ -501,16 +501,16 @@ observeEvent(input$fileIn, {
   # version1 remove invalid characters from the batch column names
   for(i in seq_along(rv$upload_batch_colscheme)){
     #delete the unrecognized character
-    rv$upload_batch_colscheme[i] <- stringr::str_replace_all(rv$upload_batch_colscheme[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+    rv$upload_batch_colscheme[i] <- stringr::str_replace_all(rv$upload_batch_colscheme[i],"[^(a-z0-9A-Z%)|[:punct:]]", "")
   }
   for(i in seq_along(rv$upload_batch_columns[[1]])){
     #delete the unrecognized character
-    rv$upload_batch_columns[[1]][i] <- stringr::str_replace_all(rv$upload_batch_columns[[1]][i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+    rv$upload_batch_columns[[1]][i] <- stringr::str_replace_all(rv$upload_batch_columns[[1]][i],"[^(a-z0-9A-Z%)|[:punct:]]", "")
   }
   
   for(i2 in seq_along(rv$upload_batch_sharedcols)){
     #delete the unrecognized character
-    rv$upload_batch_sharedcols[i2] <- stringr::str_replace_all(rv$upload_batch_sharedcols[i2],"[^(a-z0-9A-Z)|[:punct:]]", "")
+    rv$upload_batch_sharedcols[i2] <- stringr::str_replace_all(rv$upload_batch_sharedcols[i2],"[^(a-z0-9A-Z%)|[:punct:]]", "")
   }
   
   countList <- NULL
