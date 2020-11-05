@@ -84,7 +84,7 @@ body <- dashboardBody(
   
     rintrojs::introjsUI(), # introjs
     useShinyjs(), # shinyJS
-    extendShinyjs(text = jscode),
+    extendShinyjs(text = jscode, functions = c("winprint")),
     
     use_waiter(), # waiter
     waiter_show_on_load(tagList(spin_three_bounce(),h4(loadMsg)), color = "#1976D2"), # shows before anything else 

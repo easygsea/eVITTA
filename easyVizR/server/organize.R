@@ -262,7 +262,7 @@ output$batch_additional_cols <- renderUI({
   
   for(f in seq_along(additional_cols)){
     #delete the unrecognized character
-    additional_cols[f] <- stringr::str_replace_all(additional_cols[f],"[^(a-z0-9A-Z)|[:punct:]]", "")
+    additional_cols[f] <- stringr::str_replace_all(additional_cols[f],"[^(a-z0-9A-Z%)|[:punct:]]", "")
   }
   
   # pickerInput(
@@ -568,14 +568,14 @@ observeEvent(input$batch_submit, {
     show_reminder2 <- FALSE
     for(k in seq_along(colnames(in_df))){
       #detect and delete the unrecognized character Version1
-      if(stringr::str_detect(colnames(in_df)[k], "[^(a-z0-9A-Z+><)|[:punct:]]")){
+      if(stringr::str_detect(colnames(in_df)[k], "[^(a-z0-9A-Z+><%)|[:punct:]]")){
         show_reminder2 <- TRUE
-        colnames(in_df)[k]<- stringr::str_replace_all(colnames(in_df)[k],"[^(a-z0-9A-Z+><)|[:punct:]]", "")
+        colnames(in_df)[k]<- stringr::str_replace_all(colnames(in_df)[k],"[^(a-z0-9A-Z+><%)|[:punct:]]", "")
       }
       if(is.character(in_df[[k]])){
-        if(any(stringr::str_detect(in_df[[k]], "[^(a-z0-9A-Z+><)|[:punct:]]"))){
+        if(any(stringr::str_detect(in_df[[k]], "[^(a-z0-9A-Z+><%)|[:punct:]]"))){
           show_reminder2 <- TRUE 
-          in_df[[k]] <- stringr::str_replace_all(in_df[[k]],"[^(a-z0-9A-Z+><)|[:punct:]]", "")
+          in_df[[k]] <- stringr::str_replace_all(in_df[[k]],"[^(a-z0-9A-Z+><%)|[:punct:]]", "")
         }
       }
     }
@@ -612,7 +612,7 @@ observeEvent(input$batch_submit, {
   rv$folder_upload_state <- "reset"
   # shinyjs::reset("fileIn")
   removeModal()
-  # a modal that remind the user their file containin invalid characters Version 1
+  # a modal that remind the user their file contains invalid characters Version 1
   if(show_reminder2 == TRUE){
     showModal(modalDialog(
       inputId = "invalid_reminder_2 ",
@@ -761,7 +761,7 @@ output$load_other_cols <- renderUI({
                                              input$p_column,input$q_column))
   for(f in seq_along(other_cols)){
     #delete the unrecognized character
-    other_cols[f] <- stringr::str_replace_all(other_cols[f],"[^(a-z0-9A-Z)|[:punct:]]", "")
+    other_cols[f] <- stringr::str_replace_all(other_cols[f],"[^(a-z0-9A-Z%)|[:punct:]]", "")
   }
   multiInput(inputId = "load_other_cols",
              label = "Load additional columns:",
@@ -880,7 +880,7 @@ observeEvent(input$file, {
   
   for(i in seq_along(rv$upload_columns)){
     #delete the unrecognized character
-    rv$upload_columns[i] <- stringr::str_replace_all(rv$upload_columns[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+    rv$upload_columns[i] <- stringr::str_replace_all(rv$upload_columns[i],"[^(a-z0-9A-Z%)|[:punct:]]", "")
   }
   #print(rv$upload_columns)
   
@@ -914,14 +914,14 @@ observeEvent(input$submit, {
   # the for loop that loop through the file and remove invalid characters
   for(i in seq_along(colnames(in_df))){
     #detect and delete the unrecognized character Version1
-    if(stringr::str_detect(colnames(in_df)[i], "[^(a-z0-9A-Z+><)|[:punct:]|[:space:]]")){
+    if(stringr::str_detect(colnames(in_df)[i], "[^(a-z0-9A-Z+><%)|[:punct:]|[:space:]]")){
       show_reminder <- TRUE
-      colnames(in_df)[i]<- stringr::str_replace_all(colnames(in_df)[i],"[^(a-z0-9A-Z+><)|[:punct:]]", "")
+      colnames(in_df)[i]<- stringr::str_replace_all(colnames(in_df)[i],"[^(a-z0-9A-Z+><%)|[:punct:]]", "")
     }
     if(is.character(in_df[[i]])){
-      if(any(stringr::str_detect(in_df[[i]], "[^(a-z0-9A-Z+><)|[:punct:]|[:space:]]"))){
+      if(any(stringr::str_detect(in_df[[i]], "[^(a-z0-9A-Z+><%)|[:punct:]|[:space:]]"))){
         show_reminder <- TRUE 
-        in_df[[i]] <- stringr::str_replace_all(in_df[[i]],"[^(a-z0-9A-Z+><)|[:punct:]]", "")
+        in_df[[i]] <- stringr::str_replace_all(in_df[[i]],"[^(a-z0-9A-Z+><%)|[:punct:]]", "")
       }
     }
   }
@@ -965,7 +965,7 @@ observeEvent(input$submit, {
     # a modal that reminds the user that their file contains invalid characters
     showModal(modalDialog(
       inputId = "invalid_reminder",
-      span("IMPORTANT: Your file contains invalid characters. Please be aware of them. Thank you. ", style = "font-size:200%"),
+      span("Unsupported characters are detected in your uploaded file(s) and will be removed for downstream analysis.", style = "font-size:200%"),
       easyClose = TRUE,size="l"
       , footer = modalButton("OK")
     ))
