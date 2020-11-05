@@ -45,7 +45,7 @@ output$ui_bodyNetwork <- renderUI({
             box(
                 id = "dendrogram_box",
                 width = 5,
-                title=span( icon("project-diagram"), "Cluster dendrogram"), status = "primary",
+                title=span( icon("pagelines"), "Cluster dendrogram"), status = "primary",
                 
                 div(
                     plotlyOutput("plot_dendrogram", width = "100%", height = '660px'),
