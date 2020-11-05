@@ -220,15 +220,35 @@ output$nxy_sc_panel <- renderUI({
     ),
     div(style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
-          
-          numericInput(
-            inputId = "nxy_sc_size",
-            label = "Dot size:",
-            value = 3, step=0.5, width="100px")
-          ,
+          fluidRow(
+            column(6,
+                   numericInput(
+                     inputId = "nxy_sc_size",
+                     label = "Dot size:",
+                     value = 3, step=0.5, width="100px")
+                   ,
+                   numericInput(
+                     inputId = "nxy_sc_opacity",
+                     label = "Opacity:",
+                     value = 0.7, step=0.1, max=1, min=0, width="100px")
+                   ,
+                   ),
+            column(6,
+                   numericInput(
+                     inputId = "nxy_sc_outlinewidth",
+                     label = "Outline width:",
+                     value = 1, step=0.1, min=0, width="100px")
+                   ,
+                   selectInput("nxy_sc_outlinecolor", 
+                               "Outline color:",
+                               choices = default_colors,
+                               selected="white", width = "100px")
+                   ,
+                   )
+            ),
           size = "xs",
           icon = icon("palette", class = "opt"),
-          up = TRUE, width=200
+          up = TRUE, width=270
         )
     ),
     div(style = "position: absolute; left: 10em; bottom: 1em",

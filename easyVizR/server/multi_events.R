@@ -27,7 +27,8 @@ observe({
   # 2D scatter
   input2rv(c(
     "nxy_selected_x","nxy_selected_y","nxy_selected_z",
-    "nxy_colormode","nxy_sig","nxy_thresh","nxy_sc_size","n_sc_logic",
+    "nxy_colormode","nxy_sig","nxy_thresh","nxy_sc_size","nxy_sc_opacity","n_sc_logic",
+    "nxy_sc_outlinewidth", "nxy_sc_outlinecolor",
     "nxy_p", "nxy_q", "nxy_stat",
     "nxy_sc_plotmode", "nxy_sc_dflogic"
   ))
@@ -167,6 +168,9 @@ observeEvent(input$n_use_data,{
     rv$nxy_sig <- "PValue"
     rv$nxy_thresh <- 0.01
     rv$nxy_sc_size <- 3
+    rv$nxy_sc_opacity <- 0.7
+    rv$nxy_sc_outlinewidth <- 1
+    rv$nxy_sc_outlinecolor <- "white"
     rv$nxy_p <- 0.05
     rv$nxy_q <- 1
     rv$nxy_stat <- 0.5
