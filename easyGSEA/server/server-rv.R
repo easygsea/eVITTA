@@ -7,6 +7,9 @@
         run_mode=NULL, #gsea glist
         run_n = 0,
         
+        #rv for dendrogram
+        dendro_run = NULL,
+        
         db_status=NULL, # selected
         db_modal=NULL, # check if modal if used or not
         gmt_cs=list(), gmt_cs_paths=list(), # uploaded GMTs for custom analysis

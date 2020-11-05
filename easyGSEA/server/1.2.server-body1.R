@@ -47,9 +47,9 @@ output$feedback_filename <- renderUI({
     if(is.null(rv$example_file) == F){pref = " (our example data)"}else{pref = ""}
     
     HTML(
-        "Query file",pref,":<br/><b>",
+        "Query file",pref,":<br/><div style = 'word-wrap: break-word;'><b>",
         rv$infile_name,
-        "</b><br/>"
+        "</b></div><br/>"
     )
 })
 
