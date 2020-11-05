@@ -817,7 +817,7 @@ output$n_venn_ins_hl_opt <- renderUI({
                   add_help("ins_venn_c1_help", style="margin-left: 5px;"))
                 ),
                 choices = default_colors,
-                selected="red"
+                selected="gold"
     ),
     bsTooltip("ins_venn_c1_help", 
               "Highlight color for selected intersection (corresponds to table below)", 
