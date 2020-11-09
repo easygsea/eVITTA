@@ -717,12 +717,21 @@ extract_intersection <- function(gls, criteria, df, out_type="Full", include_bac
 # filter df according to a specified dflogic
 #-------------------------------------------
 # Ins: current intersection
-# Both: common intersection in all
-# Either: contained in any gene list
+# Both: in ALL the selected 2 or 3 gene lists
+# Either: in Either or Any of the selected 2 or 3 gene lists
+# All_Both: common intersection in all
+# All_Either: contained in any gene list
 # this returns a df that can be used by a plotting function
 get_df_by_dflogic <- function(selected, dflogic, gls, user_criteria, starting_df, ref=rv$nx_n){
   # replace all the values in user criteria to get a dummy, all-true criteria
   all_true_criteria <- replace(user_criteria, names(user_criteria), TRUE)
+  
+  print("selected true criteria:")
+  print(selected)
+  # define a criteria where only the selected datasets are true, the rest are NA
+  selected_true_criteria <- replace(user_criteria, names(user_criteria), NA) # initialize all to NA/ignore
+  selected_true_criteria <- replace(selected_true_criteria, selected, TRUE) # only replace the selected as TRUE
+  print(selected_true_criteria)
   
   if (dflogic=="Ins"){
     to_plot_df <- extract_intersection(gls = gls, 
@@ -732,11 +741,21 @@ get_df_by_dflogic <- function(selected, dflogic, gls, user_criteria, starting_df
     # print(rv$ins_criteria)
   } else if (dflogic=="Both"){ 
     to_plot_df <- extract_intersection(gls = gls, 
+                                       criteria = selected_true_criteria, 
+                                       df = starting_df, 
+                                       out_type = "Full", partial_match=F)
+  } else if (dflogic=="Either"){
+    to_plot_df <- extract_intersection(gls = gls, 
+                                       criteria = selected_true_criteria, 
+                                       df = starting_df, 
+                                       out_type = "Full", partial_match=T)
+  } else if (dflogic=="All_Both"){ 
+    to_plot_df <- extract_intersection(gls = gls, 
                                        criteria = all_true_criteria, 
                                        df = starting_df, 
                                        out_type = "Full", partial_match=F)
     # print(all_true_criteria)
-  } else if (dflogic=="Either"){
+  } else if (dflogic=="All_Either"){
     to_plot_df <- extract_intersection(gls = gls, 
                                        criteria = all_true_criteria, 
                                        df = starting_df, 
