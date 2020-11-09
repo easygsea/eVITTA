@@ -616,7 +616,7 @@ observeEvent(input$batch_submit, {
   if(show_reminder2 == TRUE){
     showModal(modalDialog(
       inputId = "invalid_reminder_2 ",
-      span("IMPORTANT: Your file contains invalid characters. Please be aware of them. Thank you. ", style = "font-size:200%"),
+      span("Unsupported characters are detected in your uploaded file(s) and will be removed for downstream analysis.", style = "font-size:200%"),
       easyClose = TRUE,size="l"
       , footer = modalButton("OK")
     ))

@@ -45,6 +45,9 @@
             dplyr::filter(db %in% db_selected) %>% 
             dplyr::select(-db) %>% 
             dplyr::arrange(padj)
+        
+        df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = ";"))
+        
         return(df)
     }
     
