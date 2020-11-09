@@ -27,8 +27,8 @@ observe({
   # 2D scatter
   input2rv(c(
     "nxy_selected_x","nxy_selected_y","nxy_selected_z",
-    "nxy_colormode","nxy_sig","nxy_thresh","nxy_sc_size","nxy_sc_opacity","n_sc_logic",
-    "nxy_sc_outlinewidth", "nxy_sc_outlinecolor",
+    "nxy_colormode","nxy_sig","nxy_thresh","n_sc_logic",
+    "nxy_sc_size","nxy_sc_opacity","nxy_sc_outlinewidth", "nxy_sc_outlinecolor",
     "nxy_p", "nxy_q", "nxy_stat",
     "nxy_sc_plotmode", "nxy_sc_dflogic"
   ))
@@ -37,7 +37,7 @@ observe({
   input2rv(c(
     "nxyz_colormode","nxyz_sc_logic",
     "n_3ds_p","n_3ds_q","n_3ds_Stat",
-    "nxyz_sc_size",
+    "nxyz_sc_size", "nxyz_sc_opacity", "nxyz_sc_outlinewidth", "nxyz_sc_outlinecolor",
     "nxyz_sc_plotmode","nxyz_sc_dflogic"
   ))
   
@@ -185,6 +185,9 @@ observeEvent(input$n_use_data,{
     rv$n_3ds_q <- 1
     rv$n_3ds_Stat <- 0
     rv$nxyz_sc_size <- 3
+    rv$nxyz_sc_opacity <- 0.7
+    rv$nxyz_sc_outlinewidth <- 0
+    rv$nxyz_sc_outlinecolor <- "white"
     rv$nxyz_sc_plotmode <- "Focus"
     rv$nxyz_sc_dflogic <- "Ins"
     

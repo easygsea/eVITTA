@@ -491,6 +491,9 @@ n_3ds_plt <- reactive({
     discrete_c2 <- "black"
     discrete_c3 <- "lightgray"
     size1 <- rv$nxyz_sc_size-1 # default size
+    linewidth = rv$nxyz_sc_outlinewidth
+    linecolor=rv$nxyz_sc_outlinecolor
+    opacity=rv$nxyz_sc_opacity # default 0.7
     
     
     incProgress(0.2)
@@ -531,7 +534,13 @@ n_3ds_plt <- reactive({
     
     stat_replacements <- stat_replace1(rep("Stat",3), selected, mode="each")
     
-    fig <- plot_ly(df, x = df[[statcols[[1]]]], y = df[[statcols[[2]]]], z = df[[statcols[[3]]]], marker = list(color = df$color, size=size1),
+    # datapoint appearance
+    marker_settings <- list(
+      color = df$color, size=size1,
+      opacity=opacity, line = list(color = linecolor, width = linewidth)
+      )
+    
+    fig <- plot_ly(df, x = df[[statcols[[1]]]], y = df[[statcols[[2]]]], z = df[[statcols[[3]]]], marker = marker_settings,
                    hoverinfo="text",
                    text=c(paste0(
                      df$Name, 
