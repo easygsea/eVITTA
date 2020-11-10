@@ -983,8 +983,8 @@
                 # edge pre-matrix
                 # edges_mat = edges(a,a_gmt,b_combn)
                 rv$edges_mat_zero_cutoff = edges(a,b_combn, cutoff = 0)
-                
-                edges_mat <- filter(rv$edges_mat_zero_cutoff, percent >= rv$percent_cutoff)
+                edges_mat_zero_cutoff = rv$edges_mat_zero_cutoff
+                edges_mat <- filter(edges_mat_zero_cutoff, percent >= rv$percent_cutoff)
                 # rv$hc_edges = edges_mat[,c("from","to","percent")]
                 # edges_mat = edges_mat[edges_mat$percent>rv$percent_cutoff,]
             }
@@ -1050,6 +1050,86 @@
             # get rid of db id
             y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
             
+            #get the clusters_id
+            
+            if(nrow(df) == 1){
+              df <- df %>%
+                mutate(cluster_name= 1)
+              }
+            else{
+              edges_mat2 = edges_mat_zero_cutoff
+            # Create a empty distance matrix with names
+            dist_matrix <- matrix(0,nrow(df),nrow(df))
+            colnames(dist_matrix) <- df$pathway
+            rownames(dist_matrix) <- df$pathway
+            
+            # assign the distance matrix with value: dissimilarity percentage
+            disimilarity_vector <- 1-(edges_mat2$percent)
+            dist_matrix[lower.tri(dist_matrix,diag = FALSE)] = disimilarity_vector
+            hclust_matrix <- as.dist(dist_matrix)
+            
+            # Do the hierarchical clustering
+            hc <- hclust(hclust_matrix, method = "complete")
+            
+            # get the cluster id from the cutoff of similarity
+            # create a dataframe for further data mining with cluster id in df_further
+            cutoff_similarity <- 0.3
+            hc2 <- cutree(hc, h = 1 - cutoff_similarity)
+            number_of_clusters <- max(hc2)
+            #print(number_of_clusters)
+            hc2_data <- hc2 %>%
+              as.data.frame() %>%
+              rownames_to_column() %>%
+              dplyr::rename("pathway" = "rowname")
+            
+            # store the data frame with cluster ids
+            df_further <- df %>%
+              left_join(hc2_data, by = "pathway") %>%
+              dplyr::rename("cluster" = ".")
+            
+            df_rank <- df_further %>%
+              group_by(cluster) %>%
+              dplyr::summarise(n = n())%>%
+              mutate(rank = base::rank(-n, ties.method = "first" )) %>%
+              ungroup()
+            
+            df_rank <- df_further %>%
+              left_join(df_rank, by = "cluster") %>%
+              dplyr::rename("origin_clu" = "cluster") %>%
+              dplyr::rename("cluster" = "rank")
+            
+            df_further <- dplyr::select(df_rank, -origin_clu)
+            # rv$df_further = df_further
+            
+            # create a data frame that has all the pathways having lowest P.adj. in each clusters
+            if(rv$run_mode == "gsea"){
+              df_padj <- df_further %>%
+              group_by(cluster) %>%
+              filter(padj == min(padj)) %>%
+              top_n(1, ES) %>%
+              filter(row_number()==1) %>%
+              dplyr::select(cluster, pathway)
+            } else {
+              df_padj <- df_further %>%
+                group_by(cluster) %>%
+                filter(padj == min(padj)) %>%
+                filter(row_number()==1) %>%
+                dplyr::select(cluster, pathway)
+              }
+            # assign the rvs that would be used in dendrogram
+            rv$hc = hc
+            rv$number_of_clusters = number_of_clusters
+            rv$df_padj = df_padj
+            rv$cutoff_similarity = cutoff_similarity
+            
+            # create the data frame that has the cluster name to be used in visnetwork
+            df_significant <- df_further %>%
+              left_join(df_padj, by = "cluster") %>%
+              mutate(cluster_name = paste(cluster, ": ", pathway.y)) %>%
+              dplyr::rename("pathway"= "pathway.x")
+            df = df_significant
+            }
+            # saveRDS(rv$df_significant, file = "rvs/df_significant.rds")
             # generate nodes
             nodes <- data.frame(
                 id = df$pathway,
@@ -1057,6 +1137,7 @@
                 value = sizes * 2,  # sizes proportional to no of leading edge genes
                 color = colors, # color represents ES and p
                 shape = shapes, 
+                cluster = df$cluster_name,
                 # group = group, # group represents ES up/down,
                 # font.size = 5+sizes*15,
                 title = hovertexts
@@ -1069,7 +1150,7 @@
                     visNodes(borderWidth= 2) %>%
                     visInteraction(navigationButtons = TRUE) %>% 
                     visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T), 
-                               nodesIdSelection = TRUE) %>% # , selectedBy = "group"once select a node, see relevant nodes and grey out the rest.
+                               nodesIdSelection = TRUE, selectedBy = list(variable = "cluster")) %>% # , selectedBy = "group"once select a node, see relevant nodes and grey out the rest.
                     # visPhysics(stabilization = FALSE) %>%
                     visPhysics(solver = "barnesHut") %>% # node moving dynamics
                     visLayout(randomSeed = 12) # to always have the same network
@@ -1091,7 +1172,7 @@
                     visNodes(borderWidth= 2) %>%
                     visInteraction(navigationButtons = TRUE) %>% 
                     visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T), 
-                               nodesIdSelection = TRUE, selectedBy = "group") %>% # once select a node, see relevant nodes and grey out the rest.
+                               nodesIdSelection = TRUE, selectedBy = list(variable = "cluster")) %>% # once select a node, see relevant nodes and grey out the rest.
                     # visPhysics(stabilization = FALSE) %>%
                     visPhysics(solver = "barnesHut") %>% # node moving dynamics
                     visLayout(randomSeed = 12) # to always have the same network
@@ -1100,7 +1181,7 @@
         }
     }
     
-    # plot an interative dendrogram
+    # plot an interactive dendrogram
     plot_dendro <- function(){
       df = rv$df_vis
       if(nrow(df)<=1){
@@ -1109,41 +1190,80 @@
       }else{
         rv$dendro_run = "success"
         rv$vis_status = "success"
+        
+        #get all the rvs from the vis() function
+        hc = rv$hc
+        number_of_clusters = rv$number_of_clusters
+        df_padj = rv$df_padj
+        cutoff_similarity = rv$cutoff_similarity
+        
+        # comment out everything below because we have all the RVs for faster speed
         # leading edge genes
-        a = df[[ncol(df)]] #df$leadingEdge
-        names(a) <- df$pathway
-        edges_mat2 = NULL
-        if(nrow(df)>1){
-        # pathway combinations
-        # b_combn<-sapply(as.data.frame(combn(names(a),2)), function(x) as.character(x), simplify = FALSE)
-        # calculate a edge matrix for hierarchical clustering
-        edges_mat2 = rv$edges_mat_zero_cutoff
-        }
-        # Create a empty distance matrix with names
-        dist_matrix <- matrix(0,nrow(df),nrow(df))
-        colnames(dist_matrix) <- df$pathway
-        rownames(dist_matrix) <- df$pathway
-        
-        # assign the distance matrix with value: dissimilarity percentage
-        disimilarity_vector <- 1-(edges_mat2$percent)
-        dist_matrix[lower.tri(dist_matrix,diag = FALSE)] = disimilarity_vector
-        hclust_matrix <- as.dist(dist_matrix)
-        
-        # Do the hierarchical clustering
-        hc <- hclust(hclust_matrix, method = "complete")
-        
-        # get the cluster id from the cutoff of similarity
-        # create a dataframe for further data mining with cluster id in df_further
-        cutoff_similarity <- 0.3
-        hc2 <- cutree(hc, h = 1 - cutoff_similarity)
-        number_of_clusters <- max(hc2)
-        print(number_of_clusters)
-        hc2_data <- hc2 %>%
-          as.data.frame() %>%
-          rownames_to_column() %>%
-          dplyr::rename("pathway" = "rowname")
-        df_further <- left_join(df, hc2_data, by = "pathway")
-        
+        # a = df[[ncol(df)]] #df$leadingEdge
+        # names(a) <- df$pathway
+        # edges_mat2 = NULL
+        # if(nrow(df)>1){
+        # # pathway combinations
+        # # b_combn<-sapply(as.data.frame(combn(names(a),2)), function(x) as.character(x), simplify = FALSE)
+        # # calculate a edge matrix for hierarchical clustering
+        # edges_mat2 = rv$edges_mat_zero_cutoff
+        # }
+        # # Create a empty distance matrix with names
+        # dist_matrix <- matrix(0,nrow(df),nrow(df))
+        # colnames(dist_matrix) <- df$pathway
+        # rownames(dist_matrix) <- df$pathway
+        # 
+        # # assign the distance matrix with value: dissimilarity percentage
+        # disimilarity_vector <- 1-(edges_mat2$percent)
+        # dist_matrix[lower.tri(dist_matrix,diag = FALSE)] = disimilarity_vector
+        # hclust_matrix <- as.dist(dist_matrix)
+        # 
+        # # Do the hierarchical clustering
+        # hc <- hclust(hclust_matrix, method = "complete")
+        # 
+        # # get the cluster id from the cutoff of similarity
+        # # create a dataframe for further data mining with cluster id in df_further
+        # cutoff_similarity <- 0.3
+        # hc2 <- cutree(hc, h = 1 - cutoff_similarity)
+        # number_of_clusters <- max(hc2)
+        # print(number_of_clusters)
+        # hc2_data <- hc2 %>%
+        #   as.data.frame() %>%
+        #   rownames_to_column() %>%
+        #   dplyr::rename("pathway" = "rowname")
+        # 
+        # # store the data frame with cluster ids
+        # df_further <- df %>%
+        #   left_join(hc2_data, by = "pathway") %>%
+        #   dplyr::rename("cluster" = ".")
+        # 
+        # df_rank <- df_further %>%
+        #   group_by(cluster) %>%
+        #   dplyr::summarise(n = n())%>%
+        #   mutate(rank = base::rank(-n, ties.method = "first" )) %>%
+        #   ungroup()
+        # 
+        # df_rank <- df_further %>%
+        #   left_join(df_rank, by = "cluster") %>%
+        #   dplyr::rename("origin_clu" = "cluster") %>%
+        #   dplyr::rename("cluster" = "rank")
+        # 
+        # df_further <- dplyr::select(df_rank, -origin_clu)
+        # # rv$df_further = df_further
+        # 
+        # # create a data frame that has all the pathways having lowest P.adj. in each clusters
+        # df_padj <- df_further %>%
+        #   group_by(cluster) %>%
+        #   filter(padj == min(padj)) %>%
+        #   filter(ES == min(ES)) %>%
+        #   #top_n(1, ES) %>%
+        #   filter(row_number()==1) %>%
+        #   dplyr::select(cluster, pathway)
+        # rv$df_significant <- df_further %>%
+        #   left_join(df_padj, by = "cluster") %>%
+        #   mutate(cluster_name = paste(cluster, ": ", pathway.y)) %>%
+        #   dplyr::rename("pathway"= "pathway.x")
+        # 
         # two simple denrograms here
         # plot(hc,labels = FALSE, hang= -1)
         # plot(hc, cex = 0.5, hang = -1)
@@ -1173,14 +1293,23 @@
           filter(leaf == TRUE) %>%
           mutate(name = ddata$labels$label)
         
+        # create the points of the lowest p.adj for group labeling
+        df_padj_points <- df_padj %>%
+          left_join(hover_points, by = c("pathway" = "name")) %>%
+          mutate(pathway = strsplit(pathway,"%")[[1]][1]) %>%
+          mutate(complete_name = paste(cluster,": ", pathway)) %>%
+          mutate(length = str_length(complete_name))
+        
         # plot it out
         ggplot_dendro <- gg_dendro %>%
           ggplot(theme = theme_minimal(), labels = FALSE, horiz = TRUE) + 
-          geom_point(data = hover_points, mapping = aes(x = x, y = y, text = name), size = 0.6) +
+          geom_point(data = hover_points, mapping = aes(x = x, y = y, text = name), size = 0.6)+
+          geom_text(data = df_padj_points, mapping = aes(x = x, y = y - 0.01*length,label = complete_name), size = 1.5) +
           ylab("distance") +
           theme(axis.text.y = element_blank(),
-                axis.title.y = element_blank()) +
-          geom_hline(yintercept = 1 - cutoff_similarity, linetype="dashed", color = "grey")
+                axis.title.y = element_blank(),
+                panel.grid.major.y = element_blank()) +
+          geom_hline(yintercept = 1 - cutoff_similarity, linetype="dashed", color = "grey") #scale_y_continuous(sec.axis = dup_axis())
         
         # convert it to interative plotly diagram
         ggplotly_dendro <- ggplot_dendro %>%
@@ -1671,7 +1800,6 @@
       rv$infile_check <- readRDS(paste0(getwd(),"/rvs/infile_check.rds"))
       rv$rnk_check <- readRDS(paste0(getwd(),"/rvs/rnk_check.rds"))
       rv$gene_lists_mat1 <- readRDS(paste0(getwd(),"/rvs/gene_lists_mat1.rds"))
-      # rv$run_n <- readRDS(paste0(getwd(),"/rvs/run_n.rds"))
       rv$total_genes_after <- 23710
       rv$total_genes <- 23710
       # rv$es_term <- "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"
