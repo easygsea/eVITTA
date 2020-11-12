@@ -48,9 +48,9 @@ output$ui_bodyNetwork <- renderUI({
                 title=span( icon("pagelines"), "Cluster dendrogram"), status = "primary",
                 
                 div(
-                    style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
+                    style="overflow-y:scroll; overflow-x:scroll; max-height: 700px", #max-height:600px;
                     if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){tags$h5("Need to have at least two pathways")},
-                    plotlyOutput("plot_dendrogram", width = "500px", height = '660px'),
+                    plotlyOutput("plot_dendrogram", width = "800px", height = '1320px'),
                     
                 ),
                 div(id="dendro_dropdown", style = "position: absolute; left: 1em; bottom: 2em;",
