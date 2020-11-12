@@ -148,6 +148,7 @@ output$selected_es_tables <- DT::renderDataTable({
     
     df <- df %>%
         mutate_if(is.numeric, function(x) round(x, digits=3))
+    
     df
     # DT::datatable(df,
     #               extensions=c('Scroller'),
@@ -157,7 +158,8 @@ output$selected_es_tables <- DT::renderDataTable({
     #                   scrollX=TRUE           
     #               ))
     
-    }, plugins="ellipsis", options = dt_options()
+    # }, plugins="ellipsis", options = dt_options()
+    },  options = list(scrollX=T)
 )
 
 output$gs_tbl_dl <- downloadHandler(
@@ -165,8 +167,7 @@ output$gs_tbl_dl <- downloadHandler(
     content = function(file) {
         # df <- filter_df()
         df = combine_df()
-        df[[ncol(df)]] = lapply(df[[ncol(df)]],function(x){paste(x,collapse = ";")})
-        
+
         fwrite(df, file, sep=",", 
                # sep2=c("", ";", ""), 
                row.names = F, quote=T)

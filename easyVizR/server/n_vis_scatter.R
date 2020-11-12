@@ -105,32 +105,15 @@ output$nxy_colormode_options <- renderUI({
       
       # uiOutput("nxyz_logic_caption"),
     )
-    # div(
-    #   radioButtons(
-    #     inputId = "nxy_sig",
-    #     label = "Significance:",
-    #     choices = c("PValue", "FDR"),
-    #     selected="PValue", inline=T),
-    #   numericInput("nxy_thresh", 
-    #                "Threshold:", value = 0.01, min = 0, max = 1, step=0.001, width="100px"),
-    #   radioGroupButtons("n_sc_logic",
-    #                     label = HTML(paste0(
-    #                       "Color logic:",
-    #                       add_help("nxy_sc_logic_help", style="margin-left: 5px;"))
-    #                     ),
-    #                     choices=c("OR" ="Either", "AND" = "Both"),
-    #                     selected="Both",size="s"), 
-    #   bsTooltip("nxy_sc_logic_help", 
-    #             "<b>AND</b>: highlights if conditions are met for <b>ALL</b> datasets.<br><b>OR</b>: highlights if conditions are met for <b>ANY</b> dataset.", 
-    #             placement = "right"),
-    #   # uiOutput("nxy_logic_caption")
-    # )
   } else if (rv$nxy_colormode =="Color and size"){
-    radioButtons(
-      inputId = "nxy_sig",
-      label = "Significance:",
-      choices = c("PValue", "FDR"),
-      selected="PValue", inline=T)
+    div(
+      radioButtons(
+        inputId = "nxy_sig",
+        label = "Significance:",
+        choices = c("PValue", "FDR"),
+        selected="PValue", inline=T)
+    )
+    
   }
 })
 
@@ -151,7 +134,8 @@ output$nxyz_logic_caption <- renderUI({
 
 
 
-# plotly scatter
+#---------------- plotly two way scatter
+
 nxy_sc_plt <- reactive({
   req(is.null(n_ins_full())==F)
   req(is.null(rv$nxy_selected_x)==F)
@@ -209,9 +193,9 @@ nxy_sc_plt <- reactive({
     size = rv$nxy_sc_size
     size1 = size+2 # default dot size, initialized to 5
     size2 = (rv$nxy_sc_size-1) + 3 # size multiplier for the color & size option; initialized to 2+3
-    linewidth = 1
-    linecolor="white"
-    opacity=0.7
+    linewidth = rv$nxy_sc_outlinewidth
+    linecolor=rv$nxy_sc_outlinecolor
+    opacity=rv$nxy_sc_opacity # default 0.7
     
     
     incProgress(0.2)
@@ -507,6 +491,9 @@ n_3ds_plt <- reactive({
     discrete_c2 <- "black"
     discrete_c3 <- "lightgray"
     size1 <- rv$nxyz_sc_size-1 # default size
+    linewidth = rv$nxyz_sc_outlinewidth
+    linecolor=rv$nxyz_sc_outlinecolor
+    opacity=rv$nxyz_sc_opacity # default 0.7
     
     
     incProgress(0.2)
@@ -547,7 +534,13 @@ n_3ds_plt <- reactive({
     
     stat_replacements <- stat_replace1(rep("Stat",3), selected, mode="each")
     
-    fig <- plot_ly(df, x = df[[statcols[[1]]]], y = df[[statcols[[2]]]], z = df[[statcols[[3]]]], marker = list(color = df$color, size=size1),
+    # datapoint appearance
+    marker_settings <- list(
+      color = df$color, size=size1,
+      opacity=opacity, line = list(color = linecolor, width = linewidth)
+      )
+    
+    fig <- plot_ly(df, x = df[[statcols[[1]]]], y = df[[statcols[[2]]]], z = df[[statcols[[3]]]], marker = marker_settings,
                    hoverinfo="text",
                    text=c(paste0(
                      df$Name, 

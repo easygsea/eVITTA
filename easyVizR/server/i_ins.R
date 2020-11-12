@@ -774,7 +774,7 @@ output$ins_table_panel <- renderUI({
             inputId = "n_ins_view",
             label = "Choose view:",
             choices = c("Full", "Minimized", "T/F Matrix"),
-            selected= "Full", direction="vertical"
+            selected= rv$n_ins_view, direction="vertical"
           ),
           
           size = "xs",
@@ -875,7 +875,7 @@ output$n_venn_ins_hl_opt <- renderUI({
                   add_help("ins_venn_c1_help", style="margin-left: 5px;"))
                 ),
                 choices = default_colors,
-                selected="red"
+                selected="gold"
     ),
     bsTooltip("ins_venn_c1_help", 
               "Highlight color for selected intersection (corresponds to table below)", 
@@ -1066,12 +1066,6 @@ output$ins_main_panels <- renderUI({
         )
       ),
       
-      # fluidRow(
-      #   column(12,
-      #          uiOutput("ins_table_panel")
-      #          )
-      # )
-      # ,
       fluidRow(
         column(12,
                box(

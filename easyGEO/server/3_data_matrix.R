@@ -479,7 +479,7 @@ observeEvent(input$file, {
     #the modal that reminds the user their file contains invalid characters Version 1
     showModal(modalDialog(
       inputId = "invalid_character_modal",
-      span("IMPORTANT: Your file contains unrecognized characters, please check your file's column names and convert it to GSM format. Thank you.", style = "font-size:200%"),
+      span("IMPORTANT: Unrecognized characters are detected in the uploaded file and removed for downstream analysis. Please check your uploaded file's column names. Convert them into corresponding GSM IDs if possible. Thank you.", style = "font-size:200%"),
       easyClose = TRUE, size = "l"
       , footer = modalButton("OK")
       

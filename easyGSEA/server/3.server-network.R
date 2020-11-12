@@ -36,15 +36,7 @@ output$ui_bodyNetwork <- renderUI({
                                 size = "md", style="unite",
                                 outputId = "download_vis", label = NULL
                             )
-                        ),
-                        nav_btn_b("net_b"),
-                        nav_btn_f("net_f"),
-                        
-                        bsTooltip("d_vis","Click to download plot", placement = "bottom")
-                        ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
-                                   ,placement = "bottom")
-                        ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
-                                   ,placement = "bottom")
+                        )
                     ),
                     right = 25,
                     top = 12
@@ -53,11 +45,24 @@ output$ui_bodyNetwork <- renderUI({
             box(
                 id = "dendrogram_box",
                 width = 5,
-                title=span( icon("project-diagram"), "Cluster dendrogram"), status = "primary",
+                title=span( icon("pagelines"), "Cluster dendrogram"), status = "primary",
                 
                 div(
                     plotlyOutput("plot_dendrogram", width = "100%", height = '660px'),
                     if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){tags$h5("Need to have at least two pathways")}
+                )
+                ,absolutePanel(
+                    nav_btn_b("net_b"),
+                    nav_btn_f("net_f"),
+                    
+                    bsTooltip("d_vis","Click to download plot", placement = "bottom")
+                    ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
+                               ,placement = "bottom")
+                    ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
+                               ,placement = "bottom")
+                    ,
+                    right = 10,
+                    top = 8
                 )
                 
             )
@@ -89,7 +94,7 @@ output$vis_error <- renderUI({
 output$vis_network <- renderVisNetwork({
     req(is.null(rv$fgseagg)==F)
     # N = 10
-    withProgress(message = 'Generating plots ...',value = 1, {
+    withProgress(message = 'Generating network view of enriched gene sets ...',value = 1, {
         rv$vis = vis()
         return(rv$vis)
     })
@@ -98,7 +103,7 @@ output$vis_network <- renderVisNetwork({
 # render Plotly Dendrogram
 output$plot_dendrogram <- renderPlotly({
     req(is.null(rv$fgseagg)==F)
-    withProgress(message = "Generating dendrogram ...",value = 1,{
+    withProgress(message = "Hierarchically clustering enriched gene sets and generating the dendrogram ...",value = 1,{
         plot_dendro()
     })
     

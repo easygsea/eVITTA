@@ -51,6 +51,10 @@ css_addons <- tags$head(
       width:120px;} 
       #n_ins_view .tooltip.right{
       width:180px;} 
+      #nxy_sc_dflogic .tooltip.right{
+      width:200px;} 
+      #nxyz_sc_dflogic .tooltip.right{
+      width:200px;} 
     "
     
     
