@@ -1073,7 +1073,11 @@
             
             # get the cluster id from the cutoff of similarity
             # create a dataframe for further data mining with cluster id in df_further
-            cutoff_similarity <- 0.3
+            cutoff_similarity = 0.3
+            if(!is.null(rv$cutoff_point)){
+              cutoff_similarity <- rv$cutoff_point
+            }
+            
             hc2 <- cutree(hc, h = 1 - cutoff_similarity)
             number_of_clusters <- max(hc2)
             #print(number_of_clusters)
@@ -1196,6 +1200,7 @@
         number_of_clusters = rv$number_of_clusters
         df_padj = rv$df_padj
         cutoff_similarity = rv$cutoff_similarity
+        print(cutoff_similarity)
         
         # comment out everything below because we have all the RVs for faster speed
         # leading edge genes
@@ -1274,7 +1279,7 @@
         
         # extract the dendrogram data
         ddata <- dendro_data(dhc, type = "rectangle")
-        
+        print(number_of_clusters)
         #color my dendrogram
         dendro <- dhc %>%
           #set("labels", label_short) %>%

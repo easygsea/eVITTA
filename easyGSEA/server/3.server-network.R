@@ -50,9 +50,19 @@ output$ui_bodyNetwork <- renderUI({
                 div(
                     style="overflow-y:scroll; overflow-x:scroll", #max-height:600px;
                     if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){tags$h5("Need to have at least two pathways")},
-                    plotlyOutput("plot_dendrogram", width = "500px", height = '660px')
+                    plotlyOutput("plot_dendrogram", width = "500px", height = '660px'),
                     
+                ),
+                div(id="dendro_dropdown", style = "position: absolute; left: 1em; bottom: 2em;",
+                    dropdown(
+                        uiOutput("dendro_option"),
+                        size = "xs",
+                        width = '100px',
+                        icon = icon("gear", class = "opt"),
+                        up = TRUE
+                    ) 
                 )
+                
                 ,absolutePanel(
                     nav_btn_b("net_b"),
                     nav_btn_f("net_f"),
@@ -109,6 +119,28 @@ output$plot_dendrogram <- renderPlotly({
         plot_dendro()
     })
     
+})
+
+# the dropdown gear ui of dendrogram
+output$dendro_option <- renderUI({
+    #req(rv$dendro_run == "success")
+    div(
+            numericInput("dendro_cutoff", 
+                         "Cutoff = :",
+                         value = 0.3, min = 0, max = 1, step=0.01),
+            add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
+            bsTooltip("dendro_help", "the cutoff value of pathway similarity for clustering",placement = "bottom"),
+            actionBttn("dendro_update","Replot!"
+                       ,style = "simple",size = "sm"
+                       ,color = "primary"
+            )
+        )
+
+})
+
+# The button to replot the dendrogram
+observeEvent(input$dendro_update,{
+    rv$cutoff_point = input$dendro_cutoff
 })
 
 # download
