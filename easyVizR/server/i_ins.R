@@ -716,7 +716,7 @@ output$ins_table_panel <- renderUI({
             inputId = "n_ins_view",
             label = "Choose view:",
             choices = c("Full", "Minimized", "T/F Matrix"),
-            selected= "Full", direction="vertical"
+            selected= rv$n_ins_view, direction="vertical"
           ),
           
           size = "xs",
@@ -978,12 +978,6 @@ output$ins_main_panels <- renderUI({
         )
       ),
       
-      # fluidRow(
-      #   column(12,
-      #          uiOutput("ins_table_panel")
-      #          )
-      # )
-      # ,
       fluidRow(
         column(12,
                box(

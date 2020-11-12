@@ -632,8 +632,10 @@ req_df <- function(df){
 input2rv <- function(var_list){
   for (var in var_list){
     if(is.null(input[[var]])==F){ 
-      rv[[var]] <- input[[var]] 
-      }
+      # if (identical(input[[var]], rv[[var]])==F){
+        rv[[var]] <- input[[var]] 
+      # }
+    }
   }
 }
 

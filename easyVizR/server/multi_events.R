@@ -149,7 +149,7 @@ observeEvent(input$n_use_data,{
     rv$n_venn_label <- "counts"
     rv$n_venn_type <- "Basic"
     rv$n_venn_show_ins <- T
-    rv$ins_venn_c1 <- "red"
+    rv$ins_venn_c1 <- "gold"
     
     # upset
     rv$n_upset_sortby <- "freq"
