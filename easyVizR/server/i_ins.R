@@ -1,5 +1,5 @@
 ####================= MULTIPLE - INTERSECT =====================####
-palette <- c("aquamarine","beige","darkgrey","darksalmon","red","lightgrey","lightblue","lightgreen","lightyellow","white") # this is the default base palette for venns
+palette <- c("aquamarine","blue","darkgrey","darksalmon","red","lightgrey","lightblue","lightgreen","lightyellow","white","yellow") # this is the default base palette for venns
 
 ####-------------------- Intersection selection ------------------------####
 
@@ -348,12 +348,52 @@ draw_eulerr_with_ins <- function(gls, ins, print_mode="counts", show_ins=T, ins_
   # assign colors to venn
   colors <- fit2[[2]]
   
+#Now we deal with color
+    if(length(rv$ins_venn_palette) < length(gls)){
+      temp = rv$ins_venn_palette
+      while (length(temp) < length(gls)) {
+        temp = append(temp,"white")
+      }
+    }
+    else{
+      temp = rv$ins_venn_palette[1:length(gls)]
+      
+    }
+  #This part split the color column based on names, so we will know which color to mix later
+  ColorSplitName <- names(colors)
+  ColorSplitName <- strsplit(ColorSplitName, "&")
+  
+  while(length(temp) < length(colors)){
+    colorsToMix = c()
+    for (GLSIndex in 1:length(gls)) {
+     
+     #print(ColorSplitName[[GLSIndex]])
+     #print(ColorSplitName[[length(temp)+1]])
+     if(ColorSplitName[[GLSIndex]] %in% ColorSplitName[[length(temp)+1]]){
+       colorsToMix = append(colorsToMix,temp[GLSIndex]) 
+     }
+    }
+    colorsToMix<-col2rgb(colorsToMix)
+    colorsToMix <-rowMeans(colorsToMix)
+    temp = append(temp,rgb(colorsToMix[[1]],colorsToMix[[2]],colorsToMix[[3]],max = 255))
+    colorsToMix <- NULL
+    
+  }
+    #TODO: Add a mix color here!
+  
+  colors[] <- temp
+  
   if (show_ins==T){ # if highlight the ins, will show all else as white
     colors[which(names(colors) %in% selector)] <- ins_color
-    colors[-which(names(colors) %in% selector)] <- rv$ins_venn_palette
-  } else { # if don't highlight the ins, will show base colors
-    colors <- palette[1:length(gls)] # assign base circle colors
   }
+    
+    #print(colors[1])
+    #print(names(colors))
+  #} 
+  #else { # if don't highlight the ins, will show base colors
+  #  colors <- palette[1:length(gls)] # assign base circle colors
+  #}
+  
   # draw the venn
   venn <- plot(fit2, quantities = list(type = print_mode), fills =colors, adjust_labels=adjust_labels)
   venn
@@ -419,9 +459,15 @@ draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limi
     alpha=0.5
   } else if (show_ins==T){
     #fill="white"
-    if(length(rv$ins_venn_palette) <= length(gls)){
-      fill = rv$ins_venn_palette  
-    }else{
+
+  if(length(rv$ins_venn_palette) <= length(gls)){
+      temp = rv$ins_venn_palette
+      while (length(temp) < length(gls)) {
+        temp = append(temp,"white")
+      }
+      fill = temp
+    }
+    else{
       fill = rv$ins_venn_palette[1:length(gls)]
     }
     
@@ -500,7 +546,10 @@ draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limi
     plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", axes = FALSE, xlab = "", ylab = ""
     )
     for (i in 1:length(d)){ # draw the circles
-      polygon(all_circ[[i]][[1]],col = rv$ins_venn_palette[i])
+      polygon(all_circ[[i]][[1]],col =alpha(rv$ins_venn_palette[i],0.8), border = "black")
+    }
+    for (i in 1:length(d)){ # draw the circles
+      polygon(all_circ[[i]][[1]],col = alpha(rv$ins_venn_palette[i],0), border = "black")
     }
     if (length(sel_int)>0 & identical(unname(ins), rep(F,length(d)))==F){ # if intersection is valid
       polygon(sel_int[[1]], col = ins_color)
@@ -836,7 +885,7 @@ output$n_venn_ins_hl_opt <- renderUI({
 #Newly added graph color selector
 output$n_venn_ins_palette <- renderUI({
   req_vars(rv$n_venn_show_ins)
-  req(rv$n_venn_show_ins==T)
+  #req(rv$n_venn_show_ins==T)
   div(
     selectInput("ins_venn_palette", 
                 HTML(paste0(
@@ -848,7 +897,7 @@ output$n_venn_ins_palette <- renderUI({
                 multiple = TRUE
     ),
     bsTooltip("ins_venn_palette_help", 
-              "This is a multiple choices color picker, and it colors exceeding available parts could not be rendered", 
+              "This is a multiple choices color picker for non-intersection parts of the graph", 
               placement = "top")
   )
 })
@@ -905,16 +954,6 @@ ins_venn_panel <- reactive({
       ),
       
       div(style = "position: absolute; left: 7em; bottom: 1em", 
-          dropdown(
-            
-            size = "xs",
-            icon = icon("i-cursor", class = "opt"),
-            up = TRUE, width=300
-          )
-          
-      ),
-      
-      div(style = "position: absolute; left: 10em; bottom: 1em", 
           dropdown(
             downloadButton("n_npvenn_dl", "Download basic"),
             downloadButton("n_venn_dl", "Download area-proportional"),

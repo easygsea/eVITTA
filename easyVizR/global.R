@@ -35,6 +35,7 @@ library(shinydisconnect)
 library(rjson)
 library(rgeos)
 library(polyclip)
+library(colorspace)
 
 # library(dashboardthemes)
 options(repos = BiocManager::repositories())
