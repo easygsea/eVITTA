@@ -892,7 +892,7 @@ output$n_venn_ins_palette <- renderUI({
                   "<b>color(s) for parts not in the intersection:</b>",
                   add_help("ins_venn_palette_help", style="margin-left: 5px;"))
                 ),
-                choices = palette,
+                choices = default_colors,
                 selected="white",
                 multiple = TRUE
     ),

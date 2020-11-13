@@ -82,10 +82,15 @@ default_colors = c(
   "Light gray"="lightgray", 
   "White"="white",
   "Blue"="blue", 
+  "Light blue"="lightblue",
   "Dodger blue"="dodgerblue",
   "Forest green"="forestgreen",
+  "Light green"="lightgreen",
   "Gold"="gold",
-  "Violet red"="violetred2"
+  "Violet red"="violetred2",
+  "Aquamarine"="aquamarine",
+  "Darksalmon"="darksalmon",
+  "Yellow"="yellow"
   )
 
 
