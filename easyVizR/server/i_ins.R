@@ -548,11 +548,12 @@ draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limi
     for (i in 1:length(d)){ # draw the circles
       polygon(all_circ[[i]][[1]],col =alpha(rv$ins_venn_palette[i],0.8), border = "black")
     }
-    for (i in 1:length(d)){ # draw the circles
-      polygon(all_circ[[i]][[1]],col = alpha(rv$ins_venn_palette[i],0), border = "black")
-    }
+    
     if (length(sel_int)>0 & identical(unname(ins), rep(F,length(d)))==F){ # if intersection is valid
       polygon(sel_int[[1]], col = ins_color)
+    }
+    for (i in 1:length(d)){ # draw the circles
+      polygon(all_circ[[i]][[1]],col = alpha(rv$ins_venn_palette[i],0), border = "black")
     }
 
     
