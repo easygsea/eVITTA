@@ -14,7 +14,8 @@ total_upload_limit <- total_mb_limit*1024^2
 
 
 # specify allowed characters
-allowed_chars <- "[^(a-z0-9A-Z+><)|[:punct:]|[:space:]]"
+allowed_chars <- "[^(a-z0-9A-Z+><)|[:punct:]]"
+var_allowed_chars <- "[^a-z0-9A-Z+><_-.]"
 
 
 
@@ -617,6 +618,7 @@ observeEvent(input$batch_submit, {
     newname <- tidy_filename(inFiles$name[[i]], rv$ll)
     
     # write in rv
+    newname <- stringr::str_replace_all(newname,var_allowed_chars, "")
     rv$ll <- c(rv$ll, newname)
     rv$gg <- c(rv$gg, list(in_df))
     rv$tt <- c(rv$tt, input$batch_Stat_name)
@@ -984,6 +986,7 @@ observeEvent(input$submit, {
   newname <- input$uploaded_file_name
   
   # update rv
+  newname <- stringr::str_replace_all(newname,var_allowed_chars, "")
   rv$gg <- c(rv$gg, list(in_df))
   rv$ll <- c(rv$ll, newname)
   rv$tt <- c(rv$tt, isolate(input$Stat_name))
