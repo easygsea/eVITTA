@@ -73,6 +73,70 @@ guide_box <- function(id,msg, color="warning", size="sm"){
 
 
 # ================================================= #
+#                   Simple Modals                ####
+# ================================================= #
+
+# calls a single conditional modal.
+#-------------------------------------------
+# example:
+# show_conditional_modal(show_reminder_dup2, "dup_reminder_2", "Your data contains duplicate names; these have been reformatted.")
+
+show_conditional_modal <- function(trigger, modal_id, msg, 
+                                   font_size="200%", 
+                                   easyClose=T, size="l", 
+                                   button_text="OK"){
+  if(trigger == TRUE){
+    showModal(modalDialog(
+      inputId = modal_id,
+      span(msg, 
+           style = paste0(
+             "font-size:",font_size,";"
+             )),
+      easyClose = easyClose,size=size
+      , footer = modalButton(button_text)
+    ))
+  }
+}
+
+# calls a modal that renders more than 1 error message according to conditions.
+#-------------------------------------------
+# triggers: a vector of booleans
+# msgs: to show after respective titles. vector names are titles.
+# these 3 must be vectors of the same size
+
+show_report_modal <- function(modal_id, triggers, msgs, 
+                              modal_title="Warning",
+                                   font_size="120%", 
+                                   easyClose=T, size="l", 
+                                   button_text="OK"){
+  
+  # gather titles and msgs that are triggered
+  msg_list=msgs[which(triggers==T)]
+  msg_listt <- lapply(seq_along(msg_list), function(i){
+    if (names(msg_list)[[i]]!=""){
+      paste0("<b>", names(msg_list)[[i]], "</b>: ", msg_list[[i]])
+    } else { msg_list[[i]] }
+  })
+  
+  msg <- HTML(paste(msg_listt, collapse="<br>"))
+  
+  if(any(triggers) == TRUE){
+    showModal(modalDialog(
+      title = modal_title,
+      inputId = modal_id,
+      span(msg, 
+           style = paste0(
+             "font-size:",font_size,";"
+           )),
+      easyClose = easyClose,size=size
+      , footer = modalButton(button_text)
+    ))
+  }
+}
+
+
+
+# ================================================= #
 #           Stat display replacement                ####
 # ================================================= #
 # note on "Stat": 
