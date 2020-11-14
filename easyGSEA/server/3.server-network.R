@@ -49,15 +49,22 @@ output$ui_bodyNetwork <- renderUI({
                 
                 div(
                     style="overflow-y:scroll; overflow-x:scroll; max-height: 700px", #max-height:600px;
-                    if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){tags$h5("Need to have at least two pathways")},
-                    plotlyOutput("plot_dendrogram", width = "800px", height = '1320px'),
+                    if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){
+                        div(
+                                tags$h4("Need to have at least two pathways to plot a dendrogram."),
+                                br()
+                            )
+                        }
+                    else{
+                            plotlyOutput("plot_dendrogram", width = "800px", height = '1320px')
+                        }
                     
                 ),
                 div(id="dendro_dropdown", style = "position: absolute; left: 1em; bottom: 2em;",
                     dropdown(
                         uiOutput("dendro_option"),
                         size = "xs",
-                        width = '100px',
+                        width = '300px',
                         icon = icon("gear", class = "opt"),
                         up = TRUE
                     ) 
@@ -126,10 +133,19 @@ output$dendro_option <- renderUI({
     #req(rv$dendro_run == "success")
     div(
             numericInput("dendro_cutoff", 
-                         "Cutoff = :",
+                         HTML(paste0("Cutoff = :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
                          value = 0.3, min = 0, max = 1, step=0.01),
-            add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
+            #add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
             bsTooltip("dendro_help", "the cutoff value of pathway similarity for clustering",placement = "bottom"),
+            numericInput("dendro_label_size", 
+                         HTML(paste0("Label text size : ( 0 &#x2264 x &#x2264 6 )",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
+                         value = 4, min = 0, max = 6, step=0.1),
+            #add_help("dendro_label_size_help",style = "top: 1px; right:0px")),
+            bsTooltip("dendro_label_size_help", "the size of the labels of clusters in dendrogram",placement = "bottom"),
+            numericInput("dendro_cluster_size", 
+                         HTML(paste0("Minimum Cluster size for labels = :", br(), "( 0 &#x2264 x &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
+                         value = 3, min = 0, max = rv$max_cluster_size, step = 1),
+            bsTooltip("cluster_size_help", "the Minimum size of a cluster that has label",placement = "bottom"),
             actionBttn("dendro_update","Replot!"
                        ,style = "simple",size = "sm"
                        ,color = "primary"
@@ -140,7 +156,18 @@ output$dendro_option <- renderUI({
 
 # The button to replot the dendrogram
 observeEvent(input$dendro_update,{
-    rv$cutoff_point = input$dendro_cutoff
+    # update the corresponding RVs to replot the dendrogram
+    if(!(rv$cutoff_point == input$dendro_cutoff) && (input$dendro_cutoff >= 0 && input$dendro_cutoff <= 1)){
+       rv$cutoff_point = input$dendro_cutoff 
+    }
+    if(!(rv$label_size == input$dendro_label_size) && input$dendro_label_size >= 0 && input$dendro_label_size <= 6){
+        rv$label_size = input$dendro_label_size 
+    }
+    if(!(rv$cluster_size == input$dendro_cluster_size) && input$dendro_cluster_size <= rv$max_cluster_size && input$dendro_cluster_size >=0){
+        rv$cluster_size = input$dendro_cluster_size
+    }
+    
+    
 })
 
 # download

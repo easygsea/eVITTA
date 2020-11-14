@@ -987,7 +987,8 @@
                 edges_mat <- filter(edges_mat_zero_cutoff, percent >= rv$percent_cutoff)
                 # rv$hc_edges = edges_mat[,c("from","to","percent")]
                 # edges_mat = edges_mat[edges_mat$percent>rv$percent_cutoff,]
-            }
+                rv$dendro_run = "success"
+                }
             
             # nodes matrix
             # colors
@@ -1074,6 +1075,7 @@
             # get the cluster id from the cutoff of similarity
             # create a dataframe for further data mining with cluster id in df_further
             cutoff_similarity = 0.3
+            #cutoff_similarity <- rv$cutoff_point
             if(!is.null(rv$cutoff_point)){
               cutoff_similarity <- rv$cutoff_point
             }
@@ -1109,16 +1111,18 @@
             if(rv$run_mode == "gsea"){
               df_padj <- df_further %>%
               group_by(cluster) %>%
+              mutate(n = n()) %>%
               filter(padj == min(padj)) %>%
               top_n(1, ES) %>%
               filter(row_number()==1) %>%
-              dplyr::select(cluster, pathway)
+              dplyr::select(cluster, pathway,n)
             } else {
               df_padj <- df_further %>%
                 group_by(cluster) %>%
+                mutate(n = n()) %>%
                 filter(padj == min(padj)) %>%
                 filter(row_number()==1) %>%
-                dplyr::select(cluster, pathway)
+                dplyr::select(cluster, pathway,n)
               }
             # assign the rvs that would be used in dendrogram
             rv$hc = hc
@@ -1192,8 +1196,7 @@
         rv$dendro_run = "fail"
         return(NULL)
       }else{
-        rv$dendro_run = "success"
-        rv$vis_status = "success"
+        #rv$dendro_run = "success"
         
         #get all the rvs from the vis() function
         hc = rv$hc
@@ -1298,28 +1301,46 @@
           filter(leaf == TRUE) %>%
           mutate(name = ddata$labels$label)
         
+        cluster_size = 3
+        if(!is.null(rv$cluster_size)){
+          cluster_size <- rv$cluster_size
+        }
         # create the points of the lowest p.adj for group labeling
+        rv$max_cluster_size = max(df_padj$n)
+        print(rv$max_cluster_size)
         df_padj_points <- df_padj %>%
           left_join(hover_points, by = c("pathway" = "name")) %>%
+          filter(n >= cluster_size) %>%
           mutate(pathway = strsplit(pathway,"%")[[1]][1]) %>%
-          mutate(complete_name = paste(cluster,": ", pathway)) %>%
+          mutate(complete_name = paste(cluster,": ", pathway))%>%
           mutate(length = str_length(complete_name))
         
+        df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
+          if(nchar(x) < 45){return(x)}
+          else{return(paste0(substr(x, 0, 45),"..."))}})
+        
+        # text size
+        label_size <- 3
+        if(!is.null(rv$label_size)){
+          label_size <- rv$label_size
+        }
         # plot it out
         ggplot_dendro <- gg_dendro %>%
           ggplot(theme = theme_minimal(), labels = FALSE, horiz = TRUE) + 
+          ylim(-1.5,1) +
           geom_point(data = hover_points, mapping = aes(x = x, y = y, text = name), size = 0.6)+
-          geom_text(data = df_padj_points, mapping = aes(x = x, y = y - 0.01*length,label = complete_name), size = 1.5) +
+          geom_text(data = df_padj_points, mapping = aes(x = x, y = y - 0.01,label = complete_name), size = label_size) +
           ylab("distance") +
           theme(axis.text.y = element_blank(),
                 axis.title.y = element_blank(),
                 panel.grid.major.y = element_blank()) +
           geom_hline(yintercept = 1 - cutoff_similarity, linetype="dashed", color = "grey") #scale_y_continuous(sec.axis = dup_axis())
-        
+        print(rv$label_size)
         # convert it to interative plotly diagram
         ggplotly_dendro <- ggplot_dendro %>%
           ggplotly(tooltip = c("name","x","y")) %>%
-          layout(showlegend = FALSE)
+          layout(showlegend = FALSE, margin = list(l = 0)) %>%
+          style(textposition = "left")
         
         #ggplot_dendro
         return(ggplotly_dendro)

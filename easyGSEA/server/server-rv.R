@@ -9,6 +9,10 @@
         
         #rv for dendrogram
         dendro_run = NULL,
+        cutoff_point = 0.3,
+        label_size = 4,
+        cluster_size = 3, # minimum cluster size that has label
+        max_cluster_size = 1,
         
         db_status=NULL, # selected
         db_modal=NULL, # check if modal if used or not
