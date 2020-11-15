@@ -15,7 +15,7 @@ total_upload_limit <- total_mb_limit*1024^2
 
 # specify allowed characters
 allowed_chars <- "[^(a-z0-9A-Z+><)|[:punct:]]"
-var_allowed_chars <- "[^a-z0-9A-Z+><_-.]"
+var_allowed_chars <- "[^a-z0-9A-Z+><_\\-.]"
 
 
 
