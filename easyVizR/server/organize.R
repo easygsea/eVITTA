@@ -12,6 +12,13 @@ batch_upload_limit <- batch_mb_limit*1024^2
 single_upload_limit <- single_mb_limit*1024^2
 total_upload_limit <- total_mb_limit*1024^2
 
+
+# specify allowed characters
+allowed_chars <- "[^(a-z0-9A-Z+><%)|[:punct:]]"
+var_allowed_chars <- "[^a-z0-9A-Z+><_\\-.]"
+
+
+
 # 
 # 
 # ####---------------------- From existing data --------------------------####
@@ -548,6 +555,7 @@ observeEvent(input$g_reset, {
 
 # upon submitting, add file to list of dataframes to select from
 observeEvent(input$batch_submit, {
+  
   # get files
   inFiles <- rv$batch_files
   
@@ -568,14 +576,14 @@ observeEvent(input$batch_submit, {
     show_reminder2 <- FALSE
     for(k in seq_along(colnames(in_df))){
       #detect and delete the unrecognized character Version1
-      if(stringr::str_detect(colnames(in_df)[k], "[^(a-z0-9A-Z+><%)|[:punct:]]")){
+      if(stringr::str_detect(colnames(in_df)[k], allowed_chars)){
         show_reminder2 <- TRUE
-        colnames(in_df)[k]<- stringr::str_replace_all(colnames(in_df)[k],"[^(a-z0-9A-Z+><%)|[:punct:]]", "")
+        colnames(in_df)[k]<- stringr::str_replace_all(colnames(in_df)[k],allowed_chars, "")
       }
       if(is.character(in_df[[k]])){
-        if(any(stringr::str_detect(in_df[[k]], "[^(a-z0-9A-Z+><%)|[:punct:]]"))){
+        if(any(stringr::str_detect(in_df[[k]], allowed_chars))){
           show_reminder2 <- TRUE 
-          in_df[[k]] <- stringr::str_replace_all(in_df[[k]],"[^(a-z0-9A-Z+><%)|[:punct:]]", "")
+          in_df[[k]] <- stringr::str_replace_all(in_df[[k]],allowed_chars, "")
         }
       }
     }
@@ -585,6 +593,14 @@ observeEvent(input$batch_submit, {
     colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$batch_Stat_column, "Stat")
     colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$batch_p_column, "PValue")
     colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$batch_q_column, "FDR")
+    
+    
+    # tidy duplicate names
+    if (any(duplicated(in_df$Name))){
+      in_df$Name <- make.names(in_df$Name, unique=TRUE)
+      show_reminder_dup2 <- TRUE 
+    } else {show_reminder_dup2 <- F}
+    
     
     # load only the essential columns (is it worth it to enable them to load more?)
     load_cols_list <- c(c("Name", "Stat", "PValue", "FDR"), unlist(input$batch_load_other_cols))
@@ -602,6 +618,7 @@ observeEvent(input$batch_submit, {
     newname <- tidy_filename(inFiles$name[[i]], rv$ll)
     
     # write in rv
+    newname <- stringr::str_replace_all(newname,var_allowed_chars, "")
     rv$ll <- c(rv$ll, newname)
     rv$gg <- c(rv$gg, list(in_df))
     rv$tt <- c(rv$tt, input$batch_Stat_name)
@@ -612,15 +629,27 @@ observeEvent(input$batch_submit, {
   rv$folder_upload_state <- "reset"
   # shinyjs::reset("fileIn")
   removeModal()
-  # a modal that remind the user their file contains invalid characters Version 1
-  if(show_reminder2 == TRUE){
-    showModal(modalDialog(
-      inputId = "invalid_reminder_2 ",
-      span("Unsupported characters are detected in your uploaded file(s) and will be removed for downstream analysis.", style = "font-size:200%"),
-      easyClose = TRUE,size="l"
-      , footer = modalButton("OK")
-    ))
-  }
+  
+  # # a modal that remind the user their file containin invalid characters Version 1
+  # if(show_reminder2 == TRUE){
+  #   showModal(modalDialog(
+  #     inputId = "invalid_reminder_2 ",
+  #     span("Unsupported characters are detected in your uploaded file(s) and will be removed for downstream analysis.", style = "font-size:200%"),
+  #     easyClose = TRUE,size="l"
+  #     , footer = modalButton("OK")
+  #   ))
+  # }
+  # show_conditional_modal(show_reminder2, "invalid_reminder_2", "Unsupported characters are detected in your uploaded file(s) and will be removed for downstream analysis.")
+  
+  show_report_modal("batch_reminder2",
+                    triggers = c(show_reminder2, show_reminder_dup2),
+                    msgs = c(
+                      "Invalid characters"="Unsupported characters are detected in your uploaded file(s) and will be removed for downstream analysis.",
+                      "Duplicate names"="Your data contains duplicate names; these have been reformatted."
+                      )
+                    )
+  
+  
 })
 
 
@@ -909,22 +938,25 @@ observeEvent(input$reset, {
 observeEvent(input$submit, {
   inFile <- input$file
   in_df <- read.csv(inFile$datapath)
-  show_reminder <- FALSE
+  
   
   # the for loop that loop through the file and remove invalid characters
+  show_reminder <- FALSE
   for(i in seq_along(colnames(in_df))){
     #detect and delete the unrecognized character Version1
-    if(stringr::str_detect(colnames(in_df)[i], "[^(a-z0-9A-Z+><%)|[:punct:]|[:space:]]")){
+    if(stringr::str_detect(colnames(in_df)[i], allowed_chars)){
       show_reminder <- TRUE
-      colnames(in_df)[i]<- stringr::str_replace_all(colnames(in_df)[i],"[^(a-z0-9A-Z+><%)|[:punct:]]", "")
+      colnames(in_df)[i]<- stringr::str_replace_all(colnames(in_df)[i],allowed_chars, "")
     }
     if(is.character(in_df[[i]])){
-      if(any(stringr::str_detect(in_df[[i]], "[^(a-z0-9A-Z+><%)|[:punct:]|[:space:]]"))){
+      if(any(stringr::str_detect(in_df[[i]], allowed_chars))){
         show_reminder <- TRUE 
-        in_df[[i]] <- stringr::str_replace_all(in_df[[i]],"[^(a-z0-9A-Z+><%)|[:punct:]]", "")
+        in_df[[i]] <- stringr::str_replace_all(in_df[[i]],allowed_chars, "")
       }
     }
   }
+  
+  
   
   # replace the important column names to prevent error later on
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$gene_column, "Name")
@@ -934,6 +966,12 @@ observeEvent(input$submit, {
   load_cols_list <- c(c("Name", "Stat", "PValue", "FDR"),input$load_other_cols)
   # print(load_cols_list)
   # print(in_df)
+  
+  # tidy duplicate names
+  if (any(duplicated(in_df$Name))){
+    in_df$Name <- make.names(in_df$Name, unique=TRUE)
+    show_reminder_dup1 <- TRUE 
+  } else {show_reminder_dup1 <- F}
   
   
   in_df <- in_df[,load_cols_list]
@@ -948,6 +986,7 @@ observeEvent(input$submit, {
   newname <- input$uploaded_file_name
   
   # update rv
+  newname <- stringr::str_replace_all(newname,var_allowed_chars, "")
   rv$gg <- c(rv$gg, list(in_df))
   rv$ll <- c(rv$ll, newname)
   rv$tt <- c(rv$tt, isolate(input$Stat_name))
@@ -961,15 +1000,23 @@ observeEvent(input$submit, {
   
   # shinyjs::reset("file")
   removeModal()
-  if(show_reminder == TRUE){
-    # a modal that reminds the user that their file contains invalid characters
-    showModal(modalDialog(
-      inputId = "invalid_reminder",
-      span("Unsupported characters are detected in your uploaded file(s) and will be removed for downstream analysis.", style = "font-size:200%"),
-      easyClose = TRUE,size="l"
-      , footer = modalButton("OK")
-    ))
-  }
+  # if(show_reminder == TRUE){
+  #   # a modal that reminds the user that their file contains invalid characters
+  #   showModal(modalDialog(
+  #     inputId = "invalid_reminder",
+  #     span("IMPORTANT: Your file contains invalid characters. Please be aware of them. Thank you. ", style = "font-size:200%"),
+  #     easyClose = TRUE,size="l"
+  #     , footer = modalButton("OK")
+  #   ))
+  # }
+
+  show_report_modal("single_reminder1",
+                    triggers = c(show_reminder, show_reminder_dup1),
+                    msgs = c(
+                      "Invalid characters"="Unsupported characters are detected in your uploaded file(s) and will be removed for downstream analysis.",
+                      "Duplicate names"="Your data contains duplicate names; these have been reformatted."
+                    )
+  )
 })
 
 

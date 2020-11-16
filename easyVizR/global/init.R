@@ -71,7 +71,27 @@ le_alias <- c("(?i)l(?-i)eading.*(?i)e(?-i)dge"
 loadMsg = "easyVizR"
 
 nmax_bar = 15
-default_colors = c("red", "black", "gray", "darkgray", "lightgray", "blue")
+
+# default colors available for selection in app
+# refer to http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
+default_colors = c(
+  "Red"="red", 
+  "Black"="black", 
+  "Gray"="gray", 
+  "Dark gray"="darkgray", 
+  "Light gray"="lightgray", 
+  "White"="white",
+  "Blue"="blue", 
+  "Light blue"="lightblue",
+  "Dodger blue"="dodgerblue",
+  "Forest green"="forestgreen",
+  "Light green"="lightgreen",
+  "Gold"="gold",
+  "Violet red"="violetred2",
+  "Aquamarine"="aquamarine",
+  "Darksalmon"="darksalmon",
+  "Yellow"="yellow"
+  )
 
 
 # --------------- Initialize -------------------

@@ -73,6 +73,70 @@ guide_box <- function(id,msg, color="warning", size="sm"){
 
 
 # ================================================= #
+#                   Simple Modals                ####
+# ================================================= #
+
+# calls a single conditional modal.
+#-------------------------------------------
+# example:
+# show_conditional_modal(show_reminder_dup2, "dup_reminder_2", "Your data contains duplicate names; these have been reformatted.")
+
+show_conditional_modal <- function(trigger, modal_id, msg, 
+                                   font_size="200%", 
+                                   easyClose=T, size="l", 
+                                   button_text="OK"){
+  if(trigger == TRUE){
+    showModal(modalDialog(
+      inputId = modal_id,
+      span(msg, 
+           style = paste0(
+             "font-size:",font_size,";"
+             )),
+      easyClose = easyClose,size=size
+      , footer = modalButton(button_text)
+    ))
+  }
+}
+
+# calls a modal that renders more than 1 error message according to conditions.
+#-------------------------------------------
+# triggers: a vector of booleans
+# msgs: to show after respective titles. vector names are titles.
+# these 3 must be vectors of the same size
+
+show_report_modal <- function(modal_id, triggers, msgs, 
+                              modal_title="Warning",
+                                   font_size="120%", 
+                                   easyClose=T, size="l", 
+                                   button_text="OK"){
+  
+  # gather titles and msgs that are triggered
+  msg_list=msgs[which(triggers==T)]
+  msg_listt <- lapply(seq_along(msg_list), function(i){
+    if (names(msg_list)[[i]]!=""){
+      paste0("<b>", names(msg_list)[[i]], "</b>: ", msg_list[[i]])
+    } else { msg_list[[i]] }
+  })
+  
+  msg <- HTML(paste(msg_listt, collapse="<br>"))
+  
+  if(any(triggers) == TRUE){
+    showModal(modalDialog(
+      title = modal_title,
+      inputId = modal_id,
+      span(msg, 
+           style = paste0(
+             "font-size:",font_size,";"
+           )),
+      easyClose = easyClose,size=size
+      , footer = modalButton(button_text)
+    ))
+  }
+}
+
+
+
+# ================================================= #
 #           Stat display replacement                ####
 # ================================================= #
 # note on "Stat": 
@@ -632,8 +696,10 @@ req_df <- function(df){
 input2rv <- function(var_list){
   for (var in var_list){
     if(is.null(input[[var]])==F){ 
-      rv[[var]] <- input[[var]] 
-      }
+      # if (identical(input[[var]], rv[[var]])==F){
+        rv[[var]] <- input[[var]] 
+      # }
+    }
   }
 }
 
@@ -717,12 +783,21 @@ extract_intersection <- function(gls, criteria, df, out_type="Full", include_bac
 # filter df according to a specified dflogic
 #-------------------------------------------
 # Ins: current intersection
-# Both: common intersection in all
-# Either: contained in any gene list
+# Both: in ALL the selected 2 or 3 gene lists
+# Either: in Either or Any of the selected 2 or 3 gene lists
+# All_Both: common intersection in all
+# All_Either: contained in any gene list
 # this returns a df that can be used by a plotting function
 get_df_by_dflogic <- function(selected, dflogic, gls, user_criteria, starting_df, ref=rv$nx_n){
   # replace all the values in user criteria to get a dummy, all-true criteria
   all_true_criteria <- replace(user_criteria, names(user_criteria), TRUE)
+  
+  print("selected true criteria:")
+  print(selected)
+  # define a criteria where only the selected datasets are true, the rest are NA
+  selected_true_criteria <- replace(user_criteria, names(user_criteria), NA) # initialize all to NA/ignore
+  selected_true_criteria <- replace(selected_true_criteria, selected, TRUE) # only replace the selected as TRUE
+  print(selected_true_criteria)
   
   if (dflogic=="Ins"){
     to_plot_df <- extract_intersection(gls = gls, 
@@ -732,11 +807,21 @@ get_df_by_dflogic <- function(selected, dflogic, gls, user_criteria, starting_df
     # print(rv$ins_criteria)
   } else if (dflogic=="Both"){ 
     to_plot_df <- extract_intersection(gls = gls, 
+                                       criteria = selected_true_criteria, 
+                                       df = starting_df, 
+                                       out_type = "Full", partial_match=F)
+  } else if (dflogic=="Either"){
+    to_plot_df <- extract_intersection(gls = gls, 
+                                       criteria = selected_true_criteria, 
+                                       df = starting_df, 
+                                       out_type = "Full", partial_match=T)
+  } else if (dflogic=="All_Both"){ 
+    to_plot_df <- extract_intersection(gls = gls, 
                                        criteria = all_true_criteria, 
                                        df = starting_df, 
                                        out_type = "Full", partial_match=F)
     # print(all_true_criteria)
-  } else if (dflogic=="Either"){
+  } else if (dflogic=="All_Either"){
     to_plot_df <- extract_intersection(gls = gls, 
                                        criteria = all_true_criteria, 
                                        df = starting_df, 

@@ -1,10 +1,54 @@
+
+
+#-------------- scatter plot options -------------------#
+
+# ------------- display excluded data points (plot mode)
 plotmode_label <- "Show excluded datapoints in the background?"
 plotmode_explanation <- "Whether or not to plot excluded datapoints in the background."
-dflogic_choices <- c("Current intersection" ="Ins", "Common Intersection" = "Both", "Any Intersection" ="Either")
+
+
+# ------------- which data to display (logic)
 dflogic_explanation <- "Determine which data to show in this plot."
+# text for 2 way scatter:
+dflogic_choices <- c("Current intersection" ="Ins", 
+                     "Both X and Y" = "Both", 
+                     "Either X or Y" ="Either",
+                     "Common Intersection" ="All_Both",
+                     "Any Intersection" ="All_Either"
+                     )
 dflogic_explanation_1 <- "Show currently selected intersection"
-dflogic_explanation_2 <- "Show those fulfilling filters in ALL datasets (= the intersection shared between ALL Venn circles)"
-dflogic_explanation_3 <- "Show those fulfilling filters in ANY dataset (= contained in ANY one of the Venn circles)"
+dflogic_explanation_2 <- "Show those fulfilling filters in BOTH x and y datasets"
+dflogic_explanation_3 <- "Show those fulfilling filters in EITHER x or y dataset"
+dflogic_explanation_4 <- "Show those fulfilling filters in ALL datasets (= the intersection shared between ALL Venn circles)"
+dflogic_explanation_5 <- "Show those fulfilling filters in ANY dataset (= contained in ANY one of the Venn circles)"
+
+# text for 3d scatter:
+dflogic_xyz_choices <- c("Current intersection" ="Ins", 
+                     "X AND Y AND Z" = "Both", 
+                     "X OR Y OR Z" ="Either",
+                     "Common Intersection" ="All_Both",
+                     "Any Intersection" ="All_Either"
+)
+dflogic_xyz_explanation_1 <- "Show currently selected intersection"
+dflogic_xyz_explanation_2 <- "Show those fulfilling filters in all 3 datasets X, Y and Z"
+dflogic_xyz_explanation_3 <- "Show those fulfilling filters in any of the 3 datasets X, Y or Z"
+dflogic_xyz_explanation_4 <- "Show those fulfilling filters in ALL datasets (= the intersection shared between ALL Venn circles)"
+dflogic_xyz_explanation_5 <- "Show those fulfilling filters in ANY dataset (= contained in ANY one of the Venn circles)"
+
+# ------------- conditional coloring
+# for xy scatter
+sc_coloring_choices <- c("None"="None", 
+                         "Discrete colors"="Two colors", 
+                         "Color and size"="Color and size")
+# for 3d scatter
+sc_xyz_coloring_choices <- c("None"="None", 
+                             "Discrete colors"="Two colors")
+sc_coloring_explanation_1 <- "Color all points black"
+sc_coloring_explanation_2 <- "Highlights datapoints fulfilling certain thresholds"
+sc_coloring_explanation_3 <- "Displays significance value of X and Y as color and size, respectively"
+
+
+
 
 #======================================================================#
 ####                        Heatmap UI                              ####
@@ -182,6 +226,12 @@ output$nxy_sc_panel <- renderUI({
           radioTooltip(id = "nxy_sc_dflogic", choice = "Either", 
                        title = dflogic_explanation_3, 
                        placement = "right"),
+          radioTooltip(id = "nxy_sc_dflogic", choice = "All_Both", 
+                       title = dflogic_explanation_4, 
+                       placement = "right"),
+          radioTooltip(id = "nxy_sc_dflogic", choice = "All_Either", 
+                       title = dflogic_explanation_5, 
+                       placement = "right"),
           
           
           
@@ -208,8 +258,17 @@ output$nxy_sc_panel <- renderUI({
           radioButtons(
             inputId = "nxy_colormode",
             label = "Conditional coloring:",
-            choices = c("None"="None", "Discrete colors"="Two colors", "Color and size"="Color and size")
+            choices = sc_coloring_choices
             ),
+          radioTooltip(id = "nxy_colormode", choice = sc_coloring_choices[[1]], 
+                       title = sc_coloring_explanation_1, 
+                       placement = "right"),
+          radioTooltip(id = "nxy_colormode", choice = sc_coloring_choices[[2]], 
+                       title = sc_coloring_explanation_2, 
+                       placement = "right"),
+          radioTooltip(id = "nxy_colormode", choice = sc_coloring_choices[[3]], 
+                       title = sc_coloring_explanation_3, 
+                       placement = "right"),
           uiOutput("nxy_colormode_options"),
           
 
@@ -220,15 +279,35 @@ output$nxy_sc_panel <- renderUI({
     ),
     div(style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
-          
-          numericInput(
-            inputId = "nxy_sc_size",
-            label = "Dot size:",
-            value = 3, step=0.5, width="100px")
-          ,
+          fluidRow(
+            column(6,
+                   numericInput(
+                     inputId = "nxy_sc_size",
+                     label = "Dot size:",
+                     value = 3, step=0.5, width="100px")
+                   ,
+                   numericInput(
+                     inputId = "nxy_sc_opacity",
+                     label = "Opacity:",
+                     value = 0.7, step=0.1, max=1, min=0, width="100px")
+                   ,
+                   ),
+            column(6,
+                   numericInput(
+                     inputId = "nxy_sc_outlinewidth",
+                     label = "Outline width:",
+                     value = 1, step=0.1, min=0, width="100px")
+                   ,
+                   selectInput("nxy_sc_outlinecolor", 
+                               "Outline color:",
+                               choices = default_colors,
+                               selected="white", width = "100px")
+                   ,
+                   )
+            ),
           size = "xs",
           icon = icon("palette", class = "opt"),
-          up = TRUE, width=200
+          up = TRUE, width=270
         )
     ),
     div(style = "position: absolute; left: 10em; bottom: 1em",
@@ -285,19 +364,25 @@ output$nxy_3ds_panel <- renderUI({
                               "Plot which data?",
                               add_help("nxyz_sc_dflogic_help", style="margin-left: 5px;"))
                             ),
-                            choices=dflogic_choices,
+                            choices=dflogic_xyz_choices,
                             selected="Ins",size="s", direction="vertical"), 
           bsTooltip("nxyz_sc_dflogic_help",
                     dflogic_explanation,
                     placement = "right"),
           radioTooltip(id = "nxyz_sc_dflogic", choice = "Ins", 
-                       title = dflogic_explanation_1, 
+                       title = dflogic_xyz_explanation_1, 
                        placement = "right"),
           radioTooltip(id = "nxyz_sc_dflogic", choice = "Both", 
-                       title = dflogic_explanation_2, 
+                       title = dflogic_xyz_explanation_2, 
                        placement = "right"),
           radioTooltip(id = "nxyz_sc_dflogic", choice = "Either", 
-                       title = dflogic_explanation_3, 
+                       title = dflogic_xyz_explanation_3, 
+                       placement = "right"),
+          radioTooltip(id = "nxyz_sc_dflogic", choice = "All_Both", 
+                       title = dflogic_xyz_explanation_4, 
+                       placement = "right"),
+          radioTooltip(id = "nxyz_sc_dflogic", choice = "All_Either", 
+                       title = dflogic_xyz_explanation_5, 
                        placement = "right"),
           
           
@@ -324,9 +409,16 @@ output$nxy_3ds_panel <- renderUI({
           radioButtons(
             inputId = "nxyz_colormode",
             label = "Conditional coloring:",
-            choices = c("None"="None", "Discrete colors"="Two colors"), 
+            choices = sc_xyz_coloring_choices, 
             selected = "None"
           ),
+          radioTooltip(id = "nxyz_colormode", choice = sc_xyz_coloring_choices[[1]], 
+                       title = sc_coloring_explanation_1, 
+                       placement = "right"),
+          radioTooltip(id = "nxyz_colormode", choice = sc_xyz_coloring_choices[[2]], 
+                       title = sc_coloring_explanation_2, 
+                       placement = "right"),
+          
           uiOutput("nxyz_colormode_options"),
           
           
@@ -337,14 +429,36 @@ output$nxy_3ds_panel <- renderUI({
     ),
     div(style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
-          numericInput(
-            inputId = "nxyz_sc_size",
-            label = "Dot size:",
-            value = 3, step=0.5, width="100px")
-          ,
+          fluidRow(
+            column(6,
+                   numericInput(
+                     inputId = "nxyz_sc_size",
+                     label = "Dot size:",
+                     value = 3, step=0.5, width="100px")
+                   ,
+                   numericInput(
+                     inputId = "nxyz_sc_opacity",
+                     label = "Opacity:",
+                     value = 0.7, step=0.1, max=1, min=0, width="100px")
+                   ,
+            ),
+            column(6,
+                   numericInput(
+                     inputId = "nxyz_sc_outlinewidth",
+                     label = "Outline width:",
+                     value = 0, step=0.1, min=0, width="100px")
+                   ,
+                   selectInput("nxyz_sc_outlinecolor", 
+                               "Outline color:",
+                               choices = default_colors,
+                               selected="white", width = "100px")
+                   ,
+            )
+          ),
+          
           size = "xs",
           icon = icon("palette", class = "opt"),
-          up = TRUE, width=200
+          up = TRUE, width=270
         )
     ),
     div(style = "position: absolute; left: 10em; bottom: 1em",
