@@ -427,7 +427,7 @@
 
 
             ),
-            bsTooltip("q1", "<i>Click</i> to learn more and load our <u>example data</u> for a trial run", placement = "top")
+            bsTooltip("q1", "Comma- or tab-delimited. Click to learn more and load our <u>example data</u> for a trial run", placement = "top")
 
 
         )
