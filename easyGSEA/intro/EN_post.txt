@@ -1,5 +1,8 @@
 element	intro
 enrichment_network_box2	Enriched gene sets are visualized in a network. Gene sets describing similar biology are connected together with edges. The similarity is defined using Jaccard, Overlap or Combined coefficient. Click the gear button to learn more and adjust parameters. Hover over each node for details about the enrichment statistics. Hover over each edge for details about the overlaps.
 nodeSelectvis_network	You can select the gene set you are interested in and explore its location in the network.
+selectedByvis_network	Hierarchical clustering is used for the dendrogram, and each pathway has a cluster id; you could select the cluster you are interested in and compared it with the network diagram. The most significant pathway is shown after the cluster id.
 gear_box	Click this button to adjust the parameters for creating the network.
 d_vis	Click this button to download the network diagram.
+dendrogram_box	The clustering of pathways are visualized in a dendrogram based on the distance matrix. Pathways that have higher similarity are sorted into the same cluster, and the height in the dendrogram represents the dissimilarity between pathways. The cutoff similarity can be adjusted by clicking the little button below; hover over each node for coordinates and name about the pathway.
+dendro_dropdown	Click this button to adjuste the parameters for creating the dendrogram.

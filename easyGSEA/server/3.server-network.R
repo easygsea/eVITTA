@@ -134,18 +134,18 @@ output$dendro_option <- renderUI({
     div(
             numericInput("dendro_cutoff", 
                          HTML(paste0("Cutoff = :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
-                         value = 0.3, min = 0, max = 1, step=0.01),
+                         value = rv$cutoff_point, min = 0, max = 1, step=0.01),
             #add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
-            bsTooltip("dendro_help", "the cutoff value of pathway similarity for clustering",placement = "bottom"),
+            bsTooltip("dendro_help", "the cutoff value of pathway similarity for clustering; pathways that have similarity larger than or equal to x will have the same cluster id",placement = "bottom"),
             numericInput("dendro_label_size", 
-                         HTML(paste0("Label text size : ( 0 &#x2264 x &#x2264 6 )",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
-                         value = 4, min = 0, max = 6, step=0.1),
+                         HTML(paste0("Label text size : ( 0 &#x2264 y &#x2264 6 )",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
+                         value = rv$label_size, min = 0, max = 6, step=0.1),
             #add_help("dendro_label_size_help",style = "top: 1px; right:0px")),
-            bsTooltip("dendro_label_size_help", "the size of the labels of clusters in dendrogram",placement = "bottom"),
+            bsTooltip("dendro_label_size_help", "the text size of the labels(cluster id and the most significant pathway name) in dendrogram",placement = "bottom"),
             numericInput("dendro_cluster_size", 
-                         HTML(paste0("Minimum Cluster size for labels = :", br(), "( 0 &#x2264 x &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
-                         value = 3, min = 0, max = rv$max_cluster_size, step = 1),
-            bsTooltip("cluster_size_help", "the Minimum size of a cluster that has label",placement = "bottom"),
+                         HTML(paste0("Minimum Cluster size for labels = :", br(), "( 0 &#x2264 z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
+                         value = rv$cluster_size, min = 0, max = rv$max_cluster_size, step = 1),
+            bsTooltip("cluster_size_help", "the clusters that have size larger than or equal to z will have labels",placement = "bottom"),
             actionBttn("dendro_update","Replot!"
                        ,style = "simple",size = "sm"
                        ,color = "primary"

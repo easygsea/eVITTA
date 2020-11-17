@@ -1082,7 +1082,8 @@
             
             hc2 <- cutree(hc, h = 1 - cutoff_similarity)
             number_of_clusters <- max(hc2)
-            #print(number_of_clusters)
+            print("please check the variable here")
+            print(number_of_clusters)
             hc2_data <- hc2 %>%
               as.data.frame() %>%
               rownames_to_column() %>%
@@ -1308,16 +1309,27 @@
         # create the points of the lowest p.adj for group labeling
         rv$max_cluster_size = max(df_padj$n)
         print(rv$max_cluster_size)
+        # the cluster size may be too small compared to the default size(3)
+        if(rv$max_cluster_size < cluster_size){
+          # df_padj_points <- tibble(
+          #   x = max(hover_points$x),
+          #   y = 0,
+          #   complete_name = "Please lower the minimum cluster size to see the labels"
+          # )
+          cluster_size = 1
+          rv$cluster_size = 1
+        }
         df_padj_points <- df_padj %>%
           left_join(hover_points, by = c("pathway" = "name")) %>%
           filter(n >= cluster_size) %>%
           mutate(pathway = strsplit(pathway,"%")[[1]][1]) %>%
           mutate(complete_name = paste(cluster,": ", pathway))%>%
           mutate(length = str_length(complete_name))
-        
+        print("block1")
         df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
           if(nchar(x) < 45){return(x)}
           else{return(paste0(substr(x, 0, 45),"..."))}})
+        
         
         # text size
         label_size <- 3
@@ -1325,6 +1337,7 @@
           label_size <- rv$label_size
         }
         # plot it out
+        print("block2")
         ggplot_dendro <- gg_dendro %>%
           ggplot(theme = theme_minimal(), labels = FALSE, horiz = TRUE) + 
           ylim(-1.5,1) +
