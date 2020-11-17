@@ -1339,8 +1339,9 @@
         # plot it out
         print("block2")
         ggplot_dendro <- gg_dendro %>%
-          ggplot(theme = theme_minimal(), labels = FALSE, horiz = TRUE) + 
-          ylim(-1.5,1) +
+          ggplot(theme = theme_minimal(), labels = FALSE) + #, horiz = TRUE
+          ylim(1, -1.5) +
+          coord_flip() +
           geom_point(data = hover_points, mapping = aes(x = x, y = y, text = name), size = 0.6)+
           geom_text(data = df_padj_points, mapping = aes(x = x, y = y - 0.01,label = complete_name), size = label_size) +
           ylab("distance") +
@@ -1353,7 +1354,7 @@
         ggplotly_dendro <- ggplot_dendro %>%
           ggplotly(tooltip = c("name","x","y")) %>%
           layout(showlegend = FALSE, margin = list(l = 0)) %>%
-          style(textposition = "left")
+          style(textposition = "right")
         
         #ggplot_dendro
         return(ggplotly_dendro)
