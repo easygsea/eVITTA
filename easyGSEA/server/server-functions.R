@@ -1347,9 +1347,9 @@
           mutate(pathway = strsplit(pathway,"%")[[1]][1]) %>%
           mutate(complete_name = paste(cluster,": ", pathway))%>%
           mutate(length = str_length(complete_name))
-        df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
-          if(nchar(x) < 45){return(x)}
-          else{return(paste0(substr(x, 0, 45),"..."))}})
+        # df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
+        #   if(nchar(x) < 45){return(x)}
+        #   else{return(paste0(substr(x, 0, 45),"..."))}})
         
         cluster_barplot <- df_padj_points %>% 
         dplyr::arrange(dplyr::desc(cluster)) %>%
@@ -1879,8 +1879,8 @@
       rv$run <- "success"
       rv$demo_mode <- "gsea"
       
-      rv$bar_q_cutoff <- 0.05
-      rv$vis_q <- 0.05
+      rv$bar_q_cutoff <- 0.025
+      rv$vis_q <- 0.025
 
     }
     

@@ -8,7 +8,6 @@ output$ui_bodyNetwork <- renderUI({
         )
     }else{
         fluidRow(
-            # uiOutput("ui_vis_gear"),
             # add an id for introjs
             box(id = "enrichment_network_box2",
                 width = 7,
@@ -27,7 +26,19 @@ output$ui_bodyNetwork <- renderUI({
                         # add a id for the gear button in introjs
                         div(id = "gear_box",
                             style="display: inline-block;vertical-align:top;margin-right:5px;",
-                            uiOutput("ui_vis_gear")
+                            dropdown(
+                                up = FALSE,right = TRUE,icon = icon("gear"),width = "450px",
+                                style = "unite",#status = "primary",#size = "sm",
+                                circle = TRUE,
+                                tooltip = tooltipOptions(
+                                    title = "Click to adjust parameters for creating a network"
+                                    ,placement = "bottom"),
+                                
+                                #         animate = animateOptions(
+                                #             enter = "slideInRight",
+                                #             exit = "fadeOutRight", duration = 0.5
+                                #         ),
+                            uiOutput("ui_vis_gear"))
                         ),
                         div(id="d_vis", style="display: inline-block;vertical-align:top;margin-right:5px;",
                             
@@ -65,9 +76,9 @@ output$ui_bodyNetwork <- renderUI({
                     if(rv$dendro_or_barplot == "dendro"){
                         if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){
                             div(
-                                    br(),
-                                    tags$h4("Need to have at least two pathways to plot a dendrogram."),
-                                    br()
+                                    # br(),
+                                    # tags$h4("Need to have at least two pathways to plot a dendrogram."),
+                                    # br()
                                 )
                             }
                         else{
@@ -76,12 +87,12 @@ output$ui_bodyNetwork <- renderUI({
                     } else {
                         if(!is.null(rv$cluster_bar_run) && rv$cluster_bar_run == "fail"){
                             div(
-                                br(),
-                                tags$h4("Need to have at least two pathways to plot a barplot."),
-                                br()
+                                # br(),
+                                # tags$h4("Need to have at least two pathways to plot a barplot."),
+                                # br()
                             ) 
                         } else {
-                            plotlyOutput("plot_cluster_bar", width = "900px", height = "900px")
+                            plotlyOutput("plot_cluster_bar", width = "900px", height = "500px")
                         }
                     }
                     
@@ -162,7 +173,7 @@ observeEvent(input$net_f,{
 output$vis_error <- renderUI({
     req(rv$vis_status == "failed")
     HTML(
-        "No significant enrichment found at pval < ",
+        "<br><br>No significant enrichment found at pval < ",
         rv$vis_p,
         " & q < ",
         rv$vis_q,
@@ -209,16 +220,16 @@ output$dendro_option <- renderUI({
     #req(rv$dendro_run == "success")
     div(
             numericInput("dendro_cutoff", 
-                         HTML(paste0("Cutoff = :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
+                         HTML(paste0("Similarity threshold = :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
                          value = rv$cutoff_point, min = 0, max = 1, step=0.01),
             #add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
-            bsTooltip("dendro_help", "the cutoff value of pathway similarity for clustering; pathways that have similarity larger than or equal to x will have the same cluster id",placement = "bottom"),
+            bsTooltip("dendro_help", "Gene sets that have a similarity score larger than or equal to x are clustered together",placement = "bottom"),
             if(rv$dendro_or_barplot == "Cluster dendrogram")
                 {numericInput("dendro_label_size", 
                          HTML(paste0("Label text size : ( 0 &#x2264 y &#x2264 6 )",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
                          value = rv$label_size, min = 0, max = 6, step=0.1)},
             #add_help("dendro_label_size_help",style = "top: 1px; right:0px")),
-            bsTooltip("dendro_label_size_help", "the text size of the labels(cluster id and the most significant pathway name) in dendrogram",placement = "bottom"),
+            bsTooltip("dendro_label_size_help", "The text size of the labels (cluster id and the most significant gene set) in the dendrogram",placement = "bottom"),
             numericInput("dendro_cluster_size", 
                          HTML(paste0("Minimum Cluster size for labels = :", br(), "( 0 &#x2264 z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
                          value = rv$cluster_size, min = 0, max = rv$max_cluster_size, step = 1),
@@ -310,18 +321,6 @@ output$ui_vis_gear <- renderUI({
     # div(
     #     align = "left",
     #     style = "position: absolute; right: 5em; top: 1em;",
-        dropdown(
-            up = FALSE,right = TRUE,icon = icon("gear"),width = "450px",
-            style = "unite",#status = "primary",#size = "sm",
-            circle = TRUE,
-            tooltip = tooltipOptions(
-                title = "Click to adjust parameters for creating a network"
-                ,placement = "bottom"),
-            
-    #         animate = animateOptions(
-    #             enter = "slideInRight",
-    #             exit = "fadeOutRight", duration = 0.5
-    #         ),
     # box(
     #     width = 12,
     #     title = span(icon("gear", class = "opt"),"Advanced parameters for creating a network"), solidHeader = T,
@@ -329,7 +328,7 @@ output$ui_vis_gear <- renderUI({
     #     status = "primary", 
     #     # solidHeader = T,
     #     collapsible = T, collapsed = T, 
-            div(
+            div(div(
                 align = "center",
                 tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
             ),
