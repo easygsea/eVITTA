@@ -14,7 +14,7 @@
         label_size = 4,
         cluster_size = 3, # minimum cluster size that has label
         max_cluster_size = 1,
-        dendro_or_barplot = "Cluster dendrogram",
+        dendro_or_barplot = "dendro",
         
         db_status=NULL, # selected
         db_modal=NULL, # check if modal if used or not

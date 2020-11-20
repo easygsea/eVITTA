@@ -45,23 +45,24 @@ output$ui_bodyNetwork <- renderUI({
             box(
                 id = "dendrogram_box",
                 width = 5,
-                title = div( 
-                    selectizeInput("dendro_or_barplot",
-                      span(icon("pagelines")," Select the plot you would like to explore"),
-                     choices = c("Cluster dendrogram", "Cluster barplot"),
-                     selected = rv$dendro_or_barplot,
-                     width = "70%"),
-                    div(style = "position: relative;bottom: 1em;",
-                       actionBttn("dendro_or_barplot_confirm","View"
-                               ,style = "simple",size = "sm"
-                               ,color = "primary"
-                            ) 
-                        )
+                title = div( #span(icon("pagelines"), #" Select the plot you would like to explore"),
+                                  selectizeInput("dendro_or_barplot",
+                                                 NULL,
+                                                 choices = c("Cluster dendrogram"="dendro", "Cluster barplot"="bar"),
+                                                 selected = rv$dendro_or_barplot,
+                                                 width = "200px")
+                    
+                    # ,div(style = "position: relative;bottom: 1em;",
+                    #    actionBttn("dendro_or_barplot_confirm","View"
+                    #            ,style = "simple",size = "sm"
+                    #            ,color = "primary"
+                    #         ) 
+                    #     )
                     ),
                 status = "primary",
                 div(
                     style="overflow-y:scroll; overflow-x:scroll; max-height: 700px", #max-height:600px;
-                    if(rv$dendro_or_barplot == "Cluster dendrogram"){
+                    if(rv$dendro_or_barplot == "dendro"){
                         if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){
                             div(
                                     br(),
@@ -94,45 +95,40 @@ output$ui_bodyNetwork <- renderUI({
                 #         up = TRUE
                 #     ) 
                 # )
+
                 ,absolutePanel(
-                    fluidRow(
-                        # add a id for the gear button in introjs
-                        div(id = "dendro_dropdown",
-                            style="display: inline-block;vertical-align:top;margin-right:5px;
-                            position: absolute; right: 55px; top: 4em;",
-                            dropdown(
-                                # if(rv$dendro_or_barplot == "Cluster barplot"){
-                                #     uiOutput("barplot_option")
-                                # } else {
-                                    uiOutput("dendro_option")
-                                ,
-                                width = '300px',
-                                
-                                up = FALSE,right = TRUE,icon = icon("gear"),
-                                style = "unite",
-                                circle = TRUE,
-                                tooltip = tooltipOptions(
-                                    title = "Click to adjust parameters for creating a dendrogram"
-                                    ,placement = "bottom"),
-                            )
-                        ),
-                        div(id="d_dendro", style="display: inline-block;vertical-align:top;margin-right:5px;
-                            position: absolute; top: 4em; right: 0px;",
+                    # add a id for the gear button in introjs
+                    div(id = "dendro_dropdown",
+                        style="display: inline-block;vertical-align:top;
+                            ", #position: absolute; right: 55px; top: 4em;
+                        dropdown(
+                            # if(rv$dendro_or_barplot == "Cluster barplot"){
+                            #     uiOutput("barplot_option")
+                            # } else {
+                            uiOutput("dendro_option")
+                            ,
+                            width = '300px',
                             
-                            # style = "position: absolute; right: 1em; top: 1em;",
-                            downloadBttn(
-                                size = "md", style="unite",
-                                if(rv$dendro_or_barplot == "Cluster dendrogram"){outputId = "download_dendro"}
-                                else{outputId = "download_cluster_barplot"}
-                                , label = NULL
-                            )
+                            up = FALSE,right = TRUE,icon = icon("gear"),
+                            style = "unite",
+                            circle = TRUE,
+                            tooltip = tooltipOptions(
+                                title = "Click to adjust parameters for creating a dendrogram"
+                                ,placement = "bottom"),
                         )
                     ),
-                    right = 0,
-                    top = 50
-                )
-                
-                ,absolutePanel(
+                    div(id="d_dendro", style="display: inline-block;vertical-align:top;
+                            ", #position: absolute; top: 4em; right: 0px;
+                        
+                        # style = "position: absolute; right: 1em; top: 1em;",
+                        downloadBttn(
+                            size = "md", style="unite",
+                            if(rv$dendro_or_barplot == "Cluster dendrogram"){outputId = "download_dendro"}
+                            else{outputId = "download_cluster_barplot"}
+                            , label = NULL
+                        )
+                    ),
+                    
                     nav_btn_b("net_b"),
                     nav_btn_f("net_f"),
                     
@@ -143,6 +139,7 @@ output$ui_bodyNetwork <- renderUI({
                     ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
                                ,placement = "bottom")
                     ,
+                    
                     right = 10,
                     top = 8
                 )
@@ -203,7 +200,7 @@ output$plot_cluster_bar <- renderPlotly({
 })
 
 # the input that user selected that controls the plot displayed
-observeEvent(input$dendro_or_barplot_confirm,{
+observeEvent(input$dendro_or_barplot,{
     rv$dendro_or_barplot <- input$dendro_or_barplot
 })
 
