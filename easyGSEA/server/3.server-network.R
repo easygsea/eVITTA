@@ -289,7 +289,7 @@ observeEvent(input$q_vis_edge,{
         title = "Edge parameters: Determine the degree of gene overlap between gene sets",
         includeMarkdown(paste0(getwd(),"/inc/edge_explaination.md")),
         easyClose = TRUE,size="l",
-        footer = modalButton("Dismiss")
+        footer = modalButton("OK")
     ))
     
 })
@@ -300,7 +300,7 @@ observeEvent(input$q_vis_edge_threshold,{
         title = "Recommendations on choice of thresholds",
         includeMarkdown(paste0(getwd(),"/inc/edge_threshold_explaination.md")),
         easyClose = TRUE,size="l",
-        footer = modalButton("Dismiss")
+        footer = modalButton("OK")
     ))
     
 })
@@ -311,7 +311,7 @@ output$ui_vis_gear <- renderUI({
     #     align = "left",
     #     style = "position: absolute; right: 5em; top: 1em;",
         dropdown(
-            up = FALSE,right = TRUE,icon = icon("gear"),width = "800px",
+            up = FALSE,right = TRUE,icon = icon("gear"),width = "450px",
             style = "unite",#status = "primary",#size = "sm",
             circle = TRUE,
             tooltip = tooltipOptions(
@@ -335,37 +335,25 @@ output$ui_vis_gear <- renderUI({
             ),
             fluidRow(
                 column(
-                    width = 5,
+                    width = 6,
                     sliderTextInput("cutoff_vis_p",
                                     label = "Adjust P threshold:",
                                     choices= cutoff_slider,
                                     selected=rv$vis_p, grid=T, force_edges=T)
                 ),
                 column(
-                    width = 5,
+                    width = 6,
                     sliderTextInput("cutoff_vis_q",
                                     label = "Adjust P.adj threshold:",
                                     choices= cutoff_slider,
                                     selected=rv$vis_q, grid=T, force_edges=T)
-                ),
-                column(
-                    width = 2,
-                    radioGroupButtons("p_or_q_vis","Color by",
-                        choiceNames = c("P", "P.adj"),
-                        choiceValues = c("pval", "padj"),
-                        selected = rv$vis_pq,
-                        direction = "horizontal",status="default"
-                    )
                 )
             ),br(),
             fluidRow(
                 column(
-                    width = 5,
+                    width = 6,
                     selectInput("vis_percent",
-                        label = p("Edge parameters",
-                                tags$style(type = "text/css", "#q_vis_edge {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;margin-left: 10px;}"),
-                                bsButton("q_vis_edge", label = "", icon = icon("question"), style = "default", size = "extra-small")),
-                        
+                        label = label_with_help_bttn("Edge parameters","q_vis_edge"),
                         choices = list(
                             "Jaccard Coefficient" = "jaccard",
                             "Overlap Coefficient" = "overlap",
@@ -376,33 +364,43 @@ output$ui_vis_gear <- renderUI({
                     bsTooltip("q_vis_edge", "Click to learn more!", placement = "top")
                 ),
                 column(
-                    width = 5,
+                    width = 6,
                     numericInput("vis_percent_cutoff",
-                                 label = p("Edge threshold",
-                                           tags$style(type = "text/css", "#q_vis_edge_threshold {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;margin-left: 10px;}"),
-                                           bsButton("q_vis_edge_threshold", label = "", icon = icon("question"), style = "default", size = "extra-small")),
+                                 label = label_with_help_bttn("Edge threshold","q_vis_edge_threshold"),
                                  rv$percent_cutoff, min = 0, max = 1, step = 0.01
                     ),
                     bsTooltip("q_vis_edge_threshold", "Click to learn more!", placement = "top")
-                    
                 )
                 
             ),br(),
             fluidRow(
                 column(
-                    width = 5,
+                    width = 6,
                     conditionalPanel(
                         condition = "input.vis_percent == 'combined'",
-                        numericInput("combined_k","Combined constant, K",
+                        numericInput("combined_k",HTML(paste0("Combined constant, K",add_help("q_ck"))),
                                      rv$vis_k, min = 0, max = 1, step = 0.01
                         )
+                        ,bsTooltip("q_ck","Combined coefficient merges the Jaccard and Overlap coefficients. K is the proportion of Jaccard coefficient."
+                                   ,placement = "top")
+                    )
+                )
+            ),
+    fluidRow(
+                column(
+                    width = 6,
+                    radioGroupButtons("p_or_q_vis","Color by",
+                                      choiceNames = c("P", "P.adj"),
+                                      choiceValues = c("pval", "padj"),
+                                      selected = rv$vis_pq,
+                                      direction = "horizontal",status="default"
                     )
                 ),
                 column(
-                    width = 7,align="right",br(),
+                    width = 6,align="right",br(),
                     actionBttn("vis_replot","Replot!"
                                ,style = "simple"#,size = "sm"
-                             ,color = "primary",icon = icon("atom") #,lib="font-awesome"
+                               ,color = "primary",icon = icon("atom") #,lib="font-awesome"
                     )
                 )
             )
