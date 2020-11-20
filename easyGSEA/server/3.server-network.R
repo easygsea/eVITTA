@@ -19,7 +19,16 @@ output$ui_bodyNetwork <- renderUI({
                     uiOutput("vis_error")
                 ),
                 div(
-                    visNetworkOutput("vis_network", height = "660px")
+                    if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
+                        div(
+                            br(),
+                            tags$h4("We support a maximum of 500 data points in Enrichment Network.",
+                                    ". Please reduce the number of data points by adjusting P.adj thresholds in the Gear button."),
+                            br()
+                        )
+                    } else {
+                        visNetworkOutput("vis_network", height = "660px")
+                    }
                 )
                 ,absolutePanel(
                     fluidRow(
@@ -80,6 +89,12 @@ output$ui_bodyNetwork <- renderUI({
                                     # tags$h4("Need to have at least two pathways to plot a dendrogram."),
                                     # br()
                                 )
+                        } else if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
+                                div(
+                                    br(),
+                                    tags$h4("We support a maximum of 500 data points in Enrichment Network."),
+                                    br()
+                                )
                             }
                         else{
                                 plotlyOutput("plot_dendrogram", width = "800px", height = '1320px')
@@ -91,6 +106,12 @@ output$ui_bodyNetwork <- renderUI({
                                 # tags$h4("Need to have at least two pathways to plot a barplot."),
                                 # br()
                             ) 
+                        } else if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
+                            div(
+                                br(),
+                                tags$h4("We support a maximum of 500 data points in the Enrichment Network tab."),
+                                br()
+                            )
                         } else {
                             plotlyOutput("plot_cluster_bar", width = "900px", height = "500px")
                         }

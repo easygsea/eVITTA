@@ -954,6 +954,7 @@
     
     vis <- function(){
         print(Sys.time())
+        
         # req(is.null(rv$vis_status) == T)
         rv$vis = NULL
         rv$vis_status = NULL
@@ -961,12 +962,18 @@
         df = dfNEL()
         
         rv$df_vis = df
+        print(nrow(df))
           
         # print(nrow(df))
         if(nrow(df)<1){
             rv$vis_status = "failed"
             return(NULL)
-        }else{
+        # check if it exceeds the maximum data points
+        } else if (nrow(df) > 500) {
+          rv$vis_status = "max exceeded"
+          return(NULL)
+        }
+        else{
             rv$vis_status = "success"
             # leading edge genes
             a = df[[ncol(df)]] #df$leadingEdge
@@ -1209,6 +1216,7 @@
 
         # plot a dendrogram nicely
         # convert it to a dendrogram object
+        if(is.null(hc)){return(NULL)}
         dhc <- as.dendrogram(hc)
         
         # extract the dendrogram data
@@ -1776,7 +1784,7 @@
         if(sig_no >= 100){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         sig_no <- rv$no_up_025 + rv$no_down_025
         if(sig_no >= 20){rv$bar_q_cutoff <- .025;rv$vis_q <- .025}
-        # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
+        rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
         incProgress(0.2)
       }
     }
