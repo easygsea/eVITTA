@@ -953,6 +953,7 @@
     # plot vis network
     
     vis <- function(){
+        print(Sys.time())
         # req(is.null(rv$vis_status) == T)
         rv$vis = NULL
         rv$vis_status = NULL
@@ -989,7 +990,7 @@
                 # edges_mat = edges_mat[edges_mat$percent>rv$percent_cutoff,]
                 rv$dendro_run = "success"
                 }
-            
+            print(Sys.time())
             # nodes matrix
             # colors
             get_colors = function(pq="padj"){
@@ -1082,8 +1083,7 @@
             
             hc2 <- cutree(hc, h = 1 - cutoff_similarity)
             number_of_clusters <- max(hc2)
-            print("please check the variable here")
-            print(number_of_clusters)
+            #print(number_of_clusters)
             hc2_data <- hc2 %>%
               as.data.frame() %>%
               rownames_to_column() %>%
@@ -1116,14 +1116,14 @@
               filter(padj == min(padj)) %>%
               top_n(1, ES) %>%
               filter(row_number()==1) %>%
-              dplyr::select(cluster, pathway,n)
+              dplyr::select(cluster, pathway, n, pval, ES, padj)
             } else {
               df_padj <- df_further %>%
                 group_by(cluster) %>%
                 mutate(n = n()) %>%
                 filter(padj == min(padj)) %>%
                 filter(row_number()==1) %>%
-                dplyr::select(cluster, pathway,n)
+                dplyr::select(cluster, pathway, n, pval, ES, padj)
               }
             # assign the rvs that would be used in dendrogram
             rv$hc = hc
@@ -1185,6 +1185,7 @@
                     # visPhysics(stabilization = FALSE) %>%
                     visPhysics(solver = "barnesHut") %>% # node moving dynamics
                     visLayout(randomSeed = 12) # to always have the same network
+                print(Sys.time())
                 return(vis)
             }
         }
@@ -1197,7 +1198,7 @@
         rv$dendro_run = "fail"
         return(NULL)
       }else{
-        #rv$dendro_run = "success"
+        rv$dendro_run = "success"
         
         #get all the rvs from the vis() function
         hc = rv$hc
@@ -1205,78 +1206,7 @@
         df_padj = rv$df_padj
         cutoff_similarity = rv$cutoff_similarity
         print(cutoff_similarity)
-        
-        # comment out everything below because we have all the RVs for faster speed
-        # leading edge genes
-        # a = df[[ncol(df)]] #df$leadingEdge
-        # names(a) <- df$pathway
-        # edges_mat2 = NULL
-        # if(nrow(df)>1){
-        # # pathway combinations
-        # # b_combn<-sapply(as.data.frame(combn(names(a),2)), function(x) as.character(x), simplify = FALSE)
-        # # calculate a edge matrix for hierarchical clustering
-        # edges_mat2 = rv$edges_mat_zero_cutoff
-        # }
-        # # Create a empty distance matrix with names
-        # dist_matrix <- matrix(0,nrow(df),nrow(df))
-        # colnames(dist_matrix) <- df$pathway
-        # rownames(dist_matrix) <- df$pathway
-        # 
-        # # assign the distance matrix with value: dissimilarity percentage
-        # disimilarity_vector <- 1-(edges_mat2$percent)
-        # dist_matrix[lower.tri(dist_matrix,diag = FALSE)] = disimilarity_vector
-        # hclust_matrix <- as.dist(dist_matrix)
-        # 
-        # # Do the hierarchical clustering
-        # hc <- hclust(hclust_matrix, method = "complete")
-        # 
-        # # get the cluster id from the cutoff of similarity
-        # # create a dataframe for further data mining with cluster id in df_further
-        # cutoff_similarity <- 0.3
-        # hc2 <- cutree(hc, h = 1 - cutoff_similarity)
-        # number_of_clusters <- max(hc2)
-        # print(number_of_clusters)
-        # hc2_data <- hc2 %>%
-        #   as.data.frame() %>%
-        #   rownames_to_column() %>%
-        #   dplyr::rename("pathway" = "rowname")
-        # 
-        # # store the data frame with cluster ids
-        # df_further <- df %>%
-        #   left_join(hc2_data, by = "pathway") %>%
-        #   dplyr::rename("cluster" = ".")
-        # 
-        # df_rank <- df_further %>%
-        #   group_by(cluster) %>%
-        #   dplyr::summarise(n = n())%>%
-        #   mutate(rank = base::rank(-n, ties.method = "first" )) %>%
-        #   ungroup()
-        # 
-        # df_rank <- df_further %>%
-        #   left_join(df_rank, by = "cluster") %>%
-        #   dplyr::rename("origin_clu" = "cluster") %>%
-        #   dplyr::rename("cluster" = "rank")
-        # 
-        # df_further <- dplyr::select(df_rank, -origin_clu)
-        # # rv$df_further = df_further
-        # 
-        # # create a data frame that has all the pathways having lowest P.adj. in each clusters
-        # df_padj <- df_further %>%
-        #   group_by(cluster) %>%
-        #   filter(padj == min(padj)) %>%
-        #   filter(ES == min(ES)) %>%
-        #   #top_n(1, ES) %>%
-        #   filter(row_number()==1) %>%
-        #   dplyr::select(cluster, pathway)
-        # rv$df_significant <- df_further %>%
-        #   left_join(df_padj, by = "cluster") %>%
-        #   mutate(cluster_name = paste(cluster, ": ", pathway.y)) %>%
-        #   dplyr::rename("pathway"= "pathway.x")
-        # 
-        # two simple denrograms here
-        # plot(hc,labels = FALSE, hang= -1)
-        # plot(hc, cex = 0.5, hang = -1)
-        
+
         # plot a dendrogram nicely
         # convert it to a dendrogram object
         dhc <- as.dendrogram(hc)
@@ -1325,11 +1255,11 @@
           mutate(pathway = strsplit(pathway,"%")[[1]][1]) %>%
           mutate(complete_name = paste(cluster,": ", pathway))%>%
           mutate(length = str_length(complete_name))
-        print("block1")
         df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
           if(nchar(x) < 45){return(x)}
           else{return(paste0(substr(x, 0, 45),"..."))}})
         
+        #rv$df_padj_points <- df_padj_points     
         
         # text size
         label_size <- 3
@@ -1337,7 +1267,6 @@
           label_size <- rv$label_size
         }
         # plot it out
-        print("block2")
         ggplot_dendro <- gg_dendro %>%
           ggplot(theme = theme_minimal(), labels = FALSE) + #, horiz = TRUE
           ylim(1, -1.5) +
@@ -1354,7 +1283,8 @@
         ggplotly_dendro <- ggplot_dendro %>%
           ggplotly(tooltip = c("name","x","y")) %>%
           layout(showlegend = FALSE, margin = list(l = 0)) %>%
-          style(textposition = "right")
+          style(textposition = "right") %>%
+          event_register("plotly_click")
         
         #ggplot_dendro
         return(ggplotly_dendro)
@@ -1362,6 +1292,98 @@
         
     }
     
+    plot_cluster_barplot <- function() {
+      df = rv$df_vis
+      if(nrow(df)<=1){
+        rv$cluster_bar_run = "fail"
+        return(NULL)
+      }else{
+        rv$cluster_bar_run = "success"
+       #get all the rvs from the vis() function
+        hc = rv$hc
+        number_of_clusters = rv$number_of_clusters
+        df_padj = rv$df_padj
+        cutoff_similarity = rv$cutoff_similarity
+        print(cutoff_similarity)
+
+        # plot a dendrogram nicely
+        # convert it to a dendrogram object
+        dhc <- as.dendrogram(hc)
+        
+        # extract the dendrogram data
+        ddata <- dendro_data(dhc, type = "rectangle")
+        print(number_of_clusters)
+        #color my dendrogram
+        dendro <- dhc %>%
+          #set("labels", label_short) %>%
+          dendextend::set("branches_k_color", k = number_of_clusters) %>% 
+          dendextend::set("branches_lwd", 0.3) %>%
+          dendextend::set("leaves_pch", 19) %>% 
+          dendextend::set("leaves_cex", 0.4) 
+        
+        #convert it to a ggplot object
+        gg_dendro <- as.ggdend(dendro)
+        
+        # extract the points that need to have hover function
+        hover_points <- gg_dendro$nodes %>%
+          filter(leaf == TRUE) %>%
+          mutate(name = ddata$labels$label)
+        
+        cluster_size = 3
+        if(!is.null(rv$cluster_size)){
+          cluster_size <- rv$cluster_size
+        }
+        # create the points of the lowest p.adj for group labeling
+        rv$max_cluster_size = max(df_padj$n)
+        print(rv$max_cluster_size)
+        # the cluster size may be too small compared to the default size(3)
+        if(rv$max_cluster_size < cluster_size){
+          cluster_size = 1
+          rv$cluster_size = 1
+        }
+        df_padj_points <- df_padj %>%
+          left_join(hover_points, by = c("pathway" = "name")) %>%
+          filter(n >= cluster_size) %>%
+          mutate(pathway = strsplit(pathway,"%")[[1]][1]) %>%
+          mutate(complete_name = paste(cluster,": ", pathway))%>%
+          mutate(length = str_length(complete_name))
+        df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
+          if(nchar(x) < 45){return(x)}
+          else{return(paste0(substr(x, 0, 45),"..."))}})
+        
+        cluster_barplot <- df_padj_points %>% 
+        dplyr::arrange(dplyr::desc(cluster)) %>%
+        ggplot(aes(x=ES, y=factor(complete_name, levels=complete_name),
+                   fill=-log10(pval)*sign(ES),
+                   text=paste0(
+                     "<b>",df_padj_points[["complete_name"]],"</b>\n",
+                     "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
+                     "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
+                     "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
+                     "Cluster size = ",n,"\n"))) +
+        geom_bar(stat="identity", width = 0.8) +
+        scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(P.value)*sign(ES)"), oob=squish) +
+        xlab("Enrichment Score (ES)") + ylab("") +
+        geom_vline(xintercept=0, size=0.1) +
+        theme_minimal() +
+        theme( axis.text.y = element_text(size = 11),
+              legend.title = element_text(size = 9))
+        # # scale_y_discrete(position = "right")
+        
+        
+        yh = nrow(df_padj_points) * 25 + 20
+        if(yh<=500){yh=500}
+        
+      plotly_barplot <- ggplotly(cluster_barplot,
+                                 height = yh,
+                                 tooltip = "text",
+                                 source = "bar_plot_click"
+      ) %>%
+        # layout(legend=list(colorbar=list(side="right"))) %>%
+        event_register("plotly_click")
+      plotly_barplot
+      }
+    }
     #=======================================================#
     #####         collapsible multicheckinputbox       ######
     #=======================================================#
@@ -1611,7 +1633,7 @@
       rv$gmts=NULL
       
       rv$no_up_01 = 0;rv$no_up_05 = 0;rv$no_down_01 = 0;rv$no_down_05 = 0
-      
+      rv$no_up_025 = 0; rv$no_down_025 = 0
       rv$es_term = NULL
       
       rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
@@ -1742,13 +1764,18 @@
         # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
         rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
         rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
+        rv$no_up_025 = rv$no_up_025 + sum(fgseaRes$padj<0.025&fgseaRes$ES>0,na.rm=TRUE)
+        
         rv$no_down_01 = rv$no_down_01 + sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
         rv$no_down_05 = rv$no_down_05 + sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
+        rv$no_down_025 = rv$no_down_025 + sum(fgseaRes$padj<0.025&fgseaRes$ES<0,na.rm=TRUE)
         
         sig_no <- rv$no_up_05 + rv$no_down_05
         if(sig_no >= 1){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
-        # sig_no <- rv$no_up_01 + rv$no_down_01
-        # if(sig_no >= 1){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
+        sig_no <- rv$no_up_01 + rv$no_down_01
+        if(sig_no >= 100){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
+        sig_no <- rv$no_up_025 + rv$no_down_025
+        if(sig_no >= 20){rv$bar_q_cutoff <- .025;rv$vis_q <- .025}
         # rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
         incProgress(0.2)
       }
@@ -1929,8 +1956,10 @@
       rv$gmts_length <- NULL
       rv$no_up_05 <- NULL
       rv$no_up_01 <- NULL
+      rv$no_up_025 <- NULL
       rv$no_down_05 <- NULL
       rv$no_down_01<- NULL
+      rv$no_down_025 <- NULL
       rv$infile_check <- NULL
       rv$rnk_check <- NULL
       rv$gene_lists_mat1 <- NULL

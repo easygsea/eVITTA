@@ -45,7 +45,7 @@ rownames(intros) <- NULL
 p_min = 1e-300
 
 # slider cutoffs for p/q
-cutoff_slider = c(0.0001,0.0005,0.001,0.005,0.01,0.05,0.1,0.25,0.3,0.5,1)
+cutoff_slider = c(0.0001,0.0005,0.001,0.005,0.01,0.025,0.05,0.1,0.25,0.3,0.5,1)
 
 # stop words and words with minimum meaning to be filtered for word counts
 data(stop_words)

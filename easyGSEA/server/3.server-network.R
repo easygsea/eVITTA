@@ -45,36 +45,99 @@ output$ui_bodyNetwork <- renderUI({
             box(
                 id = "dendrogram_box",
                 width = 5,
-                title=span( icon("pagelines"), "Cluster dendrogram"), status = "primary",
-                
+                title = div( 
+                    selectizeInput("dendro_or_barplot",
+                      span(icon("pagelines")," Select the plot you would like to explore"),
+                     choices = c("Cluster dendrogram", "Cluster barplot"),
+                     selected = rv$dendro_or_barplot,
+                     width = "70%"),
+                    div(style = "position: relative;bottom: 1em;",
+                       actionBttn("dendro_or_barplot_confirm","View"
+                               ,style = "simple",size = "sm"
+                               ,color = "primary"
+                            ) 
+                        )
+                    ),
+                status = "primary",
                 div(
                     style="overflow-y:scroll; overflow-x:scroll; max-height: 700px", #max-height:600px;
-                    if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){
-                        div(
-                                tags$h4("Need to have at least two pathways to plot a dendrogram."),
+                    if(rv$dendro_or_barplot == "Cluster dendrogram"){
+                        if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){
+                            div(
+                                    br(),
+                                    tags$h4("Need to have at least two pathways to plot a dendrogram."),
+                                    br()
+                                )
+                            }
+                        else{
+                                plotlyOutput("plot_dendrogram", width = "800px", height = '1320px')
+                        }
+                    } else {
+                        if(!is.null(rv$cluster_bar_run) && rv$cluster_bar_run == "fail"){
+                            div(
+                                br(),
+                                tags$h4("Need to have at least two pathways to plot a barplot."),
                                 br()
-                            )
+                            ) 
+                        } else {
+                            plotlyOutput("plot_cluster_bar", width = "900px", height = "900px")
                         }
-                    else{
-                            plotlyOutput("plot_dendrogram", width = "800px", height = '1320px')
-                        }
+                    }
                     
-                ),
-                div(id="dendro_dropdown", style = "position: absolute; left: 1em; bottom: 2em;",
-                    dropdown(
-                        uiOutput("dendro_option"),
-                        size = "xs",
-                        width = '300px',
-                        icon = icon("gear", class = "opt"),
-                        up = TRUE
-                    ) 
+                )
+                # ,div(id="dendro_dropdown", style = "position: absolute; left: 1em; bottom: 2em;",
+                #     dropdown(
+                #         uiOutput("dendro_option"),
+                #         size = "xs",
+                #         width = '300px',
+                #         icon = icon("gear", class = "opt"),
+                #         up = TRUE
+                #     ) 
+                # )
+                ,absolutePanel(
+                    fluidRow(
+                        # add a id for the gear button in introjs
+                        div(id = "dendro_dropdown",
+                            style="display: inline-block;vertical-align:top;margin-right:5px;
+                            position: absolute; right: 55px; top: 4em;",
+                            dropdown(
+                                # if(rv$dendro_or_barplot == "Cluster barplot"){
+                                #     uiOutput("barplot_option")
+                                # } else {
+                                    uiOutput("dendro_option")
+                                ,
+                                width = '300px',
+                                
+                                up = FALSE,right = TRUE,icon = icon("gear"),
+                                style = "unite",
+                                circle = TRUE,
+                                tooltip = tooltipOptions(
+                                    title = "Click to adjust parameters for creating a dendrogram"
+                                    ,placement = "bottom"),
+                            )
+                        ),
+                        div(id="d_dendro", style="display: inline-block;vertical-align:top;margin-right:5px;
+                            position: absolute; top: 4em; right: 0px;",
+                            
+                            # style = "position: absolute; right: 1em; top: 1em;",
+                            downloadBttn(
+                                size = "md", style="unite",
+                                if(rv$dendro_or_barplot == "Cluster dendrogram"){outputId = "download_dendro"}
+                                else{outputId = "download_cluster_barplot"}
+                                , label = NULL
+                            )
+                        )
+                    ),
+                    right = 0,
+                    top = 50
                 )
                 
                 ,absolutePanel(
                     nav_btn_b("net_b"),
                     nav_btn_f("net_f"),
                     
-                    bsTooltip("d_vis","Click to download plot", placement = "bottom")
+                    bsTooltip("d_vis","Click to download plot", placement = "bottom"),
+                    bsTooltip("d_dendro", "Click to download plot", placement = "bottom")
                     ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
                                ,placement = "bottom")
                     ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
@@ -123,9 +186,25 @@ output$vis_network <- renderVisNetwork({
 output$plot_dendrogram <- renderPlotly({
     req(is.null(rv$fgseagg)==F)
     withProgress(message = "Hierarchically clustering enriched gene sets and generating the dendrogram ...",value = 1,{
-        plot_dendro()
+        rv$dendro <- plot_dendro()
+        return(rv$dendro)
     })
     
+})
+
+# render Plotly cluster barplot
+output$plot_cluster_bar <- renderPlotly({
+    req(is.null(rv$fgseagg)==F)
+    withProgress(message = "Clustering enriched gene sets and generating the barplot ...",value = 1,{
+        rv$cluster_barplot <- plot_cluster_barplot()
+        return(rv$cluster_barplot)
+    })
+    
+})
+
+# the input that user selected that controls the plot displayed
+observeEvent(input$dendro_or_barplot_confirm,{
+    rv$dendro_or_barplot <- input$dendro_or_barplot
 })
 
 # the dropdown gear ui of dendrogram
@@ -137,9 +216,10 @@ output$dendro_option <- renderUI({
                          value = rv$cutoff_point, min = 0, max = 1, step=0.01),
             #add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
             bsTooltip("dendro_help", "the cutoff value of pathway similarity for clustering; pathways that have similarity larger than or equal to x will have the same cluster id",placement = "bottom"),
-            numericInput("dendro_label_size", 
+            if(rv$dendro_or_barplot == "Cluster dendrogram")
+                {numericInput("dendro_label_size", 
                          HTML(paste0("Label text size : ( 0 &#x2264 y &#x2264 6 )",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
-                         value = rv$label_size, min = 0, max = 6, step=0.1),
+                         value = rv$label_size, min = 0, max = 6, step=0.1)},
             #add_help("dendro_label_size_help",style = "top: 1px; right:0px")),
             bsTooltip("dendro_label_size_help", "the text size of the labels(cluster id and the most significant pathway name) in dendrogram",placement = "bottom"),
             numericInput("dendro_cluster_size", 
@@ -160,8 +240,10 @@ observeEvent(input$dendro_update,{
     if(!(rv$cutoff_point == input$dendro_cutoff) && (input$dendro_cutoff >= 0 && input$dendro_cutoff <= 1)){
        rv$cutoff_point = input$dendro_cutoff 
     }
-    if(!(rv$label_size == input$dendro_label_size) && input$dendro_label_size >= 0 && input$dendro_label_size <= 6){
-        rv$label_size = input$dendro_label_size 
+    if(rv$dendro_or_barplot == "Cluster dendrogram"){
+            if(!(rv$label_size == input$dendro_label_size) && input$dendro_label_size >= 0 && input$dendro_label_size <= 6){
+            rv$label_size = input$dendro_label_size 
+        }  
     }
     if(!(rv$cluster_size == input$dendro_cluster_size) && input$dendro_cluster_size <= rv$max_cluster_size && input$dendro_cluster_size >=0){
         rv$cluster_size = input$dendro_cluster_size
@@ -170,7 +252,21 @@ observeEvent(input$dendro_update,{
     
 })
 
-# download
+# download dendrogram button
+output$download_dendro <- downloadHandler(
+    filename = function() {paste0("dendrogram_",paste0("cutoff_",rv$cutoff_point,"_"),rv$rnkll,".html")},
+    content = function(file) {saveWidget(as_widget(rv$dendro), file, selfcontained = TRUE)}
+    
+)
+# download cluster barplot button
+output$download_cluster_barplot <- downloadHandler(
+    filename = function() {paste0("barplot_cluster_",paste0("cutoff_",rv$cutoff_point,"_"),rv$rnkll,".html")},
+    content = function(file) {saveWidget(as_widget(rv$cluster_barplot), file, selfcontained = TRUE)}
+    
+)
+
+
+# download visnetwork
 output$download_vis <- downloadHandler(
     filename = function() {paste0("network_",paste0("q",rv$vis_q,"p",rv$vis_p,"_",rv$vis_pq,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(rv$vis), file, selfcontained = TRUE)}

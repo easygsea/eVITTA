@@ -384,6 +384,7 @@ output$run_summary_gsea <- renderUI({
                         # tags$li(HTML("Query name:<b>",rv$rnkll,"<\b>")),
                         tags$li(HTML("Gene set size filters min=",rv$gmin," max=",rv$gmax," results in ",rv$gmts_length," / ",length(rv$gmts)," gene sets")),
                         # tags$li(HTML("Number of permutation=",rv$gperm)),
+                        tags$li(HTML("<b>",rv$no_down_025,"</b> (down) <b>",rv$no_up_025,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.025")),
                         tags$li(HTML("<b>",rv$no_down_05,"</b> (down) <b>",rv$no_up_05,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.05")),
                         tags$li(HTML("<b>",rv$no_down_01,"</b> (down) <b>",rv$no_up_01,"</b> (up) "," gene sets are significantly enriched at P.adj < 0.25"))
                     )
