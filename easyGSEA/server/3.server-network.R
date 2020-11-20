@@ -8,7 +8,6 @@ output$ui_bodyNetwork <- renderUI({
         )
     }else{
         fluidRow(
-            # uiOutput("ui_vis_gear"),
             # add an id for introjs
             box(id = "enrichment_network_box2",
                 width = 7,
@@ -36,7 +35,19 @@ output$ui_bodyNetwork <- renderUI({
                         # add a id for the gear button in introjs
                         div(id = "gear_box",
                             style="display: inline-block;vertical-align:top;margin-right:5px;",
-                            uiOutput("ui_vis_gear")
+                            dropdown(
+                                up = FALSE,right = TRUE,icon = icon("gear"),width = "450px",
+                                style = "unite",#status = "primary",#size = "sm",
+                                circle = TRUE,
+                                tooltip = tooltipOptions(
+                                    title = "Click to adjust parameters for creating a network"
+                                    ,placement = "bottom"),
+                                
+                                #         animate = animateOptions(
+                                #             enter = "slideInRight",
+                                #             exit = "fadeOutRight", duration = 0.5
+                                #         ),
+                            uiOutput("ui_vis_gear"))
                         ),
                         div(id="d_vis", style="display: inline-block;vertical-align:top;margin-right:5px;",
                             
@@ -54,28 +65,29 @@ output$ui_bodyNetwork <- renderUI({
             box(
                 id = "dendrogram_box",
                 width = 5,
-                title = div( 
-                    selectizeInput("dendro_or_barplot",
-                      span(icon("pagelines")," Select the plot you would like to explore"),
-                     choices = c("Cluster dendrogram", "Cluster barplot"),
-                     selected = rv$dendro_or_barplot,
-                     width = "70%"),
-                    div(style = "position: relative;bottom: 1em;",
-                       actionBttn("dendro_or_barplot_confirm","View"
-                               ,style = "simple",size = "sm"
-                               ,color = "primary"
-                            ) 
-                        )
+                title = div( #span(icon("pagelines"), #" Select the plot you would like to explore"),
+                                  selectizeInput("dendro_or_barplot",
+                                                 NULL,
+                                                 choices = c("Cluster dendrogram"="dendro", "Cluster barplot"="bar"),
+                                                 selected = rv$dendro_or_barplot,
+                                                 width = "200px")
+                    
+                    # ,div(style = "position: relative;bottom: 1em;",
+                    #    actionBttn("dendro_or_barplot_confirm","View"
+                    #            ,style = "simple",size = "sm"
+                    #            ,color = "primary"
+                    #         ) 
+                    #     )
                     ),
                 status = "primary",
                 div(
                     style="overflow-y:scroll; overflow-x:scroll; max-height: 700px", #max-height:600px;
-                    if(rv$dendro_or_barplot == "Cluster dendrogram"){
+                    if(rv$dendro_or_barplot == "dendro"){
                         if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){
                             div(
-                                    br(),
-                                    tags$h4("Need to have at least two pathways to plot a dendrogram."),
-                                    br()
+                                    # br(),
+                                    # tags$h4("Need to have at least two pathways to plot a dendrogram."),
+                                    # br()
                                 )
                         } else if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                                 div(
@@ -90,9 +102,9 @@ output$ui_bodyNetwork <- renderUI({
                     } else {
                         if(!is.null(rv$cluster_bar_run) && rv$cluster_bar_run == "fail"){
                             div(
-                                br(),
-                                tags$h4("Need to have at least two pathways to plot a barplot."),
-                                br()
+                                # br(),
+                                # tags$h4("Need to have at least two pathways to plot a barplot."),
+                                # br()
                             ) 
                         } else if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                             div(
@@ -101,7 +113,7 @@ output$ui_bodyNetwork <- renderUI({
                                 br()
                             )
                         } else {
-                            plotlyOutput("plot_cluster_bar", width = "900px", height = "900px")
+                            plotlyOutput("plot_cluster_bar", width = "900px", height = "500px")
                         }
                     }
                     
@@ -115,45 +127,40 @@ output$ui_bodyNetwork <- renderUI({
                 #         up = TRUE
                 #     ) 
                 # )
+
                 ,absolutePanel(
-                    fluidRow(
-                        # add a id for the gear button in introjs
-                        div(id = "dendro_dropdown",
-                            style="display: inline-block;vertical-align:top;margin-right:5px;
-                            position: absolute; right: 55px; top: 4em;",
-                            dropdown(
-                                # if(rv$dendro_or_barplot == "Cluster barplot"){
-                                #     uiOutput("barplot_option")
-                                # } else {
-                                    uiOutput("dendro_option")
-                                ,
-                                width = '300px',
-                                
-                                up = FALSE,right = TRUE,icon = icon("gear"),
-                                style = "unite",
-                                circle = TRUE,
-                                tooltip = tooltipOptions(
-                                    title = "Click to adjust parameters for creating a dendrogram"
-                                    ,placement = "bottom"),
-                            )
-                        ),
-                        div(id="d_dendro", style="display: inline-block;vertical-align:top;margin-right:5px;
-                            position: absolute; top: 4em; right: 0px;",
+                    # add a id for the gear button in introjs
+                    div(id = "dendro_dropdown",
+                        style="display: inline-block;vertical-align:top;
+                            ", #position: absolute; right: 55px; top: 4em;
+                        dropdown(
+                            # if(rv$dendro_or_barplot == "Cluster barplot"){
+                            #     uiOutput("barplot_option")
+                            # } else {
+                            uiOutput("dendro_option")
+                            ,
+                            width = '300px',
                             
-                            # style = "position: absolute; right: 1em; top: 1em;",
-                            downloadBttn(
-                                size = "md", style="unite",
-                                if(rv$dendro_or_barplot == "Cluster dendrogram"){outputId = "download_dendro"}
-                                else{outputId = "download_cluster_barplot"}
-                                , label = NULL
-                            )
+                            up = FALSE,right = TRUE,icon = icon("gear"),
+                            style = "unite",
+                            circle = TRUE,
+                            tooltip = tooltipOptions(
+                                title = "Click to adjust parameters for creating a dendrogram"
+                                ,placement = "bottom"),
                         )
                     ),
-                    right = 0,
-                    top = 50
-                )
-                
-                ,absolutePanel(
+                    div(id="d_dendro", style="display: inline-block;vertical-align:top;
+                            ", #position: absolute; top: 4em; right: 0px;
+                        
+                        # style = "position: absolute; right: 1em; top: 1em;",
+                        downloadBttn(
+                            size = "md", style="unite",
+                            if(rv$dendro_or_barplot == "Cluster dendrogram"){outputId = "download_dendro"}
+                            else{outputId = "download_cluster_barplot"}
+                            , label = NULL
+                        )
+                    ),
+                    
                     nav_btn_b("net_b"),
                     nav_btn_f("net_f"),
                     
@@ -164,6 +171,7 @@ output$ui_bodyNetwork <- renderUI({
                     ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
                                ,placement = "bottom")
                     ,
+                    
                     right = 10,
                     top = 8
                 )
@@ -186,7 +194,7 @@ observeEvent(input$net_f,{
 output$vis_error <- renderUI({
     req(rv$vis_status == "failed")
     HTML(
-        "No significant enrichment found at pval < ",
+        "<br><br>No significant enrichment found at pval < ",
         rv$vis_p,
         " & q < ",
         rv$vis_q,
@@ -224,7 +232,7 @@ output$plot_cluster_bar <- renderPlotly({
 })
 
 # the input that user selected that controls the plot displayed
-observeEvent(input$dendro_or_barplot_confirm,{
+observeEvent(input$dendro_or_barplot,{
     rv$dendro_or_barplot <- input$dendro_or_barplot
 })
 
@@ -233,16 +241,16 @@ output$dendro_option <- renderUI({
     #req(rv$dendro_run == "success")
     div(
             numericInput("dendro_cutoff", 
-                         HTML(paste0("Cutoff = :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
+                         HTML(paste0("Similarity threshold = :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
                          value = rv$cutoff_point, min = 0, max = 1, step=0.01),
             #add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
-            bsTooltip("dendro_help", "the cutoff value of pathway similarity for clustering; pathways that have similarity larger than or equal to x will have the same cluster id",placement = "bottom"),
+            bsTooltip("dendro_help", "Gene sets that have a similarity score larger than or equal to x are clustered together",placement = "bottom"),
             if(rv$dendro_or_barplot == "Cluster dendrogram")
                 {numericInput("dendro_label_size", 
                          HTML(paste0("Label text size : ( 0 &#x2264 y &#x2264 6 )",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
                          value = rv$label_size, min = 0, max = 6, step=0.1)},
             #add_help("dendro_label_size_help",style = "top: 1px; right:0px")),
-            bsTooltip("dendro_label_size_help", "the text size of the labels(cluster id and the most significant pathway name) in dendrogram",placement = "bottom"),
+            bsTooltip("dendro_label_size_help", "The text size of the labels (cluster id and the most significant gene set) in the dendrogram",placement = "bottom"),
             numericInput("dendro_cluster_size", 
                          HTML(paste0("Minimum Cluster size for labels = :", br(), "( 0 &#x2264 z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
                          value = rv$cluster_size, min = 0, max = rv$max_cluster_size, step = 1),
@@ -313,7 +321,7 @@ observeEvent(input$q_vis_edge,{
         title = "Edge parameters: Determine the degree of gene overlap between gene sets",
         includeMarkdown(paste0(getwd(),"/inc/edge_explaination.md")),
         easyClose = TRUE,size="l",
-        footer = modalButton("Dismiss")
+        footer = modalButton("OK")
     ))
     
 })
@@ -324,7 +332,7 @@ observeEvent(input$q_vis_edge_threshold,{
         title = "Recommendations on choice of thresholds",
         includeMarkdown(paste0(getwd(),"/inc/edge_threshold_explaination.md")),
         easyClose = TRUE,size="l",
-        footer = modalButton("Dismiss")
+        footer = modalButton("OK")
     ))
     
 })
@@ -334,18 +342,6 @@ output$ui_vis_gear <- renderUI({
     # div(
     #     align = "left",
     #     style = "position: absolute; right: 5em; top: 1em;",
-        dropdown(
-            up = FALSE,right = TRUE,icon = icon("gear"),width = "800px",
-            style = "unite",#status = "primary",#size = "sm",
-            circle = TRUE,
-            tooltip = tooltipOptions(
-                title = "Click to adjust parameters for creating a network"
-                ,placement = "bottom"),
-            
-    #         animate = animateOptions(
-    #             enter = "slideInRight",
-    #             exit = "fadeOutRight", duration = 0.5
-    #         ),
     # box(
     #     width = 12,
     #     title = span(icon("gear", class = "opt"),"Advanced parameters for creating a network"), solidHeader = T,
@@ -353,43 +349,31 @@ output$ui_vis_gear <- renderUI({
     #     status = "primary", 
     #     # solidHeader = T,
     #     collapsible = T, collapsed = T, 
-            div(
+            div(div(
                 align = "center",
                 tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
             ),
             fluidRow(
                 column(
-                    width = 5,
+                    width = 6,
                     sliderTextInput("cutoff_vis_p",
                                     label = "Adjust P threshold:",
                                     choices= cutoff_slider,
                                     selected=rv$vis_p, grid=T, force_edges=T)
                 ),
                 column(
-                    width = 5,
+                    width = 6,
                     sliderTextInput("cutoff_vis_q",
                                     label = "Adjust P.adj threshold:",
                                     choices= cutoff_slider,
                                     selected=rv$vis_q, grid=T, force_edges=T)
-                ),
-                column(
-                    width = 2,
-                    radioGroupButtons("p_or_q_vis","Color by",
-                        choiceNames = c("P", "P.adj"),
-                        choiceValues = c("pval", "padj"),
-                        selected = rv$vis_pq,
-                        direction = "horizontal",status="default"
-                    )
                 )
             ),br(),
             fluidRow(
                 column(
-                    width = 5,
+                    width = 6,
                     selectInput("vis_percent",
-                        label = p("Edge parameters",
-                                tags$style(type = "text/css", "#q_vis_edge {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;margin-left: 10px;}"),
-                                bsButton("q_vis_edge", label = "", icon = icon("question"), style = "default", size = "extra-small")),
-                        
+                        label = label_with_help_bttn("Edge parameters","q_vis_edge"),
                         choices = list(
                             "Jaccard Coefficient" = "jaccard",
                             "Overlap Coefficient" = "overlap",
@@ -400,33 +384,43 @@ output$ui_vis_gear <- renderUI({
                     bsTooltip("q_vis_edge", "Click to learn more!", placement = "top")
                 ),
                 column(
-                    width = 5,
+                    width = 6,
                     numericInput("vis_percent_cutoff",
-                                 label = p("Edge threshold",
-                                           tags$style(type = "text/css", "#q_vis_edge_threshold {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;margin-left: 10px;}"),
-                                           bsButton("q_vis_edge_threshold", label = "", icon = icon("question"), style = "default", size = "extra-small")),
+                                 label = label_with_help_bttn("Edge threshold","q_vis_edge_threshold"),
                                  rv$percent_cutoff, min = 0, max = 1, step = 0.01
                     ),
                     bsTooltip("q_vis_edge_threshold", "Click to learn more!", placement = "top")
-                    
                 )
                 
             ),br(),
             fluidRow(
                 column(
-                    width = 5,
+                    width = 6,
                     conditionalPanel(
                         condition = "input.vis_percent == 'combined'",
-                        numericInput("combined_k","Combined constant, K",
+                        numericInput("combined_k",HTML(paste0("Combined constant, K",add_help("q_ck"))),
                                      rv$vis_k, min = 0, max = 1, step = 0.01
                         )
+                        ,bsTooltip("q_ck","Combined coefficient merges the Jaccard and Overlap coefficients. K is the proportion of Jaccard coefficient."
+                                   ,placement = "top")
+                    )
+                )
+            ),
+    fluidRow(
+                column(
+                    width = 6,
+                    radioGroupButtons("p_or_q_vis","Color by",
+                                      choiceNames = c("P", "P.adj"),
+                                      choiceValues = c("pval", "padj"),
+                                      selected = rv$vis_pq,
+                                      direction = "horizontal",status="default"
                     )
                 ),
                 column(
-                    width = 7,align="right",br(),
+                    width = 6,align="right",br(),
                     actionBttn("vis_replot","Replot!"
                                ,style = "simple"#,size = "sm"
-                             ,color = "primary",icon = icon("atom") #,lib="font-awesome"
+                               ,color = "primary",icon = icon("atom") #,lib="font-awesome"
                     )
                 )
             )
