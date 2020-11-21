@@ -1264,8 +1264,8 @@
           mutate(complete_name = paste(cluster,": ", pathway))%>%
           mutate(length = str_length(complete_name))
         df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
-          if(nchar(x) < 45){return(x)}
-          else{return(paste0(substr(x, 0, 45),"..."))}})
+          if(nchar(x) < 53){return(x)}
+          else{return(paste0(substr(x, 0, 53),"..."))}})
         
         #rv$df_padj_points <- df_padj_points     
         

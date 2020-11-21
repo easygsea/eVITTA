@@ -149,17 +149,17 @@ output$selected_es_tables <- DT::renderDataTable({
     df <- df %>%
         mutate_if(is.numeric, function(x) round(x, digits=3))
     
-    df
-    # DT::datatable(df,
-    #               extensions=c('Scroller'),
-    #               options = list(
-    #                   scrollY = "155px",
-    #                   scroller = TRUE,
-    #                   scrollX=TRUE           
-    #               ))
+    # df
+    DT::datatable(df,
+                  extensions=c('Scroller'),
+                  options = list(
+                      scrollY = "380px",
+                      scroller = TRUE,
+                      scrollX=TRUE
+                  ))}
     
-    # }, plugins="ellipsis", options = dt_options()
-    },  options = list(scrollX=T)
+    # }, plugins="ellipsis", options = dt_options(pageLength = 10)
+    # },  options = list(scrollX=T)
 )
 
 output$gs_tbl_dl <- downloadHandler(
