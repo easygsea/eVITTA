@@ -533,9 +533,16 @@ output$id_conversion_table <- DT::renderDataTable({
         df = rv$gene_lists_mat2
     }
     
-    df
-    
-}, plugins="ellipsis", options = dt_options()
+    DT::datatable(df,
+                  extensions=c('Scroller'),
+                  options = list(
+                      scrollY = "148px",
+                      scroller = TRUE,
+                      scrollX=TRUE
+                  ))}
+#     df
+#     
+# }, plugins="ellipsis", options = dt_options()
 # options=list(scrollX=T, pageLength = 5,  pagingType = "simple",
 #                                     columnDefs = list(list(
 #                                         targets = 5,
