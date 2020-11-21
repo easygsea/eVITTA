@@ -22,8 +22,8 @@ output$ui_bodyNetwork <- renderUI({
                     if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                         div(
                             br(),
-                            tags$h4("We support a maximum of 500 data points in Enrichment Network.",
-                                    ". Please reduce the number of data points by adjusting P.adj thresholds in the Gear button."),
+                            p("We support a maximum of 500 data points in Enrichment Network.",
+                                    "Please adjust the P and/or P.adj thresholds by clicking the top-right gear button"),
                             br()
                         )
                     } else {
@@ -68,9 +68,9 @@ output$ui_bodyNetwork <- renderUI({
                 title = div( #span(icon("pagelines"), #" Select the plot you would like to explore"),
                                   selectizeInput("dendro_or_barplot",
                                                  NULL,
-                                                 choices = c("Cluster dendrogram"="dendro", "Cluster barplot"="bar"),
+                                                 choices = c("Cluster dendrogram"="dendro", "Cluster bar plot"="bar"),
                                                  selected = rv$dendro_or_barplot,
-                                                 width = "200px")
+                                                 width = "180px")
                     
                     # ,div(style = "position: relative;bottom: 1em;",
                     #    actionBttn("dendro_or_barplot_confirm","View"
@@ -81,19 +81,19 @@ output$ui_bodyNetwork <- renderUI({
                     ),
                 status = "primary",
                 div(
-                    style="overflow-y:scroll; overflow-x:scroll; max-height: 700px", #max-height:600px;
+                    style="overflow-y:scroll; overflow-x:scroll; max-height: 658px", #max-height:600px;
                     if(rv$dendro_or_barplot == "dendro"){
                         if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){
                             div(
-                                    # br(),
-                                    # tags$h4("Need to have at least two pathways to plot a dendrogram."),
-                                    # br()
+                                    br(),
+                                    p("At least two enriched gene sets are needed for a dendrogram view."),
+                                    br()
                                 )
                         } else if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                                 div(
-                                    br(),
-                                    tags$h4("We support a maximum of 500 data points in Enrichment Network."),
-                                    br()
+                                    # br(),
+                                    # p("We support a maximum of 500 data points in Enrichment Network. Please adjust adjust thresholds by clicking the top-right gear button in <b>Network view of enriched gene sets</b>."),
+                                    # br()
                                 )
                             }
                         else{
@@ -102,15 +102,15 @@ output$ui_bodyNetwork <- renderUI({
                     } else {
                         if(!is.null(rv$cluster_bar_run) && rv$cluster_bar_run == "fail"){
                             div(
-                                # br(),
-                                # tags$h4("Need to have at least two pathways to plot a barplot."),
-                                # br()
+                                br(),
+                                p("At least two enriched gene sets are needed for a bar plot view of the clusters."),
+                                br()
                             ) 
                         } else if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                             div(
-                                br(),
-                                tags$h4("We support a maximum of 500 data points in the Enrichment Network tab."),
-                                br()
+                                # br(),
+                                # p("We support a maximum of 500 data points in Enrichment Network. Please adjust adjust thresholds by clicking the top-right gear button in <b>Network view of enriched gene sets</b>."),
+                                # br()
                             )
                         } else {
                             plotlyOutput("plot_cluster_bar", width = "900px", height = "500px")
@@ -198,7 +198,7 @@ output$vis_error <- renderUI({
         rv$vis_p,
         " & q < ",
         rv$vis_q,
-        ". Please adjust thresholds by clicking the top-right gear button."
+        ". Please adjust the P and/or P.adj thresholds by clicking the top-right gear button."
     )
 
 })
