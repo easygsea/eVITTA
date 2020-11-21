@@ -65,7 +65,7 @@ output$ui_bodyNetwork <- renderUI({
             box(
                 id = "dendrogram_box",
                 width = 5,
-                title = div( #span(icon("pagelines"), #" Select the plot you would like to explore"),
+                title = div( id = "select_your_plot", #span(icon("pagelines"), #" Select the plot you would like to explore"),
                                   selectizeInput("dendro_or_barplot",
                                                  NULL,
                                                  choices = c("Cluster dendrogram"="dendro", "Cluster bar plot"="bar"),
@@ -131,8 +131,8 @@ output$ui_bodyNetwork <- renderUI({
                 ,absolutePanel(
                     # add a id for the gear button in introjs
                     div(id = "dendro_dropdown",
-                        style="display: inline-block;vertical-align:top;
-                            ", #position: absolute; right: 55px; top: 4em;
+                        style="display: inline-block;vertical-align:top;position: absolute; right: 55px; top: 2.8em;
+                            ", #
                         dropdown(
                             # if(rv$dendro_or_barplot == "Cluster barplot"){
                             #     uiOutput("barplot_option")
@@ -149,8 +149,8 @@ output$ui_bodyNetwork <- renderUI({
                                 ,placement = "bottom"),
                         )
                     ),
-                    div(id="d_dendro", style="display: inline-block;vertical-align:top;
-                            ", #position: absolute; top: 4em; right: 0px;
+                    div(id="d_dendro", style="display: inline-block;vertical-align:top;position: absolute; top: 2.8em; right: 0px;
+                            ", #
                         
                         # style = "position: absolute; right: 1em; top: 1em;",
                         downloadBttn(
@@ -173,7 +173,7 @@ output$ui_bodyNetwork <- renderUI({
                     ,
                     
                     right = 10,
-                    top = 8
+                    top = 2
                 )
                 
             )
