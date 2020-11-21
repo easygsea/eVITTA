@@ -81,7 +81,7 @@ output$ui_bodyNetwork <- renderUI({
                     ),
                 status = "primary",
                 div(
-                    style="overflow-y:scroll; overflow-x:scroll; max-height: 700px", #max-height:600px;
+                    style="overflow-y:scroll; overflow-x:scroll; max-height: 658px", #max-height:600px;
                     if(rv$dendro_or_barplot == "dendro"){
                         if(!is.null(rv$dendro_run) && rv$dendro_run == "fail"){
                             div(
