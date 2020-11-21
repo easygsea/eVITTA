@@ -1790,7 +1790,7 @@ observeEvent(input$confirm_kegg_plot,{
     observeEvent(input$p_value_help,{
         showModal(modalDialog(
             inputId = "p_help_modal",
-            title = "Choosing P and P.adj thresholds for pre-ranked GSEA runs",
+            title = "Suggested P and P.adj thresholds for ORA and pre-ranked GSEA runs",
             includeMarkdown(paste0(getwd(),"/inc/p_explaination.md")),
             easyClose = TRUE,size="m"
             ,footer = modalButton("OK")

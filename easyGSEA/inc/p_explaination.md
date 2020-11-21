@@ -6,9 +6,6 @@ output: html_document
 runtime: shiny
 ---
 
-
-Different sets of thresholds for P value (P) and adjusted P value (P.adj) are suggested for pre-ranked GSEA analysis:  
-
 ##### **Very permissive:**
 
 * P < 0.05
