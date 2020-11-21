@@ -1784,7 +1784,6 @@
         if(sig_no >= 100){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         sig_no <- rv$no_up_025 + rv$no_down_025
         if(sig_no >= 20){rv$bar_q_cutoff <- .025;rv$vis_q <- .025}
-        rv$fgseagg <- c(rv$fgseagg, list(catnames[[i]] = fgseaRes))
         incProgress(0.2)
       }
     }
