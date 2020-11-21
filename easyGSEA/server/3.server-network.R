@@ -113,7 +113,7 @@ output$ui_bodyNetwork <- renderUI({
                                 # br()
                             )
                         } else {
-                            plotlyOutput("plot_cluster_bar", width = "900px", height = "500px")
+                            plotlyOutput("plot_cluster_bar", width = "900px", height = "660px")
                         }
                     }
                     
@@ -252,8 +252,8 @@ output$dendro_option <- renderUI({
             #add_help("dendro_label_size_help",style = "top: 1px; right:0px")),
             bsTooltip("dendro_label_size_help", "The text size of the labels (cluster id and the most significant gene set) in the dendrogram",placement = "bottom"),
             numericInput("dendro_cluster_size", 
-                         HTML(paste0("Minimum Cluster size for labels = :", br(), "( 0 &#x2264 z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
-                         value = rv$cluster_size, min = 0, max = rv$max_cluster_size, step = 1),
+                         HTML(paste0("Minimum Cluster size for labels = :", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
+                         value = rv$cluster_size, min = 1, max = rv$max_cluster_size, step = 1),
             bsTooltip("cluster_size_help", "The clusters that have at least z gene sets are labeled",placement = "bottom"),
             actionBttn("dendro_update","Replot!"
                        ,style = "simple",size = "sm"
