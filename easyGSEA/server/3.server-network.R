@@ -399,7 +399,7 @@ output$ui_vis_gear <- renderUI({
                 column(
                     width = 6,
                     numericInput("vis_percent_cutoff",
-                                 label = label_with_help_bttn("Edge threshold","q_vis_edge_threshold"),
+                                 label = label_with_help_bttn(HTML("Edge threshold (0 &#8804 x &#8804 1)"),"q_vis_edge_threshold"),
                                  rv$percent_cutoff, min = 0, max = 1, step = 0.01
                     ),
                     bsTooltip("q_vis_edge_threshold", "Click to learn more!", placement = "top")
