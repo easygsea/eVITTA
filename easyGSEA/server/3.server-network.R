@@ -34,7 +34,7 @@ output$ui_bodyNetwork <- renderUI({
                     fluidRow(
                         # add a id for the gear button in introjs
                         div(id = "gear_box",
-                            style="display: inline-block;vertical-align:top;margin-right:5px;",
+                            style="display: inline-block;vertical-align:top;",
                             dropdown(
                                 up = FALSE,right = TRUE,icon = icon("gear"),width = "450px",
                                 style = "unite",#status = "primary",#size = "sm",
@@ -56,10 +56,26 @@ output$ui_bodyNetwork <- renderUI({
                                 size = "md", style="unite",
                                 outputId = "download_vis", label = NULL
                             )
-                        )
+                        ),
+                        bsTooltip("d_vis","Click to download the network view", placement = "bottom"),
+                        
                     ),
+                    
                     right = 25,
-                    top = 12
+                    top = 6
+                )
+                ,absolutePanel(
+                    fluidRow(
+                        nav_btn_b("net_b"),
+                        nav_btn_f("net_f")
+                        
+                        ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
+                                   ,placement = "bottom")
+                        ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
+                                   ,placement = "bottom")  
+                    ),
+                    right = 34.5,
+                    top = 52
                 )
             ),
             box(
@@ -70,7 +86,7 @@ output$ui_bodyNetwork <- renderUI({
                                                  NULL,
                                                  choices = c("Cluster dendrogram"="dendro", "Cluster bar plot"="bar"),
                                                  selected = rv$dendro_or_barplot,
-                                                 width = "180px")
+                                                 width = "160px")
                     
                     # ,div(style = "position: relative;bottom: 1em;",
                     #    actionBttn("dendro_or_barplot_confirm","View"
@@ -129,51 +145,48 @@ output$ui_bodyNetwork <- renderUI({
                 # )
 
                 ,absolutePanel(
-                    # add a id for the gear button in introjs
-                    div(id = "dendro_dropdown",
-                        style="display: inline-block;vertical-align:top;position: absolute; right: 55px; top: 2.8em;
-                            ", #
-                        dropdown(
-                            # if(rv$dendro_or_barplot == "Cluster barplot"){
-                            #     uiOutput("barplot_option")
-                            # } else {
-                            uiOutput("dendro_option")
-                            ,
-                            width = '300px',
+                    fluidRow(
+                        # add a id for the gear button in introjs
+                        div(id = "dendro_dropdown",
+                            style="display: inline-block;vertical-align:top;
+                            ", #position: absolute; right: 55px; top: 2.8em;
+                            dropdown(
+                                # if(rv$dendro_or_barplot == "Cluster barplot"){
+                                #     uiOutput("barplot_option")
+                                # } else {
+                                uiOutput("dendro_option")
+                                ,
+                                width = '300px',
+                                
+                                up = FALSE,right = TRUE,icon = icon("gear"),
+                                style = "unite",
+                                circle = TRUE,
+                                tooltip = tooltipOptions(
+                                    title = "Click to adjust parameters for creating a dendrogram"
+                                    ,placement = "bottom"),
+                            )
+                        ),
+                        div(id="d_dendro", style="display: inline-block;vertical-align:top;margin-right:15px;
+                            ", #position: absolute; top: 2.8em; right: 0px;
                             
-                            up = FALSE,right = TRUE,icon = icon("gear"),
-                            style = "unite",
-                            circle = TRUE,
-                            tooltip = tooltipOptions(
-                                title = "Click to adjust parameters for creating a dendrogram"
-                                ,placement = "bottom"),
+                            # style = "position: absolute; right: 1em; top: 1em;",
+                            downloadBttn(
+                                size = "md", style="unite",
+                                if(rv$dendro_or_barplot == "Cluster dendrogram"){outputId = "download_dendro"}
+                                else{outputId = "download_cluster_barplot"}
+                                , label = NULL
+                            )
                         )
-                    ),
-                    div(id="d_dendro", style="display: inline-block;vertical-align:top;position: absolute; top: 2.8em; right: 0px;
-                            ", #
-                        
-                        # style = "position: absolute; right: 1em; top: 1em;",
-                        downloadBttn(
-                            size = "md", style="unite",
-                            if(rv$dendro_or_barplot == "Cluster dendrogram"){outputId = "download_dendro"}
-                            else{outputId = "download_cluster_barplot"}
-                            , label = NULL
-                        )
-                    ),
+                    )
                     
-                    nav_btn_b("net_b"),
-                    nav_btn_f("net_f"),
+                    ,
                     
-                    bsTooltip("d_vis","Click to download plot", placement = "bottom"),
+                    
                     bsTooltip("d_dendro", "Click to download plot", placement = "bottom")
-                    ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
-                               ,placement = "bottom")
-                    ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
-                               ,placement = "bottom")
                     ,
                     
                     right = 10,
-                    top = 2
+                    top = 6
                 )
                 
             )
@@ -244,17 +257,17 @@ output$dendro_option <- renderUI({
                          HTML(paste0("Similarity threshold = :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
                          value = rv$cutoff_point, min = 0, max = 1, step=0.01),
             #add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
-            bsTooltip("dendro_help", "Gene sets that have a similarity score larger than or equal to x are grouped together",placement = "bottom"),
+            bsTooltip("dendro_help", "Gene sets that have a similarity score larger than or equal to x are grouped together",placement = "top"),
             if(rv$dendro_or_barplot == "dendro")
                 {numericInput("dendro_label_size", 
                          HTML(paste0("Label text size : ( 0 &#x2264 y &#x2264 6 )",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
                          value = rv$label_size, min = 0, max = 6, step=0.1)},
             #add_help("dendro_label_size_help",style = "top: 1px; right:0px")),
-            bsTooltip("dendro_label_size_help", "The text size of the labels (cluster id and the most significant gene set) in the dendrogram",placement = "bottom"),
+            bsTooltip("dendro_label_size_help", "The text size of the labels (cluster id and the most significant gene set) in the dendrogram",placement = "top"),
             numericInput("dendro_cluster_size", 
                          HTML(paste0("Minimum Cluster size for labels = :", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
                          value = rv$cluster_size, min = 1, max = rv$max_cluster_size, step = 1),
-            bsTooltip("cluster_size_help", "The clusters that have at least z gene sets are labeled",placement = "bottom"),
+            bsTooltip("cluster_size_help", "The clusters that have at least z gene sets are labeled",placement = "top"),
             actionBttn("dendro_update","Replot!"
                        ,style = "simple",size = "sm"
                        ,color = "primary"
