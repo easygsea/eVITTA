@@ -254,7 +254,7 @@ output$dendro_option <- renderUI({
     #req(rv$dendro_run == "success")
     div(
             numericInput("dendro_cutoff", 
-                         HTML(paste0("Similarity threshold = :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
+                         HTML(paste0("Similarity threshold :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
                          value = rv$cutoff_point, min = 0, max = 1, step=0.01),
             #add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
             bsTooltip("dendro_help", "Gene sets that have a similarity score larger than or equal to x are grouped together",placement = "top"),
@@ -265,7 +265,7 @@ output$dendro_option <- renderUI({
             #add_help("dendro_label_size_help",style = "top: 1px; right:0px")),
             bsTooltip("dendro_label_size_help", "The text size of the labels (cluster id and the most significant gene set) in the dendrogram",placement = "top"),
             numericInput("dendro_cluster_size", 
-                         HTML(paste0("Minimum Cluster size for labels = :", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
+                         HTML(paste0("Minimum Cluster size for labels :", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
                          value = rv$cluster_size, min = 1, max = rv$max_cluster_size, step = 1),
             bsTooltip("cluster_size_help", "The clusters that have at least z gene sets are labeled",placement = "top"),
             actionBttn("dendro_update","Replot!"
