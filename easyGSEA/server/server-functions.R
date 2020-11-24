@@ -1211,7 +1211,6 @@
         number_of_clusters = rv$number_of_clusters
         df_padj = rv$df_padj
         cutoff_similarity = rv$cutoff_similarity
-        print(cutoff_similarity)
 
         # plot a dendrogram nicely
         # convert it to a dendrogram object
@@ -1220,7 +1219,6 @@
         
         # extract the dendrogram data
         ddata <- dendro_data(dhc, type = "rectangle")
-        print(number_of_clusters)
         #color my dendrogram
         dendro <- dhc %>%
           #set("labels", label_short) %>%
@@ -1245,7 +1243,6 @@
         }
         # create the points of the lowest p.adj for group labeling
         rv$max_cluster_size = max(df_padj$n)
-        print(rv$max_cluster_size)
         # the cluster size may be too small compared to the default size(3)
         if(rv$max_cluster_size < cluster_size){
           # df_padj_points <- tibble(
@@ -1285,7 +1282,6 @@
                 axis.title.y = element_blank(),
                 panel.grid.major.y = element_blank()) +
           geom_hline(yintercept = 1 - cutoff_similarity, linetype="dashed", color = "grey") #scale_y_continuous(sec.axis = dup_axis())
-        print(rv$label_size)
         # convert it to interative plotly diagram
         ggplotly_dendro <- ggplot_dendro %>%
           ggplotly(tooltip = c("name","x","y")) %>%
@@ -1311,7 +1307,6 @@
         number_of_clusters = rv$number_of_clusters
         df_padj = rv$df_padj
         cutoff_similarity = rv$cutoff_similarity
-        print(cutoff_similarity)
 
         # plot a dendrogram nicely
         # convert it to a dendrogram object
@@ -1319,7 +1314,6 @@
         
         # extract the dendrogram data
         ddata <- dendro_data(dhc, type = "rectangle")
-        print(number_of_clusters)
         #color my dendrogram
         dendro <- dhc %>%
           #set("labels", label_short) %>%
@@ -1342,7 +1336,6 @@
         }
         # create the points of the lowest p.adj for group labeling
         rv$max_cluster_size = max(df_padj$n)
-        print(rv$max_cluster_size)
         # the cluster size may be too small compared to the default size(3)
         if(rv$max_cluster_size < cluster_size){
           cluster_size = 1
@@ -1355,13 +1348,14 @@
           mutate(complete_name = paste(cluster,": ", pathway))%>%
           mutate(length = str_length(complete_name))
         
-        print(rv$abbreviate_check)
+
+        # check if the user select the abbreviation checkbox; if yes, apply a abbreiviation method to the labels 
         if(rv$abbreviate_check == TRUE){
+          abbreviate_length <- rv$abbreviate_length
           df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
-            if(nchar(x) < 45){return(x)}
-            else{return(paste0(substr(x, 0, 45),"..."))}})
+            if(nchar(x) < abbreviate_length || is.na(nchar(x) < abbreviate_length)){return(x)}
+            else{return(paste0(substr(x, 0, abbreviate_length),"..."))}})
         }
-        
         
         df_padj_points <- df_padj_points %>% 
         arrange(desc(cluster))
@@ -1382,8 +1376,7 @@
         theme( axis.text.y = element_text(size = 11),
               legend.title = element_text(size = 9))
         # # scale_y_discrete(position = "right")
-        print(head(df_padj_points))
-        
+
         yh = nrow(df_padj_points) * 25 + 20
         if(yh<=500){yh=500}
         
@@ -1417,7 +1410,7 @@
         
         # extract the dendrogram data
         ddata <- dendro_data(dhc, type = "rectangle")
-        print(number_of_clusters)
+        # print(number_of_clusters)
         #color my dendrogram
         dendro <- dhc %>%
           #set("labels", label_short) %>%
@@ -1440,7 +1433,6 @@
         }
         # create the points of the lowest p.adj for group labeling
         rv$max_cluster_size = max(df_padj$n)
-        print(rv$max_cluster_size)
         # the cluster size may be too small compared to the default size(3)
         if(rv$max_cluster_size < cluster_size){
           cluster_size = 1
@@ -1454,34 +1446,15 @@
           mutate(length = str_length(complete_name))
        # check if the user select the abbreviation checkbox; if yes, apply a abbreiviation method to the labels 
         if(rv$abbreviate_check == TRUE){
+            abbreviate_length <- rv$abbreviate_length
           df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
-            if(nchar(x) < 45){return(x)}
-            else{return(paste0(substr(x, 0, 45),"..."))}})
+            if(nchar(x) < abbreviate_length || is.na(nchar(x) < abbreviate_length)){return(x)}
+            else{return(paste0(substr(x, 0, abbreviate_length),"..."))}})
         }
         
         # sort the table by the cluster id
         df_padj_points <- df_padj_points %>% 
           arrange(desc(cluster))
-        
-        # fig <- df %>% 
-        #   ggplot(aes(x=ES, y=factor(pathway, levels=pathway), size=size_g, color=-log10(df[[pq]])*sign(ES),
-        #              text=paste0(
-        #                "<b>",df[["pathway"]],"</b>\n",
-        #                "ES=",signif(df[["ES"]],digits=3),"; ",
-        #                "P=",signif(df[["pval"]],digits=3),"; ",
-        #                "P.adj=",signif(df[["padj"]],digits=3),"\n",
-        #                tail(colnames(df),n=1)," (",size_g,"/",df[["size"]],"): \n",addlinebreaks(df[[ncol(df)]])
-        #                
-        #              ))) +
-        #   geom_point(alpha=0.5) +
-        #   scale_size(range = c(zmin, zmax)) +
-        #   scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
-        #   xlab("Enrichment Score (ES)") + ylab("") +
-        #   geom_vline(xintercept=0, size=0.1) +
-        #   theme_minimal() +
-        #   theme(axis.text.y = element_text(size=10),
-        #         legend.title = element_text(size = 9)) +
-        #   scale_y_discrete(labels = y_pathway)
         
         cluster_bubble <- df_padj_points %>%
           ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
@@ -1502,8 +1475,7 @@
           theme( axis.text.y = element_text(size = 11),
                  legend.title = element_text(size = 9))
         # # scale_y_discrete(position = "right")
-        print(head(df_padj_points))
-        
+
         yh = nrow(df_padj_points) * 25 + 20
         if(yh<=500){yh=500}
         

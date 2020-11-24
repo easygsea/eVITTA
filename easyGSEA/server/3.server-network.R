@@ -273,6 +273,7 @@ output$dendro_option <- renderUI({
             if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
                 checkboxInput("abbreviate_check", HTML(paste0("Abbreviate the labels  ", add_help("abbreviate_help", style = "top: 1px; right:0px"))))
             },
+            uiOutput("ui_abbreviate_length"),
             bsTooltip("abbreviate_help", "Abbreviate the labels when the they are too long to be displayed"),
             actionBttn("dendro_update","Replot!"
                        ,style = "simple",size = "sm"
@@ -298,9 +299,22 @@ observeEvent(input$dendro_update,{
     }
     if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
         rv$abbreviate_check = input$abbreviate_check
+        if(!is.null(input$abbreviate_length)){
+            rv$abbreviate_length = input$abbreviate_length
+        }
     }
     
     
+})
+
+# the input of the number of characters we like to abbreviate to
+output$ui_abbreviate_length<- renderUI({
+    req(input$abbreviate_check == TRUE)
+    numericInput(
+        inputId = "abbreviate_length",
+        label = "String length",
+        value = rv$abbreviate_length,min=1
+    )
 })
 
 # download dendrogram button
