@@ -68,7 +68,7 @@ output$ui_bodyNetwork <- renderUI({
                 title = div( id = "select_your_plot", #span(icon("pagelines"), #" Select the plot you would like to explore"),
                                   selectizeInput("dendro_or_barplot",
                                                  NULL,
-                                                 choices = c("Cluster dendrogram"="dendro", "Cluster bar plot"="bar"),
+                                                 choices = c("Cluster dendrogram"="dendro", "Cluster bar plot"="bar", "Cluster bubble plot" = "bubble"),
                                                  selected = rv$dendro_or_barplot,
                                                  width = "180px")
                     
@@ -113,7 +113,12 @@ output$ui_bodyNetwork <- renderUI({
                                 # br()
                             )
                         } else {
-                            plotlyOutput("plot_cluster_bar", width = "900px", height = "660px")
+                            if(rv$dendro_or_barplot == "bar"){
+                               plotlyOutput("plot_cluster_bar", width = "900px", height = "660px") 
+                            } else {
+                                plotlyOutput("plot_cluster_bubble", width = "900px", height = "660px")
+                            }
+                            
                         }
                     }
                     
@@ -155,8 +160,9 @@ output$ui_bodyNetwork <- renderUI({
                         # style = "position: absolute; right: 1em; top: 1em;",
                         downloadBttn(
                             size = "md", style="unite",
-                            if(rv$dendro_or_barplot == "Cluster dendrogram"){outputId = "download_dendro"}
-                            else{outputId = "download_cluster_barplot"}
+                            if(rv$dendro_or_barplot == "dendro"){outputId = "download_dendro"}
+                            else if(rv$dendro_or_barplot == "bar"){outputId = "download_cluster_barplot"}
+                            else{outputId = "download_cluster_bubble"}
                             , label = NULL
                         )
                     ),
@@ -230,6 +236,15 @@ output$plot_cluster_bar <- renderPlotly({
     })
     
 })
+# render Plotly bubble barplot
+output$plot_cluster_bubble <- renderPlotly({
+    req(is.null(rv$fgseagg)==F)
+    withProgress(message = "Clustering enriched gene sets and generating the bubble plot ...",value = 1,{
+        rv$cluster_bubble <- plot_cluster_bubble()
+        return(rv$cluster_bubble)
+    })
+    
+})
 
 # the input that user selected that controls the plot displayed
 observeEvent(input$dendro_or_barplot,{
@@ -255,6 +270,10 @@ output$dendro_option <- renderUI({
                          HTML(paste0("Minimum Cluster size for labels = :", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
                          value = rv$cluster_size, min = 1, max = rv$max_cluster_size, step = 1),
             bsTooltip("cluster_size_help", "The clusters that have at least z gene sets are labeled",placement = "bottom"),
+            if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
+                checkboxInput("abbreviate_check", HTML(paste0("Abbreviate the labels  ", add_help("abbreviate_help", style = "top: 1px; right:0px"))))
+            },
+            bsTooltip("abbreviate_help", "Abbreviate the labels when the they are too long to be displayed"),
             actionBttn("dendro_update","Replot!"
                        ,style = "simple",size = "sm"
                        ,color = "primary"
@@ -269,13 +288,16 @@ observeEvent(input$dendro_update,{
     if(!(rv$cutoff_point == input$dendro_cutoff) && (input$dendro_cutoff >= 0 && input$dendro_cutoff <= 1)){
        rv$cutoff_point = input$dendro_cutoff 
     }
-    if(rv$dendro_or_barplot == "Cluster dendrogram"){
+    if(rv$dendro_or_barplot == "dendro"){
             if(!(rv$label_size == input$dendro_label_size) && input$dendro_label_size >= 0 && input$dendro_label_size <= 6){
             rv$label_size = input$dendro_label_size 
         }  
     }
     if(!(rv$cluster_size == input$dendro_cluster_size) && input$dendro_cluster_size <= rv$max_cluster_size && input$dendro_cluster_size >=0){
         rv$cluster_size = input$dendro_cluster_size
+    }
+    if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
+        rv$abbreviate_check = input$abbreviate_check
     }
     
     
@@ -291,6 +313,13 @@ output$download_dendro <- downloadHandler(
 output$download_cluster_barplot <- downloadHandler(
     filename = function() {paste0("barplot_cluster_",paste0("cutoff_",rv$cutoff_point,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(rv$cluster_barplot), file, selfcontained = TRUE)}
+    
+)
+
+# download cluster bubble button
+output$download_cluster_bubble <- downloadHandler(
+    filename = function() {paste0("bubble_plot_cluster_",paste0("cutoff_",rv$cutoff_point,"_"),rv$rnkll,".html")},
+    content = function(file) {saveWidget(as_widget(rv$cluster_bubble), file, selfcontained = TRUE)}
     
 )
 
