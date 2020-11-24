@@ -10,7 +10,7 @@
         #rv for dendrogram
         dendro_run = NULL,
         cluster_bar_run = NULL,
-        cutoff_point = 0.3,
+        cutoff_point = 0.25,
         label_size = 4,
         cluster_size = 3, # minimum cluster size that has label
         max_cluster_size = 1,
