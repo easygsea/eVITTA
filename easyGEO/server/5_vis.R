@@ -530,9 +530,9 @@ output$hm_area <- renderUI({
   dfm <- dim(df)
   dfmi <- dfm[1] * dfm[2]
   
-  if(dfmi > 10000){
+  if(dfmi > 180000){
     HTML(
-      "We support a maximum of <i>10,000</i> data points in heatmaps.",
+      "We support a maximum of <i>180,000</i> data points in heatmaps",
       ". Please reduce the number of data points by adjusting <b>thresholds</b> and/or <b>Options to extract genes</b> in the right panel."
     )
   }else{

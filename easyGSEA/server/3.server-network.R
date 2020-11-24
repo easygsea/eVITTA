@@ -13,8 +13,8 @@ output$ui_bodyNetwork <- renderUI({
                 width = 7,
                 #<i class="fas fa-chart-network"></i>
                 title=span( icon("project-diagram"), "Network view of enriched gene sets"), status = "primary",
-                
-                
+
+
                 div(
                     uiOutput("vis_error")
                 ),
@@ -34,7 +34,7 @@ output$ui_bodyNetwork <- renderUI({
                     fluidRow(
                         # add a id for the gear button in introjs
                         div(id = "gear_box",
-                            style="display: inline-block;vertical-align:top;margin-right:5px;",
+                            style="display: inline-block;vertical-align:top;",
                             dropdown(
                                 up = FALSE,right = TRUE,icon = icon("gear"),width = "450px",
                                 style = "unite",#status = "primary",#size = "sm",
@@ -42,7 +42,7 @@ output$ui_bodyNetwork <- renderUI({
                                 tooltip = tooltipOptions(
                                     title = "Click to adjust parameters for creating a network"
                                     ,placement = "bottom"),
-                                
+
                                 #         animate = animateOptions(
                                 #             enter = "slideInRight",
                                 #             exit = "fadeOutRight", duration = 0.5
@@ -50,16 +50,32 @@ output$ui_bodyNetwork <- renderUI({
                             uiOutput("ui_vis_gear"))
                         ),
                         div(id="d_vis", style="display: inline-block;vertical-align:top;margin-right:5px;",
-                            
+
                             # style = "position: absolute; right: 1em; top: 1em;",
                             downloadBttn(
                                 size = "md", style="unite",
                                 outputId = "download_vis", label = NULL
                             )
-                        )
+                        ),
+                        bsTooltip("d_vis","Click to download the network view", placement = "bottom"),
+
                     ),
+
                     right = 25,
-                    top = 12
+                    top = 6
+                )
+                ,absolutePanel(
+                    fluidRow(
+                        nav_btn_b("net_b"),
+                        nav_btn_f("net_f")
+
+                        ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
+                                   ,placement = "bottom")
+                        ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
+                                   ,placement = "bottom")
+                    ),
+                    right = 34.5,
+                    top = 52
                 )
             ),
             box(
@@ -70,13 +86,13 @@ output$ui_bodyNetwork <- renderUI({
                                                  NULL,
                                                  choices = c("Cluster dendrogram"="dendro", "Cluster bar plot"="bar", "Cluster bubble plot" = "bubble"),
                                                  selected = rv$dendro_or_barplot,
-                                                 width = "180px")
-                    
+                                                 width = "160px")
+
                     # ,div(style = "position: relative;bottom: 1em;",
                     #    actionBttn("dendro_or_barplot_confirm","View"
                     #            ,style = "simple",size = "sm"
                     #            ,color = "primary"
-                    #         ) 
+                    #         )
                     #     )
                     ),
                 status = "primary",
@@ -105,7 +121,7 @@ output$ui_bodyNetwork <- renderUI({
                                 br(),
                                 p("At least two enriched gene sets are needed for a bar plot view of the clusters."),
                                 br()
-                            ) 
+                            )
                         } else if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                             div(
                                 # br(),
@@ -114,14 +130,14 @@ output$ui_bodyNetwork <- renderUI({
                             )
                         } else {
                             if(rv$dendro_or_barplot == "bar"){
-                               plotlyOutput("plot_cluster_bar", width = "900px", height = "660px") 
+                               plotlyOutput("plot_cluster_bar", width = "900px", height = "660px")
                             } else {
                                 plotlyOutput("plot_cluster_bubble", width = "900px", height = "660px")
                             }
-                            
+
                         }
                     }
-                    
+
                 )
                 # ,div(id="dendro_dropdown", style = "position: absolute; left: 1em; bottom: 2em;",
                 #     dropdown(
@@ -130,58 +146,54 @@ output$ui_bodyNetwork <- renderUI({
                 #         width = '300px',
                 #         icon = icon("gear", class = "opt"),
                 #         up = TRUE
-                #     ) 
+                #     )
                 # )
 
                 ,absolutePanel(
-                    # add a id for the gear button in introjs
-                    div(id = "dendro_dropdown",
-                        style="display: inline-block;vertical-align:top;position: absolute; right: 55px; top: 2.8em;
-                            ", #
-                        dropdown(
-                            # if(rv$dendro_or_barplot == "Cluster barplot"){
-                            #     uiOutput("barplot_option")
-                            # } else {
-                            uiOutput("dendro_option")
-                            ,
-                            width = '300px',
-                            
-                            up = FALSE,right = TRUE,icon = icon("gear"),
-                            style = "unite",
-                            circle = TRUE,
-                            tooltip = tooltipOptions(
-                                title = "Click to adjust parameters for creating a dendrogram"
-                                ,placement = "bottom"),
+                    fluidRow(
+                        # add a id for the gear button in introjs
+                        div(id = "dendro_dropdown",
+                            style="display: inline-block;vertical-align:top;
+                            ", #position: absolute; right: 55px; top: 2.8em;
+                            dropdown(
+                                # if(rv$dendro_or_barplot == "Cluster barplot"){
+                                #     uiOutput("barplot_option")
+                                # } else {
+                                uiOutput("dendro_option")
+                                ,
+                                width = '300px',
+
+                                up = FALSE,right = TRUE,icon = icon("gear"),
+                                style = "unite",
+                                circle = TRUE,
+                                tooltip = tooltipOptions(
+                                    title = "Click to adjust parameters for creating a dendrogram"
+                                    ,placement = "bottom"),
+                            )
+                        ),
+                        div(id="d_dendro", style="display: inline-block;vertical-align:top;margin-right:15px;
+                            ", #position: absolute; top: 2.8em; right: 0px;
+
+                            # style = "position: absolute; right: 1em; top: 1em;",
+                            downloadBttn(
+                                size = "md", style="unite",
+                                if(rv$dendro_or_barplot == "Cluster dendrogram"){outputId = "download_dendro"}
+                                else{outputId = "download_cluster_barplot"}
+                                , label = NULL
+                            )
                         )
-                    ),
-                    div(id="d_dendro", style="display: inline-block;vertical-align:top;position: absolute; top: 2.8em; right: 0px;
-                            ", #
-                        
-                        # style = "position: absolute; right: 1em; top: 1em;",
-                        downloadBttn(
-                            size = "md", style="unite",
-                            if(rv$dendro_or_barplot == "dendro"){outputId = "download_dendro"}
-                            else if(rv$dendro_or_barplot == "bar"){outputId = "download_cluster_barplot"}
-                            else{outputId = "download_cluster_bubble"}
-                            , label = NULL
-                        )
-                    ),
-                    
-                    nav_btn_b("net_b"),
-                    nav_btn_f("net_f"),
-                    
-                    bsTooltip("d_vis","Click to download plot", placement = "bottom"),
-                    bsTooltip("d_dendro", "Click to download plot", placement = "bottom")
-                    ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
-                               ,placement = "bottom")
-                    ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
-                               ,placement = "bottom")
+                    )
+
                     ,
-                    
+
+
+                    bsTooltip("d_dendro", "Click to download plot", placement = "bottom")
+                    ,
+
                     right = 10,
-                    top = 2
+                    top = 6
                 )
-                
+
             )
         )
     }
@@ -224,7 +236,7 @@ output$plot_dendrogram <- renderPlotly({
         rv$dendro <- plot_dendro()
         return(rv$dendro)
     })
-    
+
 })
 
 # render Plotly cluster barplot
@@ -234,7 +246,7 @@ output$plot_cluster_bar <- renderPlotly({
         rv$cluster_barplot <- plot_cluster_barplot()
         return(rv$cluster_barplot)
     })
-    
+
 })
 # render Plotly bubble barplot
 output$plot_cluster_bubble <- renderPlotly({
@@ -243,7 +255,7 @@ output$plot_cluster_bubble <- renderPlotly({
         rv$cluster_bubble <- plot_cluster_bubble()
         return(rv$cluster_bubble)
     })
-    
+
 })
 
 # the input that user selected that controls the plot displayed
@@ -255,19 +267,19 @@ observeEvent(input$dendro_or_barplot,{
 output$dendro_option <- renderUI({
     #req(rv$dendro_run == "success")
     div(
-            numericInput("dendro_cutoff", 
-                         HTML(paste0("Similarity threshold = :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
+            numericInput("dendro_cutoff",
+                         HTML(paste0("Similarity threshold :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
                          value = rv$cutoff_point, min = 0, max = 1, step=0.01),
             #add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
-            bsTooltip("dendro_help", "Gene sets that have a similarity score larger than or equal to x are grouped together",placement = "bottom"),
+            bsTooltip("dendro_help", "Gene sets that have a similarity score larger than or equal to x are grouped together",placement = "top"),
             if(rv$dendro_or_barplot == "dendro")
-                {numericInput("dendro_label_size", 
+                {numericInput("dendro_label_size",
                          HTML(paste0("Label text size : ( 0 &#x2264 y &#x2264 6 )",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
                          value = rv$label_size, min = 0, max = 6, step=0.1)},
             #add_help("dendro_label_size_help",style = "top: 1px; right:0px")),
-            bsTooltip("dendro_label_size_help", "The text size of the labels (cluster id and the most significant gene set) in the dendrogram",placement = "bottom"),
-            numericInput("dendro_cluster_size", 
-                         HTML(paste0("Minimum Cluster size for labels = :", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
+            bsTooltip("dendro_label_size_help", "The text size of the labels (cluster id and the most significant gene set) in the dendrogram",placement = "top"),
+            numericInput("dendro_cluster_size",
+                         HTML(paste0("Minimum Cluster size for labels :", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
                          value = rv$cluster_size, min = 1, max = rv$max_cluster_size, step = 1),
             bsTooltip("cluster_size_help", "The clusters that have at least z gene sets are labeled",placement = "bottom"),
             if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
@@ -286,12 +298,12 @@ output$dendro_option <- renderUI({
 observeEvent(input$dendro_update,{
     # update the corresponding RVs to replot the dendrogram
     if(!(rv$cutoff_point == input$dendro_cutoff) && (input$dendro_cutoff >= 0 && input$dendro_cutoff <= 1)){
-       rv$cutoff_point = input$dendro_cutoff 
+       rv$cutoff_point = input$dendro_cutoff
     }
     if(rv$dendro_or_barplot == "dendro"){
             if(!(rv$label_size == input$dendro_label_size) && input$dendro_label_size >= 0 && input$dendro_label_size <= 6){
-            rv$label_size = input$dendro_label_size 
-        }  
+            rv$label_size = input$dendro_label_size
+        }
     }
     if(!(rv$cluster_size == input$dendro_cluster_size) && input$dendro_cluster_size <= rv$max_cluster_size && input$dendro_cluster_size >=0){
         rv$cluster_size = input$dendro_cluster_size
@@ -299,28 +311,28 @@ observeEvent(input$dendro_update,{
     if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
         rv$abbreviate_check = input$abbreviate_check
     }
-    
-    
+
+
 })
 
 # download dendrogram button
 output$download_dendro <- downloadHandler(
     filename = function() {paste0("dendrogram_",paste0("cutoff_",rv$cutoff_point,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(rv$dendro), file, selfcontained = TRUE)}
-    
+
 )
 # download cluster barplot button
 output$download_cluster_barplot <- downloadHandler(
     filename = function() {paste0("barplot_cluster_",paste0("cutoff_",rv$cutoff_point,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(rv$cluster_barplot), file, selfcontained = TRUE)}
-    
+
 )
 
 # download cluster bubble button
 output$download_cluster_bubble <- downloadHandler(
     filename = function() {paste0("bubble_plot_cluster_",paste0("cutoff_",rv$cutoff_point,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(rv$cluster_bubble), file, selfcontained = TRUE)}
-    
+
 )
 
 
@@ -328,7 +340,7 @@ output$download_cluster_bubble <- downloadHandler(
 output$download_vis <- downloadHandler(
     filename = function() {paste0("network_",paste0("q",rv$vis_q,"p",rv$vis_p,"_",rv$vis_pq,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(rv$vis), file, selfcontained = TRUE)}
-    
+
     # content = function(file) {saveWidget(as_widget(vis()), file, selfcontained = TRUE)}
 )
 
@@ -352,7 +364,7 @@ observeEvent(input$q_vis_edge,{
         easyClose = TRUE,size="l",
         footer = modalButton("OK")
     ))
-    
+
 })
 
 observeEvent(input$q_vis_edge_threshold,{
@@ -363,7 +375,7 @@ observeEvent(input$q_vis_edge_threshold,{
         easyClose = TRUE,size="l",
         footer = modalButton("OK")
     ))
-    
+
 })
 
 #  ============UI vis parameter =============
@@ -375,9 +387,9 @@ output$ui_vis_gear <- renderUI({
     #     width = 12,
     #     title = span(icon("gear", class = "opt"),"Advanced parameters for creating a network"), solidHeader = T,
     #     icon = "fa fa-th",
-    #     status = "primary", 
+    #     status = "primary",
     #     # solidHeader = T,
-    #     collapsible = T, collapsed = T, 
+    #     collapsible = T, collapsed = T,
             div(div(
                 align = "center",
                 tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
@@ -415,12 +427,12 @@ output$ui_vis_gear <- renderUI({
                 column(
                     width = 6,
                     numericInput("vis_percent_cutoff",
-                                 label = label_with_help_bttn("Edge threshold","q_vis_edge_threshold"),
+                                 label = label_with_help_bttn(HTML("Edge threshold (0 &#8804 x &#8804 1)"),"q_vis_edge_threshold"),
                                  rv$percent_cutoff, min = 0, max = 1, step = 0.01
                     ),
                     bsTooltip("q_vis_edge_threshold", "Click to learn more!", placement = "top")
                 )
-                
+
             ),br(),
             fluidRow(
                 column(
@@ -453,10 +465,10 @@ output$ui_vis_gear <- renderUI({
                     )
                 )
             )
-            
-            
-            
+
+
+
         )
     # )
-    
+
 })
