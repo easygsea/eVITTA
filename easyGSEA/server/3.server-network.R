@@ -281,11 +281,11 @@ output$dendro_option <- renderUI({
             numericInput("dendro_cluster_size",
                          HTML(paste0("Minimum Cluster size for labels :", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
                          value = rv$cluster_size, min = 1, max = rv$max_cluster_size, step = 1),
-            bsTooltip("cluster_size_help", "The clusters that have at least z gene sets are labeled",placement = "bottom"),
+            bsTooltip("cluster_size_help", "The clusters that have at least z gene sets are labeled",placement = "top"),
             if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
                 checkboxInput("abbreviate_check", HTML(paste0("Abbreviate the labels  ", add_help("abbreviate_help", style = "top: 1px; right:0px"))))
             },
-            bsTooltip("abbreviate_help", "Abbreviate the labels when the they are too long to be displayed"),
+            bsTooltip("abbreviate_help", "Abbreviate the labels when the texts are too long to be displayed", placement = "top"),
             actionBttn("dendro_update","Replot!"
                        ,style = "simple",size = "sm"
                        ,color = "primary"
