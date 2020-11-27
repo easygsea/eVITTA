@@ -16,6 +16,8 @@ observeEvent(input$tabs, {
     move_ui("ins_main_panels", "ins_main_panels_here", "afterEnd")
     move_ui("ins_table_panel", "ins_pg_bottom", "afterEnd")
     move_ui("n_filters", "ins_filters_here", "afterEnd")
+    move_ui("venn_dropdowns","venn_dropdowns_anchor","afterEnd") 
+    
     
   } else if (input$tabs == "tab3"){ # vis tab
     
