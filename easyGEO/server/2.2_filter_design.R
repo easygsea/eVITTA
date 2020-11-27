@@ -142,6 +142,12 @@ filtered_design_df <- reactive({
   
   df <- design_df()
   
+  validate(
+    need(ncol(df)>1,
+         HTML("Design matrix only has one column; Preview is not available.")
+         )
+  )
+  
   
   # if (input$fddf_filter_mode== "variables"){
     

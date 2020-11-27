@@ -186,6 +186,28 @@ char_mat_from_list <- function(char_list,
   char_mat 
 }
 
+# ---------- convenience df functions: ---------------
+
+# convert rownames to first column
+#--------------------------------------
+rown_to_firstcol <- function(df, colname="Name"){
+  ot <- cbind("Name"=rownames(df), df)
+  colnames(ot)[[1]] <- colname
+  rownames(ot) <- seq(1, nrow(ot))
+  ot
+}
+
+
+# convert first column to rownames
+#--------------------------------------
+firstcol_to_rown <- function(df){
+  ot <- df[-1]
+  rownames(ot) <- df[[1]]
+  ot
+}
+
+
+
 # -------------------------------------------------------------------- #
 #                        DEG and visualization                         #
 # -------------------------------------------------------------------- #
