@@ -125,50 +125,54 @@ design_df <- reactive({
   req(is.null(gse())==F)
   req(is.null(rv$plat_id)==F)
   
-  # tidy characteristics
-  char_list <- data.frame(t(data.frame(pData(phenoData(gse()))) %>% dplyr::select(contains("characteristics"))))
-  char_list[char_list==""] <- NA
-  char_list <- as.list(char_list)
-  # print(char_list)
+  char_list <- extract_char_list(gse(), oneline_guard=T)
+  char_mat <- char_mat_from_list(char_list)
+  char_mat
   
-  # map list of characters into dataframe format (those not found = NA)
-  char_list <- lapply(char_list, function(x){
-    transform_vector(x, ": ")
-  })
-  # print(char_list)
-  
-  
-  # char_list
-  chars <- names(table(unlist(lapply(char_list, names))))
-  # chars
-  ls <- lapply(char_list,function(x){
-    xx<- rep(NA, length(chars))
-    names(xx) <- chars
-    xx[names(x)] <- x
-    xx
-  })
-  # ls
-  char_mat <- data.frame(t(data.frame(ls)))
-  
-  # # get rid of single factor columns # well... we still need them to show user
-  # to_keep <- function(x) any(is.numeric(x), length(unique(x)) > 1)
-  # char_mat <- Filter(to_keep, char_mat)
-  
-  
-  # fill NAs with string?? (optional)
-  char_mat[is.na(char_mat)] <- "N/A"
-  char_mat[char_mat=="NA"] <- "N/A"
-  
-  # convert cols type. currently, all is converted to factor
-  # in the future: integers >> numeric, char >> factor
-  char_mat[] <- lapply(char_mat, function(x) {
-    # if(is.integer(x) | is.numeric(x)) {
-    #     as.numeric(x) 
-    # } else {
-    as.factor(x)
-    # }
-  })
-  char_mat 
+  # # tidy characteristics
+  # char_list <- data.frame(t(data.frame(pData(phenoData(gse()))) %>% dplyr::select(contains("characteristics"))))
+  # char_list[char_list==""] <- NA
+  # char_list <- as.list(char_list)
+  # # print(char_list)
+  # 
+  # # map list of characters into dataframe format (those not found = NA)
+  # char_list <- lapply(char_list, function(x){
+  #   transform_vector(x, ": ")
+  # })
+  # # print(char_list)
+  # 
+  # 
+  # # char_list
+  # chars <- names(table(unlist(lapply(char_list, names))))
+  # # chars
+  # ls <- lapply(char_list,function(x){
+  #   xx<- rep(NA, length(chars))
+  #   names(xx) <- chars
+  #   xx[names(x)] <- x
+  #   xx
+  # })
+  # # ls
+  # char_mat <- data.frame(t(data.frame(ls)))
+  # 
+  # # # get rid of single factor columns # well... we still need them to show user
+  # # to_keep <- function(x) any(is.numeric(x), length(unique(x)) > 1)
+  # # char_mat <- Filter(to_keep, char_mat)
+  # 
+  # 
+  # # fill NAs with string?? (optional)
+  # char_mat[is.na(char_mat)] <- "N/A"
+  # char_mat[char_mat=="NA"] <- "N/A"
+  # 
+  # # convert cols type. currently, all is converted to factor
+  # # in the future: integers >> numeric, char >> factor
+  # char_mat[] <- lapply(char_mat, function(x) {
+  #   # if(is.integer(x) | is.numeric(x)) {
+  #   #     as.numeric(x) 
+  #   # } else {
+  #   as.factor(x)
+  #   # }
+  # })
+  # char_mat 
 })
 
 

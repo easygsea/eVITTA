@@ -1,3 +1,8 @@
+# -------------------------------------------------------------------- #
+#                             UI elements                              #
+# -------------------------------------------------------------------- #
+
+
 # ------- Function to draw an info box to guide the user along the pipeline ---------
 # You can pass html string into msg, e.g. : guide_box("<strong>This is a bold message</strong>")
 # default color is blue
@@ -73,6 +78,117 @@ panel_null <- function(text = "Data available upon selection of a platform."){
     text
   )
 }
+
+# -------------------------------------------------------------------- #
+#                   Design matrix parsing                              #
+# -------------------------------------------------------------------- #
+
+# requires the transform_vector() function in global
+
+# parse characteristics columns from GSE 
+# and gather into named list of named vectors (char_list)
+# --------------------------------------------------------------------------------
+# sample output:
+# $GSM245051
+#          Gender             Age          Tissue 
+#        "female" "Premenopausal" "Normal Breast" 
+# 
+# $GSM245052
+#          Gender             Age          Tissue 
+#        "female" "Premenopausal" "Normal Breast" 
+# 
+# note: this guards against cases where many characteristics dimensions are condensed in one string
+# e.g. "Gender: female, Age: Premenopausal, Tissue: Normal Breast"
+
+extract_char_list <- function(gse,
+                              oneline_guard= T, # to guard against one-line characteristics
+                              sep_guard = ", ", # delimiter of one-line characteristics
+                              replace_empty=T, # whether or not to replace empty string as NA
+                              keyword="characteristics" # the substring to filter our characteristics columns
+){
+  
+  # tidy characteristics
+  char_list <- data.frame(t(data.frame(pData(phenoData(gse))) %>% dplyr::select(contains(keyword))))
+  if (replace_empty==T){
+    char_list[char_list==""] <- NA
+  }
+  if (oneline_guard==T){
+    char_list <- lapply(char_list, function(x){paste(x, collapse=sep_guard)}) # squeeze down to one dimension
+    char_list <- lapply(char_list, function(x){strsplit(x, sep_guard)[[1]]}) # restore dimensionality
+  }
+  
+  char_list <- as.list(char_list)
+  char_list <- lapply(char_list, function(x){
+    x[x!="NA"]
+  }) # remove NA vars at this step
+  
+  # map list of characters into dataframe format (those not found = NA)
+  char_list <- lapply(char_list, function(x){
+    transform_vector(x, ": ")
+  })
+  
+  
+  char_list
+  
+  
+}
+
+
+# construct a dataframe from a char_list output
+# --------------------------------------------------------------------------------
+# outputs a dataframe (the design matrix,  rv$dmdf)
+# rows are GSM numbers; columns are variables; entries are levels
+
+char_mat_from_list <- function(char_list,
+                               column_class = "factor", # only factor now
+                               keep_single_factor_vars = T, # default T
+                               fill_na_with_string=T, # whether to fill NA with fill_string
+                               fill_string ="N/A" # string to fill NA with
+){
+  # get var names
+  chars <- names(table(unlist(lapply(char_list, names))))
+  
+  ls <- lapply(char_list,function(x){
+    xx<- rep(NA, length(chars))
+    names(xx) <- chars
+    xx[names(x)] <- x
+    xx
+  })
+  # ls
+  char_mat <- data.frame(t(data.frame(ls)))
+  
+  
+  if (keep_single_factor_vars==F){
+    # get rid of single factor columns ; kept by default
+    to_keep <- function(x) any(is.numeric(x), length(unique(x)) > 1)
+    char_mat <- Filter(to_keep, char_mat)
+  }
+  
+  if (fill_na_with_string==T){
+    # fill NAs with string?? (optional)
+    char_mat[is.na(char_mat)] <- fill_string
+    char_mat[char_mat=="NA"] <- fill_string
+  }
+  
+  # convert cols type. currently, all is converted to factor
+  # in the future: integers >> numeric, char >> factor
+  char_mat[] <- lapply(char_mat, function(x) {
+    # if (column_class == "factor"){
+    as.factor(x)
+    # } else if (column_class == "numeric and factor"){ # disabled
+    # if(is.integer(x) | is.numeric(x)) {
+    #     as.numeric(x) 
+    # } else {
+    # as.factor(x)
+    # }
+    # }
+  })
+  char_mat 
+}
+
+# -------------------------------------------------------------------- #
+#                        DEG and visualization                         #
+# -------------------------------------------------------------------- #
 
 # ------------- basic function to filter DEG table -------------------
 filter_df <- function(df = rv$deg,q_cutoff=input$tl_q,logfc_cutoff=input$tl_logfc){
