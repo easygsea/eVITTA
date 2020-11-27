@@ -125,7 +125,15 @@ design_df <- reactive({
   req(is.null(gse())==F)
   req(is.null(rv$plat_id)==F)
   
-  char_list <- extract_char_list(gse(), oneline_guard=T)
+  # detect how many char columns there are; if only 1, try to parse differently
+  detected_var_num <- nrow(data.frame(t(data.frame(pData(phenoData(gse()))) %>% dplyr::select(contains("characteristics")))))
+  print(paste0("detected characteristics columns: ", detected_var_num))
+  if (detected_var_num>1){
+    char_list <- extract_char_list(gse(), oneline_guard=F)
+  } else {
+    char_list <- extract_char_list(gse(), oneline_guard=T)
+  }
+  
   char_mat <- char_mat_from_list(char_list)
   char_mat
   
