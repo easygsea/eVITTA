@@ -1039,7 +1039,7 @@ output$ins_main_panels <- renderUI({
             width = 12,
             div(id="n0_4", style="height:400px",
                 #uiOutput("n_ui_intersect"),
-                req(is.null(rv$df_n)==F),
+                
                 div(id = "n_ui_intersect",
                     
                     #----------------- venn --------------------
