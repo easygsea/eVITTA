@@ -411,7 +411,7 @@ n_venn_plt <- reactive({
   
   draw_eulerr_with_ins(n_ins_gls(), rv$ins_criteria, 
                        print_mode=rv$n_venn_label, 
-                       show_ins=rv$n_venn_show_ins, ins_color=rv$ins_venn_c1, base_color=palette,
+                       show_ins=rv$n_venn_show_ins, ins_color=rv$ins_venn_c1, base_color=rv$ins_venn_palette,
                        adjust_labels=T)
   
 })
@@ -653,13 +653,11 @@ output$venn_exclusion_report <- renderUI({
 
 output$n_venn_ui <- renderUI({
   req(is.null(rv$n_venn_type)==F)
-  
   if (rv$n_venn_type=="Basic"){
     plotOutput("df_n_npvenn", width="100%")
   } else if (rv$n_venn_type=="Area-proportional"){
     plotOutput("df_n_venn", width="100%")
   }
-  
 })
 
 
@@ -832,38 +830,10 @@ output$ins_table_panel <- renderUI({
 
 #----------------- ins vis  --------------------
 
-output$n_ui_intersect <- renderUI({
+#output$n_ui_intersect <- renderUI({
   # req(rv$n_ui_showpanel == "Intersection")
-  req(is.null(rv$df_n)==F)
-  
-  
-  div(
-    
-    #----------------- venn --------------------
-    
-    conditionalPanel("output.n_venn_status == 'ok'",
-                     ins_venn_panel(),
-                     
-    ),
-    
-    conditionalPanel("output.n_venn_status == 'no'",
-                     uiOutput("n_venn_placeholder")
-    ),
-    
-    
-    
-    #----------------- upset --------------------
-    conditionalPanel("output.n_venn_status == 'ok'",
-                     ins_upset_panel(),
-    ),
-    conditionalPanel("output.n_venn_status == 'no'",
-                     uiOutput("n_upset_placeholder")
-    ),
-    
-    
-    
-  )
-})
+
+#})
 
 #----------------- venn --------------------
 output$n_venn_ins_hl_opt <- renderUI({
@@ -876,7 +846,7 @@ output$n_venn_ins_hl_opt <- renderUI({
                   add_help("ins_venn_c1_help", style="margin-left: 5px;"))
                 ),
                 choices = default_colors,
-                selected="gold"
+                selected=rv$ins_venn_c1
     ),
     bsTooltip("ins_venn_c1_help", 
               "Highlight color for selected intersection (corresponds to table below)", 
@@ -894,7 +864,7 @@ output$n_venn_ins_palette <- renderUI({
                   add_help("ins_venn_palette_help", style="margin-left: 5px;"))
                 ),
                 choices = default_colors,
-                selected="white",
+                selected=rv$ins_venn_palette,
                 multiple = TRUE
     ),
     bsTooltip("ins_venn_palette_help", 
@@ -903,68 +873,76 @@ output$n_venn_ins_palette <- renderUI({
   )
 })
 
+output$venn_dropdowns <- renderUI({
+  div(
+    div(style = "position: absolute; left: 1em; bottom: 1em",
+        dropdown(
+          checkboxGroupInput(
+            inputId = "n_venn_label",
+            label= "Show in label:",
+            choices = c("Counts"="counts", "Percent"="percent"),
+            selected=rv$n_venn_label,
+            inline=T, width="250px"
+          ),
+          radioGroupButtons(
+            inputId = "n_venn_type",
+            label = "Venn type:",
+            choices = c("Basic","Area-proportional"),
+            selected = rv$n_venn_type, direction="horizontal"
+          ),
+          radioGroupButtons(
+            inputId = "n_venn_show_ins",
+            label = HTML(paste0(
+              "<b>Highlight selected intersection?</b>",
+              add_help("n_venn_show_ins_help", style="margin-left: 5px;"))
+            ),
+            choices = c("Yes"=T,"No"=F),
+            selected = rv$n_venn_show_ins, direction="horizontal"
+          ),
+          bsTooltip("n_venn_show_ins_help", 
+                    "Whether to highlight selected intersection (corresponds to table below)", 
+                    placement = "top"),
+          
+          
+          size = "xs",
+          icon = icon("gear", class = "opt"),
+          up = TRUE
+        )
+    ),
+    #div(id = "venn_gear_dropdowns_anchor"), #,style = "position: absolute; left: 1em; bottom: 1em"),
+    div(style = "position: absolute; left: 4em; bottom: 1em",
+        dropdown(
+          uiOutput("n_venn_ins_hl_opt"),
+          uiOutput("n_venn_ins_palette"),
+          size = "xs",
+          icon = icon("palette", class = "opt"),
+          up = TRUE, width=300
+        )
+        
+    ),
+    #div(id = "venn_color_dropdowns_anchor"),#,style = "position: absolute; left: 4em; bottom: 1em"),
+    div(style = "position: absolute; left: 7em; bottom: 1em",
+        dropdown(
+          downloadButton("n_npvenn_dl", "Download basic"),
+          downloadButton("n_venn_dl", "Download area-proportional"),
+          
+          size = "xs",
+          icon = icon("download", class = "opt"),
+          up = TRUE, width=300
+        )
+    )
+  )
+  #div(id = "venn_download_dropdowns_anchor"), #,style = "position: absolute; left: 7em; bottom: 1em"),
+})
+
 
 ins_venn_panel <- reactive({
   box(title = span( strong("3.1a."),icon("chart-area"), "Venn Diagram"), status = "primary", solidHeader = F, width=6,
       
       uiOutput("n_venn_ui"),
       
-      div(style = "position: absolute; left: 1em; bottom: 1em", 
-          dropdown(
-            checkboxGroupInput(
-              inputId = "n_venn_label",
-              label= "Show in label:",
-              choices = c("Counts"="counts", "Percent"="percent"),
-              selected=rv$n_venn_label,
-              inline=T, width="250px"
-            ),
-            radioGroupButtons(
-              inputId = "n_venn_type",
-              label = "Venn type:",
-              choices = c("Basic","Area-proportional"),
-              selected= "Basic", direction="horizontal"
-            ),
-            radioGroupButtons(
-              inputId = "n_venn_show_ins",
-              label = HTML(paste0(
-                "<b>Highlight selected intersection?</b>",
-                add_help("n_venn_show_ins_help", style="margin-left: 5px;"))
-              ),
-              choices = c("Yes"=T,"No"=F),
-              selected= T, direction="horizontal"
-            ),
-            bsTooltip("n_venn_show_ins_help", 
-                      "Whether to highlight selected intersection (corresponds to table below)", 
-                      placement = "top"),
+      div(id = "venn_dropdowns_anchor"),
             
-            
-            size = "xs",
-            icon = icon("gear", class = "opt"),
-            up = TRUE
-          )
-      ),
-      div(style = "position: absolute; left: 4em; bottom: 1em", 
-          dropdown(
-            uiOutput("n_venn_ins_hl_opt"),
-            uiOutput("n_venn_ins_palette"),
-            size = "xs",
-            icon = icon("palette", class = "opt"),
-            up = TRUE, width=300
-          )
-          
-      ),
-      
-      div(style = "position: absolute; left: 7em; bottom: 1em", 
-          dropdown(
-            downloadButton("n_npvenn_dl", "Download basic"),
-            downloadButton("n_venn_dl", "Download area-proportional"),
-            
-            size = "xs",
-            icon = icon("download", class = "opt"),
-            up = TRUE, width=300
-          )
-          
-      ),
       div(style = "position: absolute; right: 1em; bottom: 1em", 
           uiOutput("venn_exclusion_report")
           
@@ -1060,7 +1038,38 @@ output$ins_main_panels <- renderUI({
           column(
             width = 12,
             div(id="n0_4", style="height:400px",
-                uiOutput("n_ui_intersect"),
+                #uiOutput("n_ui_intersect"),
+                req(is.null(rv$df_n)==F),
+                div(id = "n_ui_intersect",
+                    
+                    #----------------- venn --------------------
+                    
+                    conditionalPanel("output.n_venn_status == 'ok'",
+                                     ins_venn_panel(),
+                                     #uiOutput("ins_venn_panel"),
+                                     #Tried to add anchor for venn but doesn't work
+                                     #div(id="venn_plot_here"),
+                    ),
+                    
+                    conditionalPanel("output.n_venn_status == 'no'",
+                                     uiOutput("n_venn_placeholder")
+                    ),
+                    
+                    
+                    
+                    #----------------- upset --------------------
+                    conditionalPanel("output.n_venn_status == 'ok'",
+                                     ins_upset_panel(),
+                    ),
+                    conditionalPanel("output.n_venn_status == 'no'",
+                                     uiOutput("n_upset_placeholder")
+                    ),
+                    
+                    
+                    
+                )
+                #div(id="ins_graph_here"),
+                
             )
             
           )
