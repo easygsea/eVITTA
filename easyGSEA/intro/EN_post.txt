@@ -5,4 +5,6 @@ selectedByvis_network	Hierarchical clustering is used for the dendrogram, and ea
 gear_box	Click this button to adjust the parameters for creating the network.
 d_vis	Click this button to download the network diagram.
 dendrogram_box	The clustering of pathways are visualized in a dendrogram based on the distance matrix. Pathways that have higher similarity are sorted into the same cluster, and the height in the dendrogram represents the dissimilarity between pathways. The cutoff similarity can be adjusted by clicking the little button below; hover over each node for coordinates and name about the pathway.
-dendro_dropdown	Click this button to adjuste the parameters for creating the dendrogram.
+select_your_plot	Select the plot your would like to explore. A cluster barplot is available based on the dendrogram.
+dendro_dropdown	Click this button to adjuste the parameters for creating the dendrogram or barplot.
+download_cluster_barplot_bttn	Click this button to download the dendrogram or barplot

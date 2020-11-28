@@ -16,6 +16,8 @@ observeEvent(input$tabs, {
     move_ui("ins_main_panels", "ins_main_panels_here", "afterEnd")
     move_ui("ins_table_panel", "ins_pg_bottom", "afterEnd")
     move_ui("n_filters", "ins_filters_here", "afterEnd")
+    move_ui("venn_dropdowns","venn_dropdowns_anchor","afterEnd") 
+    
     
   } else if (input$tabs == "tab3"){ # vis tab
     
@@ -50,6 +52,11 @@ output$n_filters <- renderUI({
 
 ####================= Buttons UI =====================####
 
+output$customize_filters_confirm <- renderUI({
+  req_filter_ns("nic", input)
+  actionButton("nic_applytorv", "Save Filters", class = "btn-warning")
+})
+
 customize_filters <- reactive({
   dropdown(inputId="customize_filters", align="right",
            
@@ -64,7 +71,7 @@ customize_filters <- reactive({
              )
            ),
            
-           actionButton("nic_applytorv", "Save Filters", class = "btn-warning"),
+           uiOutput("customize_filters_confirm"),
            
            uiOutput("n_highlights"),
            

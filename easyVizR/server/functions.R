@@ -373,13 +373,19 @@ apply_presets_to_filterinputs <- function(preset_id, input_ns, presets=filter_pr
 # req_filter_ns("f", input) # requires input$f_p_1,...etc
 # req_filter_ns("nic", rv) # requires rv$nic_p_1,...etc
 
-req_filter_ns <- function(namespace, var, input_range=rv$nx_n){
+req_filter_ns <- function(namespace, var, guard_na=T, input_range=rv$nx_n){
   req(is.null(input_range)==F)
   for (i in 1:length(rv$nx_n)){
     req(is.null(var[[paste0(namespace,"_p_",i)]])==F)
     req(is.null(var[[paste0(namespace,"_q_",i)]])==F)
     req(is.null(var[[paste0(namespace,"_Stat_",i)]])==F)
     req(is.null(var[[paste0(namespace,"_sign_",i)]])==F)
+    if(guard_na==T){
+      req(is.na(var[[paste0(namespace,"_p_",i)]])==F)
+      req(is.na(var[[paste0(namespace,"_q_",i)]])==F)
+      req(is.na(var[[paste0(namespace,"_Stat_",i)]])==F)
+      req(is.na(var[[paste0(namespace,"_sign_",i)]])==F)
+    }
   }
 }
 
@@ -448,6 +454,9 @@ observe_filter_highlights <- function(target_namespace, target_var, ref_namespac
                                       normal_radiogroupbuttons_style = "{box-shadow: none;border: #f4f4f4;}"
                                       ){
   highlights <- vector()
+  
+  req_filter_ns(target_namespace, target_var)
+  req_filter_ns(ref_namespace, ref_var)
   
   for (i in 1:length(input_range)){
     # observe p, q, stat, sign and apply highlights if diff from saved rv value

@@ -219,6 +219,8 @@ observeEvent(input[[paste0("fpreset_",filter_presets[[13]][[1]])]], {
 # observe the reset changes button
 #-------------------------------------
 observeEvent(input$f_reset, {
+  req_filter_ns("f", input)
+  req_filter_ns("nic", rv)
   update_filters("f", "nic", rv)
 })
 
@@ -227,9 +229,8 @@ observeEvent(input$f_reset, {
 # observe the changes made to the filters, and highlight unsaved changes (i.e. different from rv)
 #-----------------------------------------
 observe({
-  req_filter_ns("f", input)
+  req_filter_ns("f", input, guard_na=T)
   req_filter_ns("nic", rv)
-  
   rv$f_css_highlights <- observe_filter_highlights("f", input, "nic", rv)
 })
 

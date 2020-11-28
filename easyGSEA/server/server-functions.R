@@ -1296,7 +1296,7 @@
         print(rv$label_size)
         # convert it to interative plotly diagram
         ggplotly_dendro <- ggplot_dendro %>%
-          ggplotly(tooltip = c("name","x","y")) %>%
+          ggplotly(tooltip = c("name")) %>%
           layout(showlegend = FALSE, margin = list(l = 0)) %>%
           style(textposition = "right") %>%
           event_register("plotly_click")

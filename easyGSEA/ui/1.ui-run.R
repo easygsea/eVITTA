@@ -37,7 +37,7 @@ bodyGSEA <- tabItem(tabName = "gsea",
             width = 4,
             # fluidRow(
                 box(id= "run_analysis_box",
-                    title = span(icon("play-circle"),"RUN Analysis"), solidHeader = F,
+                    title = span(icon("code"),"RUN Analysis"), solidHeader = F,
                     width = 12,align = "left",
                     status = "primary",
 
