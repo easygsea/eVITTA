@@ -1054,15 +1054,17 @@
 
         # save dbs for plots
         if(species != "other"){
-          rv$bar_pathway = rv$dbs
-          rv$bubble_pathway = rv$dbs
-          rv$volcano_pathway = rv$dbs
+          rv$bar_pathway <- rv$dbs
+          rv$bubble_pathway <- rv$dbs
+          rv$volcano_pathway <- rv$dbs
+          rv$vis_pathway <- rv$dbs
         }else{
           rv$gmt_cs = lapply(rv$gmt_cs,function(x) {strsplit(x,"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1]})
 
-          rv$bar_pathway = rv$gmt_cs
-          rv$bubble_pathway = rv$gmt_cs
-          rv$volcano_pathway = rv$gmt_cs
+          rv$bar_pathway <- rv$gmt_cs
+          rv$bubble_pathway <- rv$gmt_cs
+          rv$volcano_pathway <- rv$gmt_cs
+          rv$vis_pathway <- rv$gmt_cs
         }
 
 

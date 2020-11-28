@@ -305,13 +305,14 @@ output$download_vis <- downloadHandler(
 
 # update and replot
 observeEvent(input$vis_replot,{
-    rv$vis_p = input$cutoff_vis_p
-    rv$vis_q = input$cutoff_vis_q
-    rv$vis_pq = input$p_or_q_vis
-    rv$percent_method = input$vis_percent
-    rv$percent_cutoff = input$vis_percent_cutoff
-    rv$vis_k = input$combined_k
-    rv$vis_status = NULL
+    rv$vis_pathway <- input$pathway_to_plot_vis
+    rv$vis_p <- input$cutoff_vis_p
+    rv$vis_q <- input$cutoff_vis_q
+    rv$vis_pq <- input$p_or_q_vis
+    rv$percent_method <- input$vis_percent
+    rv$percent_cutoff <- input$vis_percent_cutoff
+    rv$vis_k <- input$combined_k
+    rv$vis_status <- NULL
 })
 
 #  ============ vis edges modal =============
@@ -339,6 +340,11 @@ observeEvent(input$q_vis_edge_threshold,{
 
 #  ============UI vis parameter =============
 output$ui_vis_gear <- renderUI({
+    if(input$selected_species != "other"){
+        dbs = rv$dbs
+    }else{
+        dbs = rv$gmt_cs
+    }
     # div(
     #     align = "left",
     #     style = "position: absolute; right: 5em; top: 1em;",
@@ -354,6 +360,13 @@ output$ui_vis_gear <- renderUI({
                 tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
             ),
             fluidRow(
+                column(12,
+                    selectizeInput("pathway_to_plot_vis",
+                                   "Select database(s) to plot",
+                                   choices = dbs,
+                                   selected = rv$vis_pathway,
+                                   multiple = TRUE)
+                ),
                 column(
                     width = 6,
                     sliderTextInput("cutoff_vis_p",
