@@ -1113,14 +1113,14 @@
             
             df_further <- dplyr::select(df_rank, -origin_clu)
             rv$df_download <- df_further %>%
-              dplyr::rename(c("cluster_size" = "n", "cluster_id" = "cluster"))
+             dplyr::rename(c("cluster_size" = "n", "cluster_id" = "cluster"))
             print(head(rv$df_download))
             
             # create a data frame that has all the pathways having lowest P.adj. in each clusters
             if(rv$run_mode == "gsea"){
               df_padj <- df_further %>%
               group_by(cluster) %>%
-              mutate(n = n()) %>%
+              dplyr::mutate(n = n()) %>%
               filter(padj == min(padj)) %>%
               top_n(1, ES) %>%
               filter(row_number()==1) %>%
@@ -1128,7 +1128,7 @@
             } else {
               df_padj <- df_further %>%
                 group_by(cluster) %>%
-                mutate(n = n()) %>%
+                dplyr::mutate(n = n()) %>%
                 filter(padj == min(padj)) %>%
                 filter(row_number()==1) %>%
                 dplyr::select(cluster, pathway, n, pval, ES, padj)
