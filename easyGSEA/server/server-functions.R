@@ -1112,7 +1112,9 @@
               dplyr::rename("cluster" = "rank")
             
             df_further <- dplyr::select(df_rank, -origin_clu)
-            # rv$df_further = df_further
+            rv$df_download <- df_further %>%
+              dplyr::rename(c("cluster_size" = "n", "cluster_id" = "cluster"))
+            print(head(rv$df_download))
             
             # create a data frame that has all the pathways having lowest P.adj. in each clusters
             if(rv$run_mode == "gsea"){

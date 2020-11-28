@@ -1,3 +1,42 @@
+# # DEMO SESSION code -------------------------------------------------------
+# 
+# library(later)
+# # the modal to remind the user it is a demo session
+# observe({
+#   init_demo_gsea()
+#   #init_demo_ora()
+#   showModal(modalDialog(title = "Welcome to our easyGSEA demo session",
+#                         "The demo session has all the features of our app.
+#                         Follow the intro tour and switch to different tabs to explore it.",
+#                         size = "m",
+#                         easyClose = TRUE
+#                         ,footer = actionButton("welcome_modal",label = "OK")))
+#   
+# })
+# # when the user closed the modal, start rintrojs
+# observeEvent(input$welcome_modal, {
+#   removeModal()
+#   if(rv$demo_mode == "gsea"){
+#     call_introjs(rbind(intros$R_pre,intros$R_post_with_conversion_table,intros$R_post))
+#   }else {
+#     call_introjs(rbind(intros$R_pre_ora,intros$R_post_with_conversion_table_ora,intros$R_post_ora))
+#   }
+# })
+# 
+# # start rintrojs when users switch tabs
+# observeEvent(input$tabs,{
+#   if(input$tabs == "kegg"){
+#     later(~call_introjs(rbind(intros$ER_post,intros$ER_post_with_pathway)), 2)
+#   } else if(input$tabs == "network"){
+#     later(~call_introjs(intros$EN_post), 3)
+#   } else if(input$tabs == "download"){
+#     later(~call_introjs(intros$D_post), 2)
+#   } else {
+#     
+#   }
+# })
+# # END--------------------------------------------------------------------------------
+
 # RNK help --------------
     observeEvent(input$q1,{
         showModal(modalDialog(

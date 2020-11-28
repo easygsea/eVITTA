@@ -185,6 +185,9 @@ output$ui_bodyNetwork <- renderUI({
                     )
 
                     ,
+                    div(id = "download_df", style ="margin_right:15px",
+                        downloadButton("download_cluster_df", label = "Download data")
+                        ),
 
 
                     bsTooltip("d_dendro", "Click to download plot", placement = "bottom")
@@ -356,6 +359,14 @@ output$download_vis <- downloadHandler(
     content = function(file) {saveWidget(as_widget(rv$vis), file, selfcontained = TRUE)}
 
     # content = function(file) {saveWidget(as_widget(vis()), file, selfcontained = TRUE)}
+)
+
+# download clustering's data frame
+output$download_cluster_df <- downloadHandler(
+    filename = function() {paste0("cluster_data_",paste0("cutoff_",rv$cutoff_point,"_"),rv$rnkll,".csv")},
+    content = function(file) {if(is.null(rv$df_download)){return(NULL)}
+        else{write.csv(rv$df_download, file, row.names = TRUE)}
+    }
 )
 
 # update and replot
