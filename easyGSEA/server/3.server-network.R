@@ -177,8 +177,9 @@ output$ui_bodyNetwork <- renderUI({
                             # style = "position: absolute; right: 1em; top: 1em;",
                             downloadBttn(
                                 size = "md", style="unite",
-                                if(rv$dendro_or_barplot == "Cluster dendrogram"){outputId = "download_dendro"}
-                                else{outputId = "download_cluster_barplot"}
+                                if(rv$dendro_or_barplot == "dendro"){outputId = "download_dendro"}
+                                else if(rv$dendro_or_barplot == "bar"){outputId = "download_cluster_barplot"}
+                                else {outputId = "download_cluster_bubble"}
                                 , label = NULL
                             )
                         )
