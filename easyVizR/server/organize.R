@@ -1,46 +1,46 @@
-# DEMO SESSION CODE -------------------------------------------------------
-
-library(later)
-rv$demo_n = 2
-# the modal to remind the user it is a demo session
-observe({
-  req(rv$demo_n == 2)
-  init_demo()
-  showModal(modalDialog(title = "Welcome to our easyVizR demo session",
-                        "The demo session has all the features of our app.
-                        Follow the intro tour and switch to different tabs to explore it.",
-                        size = "m",
-                        easyClose = TRUE
-                        ,footer = actionButton("welcome_modal",label = "OK")))
-  rv$demo_n = 4
-  
-})
-# when the user closed the modal, start rintrojs
-observeEvent(input$welcome_modal, {
-  removeModal()
-  rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                            steps = intros$upload)
-  )
-})
-
-# start rintrojs when users switch tabs
-observeEvent(input$tabs,{
-  if(input$tabs == "tab_filters"){
-    later(~rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                                     steps = intros$f1)
-    ), 2)
-  } else if(input$tabs == "tab_ins"){
-    later(~rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                                     steps = intros$i1)
-    ), 2)
-  } else if(input$tabs == "tab3"){
-    later(~rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
-                                                     steps = intros$n2)
-    ), 2)
-  } else {
-    
-  }
-})
+# # DEMO SESSION CODE -------------------------------------------------------
+# 
+# library(later)
+# rv$demo_n = 2
+# # the modal to remind the user it is a demo session
+# observe({
+#   req(rv$demo_n == 2)
+#   init_demo()
+#   showModal(modalDialog(title = "Welcome to our easyVizR demo session",
+#                         "The demo session has all the features of our app.
+#                         Follow the intro tour and switch to different tabs to explore it.",
+#                         size = "m",
+#                         easyClose = TRUE
+#                         ,footer = actionButton("welcome_modal",label = "OK")))
+#   rv$demo_n = 4
+#   
+# })
+# # when the user closed the modal, start rintrojs
+# observeEvent(input$welcome_modal, {
+#   removeModal()
+#   rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+#                                             steps = intros$upload)
+#   )
+# })
+# 
+# # start rintrojs when users switch tabs
+# observeEvent(input$tabs,{
+#   if(input$tabs == "tab_filters"){
+#     later(~rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+#                                                      steps = intros$f1)
+#     ), 2)
+#   } else if(input$tabs == "tab_ins"){
+#     later(~rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+#                                                      steps = intros$i1)
+#     ), 2)
+#   } else if(input$tabs == "tab3"){
+#     later(~rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+#                                                      steps = intros$n2)
+#     ), 2)
+#   } else {
+#     
+#   }
+# })
 # END ----------------------------------------------------------------------
 
 #======================================================================#
