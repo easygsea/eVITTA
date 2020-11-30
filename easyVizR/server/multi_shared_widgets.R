@@ -52,6 +52,11 @@ output$n_filters <- renderUI({
 
 ####================= Buttons UI =====================####
 
+output$customize_filters_confirm <- renderUI({
+  req_filter_ns("nic", input)
+  actionButton("nic_applytorv", "Save Filters", class = "btn-warning")
+})
+
 customize_filters <- reactive({
   dropdown(inputId="customize_filters", align="right",
            
@@ -66,7 +71,7 @@ customize_filters <- reactive({
              )
            ),
            
-           actionButton("nic_applytorv", "Save Filters", class = "btn-warning"),
+           uiOutput("customize_filters_confirm"),
            
            uiOutput("n_highlights"),
            
