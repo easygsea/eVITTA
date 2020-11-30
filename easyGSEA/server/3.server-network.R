@@ -84,7 +84,7 @@ output$ui_bodyNetwork <- renderUI({
                 title = div( id = "select_your_plot", #span(icon("pagelines"), #" Select the plot you would like to explore"),
                                   selectizeInput("dendro_or_barplot",
                                                  NULL,
-                                                 choices = c("Cluster dendrogram"="dendro", "Cluster bar plot"="bar", "Cluster bubble plot" = "bubble"),
+                                                 choices = c("Cluster dendrogram"="dendro", "Cluster bar plot"="bar", "Cluster bubble plot" = "bubble","Cluster table" = "table"),
                                                  selected = rv$dendro_or_barplot,
                                                  width = "160px")
 
@@ -131,8 +131,10 @@ output$ui_bodyNetwork <- renderUI({
                         } else {
                             if(rv$dendro_or_barplot == "bar"){
                                plotlyOutput("plot_cluster_bar", width = "900px", height = "660px")
-                            } else {
+                            } else if(rv$dendro_or_barplot == "bubble"){
                                 plotlyOutput("plot_cluster_bubble", width = "900px", height = "660px")
+                            } else if(rv$dendro_or_barplot == "table"){
+                                dataTableOutput("cluster_df")
                             }
 
                         }
@@ -155,21 +157,7 @@ output$ui_bodyNetwork <- renderUI({
                         div(id = "dendro_dropdown",
                             style="display: inline-block;vertical-align:top;
                             ", #position: absolute; right: 55px; top: 2.8em;
-                            dropdown(
-                                # if(rv$dendro_or_barplot == "Cluster barplot"){
-                                #     uiOutput("barplot_option")
-                                # } else {
-                                uiOutput("dendro_option")
-                                ,
-                                width = '300px',
-
-                                up = FALSE,right = TRUE,icon = icon("gear"),
-                                style = "unite",
-                                circle = TRUE,
-                                tooltip = tooltipOptions(
-                                    title = "Click to adjust parameters for creating a dendrogram"
-                                    ,placement = "bottom"),
-                            )
+                            uiOutput("cl_gear")
                         ),
                         div(id="d_dendro", style="display: inline-block;vertical-align:top;margin-right:15px;
                             ", #position: absolute; top: 2.8em; right: 0px;
@@ -179,23 +167,27 @@ output$ui_bodyNetwork <- renderUI({
                                 size = "md", style="unite",
                                 if(rv$dendro_or_barplot == "dendro"){outputId = "download_dendro"}
                                 else if(rv$dendro_or_barplot == "bar"){outputId = "download_cluster_barplot"}
-                                else {outputId = "download_cluster_bubble"}
+                                else if(rv$dendro_or_barplot == "bubble"){outputId = "download_cluster_bubble"}
+                                else{outputId = "download_cluster_df"}
                                 , label = NULL
                             )
                         )
                     )
 
-                    ,if(!is.null(rv$df_download)){
-                        div(id = "download_df", style ="margin_right:15px",
-                        downloadBttn("download_cluster_df", label = "Download data", size = "xs")
-                        ) 
-                    }
+                    # ,if(!is.null(rv$df_download)){
+                    #     div(id = "download_df", style ="margin_right:15px",
+                    #     downloadBttn("download_cluster_df", label = "Download data", size = "xs")
+                    #     ) 
+                    # }
                    ,
 
 
-                    bsTooltip("d_dendro", "Click to download plot", placement = "bottom")
+                    bsTooltip("d_dendro", 
+                              if(rv$dendro_or_barplot == "dendro"||rv$dendro_or_barplot == "bar"||rv$dendro_or_barplot == "bubble"){
+                                  title = "Click to download plot"}
+                              else{title = "Click to download table"}
+                              , placement = "bottom")
                     ,
-
                     right = 10,
                     top = 6
                 )
@@ -203,6 +195,33 @@ output$ui_bodyNetwork <- renderUI({
             )
         )
     }
+})
+
+# UI for customizable options for creating the dendrogram
+output$cl_gear <- renderUI({
+    req(rv$dendro_or_barplot == "dendro" || rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble")
+    
+    dropdown(
+        # if(rv$dendro_or_barplot == "Cluster barplot"){
+        #     uiOutput("barplot_option")
+        # } else {
+        uiOutput("dendro_option")
+        ,
+        width = '300px',
+        
+        up = FALSE,right = TRUE,icon = icon("gear"),
+        style = "unite",
+        circle = TRUE,
+        tooltip = tooltipOptions(
+            title = "Click to adjust parameters for creating a dendrogram"
+            ,placement = "bottom"),
+    )
+})
+
+
+# the input that user selected that controls the plot displayed
+observeEvent(input$dendro_or_barplot,{
+    rv$dendro_or_barplot <- input$dendro_or_barplot
 })
 
 # ------------ nav buttons to previous/next tab -----------
@@ -226,6 +245,8 @@ output$vis_error <- renderUI({
     )
 
 })
+
+# render visnetwork
 output$vis_network <- renderVisNetwork({
     req(is.null(rv$fgseagg)==F)
     # N = 10
@@ -235,7 +256,145 @@ output$vis_network <- renderVisNetwork({
     })
 })
 
-# render Plotly Dendrogram
+
+# download visnetwork
+output$download_vis <- downloadHandler(
+    filename = function() {paste0("network_",paste0("q",rv$vis_q,"p",rv$vis_p,"_",rv$vis_pq,"_"),rv$rnkll,".html")},
+    content = function(file) {saveWidget(as_widget(rv$vis), file, selfcontained = TRUE)}
+    
+    # content = function(file) {saveWidget(as_widget(vis()), file, selfcontained = TRUE)}
+)
+
+# update and replot
+observeEvent(input$vis_replot,{
+    rv$vis_p = input$cutoff_vis_p
+    rv$vis_q = input$cutoff_vis_q
+    rv$vis_pq = input$p_or_q_vis
+    rv$percent_method = input$vis_percent
+    rv$percent_cutoff = input$vis_percent_cutoff
+    rv$vis_k = input$combined_k
+    rv$vis_status = NULL
+})
+
+#  ============ vis edges modal =============
+observeEvent(input$q_vis_edge,{
+    showModal(modalDialog(
+        inputId = "vis_edge_md",
+        title = "Edge parameters: Determine the degree of gene overlap between gene sets",
+        includeMarkdown(paste0(getwd(),"/inc/edge_explaination.md")),
+        easyClose = TRUE,size="l",
+        footer = modalButton("OK")
+    ))
+    
+})
+
+observeEvent(input$q_vis_edge_threshold,{
+    showModal(modalDialog(
+        inputId = "vis_edge_md",
+        title = "Recommendations on choice of thresholds",
+        includeMarkdown(paste0(getwd(),"/inc/edge_threshold_explaination.md")),
+        easyClose = TRUE,size="l",
+        footer = modalButton("OK")
+    ))
+    
+})
+
+#  ============UI vis parameter =============
+output$ui_vis_gear <- renderUI({
+    # div(
+    #     align = "left",
+    #     style = "position: absolute; right: 5em; top: 1em;",
+    # box(
+    #     width = 12,
+    #     title = span(icon("gear", class = "opt"),"Advanced parameters for creating a network"), solidHeader = T,
+    #     icon = "fa fa-th",
+    #     status = "primary",
+    #     # solidHeader = T,
+    #     collapsible = T, collapsed = T,
+    div(div(
+        align = "center",
+        tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
+    ),
+    fluidRow(
+        column(
+            width = 6,
+            sliderTextInput("cutoff_vis_p",
+                            label = "Adjust P threshold:",
+                            choices= cutoff_slider,
+                            selected=rv$vis_p, grid=T, force_edges=T)
+        ),
+        column(
+            width = 6,
+            sliderTextInput("cutoff_vis_q",
+                            label = "Adjust P.adj threshold:",
+                            choices= cutoff_slider,
+                            selected=rv$vis_q, grid=T, force_edges=T)
+        )
+    ),br(),
+    fluidRow(
+        column(
+            width = 6,
+            selectInput("vis_percent",
+                        label = label_with_help_bttn("Edge parameters","q_vis_edge"),
+                        choices = list(
+                            "Jaccard Coefficient" = "jaccard",
+                            "Overlap Coefficient" = "overlap",
+                            "Combined Coefficient" = "combined"
+                        ),
+                        selected = rv$percent_method
+            ),
+            bsTooltip("q_vis_edge", "Click to learn more!", placement = "top")
+        ),
+        column(
+            width = 6,
+            numericInput("vis_percent_cutoff",
+                         label = label_with_help_bttn(HTML("Edge threshold (0 &#8804 x &#8804 1)"),"q_vis_edge_threshold"),
+                         rv$percent_cutoff, min = 0, max = 1, step = 0.01
+            ),
+            bsTooltip("q_vis_edge_threshold", "Click to learn more!", placement = "top")
+        )
+        
+    ),br(),
+    fluidRow(
+        column(
+            width = 6,
+            conditionalPanel(
+                condition = "input.vis_percent == 'combined'",
+                numericInput("combined_k",HTML(paste0("Combined constant, K",add_help("q_ck"))),
+                             rv$vis_k, min = 0, max = 1, step = 0.01
+                )
+                ,bsTooltip("q_ck","Combined coefficient merges the Jaccard and Overlap coefficients. K is the proportion of Jaccard coefficient."
+                           ,placement = "top")
+            )
+        )
+    ),
+    fluidRow(
+        column(
+            width = 6,
+            radioGroupButtons("p_or_q_vis","Color by",
+                              choiceNames = c("P", "P.adj"),
+                              choiceValues = c("pval", "padj"),
+                              selected = rv$vis_pq,
+                              direction = "horizontal",status="default"
+            )
+        ),
+        column(
+            width = 6,align="right",br(),
+            actionBttn("vis_replot","Replot!"
+                       ,style = "simple"#,size = "sm"
+                       ,color = "primary",icon = icon("atom") #,lib="font-awesome"
+            )
+        )
+    )
+    
+    
+    
+    )
+    # )
+    
+})
+
+# ------------ render Plotly Dendrogram, bar, bubbl --------------
 output$plot_dendrogram <- renderPlotly({
     req(is.null(rv$fgseagg)==F)
     withProgress(message = "Hierarchically clustering enriched gene sets and generating the dendrogram ...",value = 1,{
@@ -254,6 +413,7 @@ output$plot_cluster_bar <- renderPlotly({
     })
 
 })
+
 # render Plotly bubble barplot
 output$plot_cluster_bubble <- renderPlotly({
     req(is.null(rv$fgseagg)==F)
@@ -262,11 +422,6 @@ output$plot_cluster_bubble <- renderPlotly({
         return(rv$cluster_bubble)
     })
 
-})
-
-# the input that user selected that controls the plot displayed
-observeEvent(input$dendro_or_barplot,{
-    rv$dendro_or_barplot <- input$dendro_or_barplot
 })
 
 # the dropdown gear ui of dendrogram
@@ -356,13 +511,16 @@ output$download_cluster_bubble <- downloadHandler(
 )
 
 
-# download visnetwork
-output$download_vis <- downloadHandler(
-    filename = function() {paste0("network_",paste0("q",rv$vis_q,"p",rv$vis_p,"_",rv$vis_pq,"_"),rv$rnkll,".html")},
-    content = function(file) {saveWidget(as_widget(rv$vis), file, selfcontained = TRUE)}
 
-    # content = function(file) {saveWidget(as_widget(vis()), file, selfcontained = TRUE)}
-)
+# ------------ render cluster table --------------
+output$cluster_df <- DT::renderDataTable({
+    req(rv$dendro_or_barplot=="table")
+    
+    df <- rv$df_download %>%
+        mutate_if(is.numeric, function(x) round(x, digits=3))
+    
+    df_no(df, scrollY = "556px")
+})
 
 # download clustering's data frame
 output$download_cluster_df <- downloadHandler(
@@ -371,131 +529,4 @@ output$download_cluster_df <- downloadHandler(
     }
 )
 
-# update and replot
-observeEvent(input$vis_replot,{
-    rv$vis_p = input$cutoff_vis_p
-    rv$vis_q = input$cutoff_vis_q
-    rv$vis_pq = input$p_or_q_vis
-    rv$percent_method = input$vis_percent
-    rv$percent_cutoff = input$vis_percent_cutoff
-    rv$vis_k = input$combined_k
-    rv$vis_status = NULL
-})
 
-#  ============ vis edges modal =============
-observeEvent(input$q_vis_edge,{
-    showModal(modalDialog(
-        inputId = "vis_edge_md",
-        title = "Edge parameters: Determine the degree of gene overlap between gene sets",
-        includeMarkdown(paste0(getwd(),"/inc/edge_explaination.md")),
-        easyClose = TRUE,size="l",
-        footer = modalButton("OK")
-    ))
-
-})
-
-observeEvent(input$q_vis_edge_threshold,{
-    showModal(modalDialog(
-        inputId = "vis_edge_md",
-        title = "Recommendations on choice of thresholds",
-        includeMarkdown(paste0(getwd(),"/inc/edge_threshold_explaination.md")),
-        easyClose = TRUE,size="l",
-        footer = modalButton("OK")
-    ))
-
-})
-
-#  ============UI vis parameter =============
-output$ui_vis_gear <- renderUI({
-    # div(
-    #     align = "left",
-    #     style = "position: absolute; right: 5em; top: 1em;",
-    # box(
-    #     width = 12,
-    #     title = span(icon("gear", class = "opt"),"Advanced parameters for creating a network"), solidHeader = T,
-    #     icon = "fa fa-th",
-    #     status = "primary",
-    #     # solidHeader = T,
-    #     collapsible = T, collapsed = T,
-            div(div(
-                align = "center",
-                tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
-            ),
-            fluidRow(
-                column(
-                    width = 6,
-                    sliderTextInput("cutoff_vis_p",
-                                    label = "Adjust P threshold:",
-                                    choices= cutoff_slider,
-                                    selected=rv$vis_p, grid=T, force_edges=T)
-                ),
-                column(
-                    width = 6,
-                    sliderTextInput("cutoff_vis_q",
-                                    label = "Adjust P.adj threshold:",
-                                    choices= cutoff_slider,
-                                    selected=rv$vis_q, grid=T, force_edges=T)
-                )
-            ),br(),
-            fluidRow(
-                column(
-                    width = 6,
-                    selectInput("vis_percent",
-                        label = label_with_help_bttn("Edge parameters","q_vis_edge"),
-                        choices = list(
-                            "Jaccard Coefficient" = "jaccard",
-                            "Overlap Coefficient" = "overlap",
-                            "Combined Coefficient" = "combined"
-                        ),
-                        selected = rv$percent_method
-                    ),
-                    bsTooltip("q_vis_edge", "Click to learn more!", placement = "top")
-                ),
-                column(
-                    width = 6,
-                    numericInput("vis_percent_cutoff",
-                                 label = label_with_help_bttn(HTML("Edge threshold (0 &#8804 x &#8804 1)"),"q_vis_edge_threshold"),
-                                 rv$percent_cutoff, min = 0, max = 1, step = 0.01
-                    ),
-                    bsTooltip("q_vis_edge_threshold", "Click to learn more!", placement = "top")
-                )
-
-            ),br(),
-            fluidRow(
-                column(
-                    width = 6,
-                    conditionalPanel(
-                        condition = "input.vis_percent == 'combined'",
-                        numericInput("combined_k",HTML(paste0("Combined constant, K",add_help("q_ck"))),
-                                     rv$vis_k, min = 0, max = 1, step = 0.01
-                        )
-                        ,bsTooltip("q_ck","Combined coefficient merges the Jaccard and Overlap coefficients. K is the proportion of Jaccard coefficient."
-                                   ,placement = "top")
-                    )
-                )
-            ),
-    fluidRow(
-                column(
-                    width = 6,
-                    radioGroupButtons("p_or_q_vis","Color by",
-                                      choiceNames = c("P", "P.adj"),
-                                      choiceValues = c("pval", "padj"),
-                                      selected = rv$vis_pq,
-                                      direction = "horizontal",status="default"
-                    )
-                ),
-                column(
-                    width = 6,align="right",br(),
-                    actionBttn("vis_replot","Replot!"
-                               ,style = "simple"#,size = "sm"
-                               ,color = "primary",icon = icon("atom") #,lib="font-awesome"
-                    )
-                )
-            )
-
-
-
-        )
-    # )
-
-})
