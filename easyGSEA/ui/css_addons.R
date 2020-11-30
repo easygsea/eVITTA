@@ -60,6 +60,9 @@ css_addons <-
       ,"#gmt_c_progress {
       }"
       
+      # place the help button on top of the dataoutput
+      ,"#cluster_df{ position: relative; z-index: 0; }"
+
       # file upload in GMT area
       ,"#drag_gmt {
       margin-top:-8px;
