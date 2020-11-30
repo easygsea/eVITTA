@@ -150,13 +150,7 @@ output$selected_es_tables <- DT::renderDataTable({
         mutate_if(is.numeric, function(x) round(x, digits=3))
     
     # df
-    DT::datatable(df,
-                  extensions=c('Scroller'),
-                  options = list(
-                      scrollY = "380px",
-                      scroller = TRUE,
-                      scrollX=TRUE
-                  ))}
+    df_no(df)}
     
     # }, plugins="ellipsis", options = dt_options(pageLength = 10)
     # },  options = list(scrollX=T)
