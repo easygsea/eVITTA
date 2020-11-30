@@ -110,11 +110,17 @@
         return(NULL)
       }else{
         if(rv$run_mode == "gsea"){
-          df1 <- df %>% dplyr::filter(ES > 0) %>%
-            dplyr::slice_max(ES,n=up)
+          df1 <- df %>% dplyr::filter(ES > 0)
+          if(is.null(up)==F){
+            df1 <- df1 %>%
+              dplyr::slice_max(ES,n=up)
+          }
           
-          df2 <- df  %>% dplyr::filter(ES < 0) %>%
-            dplyr::slice_min(ES,n=down)
+          df2 <- df  %>% dplyr::filter(ES < 0)
+          if(is.null(down)==F){
+            df2 <- df2 %>%
+              dplyr::slice_min(ES,n=down)
+          }
           
           df <- rbind(df1,df2)
           df <- df %>% arrange(desc(ES))
@@ -958,7 +964,8 @@
         rv$vis = NULL
         rv$vis_status = NULL
         # get df
-        df = dfNEL()
+        # df = dfNEL()
+        df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p,rv$vis_q)
         
         rv$df_vis = df
         print(nrow(df))
@@ -1962,6 +1969,7 @@
       rv$rnkgg <- readRDS(paste0(getwd(),"/rvs/rnkgg.rds"))
       rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs/bar_pathway.rds"))
       rv$bubble_pathway <- readRDS(paste0(getwd(),"/rvs/bubble_pathway.rds"))
+      rv$vis_pathway <- readRDS(paste0(getwd(),"/rvs/bar_pathway.rds"))
       rv$db_modal <- readRDS(paste0(getwd(),"/rvs/db_modal.rds"))
       rv$fgseagg <- readRDS(paste0(getwd(),"/rvs/fgseagg.rds"))
       rv$gmt_cs <- readRDS(paste0(getwd(),"/rvs/gmt_cs.rds"))
@@ -2013,6 +2021,7 @@
       rv$volcano_pathway <- readRDS(paste0(getwd(),"/rvs2/volcano_pathway.rds"))
       rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs2/bar_pathway.rds"))
       rv$bubble_pathway <- readRDS(paste0(getwd(),"/rvs2/bubble_pathway.rds"))
+      rv$vis_pathway <- readRDS(paste0(getwd(),"/rvs2/bar_pathway.rds"))
       rv$db_modal <- readRDS(paste0(getwd(),"/rvs2/db_modal.rds"))
       rv$fgseagg <- readRDS(paste0(getwd(),"/rvs2/fgseagg.rds"))
       rv$gmt_cs <- readRDS(paste0(getwd(),"/rvs2/gmt_cs.rds"))

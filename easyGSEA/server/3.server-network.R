@@ -177,12 +177,12 @@ output$ui_bodyNetwork <- renderUI({
                     # ,if(!is.null(rv$df_download)){
                     #     div(id = "download_df", style ="margin_right:15px",
                     #     downloadBttn("download_cluster_df", label = "Download data", size = "xs")
-                    #     ) 
+                    #     )
                     # }
                    ,
 
 
-                    bsTooltip("d_dendro", 
+                    bsTooltip("d_dendro",
                               if(rv$dendro_or_barplot == "dendro"||rv$dendro_or_barplot == "bar"||rv$dendro_or_barplot == "bubble"){
                                   title = "Click to download plot"}
                               else{title = "Click to download table"}
@@ -200,7 +200,7 @@ output$ui_bodyNetwork <- renderUI({
 # UI for customizable options for creating the dendrogram
 output$cl_gear <- renderUI({
     req(rv$dendro_or_barplot == "dendro" || rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble")
-    
+
     dropdown(
         # if(rv$dendro_or_barplot == "Cluster barplot"){
         #     uiOutput("barplot_option")
@@ -208,7 +208,7 @@ output$cl_gear <- renderUI({
         uiOutput("dendro_option")
         ,
         width = '300px',
-        
+
         up = FALSE,right = TRUE,icon = icon("gear"),
         style = "unite",
         circle = TRUE,
@@ -261,7 +261,7 @@ output$vis_network <- renderVisNetwork({
 output$download_vis <- downloadHandler(
     filename = function() {paste0("network_",paste0("q",rv$vis_q,"p",rv$vis_p,"_",rv$vis_pq,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(rv$vis), file, selfcontained = TRUE)}
-    
+
     # content = function(file) {saveWidget(as_widget(vis()), file, selfcontained = TRUE)}
 )
 
@@ -285,7 +285,7 @@ observeEvent(input$q_vis_edge,{
         easyClose = TRUE,size="l",
         footer = modalButton("OK")
     ))
-    
+
 })
 
 observeEvent(input$q_vis_edge_threshold,{
@@ -296,7 +296,7 @@ observeEvent(input$q_vis_edge_threshold,{
         easyClose = TRUE,size="l",
         footer = modalButton("OK")
     ))
-    
+
 })
 
 #  ============UI vis parameter =============
@@ -353,7 +353,7 @@ output$ui_vis_gear <- renderUI({
             ),
             bsTooltip("q_vis_edge_threshold", "Click to learn more!", placement = "top")
         )
-        
+
     ),br(),
     fluidRow(
         column(
@@ -386,12 +386,12 @@ output$ui_vis_gear <- renderUI({
             )
         )
     )
-    
-    
-    
+
+
+
     )
     # )
-    
+
 })
 
 # ------------ render Plotly Dendrogram, bar, bubbl --------------
@@ -515,10 +515,10 @@ output$download_cluster_bubble <- downloadHandler(
 # ------------ render cluster table --------------
 output$cluster_df <- DT::renderDataTable({
     req(rv$dendro_or_barplot=="table")
-    
+
     df <- rv$df_download %>%
         mutate_if(is.numeric, function(x) round(x, digits=3))
-    
+
     df_no(df, scrollY = "556px")
 })
 
@@ -528,5 +528,3 @@ output$download_cluster_df <- downloadHandler(
     content = function(file) {fwrite(rv$df_download, file, row.names = TRUE)
     }
 )
-
-
