@@ -110,11 +110,17 @@
         return(NULL)
       }else{
         if(rv$run_mode == "gsea"){
-          df1 <- df %>% dplyr::filter(ES > 0) %>%
-            dplyr::slice_max(ES,n=up)
+          df1 <- df %>% dplyr::filter(ES > 0)
+          if(is.null(up)==F){
+            df1 <- df1 %>%
+              dplyr::slice_max(ES,n=up)
+          }
           
-          df2 <- df  %>% dplyr::filter(ES < 0) %>%
-            dplyr::slice_min(ES,n=down)
+          df2 <- df  %>% dplyr::filter(ES < 0)
+          if(is.null(down)==F){
+            df2 <- df2 %>%
+              dplyr::slice_min(ES,n=down)
+          }
           
           df <- rbind(df1,df2)
           df <- df %>% arrange(desc(ES))
@@ -243,7 +249,6 @@
                 if(abby == "y"){
                     y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
                 }
-                
                 size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
 
                 # values = size_g
@@ -959,7 +964,8 @@
         rv$vis = NULL
         rv$vis_status = NULL
         # get df
-        df = dfNEL()
+        # df = dfNEL()
+        df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p,rv$vis_q)
         
         rv$df_vis = df
         print(nrow(df))
@@ -1113,13 +1119,15 @@
               dplyr::rename("cluster" = "rank")
             
             df_further <- dplyr::select(df_rank, -origin_clu)
-            # rv$df_further = df_further
+            rv$df_download <- df_further %>%
+             dplyr::rename(c("cluster_size" = "n", "cluster_id" = "cluster"))
+            print(head(rv$df_download))
             
             # create a data frame that has all the pathways having lowest P.adj. in each clusters
             if(rv$run_mode == "gsea"){
               df_padj <- df_further %>%
               group_by(cluster) %>%
-              mutate(n = n()) %>%
+              dplyr::mutate(n = n()) %>%
               filter(padj == min(padj)) %>%
               top_n(1, ES) %>%
               filter(row_number()==1) %>%
@@ -1127,7 +1135,7 @@
             } else {
               df_padj <- df_further %>%
                 group_by(cluster) %>%
-                mutate(n = n()) %>%
+                dplyr::mutate(n = n()) %>%
                 filter(padj == min(padj)) %>%
                 filter(row_number()==1) %>%
                 dplyr::select(cluster, pathway, n, pval, ES, padj)
@@ -1212,7 +1220,6 @@
         number_of_clusters = rv$number_of_clusters
         df_padj = rv$df_padj
         cutoff_similarity = rv$cutoff_similarity
-        print(cutoff_similarity)
 
         # plot a dendrogram nicely
         # convert it to a dendrogram object
@@ -1221,7 +1228,6 @@
         
         # extract the dendrogram data
         ddata <- dendro_data(dhc, type = "rectangle")
-        print(number_of_clusters)
         #color my dendrogram
         dendro <- dhc %>%
           #set("labels", label_short) %>%
@@ -1246,7 +1252,6 @@
         }
         # create the points of the lowest p.adj for group labeling
         rv$max_cluster_size = max(df_padj$n)
-        print(rv$max_cluster_size)
         # the cluster size may be too small compared to the default size(3)
         if(rv$max_cluster_size < cluster_size){
           # df_padj_points <- tibble(
@@ -1286,7 +1291,6 @@
                 axis.title.y = element_blank(),
                 panel.grid.major.y = element_blank()) +
           geom_hline(yintercept = 1 - cutoff_similarity, linetype="dashed", color = "grey") #scale_y_continuous(sec.axis = dup_axis())
-        print(rv$label_size)
         # convert it to interative plotly diagram
         ggplotly_dendro <- ggplot_dendro %>%
           ggplotly(tooltip = c("name")) %>%
@@ -1312,7 +1316,6 @@
         number_of_clusters = rv$number_of_clusters
         df_padj = rv$df_padj
         cutoff_similarity = rv$cutoff_similarity
-        print(cutoff_similarity)
 
         # plot a dendrogram nicely
         # convert it to a dendrogram object
@@ -1320,7 +1323,6 @@
         
         # extract the dendrogram data
         ddata <- dendro_data(dhc, type = "rectangle")
-        print(number_of_clusters)
         #color my dendrogram
         dendro <- dhc %>%
           #set("labels", label_short) %>%
@@ -1343,7 +1345,6 @@
         }
         # create the points of the lowest p.adj for group labeling
         rv$max_cluster_size = max(df_padj$n)
-        print(rv$max_cluster_size)
         # the cluster size may be too small compared to the default size(3)
         if(rv$max_cluster_size < cluster_size){
           cluster_size = 1
@@ -1355,13 +1356,20 @@
           mutate(pathway = strsplit(pathway,"%")[[1]][1]) %>%
           mutate(complete_name = paste(cluster,": ", pathway))%>%
           mutate(length = str_length(complete_name))
-        # df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
-        #   if(nchar(x) < 45){return(x)}
-        #   else{return(paste0(substr(x, 0, 45),"..."))}})
         
-        cluster_barplot <- df_padj_points %>% 
-        dplyr::arrange(dplyr::desc(cluster)) %>%
-        ggplot(aes(x=ES, y=factor(complete_name, levels=complete_name),
+
+        # check if the user select the abbreviation checkbox; if yes, apply a abbreiviation method to the labels 
+        if(rv$abbreviate_check == TRUE){
+          abbreviate_length <- rv$abbreviate_length
+          df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
+            if(nchar(x) < abbreviate_length || is.na(nchar(x) < abbreviate_length)){return(x)}
+            else{return(paste0(substr(x, 0, abbreviate_length),"..."))}})
+        }
+        
+        df_padj_points <- df_padj_points %>% 
+        arrange(desc(cluster))
+        cluster_barplot <- df_padj_points %>%
+          ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
                    fill=-log10(pval)*sign(ES),
                    text=paste0(
                      "<b>",df_padj_points[["complete_name"]],"</b>\n",
@@ -1377,8 +1385,7 @@
         theme( axis.text.y = element_text(size = 11),
               legend.title = element_text(size = 9))
         # # scale_y_discrete(position = "right")
-        
-        
+
         yh = nrow(df_padj_points) * 25 + 20
         if(yh<=500){yh=500}
         
@@ -1392,6 +1399,106 @@
       plotly_barplot
       }
     }
+    
+    # Plot the cluster bubble plot
+    plot_cluster_bubble <- function(zmin=rv$bubble_zmin,zmax=rv$bubble_zmax) {
+      df = rv$df_vis
+      if(nrow(df)<=1){
+        rv$cluster_bar_run = "fail"
+        return(NULL)
+      }else{
+        rv$cluster_bar_run = "success"
+        #get all the rvs from the vis() function
+        hc = rv$hc
+        number_of_clusters = rv$number_of_clusters
+        df_padj = rv$df_padj
+        cutoff_similarity = rv$cutoff_similarity
+        # plot a dendrogram nicely
+        # convert it to a dendrogram object
+        dhc <- as.dendrogram(hc)
+        
+        # extract the dendrogram data
+        ddata <- dendro_data(dhc, type = "rectangle")
+        # print(number_of_clusters)
+        #color my dendrogram
+        dendro <- dhc %>%
+          #set("labels", label_short) %>%
+          dendextend::set("branches_k_color", k = number_of_clusters) %>% 
+          dendextend::set("branches_lwd", 0.3) %>%
+          dendextend::set("leaves_pch", 19) %>% 
+          dendextend::set("leaves_cex", 0.4) 
+        
+        #convert it to a ggplot object
+        gg_dendro <- as.ggdend(dendro)
+        
+        # extract the points that need to have hover function
+        hover_points <- gg_dendro$nodes %>%
+          filter(leaf == TRUE) %>%
+          mutate(name = ddata$labels$label)
+        
+        cluster_size = 3
+        if(!is.null(rv$cluster_size)){
+          cluster_size <- rv$cluster_size
+        }
+        # create the points of the lowest p.adj for group labeling
+        rv$max_cluster_size = max(df_padj$n)
+        # the cluster size may be too small compared to the default size(3)
+        if(rv$max_cluster_size < cluster_size){
+          cluster_size = 1
+          rv$cluster_size = 1
+        }
+        df_padj_points <- df_padj %>%
+          left_join(hover_points, by = c("pathway" = "name")) %>%
+          filter(n >= cluster_size) %>%
+          mutate(pathway = strsplit(pathway,"%")[[1]][1]) %>%
+          mutate(complete_name = paste(cluster,": ", pathway))%>%
+          mutate(length = str_length(complete_name))
+       # check if the user select the abbreviation checkbox; if yes, apply a abbreiviation method to the labels 
+        if(rv$abbreviate_check == TRUE){
+            abbreviate_length <- rv$abbreviate_length
+          df_padj_points$complete_name = lapply(df_padj_points$complete_name, function(x){
+            if(nchar(x) < abbreviate_length || is.na(nchar(x) < abbreviate_length)){return(x)}
+            else{return(paste0(substr(x, 0, abbreviate_length),"..."))}})
+        }
+        
+        # sort the table by the cluster id
+        df_padj_points <- df_padj_points %>% 
+          arrange(desc(cluster))
+        
+        cluster_bubble <- df_padj_points %>%
+          ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
+                     size = n,
+                     colour=-log10(pval)*sign(ES),
+                     text=paste0(
+                       "<b>",df_padj_points[["complete_name"]],"</b>\n",
+                       "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
+                       "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
+                       "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
+                       "Cluster size = ",n,"\n"))) +
+          geom_point(alpha = 0.5) +
+          scale_size(range = c(zmin, zmax)) +
+          scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(P.value)*sign(ES)"), oob=squish) +
+          xlab("Enrichment Score (ES)") + ylab("") +
+          geom_vline(xintercept=0, size=0.1) +
+          theme_minimal() +
+          theme( axis.text.y = element_text(size = 11),
+                 legend.title = element_text(size = 9))
+        # # scale_y_discrete(position = "right")
+
+        yh = nrow(df_padj_points) * 25 + 20
+        if(yh<=500){yh=500}
+        
+        plotly_bubble <- ggplotly(cluster_bubble,
+                                   height = yh,
+                                   tooltip = "text",
+                                   source = "bubble_plot_click"
+        ) %>%
+          # layout(legend=list(colorbar=list(side="right"))) %>%
+          event_register("plotly_click")
+        plotly_bubble
+      }
+    }
+    
     #=======================================================#
     #####         collapsible multicheckinputbox       ######
     #=======================================================#
@@ -1860,6 +1967,7 @@
       rv$rnkgg <- readRDS(paste0(getwd(),"/rvs/rnkgg.rds"))
       rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs/bar_pathway.rds"))
       rv$bubble_pathway <- readRDS(paste0(getwd(),"/rvs/bubble_pathway.rds"))
+      rv$vis_pathway <- readRDS(paste0(getwd(),"/rvs/bar_pathway.rds"))
       rv$db_modal <- readRDS(paste0(getwd(),"/rvs/db_modal.rds"))
       rv$fgseagg <- readRDS(paste0(getwd(),"/rvs/fgseagg.rds"))
       rv$gmt_cs <- readRDS(paste0(getwd(),"/rvs/gmt_cs.rds"))
@@ -1911,6 +2019,7 @@
       rv$volcano_pathway <- readRDS(paste0(getwd(),"/rvs2/volcano_pathway.rds"))
       rv$bar_pathway <- readRDS(paste0(getwd(),"/rvs2/bar_pathway.rds"))
       rv$bubble_pathway <- readRDS(paste0(getwd(),"/rvs2/bubble_pathway.rds"))
+      rv$vis_pathway <- readRDS(paste0(getwd(),"/rvs2/bar_pathway.rds"))
       rv$db_modal <- readRDS(paste0(getwd(),"/rvs2/db_modal.rds"))
       rv$fgseagg <- readRDS(paste0(getwd(),"/rvs2/fgseagg.rds"))
       rv$gmt_cs <- readRDS(paste0(getwd(),"/rvs2/gmt_cs.rds"))

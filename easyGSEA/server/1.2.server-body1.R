@@ -533,13 +533,7 @@ output$id_conversion_table <- DT::renderDataTable({
         df = rv$gene_lists_mat2
     }
     
-    DT::datatable(df,
-                  extensions=c('Scroller'),
-                  options = list(
-                      scrollY = "148px",
-                      scroller = TRUE,
-                      scrollX=TRUE
-                  ))}
+    df_no(df,scrollY = "148px")
 #     df
 #     
 # }, plugins="ellipsis", options = dt_options()
@@ -551,7 +545,7 @@ output$id_conversion_table <- DT::renderDataTable({
 #                                             "return type === 'display' && data.length > 18 ?",
 #                                             "'<span title=\"' + data + '\">' + data.substr(0, 18) + '...</span>' : data;",
 #                                             "}")))), rownames= FALSE
-)
+})
 
 # download ID conversion button
 output$ui_mat_download <- renderUI({

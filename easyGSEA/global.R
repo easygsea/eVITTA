@@ -186,7 +186,7 @@ gcols2 = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
 # value scales for ORA output visualizations (red only) - ggolot version
 gvalues2 = rescale(c(0,-log10(0.25),1,-log10(0.05),2,3))
 
-# ======================= renderDataTable options ===========================
+# ======================= renderDataTable options #1 ===========================
 # apply options to datatable. example: options = dt_options(80,F,F,T,T,T,10)
 # To apply options to datatable. only works with ellipsis enabled
 #   dt_options (max_char, scrollX=F, scrollY=F, paging=T, searching=T, info=T, pageLength = 10, autoWidth=T)
@@ -203,6 +203,25 @@ dt_options <- function(max_char=80, scrollX=T, scrollY=F, paging=T, searching=T,
            render = JS(paste0("$.fn.dataTable.render.ellipsis( ",max_char,", false )"))
          ))
   )
+}
+
+# ======================= renderDataTable options #2 ===========================
+# enable extensions, scrolling X and Y, and customizing Y scren height
+#   df_no(df,extensions=c('Scroller'), scrollY = "380px", scroller = TRUE, scrollX=TRUE)
+# example:
+#   df_no(df)
+
+df_no <- function(df,extensions=c('Scroller'), dom = NULL, buttons = NULL, scrollY = "380px", scroller = TRUE, scrollX=TRUE){
+  DT::datatable(df,
+                extensions=extensions,
+                options = list(
+                  # sDom  = '<"top">lrt<"bottom">ip',
+                  dom = dom,
+                  buttons = buttons, #, 'excel', 'print'
+                  scrollY = scrollY,
+                  scroller = scroller,
+                  scrollX = scrollX
+                ))
 }
 
 
