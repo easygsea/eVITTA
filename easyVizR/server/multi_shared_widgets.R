@@ -312,7 +312,7 @@ observe({
                                   ,style = "padding: 15px;background:#e6f4fc;")
     )
   }
-  saveRDS(rv$nic, file = "rvs/nic.rds")
+  # saveRDS(rv$nic, file = "rvs/nic.rds")
 })
 
 

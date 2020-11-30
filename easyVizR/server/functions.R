@@ -938,6 +938,8 @@ init_demo <- function(){
   rv$v <- readRDS(paste0(getwd(), "/rvs/v.rds"))
   rv$n_to_plot <- readRDS(paste0(getwd(), "/rvs/n_to_plot.rds"))
   rv$heatmap_sortby <- readRDS(paste0(getwd(), "/rvs/heatmap_sortby.rds"))
+  rv$ins_venn_palette <- readRDS(paste0(getwd(),"/rvs/ins_venn_palette.rds"))
+  
   for (i in 1:3){
     rv[[paste0("nic_p_",i)]] <- 0.05
     rv[[paste0("nic_q_",i)]] <- 1
