@@ -733,6 +733,16 @@ match_skipna <- function(x,pattern, mode="all"){
   
 }
 
+# This applies match_skipna to each row of a df
+#-----------------------------------------------
+match_skipna_rows <- function(df, criteria){
+  Reduce(rbind,apply(df, 1, function(x) {
+    if (match_skipna(unname(x), unname(criteria))){
+      return(x)
+    }
+  }))
+}
+
 
 
 # extract intersection of several gene lists from a df
