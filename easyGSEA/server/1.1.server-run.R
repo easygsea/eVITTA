@@ -9,7 +9,7 @@
 #                         "The demo session has all the features of our app.
 #                         Follow the intro tour and switch to different tabs to explore it.",
 #                         size = "m",
-#                         easyClose = TRUE
+#                         easyClose = FALSE
 #                         ,footer = actionButton("welcome_modal",label = "OK")))
 #   
 # })
