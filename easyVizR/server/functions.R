@@ -268,6 +268,18 @@ move_ui <- function(uiOutput_id, to_where, relative_pos){
   # print("inserted ui")
 }
 
+# manually clear UI elements
+# -----------------------------------
+# can apply to any div ID, uiOutput, plotOutput, etc
+remove_ui <- function(id){
+  # remove ui
+  removeUI(
+    selector = paste0("#", id)
+  )
+  # print("removed ui")
+
+}
+
 
 # ================================================= #
 #                  Filter presets                   ####

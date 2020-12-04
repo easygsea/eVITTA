@@ -248,6 +248,10 @@ observeEvent(input$n_use_data,{
   })
   rv$df_n <- df_n
   
+  # manually reload the UI
+  remove_ui("venn_dropdowns")
+  remove_ui("upset_dropdowns")
+  
   # # find max stat and generate scale
   # statmax <- max(dplyr::select(df_n, contains("Stat_")), na.rm=TRUE)
   # rv$n_stat_scale <- round(generate_scale(statmax, 10),2)

@@ -1060,10 +1060,10 @@ output$upset_dropdowns <- renderUI({
           inputId = "n_upset_sortby",
           label = "Order by:",
           choices = c("Frequency"="freq", "Degree"="degree"),
-          selected = "freq"),
+          selected = rv$n_upset_sortby),
         materialSwitch(
           inputId = "n_upset_showempty", label = "Show empty intersections?", status="primary",
-          value = FALSE
+          value = rv$n_upset_showempty
         ),
         radioGroupButtons(
           inputId = "n_upset_show_ins",
@@ -1072,7 +1072,7 @@ output$upset_dropdowns <- renderUI({
             add_help("n_upset_show_ins_help", style="margin-left: 5px;"))
           ),
           choices = c("Yes"=T,"No"=F),
-          selected = T, direction="horizontal"
+          selected = rv$n_upset_show_ins, direction="horizontal"
         ),
         bsTooltip("n_upset_show_ins_help", 
                   "Whether to highlight selected intersection (corresponds to table below)", 
@@ -1092,7 +1092,7 @@ output$upset_dropdowns <- renderUI({
                       add_help("n_upset_c1_help", style="margin-left: 5px;"))
                     ),
                     choices = default_colors,
-                    selected="gold"
+                    selected=rv$n_upset_c1
         ),
         bsTooltip("n_upset_c1_help", 
                   "Highlight color for selected intersection (corresponds to table below)", 
