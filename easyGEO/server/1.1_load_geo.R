@@ -5,12 +5,12 @@
 # observe({
 #   init_demo()
 #   showModal(modalDialog(title = "Welcome to our easyGEO demo session",
-#                         "The demo session has all the features of our app.
-#                         Follow the intro tour and switch to different tabs to explore it.",
+#                         "The demo session inludes most of the features of our app.
+#                         Please follow the intro tour and switch to different tabs to explore it.",
 #                         size = "m",
 #                         easyClose = FALSE
 #                         ,footer = actionButton("welcome_modal",label = "OK")))
-#   
+# 
 # })
 # # when the user closed the modal, start rintrojs
 # observeEvent(input$welcome_modal, {
@@ -23,7 +23,7 @@
 #   # call_introjs(intros$V_volcano)
 #   #introjs(session, events = list(onbeforechange = readCallback("switchTabs")))
 #   print(input$menu1)
-#   
+# 
 # })
 # 
 # # start rintrojs when users switch tabs
@@ -37,7 +37,7 @@
 #   } else if(input$menu1 == "tab5"){
 #     later(~call_introjs(intros$V_volcano), 2)
 #   } else {
-#     
+# 
 #   }
 # })
 # # END-----------------------------------------------------------------------------

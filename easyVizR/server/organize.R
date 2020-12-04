@@ -7,8 +7,8 @@
 #   req(rv$demo_n == 2)
 #   init_demo()
 #   showModal(modalDialog(title = "Welcome to our easyVizR demo session",
-#                         "The demo session has all the features of our app.
-#                         Follow the intro tour and switch to different tabs to explore it.",
+#                         "The demo session includes most of the features of our app.
+#                         Please follow the intro tour and switch to different tabs to explore it.",
 #                         size = "m",
 #                         easyClose = FALSE
 #                         ,footer = actionButton("welcome_modal",label = "OK")))
@@ -41,7 +41,7 @@
 # 
 #   }
 # })
-# END ----------------------------------------------------------------------
+# # END ----------------------------------------------------------------------
 
 #======================================================================#
 ####                      ORGANIZE FILES                            ####
