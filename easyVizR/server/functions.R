@@ -534,6 +534,7 @@ filter_to_gls <- function(filter_namespace, filter_var, filtered_df, input_range
 
 gl_to_table <- function(name, gl, master_df, round=3, keep_stat=F){
   req(is.null(master_df)==F)
+  req(ncol(master_df)>=3)
   df <- master_df
   show_cols <- c("Name", paste0(c("Stat_", "PValue_", "FDR_"), name))
   df <- df[df$Name %in% gl, show_cols]
