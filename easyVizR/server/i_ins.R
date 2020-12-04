@@ -262,9 +262,16 @@ output$download_ins_gl <- downloadHandler(
 draw_upsetR_with_ins <- function(df, criteria, show_ins=T, color="red", 
                                  empty_intersections=F, 
                                  order_by="freq", 
-                                 text_scale=c(1.3, 2, 1.3, 1, 1.1, 2)
+                                 text_scale=c(1.3, 2, 1.3, 1, 1.1, 2),
+                                 lb_limit=20
+                                 
 ){
   if(show_ins==T){
+    
+    # ---------------- apply linebreaks
+    names(criteria) <- addlinebreaks2(names(criteria), lb_limit, "\n")
+    colnames(df) <- addlinebreaks2(colnames(df), lb_limit, "\n")
+    
     #----------------- parse criteria
     ins_true <- names(criteria[criteria==T & is.na(criteria)==F])
     ins_false <- names(criteria[criteria==F & is.na(criteria)==F])
@@ -418,7 +425,11 @@ output$n_venn_dl <- downloadHandler(
 # gls: named list of vectors
 # ins: named vector
 draw_eulerr_with_ins <- function(gls, ins, print_mode="counts", show_ins=T, ins_color="red", base_colors=palette,
-                                 adjust_labels=T){
+                                 adjust_labels=T, lb_limit=20){
+  # apply linebreaks
+  names(gls) <- addlinebreaks2(names(gls), lb_limit, "\n")
+  names(ins) <- addlinebreaks2(names(ins), lb_limit, "\n")
+  
   fit2 <- euler(gls)
   # get t/f/na subsets
   t_sections <- names(ins[ins==T & is.na(ins)==F])
