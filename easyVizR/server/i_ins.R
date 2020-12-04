@@ -1052,74 +1052,6 @@ ins_venn_panel <- reactive({
 
 
 #----------------- upset --------------------
-output$upset_dropdowns <- renderUI({
-  div(
-  div(style = "position: absolute; left: 1em; bottom: 1em",
-      dropdown(
-        selectInput(
-          inputId = "n_upset_sortby",
-          label = "Order by:",
-          choices = c("Frequency"="freq", "Degree"="degree"),
-          selected = "freq"),
-        materialSwitch(
-          inputId = "n_upset_showempty", label = "Show empty intersections?", status="primary",
-          value = FALSE
-        ),
-        radioGroupButtons(
-          inputId = "n_upset_show_ins",
-          label = HTML(paste0(
-            "<b>Highlight selected intersection?</b>",
-            add_help("n_upset_show_ins_help", style="margin-left: 5px;"))
-          ),
-          choices = c("Yes"=T,"No"=F),
-          selected = T, direction="horizontal"
-        ),
-        bsTooltip("n_upset_show_ins_help", 
-                  "Whether to highlight selected intersection (corresponds to table below)", 
-                  placement = "top"),
-        
-        size = "xs",
-        icon = icon("gear", class = "opt"),
-        up = TRUE, width=300
-      )
-      
-  ),
-  div(style = "position: absolute; left: 4em; bottom: 1em",
-      dropdown(
-        selectInput("n_upset_c1", 
-                    HTML(paste0(
-                      "<b>Intersection highlight color:</b>",
-                      add_help("n_upset_c1_help", style="margin-left: 5px;"))
-                    ),
-                    choices = default_colors,
-                    selected="gold"
-        ),
-        bsTooltip("n_upset_c1_help", 
-                  "Highlight color for selected intersection (corresponds to table below)", 
-                  placement = "top"),
-        
-        size = "xs",
-        icon = icon("palette", class = "opt"),
-        up = TRUE, width=300
-      )
-      
-  ),
-  
-  div(style = "position: absolute; left: 7em; bottom: 1em",
-      dropdown(
-        downloadButton("n_upset_dl", "Download plot"),
-        
-        size = "xs",
-        icon = icon("download", class = "opt"),
-        up = TRUE, width=300
-      )
-      
-  )
-  
-  )
-})
-
-
 ins_upset_panel <- reactive({
   
   box(
@@ -1127,8 +1059,67 @@ ins_upset_panel <- reactive({
     
     plotOutput("df_n_upset", width = "100%"),
     
-    div(id = "upset_dropdowns_anchor")
-
+    div(style = "position: absolute; left: 1em; bottom: 1em",
+        dropdown(
+          selectInput(
+            inputId = "n_upset_sortby",
+            label = "Order by:",
+            choices = c("Frequency"="freq", "Degree"="degree"),
+            selected = "freq"),
+          materialSwitch(
+            inputId = "n_upset_showempty", label = "Show empty intersections?", status="primary",
+            value = FALSE
+          ),
+          radioGroupButtons(
+            inputId = "n_upset_show_ins",
+            label = HTML(paste0(
+              "<b>Highlight selected intersection?</b>",
+              add_help("n_upset_show_ins_help", style="margin-left: 5px;"))
+            ),
+            choices = c("Yes"=T,"No"=F),
+            selected = T, direction="horizontal"
+          ),
+          bsTooltip("n_upset_show_ins_help", 
+                    "Whether to highlight selected intersection (corresponds to table below)", 
+                    placement = "top"),
+          
+          size = "xs",
+          icon = icon("gear", class = "opt"),
+          up = TRUE, width=300
+        )
+        
+    ),
+    div(style = "position: absolute; left: 4em; bottom: 1em",
+        dropdown(
+          selectInput("n_upset_c1", 
+                      HTML(paste0(
+                        "<b>Intersection highlight color:</b>",
+                        add_help("n_upset_c1_help", style="margin-left: 5px;"))
+                      ),
+                      choices = default_colors,
+                      selected="gold"
+          ),
+          bsTooltip("n_upset_c1_help", 
+                    "Highlight color for selected intersection (corresponds to table below)", 
+                    placement = "top"),
+          
+          size = "xs",
+          icon = icon("palette", class = "opt"),
+          up = TRUE, width=300
+        )
+        
+    ),
+    
+    div(style = "position: absolute; left: 7em; bottom: 1em",
+        dropdown(
+          downloadButton("n_upset_dl", "Download plot"),
+          
+          size = "xs",
+          icon = icon("download", class = "opt"),
+          up = TRUE, width=300
+        )
+        
+    )
     
   )
 })
@@ -1185,6 +1176,9 @@ output$ins_main_panels <- renderUI({
                     
                     conditionalPanel("output.n_venn_status == 'ok'",
                                      ins_venn_panel(),
+                                     #uiOutput("ins_venn_panel"),
+                                     #Tried to add anchor for venn but doesn't work
+                                     #div(id="venn_plot_here"),
                     ),
                     
                     conditionalPanel("output.n_venn_status == 'no'",
