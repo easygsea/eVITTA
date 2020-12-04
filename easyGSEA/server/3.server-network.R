@@ -157,26 +157,7 @@ output$ui_bodyNetwork <- renderUI({
                         div(id = "dendro_dropdown",
                             style="display: inline-block;vertical-align:top;
                             ", #position: absolute; right: 55px; top: 2.8em;
-                            # UI for customizable options for creating the dendrogram
-                            if(rv$dendro_or_barplot == "dendro" || rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
-                                dropdown(
-                                    # if(rv$dendro_or_barplot == "Cluster barplot"){
-                                    #     uiOutput("barplot_option")
-                                    # } else {
-                                    uiOutput("dendro_option")
-                                    ,
-                                    width = '300px',
-                                    
-                                    up = FALSE,right = TRUE,icon = icon("gear"),
-                                    style = "unite",
-                                    circle = TRUE,
-                                    tooltip = tooltipOptions(
-                                        title = "Click to adjust parameters for creating a dendrogram"
-                                        ,placement = "bottom"),
-                                )
-                            }
-                            
-                            
+                            uiOutput("cl_gear")
                         ),
                         div(id="d_dendro", style="display: inline-block;vertical-align:top;margin-right:15px;
                             ", #position: absolute; top: 2.8em; right: 0px;
@@ -214,6 +195,27 @@ output$ui_bodyNetwork <- renderUI({
             )
         )
     }
+})
+
+# UI for customizable options for creating the dendrogram
+output$cl_gear <- renderUI({
+    req(rv$dendro_or_barplot == "dendro" || rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble")
+
+    dropdown(
+        # if(rv$dendro_or_barplot == "Cluster barplot"){
+        #     uiOutput("barplot_option")
+        # } else {
+        uiOutput("dendro_option")
+        ,
+        width = '300px',
+
+        up = FALSE,right = TRUE,icon = icon("gear"),
+        style = "unite",
+        circle = TRUE,
+        tooltip = tooltipOptions(
+            title = "Click to adjust parameters for creating a dendrogram"
+            ,placement = "bottom"),
+    )
 })
 
 
@@ -523,10 +525,6 @@ output$cluster_df <- DT::renderDataTable({
 # download clustering's data frame
 output$download_cluster_df <- downloadHandler(
     filename = function() {paste0("cluster_data_",paste0("cutoff_",rv$cutoff_point,"_"),rv$rnkll,".csv")},
-    content = function(file) {
-        df <- rv$df_download
-        df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = ";"))
-        
-        fwrite(df, file, row.names = T, quote=T)
+    content = function(file) {fwrite(rv$df_download, file, row.names = TRUE)
     }
 )

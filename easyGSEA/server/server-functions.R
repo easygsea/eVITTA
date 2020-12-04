@@ -1121,10 +1121,10 @@
             df_further <- dplyr::select(df_rank, -origin_clu)
             rv$df_further = df_further
             rv$df_download <- df_further %>%
-              dplyr::rename(c("cluster_size" = "n", "cluster_id" = "cluster")) %>%
-              dplyr::select(cluster_id, -cluster_size, everything(), -cluster_size, -db) %>%
+             dplyr::rename(c("cluster_size" = "n", "cluster_id" = "cluster")) %>%
+              dplyr::select(cluster_id, cluster_size, everything()) %>%
               dplyr::arrange(cluster_id)
-            # print(head(rv$df_download))
+            print(head(rv$df_download))
             
             # create a data frame that has all the pathways having lowest P.adj. in each clusters
             if(rv$run_mode == "gsea"){
@@ -1398,7 +1398,7 @@
                      "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
                      "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
                      "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
-                     "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
+                     "Cluster size = ",n,"\n", "Cluster members:   ", text_cluster))) +
         geom_bar(stat="identity", width = 0.8) +
         scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(P.value)*sign(ES)"), oob=squish) +
         xlab("Enrichment Score (ES)") + ylab("") +
@@ -1515,7 +1515,7 @@
                        "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
                        "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
                        "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
-                       "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
+                       "Cluster size = ",n,"\n", "Cluster members:   ", text_cluster))) +
           geom_point(alpha = 0.5) +
           scale_size(range = c(zmin, zmax)) +
           scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(P.value)*sign(ES)"), oob=squish) +

@@ -150,11 +150,11 @@ output$selected_es_tables <- DT::renderDataTable({
         mutate_if(is.numeric, function(x) round(x, digits=3))
     
     # df
-    df_no(df)
+    df_no(df)}
     
     # }, plugins="ellipsis", options = dt_options(pageLength = 10)
     # },  options = list(scrollX=T)
-})
+)
 
 output$gs_tbl_dl <- downloadHandler(
     filename = function() {paste0(rv$rnkll,"_",paste(input$selected_download_gs,collapse="-"),".csv")},
