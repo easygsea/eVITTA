@@ -329,6 +329,7 @@ draw_upsetR_with_ins <- function(df, criteria, show_ins=T, color="red",
     sel_ins=NULL
   }
   
+  if (length(sel_ins)==0){ sel_ins <- NULL }
   
   if (empty_intersections==T){
     upset(df, 
