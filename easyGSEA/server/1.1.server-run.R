@@ -5,13 +5,13 @@
 # observe({
 #   init_demo_gsea()
 #   #init_demo_ora()
-#   showModal(modalDialog(title = "Welcome to our easyGSEA demo session",
-#                         "The demo session has all the features of our app.
-#                         Follow the intro tour and switch to different tabs to explore it.",
+#   showModal(modalDialog(title = tags$h3("Welcome to our easyGSEA demo session"),
+#                         tags$h4("The demo session has the features of our app.
+#                         Please follow the intro tour and switch to different tabs to explore it."),
 #                         size = "m",
-#                         easyClose = TRUE
+#                         easyClose = FALSE
 #                         ,footer = actionButton("welcome_modal",label = "OK")))
-#   
+# 
 # })
 # # when the user closed the modal, start rintrojs
 # observeEvent(input$welcome_modal, {
@@ -32,7 +32,7 @@
 #   } else if(input$tabs == "download"){
 #     later(~call_introjs(intros$D_post), 2)
 #   } else {
-#     
+# 
 #   }
 # })
 # # END--------------------------------------------------------------------------------

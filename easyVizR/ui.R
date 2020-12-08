@@ -29,10 +29,10 @@ sidebar <- dashboardSidebar(
                 menuItem("1. Organize Data", tabName="tab1", icon=icon("th-list")),
                 
                 # menuItem("Single Dataset", tabName="tab2", icon=icon("vial")),
-                menuItem("2. Apply Filters", tabName="tab_filters", icon=icon("cut")),
-                menuItem("3. Select Intersection", tabName="tab_ins", icon=icon("map-marker")),
+                menuItem(text = span(id = "tab2_text", "2. Apply Filters"), tabName="tab_filters", icon=icon("cut")),
+                menuItem(text = span(id = "tab3_text", "3. Select Intersection"), tabName="tab_ins", icon=icon("map-marker")),
                 
-                menuItem("4. Visualize Intersection", tabName="tab3", icon=icon("vials")),
+                menuItem(text = span(id = "tab4_text", "4. Visualize Intersection"), tabName="tab3", icon=icon("vials")),
                 
                 tags$hr(style="border-color: #48617b;margin: 8px;")
                 

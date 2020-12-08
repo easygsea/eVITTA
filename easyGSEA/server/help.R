@@ -95,7 +95,7 @@ output$floating_button_tab2 <- renderUI({
 
 output$floating_button_tab3 <- renderUI({
   req(is.null(rv$fgseagg)==F)
-    div(style="margin-top:10px;z-index:1000;",
+    div(style="margin-top:10px;z-index:99999;",
         actionBttn(
           inputId = "help_tab3", label=NULL,
           icon = icon("question"), style="material-circle", color="primary", size="lg"

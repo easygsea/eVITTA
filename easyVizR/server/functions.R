@@ -268,6 +268,18 @@ move_ui <- function(uiOutput_id, to_where, relative_pos){
   # print("inserted ui")
 }
 
+# manually clear UI elements
+# -----------------------------------
+# can apply to any div ID, uiOutput, plotOutput, etc
+remove_ui <- function(id){
+  # remove ui
+  removeUI(
+    selector = paste0("#", id)
+  )
+  # print("removed ui")
+
+}
+
 
 # ================================================= #
 #                  Filter presets                   ####
@@ -534,6 +546,7 @@ filter_to_gls <- function(filter_namespace, filter_var, filtered_df, input_range
 
 gl_to_table <- function(name, gl, master_df, round=3, keep_stat=F){
   req(is.null(master_df)==F)
+  req(ncol(master_df)>=3)
   df <- master_df
   show_cols <- c("Name", paste0(c("Stat_", "PValue_", "FDR_"), name))
   df <- df[df$Name %in% gl, show_cols]
@@ -731,6 +744,16 @@ match_skipna <- function(x,pattern, mode="all"){
     return(any(match))
   }
   
+}
+
+# This applies match_skipna to each row of a df
+#-----------------------------------------------
+match_skipna_rows <- function(df, criteria){
+  Reduce(rbind,apply(df, 1, function(x) {
+    if (match_skipna(unname(x), unname(criteria))){
+      return(x)
+    }
+  }))
 }
 
 
@@ -947,6 +970,8 @@ init_demo <- function(){
   rv$v <- readRDS(paste0(getwd(), "/rvs/v.rds"))
   rv$n_to_plot <- readRDS(paste0(getwd(), "/rvs/n_to_plot.rds"))
   rv$heatmap_sortby <- readRDS(paste0(getwd(), "/rvs/heatmap_sortby.rds"))
+  rv$ins_venn_palette <- readRDS(paste0(getwd(),"/rvs/ins_venn_palette.rds"))
+  
   for (i in 1:3){
     rv[[paste0("nic_p_",i)]] <- 0.05
     rv[[paste0("nic_q_",i)]] <- 1

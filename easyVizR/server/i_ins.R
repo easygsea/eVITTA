@@ -252,21 +252,126 @@ output$download_ins_gl <- downloadHandler(
 
 ####-------------------- Upset plot ------------------------####
 
+# draws a upsetR plot, highlighting the selected intersection
+#---------------------------------------------------
+# df must be a T/F or 0/1 matrix (i.e. fromList(gls))
+# names(criteria) should match the column names of df
+# text_scale: c(intersection size title, intersection size tick labels, set size title, set size tick labels, set names, numbers above bars)
+
+
+draw_upsetR_with_ins <- function(df, criteria, show_ins=T, color="red", 
+                                 empty_intersections=F, 
+                                 order_by="freq", 
+                                 text_scale=c(1.3, 2, 1.3, 1, 1.1, 2),
+                                 lb_limit=20
+                                 
+){
+  if(show_ins==T){
+    
+    # ---------------- apply linebreaks
+    names(criteria) <- addlinebreaks2(names(criteria), lb_limit, "\n")
+    colnames(df) <- addlinebreaks2(colnames(df), lb_limit, "\n")
+    
+    #----------------- parse criteria
+    ins_true <- names(criteria[criteria==T & is.na(criteria)==F])
+    ins_false <- names(criteria[criteria==F & is.na(criteria)==F])
+    ins_na <- names(criteria[is.na(criteria)==T])
+    
+    # ---------------- get all iterations
+    
+    # build truth table for NA sections
+    # function to apply permutations to the selected # of n
+    if (length(ins_na)>0){
+      my_permute <- function(vect, n, repeats = TRUE) {
+        gtools::permutations(length(vect), n, vect, repeats.allowed = repeats)
+      }
+      x <- my_permute(vect=c(T,F), n=length(ins_na))
+      colnames(x) <- ins_na
+      
+      # build possible combinations
+      ins_iterations <- list()
+      for (i in 1:nrow(x)){
+        add = x[i,]
+        add <- add[add==T]
+        addname <- names(add)
+        toadd <- c(ins_true, addname)
+        ins_iterations <- c(ins_iterations, list(toadd))
+      }
+    } else {
+      ins_iterations <- list(ins_true)
+    }
+    
+    
+    sel_ins=vector(mode="list", length=length(ins_iterations))
+    
+    for (i in 1:length(ins_iterations)){
+      
+      # check if there are genes in this intersection 
+      check_range <- df[,names(criteria)] # extract the relevant columns
+      check_range <- as.data.frame(lapply(check_range, as.logical))
+      # print(check_range)
+      # make a ref criteria vector
+      ref <- rep(F, length(criteria))
+      names(ref) <- names(criteria)
+      ref[ins_iterations[[i]]] <- T
+      # get matching rows
+      found <- match_skipna_rows(check_range, ref)
+      
+      # if the combination is not empty, write it to list. if empty, leave as null.
+      if (is.null(found)==F){ 
+        sel_ins[[i]] <- list(query = intersects,
+                             params= as.list(ins_iterations[[i]]), color=color, active=T)
+      }
+    }
+    # finally remove the combinations that are not found (shown in list as null element)
+    sel_ins[sapply(sel_ins, is.null)] <- NULL
+  } else {
+    sel_ins=NULL
+  }
+  
+  
+  if (empty_intersections==T){
+    upset(df, 
+          order.by = order_by,
+          queries = sel_ins, 
+          empty.intersections = "on",
+          text.scale = text_scale
+    )
+  } else if (empty_intersections==F) {
+    upset(df, 
+          order.by = order_by,
+          queries = sel_ins, 
+          text.scale = text_scale
+    )
+  }
+  
+}
+
+
+
+
 n_upset_plt <- reactive({
   gls <- n_ins_gls()
   
-  names(gls) <- gsub(".csv","",names(gls))
-  #c(intersection size title, intersection size tick labels, set size title, set size tick labels, set names, numbers above bars)
-  textscale <- c(1.3, 2, 1.3, 1, 1.1, 2)
-  if (rv$n_upset_showempty==F){
-    upset <- upset(fromList(gls), order.by = rv$n_upset_sortby,
-                   text.scale = textscale)
-  }
-  else if (rv$n_upset_showempty==T){
-    upset <- upset(fromList(gls), empty.intersections = "on", order.by = rv$n_upset_sortby,
-                   text.scale = textscale)
-  }
-  upset
+  draw_upsetR_with_ins(fromList(gls), rv$ins_criteria, 
+                       show_ins=rv$n_upset_show_ins, color=rv$n_upset_c1, 
+                       empty_intersections = rv$n_upset_showempty,
+                       order_by = rv$n_upset_sortby,
+                       text_scale=c(1.3, 2, 1.3, 1, 1.1, 2)
+  )
+  
+  # names(gls) <- gsub(".csv","",names(gls))
+  # #c(intersection size title, intersection size tick labels, set size title, set size tick labels, set names, numbers above bars)
+  # textscale <- c(1.3, 2, 1.3, 1, 1.1, 2)
+  # if (rv$n_upset_showempty==F){
+  #   upset <- upset(fromList(gls), order.by = rv$n_upset_sortby,
+  #                  text.scale = textscale)
+  # }
+  # else if (rv$n_upset_showempty==T){
+  #   upset <- upset(fromList(gls), empty.intersections = "on", order.by = rv$n_upset_sortby,
+  #                  text.scale = textscale)
+  # }
+  # upset
 })
 
 
@@ -320,7 +425,11 @@ output$n_venn_dl <- downloadHandler(
 # gls: named list of vectors
 # ins: named vector
 draw_eulerr_with_ins <- function(gls, ins, print_mode="counts", show_ins=T, ins_color="red", base_colors=palette,
-                                 adjust_labels=T){
+                                 adjust_labels=T, lb_limit=20){
+  # apply linebreaks
+  names(gls) <- addlinebreaks2(names(gls), lb_limit, "\n")
+  names(ins) <- addlinebreaks2(names(ins), lb_limit, "\n")
+  
   fit2 <- euler(gls)
   # get t/f/na subsets
   t_sections <- names(ins[ins==T & is.na(ins)==F])
@@ -548,7 +657,6 @@ draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limi
     for (i in 1:length(d)){ # draw the circles
       polygon(all_circ[[i]][[1]],col =alpha(rv$ins_venn_palette[i],0.8), border = "black")
     }
-    
     if (length(sel_int)>0 & identical(unname(ins), rep(F,length(d)))==F){ # if intersection is valid
       polygon(sel_int[[1]], col = ins_color)
     }
@@ -955,6 +1063,74 @@ ins_venn_panel <- reactive({
 
 
 #----------------- upset --------------------
+output$upset_dropdowns <- renderUI({
+  div(
+  div(style = "position: absolute; left: 1em; bottom: 1em",
+      dropdown(
+        selectInput(
+          inputId = "n_upset_sortby",
+          label = "Order by:",
+          choices = c("Frequency"="freq", "Degree"="degree"),
+          selected = rv$n_upset_sortby),
+        materialSwitch(
+          inputId = "n_upset_showempty", label = "Show empty intersections?", status="primary",
+          value = rv$n_upset_showempty
+        ),
+        radioGroupButtons(
+          inputId = "n_upset_show_ins",
+          label = HTML(paste0(
+            "<b>Highlight selected intersection?</b>",
+            add_help("n_upset_show_ins_help", style="margin-left: 5px;"))
+          ),
+          choices = c("Yes"=T,"No"=F),
+          selected = rv$n_upset_show_ins, direction="horizontal"
+        ),
+        bsTooltip("n_upset_show_ins_help", 
+                  "Whether to highlight selected intersection (corresponds to table below)", 
+                  placement = "top"),
+        
+        size = "xs",
+        icon = icon("gear", class = "opt"),
+        up = TRUE, width=300
+      )
+      
+  ),
+  div(style = "position: absolute; left: 4em; bottom: 1em",
+      dropdown(
+        selectInput("n_upset_c1", 
+                    HTML(paste0(
+                      "<b>Intersection highlight color:</b>",
+                      add_help("n_upset_c1_help", style="margin-left: 5px;"))
+                    ),
+                    choices = default_colors,
+                    selected=rv$n_upset_c1
+        ),
+        bsTooltip("n_upset_c1_help", 
+                  "Highlight color for selected intersection (corresponds to table below)", 
+                  placement = "top"),
+        
+        size = "xs",
+        icon = icon("palette", class = "opt"),
+        up = TRUE, width=300
+      )
+      
+  ),
+  
+  div(style = "position: absolute; left: 7em; bottom: 1em",
+      dropdown(
+        downloadButton("n_upset_dl", "Download plot"),
+        
+        size = "xs",
+        icon = icon("download", class = "opt"),
+        up = TRUE, width=300
+      )
+      
+  )
+  
+  )
+})
+
+
 ins_upset_panel <- reactive({
   
   box(
@@ -962,34 +1138,8 @@ ins_upset_panel <- reactive({
     
     plotOutput("df_n_upset", width = "100%"),
     
-    div(style = "position: absolute; left: 1em; bottom: 1em",
-        dropdown(
-          selectInput(
-            inputId = "n_upset_sortby",
-            label = "Order by:",
-            choices = c("Frequency"="freq", "Degree"="degree"),
-            selected = "freq"),
-          materialSwitch(
-            inputId = "n_upset_showempty", label = "Show empty intersections?", status="primary",
-            value = FALSE
-          ),
-          
-          size = "xs",
-          icon = icon("gear", class = "opt"),
-          up = TRUE, width=300
-        )
-        
-    ),
-    div(style = "position: absolute; left: 4em; bottom: 1em",
-        dropdown(
-          downloadButton("n_upset_dl", "Download plot"),
-          
-          size = "xs",
-          icon = icon("download", class = "opt"),
-          up = TRUE, width=300
-        )
-        
-    )
+    div(id = "upset_dropdowns_anchor")
+
     
   )
 })
@@ -1046,9 +1196,6 @@ output$ins_main_panels <- renderUI({
                     
                     conditionalPanel("output.n_venn_status == 'ok'",
                                      ins_venn_panel(),
-                                     #uiOutput("ins_venn_panel"),
-                                     #Tried to add anchor for venn but doesn't work
-                                     #div(id="venn_plot_here"),
                     ),
                     
                     conditionalPanel("output.n_venn_status == 'no'",

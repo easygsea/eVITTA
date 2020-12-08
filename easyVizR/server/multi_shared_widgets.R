@@ -17,6 +17,7 @@ observeEvent(input$tabs, {
     move_ui("ins_table_panel", "ins_pg_bottom", "afterEnd")
     move_ui("n_filters", "ins_filters_here", "afterEnd")
     move_ui("venn_dropdowns","venn_dropdowns_anchor","afterEnd") 
+    move_ui("upset_dropdowns","upset_dropdowns_anchor","afterEnd") 
     
     
   } else if (input$tabs == "tab3"){ # vis tab
@@ -317,7 +318,7 @@ observe({
                                   ,style = "padding: 15px;background:#e6f4fc;")
     )
   }
-  saveRDS(rv$nic, file = "rvs/nic.rds")
+  # saveRDS(rv$nic, file = "rvs/nic.rds")
 })
 
 

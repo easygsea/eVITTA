@@ -1119,9 +1119,12 @@
               dplyr::rename("cluster" = "rank")
             
             df_further <- dplyr::select(df_rank, -origin_clu)
+            rv$df_further = df_further
             rv$df_download <- df_further %>%
-             dplyr::rename(c("cluster_size" = "n", "cluster_id" = "cluster"))
-            print(head(rv$df_download))
+              dplyr::rename(c("cluster_size" = "n", "cluster_id" = "cluster")) %>%
+              dplyr::select(cluster_id, -cluster_size, everything(), -cluster_size, -db) %>%
+              dplyr::arrange(cluster_id)
+            # print(head(rv$df_download))
             
             # create a data frame that has all the pathways having lowest P.adj. in each clusters
             if(rv$run_mode == "gsea"){
@@ -1316,6 +1319,7 @@
         number_of_clusters = rv$number_of_clusters
         df_padj = rv$df_padj
         cutoff_similarity = rv$cutoff_similarity
+        df_further = rv$df_further
 
         # plot a dendrogram nicely
         # convert it to a dendrogram object
@@ -1355,7 +1359,24 @@
           filter(n >= cluster_size) %>%
           mutate(pathway = strsplit(pathway,"%")[[1]][1]) %>%
           mutate(complete_name = paste(cluster,": ", pathway))%>%
-          mutate(length = str_length(complete_name))
+          mutate(length = str_length(complete_name)) %>%
+          # add the hover texts to the data frame
+          mutate(
+            text_cluster = 
+              map(cluster, function(x){
+                a = 
+                  df_further %>%
+                  filter(cluster == x) %>%
+                  dplyr::select(pathway) %>%
+                  unname() %>%
+                  unlist()
+                if(length(a) > 13){
+                  a = c(a[1:13], "... ...")
+                }
+                a = paste(a, collapse = "\n")
+                return(a)
+              })
+          )
         
 
         # check if the user select the abbreviation checkbox; if yes, apply a abbreiviation method to the labels 
@@ -1367,7 +1388,8 @@
         }
         
         df_padj_points <- df_padj_points %>% 
-        arrange(desc(cluster))
+        arrange(desc(cluster))  
+        
         cluster_barplot <- df_padj_points %>%
           ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
                    fill=-log10(pval)*sign(ES),
@@ -1376,7 +1398,7 @@
                      "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
                      "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
                      "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
-                     "Cluster size = ",n,"\n"))) +
+                     "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
         geom_bar(stat="identity", width = 0.8) +
         scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(P.value)*sign(ES)"), oob=squish) +
         xlab("Enrichment Score (ES)") + ylab("") +
@@ -1413,6 +1435,7 @@
         number_of_clusters = rv$number_of_clusters
         df_padj = rv$df_padj
         cutoff_similarity = rv$cutoff_similarity
+        df_further <- rv$df_further
         # plot a dendrogram nicely
         # convert it to a dendrogram object
         dhc <- as.dendrogram(hc)
@@ -1452,7 +1475,25 @@
           filter(n >= cluster_size) %>%
           mutate(pathway = strsplit(pathway,"%")[[1]][1]) %>%
           mutate(complete_name = paste(cluster,": ", pathway))%>%
-          mutate(length = str_length(complete_name))
+          mutate(length = str_length(complete_name))  %>%
+          # add the hover texts to the data frame
+          mutate(
+            text_cluster = 
+              map(cluster, function(x){
+                a = 
+                  df_further %>%
+                  filter(cluster == x) %>%
+                  dplyr::select(pathway) %>%
+                  unname() %>%
+                  unlist()
+                if(length(a) > 13){
+                  a = c(a[1:13], "... ...")
+                }
+                a = paste(a, collapse = "\n")
+                return(a)
+              })
+          )
+        
        # check if the user select the abbreviation checkbox; if yes, apply a abbreiviation method to the labels 
         if(rv$abbreviate_check == TRUE){
             abbreviate_length <- rv$abbreviate_length
@@ -1474,7 +1515,7 @@
                        "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
                        "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
                        "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
-                       "Cluster size = ",n,"\n"))) +
+                       "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
           geom_point(alpha = 0.5) +
           scale_size(range = c(zmin, zmax)) +
           scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(P.value)*sign(ES)"), oob=squish) +

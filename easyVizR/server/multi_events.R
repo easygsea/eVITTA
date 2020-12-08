@@ -20,9 +20,9 @@ observe({
   # venn and upset
   input2rv(c(
     "n_venn_label","n_venn_type","n_venn_show_ins","ins_venn_c1",
-    "n_upset_sortby","n_upset_showempty","ins_venn_palette"
+    "n_upset_sortby","n_upset_showempty","ins_venn_palette",
+    "n_upset_show_ins", "n_upset_c1"
     ))
-  
   
   # 2D scatter
   input2rv(c(
@@ -156,6 +156,8 @@ observeEvent(input$n_use_data,{
     # upset
     rv$n_upset_sortby <- "freq"
     rv$n_upset_showempty <- FALSE
+    rv$n_upset_show_ins <- T
+    rv$n_upset_c1 <- "gold"
     
     
     
@@ -245,6 +247,10 @@ observeEvent(input$n_use_data,{
     
   })
   rv$df_n <- df_n
+  
+  # manually reload the UI
+  remove_ui("venn_dropdowns")
+  remove_ui("upset_dropdowns")
   
   # # find max stat and generate scale
   # statmax <- max(dplyr::select(df_n, contains("Stat_")), na.rm=TRUE)
