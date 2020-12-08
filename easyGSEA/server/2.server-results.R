@@ -5,9 +5,14 @@
 output$ui_bodyResults <- renderUI({
     # saveRDS(rv$gene_lists, file = "rvs/gene_lists.rds")
 
-    if(is.null(rv$run) || rv$run != "success"){
-        panel_null()
-    }else{
+    # if(is.null(rv$run) || rv$run != "success"){
+    #     panel_null()
+    # }else{
+        if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
+            em_w <- "8em"
+        }else{
+            em_w <- "4.5em"
+        }
         fluidRow(
             column(
                 8,
@@ -55,8 +60,18 @@ output$ui_bodyResults <- renderUI({
                                 up = TRUE,width = "410px"
                             )
                         ),
-                        div(id = "plot_download_button",
+                        div(id = "gs_search_button",
+                            align = "left",
                             style = "position: absolute; left: 4.5em; bottom: 1em;",
+                            dropdown(
+                                uiOutput("plot_gs_search"),
+                                size = "xs",
+                                icon = icon("search", class = "opt"),
+                                up = TRUE,width = "410px"
+                            )
+                        ),
+                        div(id = "plot_download_button",
+                            style = sprintf("position: absolute; left: %s; bottom: 1em;",em_w),
                             dropdown(
                                 uiOutput("plot_download"),
                                 size = "xs",
@@ -104,7 +119,7 @@ output$ui_bodyResults <- renderUI({
             )
 
         )
-    }
+    # }
 })
 
 # change default plot type
@@ -128,28 +143,28 @@ sig_none <- reactive({
 
 # ----------- plots' plots ---------
 output$plot_area <- renderUI({
-    if(input$plot_type=="manhattan"){
+    if(rv$plot_type=="manhattan"){
         plotlyOutput("plot_manhattan", width = "100%", height = rv$box_h)
-    }else if(input$plot_type=="bar"){
+    }else if(rv$plot_type=="bar"){
         if(is.null(p_bar())){
             sig_none()
         }else{
             plotlyOutput("plot_bar", width = "100%", height = rv$box_h)
         }
-    }else if(input$plot_type=="bubble"){
+    }else if(rv$plot_type=="bubble"){
         if(is.null(p_bubble())){
             sig_none()
         }else{
             plotlyOutput("plot_bubble", width = "100%",height = rv$box_h)
         }
-    }else if(input$plot_type=="volcano"){
+    }else if(rv$plot_type=="volcano"){
         if(rv$run_mode == "gsea"){
             uiOutput("ui_volcano")
 
         }else if(rv$run_mode == "glist"){
             uiOutput("ui_volcano_glist")
         }
-    }else if(input$plot_type=="word"){
+    }else if(rv$plot_type=="word"){
         if(is.null(word_plot())){
             sig_none()
         }else{
@@ -166,7 +181,7 @@ output$plot_gear <- renderUI({
         dbs = rv$gmt_cs
     }
 
-    if(input$plot_type=="manhattan"){
+    if(rv$plot_type=="manhattan"){
         fluidRow(
             column(12,
                    radioGroupButtons(
@@ -192,7 +207,7 @@ output$plot_gear <- renderUI({
                 bsButton("manhattan_confirm",tags$b("Replot!"),style = "danger")
             )
         )
-    }else if(input$plot_type=="bar"){
+    }else if(rv$plot_type=="bar"){
 
         fluidRow(
             column(12,
@@ -250,7 +265,7 @@ output$plot_gear <- renderUI({
             )
 
         )
-    }else if(input$plot_type=="bubble"){
+    }else if(rv$plot_type=="bubble"){
 
 
         fluidRow(
@@ -312,7 +327,7 @@ output$plot_gear <- renderUI({
             )
         )
 
-    }else if(input$plot_type=="volcano"){
+    }else if(rv$plot_type=="volcano"){
         fluidRow(
             column(
                 width = 12,
@@ -351,7 +366,7 @@ output$plot_gear <- renderUI({
                 bsButton("volcano_confirm",tags$b("Replot!"),style = "danger")
             )
         )
-    }else if(input$plot_type=="word"){
+    }else if(rv$plot_type=="word"){
 
         fluidRow(
             column(12,
@@ -391,17 +406,22 @@ output$plot_gear <- renderUI({
     }
 })
 
+# ------------- plots' gene set selection dropdown ------------
+output$plot_gs_search <- renderUI({
+    req()
+})
+
 # ------------- plots' download btn ids -----------
 output$plot_download <- renderUI({
-    if(input$plot_type=="manhattan"){
+    if(rv$plot_type=="manhattan"){
         downloadButton(outputId = "download_manhattan", label = "Download plot")
-    }else if(input$plot_type=="bar"){
+    }else if(rv$plot_type=="bar"){
         downloadButton(outputId = "download_bar", label = "Download plot")
-    }else if(input$plot_type=="bubble"){
+    }else if(rv$plot_type=="bubble"){
         downloadButton(outputId = "download_bubble", label = "Download plot")
-    }else if(input$plot_type=="volcano"){
+    }else if(rv$plot_type=="volcano"){
         downloadButton(outputId = "download_volcano", label = "Download plot")
-    }else if(input$plot_type=="word"){
+    }else if(rv$plot_type=="word"){
         downloadButton(outputId = "download_word", label = "Download plot")
     }
 })
@@ -415,7 +435,7 @@ observeEvent(input$manhattan_confirm,{
 # manhattan plot
 p_man <- reactive({
     req(rv$run == "success")
-    req(input$plot_type=="manhattan")
+    req(rv$plot_type=="manhattan")
 
     if(input$selected_species != "other"){
         dbs = rv$dbs
@@ -547,7 +567,7 @@ p_man <- reactive({
 # render plot
 output$plot_manhattan <- renderPlotly({
     req(rv$run == "success")
-    req(input$plot_type=="manhattan")
+    req(rv$plot_type=="manhattan")
 
     withProgress(message = "Updating Manhattan plot ...",value = 1,{
         p_man()
@@ -586,7 +606,7 @@ p_bar <- reactive({
 
 output$plot_bar <- renderPlotly({
     req(rv$run == "success")
-    req(input$plot_type=="bar")
+    req(rv$plot_type=="bar")
     req(is.null(rv$bar_pathway)==F)
 
     withProgress(message = "Updating bar plot ...",value = 1,{
@@ -629,7 +649,7 @@ p_bubble <- reactive({
 })
 output$plot_bubble <- renderPlotly({
     req(rv$run == "success")
-    req(input$plot_type=="bubble")
+    req(rv$plot_type=="bubble")
     req(is.null(rv$bar_pathway)==F)
 
     withProgress(message = "Updating bubble plot ...",value = 1,{
@@ -670,7 +690,7 @@ observeEvent(input$volcano_confirm,{
 output$p1_fs_volcano <- renderPlotly({
     req(rv$volcano_mode == "plotly")
     req(rv$run == "success")
-    req(input$plot_type=="volcano")
+    req(rv$plot_type=="volcano")
     req(rv$run_mode == "gsea")
     req(is.null(rv$volcano_pathway)==F)
 
@@ -685,7 +705,7 @@ output$p1_fs_volcano <- renderPlotly({
 output$p2_fs_volcano <- renderPlotly({
     req(rv$volcano_mode == "plotly2")
     req(rv$run == "success")
-    req(input$plot_type=="volcano")
+    req(rv$plot_type=="volcano")
     req(rv$run_mode == "gsea")
     req(is.null(rv$volcano_pathway)==F)
 
@@ -701,7 +721,7 @@ output$p2_fs_volcano <- renderPlotly({
 output$p3_fs_volcano <- renderPlot({
     req(rv$volcano_mode == "ggplot")
     req(rv$run == "success")
-    req(input$plot_type=="volcano")
+    req(rv$plot_type=="volcano")
     req(rv$run_mode == "gsea")
     req(is.null(rv$volcano_pathway)==F)
 
@@ -746,7 +766,7 @@ observeEvent(input$word_confirm,{
 # word plot
 output$plot_word <- renderPlotly({
     req(rv$run == "success")
-    req(input$plot_type=="word")
+    req(rv$plot_type=="word")
     req(is.null(rv$bar_pathway)==F)
 
     withProgress(message = "Generating word frequency chart..,", value = 1,{
@@ -1050,8 +1070,6 @@ clear_plot_rv <- function(){
 
 # manhattan click
 observeEvent(event_data("plotly_click", source = "manhattan_plot_click"),{
-    # req(rv$run == "success")
-    # req(input$plot_type=="manhattan")
     clickData <- event_data("plotly_click", source = "manhattan_plot_click")
     # print(clickData)
     rv$es_term = rv$manhattan_pathway_list[round(clickData$x + 1)]
@@ -1062,8 +1080,6 @@ observeEvent(event_data("plotly_click", source = "manhattan_plot_click"),{
 
 # bar click
 observeEvent(event_data("plotly_click", source = "bar_plot_click"),{
-    # req(rv$run == "success")
-    # req(input$plot_type=="bar")
     clickData <- event_data("plotly_click", source = "bar_plot_click")
     # print(clickData)
     rv$es_term = rv$bar_pathway_list[round(clickData$y)]
@@ -1074,8 +1090,6 @@ observeEvent(event_data("plotly_click", source = "bar_plot_click"),{
 
 # bubble click
 observeEvent(event_data("plotly_click", source = "bubble_plot_click"),{
-    # req(rv$run == "success")
-    # req(input$plot_type=="bubble")
     clickData <- event_data("plotly_click", source = "bubble_plot_click")
     rv$es_term = rv$bubble_pathway_list[round(clickData$y)]
 
@@ -1084,9 +1098,6 @@ observeEvent(event_data("plotly_click", source = "bubble_plot_click"),{
 
 # full volcano click
 observeEvent(event_data("plotly_click", source = "volcano_plot_click"),{
-    # req(rv$run == "success")
-    # req(input$plot_type == "volcano")
-    # req(rv$volcano_mode == "plotly")
     clickData <- event_data("plotly_click", source = "volcano_plot_click")
     # print(str(clickData))
     rv$es_term = rv$volcano_pathway_list[clickData$pointNumber + 1]
@@ -1096,9 +1107,6 @@ observeEvent(event_data("plotly_click", source = "volcano_plot_click"),{
 
 # discrete volcano click
 observeEvent(event_data("plotly_click", source = "volcano_plot_click2"),{
-    # req(rv$run == "success")
-    # req(input$plot_type == "volcano")
-    # req(rv$volcano_mode == "plotly2")
     clickData <- event_data("plotly_click", source = "volcano_plot_click2")
     # print(str(clickData))
     rv$es_term = rv$volcano_pathway_list[clickData$pointNumber + 1]
