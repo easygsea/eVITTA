@@ -5,15 +5,15 @@ source("ui/css_addons.R")
 sidebar <- dashboardSidebar(
     sidebarMenu(id="menu1",
                 menuItem("1. Extract GEO data", tabName="tab1", icon=icon("dashboard")),
-
-                menuItem("2. Data matrix", tabName="tab3", icon=icon("table")),
-
-                menuItem("3. Filter/review design matrix", tabName="tab2", icon=icon("pencil-ruler")),
-
-                menuItem("4. Run DEG analysis", tabName="tab4", icon=icon("calculator")),
-
-                menuItem("5. Visualize results", tabName="tab5", icon=icon("chart-area")),
-
+                
+                menuItem(text = span(id = "tab3_text", "2. Data matrix"), tabName="tab3", icon=icon("table")),
+                
+                menuItem(text = span(id = "tab2_text", "3. Filter/review design matrix"), tabName="tab2", icon=icon("pencil-ruler")),
+                
+                menuItem(text = span(id = "tab4_text", "4. Run DEG analysis"), tabName="tab4", icon=icon("calculator")),
+                
+                menuItem(text = span(id = "tab5_text", "5. Visualize results"), tabName="tab5", icon=icon("chart-area")),
+                
                 uiOutput("btn_demo")
 
 

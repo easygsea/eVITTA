@@ -1,12 +1,11 @@
 # # DEMO SESSION CODE -------------------------------------------------------
-# 
 # library(later)
 # # the modal to remind the user it is a demo session
 # observe({
 #   init_demo()
-#   showModal(modalDialog(title = "Welcome to our easyGEO demo session",
-#                         "The demo session has all the features of our app.
-#                         Follow the intro tour and switch to different tabs to explore it.",
+#   showModal(modalDialog(title = tags$h3("Welcome to our easyGEO demo session"),
+#                         tags$h4("The demo session has all the features of our app.
+#                         Follow the intro tour and switch to different tabs to explore it."),
 #                         size = "m",
 #                         easyClose = FALSE
 #                         ,footer = actionButton("welcome_modal",label = "OK")))
@@ -16,12 +15,6 @@
 # observeEvent(input$welcome_modal, {
 #   removeModal()
 #   call_introjs(rbind(intros$E_pre,intros$E_post,intros$E_post_with_summary_ui))
-#   #updateTabItems(session, inputId = "menu1", selected = "tab3")
-#   # call_introjs(intros$D_post)
-#   # call_introjs(intros$F_post)
-#   # call_introjs(rbind(intros$R_post,intros$R_post_deg))
-#   # call_introjs(intros$V_volcano)
-#   #introjs(session, events = list(onbeforechange = readCallback("switchTabs")))
 #   print(input$menu1)
 #   
 # })
@@ -41,6 +34,7 @@
 #   }
 # })
 # # END-----------------------------------------------------------------------------
+
 
 # --------------- search GEO accession ---------------
 # currently checks if input exists

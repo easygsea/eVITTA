@@ -132,6 +132,7 @@ tt <- list("logFC"
 
 # --------------- Initialize introjs -------------------
 intropath <- paste0(getwd(), "/intro/")
+# intropath <- paste0(getwd(), "/intro_demo/")
 filepaths <- list.files(intropath, full.names=T)
 intros <- lapply(filepaths, function(x){
   df <- data.frame(read.csv(x, header=T, sep="\t"))
