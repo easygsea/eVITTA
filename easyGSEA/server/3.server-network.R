@@ -122,7 +122,7 @@ output$ui_bodyNetwork <- renderUI({
                         if(!is.null(rv$cluster_bar_run) && rv$cluster_bar_run == "fail"){
                             div(
                                 br(),
-                                p("At least two enriched gene sets are needed for a bar plot view of the clusters."),
+                                p("At least two enriched gene sets are needed for clustering purposes."),
                                 br()
                             )
                         } else if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
