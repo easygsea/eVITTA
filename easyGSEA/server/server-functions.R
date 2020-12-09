@@ -83,7 +83,14 @@
     
     #=======================================================================#
     ####------------------------ Functions: Plot ------------------------####
-    #=======================================================================# 
+    #=======================================================================#
+    plot_confirm_btn <- function(id,label,style="simple",size="md",color="warning",block=F){
+      actionBttn(
+        id,HTML(sprintf("<b>%s</b>",label)),
+        color=color,style=style,size=size,block=block
+      )
+      
+    }
     enrichmentplot <- function() {
         ranks = rv$rnkgg
         names(ranks) = toupper(names(ranks))
@@ -113,13 +120,17 @@
           df1 <- df %>% dplyr::filter(ES > 0)
           if(is.null(up)==F){
             df1 <- df1 %>%
-              dplyr::slice_max(ES,n=up)
+              # dplyr::slice_max(ES,n=up)
+              dplyr::arrange(-ES) %>%
+              dplyr::slice_head(n=up)
           }
           
           df2 <- df  %>% dplyr::filter(ES < 0)
           if(is.null(down)==F){
             df2 <- df2 %>%
-              dplyr::slice_min(ES,n=down)
+              # dplyr::slice_min(ES,n=down)
+              dplyr::arrange(ES) %>%
+              dplyr::slice_head(n=down)
           }
           
           df <- rbind(df1,df2)
@@ -135,76 +146,65 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
-            # df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
-            # 
-            # df = df %>% 
-            #   dplyr::filter(db %in% pathways) %>% 
-            #   mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-            #   dplyr::arrange(padj)
-            # 
-            # if(cutoff_p < 1){
-            #     df = df %>% dplyr::filter(pval < cutoff_p)
-            # }
-            # if(cutoff_q < 1){
-            #     df = df %>% dplyr::filter(padj < cutoff_q)
-            # }
+          if(rv$bar_mode == "cutoff"){
+            df <- filter_plot_df(pathways,up,down,cutoff_p,cutoff_q)
+          }else if(rv$bar_mode == "gs"){
+            df <- rv$fgseagg %>%
+              dplyr::filter(pathway %in% rv$gss_selected) %>%
+              arrange(desc(ES))
+          }
+          
+          if(is.null(df)==T || nrow(df)<1){
+            rv$bar_error <- "0"
+            return(NULL)
+          }else if(nrow(df)>200){
+            rv$bar_error <- "l"
+            return(NULL)
+          }else{
+            size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
-            if(is.null(df)==T || nrow(df)<1){
-                return(NULL)
-            }else{
-                # df1 <- df %>% dplyr::filter(ES > 0) %>%
-                #   dplyr::slice_min(padj,n=up)
-                # 
-                # df2 <- df  %>% dplyr::filter(ES < 0) %>%
-                #   dplyr::slice_min(padj,n=down)
-                # 
-                # df <- rbind(df1,df2)
-                # df <- df %>% arrange(desc(ES))
-                size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
-                
-                rv$bar_pathway_list = df[["pathway"]]
-                
-                # get rid of db id
-                y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
-                
-                # abbreviate gene set names on y axis if too long
-                if(abby == "y"){
-                    y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
-                }
-
-                fig <- df %>% 
-                    ggplot(aes(x=ES, y=factor(pathway, levels=pathway), fill=-log10(df[[pq]])*sign(ES),
-                               text=paste0(
-                                   "<b>",df[["pathway"]],"</b>\n",
-                                   "ES=",signif(df[["ES"]],digits=3),"; ",
-                                   "P=",signif(df[["pval"]],digits=3),"; ",
-                                   "P.adj=",signif(df[["padj"]],digits=3),"\n",
-                                   tail(colnames(df),n=1)," (",size_g,"/",df[["size"]],"): \n",addlinebreaks(df[[ncol(df)]])
-                                   
-                               ))) +
-                    geom_bar(stat="identity", width = 0.8) +
-                    scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
-                    xlab("Enrichment Score (ES)") + ylab("") +
-                    geom_vline(xintercept=0, size=0.1) +
-                    theme_minimal() +
-                    theme(axis.text.y = element_text(size=10),
-                          legend.title = element_text(size = 9)) +
-                    scale_y_discrete(labels = y_pathway)
-                
-                yh = nrow(df) * 18 + 50
-                if(yh<=rv$box_hp){yh=rv$box_hp}
-                
-                fig <- ggplotly(fig,
-                                height = yh,
-                                tooltip = "text",
-                                source = "bar_plot_click"
-                ) %>%
-                  # layout(legend=list(colorbar=list(side="right"))) %>%
-                    event_register("plotly_click")
-                
-                return(fig)
+            rv$bar_pathway_list = df[["pathway"]]
+            
+            # get rid of db id
+            y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
+            
+            # abbreviate gene set names on y axis if too long
+            if(abby == "y"){
+              y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
             }
+            
+            fig <- df %>% 
+              ggplot(aes(x=ES, y=factor(pathway, levels=pathway), fill=-log10(df[[pq]])*sign(ES),
+                         text=paste0(
+                           "<b>",df[["pathway"]],"</b>\n",
+                           "ES=",signif(df[["ES"]],digits=3),"; ",
+                           "P=",signif(df[["pval"]],digits=3),"; ",
+                           "P.adj=",signif(df[["padj"]],digits=3),"\n",
+                           tail(colnames(df),n=1)," (",size_g,"/",df[["size"]],"): \n",addlinebreaks(df[[ncol(df)]])
+                           
+                         ))) +
+              geom_bar(stat="identity", width = 0.8) +
+              scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
+              xlab("Enrichment Score (ES)") + ylab("") +
+              geom_vline(xintercept=0, size=0.1) +
+              theme_minimal() +
+              theme(axis.text.y = element_text(size=10),
+                    legend.title = element_text(size = 9)) +
+              scale_y_discrete(labels = y_pathway)
+            
+            yh = nrow(df) * 18 + 50
+            if(yh<=rv$box_hp){yh=rv$box_hp}
+            
+            fig <- ggplotly(fig,
+                            height = yh,
+                            tooltip = "text",
+                            source = "bar_plot_click"
+            ) %>%
+              # layout(legend=list(colorbar=list(side="right"))) %>%
+              event_register("plotly_click")
+            
+            return(fig)
+          }
         }
     }
     
@@ -212,34 +212,24 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+          if(rv$bar_mode == "cutoff"){
+            df <- filter_plot_df(pathways,up,down,cutoff_p,cutoff_q)
+          }else if(rv$bar_mode == "gs"){
+            df <- rv$fgseagg %>%
+              dplyr::filter(pathway %in% rv$gss_selected) %>%
+              arrange(desc(ES))
+          }
           
-            # df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
-            # 
-            # df = df %>% 
-            #     dplyr::filter(db %in% pathways) %>% 
-            #     mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-            #   dplyr::arrange(padj)
-            # 
-            # if(cutoff_p < 1){
-            #     df = df %>% dplyr::filter(pval < cutoff_p)
-            # }
-            # if(cutoff_q < 1){
-            #     df = df %>% dplyr::filter(padj < cutoff_q)
-            # }
-            
-            if(is.null(df)==T || nrow(df)<1){
-                return(NULL)
-            }else{
-                # df1 <- df %>% dplyr::filter(ES > 0) %>%
-                #   dplyr::slice_min(padj,n=up)
-                # 
-                # df2 <- df  %>% dplyr::filter(ES < 0) %>%
-                #   dplyr::slice_min(padj,n=down)
-                # 
-                # df <- rbind(df1,df2)
-                # df <- df %>% arrange(desc(ES))
-                
+          if(is.null(df)==T || nrow(df)<1){
+            rv$bar_error <- "0"
+            return(NULL)
+          }else if(nrow(df)>200){
+            rv$bar_error <- "l"
+            return(NULL)
+          }else{
+              df <- df %>%
+                dplyr::filter(pathway %in% rv$gss_selected)
+              
                 rv$bubble_pathway_list = df[["pathway"]]
                 
                 # get rid of db id
@@ -1817,6 +1807,7 @@
       shinyjs::enable("rnkfile")
     }
     
+    # Displays when the run is not initiated
     # ------------------ Panell Null -------------------
     panel_null <- function(){
       box(
@@ -1839,12 +1830,12 @@
     #   )
     # }
     
-    guide_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details",color="warning",size="md"){
+    guide_box <- function(id,msg="Navigate to <b>Enrichment Results</b> for details",color="warning",size="md",style="simple"){
       actionBttn(
         id,
         HTML(msg),
         icon=icon("angle-double-right"),
-        style = "simple", color=color, size = size,
+        style = style, color = color, size = size,
         block = T
       )
     }

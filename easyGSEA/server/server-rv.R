@@ -82,6 +82,8 @@
         gmin=15,gmax=200,gperm=1000,
         no_up_01=0,no_down_01=0,no_up_05=0,no_down_05=0,
         
+        bar_mode="cutoff", # or "gs" for selected Gene Sets
+        bar_error=NULL, # "l" if data frame to large max 200 rows; 0 if 0 row
         bar_q_cutoff=1, volcano_cutoff=.005, # bar cutoff synchronized with bubble; bubble_q_cutoff=1, 
         bar_p_cutoff=.005, #bar cutoff synchronized with bubble; bubble_p_cutoff=.005,
         bar_up=10, bubble_up=10,

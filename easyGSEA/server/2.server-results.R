@@ -60,16 +60,19 @@ output$ui_bodyResults <- renderUI({
                                 up = TRUE,width = "410px"
                             )
                         ),
-                        div(id = "gs_search_button",
-                            align = "left",
-                            style = "position: absolute; left: 4.5em; bottom: 1em;",
-                            dropdown(
-                                uiOutput("plot_gs_search"),
-                                size = "xs",
-                                icon = icon("search", class = "opt"),
-                                up = TRUE,width = "410px"
+                        if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
+                            div(id = "gs_search_button",
+                                align = "left",
+                                style = "position: absolute; left: 4.5em; bottom: 1em;",
+                                dropdown(
+                                    uiOutput("plot_gs_search"),
+                                    size = "xs",
+                                    icon = icon("search", class = "opt"),
+                                    up = TRUE,width = "410px"
+                                )
                             )
-                        ),
+                        }
+                        ,
                         div(id = "plot_download_button",
                             style = sprintf("position: absolute; left: %s; bottom: 1em;",em_w),
                             dropdown(
@@ -80,18 +83,9 @@ output$ui_bodyResults <- renderUI({
                             )
                         )
                     ),
-                        # uiOutput("manhattan_box"),
-                        # uiOutput("bar_box"),
-                        # uiOutput("bubble_box"),
-                        # uiOutput("volcano_box"),
-                        # uiOutput("word_box"),
                     column(12, id="feedback_btn_wrap",
                         uiOutput("feedback_btn")
                     )
-                    # uiOutput("kegg_feedback"),
-                    # uiOutput("reactome_feedback"),
-                    # uiOutput("wp_feedback")
-
                 )
             ),
             column(
@@ -131,14 +125,23 @@ observeEvent(input$plot_type,{
 sig_none <- reactive({
     req(rv$bar_p_cutoff)
     req(rv$bar_q_cutoff)
-
-    HTML(
-        "No significant term found at pval < ",
-        rv$bar_p_cutoff,
-        "& padj < ",
-        rv$bar_q_cutoff,
-        ". Please adjust thresholds by clicking the bottom-right gear button."
-    )
+    
+    if(rv$plot_type == "bar" || rv$plot_type == "bubble" && rv$bar_error == "l"){
+        HTML(
+            "We support plotting up to 200 data points."
+            ,". Please click the bottom-left gear button to adjust thresholds, "
+            ,"or click the search button to re-select the gene sets of interest."
+        )
+    }else{
+        HTML(
+            "No significant term found at pval < ",
+            rv$bar_p_cutoff,
+            "& padj < ",
+            rv$bar_q_cutoff,
+            ". Please adjust thresholds by clicking the bottom-left gear button."
+        )
+    }
+    
 })
 
 # ----------- plots' plots ---------
@@ -194,7 +197,7 @@ output$plot_gear <- renderUI({
                    )
             ),
             column(
-                width = 9,
+                width = 12,
                 sliderTextInput("cutoff_manhattan",
                                 label = "Adjust P or P.adj threshold:",
                                 choices= cutoff_slider,
@@ -202,9 +205,8 @@ output$plot_gear <- renderUI({
                 )
             ),
             column(
-                width = 3,
-                br(),br(),
-                bsButton("manhattan_confirm",tags$b("Replot!"),style = "danger")
+                width = 12,
+                plot_confirm_btn("manhattan_confirm","Replot!",block=T)
             )
         )
     }else if(rv$plot_type=="bar"){
@@ -257,11 +259,9 @@ output$plot_gear <- renderUI({
                 width = 3,
                 uiOutput("ui_bar_abb_n")
             ),
-            fluidRow(
-                column(
-                    width = 3, offset = 9,
-                    bsButton("bar_confirm",tags$b("Replot!"),style = "danger")
-                )
+            column(
+                width = 12, align = "right",
+                plot_confirm_btn("bar_confirm","Replot!",block=T)
             )
 
         )
@@ -316,14 +316,13 @@ output$plot_gear <- renderUI({
                 uiOutput("ui_bubble_abb_n")
             ),
             column(
-                width = 9,
+                width = 12,
                 sliderInput("bubble_slider", "Bubble size range", min = 0.5, max = 30, step = 0.5,
                             value = c(2.5, 9.5))
             ),
             column(
-                width = 3,
-                br(),br(),
-                bsButton("bubble_confirm",tags$b("Replot!"),style = "danger")
+                width = 12,
+                plot_confirm_btn("bubble_confirm","Replot!",block = T)
             )
         )
 
@@ -361,9 +360,8 @@ output$plot_gear <- renderUI({
             ),
             uiOutput("ui_volcano_cutoff"),
             column(
-                width = 3, offset = 9,
-                br(),
-                bsButton("volcano_confirm",tags$b("Replot!"),style = "danger")
+                width = 12,
+                plot_confirm_btn("volcano_confirm","Replot!",block = T)
             )
         )
     }else if(rv$plot_type=="word"){
@@ -399,8 +397,7 @@ output$plot_gear <- renderUI({
             ),
             column(
                 width = 12, align = "right",
-                br(),br(),
-                bsButton("word_confirm",tags$b("Replot!"),style = "danger")
+                plot_confirm_btn("word_confirm","Replot!",block = T)
             )
         )
     }
@@ -408,7 +405,49 @@ output$plot_gear <- renderUI({
 
 # ------------- plots' gene set selection dropdown ------------
 output$plot_gs_search <- renderUI({
-    req()
+    fluidRow(
+        column(
+            12,
+            pickerInput("gs_to_plot",
+                        "Select gene set(s) to plot",
+                        choices = rv$gss,
+                        selected = rv$gss_selected,
+                        options = list(
+                            `actions-box` = TRUE,
+                            size = 10,
+                            style = "btn-default",
+                            `selected-text-format` = "count > 10"
+                            ,`live-search` = TRUE
+                        ),
+                        multiple = TRUE)
+        )
+        ,column(
+            12,align=T,
+            plot_confirm_btn("gs_to_plot_confirm","Replot!",block=T)
+        )
+    )
+})
+
+
+# update Gene Sets list upon new successful run
+observeEvent(rv$fgseagg,{
+    # the entire gene list
+    rv$gss <- rv$fgseagg[["pathway"]]
+    names(rv$gss) <- sapply(rv$gss, function(x){subset_string(x)})
+    
+    # selected gene list for display
+    df <- filter_plot_df(rv$bar_pathway,rv$bar_up,rv$bar_down,rv$bar_p_cutoff,rv$bar_q_cutoff)
+    rv$gss_selected <- df[["pathway"]]
+})
+
+# update rv$gss_selected
+observeEvent(input$gs_to_plot_confirm,{
+    if(is.null(input$gs_to_plot) == T){
+        shinyalert("Please select at least 1 gene set to plot.")
+    }else{
+        rv$bar_mode <- "gs"
+        rv$gss_selected <- input$gs_to_plot
+    }
 })
 
 # ------------- plots' download btn ids -----------
@@ -583,16 +622,21 @@ output$download_manhattan <- downloadHandler(
 
 # bar plot --------------
 observeEvent(input$bar_confirm,{
-    rv$bar_pathway = input$pathway_to_plot_bar
-    rv$bar_pq = input$p_or_q_bar
-    rv$bar_p_cutoff = input$cutoff_bar_p
-    rv$bar_q_cutoff = input$cutoff_bar_q
-    rv$bar_up = input$n_up_bar
-    rv$bar_down = input$n_down_bar
-
-    rv$bar_abb = input$abb_bar
-    if(rv$bar_abb == "y"){if(is.null(input$abb_bar_n)){rv$bar_abb_n = 40}else{rv$bar_abb_n = input$abb_bar_n}}
-
+    if(is.null(input$pathway_to_plot_bar)==T){
+        shinyalert("Please select at least 1 database to plot.")
+    }else{
+        rv$bar_pathway = input$pathway_to_plot_bar
+        rv$bar_pq = input$p_or_q_bar
+        rv$bar_p_cutoff = input$cutoff_bar_p
+        rv$bar_q_cutoff = input$cutoff_bar_q
+        rv$bar_up = input$n_up_bar
+        rv$bar_down = input$n_down_bar
+        
+        rv$bar_abb = input$abb_bar
+        if(rv$bar_abb == "y"){if(is.null(input$abb_bar_n)){rv$bar_abb_n = 40}else{rv$bar_abb_n = input$abb_bar_n}}
+        
+        rv$bar_mode <- "cutoff"
+    }
 })
 
 # bar plot
@@ -624,18 +668,24 @@ output$download_bar <- downloadHandler(
 
 # bubble plot ----------
 observeEvent(input$bubble_confirm,{
-    rv$bar_pathway = input$pathway_to_plot_bubble
-    rv$bar_pq = input$p_or_q_bubble
-    rv$bar_q_cutoff = input$cutoff_q_bubble
-    rv$bar_p_cutoff = input$cutoff_p_bubble
-    rv$bar_up = input$n_up_bubble
-    rv$bar_down = input$n_down_bubble
-
-    rv$bar_abb = input$abb_bubble
-    if(rv$bar_abb == "y"){if(is.null(input$abb_bubble_n)){rv$bar_abb_n = 40}else{rv$bar_abb_n = input$abb_bubble_n}}
-
-    rv$bubble_zmin = input$bubble_slider[1]
-    rv$bubble_zmax = input$bubble_slider[2]
+    if(is.null(input$pathway_to_plot_bubble)==T){
+        shinyalert("Please select at least 1 database to plot.")
+    }else{
+        rv$bar_pathway = input$pathway_to_plot_bubble
+        rv$bar_pq = input$p_or_q_bubble
+        rv$bar_q_cutoff = input$cutoff_q_bubble
+        rv$bar_p_cutoff = input$cutoff_p_bubble
+        rv$bar_up = input$n_up_bubble
+        rv$bar_down = input$n_down_bubble
+        
+        rv$bar_abb = input$abb_bubble
+        if(rv$bar_abb == "y"){if(is.null(input$abb_bubble_n)){rv$bar_abb_n = 40}else{rv$bar_abb_n = input$abb_bubble_n}}
+        
+        rv$bubble_zmin = input$bubble_slider[1]
+        rv$bubble_zmax = input$bubble_slider[2]
+        
+        rv$bar_mode <- "cutoff"
+    }
 })
 
 
@@ -756,10 +806,14 @@ output$ui_volcano_glist <- renderUI({
 
 # keyword plot --------------
 observeEvent(input$word_confirm,{
-    rv$bar_pathway = input$pathway_to_plot_word
-    rv$bar_p_cutoff = input$cutoff_word_p
-    rv$bar_q_cutoff = input$cutoff_word_q
-    rv$n_word = input$n_word
+    if(is.null(input$pathway_to_plot_word)==T){
+        shinyalert("Please select at least 1 database to plot.")
+    }else{
+        rv$bar_pathway = input$pathway_to_plot_word
+        rv$bar_p_cutoff = input$cutoff_word_p
+        rv$bar_q_cutoff = input$cutoff_word_q
+        rv$n_word = input$n_word
+    }
 })
 
 
