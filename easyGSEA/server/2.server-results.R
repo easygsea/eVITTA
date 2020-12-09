@@ -129,7 +129,7 @@ sig_none <- reactive({
     if(rv$plot_type == "bar" || rv$plot_type == "bubble" && rv$bar_error == "l"){
         HTML(
             "We support plotting up to 200 data points."
-            ,". Please click the bottom-left gear button to adjust thresholds, "
+            ,"Please click the bottom-left gear button to adjust thresholds, "
             ,"or click the search button to re-select the gene sets of interest."
         )
     }else{
