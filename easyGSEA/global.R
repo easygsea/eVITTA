@@ -75,6 +75,16 @@ abbreviate_vector <- function(x,no=3){
   return(x)
 }
 
+# function to subset string with n characters and attach "..." to the subsetted string if longer than n
+subset_string <- function(x,abbn=45){
+  if(nchar(x)<abbn){
+    return(x)
+  }else{
+      return(paste0(substr(x,0,abbn),"..."))
+    }
+}
+
+
 # function to convert between full and abbreviated species names
 species_translate <- function(x,source_list = species_names){
   if(nchar(x)>5){
