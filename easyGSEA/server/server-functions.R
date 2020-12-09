@@ -136,9 +136,12 @@
           df <- rbind(df1,df2)
           df <- df %>% arrange(desc(ES))
         }else if(rv$run_mode == "glist"){
-          df <- df %>%
-            dplyr::slice_min(padj,n=up)
+          if(is.null(up)==F){
+            df <- df %>%
+              dplyr::slice_min(padj,n=up)
+          }
         }
+        return(df)
       }
     }
     
@@ -956,6 +959,7 @@
         # get df
         # df = dfNEL()
         df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p,rv$vis_q)
+        print(df)
 
         # print(nrow(df))
         if(is.null(df) || nrow(df)<1){
