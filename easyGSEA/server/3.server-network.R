@@ -530,7 +530,8 @@ output$download_cluster_bubble <- downloadHandler(
 # ------------ render cluster table --------------
 output$cluster_df <- DT::renderDataTable({
     req(rv$dendro_or_barplot=="table")
-
+    req(!is.null(rv$df_download))
+    
     df <- rv$df_download %>%
         mutate_if(is.numeric, function(x) round(x, digits=3))
 

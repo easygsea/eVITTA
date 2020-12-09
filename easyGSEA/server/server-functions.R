@@ -959,8 +959,7 @@
         # get df
         # df = dfNEL()
         df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p,rv$vis_q)
-        print(df)
-
+        
         # print(nrow(df))
         if(is.null(df) || nrow(df)<1){
             rv$vis_status = "failed"
@@ -1060,10 +1059,10 @@
             y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
             
             #get the clusters_id
-            
+            print(head(df))
             if(nrow(df) == 1){
               df <- df %>%
-                mutate(cluster_name= 1)
+                mutate(cluster_name = paste0("1: ", pathway))
               }
             else{
               edges_mat2 = edges_mat_zero_cutoff
@@ -1206,7 +1205,7 @@
     # plot an interactive dendrogram
     plot_dendro <- function(){
       df = rv$df_vis
-      if(nrow(df)<=1){
+      if(is.null(df) || nrow(df)<=1){
         rv$dendro_run = "fail"
         return(NULL)
       }else{
@@ -1303,7 +1302,7 @@
     
     plot_cluster_barplot <- function() {
       df = rv$df_vis
-      if(nrow(df)<=1){
+      if(is.null(df) || nrow(df)<=1){
         rv$cluster_bar_run = "fail"
         return(NULL)
       }else{
@@ -1419,7 +1418,7 @@
     # Plot the cluster bubble plot
     plot_cluster_bubble <- function(zmin=rv$bubble_zmin,zmax=rv$bubble_zmax) {
       df = rv$df_vis
-      if(nrow(df)<=1){
+      if(is.null(df) || nrow(df)<=1){
         rv$cluster_bar_run = "fail"
         return(NULL)
       }else{
@@ -1922,7 +1921,7 @@
         rv$no_down_025 = rv$no_down_025 + sum(fgseaRes$padj<0.025&fgseaRes$ES<0,na.rm=TRUE)
         
         sig_no <- rv$no_up_05 + rv$no_down_05
-        if(sig_no >= 1){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+        if(sig_no >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
         sig_no <- rv$no_up_01 + rv$no_down_01
         if(sig_no >= 100){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         sig_no <- rv$no_up_025 + rv$no_down_025
@@ -1962,7 +1961,7 @@
           rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25,na.rm=TRUE)
           rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
           
-          if(rv$no_up_05 >= 1){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+          if(rv$no_up_05 >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
           # if(rv$no_up_01 >= 1){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         }
         
