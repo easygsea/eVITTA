@@ -1,3 +1,4 @@
+# display choices for numeric IDs
 # --------- numeric ID selection ----------
 r_num_acc <- reactive({
   div(
@@ -12,3 +13,12 @@ r_num_acc <- reactive({
   )
 })
 
+# display databases for selection
+# ------- databases for selection ----------
+dbs <- reactive({
+  if(input$selected_species != "other"){
+    return(rv$dbs)
+  }else{
+    return(rv$gmt_cs)
+  }
+})

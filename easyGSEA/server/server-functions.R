@@ -1,4 +1,66 @@
     #=======================================================================#
+    ####---------------------- Functions: Initialization ----------------####
+    #=======================================================================# 
+    # function to abbreviate strings
+    abbreviate_string <- function(x){
+      abbreviate(x, use.classes = T, dot = F, named = F)
+    }
+    
+    # function to extract the first no of elements and attach "... ..." to an R vector
+    abbreviate_vector <- function(x,no=3){
+      if(length(x)>no){
+        x = paste(x[1:no],collapse = ", ") %>%
+          paste0(.," ... ...")
+      }else{
+        x = paste(x,collapse = ", ")
+      }
+      return(x)
+    }
+    
+    # function to subset string with n characters and attach "..." to the subsetted string if longer than n
+    subset_string <- function(x,abbn=45){
+      if(nchar(x)<abbn){
+        return(x)
+      }else{
+        return(paste0(substr(x,0,abbn),"..."))
+      }
+    }
+    
+    
+    # function to convert between full and abbreviated species names
+    species_translate <- function(x,source_list = species_names){
+      if(nchar(x)>5){
+        translated <- source_list[x][[1]]
+      }else if(nchar(x)<=5){
+        translated <- names(source_list)[which(source_list == x)]
+      }else{
+        translated <- NULL
+      }
+      return(translated)
+    }
+    
+    # add help buttons to labels (need to wrap again in HTML)
+    # example of use: label=HTML("Label here", add_help("id1", style="padding:1px 1px 1px 1px;") )
+    add_help <- function(id, color="#00c0ef", style=""){
+      out <- paste0("<i class='fa fa-question-circle'
+                style = 'color:",color,";
+                font-size:medium;",style,"'
+                id='",id,"'></i>")
+      
+      HTML(out)
+    }
+    
+    # LABELS WITH CLICKABLE BS BUTTON 
+    # construct a label with a clickable help bs button
+    label_with_help_bttn <- function(label_text, bttn_id, bttn_status="info", bttn_style=""){
+      p(style="margin-block-end: 2px;",
+        label_text,
+        tags$style(type = "text/css", paste0("#",bttn_id,"{display: inline-block;width: 17px;height: 17px;padding: 0;border-radius: 50%;vertical-align: text-top;margin-left: 3px;font-size: 10px;padding-top: 1px;",bttn_style,"}")),
+        bsButton(bttn_id, label = "", icon = icon("question"), style = bttn_status, size = "extra-small"))
+    }
+    
+    
+    #=======================================================================#
     ####----------------------- Functions: Calculation -------------------####
     #=======================================================================# 
     # change heximal colors to 90% transparency
@@ -84,10 +146,10 @@
     #=======================================================================#
     ####------------------------ Functions: Plot ------------------------####
     #=======================================================================#
-    plot_confirm_btn <- function(id,label,style="simple",size="md",color="warning",block=F){
+    plot_confirm_btn <- function(id,label,style="simple",size="md",color="warning",icon = NULL,block=F){
       actionBttn(
         id,HTML(sprintf("<b>%s</b>",label)),
-        color=color,style=style,size=size,block=block
+        color=color,style=style,size=size,icon=icon,block=block
       )
       
     }
@@ -956,12 +1018,9 @@
         # get df
         # df = dfNEL()
         df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p,rv$vis_q)
-        
-        rv$df_vis = df
-        print(nrow(df))
-          
+
         # print(nrow(df))
-        if(nrow(df)<1){
+        if(is.null(df) || nrow(df)<1){
             rv$vis_status = "failed"
             return(NULL)
         # check if it exceeds the maximum data points
@@ -971,6 +1030,9 @@
         }
         else{
             rv$vis_status = "success"
+            
+            rv$df_vis = df
+
             # leading edge genes
             a = df[[ncol(df)]] #df$leadingEdge
             # a = sapply(a, function(x) strsplit(x," "))

@@ -1,12 +1,12 @@
 # Overall bodyNetwork UI ------------------
 output$ui_bodyNetwork <- renderUI({
-    if(is.null(rv$run) || rv$run != "success"){
-        # add an id for introjs
-        box(id = "enrichment_network_box",
-            title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
-            "Visualization available upon successful run."
-        )
-    }else{
+    # if(is.null(rv$run) || rv$run != "success"){
+    #     # add an id for introjs
+    #     box(id = "enrichment_network_box",
+    #         title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
+    #         "Visualization available upon successful run."
+    #     )
+    # }else{
         fluidRow(
             # add an id for introjs
             box(id = "enrichment_network_box2",
@@ -64,19 +64,22 @@ output$ui_bodyNetwork <- renderUI({
                     right = 25,
                     top = 6
                 )
-                ,absolutePanel(
-                    fluidRow(
-                        nav_btn_b("net_b"),
-                        nav_btn_f("net_f")
-
-                        ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
-                                   ,placement = "bottom")
-                        ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
-                                   ,placement = "bottom")
-                    ),
-                    right = 34.5,
-                    top = 52
-                )
+                # ,div(
+                #     style="position:relative;z-index:1000",
+                #     fixedPanel(
+                #         fluidRow(
+                #             nav_btn_b("net_b"),
+                #             nav_btn_f("net_f")
+                #             
+                #             ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
+                #                        ,placement = "bottom")
+                #             ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
+                #                        ,placement = "bottom")
+                #         ),
+                #         left = 30,
+                #         bottom = 30
+                #     )
+                # )
             ),
             box(
                 id = "dendrogram_box",
@@ -213,7 +216,7 @@ output$ui_bodyNetwork <- renderUI({
 
             )
         )
-    }
+    # }
 })
 
 
@@ -239,7 +242,9 @@ output$vis_error <- renderUI({
         rv$vis_p,
         " & q < ",
         rv$vis_q,
-        ". Please adjust the P and/or P.adj thresholds by clicking the top-right gear button."
+        " in ",
+        paste(rv$vis_pathway,collapse = ", "),
+        ". Please adjust the selected database(s), and/or the P and/or P.adj thresholds by clicking the top-right gear button."
     )
 
 })
@@ -263,15 +268,22 @@ output$download_vis <- downloadHandler(
     # content = function(file) {saveWidget(as_widget(vis()), file, selfcontained = TRUE)}
 )
 
-# update and replot
+# -------- update and replot visnetwork ----------
 observeEvent(input$vis_replot,{
-    rv$vis_p = input$cutoff_vis_p
-    rv$vis_q = input$cutoff_vis_q
-    rv$vis_pq = input$p_or_q_vis
-    rv$percent_method = input$vis_percent
-    rv$percent_cutoff = input$vis_percent_cutoff
-    rv$vis_k = input$combined_k
-    rv$vis_status = NULL
+    if(is.null(input$vis_pathway)){
+        shinyalert("Please select at least 1 database to visualize.")
+    }else{
+        rv$vis_p = input$cutoff_vis_p
+        rv$vis_q = input$cutoff_vis_q
+        rv$vis_pq = input$p_or_q_vis
+        rv$percent_method = input$vis_percent
+        rv$percent_cutoff = input$vis_percent_cutoff
+        rv$vis_k = input$combined_k
+        rv$vis_status = NULL
+        
+        rv$vis_pathway <- input$vis_pathway
+    }
+    
 })
 
 #  ============ vis edges modal =============
@@ -314,6 +326,14 @@ output$ui_vis_gear <- renderUI({
         tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
     ),
     fluidRow(
+        column(12,
+               selectizeInput("vis_pathway",
+                              "Select database(s) to plot",
+                              choices = dbs(),
+                              selected = rv$vis_pathway,
+                              multiple = TRUE
+                              )
+        ),
         column(
             width = 6,
             sliderTextInput("cutoff_vis_p",
@@ -378,9 +398,9 @@ output$ui_vis_gear <- renderUI({
         ),
         column(
             width = 6,align="right",br(),
-            actionBttn("vis_replot","Replot!"
-                       ,style = "simple"#,size = "sm"
-                       ,color = "primary",icon = icon("atom") #,lib="font-awesome"
+            plot_confirm_btn("vis_replot","Replot!"
+                       ,icon = icon("atom") #,lib="font-awesome"
+                       ,block = T
             )
         )
     )
@@ -446,10 +466,7 @@ output$dendro_option <- renderUI({
             },
             uiOutput("ui_abbreviate_length"),
             bsTooltip("abbreviate_help", "Abbreviate the labels when the texts are too long to be displayed", placement = "top"),
-            actionBttn("dendro_update","Replot!"
-                       ,style = "simple",size = "sm"
-                       ,color = "primary"
-            )
+            plot_confirm_btn("dendro_update","Replot!",block=T)
         )
 
 })

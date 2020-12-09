@@ -1326,7 +1326,7 @@
       }
       
       column(12,
-        guide_box("msg2",size="sm",style="minimal",color="primary")
+        guide_box("msg2",size="sm")
         
       )
     })
