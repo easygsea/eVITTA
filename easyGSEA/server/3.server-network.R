@@ -7,6 +7,11 @@ output$ui_bodyNetwork <- renderUI({
     #         "Visualization available upon successful run."
     #     )
     # }else{
+    if(input$sidebarCollapsed == TRUE){
+        nav_left <- 35
+    }else{
+        nav_left <- 265
+    }
         fluidRow(
             # add an id for introjs
             box(id = "enrichment_network_box2",
@@ -65,37 +70,22 @@ output$ui_bodyNetwork <- renderUI({
                     top = 6
                 )
                 ,
+                
                 div(
                     style="position:relative;z-index:1000",
-                    if(input$sidebarCollapsed == TRUE){
-                        fixedPanel(
-                            fluidRow(
-                                nav_btn_b("net_b"),
-                                nav_btn_f("net_f")
-                                
-                                ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
-                                           ,placement = "bottom")
-                                ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
-                                           ,placement = "bottom")
-                            ),
-                            left = 20,
-                            bottom = 10
-                        )
-                    }else{
-                        fixedPanel(
-                            fluidRow(
-                                nav_btn_b("net_b"),
-                                nav_btn_f("net_f")
-    
-                                ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
-                                           ,placement = "bottom")
-                                ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
-                                           ,placement = "bottom")
-                            ),
-                            left = 250,
-                            bottom = 10
-                        )
-                    }
+                    fixedPanel(
+                        fluidRow(
+                            nav_btn_b("net_b"),
+                            nav_btn_f("net_f")
+                            
+                            ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
+                                       ,placement = "top")
+                            ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
+                                       ,placement = "top")
+                        ),
+                        left = nav_left,
+                        bottom = 25
+                    )
 
                 )
             ),
