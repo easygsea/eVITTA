@@ -241,7 +241,7 @@ output$plot_gear <- renderUI({
                    ),
                    bsTooltip("p_bar",HTML("Gene sets with a P-value &lt; ",input$cutoff_bar_p," will be kept. Drag the slider to change the threshold.")
                              ,placement = "top"),
-                   bsTooltip("q_bar",HTML("Gene sets with a adjusted P-value &lt; ",input$cutoff_bar_q," will be kept. Drag the slider to change the threshold.")
+                   bsTooltip("q_bar",HTML("Gene sets with an adjusted P-value &lt; ",input$cutoff_bar_q," will be kept. Drag the slider to change the threshold.")
                              ,placement = "top"),
                    
             ),
