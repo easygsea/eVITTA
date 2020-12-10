@@ -7,12 +7,14 @@ a_mode <- conditionalPanel(
                
                radioButtons(
                    inputId = "selected_mode",
-                   label = div(style = "font-weight:400;", "Select mode of analysis:"),
+                   label = div(style = "font-weight:400;", HTML(paste0("Select mode of analysis:",add_help("mode_q")))),
                    choices = run_modes,
                    selected = "gsea"
                    #demo session for ora analysis, where the default selected mode is "glist" please be careful here
                    # selected = "glist"
                )
+               ,bsTooltip("mode_q",HTML("Select the method for functional enrichment analysis")
+                          ,placement = "right")
                # ,bsButton("loadx","Example Run")
                ,tags$hr(style="border-color: #48617b;margin: 8px;")
         )
@@ -58,7 +60,8 @@ bodyGSEA <- tabItem(tabName = "gsea",
                             ,onInitialize = I('function() { this.setValue(""); }')
                         )
                     )),
-                    bsTooltip("selected_species_q", HTML("Select species of interest, or <b>Other (custom GMT)</b> for custom analysis"), placement = "top"), #, then <i>click</i> <b>Confirm selection</b> to proceed
+                    bsTooltip("selected_species_q", HTML("Select species of interest, or <b>Other (custom GMT)</b> for custom analysis")
+                              , placement = "top"), #, then <i>click</i> <b>Confirm selection</b> to proceed
                     
                     # database selection
                     uiOutput("test_db"),

@@ -5,9 +5,9 @@
 output$ui_bodyResults <- renderUI({
     # saveRDS(rv$gene_lists, file = "rvs/gene_lists.rds")
 
-    # if(is.null(rv$run) || rv$run != "success"){
-    #     panel_null()
-    # }else{
+    if(is.null(rv$run) || rv$run != "success"){
+        panel_null()
+    }else{
         if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
             em_w <- "8em"
         }else{
@@ -60,6 +60,8 @@ output$ui_bodyResults <- renderUI({
                                 up = TRUE,width = "410px"
                             )
                         ),
+                        bsTooltip("setting_button",HTML("Click to adjust database selection, P & P.adj thresholds, and custom options for visualization")
+                                  ,placement = "top"),
                         if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
                             div(id = "gs_search_button",
                                 align = "left",
@@ -71,8 +73,9 @@ output$ui_bodyResults <- renderUI({
                                     up = TRUE,width = "410px"
                                 )
                             )
-                        }
-                        ,
+                        },
+                        bsTooltip("gs_search_button",HTML(paste0("Click to search, select, and visualize gene set(s) of interest with a ",rv$plot_type," plot"))
+                                  ,placement = "top"),
                         div(id = "plot_download_button",
                             style = sprintf("position: absolute; left: %s; bottom: 1em;",em_w),
                             dropdown(
@@ -81,7 +84,9 @@ output$ui_bodyResults <- renderUI({
                                 icon = icon("download", class = "opt"),
                                 up = TRUE
                             )
-                        )
+                        ),
+                        bsTooltip("plot_download_button",HTML("Click to download the plot")
+                                  ,placement = "top")
                     ),
                     column(12, id="feedback_btn_wrap",
                         uiOutput("feedback_btn")
@@ -113,7 +118,7 @@ output$ui_bodyResults <- renderUI({
             )
 
         )
-    # }
+    }
 })
 
 # change default plot type
@@ -214,46 +219,57 @@ output$plot_gear <- renderUI({
         fluidRow(
             column(12,
                    selectizeInput("pathway_to_plot_bar",
-                                  "Select database(s) to plot",
+                                  HTML(paste0("Select database(s) to plot ",add_help("db_bar"))),
                                   choices = dbs,
                                   selected = rv$bar_pathway,
                                   multiple = TRUE),
+                   bsTooltip("db_bar",HTML("Select or de-select the functional database(s) for your run")
+                             ,placement = "top"),
                    uiOutput("bar_top"),
 
                    splitLayout(
                        sliderTextInput("cutoff_bar_p",
-                                       label = "Adjust P threshold:",
+                                       label = HTML(paste0("Adjust P threshold: ",add_help("p_bar"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
                        ),
                        sliderTextInput("cutoff_bar_q",
-                                       label = "Adjust P.adj threshold:",
+                                       label = HTML(paste0("Adjust P.adj threshold:",add_help("q_bar"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
                        )
-                   )
+                   ),
+                   bsTooltip("p_bar",HTML("Gene sets with a P-value &lt; ",input$cutoff_bar_p," will be kept. Drag the slider to change the threshold.")
+                             ,placement = "top"),
+                   bsTooltip("q_bar",HTML("Gene sets with a adjusted P-value &lt; ",input$cutoff_bar_q," will be kept. Drag the slider to change the threshold.")
+                             ,placement = "top"),
+                   
             ),
             column(
                 width = 4,
                 radioGroupButtons(
                     inputId = "p_or_q_bar",
-                    label = "Color by P or P.adj",
+                    label = HTML(paste0("Color by P or P.adj",add_help("col_bar"))),
                     choiceNames = c("P", "P.adj"),
                     choiceValues = c("pval", "padj"),
                     selected = rv$bar_pq,
                     direction = "horizontal"
                 )
+                ,bsTooltip("col_bar",HTML("Choose P-value or adjusted P-value to color the bar plot")
+                           ,placement = "top")
             ),
             column(
                 width = 5,
                 radioGroupButtons(
                     inputId = "abb_bar",
-                    label = "Abbreviate y axis labels",
+                    label = HTML(paste0("Abbreviate y axis labels",add_help("y_bar"))),
                     choiceNames = c("Yes", "No"),
                     choiceValues = c("y", "n"),
                     selected = rv$bar_abb,
                     direction = "horizontal"
                 )
+                ,bsTooltip("y_bar",HTML("<b>No</b> will display the names of the gene sets in full. <b>Yes</b> will extract the first characters, as defined by <b>String length</b>, for display.")
+                           ,placement = "top")
             ),
             column(
                 width = 3,

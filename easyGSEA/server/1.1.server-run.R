@@ -793,7 +793,7 @@
       fluidRow(
         column(
           width = 12,
-          bsTooltip("gene_list_q", "Input newline-delimited gene list", placement = "top"),
+          bsTooltip("gene_list_q", "List of genes or proteins, newline-delimited", placement = "top"),
           div(
             id = "input_list_box",
               textAreaInput(
@@ -866,12 +866,15 @@
       if (is.null(rv$gene_lists)==F){
         shinyjs::disable("gene_list")
         shinyjs::disable("glist_name")
+        shinyjs::disable("num_acc")
       }
       else if (is.null(rv$gene_lists)){
         shinyjs::reset("gene_list")
         shinyjs::enable("gene_list")
         shinyjs::reset("glist_name")
         shinyjs::enable("glist_name")
+        shinyjs::reset("num_acc")
+        shinyjs::enable("num_acc")
       }
     })
     
