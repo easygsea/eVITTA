@@ -64,22 +64,40 @@ output$ui_bodyNetwork <- renderUI({
                     right = 25,
                     top = 6
                 )
-                # ,div(
-                #     style="position:relative;z-index:1000",
-                #     fixedPanel(
-                #         fluidRow(
-                #             nav_btn_b("net_b"),
-                #             nav_btn_f("net_f")
-                #             
-                #             ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
-                #                        ,placement = "bottom")
-                #             ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
-                #                        ,placement = "bottom")
-                #         ),
-                #         left = 30,
-                #         bottom = 30
-                #     )
-                # )
+                ,
+                div(
+                    style="position:relative;z-index:1000",
+                    if(input$sidebarCollapsed == TRUE){
+                        fixedPanel(
+                            fluidRow(
+                                nav_btn_b("net_b"),
+                                nav_btn_f("net_f")
+                                
+                                ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
+                                           ,placement = "bottom")
+                                ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
+                                           ,placement = "bottom")
+                            ),
+                            left = 20,
+                            bottom = 10
+                        )
+                    }else{
+                        fixedPanel(
+                            fluidRow(
+                                nav_btn_b("net_b"),
+                                nav_btn_f("net_f")
+    
+                                ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
+                                           ,placement = "bottom")
+                                ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
+                                           ,placement = "bottom")
+                            ),
+                            left = 250,
+                            bottom = 10
+                        )
+                    }
+
+                )
             ),
             box(
                 id = "dendrogram_box",
@@ -215,7 +233,8 @@ output$ui_bodyNetwork <- renderUI({
                 )
 
             )
-        )
+            
+         )
     # }
 })
 
@@ -530,7 +549,8 @@ output$download_cluster_bubble <- downloadHandler(
 # ------------ render cluster table --------------
 output$cluster_df <- DT::renderDataTable({
     req(rv$dendro_or_barplot=="table")
-
+    req(!is.null(rv$df_download))
+    
     df <- rv$df_download %>%
         mutate_if(is.numeric, function(x) round(x, digits=3))
 
