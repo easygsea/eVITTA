@@ -1134,7 +1134,7 @@
                 dplyr::mutate(n = n()) %>%
                 filter(padj == min(padj)) %>%
                 filter(row_number()==1) %>%
-                dplyr::select(cluster, pathway, n, pval, ES, padj)
+                dplyr::select(cluster, pathway, n, pval, padj)
               }
             # assign the rvs that would be used in dendrogram
             rv$hc = hc
@@ -1380,27 +1380,66 @@
             else{return(paste0(substr(x, 0, abbreviate_length),"..."))}})
         }
         
-        df_padj_points <- df_padj_points %>% 
-        arrange(desc(cluster))  
-        
-        cluster_barplot <- df_padj_points %>%
-          ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
-                   fill=-log10(pval)*sign(ES),
-                   text=paste0(
-                     "<b>",df_padj_points[["complete_name"]],"</b>\n",
-                     "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
-                     "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
-                     "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
-                     "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
-        geom_bar(stat="identity", width = 0.8) +
-        scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(P.value)*sign(ES)"), oob=squish) +
-        xlab("Enrichment Score (ES)") + ylab("") +
-        geom_vline(xintercept=0, size=0.1) +
-        theme_minimal() +
-        theme( axis.text.y = element_text(size = 11),
-              legend.title = element_text(size = 9))
-        # # scale_y_discrete(position = "right")
+        # rearrange the data frame based on users' selction(whether they would like to sort)
+        if(rv$sort_check == TRUE){
+          if(rv$run_mode == "gsea"){
+            df_padj_points <- df_padj_points %>%
+              arrange(desc(ES))
+          } else {
+            df_padj_points <- df_padj_points %>%
+              arrange(desc(-log10(pval)))
+          }
+        } else{
+          df_padj_points <- df_padj_points %>% 
+          arrange(desc(cluster))
+        }
 
+        # assign the the variable that decide the color and the text of the color bar, p or p.adj
+        color_value = rv$color_check
+        if(color_value == "pval"){
+          color_text = "P.value"
+        } else{
+          color_text = "P.adj"
+        }
+        # generate the plot
+        if(rv$run_mode == "gsea"){
+          cluster_barplot <- df_padj_points %>%
+            ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
+                       fill=-log10(df_padj_points[[color_value]])*sign(ES),
+                       text=
+                         paste0(
+                           "<b>",df_padj_points[["complete_name"]],"</b>\n",
+                           "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
+                           "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
+                           "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
+                           "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
+            geom_bar(stat="identity", width = 0.8) +
+            scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(", color_text, ")*sign(ES)"), oob=squish) +
+            xlab("Enrichment Score (ES)") + ylab("") +
+            geom_vline(xintercept=0, size=0.1) +
+            theme_minimal() +
+            theme( axis.text.y = element_text(size = 11),
+                   legend.title = element_text(size = 9))
+          
+        } else {
+          cluster_barplot <- df_padj_points %>%
+            ggplot(aes(x=-log10(pval), y=factor(complete_name, levels = complete_name),
+                     fill=-log10(df_padj_points[[color_value]]),
+                     text=
+                       paste0(
+                       "<b>",df_padj_points[["complete_name"]],"</b>\n",
+                       "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
+                       "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
+                       "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
+          geom_bar(stat="identity", width = 0.8) +
+          scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(", color_text, ")"), oob=squish) +
+          xlab("-log10(P.value)") + ylab("") +
+          geom_vline(xintercept=0, size=0.1) +
+          theme_minimal() +
+          theme( axis.text.y = element_text(size = 11),
+                legend.title = element_text(size = 9))
+        }
+        
         yh = nrow(df_padj_points) * 25 + 20
         if(yh<=500){yh=500}
         
@@ -1495,29 +1534,66 @@
             else{return(paste0(substr(x, 0, abbreviate_length),"..."))}})
         }
         
-        # sort the table by the cluster id
-        df_padj_points <- df_padj_points %>% 
-          arrange(desc(cluster))
+        # rearrange the data frame based on users' selction(whether they would like to sort)
+        if(rv$sort_check == TRUE){
+          if(rv$run_mode == "gsea"){
+            df_padj_points <- df_padj_points %>%
+              arrange(desc(ES))
+          } else {
+            df_padj_points <- df_padj_points %>%
+              arrange(desc(-log10(pval)))
+          }
+        } else{
+          df_padj_points <- df_padj_points %>% 
+            arrange(desc(cluster))
+        }
         
-        cluster_bubble <- df_padj_points %>%
-          ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
-                     size = n,
-                     colour=-log10(pval)*sign(ES),
-                     text=paste0(
-                       "<b>",df_padj_points[["complete_name"]],"</b>\n",
-                       "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
-                       "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
-                       "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
-                       "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
-          geom_point(alpha = 0.5) +
-          scale_size(range = c(zmin, zmax)) +
-          scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(P.value)*sign(ES)"), oob=squish) +
-          xlab("Enrichment Score (ES)") + ylab("") +
-          geom_vline(xintercept=0, size=0.1) +
-          theme_minimal() +
-          theme( axis.text.y = element_text(size = 11),
-                 legend.title = element_text(size = 9))
-        # # scale_y_discrete(position = "right")
+        color_value = rv$color_check
+        if(color_value == "pval"){
+          color_text = "P.value"
+        } else{
+          color_text = "P.adj"
+        }
+        # generate the plot
+        if(rv$run_mode == "gsea"){
+          cluster_bubble <- df_padj_points %>%
+            ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
+                       size = n,
+                       colour=-log10(df_padj_points[[color_value]])*sign(ES),
+                       text=paste0(
+                         "<b>",df_padj_points[["complete_name"]],"</b>\n",
+                         "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
+                         "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
+                         "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
+                         "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
+            geom_point(alpha = 0.5) +
+            scale_size(range = c(zmin, zmax)) +
+            scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(", color_text,")*sign(ES)"), oob=squish) +
+            xlab("Enrichment Score (ES)") + ylab("") +
+            geom_vline(xintercept=0, size=0.1) +
+            theme_minimal() +
+            theme( axis.text.y = element_text(size = 11),
+                   legend.title = element_text(size = 9))
+          
+        } else {
+          cluster_bubble <- df_padj_points %>%
+            ggplot(aes(x=-log10(pval), y=factor(complete_name, levels = complete_name),
+                       size = n,
+                       colour=-log10(df_padj_points[[color_value]]),
+                       text=paste0(
+                         "<b>",df_padj_points[["complete_name"]],"</b>\n",
+                         "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
+                         "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
+                         "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
+            geom_point(alpha = 0.5) +
+            scale_size(range = c(zmin, zmax)) +
+            scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(", color_text,")"), oob=squish) +
+            xlab("-log10(P.value)") + ylab("") +
+            geom_vline(xintercept=0, size=0.1) +
+            theme_minimal() +
+            theme( axis.text.y = element_text(size = 11),
+                   legend.title = element_text(size = 9))
+        }
 
         yh = nrow(df_padj_points) * 25 + 20
         if(yh<=500){yh=500}
