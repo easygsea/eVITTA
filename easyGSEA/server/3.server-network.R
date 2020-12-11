@@ -487,7 +487,19 @@ output$dendro_option <- renderUI({
                          value = rv$cluster_size, min = 1, max = rv$max_cluster_size, step = 1),
             bsTooltip("cluster_size_help", "The clusters that have at least z gene sets are labeled",placement = "top"),
             if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
-                checkboxInput("abbreviate_check", HTML(paste0("Abbreviate the labels  ", add_help("abbreviate_help", style = "top: 1px; right:0px"))))
+                div(
+                    checkboxInput("abbreviate_check", HTML(paste0("Abbreviate the labels  ", add_help("abbreviate_help", style = "top: 1px; right:0px")))),
+                    checkboxInput("sort_check", HTML(paste0("Sort the pathways ", add_help("sort_help", style = "top: 1px; right:0px")))),
+                    bsTooltip("sort_help", "Sort the pathways by ES in ascending order in GSEA mode, or by -log10(p.value) in ascending order in ORA mode"),
+                    radioGroupButtons(
+                        inputId = "color_check",
+                        label = HTML(paste0("Color by P.value or P.adj ")), #,add_help("color_help", style = "top: 1px; right: 0px")
+                        choiceNames = c("P", "P.adj"),
+                        choiceValues = c("pval", "padj"),
+                        selected = rv$color_check,
+                        direction = "horizontal" 
+                    )
+                )
             },
             uiOutput("ui_abbreviate_length"),
             bsTooltip("abbreviate_help", "Abbreviate the labels when the texts are too long to be displayed", placement = "top"),
@@ -512,6 +524,8 @@ observeEvent(input$dendro_update,{
     }
     if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
         rv$abbreviate_check = input$abbreviate_check
+        rv$sort_check = input$sort_check
+        rv$color_check = input$color_check
         if(!is.null(input$abbreviate_length)){
             rv$abbreviate_length = input$abbreviate_length
         }

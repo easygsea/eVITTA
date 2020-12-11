@@ -16,6 +16,8 @@
         max_cluster_size = 1,
         dendro_or_barplot = "dendro",
         abbreviate_check = FALSE,
+        sort_check = FALSE,
+        color_check = "pval",
         abbreviate_length = 45,
         
         db_status=NULL, # selected
