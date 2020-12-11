@@ -1001,11 +1001,20 @@
                     colors[df[[pq]]<0.01 & df$ES<0] = "rgba(49,130,189)" #darker blue
                     colors[df[[pq]]<0.001 & df$ES<0] = "rgba(8,81,156)" #cornflower
                 }else if(rv$run_mode == "glist"){
+                  if(rv$ora_color == "red"){
                     colors[df[[pq]]<0.25] = "rgba(254,224,144)" #lightyellow
                     colors[df[[pq]]<0.1] = "rgba(253,174,97)" #yellow
                     colors[df[[pq]]<0.05] = "rgba(244,109,67)" #orange
                     colors[df[[pq]]<0.01] = "rgba(215,48,39)" #red
                     colors[df[[pq]]<0.001] = "rgba(165,0,38)" #dark red
+                  }else if(rv$ora_color == "blue"){
+                    colors[df[[pq]]<0.25] = "rgba(198,219,239)" #pale blue
+                    colors[df[[pq]]<0.1] = "rgba(158,202,225)" #light blue
+                    colors[df[[pq]]<0.05] = "rgba(107,174,214)" #blue
+                    colors[df[[pq]]<0.01] = "rgba(49,130,189)" #darker blue
+                    colors[df[[pq]]<0.001] = "rgba(8,81,156)" #cornflower
+                  }
+                    
                 }
                 
                 

@@ -291,6 +291,8 @@ observeEvent(input$vis_replot,{
         rv$vis_status = NULL
         
         rv$vis_pathway <- input$vis_pathway
+        
+        rv$ora_color <- input$vis_color
     }
     
 })
@@ -405,8 +407,22 @@ output$ui_vis_gear <- renderUI({
                               direction = "horizontal",status="default"
             )
         ),
+        if(rv$run_mode == "glist"){
+            column(
+                width = 6,
+                radioGroupButtons("vis_color",
+                                  "Color tone",
+                                  c("Red"="red","Blue"="blue"),
+                                  rv$ora_color,
+                                  justified = TRUE,
+                                  checkIcon = list(
+                                      yes = icon("ok", 
+                                                 lib = "glyphicon"))
+                )
+            )
+        },
         column(
-            width = 6,align="right",br(),
+            width = 12,align="right",br(),
             plot_confirm_btn("vis_replot","Replot!"
                        ,icon = icon("atom") #,lib="font-awesome"
                        ,block = T
