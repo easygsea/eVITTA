@@ -61,7 +61,7 @@ output$ui_bodyResults <- renderUI({
                             )
                         ),
                         bsTooltip("setting_button",HTML("Click to adjust database selection, P & P.adj thresholds, and custom options for visualization")
-                                  ,placement = "top"),
+                                  ,placement = "bottom"),
                         if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
                             div(id = "gs_search_button",
                                 align = "left",
@@ -75,7 +75,7 @@ output$ui_bodyResults <- renderUI({
                             )
                         },
                         bsTooltip("gs_search_button",HTML(paste0("Click to search, select, and visualize gene set(s) of interest with a ",rv$plot_type," plot"))
-                                  ,placement = "top"),
+                                  ,placement = "bottom"),
                         div(id = "plot_download_button",
                             style = sprintf("position: absolute; left: %s; bottom: 1em;",em_w),
                             dropdown(
@@ -86,7 +86,7 @@ output$ui_bodyResults <- renderUI({
                             )
                         ),
                         bsTooltip("plot_download_button",HTML("Click to download the plot")
-                                  ,placement = "top")
+                                  ,placement = "bottom")
                     ),
                     column(12, id="feedback_btn_wrap",
                         uiOutput("feedback_btn")
@@ -239,9 +239,9 @@ output$plot_gear <- renderUI({
                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
                        )
                    ),
-                   bsTooltip("p_bar",HTML("Gene sets with a P-value &lt; ",input$cutoff_bar_p," will be kept. Drag the slider to change the threshold.")
+                   bsTooltip("p_bar",HTML("Gene sets with a P-value &lt; the selected threshold will be kept. Drag the slider to change the threshold.")
                              ,placement = "top"),
-                   bsTooltip("q_bar",HTML("Gene sets with an adjusted P-value &lt; ",input$cutoff_bar_q," will be kept. Drag the slider to change the threshold.")
+                   bsTooltip("q_bar",HTML("Gene sets with an adjusted P-value &lt; the selected threshold will be kept. Drag the slider to change the threshold.")
                              ,placement = "top"),
                    
             ),

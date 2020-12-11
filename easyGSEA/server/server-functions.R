@@ -1134,7 +1134,7 @@
                 dplyr::mutate(n = n()) %>%
                 filter(padj == min(padj)) %>%
                 filter(row_number()==1) %>%
-                dplyr::select(cluster, pathway, n, pval, ES, padj)
+                dplyr::select(cluster, pathway, n, pval, padj)
               }
             # assign the rvs that would be used in dendrogram
             rv$hc = hc
