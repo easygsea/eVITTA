@@ -451,6 +451,7 @@ hm_plot <- function(counts=hm_count(),df = hm_df()){
     # make matrix for plot
     dat <- expand.grid(y = rownames(counts), x = colnames(counts))
     dat$z <- unlist(as.data.frame(counts),recursive = T)
+    req(length(dat$z)>0)
     
     # genes and their logFC & FDR info
     genes = rownames(counts)
