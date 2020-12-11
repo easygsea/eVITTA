@@ -715,22 +715,15 @@
             return(NULL)
         }else{
           df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
-          
-            # df = rv$fgseagg %>% 
-            #     dplyr::filter(db %in% pathways) %>% 
-            #     mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-            #   dplyr::arrange(padj)
-            # 
-            # if(cutoff_p < 1){
-            #     df = df[which(df[["pval"]]<cutoff_p),]
-            # }
-            # if(cutoff_q < 1){
-            #     df = df[which(df[["padj"]]<cutoff_q),]
-            # }
 
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
+              if(rv$ora_color == "red"){
+                g_color <- gcols2
+              }else if(rv$ora_color == "blue"){
+                g_color <- gcols3
+              }
                                 
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
@@ -763,7 +756,7 @@
                                ))) +
                     geom_point(alpha=0.5) +
                     scale_size(range = c(zmin, zmax)) +
-                    scale_color_gradientn(limits = c(0,3),colours=gcols2, values=gvalues2, name=paste0("-log10(",pq,")"), oob=squish) +
+                    scale_color_gradientn(limits = c(0,3),colours=g_color, values=gvalues2, name=paste0("-log10(",pq,")"), oob=squish) +
                     xlab(paste0("-log10(",pq,")")) + ylab("") +
                     xlim(0,max(-log10(df[[pq]]))+0.5) +
                     # geom_vline(xintercept=0, size=0.1) +
