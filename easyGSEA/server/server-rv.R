@@ -69,6 +69,7 @@
         gene_lists_mat1=NULL, # df for id conversion (GSEA)
         gene_lists_mat2=NULL, # df for id conversion (ORA)
         
+        ora_color="red", # color for bar plot in ORA
         
         # input_symbol=NULL, # check if input is SYMBOL, if, "yes"
         

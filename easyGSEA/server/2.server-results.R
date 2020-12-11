@@ -9,7 +9,11 @@ output$ui_bodyResults <- renderUI({
         panel_null()
     }else{
         if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
-            em_w <- "8em"
+            if(rv$run_mode == "gsea"){
+                em_w <- "8em"
+            }else{
+                em_w <- "11.5em"
+            }
         }else{
             em_w <- "4.5em"
         }
@@ -62,7 +66,7 @@ output$ui_bodyResults <- renderUI({
                         ),
                         bsTooltip("setting_button",HTML("Click to adjust database selection, P & P.adj thresholds, and custom options for visualization")
                                   ,placement = "bottom"),
-                        if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
+                        if(rv$plot_type=="bar" || rv$plot_type=="bubble"){
                             div(id = "gs_search_button",
                                 align = "left",
                                 style = "position: absolute; left: 4.5em; bottom: 1em;",
@@ -76,6 +80,27 @@ output$ui_bodyResults <- renderUI({
                         },
                         bsTooltip("gs_search_button",HTML(paste0("Click to search, select, and visualize gene set(s) of interest with a ",rv$plot_type," plot"))
                                   ,placement = "bottom"),
+                        if(rv$plot_type=="bar" || rv$plot_type=="bubble" && rv$run_mode == "glist"){
+                            div(id = "ora_color_div",
+                                align = "left",
+                                style = "position: absolute; left: 8em; bottom: 1em;",
+                                dropdown(
+                                    radioGroupButtons("ora_color",
+                                                 "Color tone",
+                                                 c("Red"="red","Blue"="blue"),
+                                                 rv$ora_color,
+                                                 justified = TRUE,
+                                                 checkIcon = list(
+                                                     yes = icon("ok", 
+                                                                lib = "glyphicon"))
+                                    ),
+                                    size = "xs",
+                                    icon = icon("palette", class = "opt"),
+                                    up = TRUE,width = "200px"
+                                )
+                            )
+                        },
+                        bsTooltip("ora_color_div",HTML("Click to adjust the color tone")),
                         div(id = "plot_download_button",
                             style = sprintf("position: absolute; left: %s; bottom: 1em;",em_w),
                             dropdown(
@@ -124,6 +149,11 @@ output$ui_bodyResults <- renderUI({
 # change default plot type
 observeEvent(input$plot_type,{
     rv$plot_type = input$plot_type
+})
+
+# change color tone in ORA's bar/bubble
+observeEvent(input$ora_color,{
+    rv$ora_color <- input$ora_color
 })
 
 # feedbacks on no significant enrichment

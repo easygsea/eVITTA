@@ -194,6 +194,14 @@ gcols2 = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
           rgb(215,48,39,maxColorValue = 255),
           rgb(165,0,38,maxColorValue = 255)) # 0.001 = dark red
 
+# color bar for ORA output visualizations (blue only) - ggolot version
+gcols3 = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+           rgb(198,219,239,maxColorValue = 255),
+           rgb(158,202,225,maxColorValue = 255),
+           rgb(107,174,214,maxColorValue = 255),
+           rgb(49,130,189,maxColorValue = 255),
+           rgb(8,81,156,maxColorValue = 255)) # 0.001 = cornflower
+
 # value scales for ORA output visualizations (red only) - ggolot version
 gvalues2 = rescale(c(0,-log10(0.25),1,-log10(0.05),2,3))
 
