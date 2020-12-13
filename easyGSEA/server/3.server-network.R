@@ -334,16 +334,17 @@ output$ui_vis_gear <- renderUI({
     #     collapsible = T, collapsed = T,
     div(div(
         align = "center",
-        tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
+        tags$h4(tags$strong(tags$em("Advanced parameters for creating the network"))),br()
     ),
     fluidRow(
         column(12,
                selectizeInput("vis_pathway",
-                              "Select database(s) to plot",
+                              HTML(paste0("Select database(s) to plot ",add_help("db_vis"))),
                               choices = dbs(),
                               selected = rv$vis_pathway,
                               multiple = TRUE
                               )
+               ,bsTooltip("db_vis",HTML(db_bs),placement = "top")
         ),
         column(
             width = 6,
