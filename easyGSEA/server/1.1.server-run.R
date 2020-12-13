@@ -543,7 +543,9 @@
             )
           ),
           column(6,
-                 textInput("f_name",label = "Name your query:",value = rv$rnkll,width = "100%")
+                 textInput("f_name",label = HTML(paste0("Name your query:",add_help("name_q"))),value = rv$rnkll,width = "100%")
+                 ,bsTooltip("name_q",HTML("The figures/results to be downloaded will be named according to the input here")
+                           ,placement = "top")
 
 
           ),
@@ -553,7 +555,7 @@
 
           ),
           column(12,
-                 p("Your query file content:"),
+                 p("Review your uploaded file:"),
                  uiOutput("feedback_filecontent")
           )
         ),

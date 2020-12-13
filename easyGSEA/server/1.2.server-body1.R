@@ -102,7 +102,7 @@ output$feedback_filecontent_deg <- renderUI({
                 choices = colnames(rv$data_head_o),
                 selected = match_colnames(col_gene_names,colnames(rv$data_head_o))
             ),
-            bsTooltip("gene_colq", "The genes", placement = "top"),
+            bsTooltip("gene_colq", "The genes, proteins or probes (e.g, Gene, Symbol, Ensembl, Affymetrix ID)", placement = "top"),
         ),
         column(
             width = 4,
@@ -113,7 +113,7 @@ output$feedback_filecontent_deg <- renderUI({
                 choices = colnames(rv$data_head_o),
                 selected = match_colnames(col_fc_names,colnames(rv$data_head_o))
             ),
-            bsTooltip("fc_colq", "Log-transformed fold changes of genes", placement = "top"),
+            bsTooltip("fc_colq", "The log-transformed fold changes of genes (e.g. logFC), or the direction of fold changes (e.g. -1, +1)", placement = "top"),
             
         ),
         column(
@@ -125,7 +125,7 @@ output$feedback_filecontent_deg <- renderUI({
                 choices = colnames(rv$data_head_o),
                 selected = match_colnames(col_p_names,colnames(rv$data_head_o))
             ),
-            bsTooltip("p_colq", "P values of differential expressions", placement = "top"),
+            bsTooltip("p_colq", "The P values of differential expressions (e.g. P, P-value)", placement = "top"),
             
         )
     )
@@ -149,7 +149,7 @@ output$feedback_filecontent_rnk <- renderUI({
                 choices = colnames(rv$data_head_o),
                 selected = match_colnames(col_gene_names,colnames(rv$data_head_o))
             ),
-            bsTooltip("gene_colq", "The genes", placement = "top"),
+            bsTooltip("gene_colq", "The genes, proteins or probes (e.g, Gene, Symbol, Ensembl, Affymetrix ID)", placement = "top"),
         ),
         column(
             width = 6,
@@ -160,7 +160,7 @@ output$feedback_filecontent_rnk <- renderUI({
                 choices = colnames(rv$data_head_o),
                 selected = match_colnames(col_rank_names,colnames(rv$data_head_o))
             ),
-            bsTooltip("rank_colq", "Rank scores of genes", placement = "top"),
+            bsTooltip("rank_colq", "The rank scores (e.g. Rank, Rank score)", placement = "top"),
             
         )
     )
