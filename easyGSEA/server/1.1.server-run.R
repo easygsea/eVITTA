@@ -453,9 +453,10 @@
 
 
             fileInput("rnkfile",
-                      label = p(paste0(noo,". Upload RNK or DEG file:"),
-                                tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
-                                bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                      label = HTML(paste0(noo,". Upload RNK or DEG file:",
+                                tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline; position: absolute;}"),
+                                bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")
+                                )),
                       # buttonLabel = "Upload...",
                       accept = c(
                           "text/tab-separated-values",
