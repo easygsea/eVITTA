@@ -7,7 +7,7 @@ a_mode <- conditionalPanel(
                
                radioButtons(
                    inputId = "selected_mode",
-                   label = div(style = "font-weight:400;", HTML(paste0("Select mode of analysis:",add_help("mode_q")))),
+                   label = div(style = "font-weight:400;", HTML(paste0("Select mode of analysis: ",add_help("mode_q")))),
                    choices = run_modes,
                    selected = "gsea"
                    #demo session for ora analysis, where the default selected mode is "glist" please be careful here

@@ -14,6 +14,12 @@ output$ui_bodyResults <- renderUI({
             }else{
                 em_w <- "11.5em"
             }
+        }else if(rv$plot_type=="word"){
+            if(rv$run_mode == "gsea"){
+                em_w <- "4.5em"
+            }else{
+                em_w <- "8em"
+            }
         }else{
             em_w <- "4.5em"
         }
@@ -80,10 +86,15 @@ output$ui_bodyResults <- renderUI({
                         },
                         # bsTooltip("gs_search_button",HTML(paste0("Click to search, select, and visualize gene set(s) of interest with a ",rv$plot_type," plot"))
                         #           ,placement = "bottom"),
-                        if(rv$plot_type=="bar" || rv$plot_type=="bubble" && rv$run_mode == "glist"){
+                        if(rv$plot_type=="bar" || rv$plot_type=="bubble" || rv$plot_type=="word" && rv$run_mode == "glist"){
+                            if(rv$plot_type=="bar" || rv$plot_type=="bubble"){
+                                em_w_col <- "8em"
+                            }else{
+                                em_w_col <- "4.5em"
+                            }
                             div(id = "ora_color_div",
                                 align = "left",
-                                style = "position: absolute; left: 8em; bottom: 1em;",
+                                style = sprintf("position: absolute; left: %s; bottom: 1em;",em_w_col),
                                 dropdown(
                                     fluidRow(
                                         column(

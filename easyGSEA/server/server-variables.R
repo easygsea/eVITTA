@@ -115,7 +115,7 @@ q_bs <- "Gene sets with an adjusted P-value &lt; the selected threshold will be 
 # pq bsToopTip annotation for manhattan or volcano
 man_pq_c_bs <- "Gene sets with a P or adjusted P-value &lt; the selected threshold will be highlighted with darker colors. Drag the slider to change the threshold"
 pq_bs <- "Choose P-value or adjusted P-value to color the plot"
-abb_bs <- "<b>No</b> will display the names of the gene sets in full. <b>Yes</b> will extract the first characters, as defined by <b>String length</b>, for display"
+abb_bs <- "Abbreviate the labels when the texts are too long to be displayed. <b>Yes</b> will extract the first characters, as defined by <b>String length</b>, for display"
 len_bs <- "Number of characters for the abbreviated y-axis labels"
 up_bs <- "Number of top upregulated gene set(s)"
 down_bs <- "Number of top downregulated gene set(s)"

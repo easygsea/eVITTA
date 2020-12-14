@@ -1,12 +1,12 @@
 # Overall bodyNetwork UI ------------------
 output$ui_bodyNetwork <- renderUI({
-    # if(is.null(rv$run) || rv$run != "success"){
-    #     # add an id for introjs
-    #     box(id = "enrichment_network_box",
-    #         title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
-    #         "Visualization available upon successful run."
-    #     )
-    # }else{
+    if(is.null(rv$run) || rv$run != "success"){
+        # add an id for introjs
+        box(id = "enrichment_network_box",
+            title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
+            "Visualization available upon successful run."
+        )
+    }else{
     if(input$sidebarCollapsed == TRUE){
         nav_left <- 35
     }else{
@@ -225,7 +225,7 @@ output$ui_bodyNetwork <- renderUI({
             )
             
          )
-    # }
+    }
 })
 
 
@@ -417,7 +417,7 @@ output$ui_vis_gear <- renderUI({
             column(
                 width = 6,
                 radioGroupButtons("vis_color",
-                                  "Color tone",
+                                  HTML(paste0("Color tone",add_help("vis_col_q"))),
                                   c("Red"="red","Blue"="blue"),
                                   rv$ora_color,
                                   justified = TRUE,
@@ -425,6 +425,7 @@ output$ui_vis_gear <- renderUI({
                                       yes = icon("ok", 
                                                  lib = "glyphicon"))
                 )
+                ,bsTooltip("vis_col_q",HTML("Color the network in red or blue"),placement = "top")
             )
         },
         column(
@@ -478,33 +479,35 @@ output$dendro_option <- renderUI({
     #req(rv$dendro_run == "success")
     div(
             numericInput("dendro_cutoff",
-                         HTML(paste0("Similarity threshold :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
+                         HTML(paste0("Similarity threshold :( 0 &#x2264 x &#x2264 1 ) ",add_help("dendro_help",style = "top: 1px; right:0px"))),
                          value = rv$cutoff_point, min = 0, max = 1, step=0.01),
             #add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
             bsTooltip("dendro_help", "Gene sets that have a similarity score larger than or equal to x are grouped together",placement = "top"),
             if(rv$dendro_or_barplot == "dendro")
                 {numericInput("dendro_label_size",
-                         HTML(paste0("Label text size : ( 0 &#x2264 y &#x2264 6 )",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
+                         HTML(paste0("Label text size : ( 0 &#x2264 y &#x2264 6 ) ",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
                          value = rv$label_size, min = 0, max = 6, step=0.1)},
             #add_help("dendro_label_size_help",style = "top: 1px; right:0px")),
             bsTooltip("dendro_label_size_help", "The text size of the labels (cluster id and the most significant gene set) in the dendrogram",placement = "top"),
             numericInput("dendro_cluster_size",
-                         HTML(paste0("Minimum Cluster size for labels :", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
+                         HTML(paste0("Minimum Cluster size for labels ", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," ) ",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
                          value = rv$cluster_size, min = 1, max = rv$max_cluster_size, step = 1),
             bsTooltip("cluster_size_help", "The clusters that have at least z gene sets are labeled",placement = "top"),
             if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
                 div(
-                    checkboxInput("abbreviate_check", HTML(paste0("Abbreviate the labels  ", add_help("abbreviate_help", style = "top: 1px; right:0px")))),
-                    checkboxInput("sort_check", HTML(paste0("Sort the pathways ", add_help("sort_help", style = "top: 1px; right:0px")))),
-                    bsTooltip("sort_help", "Sort the pathways by ES in ascending order in GSEA mode, or by -log10(p.value) in ascending order in ORA mode"),
                     radioGroupButtons(
                         inputId = "color_check",
-                        label = HTML(paste0("Color by P.value or P.adj ")), #,add_help("color_help", style = "top: 1px; right: 0px")
+                        label = HTML(paste0("Color by P or P.adj ",add_help("col_vis_bar"))),
                         choiceNames = c("P", "P.adj"),
                         choiceValues = c("pval", "padj"),
                         selected = rv$color_check,
-                        direction = "horizontal" 
-                    )
+                        direction = "horizontal"
+                    ),
+                    checkboxInput("sort_check", HTML(paste0("Sort the pathways ", add_help("sort_help", style = "top: 1px; right:0px")))),
+                    checkboxInput("abbreviate_check", HTML(paste0("Abbreviate the labels  ", add_help("abbreviate_help", style = "top: 1px; right:0px")))),
+                    bsTooltip("sort_help", "Sort the pathways by ES in ascending order in GSEA mode, or by -log10(p.value) in ascending order in ORA mode"),
+                    bsTooltip("col_vis_bar",HTML(pq_bs),placement = "top")
+                
                 )
             },
             uiOutput("ui_abbreviate_length"),

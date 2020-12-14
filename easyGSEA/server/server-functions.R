@@ -519,9 +519,15 @@
             
             text = unlist(text)
             
+            if(rv$ora_color == "red"){
+              g_color <- "#F8766D"
+            }else if(rv$ora_color == "blue"){
+              g_color <- "#00BFC4"
+            }
+            
             p <- tidy_data %>%
               ggplot(aes(word, n, text=text)) +
-              geom_col(show.legend = FALSE, fill = "#F8766D") +
+              geom_col(show.legend = FALSE, fill = g_color) +
               labs(x = NULL, y = NULL, title = NULL) +
               coord_flip() +
               scale_x_reordered() +
@@ -1392,10 +1398,11 @@
         # assign the the variable that decide the color and the text of the color bar, p or p.adj
         color_value = rv$color_check
         if(color_value == "pval"){
-          color_text = "P.value"
+          color_text = "P"
         } else{
           color_text = "P.adj"
         }
+        
         # generate the plot
         if(rv$run_mode == "gsea"){
           cluster_barplot <- df_padj_points %>%
@@ -1417,6 +1424,13 @@
                    legend.title = element_text(size = 9))
           
         } else {
+          # color tone, red or blue
+          if(rv$ora_color == "red"){
+            g_color <- gcols2
+          }else if(rv$ora_color == "blue"){
+            g_color <- gcols3
+          }
+          
           cluster_barplot <- df_padj_points %>%
             ggplot(aes(x=-log10(pval), y=factor(complete_name, levels = complete_name),
                      fill=-log10(df_padj_points[[color_value]]),
@@ -1427,9 +1441,9 @@
                        "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
                        "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
           geom_bar(stat="identity", width = 0.8) +
-          scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(", color_text, ")"), oob=squish) +
-          xlab("-log10(P.value)") + ylab("") +
-          geom_vline(xintercept=0, size=0.1) +
+            scale_fill_gradientn(limits = c(0,3),colours=g_color, values=gvalues2, name=paste0("-log10(",color_text,")"), oob=squish) +
+            xlab(paste0("-log10(",color_text,")")) + ylab("") +
+            geom_vline(xintercept=0, size=0.1) +
           theme_minimal() +
           theme( axis.text.y = element_text(size = 11),
                 legend.title = element_text(size = 9))
@@ -1571,6 +1585,13 @@
                    legend.title = element_text(size = 9))
           
         } else {
+          # color tone, red or blue
+          if(rv$ora_color == "red"){
+            g_color <- gcols2
+          }else if(rv$ora_color == "blue"){
+            g_color <- gcols3
+          }
+          
           cluster_bubble <- df_padj_points %>%
             ggplot(aes(x=-log10(pval), y=factor(complete_name, levels = complete_name),
                        size = n,
@@ -1582,8 +1603,8 @@
                          "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
             geom_point(alpha = 0.5) +
             scale_size(range = c(zmin, zmax)) +
-            scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(", color_text,")"), oob=squish) +
-            xlab("-log10(P.value)") + ylab("") +
+            scale_fill_gradientn(limits = c(0,3),colours=g_color, values=gvalues2, name=paste0("-log10(",color_text,")"), oob=squish) +
+            xlab(paste0("-log10(",color_text,")")) + ylab("") +
             geom_vline(xintercept=0, size=0.1) +
             theme_minimal() +
             theme( axis.text.y = element_text(size = 11),
