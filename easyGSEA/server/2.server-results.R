@@ -291,7 +291,7 @@ output$plot_gear <- renderUI({
                    bsTooltip("p_bar",HTML(p_bs)
                              ,placement = "top"),
                    bsTooltip("q_bar",HTML(q_bs)
-                             ,placement = "top"),
+                             ,placement = "top")
                    
             ),
             column(
@@ -304,8 +304,7 @@ output$plot_gear <- renderUI({
                     selected = rv$bar_pq,
                     direction = "horizontal"
                 )
-                ,bsTooltip("col_bar",HTML(pq_bs)
-                           ,placement = "top")
+                ,bsTooltip("col_bar",HTML(pq_bs),placement = "top")
             ),
             column(
                 width = 5,
@@ -317,8 +316,7 @@ output$plot_gear <- renderUI({
                     selected = rv$bar_abb,
                     direction = "horizontal"
                 )
-                ,bsTooltip("y_bar",HTML(abb_bs)
-                           ,placement = "top")
+                ,bsTooltip("y_bar",HTML(abb_bs),placement = "top")
             ),
             column(
                 width = 3,
@@ -367,23 +365,25 @@ output$plot_gear <- renderUI({
                 width = 4,
                 radioGroupButtons(
                     inputId = "p_or_q_bubble",
-                    label = "Color by P or P.adj",
+                    label = HTML(paste0("Color by P or P.adj",add_help("col_bubble"))),
                     choiceNames = c("P", "P.adj"),
                     choiceValues = c("pval", "padj"),
                     selected = rv$bar_pq,
                     direction = "horizontal"
                 )
+                ,bsTooltip("col_bubble",HTML(pq_bs),placement = "top")
             ),
             column(
                 width = 5,
                 radioGroupButtons(
                     inputId = "abb_bubble",
-                    label = "Abbreviate y axis labels",
+                    label = HTML(paste0("Abbreviate y axis labels",add_help("y_bubble"))),
                     choiceNames = c("Yes", "No"),
                     choiceValues = c("y", "n"),
                     selected = rv$bar_abb,
                     direction = "horizontal"
                 )
+                ,bsTooltip("y_bubble",HTML(abb_bs),placement = "top")
             ),
             column(
                 width = 3,
@@ -391,8 +391,12 @@ output$plot_gear <- renderUI({
             ),
             column(
                 width = 12,
-                sliderInput("bubble_slider", "Bubble size range", min = 0.5, max = 30, step = 0.5,
+                sliderInput("bubble_slider", 
+                            HTML(paste0("Bubble size range",add_help("bubble_size_q"))), 
+                            min = 0.5, max = 30, step = 0.5,
                             value = c(2.5, 9.5))
+                ,bsTooltip("bubble_size_q",HTML(bubble_size_bs),placement = "top")
+                
             ),
             column(
                 width = 12,
@@ -419,12 +423,13 @@ output$plot_gear <- renderUI({
                 width = 12,
                 radioGroupButtons(
                     inputId = "p_or_q_volcano",
-                    label = "Color by P or P.adj",
+                    label = HTML(paste0("Color by P or P.adj",add_help("col_vol"))),
                     choiceNames = c("P", "P.adj"),
                     choiceValues = c("pval", "padj"),
                     selected = rv$volcano_pq,
                     direction = "horizontal"
                 )
+                ,bsTooltip("col_vol",HTML(pq_bs),placement = "top")
             ),
             column(
                 width = 12,
@@ -461,16 +466,19 @@ output$plot_gear <- renderUI({
             column(12,
                    splitLayout(
                        sliderTextInput("cutoff_word_p",
-                                       label = "Adjust P threshold:",
+                                       HTML(paste0("Adjust P threshold: ",add_help("p_word"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
                        ),
                        sliderTextInput("cutoff_word_q",
-                                       label = HTML(paste0("Adjust P.adj threshold:",add_help("wq_q"))),
+                                       label = HTML(paste0("Adjust P.adj threshold:",add_help("q_word"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
                        )
                    )
+                   ,bsTooltip("p_word",HTML(p_bs),placement = "top"),
+                   bsTooltip("q_word",HTML(q_bs),placement = "top")
+            
             ),
             column(12,
                    numericInput("n_word",
@@ -936,8 +944,7 @@ output$ui_bar_abb_n <- renderUI({
             label = HTML(paste0("String length",add_help("len_bar"))),
             value = rv$bar_abb_n,min=1
         )
-        ,bsTooltip("len_bar",HTML(len_bs)
-                   ,placement = "top")
+        ,bsTooltip("len_bar",HTML(len_bs),placement = "top")
     )
     
 })
@@ -976,30 +983,54 @@ output$bar_top <- renderUI({
 # UI bubble abbreviation length
 output$ui_bubble_abb_n <- renderUI({
     req(input$abb_bubble == "y")
-    numericInput(
-        inputId = "abb_bubble_n",
-        label = "String length",
-        value = rv$bar_abb_n,min=1
+    fluidRow(
+        column(
+            12,
+            numericInput(
+                inputId = "abb_bubble_n",
+                label = HTML(paste0("String length",add_help("len_bubble"))),
+                value = rv$bar_abb_n,min=1
+            )
+            ,bsTooltip("len_bubble",HTML(len_bs),placement = "top")
+        )
     )
+    
 })
 
 # UI bubble top # of GSs
 output$bubble_top <- renderUI({
     if(rv$run_mode == "gsea"){
-        splitLayout(
-            numericInput("n_up_bubble",
-                         "# of top up",
-                         rv$bar_up, min=1,
-                         width = "90%"),
-            numericInput("n_down_bubble",
-                         "# of top down",
-                         rv$bar_down, min=1,
-                         width = "90%")
+        fluidRow(
+            column(
+                12,
+                splitLayout(
+                    numericInput("n_up_bubble",
+                                 HTML(paste0("# of top up",add_help("bubbleup_q"))),
+                                 rv$bar_up, min=1,
+                                 width = "90%"),
+                    numericInput("n_down_bubble",
+                                 HTML(paste0("# of top down",add_help("bubbledown_q"))),
+                                 rv$bar_down, min=1,
+                                 width = "90%")
+                )
+                ,bsTooltip("bubbleup_q",HTML(up_bs),placement = "top")
+                ,bsTooltip("bubbledown_q",HTML(down_bs),placement = "top")
+            )
         )
+        
+
     }else{
-        numericInput("n_up_bubble",
-                     "# of top enriched gene sets to display",
-                     rv$bar_up, min=1)
+        fluidRow(
+            column(
+                12,
+                numericInput("n_up_bubble",
+                             HTML(paste0("# of top enriched gene sets to display",add_help("oratop_q_bubble"))),
+                             rv$bar_up, min=1)
+                ,bsTooltip("oratop_q_bubble",HTML(oratop_bs),placement = "top")
+            )
+        )
+        
+
     }
 })
 
@@ -1022,10 +1053,11 @@ output$ui_volcano_cutoff <- renderUI({
     column(
         width = 12,
         sliderTextInput("volcano_cutoff",
-                        label = "Adjust P or P.adj threshold:",
+                        label = HTML(paste0("Adjust P or P.adj threshold:",add_help("vol_pq_c_q"))),
                         choices= cutoff_slider,
                         selected=rv$volcano_cutoff, grid=T, force_edges=T
         )
+        ,bsTooltip("vol_pq_c_q",HTML(man_pq_c_bs),placement = "top")
     )
 })
 

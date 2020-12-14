@@ -112,6 +112,7 @@ num_space <- list(
 db_bs <- "Select or de-select the functional database(s) for your run"
 p_bs <- "Gene sets with a P-value &lt; the selected threshold will be kept. Drag the slider to change the threshold"
 q_bs <- "Gene sets with an adjusted P-value &lt; the selected threshold will be kept. Drag the slider to change the threshold"
+# pq bsToopTip annotation for manhattan or volcano
 man_pq_c_bs <- "Gene sets with a P or adjusted P-value &lt; the selected threshold will be highlighted with darker colors. Drag the slider to change the threshold"
 pq_bs <- "Choose P-value or adjusted P-value to color the plot"
 abb_bs <- "<b>No</b> will display the names of the gene sets in full. <b>Yes</b> will extract the first characters, as defined by <b>String length</b>, for display"
@@ -120,3 +121,4 @@ up_bs <- "Number of top upregulated gene set(s)"
 down_bs <- "Number of top downregulated gene set(s)"
 oratop_bs <- "Number of top enriched gene set(s)"
 manual_bs <- "Manually search, select and plot the gene set(s) of interest"
+bubble_size_bs <- "Drag the slider to adjust the maximum and minimum bubble sizes"

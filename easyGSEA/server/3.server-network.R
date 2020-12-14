@@ -401,12 +401,14 @@ output$ui_vis_gear <- renderUI({
     fluidRow(
         column(
             width = 6,
-            radioGroupButtons("p_or_q_vis","Color by",
+            radioGroupButtons("p_or_q_vis",
+                              label = HTML(paste0("Color by P or P.adj",add_help("col_vis"))),
                               choiceNames = c("P", "P.adj"),
                               choiceValues = c("pval", "padj"),
                               selected = rv$vis_pq,
                               direction = "horizontal",status="default"
             )
+            ,bsTooltip("col_vis",HTML(pq_bs),placement = "top")
         ),
         if(rv$run_mode == "glist"){
             column(
