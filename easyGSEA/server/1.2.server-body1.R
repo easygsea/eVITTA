@@ -97,7 +97,7 @@ output$feedback_filecontent_deg <- renderUI({
             width = 4,
             radioButtons(
                 inputId = "gene_column",
-                label = HTML(paste0("Gene column:",
+                label = HTML(paste0("Gene column: ",
                                     add_help("gene_colq"))),
                 choices = colnames(rv$data_head_o),
                 selected = match_colnames(col_gene_names,colnames(rv$data_head_o))
@@ -108,7 +108,7 @@ output$feedback_filecontent_deg <- renderUI({
             width = 4,
             radioButtons(
                 inputId = "logfc_column",
-                label = HTML(paste0("logFC column:",
+                label = HTML(paste0("logFC column: ",
                                    add_help("fc_colq"))),
                 choices = colnames(rv$data_head_o),
                 selected = match_colnames(col_fc_names,colnames(rv$data_head_o))
@@ -120,7 +120,7 @@ output$feedback_filecontent_deg <- renderUI({
             width = 4,
             radioButtons(
                 inputId = "p_column",
-                label = HTML(paste0("P value column:",
+                label = HTML(paste0("P value column: ",
                                     add_help("p_colq"))),
                 choices = colnames(rv$data_head_o),
                 selected = match_colnames(col_p_names,colnames(rv$data_head_o))
@@ -144,7 +144,7 @@ output$feedback_filecontent_rnk <- renderUI({
             width = 6,
             radioButtons(
                 inputId = "gene_column",
-                label = HTML(paste0("Gene column:",
+                label = HTML(paste0("Gene column: ",
                                     add_help("gene_colq"))),
                 choices = colnames(rv$data_head_o),
                 selected = match_colnames(col_gene_names,colnames(rv$data_head_o))
@@ -155,7 +155,7 @@ output$feedback_filecontent_rnk <- renderUI({
             width = 6,
             radioButtons(
                 inputId = "rank_column",
-                label = HTML(paste0("Rank column:",
+                label = HTML(paste0("Rank column: ",
                                     add_help("rank_colq"))),
                 choices = colnames(rv$data_head_o),
                 selected = match_colnames(col_rank_names,colnames(rv$data_head_o))
