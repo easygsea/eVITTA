@@ -61,7 +61,7 @@ output$ui_bodyResults <- renderUI({
                                 uiOutput("plot_gear"),
                                 size = "xs",
                                 icon = icon("gear", class = "opt"),
-                                up = TRUE,width = "450px"
+                                up = TRUE,width = "425px"
                             )
                         ),
                         # bsTooltip("setting_button",HTML("Click to adjust database selection, P & P.adj thresholds, and custom options for visualization")
@@ -74,7 +74,7 @@ output$ui_bodyResults <- renderUI({
                                     uiOutput("plot_gs_search"),
                                     size = "xs",
                                     icon = icon("search", class = "opt"),
-                                    up = TRUE,width = "450px"
+                                    up = TRUE,width = "425px"
                                 )
                             )
                         },
@@ -238,7 +238,7 @@ output$plot_gear <- renderUI({
             column(12,
                    radioGroupButtons(
                        inputId = "p_or_q_manhattan",
-                       label = HTML(paste0("Threshold by P or P.adj",add_help("man_pq_q"))),
+                       label = HTML(paste0("Threshold by P or P.adj ",add_help("man_pq_q"))),
                        choiceNames = c("P", "P.adj"),
                        choiceValues = c("pval", "padj"),
                        selected = rv$volcano_pq,
@@ -249,7 +249,7 @@ output$plot_gear <- renderUI({
             column(
                 width = 12,
                 sliderTextInput("cutoff_manhattan",
-                                label = HTML(paste0("Adjust P or P.adj threshold:",add_help("man_pq_c_q"))),
+                                label = HTML(paste0("Adjust P or P.adj threshold ",add_help("man_pq_c_q"))),
                                 choices= cutoff_slider,
                                 selected=rv$volcano_cutoff, grid=T, force_edges=T
                 )
@@ -278,12 +278,12 @@ output$plot_gear <- renderUI({
 
                    splitLayout(
                        sliderTextInput("cutoff_bar_p",
-                                       label = HTML(paste0("Adjust P threshold: ",add_help("p_bar"))),
+                                       label = HTML(paste0("Adjust P threshold ",add_help("p_bar"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
                        ),
                        sliderTextInput("cutoff_bar_q",
-                                       label = HTML(paste0("Adjust P.adj threshold:",add_help("q_bar"))),
+                                       label = HTML(paste0("Adjust P.adj threshold ",add_help("q_bar"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
                        )
@@ -298,7 +298,7 @@ output$plot_gear <- renderUI({
                 width = 4,
                 radioGroupButtons(
                     inputId = "p_or_q_bar",
-                    label = HTML(paste0("Color by P or P.adj",add_help("col_bar"))),
+                    label = HTML(paste0("Color by P or P.adj ",add_help("col_bar"))),
                     choiceNames = c("P", "P.adj"),
                     choiceValues = c("pval", "padj"),
                     selected = rv$bar_pq,
@@ -310,7 +310,7 @@ output$plot_gear <- renderUI({
                 width = 5,
                 radioGroupButtons(
                     inputId = "abb_bar",
-                    label = HTML(paste0("Abbreviate y axis labels",add_help("y_bar"))),
+                    label = HTML(paste0("Abbreviate y axis labels ",add_help("y_bar"))),
                     choiceNames = c("Yes", "No"),
                     choiceValues = c("y", "n"),
                     selected = rv$bar_abb,
@@ -346,12 +346,12 @@ output$plot_gear <- renderUI({
                    uiOutput("bubble_top"),
                    splitLayout(
                        sliderTextInput("cutoff_p_bubble",
-                                       label = HTML(paste0("Adjust P threshold:",add_help("p_bubble"))),
+                                       label = HTML(paste0("Adjust P threshold ",add_help("p_bubble"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
                        ),
                        sliderTextInput("cutoff_q_bubble",
-                                       label = HTML(paste0("Adjust P.adj threshold:",add_help("q_bubble"))),
+                                       label = HTML(paste0("Adjust P.adj threshold ",add_help("q_bubble"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
                        )
@@ -365,7 +365,7 @@ output$plot_gear <- renderUI({
                 width = 4,
                 radioGroupButtons(
                     inputId = "p_or_q_bubble",
-                    label = HTML(paste0("Color by P or P.adj",add_help("col_bubble"))),
+                    label = HTML(paste0("Color by P or P.adj ",add_help("col_bubble"))),
                     choiceNames = c("P", "P.adj"),
                     choiceValues = c("pval", "padj"),
                     selected = rv$bar_pq,
@@ -377,7 +377,7 @@ output$plot_gear <- renderUI({
                 width = 5,
                 radioGroupButtons(
                     inputId = "abb_bubble",
-                    label = HTML(paste0("Abbreviate y axis labels",add_help("y_bubble"))),
+                    label = HTML(paste0("Abbreviate y axis labels ",add_help("y_bubble"))),
                     choiceNames = c("Yes", "No"),
                     choiceValues = c("y", "n"),
                     selected = rv$bar_abb,
@@ -392,7 +392,7 @@ output$plot_gear <- renderUI({
             column(
                 width = 12,
                 sliderInput("bubble_slider", 
-                            HTML(paste0("Bubble size range",add_help("bubble_size_q"))), 
+                            HTML(paste0("Bubble size range ",add_help("bubble_size_q"))), 
                             min = 0.5, max = 30, step = 0.5,
                             value = c(2.5, 9.5))
                 ,bsTooltip("bubble_size_q",HTML(bubble_size_bs),placement = "top")
@@ -423,7 +423,7 @@ output$plot_gear <- renderUI({
                 width = 12,
                 radioGroupButtons(
                     inputId = "p_or_q_volcano",
-                    label = HTML(paste0("Color by P or P.adj",add_help("col_vol"))),
+                    label = HTML(paste0("Color by P or P.adj ",add_help("col_vol"))),
                     choiceNames = c("P", "P.adj"),
                     choiceValues = c("pval", "padj"),
                     selected = rv$volcano_pq,
@@ -435,12 +435,13 @@ output$plot_gear <- renderUI({
                 width = 12,
                 radioGroupButtons(
                     inputId = "volcano_mode",
-                    label = "Mode of plots",
+                    label = HTML(paste0("Mode of plots ",add_help("vol_mode_q"))),
                     choiceNames = c("Continuous", "Discrete","Static"),
                     choiceValues = c("plotly", "plotly2","ggplot"),
                     selected = rv$volcano_mode,
                     direction = "horizontal"
                 )
+                ,bsTooltip("vol_mode_q",HTML(vol_mode_bs),placement = "top")
             ),
             uiOutput("ui_volcano_cutoff"),
             column(
@@ -466,12 +467,12 @@ output$plot_gear <- renderUI({
             column(12,
                    splitLayout(
                        sliderTextInput("cutoff_word_p",
-                                       HTML(paste0("Adjust P threshold: ",add_help("p_word"))),
+                                       HTML(paste0("Adjust P threshold ",add_help("p_word"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
                        ),
                        sliderTextInput("cutoff_word_q",
-                                       label = HTML(paste0("Adjust P.adj threshold:",add_help("q_word"))),
+                                       HTML(paste0("Adjust P.adj threshold ",add_help("q_word"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
                        )
@@ -482,11 +483,11 @@ output$plot_gear <- renderUI({
             ),
             column(12,
                    numericInput("n_word",
-                                HTML(paste0("# of top words",add_help("wtop_q"))),
+                                HTML(paste0("# of top words ",add_help("wtop_q"))),
                                 rv$n_word, min=1,
                                 width = "50%"
                    )
-                   ,bsTooltip("wtop_q",HTML("The number of top frequently appearing words")
+                   ,bsTooltip("wtop_q",HTML("The number of top frequently appearing words ")
                               ,placement = "top")
             ),
             column(
@@ -502,13 +503,13 @@ output$plot_gs_search <- renderUI({
     fluidRow(
         column(
           12, align="center",
-          tags$h4(tags$strong(tags$em(paste0("Manual selection of gene set(s)"))))
+          tags$h4(tags$strong(tags$em(paste0("Manual selection of gene set(s) "))))
           
         ),
         column(
             12,
             pickerInput("gs_to_plot",
-                        HTML(paste0("Select gene set(s) to plot",add_help("manual_q"))),
+                        HTML(paste0("Select gene set(s) to plot ",add_help("manual_q"))),
                         choices = rv$gss,
                         selected = rv$gss_selected,
                         options = list(
@@ -941,7 +942,7 @@ output$ui_bar_abb_n <- renderUI({
     div(
         numericInput(
             inputId = "abb_bar_n",
-            label = HTML(paste0("String length",add_help("len_bar"))),
+            label = HTML(paste0("String length ",add_help("len_bar"))),
             value = rv$bar_abb_n,min=1
         )
         ,bsTooltip("len_bar",HTML(len_bs),placement = "top")
@@ -955,11 +956,11 @@ output$bar_top <- renderUI({
         div(
             splitLayout(
                 numericInput("n_up_bar",
-                             HTML(paste0("# of top up",add_help("barup_q"))),
+                             HTML(paste0("# of top up ",add_help("barup_q"))),
                              rv$bar_up, min=1,
                              width = "90%"),
                 numericInput("n_down_bar",
-                             HTML(paste0("# of top down",add_help("bardown_q"))),
+                             HTML(paste0("# of top down ",add_help("bardown_q"))),
                              rv$bar_down, min=1,
                              width = "90%")
             )
@@ -969,7 +970,7 @@ output$bar_top <- renderUI({
     }else{
         div(
             numericInput("n_up_bar",
-                         HTML(paste0("# of top enriched gene sets to display",add_help("oratop_q"))),
+                         HTML(paste0("# of top enriched gene sets to display ",add_help("oratop_q"))),
                          rv$bar_up, min=1,
             )
             ,bsTooltip("oratop_q",HTML(oratop_bs),placement = "top")
@@ -1005,11 +1006,11 @@ output$bubble_top <- renderUI({
                 12,
                 splitLayout(
                     numericInput("n_up_bubble",
-                                 HTML(paste0("# of top up",add_help("bubbleup_q"))),
+                                 HTML(paste0("# of top up ",add_help("bubbleup_q"))),
                                  rv$bar_up, min=1,
                                  width = "90%"),
                     numericInput("n_down_bubble",
-                                 HTML(paste0("# of top down",add_help("bubbledown_q"))),
+                                 HTML(paste0("# of top down ",add_help("bubbledown_q"))),
                                  rv$bar_down, min=1,
                                  width = "90%")
                 )
@@ -1024,7 +1025,7 @@ output$bubble_top <- renderUI({
             column(
                 12,
                 numericInput("n_up_bubble",
-                             HTML(paste0("# of top enriched gene sets to display",add_help("oratop_q_bubble"))),
+                             HTML(paste0("# of top enriched gene sets to display ",add_help("oratop_q_bubble"))),
                              rv$bar_up, min=1)
                 ,bsTooltip("oratop_q_bubble",HTML(oratop_bs),placement = "top")
             )
@@ -1053,7 +1054,7 @@ output$ui_volcano_cutoff <- renderUI({
     column(
         width = 12,
         sliderTextInput("volcano_cutoff",
-                        label = HTML(paste0("Adjust P or P.adj threshold:",add_help("vol_pq_c_q"))),
+                        label = HTML(paste0("Adjust P or P.adj threshold ",add_help("vol_pq_c_q"))),
                         choices= cutoff_slider,
                         selected=rv$volcano_cutoff, grid=T, force_edges=T
         )

@@ -349,17 +349,20 @@ output$ui_vis_gear <- renderUI({
         column(
             width = 6,
             sliderTextInput("cutoff_vis_p",
-                            label = "Adjust P threshold:",
+                            label = HTML(paste0("Adjust P threshold ",add_help("p_vis"))),
                             choices= cutoff_slider,
                             selected=rv$vis_p, grid=T, force_edges=T)
         ),
         column(
             width = 6,
             sliderTextInput("cutoff_vis_q",
-                            label = "Adjust P.adj threshold:",
+                            label = HTML(paste0("Adjust P.adj threshold ",add_help("q_vis"))),
                             choices= cutoff_slider,
                             selected=rv$vis_q, grid=T, force_edges=T)
         )
+        ,bsTooltip("p_vis",HTML(p_bs),placement = "top")
+        ,bsTooltip("q_vis",HTML(q_bs),placement = "top")
+        
     ),br(),
     fluidRow(
         column(
@@ -390,7 +393,7 @@ output$ui_vis_gear <- renderUI({
             width = 6,
             conditionalPanel(
                 condition = "input.vis_percent == 'combined'",
-                numericInput("combined_k",HTML(paste0("Combined constant, K",add_help("q_ck"))),
+                numericInput("combined_k",HTML(paste0("Combined constant, K ",add_help("q_ck"))),
                              rv$vis_k, min = 0, max = 1, step = 0.01
                 )
                 ,bsTooltip("q_ck","Combined coefficient merges the Jaccard and Overlap coefficients. K is the proportion of Jaccard coefficient."
@@ -402,7 +405,7 @@ output$ui_vis_gear <- renderUI({
         column(
             width = 6,
             radioGroupButtons("p_or_q_vis",
-                              label = HTML(paste0("Color by P or P.adj",add_help("col_vis"))),
+                              label = HTML(paste0("Color by P or P.adj ",add_help("col_vis"))),
                               choiceNames = c("P", "P.adj"),
                               choiceValues = c("pval", "padj"),
                               selected = rv$vis_pq,
