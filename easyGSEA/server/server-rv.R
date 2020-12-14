@@ -12,7 +12,7 @@
         cluster_bar_run = NULL,
         cutoff_point = 0.25,
         label_size = 4,
-        cluster_size = 3, # minimum cluster size that has label
+        cluster_size = 2, # minimum cluster size that has label
         max_cluster_size = 1,
         dendro_or_barplot = "dendro",
         abbreviate_check = FALSE,
@@ -25,6 +25,7 @@
         gmt_cs=list(), gmt_cs_paths=list(), # uploaded GMTs for custom analysis
         
         box_h_a = "594px", box_h = "574px", box_hp = 574, es_h = "245px",
+        dendro_hp = 660,
         
         run_btn_color="warning", run_btn_style="simple",
         dbtn_style="unite", dbtn_color="default", dbtn_size="xs",

@@ -1288,9 +1288,14 @@
                 axis.title.y = element_blank(),
                 panel.grid.major.y = element_blank()) +
           geom_hline(yintercept = 1 - cutoff_similarity, linetype="dashed", color = "grey") #scale_y_continuous(sec.axis = dup_axis())
+        
+        # adjust height accordingly
+        yh = nrow(df) * 18
+        if(yh<=rv$dendro_hp){yh=rv$dendro_hp}
+
         # convert it to interative plotly diagram
         ggplotly_dendro <- ggplot_dendro %>%
-          ggplotly(tooltip = c("name")) %>%
+          ggplotly(height = yh,tooltip = c("name")) %>%
           layout(showlegend = FALSE, margin = list(l = 0)) %>%
           style(textposition = "right") %>%
           event_register("plotly_click")
@@ -1454,11 +1459,8 @@
         
       plotly_barplot <- ggplotly(cluster_barplot,
                                  height = yh,
-                                 tooltip = "text",
-                                 source = "bar_plot_click"
-      ) %>%
-        # layout(legend=list(colorbar=list(side="right"))) %>%
-        event_register("plotly_click")
+                                 tooltip = "text"
+      )
       plotly_barplot
       }
     }
@@ -1603,7 +1605,7 @@
                          "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
             geom_point(alpha = 0.5) +
             scale_size(range = c(zmin, zmax)) +
-            scale_fill_gradientn(limits = c(0,3),colours=g_color, values=gvalues2, name=paste0("-log10(",color_text,")"), oob=squish) +
+            scale_color_gradientn(limits = c(0,3),colours=g_color, values=gvalues2, name=paste0("-log10(",color_text,")"), oob=squish) +
             xlab(paste0("-log10(",color_text,")")) + ylab("") +
             geom_vline(xintercept=0, size=0.1) +
             theme_minimal() +
@@ -1616,11 +1618,9 @@
         
         plotly_bubble <- ggplotly(cluster_bubble,
                                    height = yh,
-                                   tooltip = "text",
-                                   source = "bubble_plot_click"
-        ) %>%
-          # layout(legend=list(colorbar=list(side="right"))) %>%
-          event_register("plotly_click")
+                                   tooltip = "text"
+        )
+        
         plotly_bubble
       }
     }

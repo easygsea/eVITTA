@@ -124,7 +124,7 @@ output$ui_bodyNetwork <- renderUI({
                                 )
                             }
                         else{
-                                plotlyOutput("plot_dendrogram", width = "800px", height = '1320px')
+                                plotlyOutput("plot_dendrogram", width = "800px", height = paste0(rv$dendro_hp,"px"))
                         }
                     } else {
                         if(!is.null(rv$cluster_bar_run) && rv$cluster_bar_run == "fail"){
@@ -141,9 +141,9 @@ output$ui_bodyNetwork <- renderUI({
                             )
                         } else {
                             if(rv$dendro_or_barplot == "bar"){
-                               plotlyOutput("plot_cluster_bar", width = "900px", height = "660px")
+                               plotlyOutput("plot_cluster_bar", width = "900px", height = paste0(rv$dendro_hp,"px"))
                             } else if(rv$dendro_or_barplot == "bubble"){
-                                plotlyOutput("plot_cluster_bubble", width = "900px", height = "660px")
+                                plotlyOutput("plot_cluster_bubble", width = "900px", height = paste0(rv$dendro_hp,"px"))
                             } else if(rv$dendro_or_barplot == "table"){
                                 dataTableOutput("cluster_df")
                             }
@@ -425,7 +425,7 @@ output$ui_vis_gear <- renderUI({
                                       yes = icon("ok", 
                                                  lib = "glyphicon"))
                 )
-                ,bsTooltip("vis_col_q",HTML("Color the network in red or blue"),placement = "top")
+                ,bsTooltip("vis_col_q",HTML("Color the network and corresponding cluster bar/bubble plots in red or blue"),placement = "top")
             )
         },
         column(
