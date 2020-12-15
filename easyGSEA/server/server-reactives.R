@@ -146,5 +146,9 @@ gcols_div <- function(col1 = rv$up_color, col2 = rv$down_color){
   col_up <- g_color(col = col1)
   col_down <- g_color(col = col2)
   
-  unique(c(rev(col_down),col_up))
+  if(col1 == col2){
+    c(rev(col_down),col_up)[-6]
+  }else{
+    unique(c(rev(col_down),col_up))
+  }
 }
