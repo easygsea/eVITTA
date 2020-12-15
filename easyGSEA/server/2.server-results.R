@@ -9,17 +9,17 @@ output$ui_bodyResults <- renderUI({
         panel_null()
     }else{
         if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
-            if(rv$run_mode == "gsea"){
-                em_w <- "8em"
-            }else{
+            # if(rv$run_mode == "gsea"){
+            #     em_w <- "8em"
+            # }else{
                 em_w <- "11.5em"
-            }
+            # }
         }else if(rv$plot_type=="word"){
-            if(rv$run_mode == "gsea"){
-                em_w <- "4.5em"
-            }else{
+            # if(rv$run_mode == "gsea"){
+            #     em_w <- "4.5em"
+            # }else{
                 em_w <- "8em"
-            }
+            # }
         }else{
             em_w <- "4.5em"
         }
@@ -86,7 +86,7 @@ output$ui_bodyResults <- renderUI({
                         },
                         # bsTooltip("gs_search_button",HTML(paste0("Click to search, select, and visualize gene set(s) of interest with a ",rv$plot_type," plot"))
                         #           ,placement = "bottom"),
-                        if(rv$plot_type=="bar" || rv$plot_type=="bubble" || rv$plot_type=="word" && rv$run_mode == "glist"){
+                        if(rv$plot_type=="bar" || rv$plot_type=="bubble" || rv$plot_type=="word"){
                             if(rv$plot_type=="bar" || rv$plot_type=="bubble"){
                                 em_w_col <- "8em"
                             }else{
@@ -99,26 +99,10 @@ output$ui_bodyResults <- renderUI({
                                     fluidRow(
                                         column(
                                             12,
-                                            pickerInput("ora_color",
-                                                        HTML(paste0("Adjust color tone ",add_help("bar_col"))),
-                                                        c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
-                                                        rv$ora_color
-                                                        ,choicesOpt = list(
-                                                            content = c("<div style='color: #a50026;'>Red</div>"
-                                                                        ,"<div style='color: #f8766d;'>Salmon</div>"
-                                                                        ,"<div style='color: #08519c;'>Blue</div>"
-                                                                        ,"<div style='color: #0098e6;'>Cyan</div>"
-                                                                        ,"<div style='color: #e69500;'>Orange</div>"
-                                                                        ,"<div style='color: #688800;'>Green</div>"
-                                                                        ,"<div style='color: #bc63ff;'>Purple</div>"
-                                                                        ,"<div style='color: #696969;'>Grey</div>"
-                                                            ))
-                                                              # ,justified = TRUE,
-                                                              # checkIcon = list(
-                                                              #     yes = icon("ok", 
-                                                              #                lib = "glyphicon"))
-                                            )
+                                            color_tone_div()
                                             ,bsTooltip("bar_col",HTML(col_tone_bs),placement = "top")
+                                            ,bsTooltip("bar_col_up",HTML(paste0(col_tone_bs," for upregulation")),placement = "top")
+                                            ,bsTooltip("bar_col_down",HTML(paste0(col_tone_bs," for downregulation")),placement = "top")
                                         )
                                     )
                                     ,
@@ -182,6 +166,15 @@ observeEvent(input$plot_type,{
 # change color tone in ORA's bar/bubble
 observeEvent(input$ora_color,{
     rv$ora_color <- input$ora_color
+})
+
+# change color tone in GSEA's bar/bubble
+observeEvent(input$up_color,{
+    rv$up_color <- input$up_color
+})
+
+observeEvent(input$down_color,{
+    rv$down_color <- input$down_color
 })
 
 # feedbacks on no significant enrichment

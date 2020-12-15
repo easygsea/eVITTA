@@ -187,7 +187,7 @@
                            
                          ))) +
               geom_bar(stat="identity", width = 0.8) +
-              scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
+              scale_fill_gradientn(limits = c(-3,3),colours=gcols_div(), values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
               xlab("Enrichment Score (ES)") + ylab("") +
               geom_vline(xintercept=0, size=0.1) +
               theme_minimal() +
@@ -261,7 +261,7 @@
                                ))) +
                     geom_point(alpha=0.5) +
                     scale_size(range = c(zmin, zmax)) +
-                    scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
+                    scale_color_gradientn(limits = c(-3,3),colours=gcols_div(), values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
                     xlab("Enrichment Score (ES)") + ylab("") +
                     geom_vline(xintercept=0, size=0.1) +
                     theme_minimal() +
@@ -312,7 +312,7 @@
                            ))) +
                 geom_point(alpha=0.5) +
                 # geom_text_repel(aes(x = ES, y =-log10(df[[pq]]), label = ifelse(pval<cutoff_p && padj<cutoff_q, pathway,""))) +
-                scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
+                scale_color_gradientn(limits = c(-3,3),colours=gcols_div(), values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
                 xlab("Enrichment Score (ES)") + ylab(paste0("-log10(",pq,")")) +
                 geom_vline(xintercept=0, size=0.1) +
                 theme_minimal() +
@@ -619,7 +619,7 @@
               labs(x = NULL, y = NULL, title = NULL) +
               coord_flip() +
               scale_x_reordered() +
-              scale_fill_manual(values = c("#00BFC4", "#F8766D")) +
+              scale_fill_manual(values = word_color_div()) +
               theme(
                 plot.title = element_text(size = 10,face = "bold",vjust=0) #hjust = 0.5
               )
@@ -1434,7 +1434,7 @@
                            "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
                            "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
             geom_bar(stat="identity", width = 0.8) +
-            scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(", color_text, ")*sign(ES)"), oob=squish) +
+            scale_fill_gradientn(limits = c(-3,3),colours=gcols_div(), values=gvalues, name=paste0("-log10(", color_text, ")*sign(ES)"), oob=squish) +
             xlab("Enrichment Score (ES)") + ylab("") +
             geom_vline(xintercept=0, size=0.1) +
             theme_minimal() +
@@ -1587,7 +1587,7 @@
                          "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
             geom_point(alpha = 0.5) +
             scale_size(range = c(zmin, zmax)) +
-            scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(", color_text,")*sign(ES)"), oob=squish) +
+            scale_color_gradientn(limits = c(-3,3),colours=gcols_div(), values=gvalues, name=paste0("-log10(", color_text,")*sign(ES)"), oob=squish) +
             xlab("Enrichment Score (ES)") + ylab("") +
             geom_vline(xintercept=0, size=0.1) +
             theme_minimal() +

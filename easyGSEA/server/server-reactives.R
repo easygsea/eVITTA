@@ -23,6 +23,71 @@ dbs <- reactive({
   }
 })
 
+# display colors for selection
+# ------ color tones for selection --------
+color_tone_div <- reactive({
+  if(rv$run_mode == "glist"){
+    pickerInput("ora_color",
+                HTML(paste0("Adjust color tone ",add_help("bar_col"))),
+                c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
+                rv$ora_color
+                ,choicesOpt = list(
+                  content = c("<div style='color: #a50026;'>Red</div>"
+                              ,"<div style='color: #f8766d;'>Salmon</div>"
+                              ,"<div style='color: #08519c;'>Blue</div>"
+                              ,"<div style='color: #0098e6;'>Cyan</div>"
+                              ,"<div style='color: #e69500;'>Orange</div>"
+                              ,"<div style='color: #688800;'>Green</div>"
+                              ,"<div style='color: #bc63ff;'>Purple</div>"
+                              ,"<div style='color: #696969;'>Grey</div>"
+                  ))
+                # ,justified = TRUE,
+                # checkIcon = list(
+                #     yes = icon("ok", 
+                #                lib = "glyphicon"))
+    )
+  }else{
+    fluidRow(
+      column(
+        12,
+        pickerInput("up_color",
+                    HTML(paste0("Color tone for upregulation ",add_help("bar_col_up"))),
+                    c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
+                    rv$up_color
+                    ,choicesOpt = list(
+                      content = c("<div style='color: #a50026;'>Red</div>"
+                                  ,"<div style='color: #f8766d;'>Salmon</div>"
+                                  ,"<div style='color: #08519c;'>Blue</div>"
+                                  ,"<div style='color: #0098e6;'>Cyan</div>"
+                                  ,"<div style='color: #e69500;'>Orange</div>"
+                                  ,"<div style='color: #688800;'>Green</div>"
+                                  ,"<div style='color: #bc63ff;'>Purple</div>"
+                                  ,"<div style='color: #696969;'>Grey</div>"
+                      ))
+        )
+      )
+      ,column(
+        12,
+        pickerInput("down_color",
+                    HTML(paste0("Color tone for downregulation ",add_help("bar_col_down"))),
+                    c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
+                    rv$down_color
+                    ,choicesOpt = list(
+                      content = c("<div style='color: #a50026;'>Red</div>"
+                                  ,"<div style='color: #f8766d;'>Salmon</div>"
+                                  ,"<div style='color: #08519c;'>Blue</div>"
+                                  ,"<div style='color: #0098e6;'>Cyan</div>"
+                                  ,"<div style='color: #e69500;'>Orange</div>"
+                                  ,"<div style='color: #688800;'>Green</div>"
+                                  ,"<div style='color: #bc63ff;'>Purple</div>"
+                                  ,"<div style='color: #696969;'>Grey</div>"
+                      ))
+        )
+      )
+    )
+  }
+})
+
 # ------ color tones for ORA run --------
 g_color <- function(col = rv$ora_color){
   # color tone, red or blue
@@ -45,29 +110,41 @@ g_color <- function(col = rv$ora_color){
   }
 }
 
+word_color_basic <- function(col){
+  if(col == "red"){
+    "#a50026"
+  }else if(col == "blue"){
+    "#08519c"
+  }else if(col == "grey"){
+    "#696969"
+  }else if(col == "purple"){
+    "#C77CFF"
+  }else if(col == "orange"){
+    "#ffa500"
+  }else if(col == "green"){
+    "#7CAE00"
+  }else if(col == "cyan"){
+    "#00A9FF"
+  }else if(col == "salmon"){
+    "#f8766d"
+  }
+  
+}
+
 word_color <- reactive({
   req(rv$ora_color)
   
-  if(rv$ora_color == "red"){
-    word_color <- "#a50026"
-  }else if(rv$ora_color == "blue"){
-    word_color <- "#08519c"
-  }else if(rv$ora_color == "grey"){
-    word_color <- "#C0C0C0"
-  }else if(rv$ora_color == "purple"){
-    word_color <- "#C77CFF"
-  }else if(rv$ora_color == "orange"){
-    word_color <- "#CD9600"
-  }else if(rv$ora_color == "green"){
-    word_color <- "#7CAE00"
-  }else if(rv$ora_color == "cyan"){
-    word_color <- "#00A9FF"
-  }else if(rv$ora_color == "salmon"){
-    word_color <- "#f8766d"
-  }
+  word_color_basic(rv$ora_color)
 })
 
+word_color_div <- function(col1 = rv$up_color, col2 = rv$down_color){
+  c(word_color_basic(col2),word_color_basic(col1))
+}
+
 # ------ color tones combination for GSEA run ---------
-gcols_div <- function(col1 = rv$gsea_up, col2 = rv$gsea_down){
-  col_up <- g_color(col1)
+gcols_div <- function(col1 = rv$up_color, col2 = rv$down_color){
+  col_up <- g_color(col = col1)
+  col_down <- g_color(col = col2)
+  
+  unique(c(rev(col_down),col_up))
 }
