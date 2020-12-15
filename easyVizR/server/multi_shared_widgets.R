@@ -289,12 +289,12 @@ observe({
                                   fluidRow(
                                     column(6, align = "left", 
                                            numericInput(inputId = paste0("nic_p_",i), 
-                                                        "P <=:", value = rv[[paste0("nic_p_",i)]], min = 0, max = 1, step=0.001, width="100px")),
+                                                        p_filter_text, value = rv[[paste0("nic_p_",i)]], min = 0, max = 1, step=0.001, width="100px")),
                                     column(6, align = "left",
                                            numericInput(paste0("nic_Stat_",i), 
                                                         stat_replace1(
                                                           HTML(paste0(
-                                                            "<b>|Stat| >=</b>:",
+                                                            stat_filter_text,
                                                             add_help(paste0("n_stat_help",i), style="margin-left: 5px;"))
                                                           )
                                                           , rv$nx_n[[i]]),
@@ -306,10 +306,10 @@ observe({
                                   fluidRow(
                                     column(6, align = "left",
                                            numericInput(inputId = paste0("nic_q_",i), 
-                                                        "FDR <=:", value = rv[[paste0("nic_q_",i)]], min = 0, max = 1, step=0.001, width="100px")),
+                                                        q_filter_text, value = rv[[paste0("nic_q_",i)]], min = 0, max = 1, step=0.001, width="100px")),
                                     column(6, align = "left",
                                            radioGroupButtons(inputId = paste0("nic_sign_",i), 
-                                                             label = "Direction:",
+                                                             label = sign_filter_text,
                                                              choices=c("All"="All", "+"="Positive", "-"="Negative"),
                                                              selected=rv[[paste0("nic_sign_",i)]],size="s",direction = "horizontal"),
                                     ),

@@ -163,9 +163,9 @@ output$filters_summary <- renderUI({
     adddesc <- paste(name, ": ",
                      nterms, " ",
                      cur_sign, " entries with ",
-                     "p <= ",cur_p, ", ", 
-                     "FDR <= ", cur_q, ", ", 
-                     "|Stat| >= ", cur_Stat,
+                     "p < ",cur_p, ", ", 
+                     "FDR < ", cur_q, ", ", 
+                     "|Stat| > ", cur_Stat,
                      sep="")
     desc <- c(desc, adddesc)
   }
@@ -266,6 +266,7 @@ draw_upsetR_with_ins <- function(df, criteria, show_ins=T, color="red",
                                  lb_limit=20
                                  
 ){
+  req(is.null(show_ins)==F)
   if(show_ins==T){
     
     # ---------------- apply linebreaks

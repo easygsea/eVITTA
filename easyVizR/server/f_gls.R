@@ -8,6 +8,8 @@ min_shared_cols <- 3 # this excludes the name column
 
 
 
+
+
 ####---------------------- SELECT DATASETS ---------------------------####
 
 # select data
@@ -398,12 +400,12 @@ output$f_filtering_ui <- renderUI({
                               fluidRow(
                                 column(6, align = "left", 
                                        numericInput(inputId = paste0("f_p_",i), 
-                                                    "P <=:", value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
+                                                    p_filter_text, value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
                                 column(6, align = "left",
                                        numericInput(paste0("f_Stat_",i), 
                                                     stat_replace1(
                                                       HTML(paste0(
-                                                        "<b>|Stat| >=</b>:",
+                                                        stat_filter_text,
                                                         add_help(paste0("f_stat_help",i), style="margin-left: 5px;"))
                                                       )
                                                       , rv$nx_n[[i]]),
@@ -416,10 +418,10 @@ output$f_filtering_ui <- renderUI({
                               fluidRow(
                                 column(6, align = "left",
                                        numericInput(inputId = paste0("f_q_",i), 
-                                                    "FDR <=:", value = 1, min = 0, max = 1, step=0.001, width="100px")),
+                                                    q_filter_text, value = 1, min = 0, max = 1, step=0.001, width="100px")),
                                 column(6, align = "left",
                                        radioGroupButtons(inputId = paste0("f_sign_",i), 
-                                                         label = "Direction:",
+                                                         label = sign_filter_text,
                                                          choices=c("All"="All", "+"="Positive", "-"="Negative"),
                                                          selected="All",size="s",direction = "horizontal"),
                                 ),
