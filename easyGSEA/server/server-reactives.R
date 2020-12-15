@@ -74,13 +74,13 @@ color_tone_div <- reactive({
   }
 })
 
-# ------ color tones for ORA run --------
+# ------ color tones for ORA run: Results tab --------
 g_color <- function(col = rv$ora_color){
   # color tone, red or blue
   if(col == "red"){
-    gcols2
+    gcols_red
   }else if(col == "blue"){
-    gcols3
+    gcols_blue
   }else if(col == "grey"){
     gcols_grey
   }else if(col == "purple"){

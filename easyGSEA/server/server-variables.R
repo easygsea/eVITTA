@@ -49,20 +49,28 @@ gcols = c(rgb(8,81,156,maxColorValue = 255), # -0.001 = cornflower,
 gvalues = rescale(c(-3,-2,log10(0.05),-1,log10(0.25),0,-log10(0.25),1,-log10(0.05),2,3))
 
 # color bar for ORA output visualizations (red only) - ggolot version
-gcols2 = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+gcols_red = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
            rgb(243,0,56,maxColorValue = 255), # 0.25 = light yellow 254,224,144
            rgb(224,0,52,maxColorValue = 255), # 0.1 = yellow 253,174,97
            rgb(204,0,47,maxColorValue = 255), # 0.05 = orange 244,109,67
            rgb(185,0,43,maxColorValue = 255), # 0.01 = red 215,48,39
            rgb(165,0,38,maxColorValue = 255)) # 0.001 = dark red
 
+gcols_red_vis <- c(
+  "rgba(254,224,144)","rgba(253,174,97)","rgba(244,109,67)","rgba(215,48,39)","rgba(165,0,38)"
+)
+
 # color bar for ORA output visualizations (blue only) - ggolot version
-gcols3 = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+gcols_blue = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
            rgb(12,120,231,maxColorValue = 255),
            rgb(11,110,212,maxColorValue = 255),
            rgb(10,100,193,maxColorValue = 255),
            rgb(9,91,175,maxColorValue = 255),
            rgb(8,81,156,maxColorValue = 255)) # 0.001 = cornflower
+
+gcols_blue_vis <- c(
+  "rgba(198,219,239)","rgba(158,202,225)","rgba(107,174,214)","rgba(49,130,189)","rgba(8,81,156)"
+)
 
 # color bar for ORA output visualizations (salmon only) - ggolot version
 gcols_salmon = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
@@ -72,13 +80,21 @@ gcols_salmon = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
                rgb(248,118,109,maxColorValue = 255), # 0.005 = salmon
                rgb(247,95,85,maxColorValue = 255)) # 0.001
 
+gcols_salmon_vis <- c(
+  "rgba(252,187,182)","rgba(250,164,158)","rgba(249,141,133)","rgba(248,118,109)","rgba(247,95,85)"
+)
+
 # color bar for ORA output visualizations (cyan only) - ggolot version
-gcols_cyan = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+gcols_cyan <- c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
                rgb(77,195,255,maxColorValue = 255),
                rgb(51,186,255,maxColorValue = 255),
                rgb(26,178,255,maxColorValue = 255),
                rgb(0,169,255,maxColorValue = 255), # 0.005 = cyan
                rgb(0,152,230,maxColorValue = 255)) # 0.001
+
+gcols_cyan_vis <- c(
+  "rgba(77,195,255)","rgba(51,186,255)","rgba(26,178,255)","rgba(0,169,255)","rgba(0,152,230)"
+)
 
 # color bar for ORA output visualizations (orange only) - ggolot version
 gcols_orange = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
@@ -88,6 +104,10 @@ gcols_orange = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
                  rgb(255,165,0,maxColorValue = 255), # 0.005 = orange
                  rgb(230,149,0,maxColorValue = 255)) # 0.001 = 
 
+gcols_orange_vis <- c(
+  "rgba(255,192,77)","rgba(255,183,51)","rgba(255,174,26)","rgba(255,165,0)","rgba(230,149,0)" #
+)
+
 # color bar for ORA output visualizations (green only) - ggolot version
 gcols_green = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
                 rgb(183,238,0,maxColorValue = 255), # 0.25 = 
@@ -95,6 +115,10 @@ gcols_green = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
                 rgb(144,187,0,maxColorValue = 255), # 0.01 = 
                 rgb(124,161,0,maxColorValue = 255), # 0.005 = 
                 rgb(104,136,0,maxColorValue = 255)) # 0.001 = green
+
+gcols_green_vis <- c(
+  "rgba(255,192,77)","rgba(183,238,0)","rgba(144,187,0)","rgba(124,161,0)","rgba(104,136,0)"
+)
 
 # color bar for ORA output visualizations (purple only) - ggolot version
 gcols_purple = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
@@ -104,6 +128,9 @@ gcols_purple = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
                  rgb(199,124,255,maxColorValue = 255), # 0.005 = orchid
                  rgb(188,99,255,maxColorValue = 255)) # 0.001 = mediumorchid
 
+gcols_purple_vis <- c(
+  "rgba(232,201,255)","rgba(221,175,255)","rgba(210,150,255)","rgba(199,124,255)","rgba(188,99,255)"
+)
 
 # color bar for ORA output visualizations (grey only) - ggolot version
 gcols_grey = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
@@ -113,7 +140,9 @@ gcols_grey = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
                rgb(128,128,128,maxColorValue = 255), # 0.005 = grey
                rgb(105,105,105,maxColorValue = 255)) # 0.001 = dimgrey
 
-
+gcols_grey_vis <- c(
+  "rgba(220,220,220)","rgba(192,192,192)","rgba(169,169,169)","rgba(128,128,128)","rgba(105,105,105)"
+)
 
 # value scales for ORA output visualizations (red only) - ggolot version
 gvalues2 = rescale(c(0,-log10(0.25),1,-log10(0.05),2,3))

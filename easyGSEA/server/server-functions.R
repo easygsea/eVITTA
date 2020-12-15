@@ -974,72 +974,57 @@
             print(Sys.time())
             # nodes matrix
             # colors
-            get_colors = function(pq="padj"){
-                # colors = vector(mode="character", length=length(a))
-                colors = rep("white",nrow(df))
-                if(rv$run_mode == "gsea"){
-                    colors[df[[pq]]<0.25 & df$ES>0] = "rgba(254,224,144)" #lightyellow
-                    colors[df[[pq]]<0.05 & df$ES>0] = "rgba(253,174,97)" #yellow
-                    colors[df[[pq]]<0.01 & df$ES>0] = "rgba(244,109,67)" #orange
-                    colors[df[[pq]]<0.005 & df$ES>0] = "rgba(215,48,39)" #red
-                    colors[df[[pq]]<0.001 & df$ES>0] = "rgba(165,0,38)" #dark red
-                    
-                    colors[df[[pq]]<0.25 & df$ES<0] = "rgba(198,219,239)" #pale blue
-                    colors[df[[pq]]<0.05 & df$ES<0] = "rgba(158,202,225)" #light blue
-                    colors[df[[pq]]<0.01 & df$ES<0] = "rgba(107,174,214)" #blue
-                    colors[df[[pq]]<0.005 & df$ES<0] = "rgba(49,130,189)" #darker blue
-                    colors[df[[pq]]<0.001 & df$ES<0] = "rgba(8,81,156)" #cornflower
-                }else if(rv$run_mode == "glist"){
+            get_colors <- function(pq=rv$vis_pq){
+              # colors = vector(mode="character", length=length(a))
+              colors = rep("white",nrow(df))
+              
+              
+              if(rv$run_mode == "gsea"){
+                colors[df[[pq]]<0.25 & df$ES>0] = "rgba(254,224,144)" #lightyellow
+                colors[df[[pq]]<0.05 & df$ES>0] = "rgba(253,174,97)" #yellow
+                colors[df[[pq]]<0.01 & df$ES>0] = "rgba(244,109,67)" #orange
+                colors[df[[pq]]<0.005 & df$ES>0] = "rgba(215,48,39)" #red
+                colors[df[[pq]]<0.001 & df$ES>0] = "rgba(165,0,38)" #dark red
+                
+                colors[df[[pq]]<0.25 & df$ES<0] = "rgba(198,219,239)" #pale blue
+                colors[df[[pq]]<0.05 & df$ES<0] = "rgba(158,202,225)" #light blue
+                colors[df[[pq]]<0.01 & df$ES<0] = "rgba(107,174,214)" #blue
+                colors[df[[pq]]<0.005 & df$ES<0] = "rgba(49,130,189)" #darker blue
+                colors[df[[pq]]<0.001 & df$ES<0] = "rgba(8,81,156)" #cornflower
+              }else if(rv$run_mode == "glist"){
+                get_col_gradient <- function(){
                   if(rv$ora_color == "red"){
-                    colors[df[[pq]]<0.25] = "rgba(254,224,144)" #lightyellow
-                    colors[df[[pq]]<0.05] = "rgba(253,174,97)" #yellow
-                    colors[df[[pq]]<0.01] = "rgba(244,109,67)" #orange
-                    colors[df[[pq]]<0.005] = "rgba(215,48,39)" #red
-                    colors[df[[pq]]<0.001] = "rgba(165,0,38)" #dark red
+                    gcols_red_vis
                   }else if(rv$ora_color == "blue"){
-                    colors[df[[pq]]<0.25] = "rgba(198,219,239)" #pale blue
-                    colors[df[[pq]]<0.05] = "rgba(158,202,225)" #light blue
-                    colors[df[[pq]]<0.01] = "rgba(107,174,214)" #blue
-                    colors[df[[pq]]<0.005] = "rgba(49,130,189)" #darker blue
-                    colors[df[[pq]]<0.001] = "rgba(8,81,156)" #cornflower
-                  }else if(rv$ora_color == "grey"){
-                    colors[df[[pq]]<0.25] = "rgba(220,220,220)" #gainsboro
-                    colors[df[[pq]]<0.05] = "rgba(192,192,192)" #silver
-                    colors[df[[pq]]<0.01] = "rgba(169,169,169)" #darkgrey
-                    colors[df[[pq]]<0.005] = "rgba(128,128,128)" #grey
-                    colors[df[[pq]]<0.001] = "rgba(105,105,105)" #dimgrey
-                  }else if(rv$ora_color == "purple"){
-                    colors[df[[pq]]<0.25] = "rgba(232,201,255)" #lavender
-                    colors[df[[pq]]<0.05] = "rgba(221,175,255)" #thistle
-                    colors[df[[pq]]<0.01] = "rgba(210,150,255)" #plum
-                    colors[df[[pq]]<0.005] = "rgba(199,124,255)" #orchid
-                    colors[df[[pq]]<0.001] = "rgba(188,99,255)" #mediumorchid
-                  }else if(rv$ora_color == "orange"){
-                    colors[df[[pq]]<0.25] = "rgba(255,192,77)" #
-                    colors[df[[pq]]<0.05] = "rgba(255,183,51)" #
-                    colors[df[[pq]]<0.01] = "rgba(255,174,26)" #
-                    colors[df[[pq]]<0.005] = "rgba(255,165,0)" #orange
-                    colors[df[[pq]]<0.001] = "rgba(230,149,0)" #
-                  }else if(rv$ora_color == "green"){
-                    colors[df[[pq]]<0.25] = "rgba(255,192,77)" #
-                    colors[df[[pq]]<0.05] = "rgba(183,238,0)" #
-                    colors[df[[pq]]<0.01] = "rgba(144,187,0)" #
-                    colors[df[[pq]]<0.005] = "rgba(124,161,0)" #
-                    colors[df[[pq]]<0.001] = "rgba(104,136,0)" #green
+                    gcols_blue_vis
+                  }else if(rv$ora_color == "salmon"){
+                    gcols_salmon_vis
                   }else if(rv$ora_color == "cyan"){
-                    colors[df[[pq]]<0.25] = "rgba(77,195,255)" #
-                    colors[df[[pq]]<0.05] = "rgba(51,186,255)" #
-                    colors[df[[pq]]<0.01] = "rgba(26,178,255)" #
-                    colors[df[[pq]]<0.005] = "rgba(0,169,255)" # cyan
-                    colors[df[[pq]]<0.001] = "rgba(0,152,230)" #
+                    gcols_cyan_vis
+                  }else if(rv$ora_color == "orange"){
+                    gcols_orange_vis
+                  }else if(rv$ora_color == "green"){
+                    gcols_green_vis
+                  }else if(rv$ora_color == "purple"){
+                    gcols_purple_vis
+                  }else if(rv$ora_color == "grey"){
+                    gcols_grey_vis
                   }
-                    
+                  
                 }
                 
+                col_gradient <- get_col_gradient()
                 
-                return(colors)
+                colors[df[[pq]]<0.25] = col_gradient[1] #lightest
+                colors[df[[pq]]<0.05] = col_gradient[2] #
+                colors[df[[pq]]<0.01] = col_gradient[3] #
+                colors[df[[pq]]<0.005] = col_gradient[4] #
+                colors[df[[pq]]<0.001] = col_gradient[5] #darkest
+              }
+              return(colors)
             }
-            colors = get_colors((pq=rv$vis_pq))
+            
+            colors = get_colors()
             
             # shapes
             shapes = rep("dot",nrow(df))
