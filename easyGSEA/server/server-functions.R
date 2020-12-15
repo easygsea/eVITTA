@@ -520,22 +520,24 @@
             text = unlist(text)
             
             if(rv$ora_color == "red"){
-              g_color <- "#F8766D"
+              word_color <- "#F8766D"
             }else if(rv$ora_color == "blue"){
-              g_color <- "#00BFC4"
+              word_color <- "#08519c"
             }else if(rv$ora_color == "grey"){
-              g_color <- "#C0C0C0"
+              word_color <- "#C0C0C0"
             }else if(rv$ora_color == "purple"){
-              g_color <- "#C77CFF"
+              word_color <- "#C77CFF"
             }else if(rv$ora_color == "orange"){
-              g_color <- "#CD9600"
+              word_color <- "#CD9600"
             }else if(rv$ora_color == "green"){
-              g_color <- "#7CAE00"
+              word_color <- "#7CAE00"
+            }else if(rv$ora_color == "cyan"){
+              word_color <- "#00A9FF"
             }
             
             p <- tidy_data %>%
               ggplot(aes(word, n, text=text)) +
-              geom_col(show.legend = FALSE, fill = g_color) +
+              geom_col(show.legend = FALSE, fill = word_color) +
               labs(x = NULL, y = NULL, title = NULL) +
               coord_flip() +
               scale_x_reordered() +
@@ -670,24 +672,6 @@
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
-              
-              # color tone, red or blue
-              if(rv$ora_color == "red"){
-                g_color <- gcols2
-              }else if(rv$ora_color == "blue"){
-                g_color <- gcols3
-              }else if(rv$ora_color == "grey"){
-                g_color <- gcols_grey
-              }else if(rv$ora_color == "purple"){
-                g_color <- gcols_purple
-              }else if(rv$ora_color == "orange"){
-                g_color <- gcols_orange
-              }else if(rv$ora_color == "green"){
-                g_color <- gcols_green
-              }else if(rv$ora_color == "cyan"){
-                g_color <- gcols_cyan
-              }
-              
                 
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
@@ -712,7 +696,7 @@
                                    
                                ))) +
                     geom_bar(stat="identity", width = 0.8) +
-                    scale_fill_gradientn(limits = c(0,3),colours=g_color, values=gvalues2, name=paste0("-log10(",pq,")"), oob=squish) +
+                    scale_fill_gradientn(limits = c(0,3),colours=g_color(), values=gvalues2, name=paste0("-log10(",pq,")"), oob=squish) +
                     xlab(paste0("-log10(",pq,")")) + ylab("") +
                     xlim(0,max(-log10(df[[pq]]))+0.5) +
                     theme_bw() +
@@ -745,23 +729,7 @@
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
-              # color tone, red or blue
-              if(rv$ora_color == "red"){
-                g_color <- gcols2
-              }else if(rv$ora_color == "blue"){
-                g_color <- gcols3
-              }else if(rv$ora_color == "grey"){
-                g_color <- gcols_grey
-              }else if(rv$ora_color == "purple"){
-                g_color <- gcols_purple
-              }else if(rv$ora_color == "orange"){
-                g_color <- gcols_orange
-              }else if(rv$ora_color == "green"){
-                g_color <- gcols_green
-              }else if(rv$ora_color == "cyan"){
-                g_color <- gcols_cyan
-              }
-
+              
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
                 
@@ -793,7 +761,7 @@
                                ))) +
                     geom_point(alpha=0.5) +
                     scale_size(range = c(zmin, zmax)) +
-                    scale_color_gradientn(limits = c(0,3),colours=g_color, values=gvalues2, name=paste0("-log10(",pq,")"), oob=squish) +
+                    scale_color_gradientn(limits = c(0,3),colours=g_color(), values=gvalues2, name=paste0("-log10(",pq,")"), oob=squish) +
                     xlab(paste0("-log10(",pq,")")) + ylab("") +
                     xlim(0,max(-log10(df[[pq]]))+0.5) +
                     # geom_vline(xintercept=0, size=0.1) +
@@ -1490,22 +1458,7 @@
                    legend.title = element_text(size = 9))
           
         } else {
-          # color tone, red or blue
-          if(rv$ora_color == "red"){
-            g_color <- gcols2
-          }else if(rv$ora_color == "blue"){
-            g_color <- gcols3
-          }else if(rv$ora_color == "grey"){
-            g_color <- gcols_grey
-          }else if(rv$ora_color == "purple"){
-            g_color <- gcols_purple
-          }else if(rv$ora_color == "orange"){
-            g_color <- gcols_orange
-          }else if(rv$ora_color == "green"){
-            g_color <- gcols_green
-          }else if(rv$ora_color == "cyan"){
-            g_color <- gcols_cyan
-          }
+          
 
           cluster_barplot <- df_padj_points %>%
             ggplot(aes(x=-log10(pval), y=factor(complete_name, levels = complete_name),
@@ -1517,7 +1470,7 @@
                        "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
                        "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
           geom_bar(stat="identity", width = 0.8) +
-            scale_fill_gradientn(limits = c(0,3),colours=g_color, values=gvalues2, name=paste0("-log10(",color_text,")"), oob=squish) +
+            scale_fill_gradientn(limits = c(0,3),colours=g_color(), values=gvalues2, name=paste0("-log10(",color_text,")"), oob=squish) +
             xlab(paste0("-log10(",color_text,")")) + ylab("") +
             geom_vline(xintercept=0, size=0.1) +
           theme_minimal() +
@@ -1658,23 +1611,6 @@
                    legend.title = element_text(size = 9))
           
         } else {
-          # color tone, red or blue
-          if(rv$ora_color == "red"){
-            g_color <- gcols2
-          }else if(rv$ora_color == "blue"){
-            g_color <- gcols3
-          }else if(rv$ora_color == "grey"){
-            g_color <- gcols_grey
-          }else if(rv$ora_color == "purple"){
-            g_color <- gcols_purple
-          }else if(rv$ora_color == "orange"){
-            g_color <- gcols_orange
-          }else if(rv$ora_color == "green"){
-            g_color <- gcols_green
-          }else if(rv$ora_color == "cyan"){
-            g_color <- gcols_cyan
-          }
-          
           
           cluster_bubble <- df_padj_points %>%
             ggplot(aes(x=-log10(pval), y=factor(complete_name, levels = complete_name),
@@ -1687,7 +1623,7 @@
                          "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
             geom_point(alpha = 0.5) +
             scale_size(range = c(zmin, zmax)) +
-            scale_color_gradientn(limits = c(0,3),colours=g_color, values=gvalues2, name=paste0("-log10(",color_text,")"), oob=squish) +
+            scale_color_gradientn(limits = c(0,3),colours=g_color(), values=gvalues2, name=paste0("-log10(",color_text,")"), oob=squish) +
             xlab(paste0("-log10(",color_text,")")) + ylab("") +
             geom_vline(xintercept=0, size=0.1) +
             theme_minimal() +

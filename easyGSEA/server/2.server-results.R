@@ -99,10 +99,19 @@ output$ui_bodyResults <- renderUI({
                                     fluidRow(
                                         column(
                                             12,
-                                            selectizeInput("ora_color",
-                                                              HTML(paste0("Adjust color tone ",add_help("bar_col"))),
-                                                              c("Red"="red","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
-                                                              rv$ora_color
+                                            pickerInput("ora_color",
+                                                        HTML(paste0("Adjust color tone ",add_help("bar_col"))),
+                                                        c("Red"="red","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
+                                                        rv$ora_color
+                                                        ,choicesOpt = list(
+                                                            content = c("<div style='color: #a50026;'>Red</div>"
+                                                                        ,"<div style='color: #08519c;'>Blue</div>"
+                                                                        ,"<div style='color: #0098e6;'>Cyan</div>"
+                                                                        ,"<div style='color: #e69500;'>Orange</div>"
+                                                                        ,"<div style='color: #688800;'>Green</div>"
+                                                                        ,"<div style='color: #bc63ff;'>Purple</div>"
+                                                                        ,"<div style='color: #696969;'>Grey</div>"
+                                                            ))
                                                               # ,justified = TRUE,
                                                               # checkIcon = list(
                                                               #     yes = icon("ok", 
@@ -524,7 +533,7 @@ output$plot_gs_search <- renderUI({
                             `actions-box` = TRUE,
                             size = 10,
                             style = "btn-default",
-                            `selected-text-format` = "count > 10"
+                            `selected-text-format` = "count > 2"
                             ,`live-search` = TRUE
                         ),
                         multiple = TRUE)

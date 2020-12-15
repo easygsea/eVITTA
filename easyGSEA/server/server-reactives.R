@@ -22,3 +22,24 @@ dbs <- reactive({
     return(rv$gmt_cs)
   }
 })
+
+# ------ color tones for ORA run --------
+g_color <- reactive({
+  req(rv$ora_color)
+  # color tone, red or blue
+  if(rv$ora_color == "red"){
+    gcols2
+  }else if(rv$ora_color == "blue"){
+    gcols3
+  }else if(rv$ora_color == "grey"){
+    gcols_grey
+  }else if(rv$ora_color == "purple"){
+    gcols_purple
+  }else if(rv$ora_color == "orange"){
+    gcols_orange
+  }else if(rv$ora_color == "green"){
+    gcols_green
+  }else if(rv$ora_color == "cyan"){
+    gcols_cyan
+  }
+})
