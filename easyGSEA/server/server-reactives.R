@@ -25,22 +25,26 @@ dbs <- reactive({
 
 # display colors for selection
 # ------ color tones for selection --------
+col_opts <- c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey")
+
+col_choicesopt <- list(
+  content = c("<div style='color: #a50026;'>Red</div>"
+              ,"<div style='color: #f8766d;'>Salmon</div>"
+              ,"<div style='color: #08519c;'>Blue</div>"
+              ,"<div style='color: #0098e6;'>Cyan</div>"
+              ,"<div style='color: #e69500;'>Orange</div>"
+              ,"<div style='color: #688800;'>Green</div>"
+              ,"<div style='color: #bc63ff;'>Purple</div>"
+              ,"<div style='color: #696969;'>Grey</div>"
+  ))
+
 color_tone_div <- reactive({
   if(rv$run_mode == "glist"){
     pickerInput("ora_color",
                 HTML(paste0("Adjust color tone ",add_help("bar_col"))),
-                c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
+                col_opts,
                 rv$ora_color
-                ,choicesOpt = list(
-                  content = c("<div style='color: #a50026;'>Red</div>"
-                              ,"<div style='color: #f8766d;'>Salmon</div>"
-                              ,"<div style='color: #08519c;'>Blue</div>"
-                              ,"<div style='color: #0098e6;'>Cyan</div>"
-                              ,"<div style='color: #e69500;'>Orange</div>"
-                              ,"<div style='color: #688800;'>Green</div>"
-                              ,"<div style='color: #bc63ff;'>Purple</div>"
-                              ,"<div style='color: #696969;'>Grey</div>"
-                  ))
+                ,choicesOpt = col_choicesopt
                 # ,justified = TRUE,
                 # checkIcon = list(
                 #     yes = icon("ok", 
@@ -52,36 +56,18 @@ color_tone_div <- reactive({
         12,
         pickerInput("up_color",
                     HTML(paste0("Color tone for upregulation ",add_help("bar_col_up"))),
-                    c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
+                    col_opts,
                     rv$up_color
-                    ,choicesOpt = list(
-                      content = c("<div style='color: #a50026;'>Red</div>"
-                                  ,"<div style='color: #f8766d;'>Salmon</div>"
-                                  ,"<div style='color: #08519c;'>Blue</div>"
-                                  ,"<div style='color: #0098e6;'>Cyan</div>"
-                                  ,"<div style='color: #e69500;'>Orange</div>"
-                                  ,"<div style='color: #688800;'>Green</div>"
-                                  ,"<div style='color: #bc63ff;'>Purple</div>"
-                                  ,"<div style='color: #696969;'>Grey</div>"
-                      ))
+                    ,choicesOpt = col_choicesopt
         )
       )
       ,column(
         12,
         pickerInput("down_color",
                     HTML(paste0("Color tone for downregulation ",add_help("bar_col_down"))),
-                    c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
+                    col_opts,
                     rv$down_color
-                    ,choicesOpt = list(
-                      content = c("<div style='color: #a50026;'>Red</div>"
-                                  ,"<div style='color: #f8766d;'>Salmon</div>"
-                                  ,"<div style='color: #08519c;'>Blue</div>"
-                                  ,"<div style='color: #0098e6;'>Cyan</div>"
-                                  ,"<div style='color: #e69500;'>Orange</div>"
-                                  ,"<div style='color: #688800;'>Green</div>"
-                                  ,"<div style='color: #bc63ff;'>Purple</div>"
-                                  ,"<div style='color: #696969;'>Grey</div>"
-                      ))
+                    ,choicesOpt = col_choicesopt
         )
       )
     )
