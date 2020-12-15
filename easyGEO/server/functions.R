@@ -1,4 +1,31 @@
 # -------------------------------------------------------------------- #
+#                       render datatable options                       #
+# -------------------------------------------------------------------- #
+# ======================= renderDataTable options #2 ===========================
+# enable extensions, scrolling X and Y, and customizing Y scren height
+#   df_no(df,extensions=c('Scroller'), scrollY = "380px", scroller = TRUE, scrollX=TRUE)
+# example:
+# in the UI element:
+#   dataTableOutput("")
+# in the server element:
+#   DT::renderDataTable({
+#       df_no(df)
+#   })
+
+df_no <- function(df,extensions=c('Scroller'), dom = NULL, buttons = NULL, scrollY = "380px", scroller = TRUE, scrollX=TRUE){
+  DT::datatable(df,
+                extensions=extensions,
+                options = list(
+                  # sDom  = '<"top">lrt<"bottom">ip',
+                  dom = dom,
+                  buttons = buttons, #, 'excel', 'print'
+                  scrollY = scrollY,
+                  scroller = scroller,
+                  scrollX = scrollX
+                ))
+}
+
+# -------------------------------------------------------------------- #
 #                             UI elements                              #
 # -------------------------------------------------------------------- #
 

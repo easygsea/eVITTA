@@ -192,7 +192,12 @@ dt_options <- function(max_char=80, scrollX=T, scrollY=F, paging=T, searching=T,
 # enable extensions, scrolling X and Y, and customizing Y scren height
 #   df_no(df,extensions=c('Scroller'), scrollY = "380px", scroller = TRUE, scrollX=TRUE)
 # example:
-#   df_no(df)
+# in the UI element:
+#   dataTableOutput("")
+# in the server element:
+#   DT::renderDataTable({
+#       df_no(df)
+#   })
 
 df_no <- function(df,extensions=c('Scroller'), dom = NULL, buttons = NULL, scrollY = "380px", scroller = TRUE, scrollX=TRUE){
   DT::datatable(df,

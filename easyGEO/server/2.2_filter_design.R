@@ -191,9 +191,9 @@ output$filtered_design_df <- DT::renderDataTable({
                                            rv$pdata[c("title", "geo_accession")],  # translation df
                                            "title") # translating to
   }
-  df
+  df_no(df)
   
-}, plugins="ellipsis",options=dt_options(30, scrollX=T)
-,
-# fillContainer = T # add this to prevent header not scrolling with content
+}#, plugins="ellipsis",options=dt_options(30, scrollX=T)
+# ,
+# # fillContainer = T # add this to prevent header not scrolling with content
 )
