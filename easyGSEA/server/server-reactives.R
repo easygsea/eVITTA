@@ -24,7 +24,7 @@ dbs <- reactive({
 })
 
 # display colors for selection
-# ------ color tones for selection --------
+# ------ color tones for selection: options --------
 col_opts <- c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey")
 
 col_choicesopt <- list(
@@ -38,18 +38,26 @@ col_choicesopt <- list(
               ,"<div style='color: #696969;'>Grey</div>"
   ))
 
+# ------ color tones for selection: Results tab --------
 color_tone_div <- reactive({
   if(rv$run_mode == "glist"){
-    pickerInput("ora_color",
-                HTML(paste0("Adjust color tone ",add_help("bar_col"))),
-                col_opts,
-                rv$ora_color
-                ,choicesOpt = col_choicesopt
-                # ,justified = TRUE,
-                # checkIcon = list(
-                #     yes = icon("ok", 
-                #                lib = "glyphicon"))
+    fluidRow(
+      column(
+        12,
+        pickerInput("ora_color",
+                    HTML(paste0("Adjust color tone ",add_help("bar_col"))),
+                    col_opts,
+                    rv$ora_color
+                    ,choicesOpt = col_choicesopt
+                    # ,justified = TRUE,
+                    # checkIcon = list(
+                    #     yes = icon("ok", 
+                    #                lib = "glyphicon"))
+        )
+        ,bsTooltip("bar_col",HTML(col_tone_bs),placement = "top")
+      )
     )
+    
   }else{
     fluidRow(
       column(
@@ -69,8 +77,57 @@ color_tone_div <- reactive({
                     rv$down_color
                     ,choicesOpt = col_choicesopt
         )
+        ,bsTooltip("bar_col_up",HTML(paste0(col_tone_bs," for upregulation")),placement = "top")
+        ,bsTooltip("bar_col_down",HTML(paste0(col_tone_bs," for downregulation")),placement = "top")
       )
     )
+  }
+})
+
+# ------ color tones for selection: Enrichment vis tab --------
+vis_col_div <- reactive({
+  req(rv$run_mode)
+  
+  if(rv$run_mode == "glist"){
+    column(
+      width = 4, offset = 2,
+      pickerInput("vis_color",
+                  HTML(paste0("Color tone <br>",add_help("vis_col_q"))),
+                  col_opts,
+                  rv$ora_color
+                  ,choicesOpt = col_choicesopt
+                  # ,justified = TRUE,
+                  # checkIcon = list(
+                  #     yes = icon("ok", 
+                  #                lib = "glyphicon"))
+      )
+      ,bsTooltip("vis_col_q",HTML(col_tone_bs),placement = "top")
+    )
+  }else if(rv$run_mode == "gsea"){
+    div(
+      column(
+        4,
+        pickerInput("vis_color_up",
+                    HTML(paste0("Upregulation<br>",add_help("vis_col_up_q"))),
+                    col_opts,
+                    rv$up_color
+                    ,choicesOpt = col_choicesopt
+        )
+      )
+      ,column(
+        4,
+        pickerInput("vis_color_down",
+                    HTML(paste0("Downregulation<br>",add_help("vis_col_down_q"))),
+                    col_opts,
+                    rv$down_color
+                    ,choicesOpt = col_choicesopt
+        )
+      )
+      ,bsTooltip("vis_col_up_q",HTML(paste0(col_tone_bs," for upregulation")),placement = "top")
+      ,bsTooltip("vis_col_down_q",HTML(paste0(col_tone_bs," for downregulation")),placement = "top")
+      
+    )
+    
   }
 })
 
@@ -127,7 +184,7 @@ word_color_div <- function(col1 = rv$up_color, col2 = rv$down_color){
   c(word_color_basic(col2),word_color_basic(col1))
 }
 
-# ------ color tones combination for GSEA run ---------
+# ------ color tones for GSEA run: Results tab ---------
 gcols_div <- function(col1 = rv$up_color, col2 = rv$down_color){
   col_up <- g_color(col = col1)
   col_down <- g_color(col = col2)

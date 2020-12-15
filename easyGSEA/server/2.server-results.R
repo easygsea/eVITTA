@@ -100,9 +100,6 @@ output$ui_bodyResults <- renderUI({
                                         column(
                                             12,
                                             color_tone_div()
-                                            ,bsTooltip("bar_col",HTML(col_tone_bs),placement = "top")
-                                            ,bsTooltip("bar_col_up",HTML(paste0(col_tone_bs," for upregulation")),placement = "top")
-                                            ,bsTooltip("bar_col_down",HTML(paste0(col_tone_bs," for downregulation")),placement = "top")
                                         )
                                     )
                                     ,

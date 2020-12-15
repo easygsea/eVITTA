@@ -293,6 +293,8 @@ observeEvent(input$vis_replot,{
         rv$vis_pathway <- input$vis_pathway
         
         rv$ora_color <- input$vis_color
+        rv$up_color <- input$vis_color_up
+        rv$down_color <- input$vis_color_down
     }
     
 })
@@ -403,7 +405,7 @@ output$ui_vis_gear <- renderUI({
     ),
     fluidRow(
         column(
-            width = 6,
+            width = 4,
             radioGroupButtons("p_or_q_vis",
                               label = HTML(paste0("Color by P or P.adj ",add_help("col_vis"))),
                               choiceNames = c("P", "P.adj"),
@@ -413,22 +415,7 @@ output$ui_vis_gear <- renderUI({
             )
             ,bsTooltip("col_vis",HTML(pq_bs),placement = "top")
         ),
-        if(rv$run_mode == "glist"){
-            column(
-                width = 6,
-                pickerInput("vis_color",
-                            HTML(paste0("Color tone",add_help("vis_col_q"))),
-                            col_opts,
-                            rv$ora_color
-                            ,choicesOpt = col_choicesopt
-                                  # ,justified = TRUE,
-                                  # checkIcon = list(
-                                  #     yes = icon("ok", 
-                                  #                lib = "glyphicon"))
-                )
-                ,bsTooltip("vis_col_q",HTML(col_tone_bs),placement = "top")
-            )
-        },
+        vis_col_div(),
         column(
             width = 12,align="right",br(),
             plot_confirm_btn("vis_replot","Replot!"

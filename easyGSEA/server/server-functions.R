@@ -980,18 +980,45 @@
               
               
               if(rv$run_mode == "gsea"){
-                colors[df[[pq]]<0.25 & df$ES>0] = "rgba(254,224,144)" #lightyellow
-                colors[df[[pq]]<0.05 & df$ES>0] = "rgba(253,174,97)" #yellow
-                colors[df[[pq]]<0.01 & df$ES>0] = "rgba(244,109,67)" #orange
-                colors[df[[pq]]<0.005 & df$ES>0] = "rgba(215,48,39)" #red
-                colors[df[[pq]]<0.001 & df$ES>0] = "rgba(165,0,38)" #dark red
+                # function to fetch predefined color gradients
+                get_col_gradient <- function(col){
+                  if(col == "red"){
+                    gcols_red
+                  }else if(col == "blue"){
+                    gcols_blue
+                  }else if(col == "salmon"){
+                    gcols_salmon
+                  }else if(col == "cyan"){
+                    gcols_cyan
+                  }else if(col == "orange"){
+                    gcols_orange
+                  }else if(col == "green"){
+                    gcols_green
+                  }else if(col == "purple"){
+                    gcols_purple
+                  }else if(col == "grey"){
+                    gcols_grey
+                  }
+                }
                 
-                colors[df[[pq]]<0.25 & df$ES<0] = "rgba(198,219,239)" #pale blue
-                colors[df[[pq]]<0.05 & df$ES<0] = "rgba(158,202,225)" #light blue
-                colors[df[[pq]]<0.01 & df$ES<0] = "rgba(107,174,214)" #blue
-                colors[df[[pq]]<0.005 & df$ES<0] = "rgba(49,130,189)" #darker blue
-                colors[df[[pq]]<0.001 & df$ES<0] = "rgba(8,81,156)" #cornflower
+                # fetch colors for up and down separately
+                colup <- get_col_gradient(rv$up_color)
+                coldown <- get_col_gradient(rv$down_color)
+                
+                # assign colors for up and down separately
+                colors[df[[pq]]<0.25 & df$ES>0] = colup[1] #lightyellow
+                colors[df[[pq]]<0.05 & df$ES>0] = colup[2] #yellow
+                colors[df[[pq]]<0.01 & df$ES>0] = colup[3] #orange
+                colors[df[[pq]]<0.005 & df$ES>0] = colup[4] #red
+                colors[df[[pq]]<0.001 & df$ES>0] = colup[5] #dark red
+                
+                colors[df[[pq]]<0.25 & df$ES<0] = coldown[1] #pale blue
+                colors[df[[pq]]<0.05 & df$ES<0] = coldown[2] #light blue
+                colors[df[[pq]]<0.01 & df$ES<0] = coldown[3] #blue
+                colors[df[[pq]]<0.005 & df$ES<0] = coldown[4] #darker blue
+                colors[df[[pq]]<0.001 & df$ES<0] = coldown[5] #cornflower
               }else if(rv$run_mode == "glist"){
+                # function to fetch predefined color gradients
                 get_col_gradient <- function(){
                   if(rv$ora_color == "red"){
                     gcols_red_vis
@@ -1010,11 +1037,12 @@
                   }else if(rv$ora_color == "grey"){
                     gcols_grey_vis
                   }
-                  
                 }
                 
+                # fetch the color gradient
                 col_gradient <- get_col_gradient()
                 
+                # assign colors to cutoffs
                 colors[df[[pq]]<0.25] = col_gradient[1] #lightest
                 colors[df[[pq]]<0.05] = col_gradient[2] #
                 colors[df[[pq]]<0.01] = col_gradient[3] #
@@ -1166,7 +1194,7 @@
                 vis <- visNetwork(nodes, height = "1000px", width = "100%") %>%
                     # visEdges(smooth = FALSE) %>% #disable smooth curve for edges
                     # visIgraphLayout() %>% # decrease plotting time
-                    visNodes(borderWidth= 2) %>%
+                    visNodes(borderWidth= 1) %>%
                     visInteraction(navigationButtons = TRUE) %>% 
                     visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T), 
                                nodesIdSelection = TRUE, selectedBy = list(variable = "cluster")) %>% # , selectedBy = "group"once select a node, see relevant nodes and grey out the rest.
@@ -1188,7 +1216,7 @@
                 vis <- visNetwork(nodes, edges, height = "1000px", width = "100%") %>%
                     visEdges(smooth = FALSE) %>% #disable smooth curve for edges
                     # visIgraphLayout() %>% # decrease plotting time
-                    visNodes(borderWidth= 2) %>%
+                    visNodes(borderWidth= 1) %>%
                     visInteraction(navigationButtons = TRUE) %>% 
                     visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T), 
                                nodesIdSelection = TRUE, selectedBy = list(variable = "cluster")) %>% # once select a node, see relevant nodes and grey out the rest.

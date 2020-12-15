@@ -74,7 +74,7 @@
         
         ora_color="red", # color for bar/bubble/word/vis plot in ORA
         down_color="blue", up_color="red", # colors for bar/bubble/word/vis plot in GSEA
-        
+
         # input_symbol=NULL, # check if input is SYMBOL, if, "yes"
         
         #========================================#
