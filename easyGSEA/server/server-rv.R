@@ -129,5 +129,7 @@
         percent_method="jaccard",# or   combined overlap
         percent_cutoff = 0.25, # or 0.5 for overlap
         
-        tl_p=1,tl_q=1,tl_ES="both"
+        tl_p=1,tl_q=1,tl_ES="both",
+        
+        bar_tl=NULL,word_tl=NULL # tables for bar/bubble/keyword plots for download
     )

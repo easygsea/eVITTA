@@ -564,13 +564,22 @@ output$plot_download <- renderUI({
     if(rv$plot_type=="manhattan"){
         downloadButton(outputId = "download_manhattan", label = "Download plot")
     }else if(rv$plot_type=="bar"){
-        downloadButton(outputId = "download_bar", label = "Download plot")
+        div(
+            downloadButton(outputId = "download_bar", label = "Download plot"),
+            downloadButton(outputId = "download_bar_tl", label = "Download table")
+        )
     }else if(rv$plot_type=="bubble"){
-        downloadButton(outputId = "download_bubble", label = "Download plot")
+        div(
+            downloadButton(outputId = "download_bubble", label = "Download plot"),
+            downloadButton(outputId = "download_bubble_tl", label = "Download table")
+        )
     }else if(rv$plot_type=="volcano"){
         downloadButton(outputId = "download_volcano", label = "Download plot")
     }else if(rv$plot_type=="word"){
-        downloadButton(outputId = "download_word", label = "Download plot")
+        div(
+            downloadButton(outputId = "download_word", label = "Download plot"),
+            downloadButton(outputId = "download_word_tl", label = "Download table")
+        )
     }
 })
 
@@ -774,6 +783,15 @@ output$download_bar <- downloadHandler(
     content = function(file) {saveWidget(as_widget(p_bar()), file, selfcontained = TRUE)}
 )
 
+output$download_bar_tl <- downloadHandler(
+    filename = function() {paste0("bar_table_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".csv")},
+    content = function(file) {
+        df <- rv$bar_tl
+        df <- collapse_last_col(df)
+        fwrite(df, file, sep=",",row.names = F, quote=T)
+    }
+)
+
 
 # bubble plot ----------
 observeEvent(input$bubble_confirm,{
@@ -820,6 +838,15 @@ output$plot_bubble <- renderPlotly({
 output$download_bubble <- downloadHandler(
     filename = function() {paste0("bubble_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(p_bubble()), file, selfcontained = TRUE)}
+)
+
+output$download_bubble_tl <- downloadHandler(
+    filename = function() {paste0("bubble_table_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".csv")},
+    content = function(file) {
+        df <- rv$bar_tl
+        df <- collapse_last_col(df)
+        fwrite(df, file, sep=",",row.names = F, quote=T)
+    }
 )
 
 # volcano plot ------------
@@ -937,10 +964,18 @@ output$plot_word <- renderPlotly({
     })
 })
 
-# bar download
+# keyword download
 output$download_word <- downloadHandler(
     filename = function() {paste0("keyword_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(word_plot()), file, selfcontained = TRUE)}
+)
+
+output$download_word_tl <- downloadHandler(
+    filename = function() {paste0("keyword_table_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".csv")},
+    content = function(file) {
+        df <- rv$word_tl
+        fwrite(df, file, sep=",",row.names = F, quote=T)
+    }
 )
 
 # --------- UI: bar --------------

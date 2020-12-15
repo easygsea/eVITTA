@@ -1,6 +1,12 @@
     #=======================================================================#
     ####----------------------- Functions: Calculation -------------------####
-    #=======================================================================# 
+    #=======================================================================#
+    # collapse the leadingedge column
+    collapse_last_col <- function(df, sep=";"){
+      df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = sep))
+      return(df)
+    }
+    
     # change heximal colors to 90% transparency
     addalpha <- function(colors, alpha=0.25) {
         r <- col2rgb(colors, alpha=T)
@@ -157,6 +163,8 @@
               arrange(desc(ES))
           }
           
+          rv$bar_tl <- df
+          
           if(is.null(df)==T || nrow(df)<1){
             rv$bar_error <- "0"
             return(NULL)
@@ -223,6 +231,8 @@
               arrange(desc(ES))
           }
           
+          rv$bar_tl <- df
+          
           if(is.null(df)==T || nrow(df)<1){
             rv$bar_error <- "0"
             return(NULL)
@@ -230,8 +240,6 @@
             rv$bar_error <- "l"
             return(NULL)
           }else{
-              df <- df %>%
-                dplyr::filter(pathway %in% rv$gss_selected)
               
                 rv$bubble_pathway_list = df[["pathway"]]
                 
@@ -464,7 +472,7 @@
         if(cutoff_q < 1){
           df = df %>% dplyr::filter(padj < cutoff_q)
         }
-        
+
         if(is.null(df)==T || nrow(df)<1){
           return(NULL)
         }else{
@@ -517,8 +525,12 @@
               return(a)
             })
             
-            text = unlist(text)
+            tidy_data$text = unlist(text)
             
+            # save the keyword table to RV
+            rv$word_tl <- tidy_data
+            
+
             p <- tidy_data %>%
               ggplot(aes(word, n, text=text)) +
               geom_col(show.legend = FALSE, fill = word_color()) +
@@ -611,6 +623,8 @@
               tidy_data = rbind(tidy_data,tidy_data0)
             }
             
+            rv$word_tl <- tidy_data
+            
             p <- tidy_data %>%
               dplyr::arrange(n) %>%
               dplyr::mutate(word = factor(word, levels = rev(unique(word)))) %>%
@@ -652,7 +666,8 @@
             return(NULL)
         }else{
           df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
-
+          rv$bar_tl <- df
+          
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
@@ -709,7 +724,8 @@
             return(NULL)
         }else{
           df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
-
+          rv$bar_tl <- df
+          
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
@@ -1894,6 +1910,8 @@
       
       rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
       rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
+      
+      rv$bar_tl=NULL;rv$word_tl=NULL
     }
     
     #===================================================#
