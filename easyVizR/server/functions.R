@@ -578,13 +578,14 @@ gl_to_table <- function(name, gl, master_df, round=3, keep_stat=F){
 #        Convert filters to verbal summary          ####
 # ================================================= #
 
-
-
 # gathers filters about 1 dataset from namespace and summarizes them with a line of HTML text
 # -------------------------------------------------
 # call this inside HTML()
 # name: the name of the dataset
 # status: T/F/NA
+
+# NOTE. now, the filtering is set to <, > instead of <=, >=.
+# Thus, p/ q cutoff of 1 and below, and stat cutoff of 0 or above will be meaningful, and will be shown.
 
 summarize_filter <- function(filter_namespace, filter_var, name, status, include_name=T, input_range=rv$nx_n){
   req_filter_ns(filter_namespace, filter_var)
@@ -600,15 +601,15 @@ summarize_filter <- function(filter_namespace, filter_var, name, status, include
   if (is.na(status)==T){ # if NA
     stat_text=""
   } else if (status==F){ # if FALSE
-    if (cur_p<1){ # p cutoff is only meaningful if <1
+    if (cur_p<=1){ # p cutoff is only meaningful if <=1
       p_text <- paste0("p > ",cur_p)
     } else {p_text <- NA}
-    if (cur_q<1){ # q cutoff is only meaningful if <1
+    if (cur_q<=1){ # q cutoff is only meaningful if <=1
       q_text <- paste0("q > ",cur_q)
     } else {q_text <- NA}
     
     if (cur_sign=="All"){ # if FALSE and ALL
-      if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
+      if (cur_Stat>=0){ # |Stat| cutoff is only meaningful if >=0
         stat_text <- stat_replace1(paste0("|Stat| < ", cur_Stat), name)
       } else {stat_text <- NA} 
     } else if (cur_sign=="Positive"){ # if FALSE and POS
@@ -617,15 +618,15 @@ summarize_filter <- function(filter_namespace, filter_var, name, status, include
       stat_text <- stat_replace1(paste0("Stat >  ", cur_Stat), name)
     }
   } else if (status==T){ # if TRUE
-    if (cur_p<1){
+    if (cur_p<=1){ # p cutoff is only meaningful if <=1
       p_text <- paste0("p < ",cur_p)
     } else {p_text <- NA}
-    if (cur_q<1){
+    if (cur_q<=1){ # q cutoff is only meaningful if <=1
       q_text <- paste0("q < ",cur_q)
     } else {q_text <- NA}
     
     if (cur_sign=="All"){ # if TRUE and ALL
-      if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
+      if (cur_Stat>=0){ # |Stat| cutoff is only meaningful if >=0
         stat_text <- stat_replace1(paste0("|Stat| > ", cur_Stat) , name)
       } else {stat_text <- NA} 
     } else if (cur_sign=="Positive"){ # if TRUE and POS
