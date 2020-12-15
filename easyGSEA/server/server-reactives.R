@@ -24,22 +24,50 @@ dbs <- reactive({
 })
 
 # ------ color tones for ORA run --------
-g_color <- reactive({
-  req(rv$ora_color)
+g_color <- function(col = rv$ora_color){
   # color tone, red or blue
-  if(rv$ora_color == "red"){
+  if(col == "red"){
     gcols2
-  }else if(rv$ora_color == "blue"){
+  }else if(col == "blue"){
     gcols3
-  }else if(rv$ora_color == "grey"){
+  }else if(col == "grey"){
     gcols_grey
-  }else if(rv$ora_color == "purple"){
+  }else if(col == "purple"){
     gcols_purple
-  }else if(rv$ora_color == "orange"){
+  }else if(col == "orange"){
     gcols_orange
-  }else if(rv$ora_color == "green"){
+  }else if(col == "green"){
     gcols_green
-  }else if(rv$ora_color == "cyan"){
+  }else if(col == "cyan"){
     gcols_cyan
+  }else if(col == "salmon"){
+    gcols_salmon
+  }
+}
+
+word_color <- reactive({
+  req(rv$ora_color)
+  
+  if(rv$ora_color == "red"){
+    word_color <- "#a50026"
+  }else if(rv$ora_color == "blue"){
+    word_color <- "#08519c"
+  }else if(rv$ora_color == "grey"){
+    word_color <- "#C0C0C0"
+  }else if(rv$ora_color == "purple"){
+    word_color <- "#C77CFF"
+  }else if(rv$ora_color == "orange"){
+    word_color <- "#CD9600"
+  }else if(rv$ora_color == "green"){
+    word_color <- "#7CAE00"
+  }else if(rv$ora_color == "cyan"){
+    word_color <- "#00A9FF"
+  }else if(rv$ora_color == "salmon"){
+    word_color <- "#f8766d"
   }
 })
+
+# ------ color tones combination for GSEA run ---------
+gcols_div <- function(col1 = rv$gsea_up, col2 = rv$gsea_down){
+  col_up <- g_color(col1)
+}

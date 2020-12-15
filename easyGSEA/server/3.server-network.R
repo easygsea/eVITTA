@@ -417,18 +417,19 @@ output$ui_vis_gear <- renderUI({
             column(
                 width = 6,
                 pickerInput("vis_color",
-                                HTML(paste0("Color tone",add_help("vis_col_q"))),
-                               c("Red"="red","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
-                               rv$ora_color
-                               ,choicesOpt = list(
-                                   content = c("<div style='color: #a50026;'>Red</div>"
-                                               ,"<div style='color: #08519c;'>Blue</div>"
-                                               ,"<div style='color: #0098e6;'>Cyan</div>"
-                                               ,"<div style='color: #e69500;'>Orange</div>"
-                                               ,"<div style='color: #688800;'>Green</div>"
-                                               ,"<div style='color: #bc63ff;'>Purple</div>"
-                                               ,"<div style='color: #696969;'>Grey</div>"
-                                               ))
+                            HTML(paste0("Color tone",add_help("vis_col_q"))),
+                            c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
+                            rv$ora_color
+                            ,choicesOpt = list(
+                                content = c("<div style='color: #a50026;'>Red</div>"
+                                            ,"<div style='color: #f8766d;'>Salmon</div>"
+                                            ,"<div style='color: #08519c;'>Blue</div>"
+                                            ,"<div style='color: #0098e6;'>Cyan</div>"
+                                            ,"<div style='color: #e69500;'>Orange</div>"
+                                            ,"<div style='color: #688800;'>Green</div>"
+                                            ,"<div style='color: #bc63ff;'>Purple</div>"
+                                            ,"<div style='color: #696969;'>Grey</div>"
+                                ))
                                   # ,justified = TRUE,
                                   # checkIcon = list(
                                   #     yes = icon("ok", 

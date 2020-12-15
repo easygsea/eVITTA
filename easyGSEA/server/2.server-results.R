@@ -101,10 +101,11 @@ output$ui_bodyResults <- renderUI({
                                             12,
                                             pickerInput("ora_color",
                                                         HTML(paste0("Adjust color tone ",add_help("bar_col"))),
-                                                        c("Red"="red","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
+                                                        c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
                                                         rv$ora_color
                                                         ,choicesOpt = list(
                                                             content = c("<div style='color: #a50026;'>Red</div>"
+                                                                        ,"<div style='color: #f8766d;'>Salmon</div>"
                                                                         ,"<div style='color: #08519c;'>Blue</div>"
                                                                         ,"<div style='color: #0098e6;'>Cyan</div>"
                                                                         ,"<div style='color: #e69500;'>Orange</div>"

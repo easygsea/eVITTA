@@ -519,25 +519,9 @@
             
             text = unlist(text)
             
-            if(rv$ora_color == "red"){
-              word_color <- "#F8766D"
-            }else if(rv$ora_color == "blue"){
-              word_color <- "#08519c"
-            }else if(rv$ora_color == "grey"){
-              word_color <- "#C0C0C0"
-            }else if(rv$ora_color == "purple"){
-              word_color <- "#C77CFF"
-            }else if(rv$ora_color == "orange"){
-              word_color <- "#CD9600"
-            }else if(rv$ora_color == "green"){
-              word_color <- "#7CAE00"
-            }else if(rv$ora_color == "cyan"){
-              word_color <- "#00A9FF"
-            }
-            
             p <- tidy_data %>%
               ggplot(aes(word, n, text=text)) +
-              geom_col(show.legend = FALSE, fill = word_color) +
+              geom_col(show.legend = FALSE, fill = word_color()) +
               labs(x = NULL, y = NULL, title = NULL) +
               coord_flip() +
               scale_x_reordered() +
