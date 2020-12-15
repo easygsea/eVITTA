@@ -98,20 +98,17 @@ output$ui_bodyResults <- renderUI({
                                 dropdown(
                                     fluidRow(
                                         column(
-                                            12,align="center",
-                                            tags$h4(tags$strong(tags$em(paste0("Adjust color tone"))))
-                                        ),
-                                        column(
                                             12,
-                                            radioGroupButtons("ora_color",
-                                                              NULL,
-                                                              c("Red"="red","Blue"="blue"),
-                                                              rv$ora_color,
-                                                              justified = TRUE,
-                                                              checkIcon = list(
-                                                                  yes = icon("ok", 
-                                                                             lib = "glyphicon"))
+                                            selectizeInput("ora_color",
+                                                              HTML(paste0("Adjust color tone ",add_help("bar_col"))),
+                                                              c("Red"="red","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
+                                                              rv$ora_color
+                                                              # ,justified = TRUE,
+                                                              # checkIcon = list(
+                                                              #     yes = icon("ok", 
+                                                              #                lib = "glyphicon"))
                                             )
+                                            ,bsTooltip("bar_col",HTML(col_tone_bs),placement = "top")
                                         )
                                     )
                                     ,

@@ -169,42 +169,6 @@ glist_example = as.list(glist_example[[2]])
 names(glist_example) = glist_example_species
 remove(glist_example_species)
 
-# ===================== COLOR SCALES for visualizations =====================
-# color bar for GSEA output visualizations (blue and red) - ggolot version
-gcols = c(rgb(8,81,156,maxColorValue = 255), # -0.001 = cornflower,
-          rgb(49,130,189,maxColorValue = 255), # -0.01 = darker blue
-          rgb(107,174,214,maxColorValue = 255), # -0.05 = blue
-          rgb(158,202,225,maxColorValue = 255), # -0.1 = light blue
-          rgb(198,219,239,maxColorValue = 255), # -0.25 = pale blue
-          rgb(255, 255, 255,maxColorValue = 255), # 0 = white
-          rgb(254,224,144,maxColorValue = 255), # 0.25 = light yellow
-          rgb(253,174,97,maxColorValue = 255), # 0.1 = yellow
-          rgb(244,109,67,maxColorValue = 255), # 0.05 = orange
-          rgb(215,48,39,maxColorValue = 255), # 0.01 = red
-          rgb(165,0,38,maxColorValue = 255)) # 0.001 = dark red
-
-# value scales for GSEA output visualizations (blue and red) - ggolot version
-gvalues = rescale(c(-3,-2,log10(0.05),-1,log10(0.25),0,-log10(0.25),1,-log10(0.05),2,3))
-
-# color bar for ORA output visualizations (red only) - ggolot version
-gcols2 = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
-          rgb(254,224,144,maxColorValue = 255),
-          rgb(253,174,97,maxColorValue = 255),
-          rgb(244,109,67,maxColorValue = 255),
-          rgb(215,48,39,maxColorValue = 255),
-          rgb(165,0,38,maxColorValue = 255)) # 0.001 = dark red
-
-# color bar for ORA output visualizations (blue only) - ggolot version
-gcols3 = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
-           rgb(198,219,239,maxColorValue = 255),
-           rgb(158,202,225,maxColorValue = 255),
-           rgb(107,174,214,maxColorValue = 255),
-           rgb(49,130,189,maxColorValue = 255),
-           rgb(8,81,156,maxColorValue = 255)) # 0.001 = cornflower
-
-# value scales for ORA output visualizations (red only) - ggolot version
-gvalues2 = rescale(c(0,-log10(0.25),1,-log10(0.05),2,3))
-
 # ======================= renderDataTable options #1 ===========================
 # apply options to datatable. example: options = dt_options(80,F,F,T,T,T,10)
 # To apply options to datatable. only works with ellipsis enabled

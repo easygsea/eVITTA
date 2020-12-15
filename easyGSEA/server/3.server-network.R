@@ -416,16 +416,16 @@ output$ui_vis_gear <- renderUI({
         if(rv$run_mode == "glist"){
             column(
                 width = 6,
-                radioGroupButtons("vis_color",
-                                  HTML(paste0("Color tone",add_help("vis_col_q"))),
-                                  c("Red"="red","Blue"="blue"),
-                                  rv$ora_color,
-                                  justified = TRUE,
-                                  checkIcon = list(
-                                      yes = icon("ok", 
-                                                 lib = "glyphicon"))
+                selectizeInput("vis_color",
+                                HTML(paste0("Color tone",add_help("vis_col_q"))),
+                               c("Red"="red","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey"),
+                               rv$ora_color
+                                  # ,justified = TRUE,
+                                  # checkIcon = list(
+                                  #     yes = icon("ok", 
+                                  #                lib = "glyphicon"))
                 )
-                ,bsTooltip("vis_col_q",HTML("Color the network and corresponding cluster bar/bubble plots in red or blue"),placement = "top")
+                ,bsTooltip("vis_col_q",HTML(col_tone_bs),placement = "top")
             )
         },
         column(

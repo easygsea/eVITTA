@@ -31,6 +31,87 @@ src <- reactive({
   return(src)
 })
 
+# ===================== COLOR SCALES for visualizations =====================
+# color bar for GSEA output visualizations (blue and red) - ggolot version
+gcols = c(rgb(8,81,156,maxColorValue = 255), # -0.001 = cornflower,
+          rgb(49,130,189,maxColorValue = 255), # -0.01 = darker blue
+          rgb(107,174,214,maxColorValue = 255), # -0.05 = blue
+          rgb(158,202,225,maxColorValue = 255), # -0.1 = light blue
+          rgb(198,219,239,maxColorValue = 255), # -0.25 = pale blue
+          rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+          rgb(254,224,144,maxColorValue = 255), # 0.25 = light yellow
+          rgb(253,174,97,maxColorValue = 255), # 0.1 = yellow
+          rgb(244,109,67,maxColorValue = 255), # 0.05 = orange
+          rgb(215,48,39,maxColorValue = 255), # 0.01 = red
+          rgb(165,0,38,maxColorValue = 255)) # 0.001 = dark red
+
+# value scales for GSEA output visualizations (blue and red) - ggolot version
+gvalues = rescale(c(-3,-2,log10(0.05),-1,log10(0.25),0,-log10(0.25),1,-log10(0.05),2,3))
+
+# color bar for ORA output visualizations (red only) - ggolot version
+gcols2 = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+           rgb(254,224,144,maxColorValue = 255),
+           rgb(253,174,97,maxColorValue = 255),
+           rgb(244,109,67,maxColorValue = 255),
+           rgb(215,48,39,maxColorValue = 255),
+           rgb(165,0,38,maxColorValue = 255)) # 0.001 = dark red
+
+# color bar for ORA output visualizations (blue only) - ggolot version
+gcols3 = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+           rgb(198,219,239,maxColorValue = 255),
+           rgb(158,202,225,maxColorValue = 255),
+           rgb(107,174,214,maxColorValue = 255),
+           rgb(49,130,189,maxColorValue = 255),
+           rgb(8,81,156,maxColorValue = 255)) # 0.001 = cornflower
+
+# color bar for ORA output visualizations (cyan only) - ggolot version
+gcols_cyan = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+               rgb(77,195,255,maxColorValue = 255),
+               rgb(51,186,255,maxColorValue = 255),
+               rgb(26,178,255,maxColorValue = 255),
+               rgb(0,169,255,maxColorValue = 255), # 0.005 = cyan
+               rgb(0,152,230,maxColorValue = 255)) # 0.001
+
+# color bar for ORA output visualizations (orange only) - ggolot version
+gcols_orange = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+                 rgb(255,192,77,maxColorValue = 255), # 0.25 = 
+                 rgb(255,183,51,maxColorValue = 255), # 0.05 = 
+                 rgb(255,174,26,maxColorValue = 255), # 0.01 = 
+                 rgb(255,165,0,maxColorValue = 255), # 0.005 = orange
+                 rgb(230,149,0,maxColorValue = 255)) # 0.001 = 
+
+# color bar for ORA output visualizations (green only) - ggolot version
+gcols_green = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+                rgb(183,238,0,maxColorValue = 255), # 0.25 = 
+                rgb(163,212,0,maxColorValue = 255), # 0.05 = 
+                rgb(144,187,0,maxColorValue = 255), # 0.01 = 
+                rgb(124,161,0,maxColorValue = 255), # 0.005 = 
+                rgb(104,136,0,maxColorValue = 255)) # 0.001 = green
+
+# color bar for ORA output visualizations (purple only) - ggolot version
+gcols_purple = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+                 rgb(232,201,255,maxColorValue = 255), # 0.25 = lavender
+                 rgb(221,175,255,maxColorValue = 255), # 0.05 = thistle
+                 rgb(210,150,255,maxColorValue = 255), # 0.01 = plum
+                 rgb(199,124,255,maxColorValue = 255), # 0.005 = orchid
+                 rgb(188,99,255,maxColorValue = 255)) # 0.001 = mediumorchid
+
+
+# color bar for ORA output visualizations (grey only) - ggolot version
+gcols_grey = c(rgb(255, 255, 255,maxColorValue = 255), # 0 = white
+               rgb(220,220,220,maxColorValue = 255), # 0.25 = gainsboro
+               rgb(192,192,192,maxColorValue = 255), # 0.05 = silver
+               rgb(169,169,169,maxColorValue = 255), # 0.01 = darkgrey
+               rgb(128,128,128,maxColorValue = 255), # 0.005 = grey
+               rgb(105,105,105,maxColorValue = 255)) # 0.001 = dimgrey
+
+
+
+# value scales for ORA output visualizations (red only) - ggolot version
+gvalues2 = rescale(c(0,-log10(0.25),1,-log10(0.05),2,3))
+
+
+
 #===================== GMT collections =====================
 # initialize three list vectors
 # 1. a list vector to store paths to database collection (.GMT) files
@@ -123,3 +204,4 @@ oratop_bs <- "Number of top enriched gene set(s)"
 manual_bs <- "Manually search, select and plot the gene set(s) of interest"
 bubble_size_bs <- "Drag the slider to adjust the maximum and minimum bubble sizes"
 vol_mode_bs <- "<b>Continuous</b> and <b>Discrete</b> are hoverable, clickable and interactive. <b>Static</b> labels the top regulations with texts."
+col_tone_bs <- "Scroll down and click to select the color tone"

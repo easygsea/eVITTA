@@ -523,6 +523,14 @@
               g_color <- "#F8766D"
             }else if(rv$ora_color == "blue"){
               g_color <- "#00BFC4"
+            }else if(rv$ora_color == "grey"){
+              g_color <- "#C0C0C0"
+            }else if(rv$ora_color == "purple"){
+              g_color <- "#C77CFF"
+            }else if(rv$ora_color == "orange"){
+              g_color <- "#CD9600"
+            }else if(rv$ora_color == "green"){
+              g_color <- "#7CAE00"
             }
             
             p <- tidy_data %>%
@@ -663,11 +671,23 @@
                 return(NULL)
             }else{
               
+              # color tone, red or blue
               if(rv$ora_color == "red"){
                 g_color <- gcols2
               }else if(rv$ora_color == "blue"){
                 g_color <- gcols3
+              }else if(rv$ora_color == "grey"){
+                g_color <- gcols_grey
+              }else if(rv$ora_color == "purple"){
+                g_color <- gcols_purple
+              }else if(rv$ora_color == "orange"){
+                g_color <- gcols_orange
+              }else if(rv$ora_color == "green"){
+                g_color <- gcols_green
+              }else if(rv$ora_color == "cyan"){
+                g_color <- gcols_cyan
               }
+              
                 
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
@@ -725,12 +745,23 @@
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
+              # color tone, red or blue
               if(rv$ora_color == "red"){
                 g_color <- gcols2
               }else if(rv$ora_color == "blue"){
                 g_color <- gcols3
+              }else if(rv$ora_color == "grey"){
+                g_color <- gcols_grey
+              }else if(rv$ora_color == "purple"){
+                g_color <- gcols_purple
+              }else if(rv$ora_color == "orange"){
+                g_color <- gcols_orange
+              }else if(rv$ora_color == "green"){
+                g_color <- gcols_green
+              }else if(rv$ora_color == "cyan"){
+                g_color <- gcols_cyan
               }
-                                
+
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
                 
@@ -996,29 +1027,59 @@
                 colors = rep("white",nrow(df))
                 if(rv$run_mode == "gsea"){
                     colors[df[[pq]]<0.25 & df$ES>0] = "rgba(254,224,144)" #lightyellow
-                    colors[df[[pq]]<0.1 & df$ES>0] = "rgba(253,174,97)" #yellow
-                    colors[df[[pq]]<0.05 & df$ES>0] = "rgba(244,109,67)" #orange
-                    colors[df[[pq]]<0.01 & df$ES>0] = "rgba(215,48,39)" #red
+                    colors[df[[pq]]<0.05 & df$ES>0] = "rgba(253,174,97)" #yellow
+                    colors[df[[pq]]<0.01 & df$ES>0] = "rgba(244,109,67)" #orange
+                    colors[df[[pq]]<0.005 & df$ES>0] = "rgba(215,48,39)" #red
                     colors[df[[pq]]<0.001 & df$ES>0] = "rgba(165,0,38)" #dark red
                     
                     colors[df[[pq]]<0.25 & df$ES<0] = "rgba(198,219,239)" #pale blue
-                    colors[df[[pq]]<0.1 & df$ES<0] = "rgba(158,202,225)" #light blue
-                    colors[df[[pq]]<0.05 & df$ES<0] = "rgba(107,174,214)" #blue
-                    colors[df[[pq]]<0.01 & df$ES<0] = "rgba(49,130,189)" #darker blue
+                    colors[df[[pq]]<0.05 & df$ES<0] = "rgba(158,202,225)" #light blue
+                    colors[df[[pq]]<0.01 & df$ES<0] = "rgba(107,174,214)" #blue
+                    colors[df[[pq]]<0.005 & df$ES<0] = "rgba(49,130,189)" #darker blue
                     colors[df[[pq]]<0.001 & df$ES<0] = "rgba(8,81,156)" #cornflower
                 }else if(rv$run_mode == "glist"){
                   if(rv$ora_color == "red"){
                     colors[df[[pq]]<0.25] = "rgba(254,224,144)" #lightyellow
-                    colors[df[[pq]]<0.1] = "rgba(253,174,97)" #yellow
-                    colors[df[[pq]]<0.05] = "rgba(244,109,67)" #orange
-                    colors[df[[pq]]<0.01] = "rgba(215,48,39)" #red
+                    colors[df[[pq]]<0.05] = "rgba(253,174,97)" #yellow
+                    colors[df[[pq]]<0.01] = "rgba(244,109,67)" #orange
+                    colors[df[[pq]]<0.005] = "rgba(215,48,39)" #red
                     colors[df[[pq]]<0.001] = "rgba(165,0,38)" #dark red
                   }else if(rv$ora_color == "blue"){
                     colors[df[[pq]]<0.25] = "rgba(198,219,239)" #pale blue
-                    colors[df[[pq]]<0.1] = "rgba(158,202,225)" #light blue
-                    colors[df[[pq]]<0.05] = "rgba(107,174,214)" #blue
-                    colors[df[[pq]]<0.01] = "rgba(49,130,189)" #darker blue
+                    colors[df[[pq]]<0.05] = "rgba(158,202,225)" #light blue
+                    colors[df[[pq]]<0.01] = "rgba(107,174,214)" #blue
+                    colors[df[[pq]]<0.005] = "rgba(49,130,189)" #darker blue
                     colors[df[[pq]]<0.001] = "rgba(8,81,156)" #cornflower
+                  }else if(rv$ora_color == "grey"){
+                    colors[df[[pq]]<0.25] = "rgba(220,220,220)" #gainsboro
+                    colors[df[[pq]]<0.05] = "rgba(192,192,192)" #silver
+                    colors[df[[pq]]<0.01] = "rgba(169,169,169)" #darkgrey
+                    colors[df[[pq]]<0.005] = "rgba(128,128,128)" #grey
+                    colors[df[[pq]]<0.001] = "rgba(105,105,105)" #dimgrey
+                  }else if(rv$ora_color == "purple"){
+                    colors[df[[pq]]<0.25] = "rgba(232,201,255)" #lavender
+                    colors[df[[pq]]<0.05] = "rgba(221,175,255)" #thistle
+                    colors[df[[pq]]<0.01] = "rgba(210,150,255)" #plum
+                    colors[df[[pq]]<0.005] = "rgba(199,124,255)" #orchid
+                    colors[df[[pq]]<0.001] = "rgba(188,99,255)" #mediumorchid
+                  }else if(rv$ora_color == "orange"){
+                    colors[df[[pq]]<0.25] = "rgba(255,192,77)" #
+                    colors[df[[pq]]<0.05] = "rgba(255,183,51)" #
+                    colors[df[[pq]]<0.01] = "rgba(255,174,26)" #
+                    colors[df[[pq]]<0.005] = "rgba(255,165,0)" #orange
+                    colors[df[[pq]]<0.001] = "rgba(230,149,0)" #
+                  }else if(rv$ora_color == "green"){
+                    colors[df[[pq]]<0.25] = "rgba(255,192,77)" #
+                    colors[df[[pq]]<0.05] = "rgba(183,238,0)" #
+                    colors[df[[pq]]<0.01] = "rgba(144,187,0)" #
+                    colors[df[[pq]]<0.005] = "rgba(124,161,0)" #
+                    colors[df[[pq]]<0.001] = "rgba(104,136,0)" #green
+                  }else if(rv$ora_color == "cyan"){
+                    colors[df[[pq]]<0.25] = "rgba(77,195,255)" #
+                    colors[df[[pq]]<0.05] = "rgba(51,186,255)" #
+                    colors[df[[pq]]<0.01] = "rgba(26,178,255)" #
+                    colors[df[[pq]]<0.005] = "rgba(0,169,255)" # cyan
+                    colors[df[[pq]]<0.001] = "rgba(0,152,230)" #
                   }
                     
                 }
@@ -1434,8 +1495,18 @@
             g_color <- gcols2
           }else if(rv$ora_color == "blue"){
             g_color <- gcols3
+          }else if(rv$ora_color == "grey"){
+            g_color <- gcols_grey
+          }else if(rv$ora_color == "purple"){
+            g_color <- gcols_purple
+          }else if(rv$ora_color == "orange"){
+            g_color <- gcols_orange
+          }else if(rv$ora_color == "green"){
+            g_color <- gcols_green
+          }else if(rv$ora_color == "cyan"){
+            g_color <- gcols_cyan
           }
-          
+
           cluster_barplot <- df_padj_points %>%
             ggplot(aes(x=-log10(pval), y=factor(complete_name, levels = complete_name),
                      fill=-log10(df_padj_points[[color_value]]),
@@ -1592,7 +1663,18 @@
             g_color <- gcols2
           }else if(rv$ora_color == "blue"){
             g_color <- gcols3
+          }else if(rv$ora_color == "grey"){
+            g_color <- gcols_grey
+          }else if(rv$ora_color == "purple"){
+            g_color <- gcols_purple
+          }else if(rv$ora_color == "orange"){
+            g_color <- gcols_orange
+          }else if(rv$ora_color == "green"){
+            g_color <- gcols_green
+          }else if(rv$ora_color == "cyan"){
+            g_color <- gcols_cyan
           }
+          
           
           cluster_bubble <- df_padj_points %>%
             ggplot(aes(x=-log10(pval), y=factor(complete_name, levels = complete_name),
