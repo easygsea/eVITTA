@@ -12,6 +12,7 @@ server <- function(input, output, session) {
     
     # toggle button for a demo run
     output$btn_demo <- renderUI({
+        req(is.null(rv$demo_yes))
         btn_demo("ee")
     })
     

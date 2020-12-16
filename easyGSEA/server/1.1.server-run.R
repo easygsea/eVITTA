@@ -16,6 +16,7 @@
 # # when the user closed the modal, start rintrojs
 # observeEvent(input$welcome_modal, {
 #   removeModal()
+#   rv$demo_yes <- "yes"
 #   if(rv$demo_mode == "gsea"){
 #     call_introjs(rbind(intros$R_pre,intros$R_post_with_conversion_table,intros$R_post))
 #   }else {

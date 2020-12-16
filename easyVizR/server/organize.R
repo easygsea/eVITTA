@@ -18,6 +18,7 @@
 # # when the user closed the modal, start rintrojs
 # observeEvent(input$welcome_modal, {
 #   removeModal()
+#   rv$demo_yes <- "yes"
 #   rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
 #                                             steps = intros$upload)
 #   )

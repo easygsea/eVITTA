@@ -14,6 +14,7 @@
 # # when the user closed the modal, start rintrojs
 # observeEvent(input$welcome_modal, {
 #   removeModal()
+#   rv$demo_yes <- "yes"
 #   call_introjs(rbind(intros$E_pre,intros$E_post,intros$E_post_with_summary_ui))
 #   print(input$menu1)
 # 
