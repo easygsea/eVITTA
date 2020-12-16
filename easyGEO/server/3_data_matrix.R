@@ -20,7 +20,7 @@ output$ui_dm <- renderUI({
       ),
       column(8,
              
-             box(title=span(icon("table"),"Review processed data matrix"), width = 12, solidHeader=F, status = "primary", 
+             box(title=span(icon("table"),"Review processed data matrix", uiOutput("download_dmdf_button")), width = 12, solidHeader=F, status = "primary", 
                  id = "data_matrix",
                  
                  fluidRow(
@@ -36,6 +36,7 @@ output$ui_dm <- renderUI({
                           ),
                           
                           uiOutput("dmdf_filter_ui"),
+                          
                           
                           DT::dataTableOutput("data_matrix_df")
                           
@@ -53,6 +54,28 @@ output$ui_dm <- renderUI({
   }
 })
 
+# the button to download rv$dmdf, the data matrix
+output$download_dmdf_button <- renderUI({
+  req(!is.null(rv$dmdf))
+  req(nrow(rv$dmdf) >= 1)
+
+  div(
+    id = "download_dm", style = "display: inline-block; position: absolute; right: 0px; top: 4px",
+    downloadBttn(
+      size = "md", style = "unite",
+      outputId = "download_dmdf", label = NULL
+    ),
+    bsTooltip("download_dm", "Download the data matrix.")
+
+  )
+})
+
+output$download_dmdf <- downloadHandler(
+  filename = function(){paste0("data_matrix_for_further_analysis.csv")},
+  content = function(file){
+    fwrite(rv$dmdf, file)
+  }
+)
 
 # --------------- detect data source and provide download ---------------
 
