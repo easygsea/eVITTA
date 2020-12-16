@@ -1,10 +1,32 @@
 source("ui/css_addons.R")
 
 
+# ====================== Mode of analysis ======================
+upload_mode <- conditionalPanel(
+  condition = "input.menu1 == 'tab1'",
+  fluidRow(
+    column(12,
+           tags$hr(style="border-color: #48617b;margin: 8px;"),
+           
+           radioButtons(
+             inputId = "selected_mode",
+             label = div(style = "font-weight:400;", HTML(paste0("Upload mode:",add_help("mode_q")))),
+             choices = list("Retrieval by GSE Number" = "auto", "Manually Uploading Data" = "manual"),
+             selected = "auto"
+             # selected = "manual"
+           )
+           ,bsTooltip("mode_q",HTML("Select the method for uploading your data matrix and design matrix.")
+                      ,placement = "right")
+           ,tags$hr(style="border-color: #48617b;margin: 8px;")
+    )
+  )
+)
 
 sidebar <- dashboardSidebar(
     sidebarMenu(id="menu1",
                 menuItem("1. Extract GEO data", tabName="tab1", icon=icon("dashboard")),
+                
+                upload_mode,
                 
                 menuItem(text = span(id = "tab3_text", "2. Data matrix"), tabName="tab3", icon=icon("table")),
                 
@@ -26,6 +48,7 @@ sidebar <- dashboardSidebar(
 
 
 )
+
 
 
 
@@ -57,54 +80,56 @@ body <- dashboardBody(
                 #
                 #
                 #                 )),
-                fluidRow(
-                    column(4,
+                uiOutput("ui_tab1")
+                # fluidRow(
+                #     column(4,
+                # 
+                #            box(title=span(HTML("<b>1.1.</b>"),icon("search"), "Input GEO accession"), width = 12, solidHeader=F, status = "primary",
+                #                uiOutput("geo_accession_ui"),
+                # 
+                #            ),
+                # 
+                #            box(title=span(HTML("<b>1.2.</b>"),icon("hdd"),"Select Platform"), width = 12, solidHeader=F, status = "primary",
+                #                uiOutput("geo_platform_ui")
+                #            ),
+                # 
+                #            column(12,align="center",
+                #              uiOutput("guide_1a")
+                # 
+                #            )
+                # 
+                # 
+                #     ),
+                # 
+                #     column(8,
+                # 
+                #            tabBox(
+                #                title = NULL, width = 12,
+                #                id = "summary", height = "250px",
+                #                tabPanel("Summary",
+                # 
+                #                         uiOutput("gse_summary_ui")
+                # 
+                #                ),
+                #                tabPanel("Study info",
+                # 
+                #                         DT::dataTableOutput("gse_meta_df")
+                #                ),
+                #                tabPanel("Experiment info",
+                # 
+                #                         DT::dataTableOutput("gsm_meta_df")
+                #                )
+                #            ),
+                # 
+                # 
+                # 
+                #     )
+                # 
+                # 
+                # 
+                # 
+                # )                  
 
-                           box(title=span(HTML("<b>1.1.</b>"),icon("search"), "Input GEO accession"), width = 12, solidHeader=F, status = "primary",
-                               uiOutput("geo_accession_ui"),
-
-                           ),
-
-                           box(title=span(HTML("<b>1.2.</b>"),icon("hdd"),"Select Platform"), width = 12, solidHeader=F, status = "primary",
-                               uiOutput("geo_platform_ui")
-                           ),
-
-                           column(12,align="center",
-                             uiOutput("guide_1a")
-
-                           )
-
-
-                    ),
-
-                    column(8,
-
-                           tabBox(
-                               title = NULL, width = 12,
-                               id = "summary", height = "250px",
-                               tabPanel("Summary",
-
-                                        uiOutput("gse_summary_ui")
-
-                               ),
-                               tabPanel("Study info",
-
-                                        DT::dataTableOutput("gse_meta_df")
-                               ),
-                               tabPanel("Experiment info",
-
-                                        DT::dataTableOutput("gsm_meta_df")
-                               )
-                           ),
-
-
-
-                    )
-
-
-
-
-                )
                 ,
                 fixedPanel(
                   uiOutput("floating_button_1"),

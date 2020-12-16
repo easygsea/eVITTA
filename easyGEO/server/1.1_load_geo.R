@@ -36,6 +36,179 @@
 # # END-----------------------------------------------------------------------------
 
 
+# get the current run_mode ------------------------------------------------
+observe({
+  req(input$menu1 == "tab1")
+  rv$run_mode = input$selected_mode
+})
+# UI for the retrieval by GSE mode
+output$ui_tab1 <- renderUI({
+  if(rv$run_mode == "auto"){
+  fluidRow(
+    column(4,
+           
+           box(title=span(HTML("<b>1.1.</b>"),icon("search"), "Input GEO accession"), width = 12, solidHeader=F, status = "primary",
+               uiOutput("geo_accession_ui"),
+               
+           ),
+           
+           box(title=span(HTML("<b>1.2.</b>"),icon("hdd"),"Select Platform"), width = 12, solidHeader=F, status = "primary",
+               uiOutput("geo_platform_ui")
+           ),
+           
+           column(12,align="center",
+                  uiOutput("guide_1a")
+                  
+           )
+           
+           
+    ),
+    
+    column(8,
+           
+           tabBox(
+             title = NULL, width = 12,
+             id = "summary", height = "250px",
+             tabPanel("Summary",
+                      
+                      uiOutput("gse_summary_ui")
+                      
+             ),
+             tabPanel("Study info",
+                      
+                      DT::dataTableOutput("gse_meta_df")
+             ),
+             tabPanel("Experiment info",
+                      
+                      DT::dataTableOutput("gsm_meta_df")
+             )
+           )
+           
+           
+           
+    )
+    
+    
+    
+    
+  )}else{ uiOutput("ui_manual")}                  
+  
+})
+# UI for the manually uploading data mode
+output$ui_manual <- renderUI({
+  # req(input$selected_mode == "manual")
+  fluidRow(
+    column(6,
+             box(title=span(HTML("<b>1.1.</b>"),icon("upload"),"Upload Data Matrix"), width = 12, solidHeader=F, status = "primary", 
+                 id = "manual_data_matrix",
+                 
+                 div(
+                   fileInput("data_matrix_file",
+                             # help button added Edtion 1
+                             label = p("Upload tidied data matrix (CSV/TSV format):",
+                                       tags$style(type = "text/css", "#manual_help {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
+                                       bsButton("manual_help", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                             # "Upload tidied data matrix (CSV/TSV format):",
+                             accept = c(
+                               "text/csv",
+                               "text/comma-separated-values,text/plain",
+                               ".csv",".tsv",".txt",".tab")
+                   ), 
+                   bsTooltip("manual_help", "Click to learn more", placement = "top")
+                 )
+               )
+           ),
+    column(6,
+           box(title=span(HTML("<b>1.2.</b>"),icon("upload"),"Upload Design Matrix"), width = 12, solidHeader=F, status = "primary", 
+               id = "manual_design_matrix",
+               
+               div(
+                 fileInput("design_matrix_file",
+                           # help button added Edtion 1
+                           label = p("Upload tidied design matrix (CSV/TSV format):",
+                                     tags$style(type = "text/css", "#manual_help_2 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
+                                     bsButton("manual_help_2", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                           # "Upload tidied data matrix (CSV/TSV format):",
+                           accept = c(
+                             "text/csv",
+                             "text/comma-separated-values,text/plain",
+                             ".csv",".tsv",".txt",".tab")
+                 ), 
+                 bsTooltip("manual_help_2", "Click to learn more", placement = "top")
+               )
+           ),
+           column(12,align="center",
+                  uiOutput("guide_1a")
+                  
+           ))
+  )
+})
+observeEvent(input$manual_help,{
+  showModal(modalDialog(
+    inputId = "file_help_1",
+    #title = "Ranked list file format (*.rnk)",
+    #includeHTML(paste0(getwd(),"/server/help_button_page.html")),
+    # dataTableOutput('example_data1'),
+    # includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
+    # includeMarkdown(knitr::knit(paste0(getwd(),"/inc/rnk_explaination.Rmd"),quiet=T)),
+    easyClose = TRUE,size="l",
+    footer = modalButton("OK")
+  ))
+})
+observeEvent(input$manual_help_2,{
+  showModal(modalDialog(
+    inputId = "file_help_2",
+    #title = "Ranked list file format (*.rnk)",
+    #includeHTML(paste0(getwd(),"/server/help_button_page.html")),
+    # dataTableOutput('example_data1'),
+    # includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
+    # includeMarkdown(knitr::knit(paste0(getwd(),"/inc/rnk_explaination.Rmd"),quiet=T)),
+    easyClose = TRUE,size="l",
+    footer = modalButton("OK")
+  ))
+})
+observeEvent(input$data_matrix_file, {
+  # generate data matrix
+  inFile <- input$data_matrix_file
+  read_data_matrix(inFile = inFile)
+
+  # showModal(modalDialog(
+  #   title = "File Upload",
+  #   easyClose = F,
+  #   size = "l",
+  #   footer = uiOutput("matrix_buttons")
+  # ))
+  # 
+  # 
+})
+# the buttons of the modal after file uploaded
+output$matrix_buttons <- renderUI({
+  fluidRow(
+    div(style="display:inline-block;",
+        uiOutput("dm_confirm_button")
+    ),
+    div(style="display:inline-block;",
+        actionButton('dm_reset', 'Reset upload')
+    )
+  )   
+})
+
+output$dm_confirm_button <- renderUI({
+  actionButton("dm_confirm", "Confirm and Upload", class = "btn_primary")
+})
+# when user presses reset
+observeEvent(input$dm_reset, {
+  # rv$folder_upload_state <- 'reset'
+  shinyjs::reset("data_matrix_file")
+  removeModal()
+})
+# when user clicks confirm and upload button
+observeEvent(input$dm_confirm, {
+  #initialize rv$dmdf
+  rv$dmdf <- rv$indf
+  removeModal()
+})
+
 # --------------- search GEO accession ---------------
 # currently checks if input exists
 # todo: check if input format is correct (GSEXXXXXX)
@@ -330,7 +503,7 @@ observeEvent(input$geo_platform, {
 
 # ---------- when all is done, show guide box to next page ---------
 output$guide_1a <- renderUI({
-  if (is.null(rv$plat_id)==F){ # user already selected a platform
+  if (is.null(rv$plat_id)==F || is.null(rv$fddf)==F){ # user already selected a platform
     msg = "Navigate to <b>2. Data matrix</b> to proceed"
     guide_box("guide1", msg)
   } else {

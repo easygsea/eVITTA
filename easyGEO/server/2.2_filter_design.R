@@ -191,6 +191,7 @@ output$filtered_design_df <- DT::renderDataTable({
                                            rv$pdata[c("title", "geo_accession")],  # translation df
                                            "title") # translating to
   }
+  # fwrite(df, file = "design_matrix.csv", row.names = TRUE)
   df
   
 }, plugins="ellipsis",options=dt_options(30, scrollX=T)
