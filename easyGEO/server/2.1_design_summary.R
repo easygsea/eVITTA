@@ -78,7 +78,7 @@ output$ui_design <- renderUI({
       fluidRow(
         column(12,
                tabBox(
-                 title = NULL, width = 12,
+                 title = uiOutput("download_fddf_button"), width = 12,
                  
                  tabPanel(span(HTML("<b>3.2.</b>"),icon("microscope"),HTML("Review design matrix")),
                           
@@ -112,6 +112,28 @@ output$ui_design <- renderUI({
     
   }
 })
+
+# the button to download rv$fddf, the design matrix
+output$download_fddf_button <- renderUI({
+  req(!is.null(rv$fddf))
+  req(nrow(rv$fddf) >= 1)
+
+  div(
+    id = "download_fd", style = "display: inline-block; position: absolute; right: 0px; top: 4px;",
+    downloadBttn(
+      size = "md", style = "unite",
+      outputId = "download_fddf", label = NULL
+    ),
+    bsTooltip("download_fd", "Download the design matrix")
+  )
+})
+
+output$download_fddf <- downloadHandler(
+  filename = function(){paste0("design_matrix_for_further_analysis.csv")},
+  content = function(file){
+    fwrite(rv$fddf, file, row.names = T)
+  }
+)
 
 # ----------- guide box to 4. run DEG page ---------
 observeEvent(input$guide3,{
