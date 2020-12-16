@@ -189,6 +189,10 @@ output$ui_gmt_download <- renderUI({
         gmt_paths = gsub(paste0(getwd(),"/www/"),"",gmt_paths)
         gmt_paths_basenames = paste0(gsub(" ","_",species_full),"_",basename(gmt_paths))
         
+        # add date
+        cdate <- as.character(Sys.Date()) %>% strsplit(.,split="-") %>% unlist(.)
+        gmt_paths_basenames = gsub(".gmt",paste0("_",cdate[1],cdate[2],"05",".gmt"),gmt_paths_basenames)
+        
         a_links = paste0("<a href='",gmt_paths,"' download> <i class='fa fa-download'> </i>",gmt_paths_basenames,"</a><br/>")
         
         div(style="width: 100%;word-break: break-word;",
