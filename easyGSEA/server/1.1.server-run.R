@@ -418,6 +418,10 @@
     # reset button
     observeEvent(input$reset_db, {
         rv$run = NULL
+        
+        rv$glist_check = NULL
+        rv$gene_lists = NULL
+        rv$gene_lists_after = NULL
 
         species <- input$selected_species
         for(collection in names(gmt_collections_paths[[species]])){
@@ -878,6 +882,11 @@
         shinyjs::enable("glist_name")
         shinyjs::reset("num_acc")
         shinyjs::enable("num_acc")
+        
+        updateTextAreaInput(session,
+                            inputId = "gene_list",
+                            value = ""
+        )
       }
     })
     
@@ -960,11 +969,6 @@
         rv$gene_lists = NULL
         rv$gene_lists_after = NULL
 
-        updateTextAreaInput(session,
-                            inputId = "gene_list",
-                            value = ""
-        )
-        
         # updateTextInput(session,
         #                 inputId = "glist_name",
         #                 value = NULL)
