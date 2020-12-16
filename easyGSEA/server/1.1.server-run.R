@@ -86,34 +86,34 @@
 
     # --------------  1.2 select GMTs ---------------------------
 
-    observe({
-        req(nchar(input$selected_species)>0 && input$selected_species != "other")
-        req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
-
-        species <- input$selected_species
-
-        for(collection in sort(names(gmt_collections_paths[[species]]))){
-          if(collection %in% col_f){
-            f = FALSE
-          }else{
-            f = TRUE
-          }
-            # print(paste0(species,gsub(" ","_",collection)))
-            rv$v[[species]][[collection]] <- column(
-              6,
-              box(
-                title = strsplit(collection,"_")[[1]][[2]], width = 12, status = "primary", collapsible = T, collapsed = f,
-                checkboxGroupInput(
-                  inputId = paste0(species,gsub(" ","_",collection)),
-                  label = NULL,
-                  # label = strsplit(collection,"_")[[1]][[2]],
-                  choices = sort(gmt_collections[[species]][[collection]]),
-                  selected = gmt_collections_selected[[species]][[collection]]
-                )
-              )
-            )
-        }
-    })
+    # observe({
+    #     req(nchar(input$selected_species)>0 && input$selected_species != "other")
+    #     req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
+    # 
+    #     species <- input$selected_species
+    # 
+    #     for(collection in sort(names(gmt_collections_paths[[species]]))){
+    #       if(collection %in% col_f){
+    #         f = FALSE
+    #       }else{
+    #         f = TRUE
+    #       }
+    #         # print(paste0(species,gsub(" ","_",collection)))
+    #         rv$v[[species]][[collection]] <- column(
+    #           6,
+    #           box(
+    #             title = strsplit(collection,"_")[[1]][[2]], width = 12, status = "primary", collapsible = T, collapsed = f,
+    #             checkboxGroupInput(
+    #               inputId = paste0(species,gsub(" ","_",collection)),
+    #               label = NULL,
+    #               # label = strsplit(collection,"_")[[1]][[2]],
+    #               choices = sort(gmt_collections[[species]][[collection]]),
+    #               selected = gmt_collections_selected[[species]][[collection]]
+    #             )
+    #           )
+    #         )
+    #     }
+    # })
 
     output$test_db <- renderUI({
     
@@ -260,7 +260,32 @@
 
     # --------------  1.2.2 show databases in a modal ---------------------------
     observeEvent(input$showdbs,{
-      species = input$selected_species
+      # req(nchar(input$selected_species)>0 && input$selected_species != "other")
+      # req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
+      
+      species <- input$selected_species
+      
+      for(collection in sort(names(gmt_collections_paths[[species]]))){
+        if(collection %in% col_f){
+          f = FALSE
+        }else{
+          f = TRUE
+        }
+        # print(paste0(species,gsub(" ","_",collection)))
+        rv$v[[species]][[collection]] <- column(
+          6,
+          box(
+            title = strsplit(collection,"_")[[1]][[2]], width = 12, status = "primary", collapsible = T, collapsed = f,
+            checkboxGroupInput(
+              inputId = paste0(species,gsub(" ","_",collection)),
+              label = NULL,
+              # label = strsplit(collection,"_")[[1]][[2]],
+              choices = sort(gmt_collections[[species]][[collection]]),
+              selected = gmt_collections_selected[[species]][[collection]]
+            )
+          )
+        )
+      }
 
       showModal(modalDialog(id = "db_modal",
         title = HTML(paste0("Available databases for <i>",species_translate(species),"</i>")),
@@ -498,6 +523,14 @@
     observeEvent(input$reset, {
       reset_rnk()
     })
+    
+    # # onclick of the rnkfile upload button
+    # onclick(
+    #   "rnkfile", 
+    #   if(is.null(rv$db_status) || rv$db_status != "selected"){
+    #     shinyalert("Please select the species and corresponding datases")
+    #   }
+    #   )
 
     # read in RNK file path name, disable widget
     observeEvent(input$rnkfile, {
