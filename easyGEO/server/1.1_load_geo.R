@@ -289,43 +289,51 @@ observeEvent(input$geo_platform, {
 
   plat <- isolate(input$plat)
   rv$plat_id <- match(plat, rv$platforms)
-
-  # initialize the count matrix (even if it's empty) with first row = Name
-  exprs <- exprs(gse())
-  if (nrow(exprs) >0){ # put gene names onto first column
-    dmdf <- cbind(Name = rownames(exprs), exprs)
-  } else {
-    dmdf <- cbind(Name = character(0), exprs)
-  }
-  rownames(dmdf) <- c() # remove rownames
-  rv$dmdf <- dmdf
-  rv$dmdf_o <- dmdf
-
-
-  # initialize samples list
-  rv$all_samples <- sampleNames(gse()) # this one stays the same
-  rv$samples <- sampleNames(gse()) # this one will change
-
-  # initialize pdata
-  rv$pdata <- pData(phenoData(gse()))
-
-  # initialize fddf
-  rv$fddf <- design_df() # initially unfiltered, will update when filter
   
-  # initialize gene identifiers
-  if(rv$microarray == "yes"){
-    # GPL probes' info
-    # gset <- rv$gse_all[[match(plat, rv$platforms)]]
+  withProgress(message = 'Loading data...', value = 1, {
+  
+    # initialize the count matrix (even if it's empty) with first row = Name
+    exprs <- exprs(gse())
+    if (nrow(exprs) >0){ # put gene names onto first column
+      dmdf <- cbind(Name = rownames(exprs), exprs)
+    } else {
+      dmdf <- cbind(Name = character(0), exprs)
+    }
+    rownames(dmdf) <- c() # remove rownames
+    rv$dmdf <- dmdf
+    rv$dmdf_o <- dmdf
+  
+    incProgress(0.5)
+  
+    # initialize samples list
+    rv$all_samples <- sampleNames(gse()) # this one stays the same
+    rv$samples <- sampleNames(gse()) # this one will change
+  
+    # initialize pdata
+    rv$pdata <- pData(phenoData(gse()))
+  
+    # initialize fddf
+    rv$fddf <- design_df() # initially unfiltered, will update when filter
     
-    df <- pData(featureData(gse())) 
-    df <- df %>%
-      dplyr::select(any_of(c(matches(accepted_gene_identifiers, ignore.case = T),ends_with("_id", ignore.case = T))))
-
+    incProgress(0.2)
     
-    rv$identifiers <- colnames(df)
-    rv$identifiers_df <- df
-    
-  }
+    # initialize gene identifiers
+    if(rv$microarray == "yes"){
+      # GPL probes' info
+      # gset <- rv$gse_all[[match(plat, rv$platforms)]]
+      
+      df <- pData(featureData(gse())) 
+      df <- df %>%
+        dplyr::select(any_of(c(matches(accepted_gene_identifiers, ignore.case = T),ends_with("_id", ignore.case = T))))
+  
+      
+      rv$identifiers <- colnames(df)
+      rv$identifiers_df <- df
+      
+    }
+    incProgress(0.3)
+  
+  })
 
 })
 
