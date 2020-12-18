@@ -376,6 +376,9 @@ read_data_matrix <- function(inFile){
   if(rv$run_mode == "auto"){
       # then, match each column to rv$dmdf and update the values into it
       rvdf <- rv$dmdf
+      print(rv$dmdf)
+      print(nrow(rv$dmdf) >=  1)
+      
       dmdf <- data.frame(matrix(NA, nrow = nrow(indf), ncol = ncol(rvdf))) # initialize empty df
       dmdf <- data.frame(lapply(colnames(rvdf), function(x){ # update values into dmdf (leaves NA if not found)
         if (x %in% colnames(indf)){
@@ -386,17 +389,23 @@ read_data_matrix <- function(inFile){
       }))
    }
   if(rv$run_mode == "manual"){
+    # perform data transformation to create rv$indf, which is assigned to rv$dmdf later when the user confirms
     indf <- cbind(Name = indf_rown[-1], indf)
     rownames(indf) <- c()
     rvdf <- indf
+    # the vector to store the sample names to compare with the sample names from the design matrix
+    rv$dmdf_samples <- indf_coln[-1]
+    
     rv$indf <- indf
+    
+    # the modal that briefly show the datas inside the file that the user uploads
     showModal(modalDialog(
       title = div("File Upload",style = "font-size:170%"),
       span(HTML("The uploaded file contains these <b>Genes:</b> "),
            glue_collapse(indf$Name[1:10], sep = ", ", last = " and "), "... (",
            length(indf$Name), HTML(" in total), and  these <b>Samples:</b>"),
            glue_collapse(colnames(indf)[2:10], sep = ", ", last = " and "), "... (",
-           length(colnames(indf))-1, " in total).",br(), " Please review them to proceed.",
+           length(colnames(indf))-1, " in total).",br(),uiOutput("sample_comparison"), " Please review them to proceed.",
            style = "font-size:130%"),
       easyClose = F,
       size = "l",

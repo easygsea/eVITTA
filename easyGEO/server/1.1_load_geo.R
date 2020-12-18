@@ -104,11 +104,9 @@ output$ui_manual <- renderUI({
                  
                  div(
                    fileInput("data_matrix_file",
-                             # help button added Edtion 1
                              label = p("Upload tidied data matrix (CSV/TSV format):",
                                        tags$style(type = "text/css", "#manual_help {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
                                        bsButton("manual_help", label = "", icon = icon("question"), style = "info", size = "extra-small")),
-                             # "Upload tidied data matrix (CSV/TSV format):",
                              accept = c(
                                "text/csv",
                                "text/comma-separated-values,text/plain",
@@ -124,11 +122,9 @@ output$ui_manual <- renderUI({
                
                div(
                  fileInput("design_matrix_file",
-                           # help button added Edtion 1
                            label = p("Upload tidied design matrix (CSV/TSV format):",
                                      tags$style(type = "text/css", "#manual_help_2 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
                                      bsButton("manual_help_2", label = "", icon = icon("question"), style = "info", size = "extra-small")),
-                           # "Upload tidied data matrix (CSV/TSV format):",
                            accept = c(
                              "text/csv",
                              "text/comma-separated-values,text/plain",
@@ -167,6 +163,7 @@ observeEvent(input$manual_help_2,{
     footer = modalButton("OK")
   ))
 })
+# when the data matrix is uploaded
 observeEvent(input$data_matrix_file, {
   # generate data matrix
   inFile <- input$data_matrix_file
@@ -181,6 +178,18 @@ observeEvent(input$data_matrix_file, {
   # 
   # 
 })
+
+# when the design matrix is uploaded, rv$fddf changed from NULL to a data frame
+observeEvent(input$design_matrix_file, {
+  print("tired as fuck")
+  print(rv$fddf)
+  # read the design matrix into rv$fddf
+  inFile <- input$design_matrix_file
+  read_design_matrix(inFile)
+
+  print(head(rv$fddf))
+})
+
 # the buttons of the modal after file uploaded
 output$matrix_buttons <- renderUI({
   fluidRow(
@@ -204,10 +213,119 @@ observeEvent(input$dm_reset, {
 })
 # when user clicks confirm and upload button
 observeEvent(input$dm_confirm, {
+  print("stay positive")
+  print(rv$dmdf)
   #initialize rv$dmdf
   rv$dmdf <- rv$indf
   removeModal()
 })
+
+# the function that read the design matrix
+read_design_matrix <- function(inFile){
+  
+  # the modal that appears when the file user upload exceeds 50MB, Version1
+  if(inFile$size >= 100*1024^2){
+    showModal(modalDialog(
+      inputId = "size_reminder_modal",
+      # title = "The file size exceeds 100MB.",
+      div("The file you uploaded exceeds 100MB, please modify it to proceed. Try to delete unneeded columns and 
+            only keep the columns that you are interested in. 
+            Then press \"Browse...\" to upload it again. Thank you.",style="font-size:200%"),
+      easyClose = TRUE,size="l"
+      , footer = modalButton("OK")
+    ))
+  }
+  
+  #added try() here because there could be an error reading the file
+  indf <- try(read.csv(inFile$datapath, header=T, 
+                       colClasses=c("character")))
+  
+  # read in TAB delimited
+  if(ncol(indf)==1){
+    indf <- try(read.table(inFile$datapath, sep="\t",header=T, 
+                           colClasses=c("character")))
+  }
+  print(head(indf))
+  # read in space delimited
+  if(ncol(indf)==1){
+    indf <- try(read.table(inFile$datapath, sep=" ",header=T, 
+                           colClasses=c("character")))
+  }
+  
+  if(inherits(indf, "try-error")) {        
+    ErrorMessage <- conditionMessage(attr(indf, "condition"))  # the error message
+    #show a modal dialog if there is an error reading files causing crash
+    showModal(modalDialog( 
+      title = "Your input file has a wrong format",
+      HTML(paste0("Having trouble loading your file:<br>",
+                  ErrorMessage,"<br>",
+                  "Please revise your input file according to our notes and reupload the file.")),
+      size = "l",
+      easyClose = TRUE
+      ,footer = modalButton("OK")
+    ))
+  }
+  
+  
+  req(!inherits(indf, "try-error")) #require to be no error to proceed the following codes
+  
+  # This part removes duplicate rows of indf
+  DuplicateCheck <- as.data.frame(indf[,1], drop=FALSE) #extract first column of indf and check if there is 
+  DuplicateCheck <- duplicated(DuplicateCheck)
+  indf<-indf[!DuplicateCheck, ] #remove duplicate rows
+  DuplicateRows <- which(DuplicateCheck == TRUE, arr.ind=TRUE)
+  if(length(DuplicateRows) > 0){ # if there are duplicate rows
+    showModal(modalDialog( 
+      title = "Warning: The file you uploaded contains duplicate gene names",
+      HTML(paste0("Only the first duplicate(s) will be kept.<br>",
+                  "If this is not what you intend, please double check your input file and re-upload.")),
+      size = "l",
+      easyClose = TRUE
+      ,footer = modalButton("OK")
+    ))
+  }
+  ###
+  
+  indf_coln <- colnames(indf)
+  
+  #print(indf_coln)
+  #print(validUTF8(indf_coln))
+  #print(prod(validUTF8(indf_coln)))
+  #adding a IF statement to ensure that the characters in the column names are encoded correctly,
+  #which means there is no invalid characters inside the column names
+  if(prod(validUTF8(indf_coln))){
+    whether_contains_invalid <- FALSE
+  }
+  else{
+    #delete the column names that contain invalid characters
+    #indf_coln <- indf_coln[validUTF8(indf_coln)]
+    whether_contains_invalid <- TRUE
+    for(i in seq_along(indf_coln)){
+      #delete the unrecognized character
+      indf_coln[i] <- stringr::str_replace_all(indf_coln[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+      # print(indf_coln[i])
+    }
+  }
+  
+  rv$fddf_samples <- indf$X
+  rownames(indf) <- indf$X
+  indf[ ,1] <- NULL
+  rv$fddf <- indf
+  print("function ends")
+  
+}
+
+output$sample_comparison <- renderUI({
+  number_of_matches <- 0
+  map(rv$dmdf_samples, function(x){
+    if(any(rv$fddf_samples) == x)
+      number_of_matches = number_of_matches + 1
+  })
+  print(number_of_matches)
+  number_of_matches
+})
+
+
 
 # --------------- search GEO accession ---------------
 # currently checks if input exists

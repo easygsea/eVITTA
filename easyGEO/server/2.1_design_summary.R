@@ -1,6 +1,6 @@
 # --------------- overall design tab UI -----------------
 output$ui_design <- renderUI({
-  if(is.null(rv$plat_id)){
+  if(is.null(rv$plat_id) && is.null(rv$fddf)){
     panel_null()
   }else{
     div(
