@@ -14,6 +14,7 @@ options(shiny.maxRequestSize=100*1024^2)
 server <- function(input, output, session) {
     # toggle button for a demo run
     output$btn_demo <- renderUI({
+        req(is.null(rv$demo_yes))
         btn_demo("ee")
     })
     

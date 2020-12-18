@@ -30,8 +30,8 @@ options(repos = BiocManager::repositories())
 source("global/functions.R")
 
 # --------------- Initialize introjs -------------------
-# intropath <- paste0(getwd(), "/intro/")
-intropath <- paste0(getwd(), "/intro_demo/") # initialize the introjs for demo session
+intropath <- paste0(getwd(), "/intro/")
+# intropath <- paste0(getwd(), "/intro_demo/") # initialize the introjs for demo session
 filepaths <- list.files(intropath, full.names=T)
 intros <- lapply(filepaths, function(x){
   df <- data.frame(read.csv(x, header=T, sep="\t"))

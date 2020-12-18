@@ -1,41 +1,41 @@
-# DEMO SESSION CODE -------------------------------------------------------
-library(later)
-# the modal to remind the user it is a demo session
-observe({
-  init_demo()
-  showModal(modalDialog(title = tags$h3("Welcome to our easyGEO demo session"),
-                        tags$h4("Explore the sample output that performs interactively in the same way as real output.")
-                        ,br()
-                        ,tags$h4("Click OK to follow the intro tour."),
-                        size = "m",
-                        easyClose = FALSE
-                        ,footer = actionButton("welcome_modal",label = "OK")))
-
-})
-# when the user closed the modal, start rintrojs
-observeEvent(input$welcome_modal, {
-  removeModal()
-  rv$demo_yes <- "yes"
-  call_introjs(rbind(intros$E_pre,intros$E_post,intros$E_post_with_summary_ui))
-  print(input$menu1)
-
-})
-
-# start rintrojs when users switch tabs
-observeEvent(input$menu1,{
-  if(input$menu1 == "tab3"){
-    later::later(~call_introjs(intros$D_post), delay = 2)
-  } else if(input$menu1 == "tab2"){
-    later(~call_introjs(intros$F_post),2)
-  } else if(input$menu1 == "tab4"){
-    later(~call_introjs(rbind(intros$R_post,intros$R_post_deg)),2)
-  } else if(input$menu1 == "tab5"){
-    later(~call_introjs(intros$V_volcano), 2)
-  } else {
-
-  }
-})
-# END-----------------------------------------------------------------------------
+# # DEMO SESSION CODE -------------------------------------------------------
+# library(later)
+# # the modal to remind the user it is a demo session
+# observe({
+#   init_demo()
+#   showModal(modalDialog(title = tags$h3("Welcome to our easyGEO demo session"),
+#                         tags$h4("Explore the sample output that performs interactively in the same way as real output.")
+#                         ,br()
+#                         ,tags$h4("Click OK to follow the intro tour."),
+#                         size = "m",
+#                         easyClose = FALSE
+#                         ,footer = actionButton("welcome_modal",label = "OK")))
+# 
+# })
+# # when the user closed the modal, start rintrojs
+# observeEvent(input$welcome_modal, {
+#   removeModal()
+#   rv$demo_yes <- "yes"
+#   call_introjs(rbind(intros$E_pre,intros$E_post,intros$E_post_with_summary_ui))
+#   print(input$menu1)
+# 
+# })
+# 
+# # start rintrojs when users switch tabs
+# observeEvent(input$menu1,{
+#   if(input$menu1 == "tab3"){
+#     later::later(~call_introjs(intros$D_post), delay = 2)
+#   } else if(input$menu1 == "tab2"){
+#     later(~call_introjs(intros$F_post),2)
+#   } else if(input$menu1 == "tab4"){
+#     later(~call_introjs(rbind(intros$R_post,intros$R_post_deg)),2)
+#   } else if(input$menu1 == "tab5"){
+#     later(~call_introjs(intros$V_volcano), 2)
+#   } else {
+# 
+#   }
+# })
+# # END-----------------------------------------------------------------------------
 
 
 # --------------- search GEO accession ---------------
