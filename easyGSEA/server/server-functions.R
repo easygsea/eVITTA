@@ -665,7 +665,9 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) %>%
+            dplyr::arrange(desc(.[[pq]]))
+          
           rv$bar_tl <- df
           
             if(is.null(df)==T || nrow(df)<1){

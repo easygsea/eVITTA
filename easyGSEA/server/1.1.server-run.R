@@ -76,20 +76,6 @@
   })
 
 
-    # --------------  1.1 select databases --------------------
-
-    # # disable selection when user confirms gmts; enables upon modify
-    # # this is to prevent accidentally messing up selections by changing species
-    # observe({
-    #     req(is.null(rv$db_status)==F)
-    #     if (rv$db_status == "selected"){
-    #         shinyjs::disable("selected_species")
-    #     }
-    #     else if (rv$db_status == "modify"){
-    #         shinyjs::enable("selected_species")
-    #     }
-    # })
-
     # --------------  1.2 select GMTs ---------------------------
 
     # observe({
