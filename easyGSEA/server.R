@@ -40,9 +40,9 @@ server <- function(input, output, session) {
             bottom = 22,
             left = 12,
             if(is.null(input$selected_mode) || input$selected_mode == "gsea"){
-                downloadLink("dataset_download","Download Sample Data", style = "color: #FFFF99" )
+                downloadLink("dataset_download","Download Sample Data", style = "color: #FFFF99;font-size:90%;" )
             } else {
-                downloadLink("dataset_download_ora","Download Sample Data", style = "color: #FFFF99" )
+                downloadLink("dataset_download_ora","Download Sample Data", style = "color: #FFFF99;font-size:90%;" )
             }
         )
     })

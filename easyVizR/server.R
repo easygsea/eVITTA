@@ -139,7 +139,7 @@ server <- function(input, output, session) {
         fixedPanel(
             bottom = 22,
             left = 12,
-            downloadLink("dataset_download","Download Sample Data", style = "color: #FFFF99" )
+            downloadLink("dataset_download","Download Sample Data", style = "color: #FFFF99;font-size:90%;" ) #color: #FFFF99;
         )
     })
     output$dataset_download <- downloadHandler(
