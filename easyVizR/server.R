@@ -136,6 +136,7 @@ server <- function(input, output, session) {
     
     #download sample data function and ui
     output$download_sample_data <- renderUI({
+        req(is.null(rv$demo_yes))
         fixedPanel(
             bottom = 22,
             left = 12,

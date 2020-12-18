@@ -5,9 +5,10 @@
 # observe({
 #   init_demo_gsea()
 #   #init_demo_ora()
-#   showModal(modalDialog(title = tags$h3("Welcome to our easyGSEA demo session"),
-#                         tags$h4("The demo session has the features of our app.
-#                         Please follow the intro tour and switch to different tabs to explore it."),
+#   showModal(modalDialog(title = tags$h3("Welcome to easyGSEA demo session"),
+#                         tags$h4("Explore the sample output that performs interactively in the same way as real output.")
+#                         ,br()
+#                         ,tags$h4("Click OK to follow the intro tour."),
 #                         size = "m",
 #                         easyClose = FALSE
 #                         ,footer = actionButton("welcome_modal",label = "OK")))
