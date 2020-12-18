@@ -501,26 +501,31 @@ output$id_box <- renderUI({
     box(
         title = span(icon("align-left"),"Gene ID conversion"), width = 12, status = "primary", #span(img(src = "easygsea_bw.tiff", height = 40))
         
-        fluidRow(
-            column(
-                12,
-                div(
-                    style = "display: inline-block;vertical-align:top;",
-                    uiOutput("ui_mat_download")
+        div(
+            id = "DataTables_Table_0_wrapper",
+            fluidRow(
+                
+                column(
+                    12,
+                    div(
+                        style = "display: inline-block;vertical-align:top;",
+                        uiOutput("ui_mat_download")
+                    )
+                    ,div(
+                        style = "display: inline-block;vertical-align:top;",
+                        uiOutput("ui_deg_download")
+                    )
                 )
-                ,div(
-                    style = "display: inline-block;vertical-align:top;",
-                    uiOutput("ui_deg_download")
+            )
+            ,br()
+            ,fluidRow(
+                column(
+                    12
+                    ,dataTableOutput("id_conversion_table")
                 )
             )
         )
-        ,br()
-        ,fluidRow(
-            column(
-                12
-                ,dataTableOutput("id_conversion_table")
-            )
-        )
+        
     )
 })
 

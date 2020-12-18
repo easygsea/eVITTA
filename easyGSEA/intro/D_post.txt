@@ -1,5 +1,5 @@
 element	intro
 selected_download_gs	Select database(s) to download the corresponding enrichment results.
-selected_es_tables	Review the enrichment table.
-gs_tbl_dl_bttn	Download the enrichment table and proceed to <a href='https://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'>easyVizR</a> for multiple comparisons on functional categories.
-ui_gmt_download	Download our gene set libraries here.
+selected_es_tables	Detailed enrichment statistics are displayed as a table. Scroll or search for the gene sets and/or genes you are interested in.
+gs_tbl_dl_bttn	Download the enrichment table for record. Proceed to <a href='https://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'>easyVizR</a> for multiple comparisons on functional categories.
+ui_gmt_download	Our gene set libraries are available for download for further analysis and/or for tool development.

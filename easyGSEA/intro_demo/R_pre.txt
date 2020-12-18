@@ -1,6 +1,6 @@
 element	intro
 selected_mode	To begin with, select the mode of analysis.
-	<b>Pre-ranked GSEA</b> is selected.
+	The demo session will display the sample output of a <b>Pre-ranked GSEA</b> run.
 run_analysis_box	This is the main panel to analyze your data.
 selected_box	First, select the species that matches your input query, or choose <b>Custom analysis</b> to upload your own GMT file(s).
 gene_identifier	Next, select the identifier of your input genes. If unsure, select <b>Other/Mixed</b>.
