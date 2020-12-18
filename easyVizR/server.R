@@ -140,7 +140,7 @@ server <- function(input, output, session) {
         req(is.null(rv$demo_yes))
         fixedPanel(
             bottom = 22,
-            left = 12,
+            left = 14,
             downloadLink("dataset_download","Download Sample Data", style = "color: #FFFF99;font-size:90%;" ) #color: #FFFF99;
         )
     })
