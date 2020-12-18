@@ -133,7 +133,7 @@ output$nx_vol_colthresh_opt <- renderUI({
               placement = "top"),
     br(),
     numericInput("nx_p", 
-                 "P <= :", value = rv$nx_p, min = 0, max = 1, step=0.001, width="100px"),
+                 p_filter_text, value = rv$nx_p, min = 0, max = 1, step=0.001, width="100px"),
     numericInput("nx_Stat", 
                  stat_replace1("|Stat| >= :", rv$nx_selected), 
                  value = rv$nx_Stat, min = 0, max = 1, step=0.001, width="100px"),
