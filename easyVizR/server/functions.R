@@ -1018,7 +1018,7 @@ btn_demo <- function(id){
   }
   
   fixedPanel(
-    bottom = 25,
+    bottom = 50,
     actionBttn(id,label
                ,block = TRUE
                ,style = style

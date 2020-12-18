@@ -987,7 +987,7 @@
                 # edges_mat = edges_mat[edges_mat$percent>rv$percent_cutoff,]
                 rv$dendro_run = "success"
                 }
-            print(Sys.time())
+            # print(Sys.time())
             # nodes matrix
             # colors
             get_colors <- function(pq=rv$vis_pq){
@@ -2312,7 +2312,7 @@
       }
       
       fixedPanel(
-        bottom = 25,
+        bottom = 50,
         actionBttn(id,label
                    ,block = TRUE
                    ,style = style
