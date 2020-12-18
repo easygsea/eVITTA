@@ -136,10 +136,12 @@ observeEvent(input$n_use_data,{
     }
     
     
-    
+    #heatmap_sortby_initializer = rv$nx_n[[1]]
+    #isolate({ heatmap_sortby_initializer<-rv$nx_n[[1]] })
     # ---------------  heatmap options
     rv$n_to_plot <- "Stat"
     rv$heatmap_sortby <- rv$nx_n[[1]]
+    #rv$heatmap_sortby <- heatmap_sortby_initializer
     rv$n_hm_ylabs <- F
 
     
@@ -251,6 +253,24 @@ observeEvent(input$n_use_data,{
   # manually reload the UI
   remove_ui("venn_dropdowns")
   remove_ui("upset_dropdowns")
+  # tab 4 elements
+  remove_ui("select_graph_to_display")
+  remove_ui("heatmap_dropdowns")
+  remove_ui("scatter_selection")
+  remove_ui("scatter_3d_dropdowns")
+  remove_ui("scatter_2d_dropdowns")
+  remove_ui("single_dropdowns")
+  remove_ui("single_selections")
+  remove_ui("nx_bar_panel_dropdowns")
+  remove_ui("network_selection")
+  remove_ui("dataset_selection")
+  remove_ui("network_dropdowns ")
+  
+  
+  
+  
+  
+  
   
   # # find max stat and generate scale
   # statmax <- max(dplyr::select(df_n, contains("Stat_")), na.rm=TRUE)

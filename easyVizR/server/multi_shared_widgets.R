@@ -22,8 +22,30 @@ observeEvent(input$tabs, {
     
   } else if (input$tabs == "tab3"){ # vis tab
     
+    move_ui("select_graph_to_display","select_graph_to_display_anchor","afterEnd")
     move_ui("ins_table_panel", "vis_pg_bottom", "afterEnd")
     move_ui("n_filters", "n_filters_here", "afterEnd")
+    move_ui("heatmap_dropdowns","heatmap_dropdowns_anchor","afterEnd")
+    #Scatter
+    move_ui("scatter_selection","scatter_selection_anchor","afterEnd")
+    move_ui("scatter_3d_dropdowns","scatter_3d_dropdowns_anchor","afterEnd")
+    move_ui("scatter_2d_dropdowns","scatter_2d_dropdowns_anchor","afterEnd")
+    #Single
+    move_ui("single_dropdowns","single_dropdowns_anchor","afterEnd")
+    move_ui("single_selections","single_selections_anchor","afterEnd")
+    move_ui("nx_bar_panel_dropdowns","nx_bar_panel_dropdowns_anchor","afterEnd")
+    #Network Graph
+    #move_ui("network_selection","network_selection_anchor","afterEnd")
+    move_ui("dataset_selection","dataset_selection_anchor","afterEnd")
+    move_ui("network_selection","network_selection_anchor","afterEnd")
+    move_ui("network_dropdowns","network_dropdowns_anchor","afterEnd")
+    
+    
+    
+    
+    
+    
+    
     
   }
 })

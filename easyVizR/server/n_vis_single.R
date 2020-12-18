@@ -1,7 +1,37 @@
 ####-----------------single gl bar plot----------------####
 
+output$nx_bar_panel_dropdowns <- renderUI({
+  choices <- rv$hm_numeric_stats
+  names(choices) <- stat_replace1(rv$hm_numeric_stats, input$nx_selected)
+  div(div(style = "position: absolute; left: 1em; bottom: 1em; width:300px;",
+      dropdown(
+        radioButtons("nx_bar_sig", "Color by significance:",
+                     choices=c("PValue", "FDR"),
+                     selected=rv$nx_bar_sig),
+        selectInput(
+          inputId = "nx_bar_to_plot",
+          label= "Plot data:",
+          choices = choices, # this displays all the shared numeric columns, 
+          selected = rv$nx_bar_to_plot
+        ),
+        
+        size = "xs",
+        icon = icon("gear", class = "opt"),
+        up = TRUE
+      )
+  ),
+  div(style = "position: absolute; left: 4em; bottom: 1em",
+      dropdown(
+        downloadButton("nx_bar_dl", "Download plot"),
+        
+        size = "xs",
+        icon = icon("download", class = "opt"),
+        up = TRUE
+      )
+  ))
+})
 
-output$nx_bar_panel <- renderUI({
+nx_bar_panel <- reactive({
   req(is.null(n_ins_full())==F)
   
   if (nrow(n_ins_full())<= nmax_bar) {
@@ -16,34 +46,8 @@ output$nx_bar_panel <- renderUI({
       div(id="nx_barp",
           plotlyOutput("nx_bar", width = "100%", height = "400px"),
           ),
-      
-      
-      div(style = "position: absolute; left: 1em; bottom: 1em; width:300px;",
-          dropdown(
-            radioButtons("nx_bar_sig", "Color by significance:",
-                         choices=c("PValue", "FDR"),
-                         selected="PValue"),
-            selectInput(
-              inputId = "nx_bar_to_plot",
-              label= "Plot data:",
-              choices = choices, # this displays all the shared numeric columns, 
-              selected = "Stat"
-            ),
-            
-            size = "xs",
-            icon = icon("gear", class = "opt"),
-            up = TRUE
-          )
-      ),
-      div(style = "position: absolute; left: 4em; bottom: 1em",
-          dropdown(
-            downloadButton("nx_bar_dl", "Download plot"),
-            
-            size = "xs",
-            icon = icon("download", class = "opt"),
-            up = TRUE
-          )
-      )
+      div(id = "nx_bar_panel_dropdowns_anchor"),
+
     )
   } else {
     box(
@@ -129,10 +133,10 @@ output$nx_vol_colthresh_opt <- renderUI({
               placement = "top"),
     br(),
     numericInput("nx_p", 
-                 "P <= :", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),
+                 "P <= :", value = rv$nx_p, min = 0, max = 1, step=0.001, width="100px"),
     numericInput("nx_Stat", 
                  stat_replace1("|Stat| >= :", rv$nx_selected), 
-                 value = 0, min = 0, max = 1, step=0.001, width="100px"),
+                 value = rv$nx_Stat, min = 0, max = 1, step=0.001, width="100px"),
   )
   
 })

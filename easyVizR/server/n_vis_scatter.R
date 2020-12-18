@@ -76,18 +76,18 @@ output$nxy_colormode_options <- renderUI({
       fluidRow(
         column(6,
                numericInput("nxy_p", 
-                            "P <:", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),
+                            "P <:", value = rv$nxy_p, min = 0, max = 1, step=0.001, width="100px"),
         ),
         column(6,
                numericInput("nxy_q", 
-                            "FDR <:", value = 1, min = 0, max = 1, step=0.001, width="100px"),
+                            "FDR <:", value = rv$nxy_q, min = 0, max = 1, step=0.001, width="100px"),
         ),
       ),
       fluidRow(
         column(6,
                numericInput("nxy_stat", 
                             stat_replace1("|Stat| >:",c(rv$nxy_selected_x, rv$nxy_selected_y)),
-                            value = 0.5, min = 0, max = 10, step=0.1, width="100px"),
+                            value = rv$nxy_stat, min = 0, max = 10, step=0.1, width="100px"),
         ),
         column(6,
                radioGroupButtons("n_sc_logic",
@@ -96,7 +96,7 @@ output$nxy_colormode_options <- renderUI({
                                    add_help("n_sc_logic_help", style="margin-left: 5px;"))
                                  ),
                                  choices=c("OR" ="Either", "AND" = "Both"),
-                                 selected="Both",size="s"), 
+                                 selected=rv$n_sc_logic,size="s"), 
                bsTooltip("n_sc_logic_help", 
                          "<b>AND</b>: highlights if conditions are met for <b>ALL</b> datasets.<br><b>OR</b>: highlights if conditions are met for <b>ANY</b> dataset.", 
                          placement = "right"),
@@ -111,7 +111,7 @@ output$nxy_colormode_options <- renderUI({
         inputId = "nxy_sig",
         label = "Significance:",
         choices = c("PValue", "FDR"),
-        selected="PValue", inline=T)
+        selected=rv$nxy_sig, inline=T)
     )
     
   }
@@ -416,18 +416,18 @@ output$nxyz_colormode_options <- renderUI({
       fluidRow(
         column(6,
                numericInput("n_3ds_p", 
-                            "P <:", value = 0.05, min = 0, max = 1, step=0.001, width="100px"),
+                            "P <:", value = rv$n_3ds_p, min = 0, max = 1, step=0.001, width="100px"),
         ),
         column(6,
                numericInput("n_3ds_q", 
-                            "FDR <:", value = 1, min = 0, max = 1, step=0.001, width="100px"),
+                            "FDR <:", value = rv$n_3ds_q, min = 0, max = 1, step=0.001, width="100px"),
         ),
       ),
       fluidRow(
         column(6,
                numericInput("n_3ds_Stat", 
                             stat_replace1("|Stat| >:",c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z)),
-                            value = 0, min = 0, max = 10, step=0.1, width="100px"),
+                            value = rv$n_3ds_Stat, min = 0, max = 10, step=0.1, width="100px"),
                ),
         column(6,
                radioGroupButtons("nxyz_sc_logic",
@@ -436,7 +436,7 @@ output$nxyz_colormode_options <- renderUI({
                                    add_help("nxyz_sc_logic_help", style="margin-left: 5px;"))
                                  ),
                                  choices=c("OR" ="Either", "AND" = "Both"),
-                                 selected="Both",size="s"), 
+                                 selected=rv$nxyz_sc_logic,size="s"), 
                bsTooltip("nxyz_sc_logic_help", 
                          "<b>AND</b>: highlights if conditions are met for <b>ALL</b> datasets.<br><b>OR</b>: highlights if conditions are met for <b>ANY</b> dataset.", 
                          placement = "right"),

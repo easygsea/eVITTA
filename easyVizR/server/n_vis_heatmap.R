@@ -77,9 +77,11 @@
 # sort by which dataset
 output$select_sortby_p2 <- renderUI({
   req(rv$df_n)
+  #isolate({choices <- rv$nx_n})
   radioButtons(
     inputId = "heatmap_sortby",
     label= "Sort heatmap by:",
+    #choices = choices,
     choices = rv$nx_n,
     selected = rv$select_sortby_p2
   )
@@ -96,7 +98,7 @@ output$n_to_plot <- renderUI({
     label= shiny::HTML("Plot data: 
                                <span style='color: gray'>(Note: only numeric columns are selectable)</span>"),
     choices = choices, # this displays all the shared numeric columns, 
-    selected = "Stat"
+    selected = rv$n_to_plot
   )
 })
 

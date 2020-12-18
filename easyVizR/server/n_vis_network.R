@@ -2,36 +2,6 @@
 ####----------------------- Functions: VisNetwork -------------------####
 #=======================================================================# 
 
-output$nw_set_le_ui <- renderUI({
-  req(is.null(rv$nw_selected_n)==F)
-  
-  available_cols <- firstmatch(le_alias,rv$nw_char_stats)
-  if (length(available_cols)>0){
-    div(
-      selectInput(
-        inputId = "nw_selected_col",
-        label = "Select leading edge column:",
-        choices = rv$nw_char_stats,
-        selected = available_cols
-      ),
-      radioButtons("nw_le_sep", "Separator:",
-                   choices=c(
-                     "semicolon (;)"=";",
-                     "space ( )" = "\\s+",
-                     "comma (,)" = ",",
-                     "vertical bar (|)" = "\\|"
-                   ),
-                   selected=";"
-      ),
-      uiOutput("nw_feedback")
-    )
-  } else {
-    box(
-      title = NULL, background = "red", solidHeader = TRUE, width=12,
-      paste0("No character column available for selection. ")
-    )
-  }
-})
 
 output$nw_feedback <- renderUI({
   if (is.null(rv$nw_edges_mat)==T){
@@ -43,7 +13,7 @@ output$nw_feedback <- renderUI({
 })
 
 # wrapper
-output$vis_network_panel <- renderUI({
+output$vis_network_panel <- renderPlot({
   
   if (is.null(rv$nw_selected_n)==F & is.null(rv$nw_selected_col)==F){
     
