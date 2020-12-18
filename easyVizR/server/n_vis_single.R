@@ -133,10 +133,12 @@ output$nx_vol_colthresh_opt <- renderUI({
               placement = "top"),
     br(),
     numericInput("nx_p", 
+
                  p_filter_text, value = rv$nx_p, min = 0, max = 1, step=0.001, width="100px"),
     numericInput("nx_Stat", 
                  stat_replace1(stat_filter_text, rv$nx_selected), 
                  value = rv$nx_Stat, min = 0, max = 1, step=0.001, width="100px"),
+
   )
   
 })
@@ -168,15 +170,15 @@ nx_vol_plt <- reactive({
   df <- remove_nas(df)
   
   if (rv$nx_vol_plotmode=="Focus"){
-    df$color <- ifelse(df[[pcol]] <= rv$nx_p & 
-                         abs(df[[statcol]]) >= rv$nx_Stat, 
+    df$color <- ifelse(df[[pcol]] < rv$nx_p & 
+                         abs(df[[statcol]]) > rv$nx_Stat, 
                        rv$nx_vol_c1, rv$nx_vol_c2)
   } else if (rv$nx_vol_plotmode=="Context"){
     # print(df_ins)
     df$color <- ifelse(df$Name %in% df_ins,
                        rv$nx_vol_c2, rv$nx_vol_c3)
-    df$color <- ifelse(df[[pcol]] <= rv$nx_p & 
-                         abs(df[[statcol]]) >= rv$nx_Stat & df$Name %in% df_ins, 
+    df$color <- ifelse(df[[pcol]] < rv$nx_p & 
+                         abs(df[[statcol]]) > rv$nx_Stat & df$Name %in% df_ins, 
                        rv$nx_vol_c1, df$color)
     # print(df)
   }

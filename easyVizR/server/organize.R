@@ -18,6 +18,7 @@
 # # when the user closed the modal, start rintrojs
 # observeEvent(input$welcome_modal, {
 #   removeModal()
+#   rv$demo_yes <- "yes"
 #   rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
 #                                             steps = intros$upload)
 #   )
@@ -59,7 +60,7 @@ total_upload_limit <- total_mb_limit*1024^2
 
 
 # specify allowed characters
-allowed_chars <- "[^(a-z0-9A-Z+><%)|[:punct:]]"
+allowed_chars <- "[^(a-z0-9A-Z+><%\\s)|[:punct:]]"
 var_allowed_chars <- "[^a-z0-9A-Z+><_\\-.]"
 
 
@@ -983,8 +984,7 @@ observeEvent(input$reset, {
 observeEvent(input$submit, {
   inFile <- input$file
   in_df <- read.csv(inFile$datapath)
-  
-  
+
   # the for loop that loop through the file and remove invalid characters
   show_reminder <- FALSE
   for(i in seq_along(colnames(in_df))){

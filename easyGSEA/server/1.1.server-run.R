@@ -16,6 +16,7 @@
 # # when the user closed the modal, start rintrojs
 # observeEvent(input$welcome_modal, {
 #   removeModal()
+#   rv$demo_yes <- "yes"
 #   if(rv$demo_mode == "gsea"){
 #     call_introjs(rbind(intros$R_pre,intros$R_post_with_conversion_table,intros$R_post))
 #   }else {
@@ -26,7 +27,7 @@
 # # start rintrojs when users switch tabs
 # observeEvent(input$tabs,{
 #   if(input$tabs == "kegg"){
-#     later(~call_introjs(rbind(intros$ER_post,intros$ER_post_with_pathway)), 2)
+#     later(~call_introjs(rbind(intros$ER_post,intros$ER_post_with_pathway)), 0.1)
 #   } else if(input$tabs == "network"){
 #     later(~call_introjs(intros$EN_post), 3)
 #   } else if(input$tabs == "download"){
@@ -34,6 +35,11 @@
 #   } else {
 # 
 #   }
+# })
+# # when user switch tabs, call introjs
+# observeEvent(input$plot_type, {
+#   if(input$plot_type != "bar")
+#     later(~call_introjs(rbind(intros$ER_post,intros$ER_post_with_pathway)), 0.1)
 # })
 # # END--------------------------------------------------------------------------------
 
@@ -85,34 +91,34 @@
 
     # --------------  1.2 select GMTs ---------------------------
 
-    observe({
-        req(nchar(input$selected_species)>0 && input$selected_species != "other")
-        req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
-
-        species <- input$selected_species
-
-        for(collection in sort(names(gmt_collections_paths[[species]]))){
-          if(collection %in% col_f){
-            f = FALSE
-          }else{
-            f = TRUE
-          }
-            # print(paste0(species,gsub(" ","_",collection)))
-            rv$v[[species]][[collection]] <- column(
-              6,
-              box(
-                title = strsplit(collection,"_")[[1]][[2]], width = 12, status = "primary", collapsible = T, collapsed = f,
-                checkboxGroupInput(
-                  inputId = paste0(species,gsub(" ","_",collection)),
-                  label = NULL,
-                  # label = strsplit(collection,"_")[[1]][[2]],
-                  choices = sort(gmt_collections[[species]][[collection]]),
-                  selected = gmt_collections_selected[[species]][[collection]]
-                )
-              )
-            )
-        }
-    })
+    # observe({
+    #     req(nchar(input$selected_species)>0 && input$selected_species != "other")
+    #     req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
+    # 
+    #     species <- input$selected_species
+    # 
+    #     for(collection in sort(names(gmt_collections_paths[[species]]))){
+    #       if(collection %in% col_f){
+    #         f = FALSE
+    #       }else{
+    #         f = TRUE
+    #       }
+    #         # print(paste0(species,gsub(" ","_",collection)))
+    #         rv$v[[species]][[collection]] <- column(
+    #           6,
+    #           box(
+    #             title = strsplit(collection,"_")[[1]][[2]], width = 12, status = "primary", collapsible = T, collapsed = f,
+    #             checkboxGroupInput(
+    #               inputId = paste0(species,gsub(" ","_",collection)),
+    #               label = NULL,
+    #               # label = strsplit(collection,"_")[[1]][[2]],
+    #               choices = sort(gmt_collections[[species]][[collection]]),
+    #               selected = gmt_collections_selected[[species]][[collection]]
+    #             )
+    #           )
+    #         )
+    #     }
+    # })
 
     output$test_db <- renderUI({
     
@@ -259,7 +265,32 @@
 
     # --------------  1.2.2 show databases in a modal ---------------------------
     observeEvent(input$showdbs,{
-      species = input$selected_species
+      # req(nchar(input$selected_species)>0 && input$selected_species != "other")
+      # req(is.null(rv$db_status)==TRUE || rv$db_status == "modify")
+      
+      species <- input$selected_species
+      
+      for(collection in sort(names(gmt_collections_paths[[species]]))){
+        if(collection %in% col_f){
+          f = FALSE
+        }else{
+          f = TRUE
+        }
+        # print(paste0(species,gsub(" ","_",collection)))
+        rv$v[[species]][[collection]] <- column(
+          6,
+          box(
+            title = strsplit(collection,"_")[[1]][[2]], width = 12, status = "primary", collapsible = T, collapsed = f,
+            checkboxGroupInput(
+              inputId = paste0(species,gsub(" ","_",collection)),
+              label = NULL,
+              # label = strsplit(collection,"_")[[1]][[2]],
+              choices = sort(gmt_collections[[species]][[collection]]),
+              selected = gmt_collections_selected[[species]][[collection]]
+            )
+          )
+        )
+      }
 
       showModal(modalDialog(id = "db_modal",
         title = HTML(paste0("Available databases for <i>",species_translate(species),"</i>")),
@@ -418,6 +449,10 @@
     # reset button
     observeEvent(input$reset_db, {
         rv$run = NULL
+        
+        rv$glist_check = NULL
+        rv$gene_lists = NULL
+        rv$gene_lists_after = NULL
 
         species <- input$selected_species
         for(collection in names(gmt_collections_paths[[species]])){
@@ -453,9 +488,10 @@
 
 
             fileInput("rnkfile",
-                      label = p(paste0(noo,". Upload RNK or DEG file:"),
-                                tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
-                                bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                      label = HTML(paste0(noo,". Upload RNK or DEG file:",
+                                tags$style(type = "text/css", "#q1 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline; position: absolute;}"),
+                                bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")
+                                )),
                       # buttonLabel = "Upload...",
                       accept = c(
                           "text/tab-separated-values",
@@ -492,6 +528,14 @@
     observeEvent(input$reset, {
       reset_rnk()
     })
+    
+    # # onclick of the rnkfile upload button
+    # onclick(
+    #   "rnkfile", 
+    #   if(is.null(rv$db_status) || rv$db_status != "selected"){
+    #     shinyalert("Please select the species and corresponding datases")
+    #   }
+    #   )
 
     # read in RNK file path name, disable widget
     observeEvent(input$rnkfile, {
@@ -543,7 +587,9 @@
             )
           ),
           column(6,
-                 textInput("f_name",label = "Name your query:",value = rv$rnkll,width = "100%")
+                 textInput("f_name",label = HTML(paste0("Name your query: ",add_help("name_q"))),value = rv$rnkll,width = "100%")
+                 ,bsTooltip("name_q",HTML("The figures/results to be downloaded will be named according to the input here")
+                           ,placement = "top")
 
 
           ),
@@ -553,7 +599,7 @@
 
           ),
           column(12,
-                 p("Your query file content:"),
+                 p("Review your uploaded file:"),
                  uiOutput("feedback_filecontent")
           )
         ),
@@ -793,7 +839,7 @@
       fluidRow(
         column(
           width = 12,
-          bsTooltip("gene_list_q", "Input newline-delimited gene list", placement = "top"),
+          bsTooltip("gene_list_q", "List of genes or proteins, newline-delimited", placement = "top"),
           div(
             id = "input_list_box",
               textAreaInput(
@@ -866,12 +912,20 @@
       if (is.null(rv$gene_lists)==F){
         shinyjs::disable("gene_list")
         shinyjs::disable("glist_name")
+        shinyjs::disable("num_acc")
       }
       else if (is.null(rv$gene_lists)){
         shinyjs::reset("gene_list")
         shinyjs::enable("gene_list")
         shinyjs::reset("glist_name")
         shinyjs::enable("glist_name")
+        shinyjs::reset("num_acc")
+        shinyjs::enable("num_acc")
+        
+        updateTextAreaInput(session,
+                            inputId = "gene_list",
+                            value = ""
+        )
       }
     })
     
@@ -954,11 +1008,6 @@
         rv$gene_lists = NULL
         rv$gene_lists_after = NULL
 
-        updateTextAreaInput(session,
-                            inputId = "gene_list",
-                            value = ""
-        )
-        
         # updateTextInput(session,
         #                 inputId = "glist_name",
         #                 value = NULL)

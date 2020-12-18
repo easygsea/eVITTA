@@ -12,10 +12,12 @@
         cluster_bar_run = NULL,
         cutoff_point = 0.25,
         label_size = 4,
-        cluster_size = 3, # minimum cluster size that has label
+        cluster_size = 2, # minimum cluster size that has label
         max_cluster_size = 1,
         dendro_or_barplot = "dendro",
         abbreviate_check = FALSE,
+        sort_check = FALSE,
+        color_check = "pval",
         abbreviate_length = 45,
         
         db_status=NULL, # selected
@@ -23,6 +25,7 @@
         gmt_cs=list(), gmt_cs_paths=list(), # uploaded GMTs for custom analysis
         
         box_h_a = "594px", box_h = "574px", box_hp = 574, es_h = "245px",
+        dendro_hp = 660,
         
         run_btn_color="warning", run_btn_style="simple",
         dbtn_style="unite", dbtn_color="default", dbtn_size="xs",
@@ -69,7 +72,9 @@
         gene_lists_mat1=NULL, # df for id conversion (GSEA)
         gene_lists_mat2=NULL, # df for id conversion (ORA)
         
-        
+        ora_color="red", # color for bar/bubble/word/vis plot in ORA
+        down_color="blue", up_color="red", # colors for bar/bubble/word/vis plot in GSEA
+
         # input_symbol=NULL, # check if input is SYMBOL, if, "yes"
         
         #========================================#
@@ -124,5 +129,7 @@
         percent_method="jaccard",# or   combined overlap
         percent_cutoff = 0.25, # or 0.5 for overlap
         
-        tl_p=1,tl_q=1,tl_ES="both"
+        tl_p=1,tl_q=1,tl_ES="both",
+        
+        bar_tl=NULL,word_tl=NULL # tables for bar/bubble/keyword plots for download
     )

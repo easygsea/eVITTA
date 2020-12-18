@@ -5,11 +5,21 @@
 output$ui_bodyResults <- renderUI({
     # saveRDS(rv$gene_lists, file = "rvs/gene_lists.rds")
 
-    # if(is.null(rv$run) || rv$run != "success"){
-    #     panel_null()
-    # }else{
+    if(is.null(rv$run) || rv$run != "success"){
+        panel_null()
+    }else{
         if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
-            em_w <- "8em"
+            # if(rv$run_mode == "gsea"){
+            #     em_w <- "8em"
+            # }else{
+                em_w <- "11.5em"
+            # }
+        }else if(rv$plot_type=="word"){
+            # if(rv$run_mode == "gsea"){
+            #     em_w <- "4.5em"
+            # }else{
+                em_w <- "8em"
+            # }
         }else{
             em_w <- "4.5em"
         }
@@ -57,10 +67,12 @@ output$ui_bodyResults <- renderUI({
                                 uiOutput("plot_gear"),
                                 size = "xs",
                                 icon = icon("gear", class = "opt"),
-                                up = TRUE,width = "410px"
+                                up = TRUE,width = "425px"
                             )
                         ),
-                        if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
+                        # bsTooltip("setting_button",HTML("Click to adjust database selection, P & P.adj thresholds, and custom options for visualization")
+                        #           ,placement = "bottom"),
+                        if(rv$plot_type=="bar" || rv$plot_type=="bubble"){
                             div(id = "gs_search_button",
                                 align = "left",
                                 style = "position: absolute; left: 4.5em; bottom: 1em;",
@@ -68,11 +80,36 @@ output$ui_bodyResults <- renderUI({
                                     uiOutput("plot_gs_search"),
                                     size = "xs",
                                     icon = icon("search", class = "opt"),
-                                    up = TRUE,width = "410px"
+                                    up = TRUE,width = "425px"
                                 )
                             )
-                        }
-                        ,
+                        },
+                        # bsTooltip("gs_search_button",HTML(paste0("Click to search, select, and visualize gene set(s) of interest with a ",rv$plot_type," plot"))
+                        #           ,placement = "bottom"),
+                        if(rv$plot_type=="bar" || rv$plot_type=="bubble" || rv$plot_type=="word"){
+                            if(rv$plot_type=="bar" || rv$plot_type=="bubble"){
+                                em_w_col <- "8em"
+                            }else{
+                                em_w_col <- "4.5em"
+                            }
+                            div(id = "ora_color_div",
+                                align = "left",
+                                style = sprintf("position: absolute; left: %s; bottom: 1em;",em_w_col),
+                                dropdown(
+                                    fluidRow(
+                                        column(
+                                            12,
+                                            color_tone_div()
+                                        )
+                                    )
+                                    ,
+                                    size = "xs",
+                                    icon = icon("palette", class = "opt"),
+                                    up = TRUE,width = "200px"
+                                )
+                            )
+                        },
+                        # bsTooltip("ora_color_div",HTML("Click to adjust the color tone")),
                         div(id = "plot_download_button",
                             style = sprintf("position: absolute; left: %s; bottom: 1em;",em_w),
                             dropdown(
@@ -81,7 +118,9 @@ output$ui_bodyResults <- renderUI({
                                 icon = icon("download", class = "opt"),
                                 up = TRUE
                             )
-                        )
+                        ),
+                        # bsTooltip("plot_download_button",HTML("Click to download the plot")
+                        #           ,placement = "bottom")
                     ),
                     column(12, id="feedback_btn_wrap",
                         uiOutput("feedback_btn")
@@ -113,12 +152,26 @@ output$ui_bodyResults <- renderUI({
             )
 
         )
-    # }
+    }
 })
 
 # change default plot type
 observeEvent(input$plot_type,{
     rv$plot_type = input$plot_type
+})
+
+# change color tone in ORA's bar/bubble
+observeEvent(input$ora_color,{
+    rv$ora_color <- input$ora_color
+})
+
+# change color tone in GSEA's bar/bubble
+observeEvent(input$up_color,{
+    rv$up_color <- input$up_color
+})
+
+observeEvent(input$down_color,{
+    rv$down_color <- input$down_color
 })
 
 # feedbacks on no significant enrichment
@@ -186,23 +239,29 @@ output$plot_gear <- renderUI({
 
     if(rv$plot_type=="manhattan"){
         fluidRow(
+            column(
+                12,align="center",
+                tags$h4(tags$strong(tags$em(paste0("Advanced parameters for creating the ",rv$plot_type," plot"))))
+            ),
             column(12,
                    radioGroupButtons(
                        inputId = "p_or_q_manhattan",
-                       label = "Threshold by P or P.adj",
+                       label = HTML(paste0("Threshold by P or P.adj ",add_help("man_pq_q"))),
                        choiceNames = c("P", "P.adj"),
                        choiceValues = c("pval", "padj"),
                        selected = rv$volcano_pq,
                        direction = "horizontal"
                    )
+                   ,bsTooltip("man_pq_q",HTML(pq_bs),placement = "top")
             ),
             column(
                 width = 12,
                 sliderTextInput("cutoff_manhattan",
-                                label = "Adjust P or P.adj threshold:",
+                                label = HTML(paste0("Adjust P or P.adj threshold ",add_help("man_pq_c_q"))),
                                 choices= cutoff_slider,
                                 selected=rv$volcano_cutoff, grid=T, force_edges=T
                 )
+                ,bsTooltip("man_pq_c_q",HTML(man_pq_c_bs),placement = "top")
             ),
             column(
                 width = 12,
@@ -212,48 +271,60 @@ output$plot_gear <- renderUI({
     }else if(rv$plot_type=="bar"){
 
         fluidRow(
+            column(
+                12,align="center",
+                tags$h4(tags$strong(tags$em(paste0("Advanced parameters for creating the ",rv$plot_type," plot"))))
+            ),
             column(12,
                    selectizeInput("pathway_to_plot_bar",
-                                  "Select database(s) to plot",
+                                  HTML(paste0("Select database(s) to plot ",add_help("db_bar"))),
                                   choices = dbs,
                                   selected = rv$bar_pathway,
                                   multiple = TRUE),
+                   bsTooltip("db_bar",HTML(db_bs),placement = "top"),
                    uiOutput("bar_top"),
 
                    splitLayout(
                        sliderTextInput("cutoff_bar_p",
-                                       label = "Adjust P threshold:",
+                                       label = HTML(paste0("Adjust P threshold ",add_help("p_bar"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
                        ),
                        sliderTextInput("cutoff_bar_q",
-                                       label = "Adjust P.adj threshold:",
+                                       label = HTML(paste0("Adjust P.adj threshold ",add_help("q_bar"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
                        )
-                   )
+                   ),
+                   bsTooltip("p_bar",HTML(p_bs)
+                             ,placement = "top"),
+                   bsTooltip("q_bar",HTML(q_bs)
+                             ,placement = "top")
+                   
             ),
             column(
                 width = 4,
                 radioGroupButtons(
                     inputId = "p_or_q_bar",
-                    label = "Color by P or P.adj",
+                    label = HTML(paste0("Color by P or P.adj ",add_help("col_bar"))),
                     choiceNames = c("P", "P.adj"),
                     choiceValues = c("pval", "padj"),
                     selected = rv$bar_pq,
                     direction = "horizontal"
                 )
+                ,bsTooltip("col_bar",HTML(pq_bs),placement = "top")
             ),
             column(
                 width = 5,
                 radioGroupButtons(
                     inputId = "abb_bar",
-                    label = "Abbreviate y axis labels",
+                    label = HTML(paste0("Abbreviate y axis labels ",add_help("y_bar"))),
                     choiceNames = c("Yes", "No"),
                     choiceValues = c("y", "n"),
                     selected = rv$bar_abb,
                     direction = "horizontal"
                 )
+                ,bsTooltip("y_bar",HTML(abb_bs),placement = "top")
             ),
             column(
                 width = 3,
@@ -269,47 +340,58 @@ output$plot_gear <- renderUI({
 
 
         fluidRow(
+            column(
+                12,align="center",
+                tags$h4(tags$strong(tags$em(paste0("Advanced parameters for creating the ",rv$plot_type," plot"))))
+            ),
             column(12,
                    selectizeInput("pathway_to_plot_bubble",
-                                  "Select database(s) to plot",
+                                  HTML(paste0("Select database(s) to plot ",add_help("db_bubble"))),
                                   choices = dbs,
                                   selected = rv$bar_pathway,
                                   multiple = TRUE),
+                   bsTooltip("db_bubble",HTML(db_bs),placement = "top"),
                    uiOutput("bubble_top"),
                    splitLayout(
                        sliderTextInput("cutoff_p_bubble",
-                                       label = "Adjust P threshold:",
+                                       label = HTML(paste0("Adjust P threshold ",add_help("p_bubble"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
                        ),
                        sliderTextInput("cutoff_q_bubble",
-                                       label = "Adjust P.adj threshold:",
+                                       label = HTML(paste0("Adjust P.adj threshold ",add_help("q_bubble"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
                        )
                    )
+                   ,bsTooltip("p_bubble",HTML(p_bs)
+                             ,placement = "top"),
+                   bsTooltip("q_bubble",HTML(q_bs)
+                             ,placement = "top"),
             ),
             column(
                 width = 4,
                 radioGroupButtons(
                     inputId = "p_or_q_bubble",
-                    label = "Color by P or P.adj",
+                    label = HTML(paste0("Color by P or P.adj ",add_help("col_bubble"))),
                     choiceNames = c("P", "P.adj"),
                     choiceValues = c("pval", "padj"),
                     selected = rv$bar_pq,
                     direction = "horizontal"
                 )
+                ,bsTooltip("col_bubble",HTML(pq_bs),placement = "top")
             ),
             column(
                 width = 5,
                 radioGroupButtons(
                     inputId = "abb_bubble",
-                    label = "Abbreviate y axis labels",
+                    label = HTML(paste0("Abbreviate y axis labels ",add_help("y_bubble"))),
                     choiceNames = c("Yes", "No"),
                     choiceValues = c("y", "n"),
                     selected = rv$bar_abb,
                     direction = "horizontal"
                 )
+                ,bsTooltip("y_bubble",HTML(abb_bs),placement = "top")
             ),
             column(
                 width = 3,
@@ -317,8 +399,12 @@ output$plot_gear <- renderUI({
             ),
             column(
                 width = 12,
-                sliderInput("bubble_slider", "Bubble size range", min = 0.5, max = 30, step = 0.5,
+                sliderInput("bubble_slider", 
+                            HTML(paste0("Bubble size range ",add_help("bubble_size_q"))), 
+                            min = 0.5, max = 30, step = 0.5,
                             value = c(2.5, 9.5))
+                ,bsTooltip("bubble_size_q",HTML(bubble_size_bs),placement = "top")
+                
             ),
             column(
                 width = 12,
@@ -329,34 +415,41 @@ output$plot_gear <- renderUI({
     }else if(rv$plot_type=="volcano"){
         fluidRow(
             column(
+                12,align="center",
+                tags$h4(tags$strong(tags$em(paste0("Advanced parameters for creating the ",rv$plot_type," plot"))))
+            ),
+            column(
                 width = 12,
                 selectizeInput("pathway_to_plot_volcano",
-                               "Select database(s) to plot",
+                               HTML(paste0("Select database(s) to plot ",add_help("db_vol"))),
                                choices = dbs,
                                selected = rv$volcano_pathway,
-                               multiple = TRUE)
+                               multiple = TRUE),
+                bsTooltip("db_vol",HTML(db_bs),placement = "top")
             ),
             column(
                 width = 12,
                 radioGroupButtons(
                     inputId = "p_or_q_volcano",
-                    label = "Color by P or P.adj",
+                    label = HTML(paste0("Color by P or P.adj ",add_help("col_vol"))),
                     choiceNames = c("P", "P.adj"),
                     choiceValues = c("pval", "padj"),
                     selected = rv$volcano_pq,
                     direction = "horizontal"
                 )
+                ,bsTooltip("col_vol",HTML(pq_bs),placement = "top")
             ),
             column(
                 width = 12,
                 radioGroupButtons(
                     inputId = "volcano_mode",
-                    label = "Mode of plots",
+                    label = HTML(paste0("Mode of plots ",add_help("vol_mode_q"))),
                     choiceNames = c("Continuous", "Discrete","Static"),
                     choiceValues = c("plotly", "plotly2","ggplot"),
                     selected = rv$volcano_mode,
                     direction = "horizontal"
                 )
+                ,bsTooltip("vol_mode_q",HTML(vol_mode_bs),placement = "top")
             ),
             uiOutput("ui_volcano_cutoff"),
             column(
@@ -367,33 +460,43 @@ output$plot_gear <- renderUI({
     }else if(rv$plot_type=="word"){
 
         fluidRow(
+            column(
+                12,align="center",
+                tags$h4(tags$strong(tags$em(paste0("Advanced parameters for creating the ",rv$plot_type," plot"))))
+            ),
             column(12,
                    selectizeInput("pathway_to_plot_word",
-                                  "Select database(s) to plot",
+                                  HTML(paste0("Select database(s) to plot ",add_help("db_word"))),
                                   choices = dbs,
                                   selected = rv$bar_pathway,
                                   multiple = TRUE)
+                   , bsTooltip("db_word",HTML(db_bs),placement = "top")
             ),
             column(12,
                    splitLayout(
                        sliderTextInput("cutoff_word_p",
-                                       label = "Adjust P.adj threshold:",
+                                       HTML(paste0("Adjust P threshold ",add_help("p_word"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_p_cutoff, grid=T, force_edges=T
                        ),
                        sliderTextInput("cutoff_word_q",
-                                       label = "Adjust P.adj threshold:",
+                                       HTML(paste0("Adjust P.adj threshold ",add_help("q_word"))),
                                        choices= cutoff_slider,
                                        selected=rv$bar_q_cutoff, grid=T, force_edges=T
                        )
                    )
+                   ,bsTooltip("p_word",HTML(p_bs),placement = "top"),
+                   bsTooltip("q_word",HTML(q_bs),placement = "top")
+            
             ),
             column(12,
                    numericInput("n_word",
-                                "# of top words",
+                                HTML(paste0("# of top words ",add_help("wtop_q"))),
                                 rv$n_word, min=1,
                                 width = "50%"
                    )
+                   ,bsTooltip("wtop_q",HTML("The number of top frequently appearing words ")
+                              ,placement = "top")
             ),
             column(
                 width = 12, align = "right",
@@ -407,19 +510,25 @@ output$plot_gear <- renderUI({
 output$plot_gs_search <- renderUI({
     fluidRow(
         column(
+          12, align="center",
+          tags$h4(tags$strong(tags$em(paste0("Manual selection of gene set(s) "))))
+          
+        ),
+        column(
             12,
             pickerInput("gs_to_plot",
-                        "Select gene set(s) to plot",
+                        HTML(paste0("Select gene set(s) to plot ",add_help("manual_q"))),
                         choices = rv$gss,
                         selected = rv$gss_selected,
                         options = list(
                             `actions-box` = TRUE,
                             size = 10,
                             style = "btn-default",
-                            `selected-text-format` = "count > 10"
+                            `selected-text-format` = "count > 2"
                             ,`live-search` = TRUE
                         ),
                         multiple = TRUE)
+            ,bsTooltip("manual_q",HTML(manual_bs),placement = "top")
         )
         ,column(
             12,align=T,
@@ -455,13 +564,22 @@ output$plot_download <- renderUI({
     if(rv$plot_type=="manhattan"){
         downloadButton(outputId = "download_manhattan", label = "Download plot")
     }else if(rv$plot_type=="bar"){
-        downloadButton(outputId = "download_bar", label = "Download plot")
+        div(
+            downloadButton(outputId = "download_bar", label = "Download plot"),
+            downloadButton(outputId = "download_bar_tl", label = "Download table")
+        )
     }else if(rv$plot_type=="bubble"){
-        downloadButton(outputId = "download_bubble", label = "Download plot")
+        div(
+            downloadButton(outputId = "download_bubble", label = "Download plot"),
+            downloadButton(outputId = "download_bubble_tl", label = "Download table")
+        )
     }else if(rv$plot_type=="volcano"){
         downloadButton(outputId = "download_volcano", label = "Download plot")
     }else if(rv$plot_type=="word"){
-        downloadButton(outputId = "download_word", label = "Download plot")
+        div(
+            downloadButton(outputId = "download_word", label = "Download plot"),
+            downloadButton(outputId = "download_word_tl", label = "Download table")
+        )
     }
 })
 
@@ -665,6 +783,15 @@ output$download_bar <- downloadHandler(
     content = function(file) {saveWidget(as_widget(p_bar()), file, selfcontained = TRUE)}
 )
 
+output$download_bar_tl <- downloadHandler(
+    filename = function() {paste0("bar_table_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".csv")},
+    content = function(file) {
+        df <- rv$bar_tl
+        df <- collapse_last_col(df)
+        fwrite(df, file, sep=",",row.names = F, quote=T)
+    }
+)
+
 
 # bubble plot ----------
 observeEvent(input$bubble_confirm,{
@@ -711,6 +838,15 @@ output$plot_bubble <- renderPlotly({
 output$download_bubble <- downloadHandler(
     filename = function() {paste0("bubble_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(p_bubble()), file, selfcontained = TRUE)}
+)
+
+output$download_bubble_tl <- downloadHandler(
+    filename = function() {paste0("bubble_table_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".csv")},
+    content = function(file) {
+        df <- rv$bar_tl
+        df <- collapse_last_col(df)
+        fwrite(df, file, sep=",",row.names = F, quote=T)
+    }
 )
 
 # volcano plot ------------
@@ -828,41 +964,61 @@ output$plot_word <- renderPlotly({
     })
 })
 
-# bar download
+# keyword download
 output$download_word <- downloadHandler(
     filename = function() {paste0("keyword_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(word_plot()), file, selfcontained = TRUE)}
+)
+
+output$download_word_tl <- downloadHandler(
+    filename = function() {paste0("keyword_table_",paste(rv$bar_pathway,collapse = "-"),"_",paste0("q",rv$bar_q_cutoff,"p",rv$bar_p_cutoff,"_",rv$bar_pq,"_"),rv$rnkll,".csv")},
+    content = function(file) {
+        df <- rv$word_tl
+        fwrite(df, file, sep=",",row.names = F, quote=T)
+    }
 )
 
 # --------- UI: bar --------------
 # UI bar abbreviation length
 output$ui_bar_abb_n <- renderUI({
     req(input$abb_bar == "y")
-    numericInput(
-        inputId = "abb_bar_n",
-        label = "String length",
-        value = rv$bar_abb_n,min=1
+    div(
+        numericInput(
+            inputId = "abb_bar_n",
+            label = HTML(paste0("String length ",add_help("len_bar"))),
+            value = rv$bar_abb_n,min=1
+        )
+        ,bsTooltip("len_bar",HTML(len_bs),placement = "top")
     )
+    
 })
 
 # UI bar top # of GSs
 output$bar_top <- renderUI({
     if(rv$run_mode == "gsea"){
-        splitLayout(
-            numericInput("n_up_bar",
-                         "# of top up",
-                         rv$bar_up, min=1,
-                         width = "90%"),
-            numericInput("n_down_bar",
-                         "# of top down",
-                         rv$bar_down, min=1,
-                         width = "90%")
+        div(
+            splitLayout(
+                numericInput("n_up_bar",
+                             HTML(paste0("# of top up ",add_help("barup_q"))),
+                             rv$bar_up, min=1,
+                             width = "90%"),
+                numericInput("n_down_bar",
+                             HTML(paste0("# of top down ",add_help("bardown_q"))),
+                             rv$bar_down, min=1,
+                             width = "90%")
+            )
+            ,bsTooltip("barup_q",HTML(up_bs),placement = "top")
+            ,bsTooltip("bardown_q",HTML(down_bs),placement = "top")
         )
     }else{
-        numericInput("n_up_bar",
-                     "# of top enriched gene sets to display",
-                     rv$bar_up, min=1,
-                     )
+        div(
+            numericInput("n_up_bar",
+                         HTML(paste0("# of top enriched gene sets to display ",add_help("oratop_q"))),
+                         rv$bar_up, min=1,
+            )
+            ,bsTooltip("oratop_q",HTML(oratop_bs),placement = "top")
+        )
+        
     }
 })
 
@@ -871,30 +1027,54 @@ output$bar_top <- renderUI({
 # UI bubble abbreviation length
 output$ui_bubble_abb_n <- renderUI({
     req(input$abb_bubble == "y")
-    numericInput(
-        inputId = "abb_bubble_n",
-        label = "String length",
-        value = rv$bar_abb_n,min=1
+    fluidRow(
+        column(
+            12,
+            numericInput(
+                inputId = "abb_bubble_n",
+                label = HTML(paste0("String length",add_help("len_bubble"))),
+                value = rv$bar_abb_n,min=1
+            )
+            ,bsTooltip("len_bubble",HTML(len_bs),placement = "top")
+        )
     )
+    
 })
 
 # UI bubble top # of GSs
 output$bubble_top <- renderUI({
     if(rv$run_mode == "gsea"){
-        splitLayout(
-            numericInput("n_up_bubble",
-                         "# of top up",
-                         rv$bar_up, min=1,
-                         width = "90%"),
-            numericInput("n_down_bubble",
-                         "# of top down",
-                         rv$bar_down, min=1,
-                         width = "90%")
+        fluidRow(
+            column(
+                12,
+                splitLayout(
+                    numericInput("n_up_bubble",
+                                 HTML(paste0("# of top up ",add_help("bubbleup_q"))),
+                                 rv$bar_up, min=1,
+                                 width = "90%"),
+                    numericInput("n_down_bubble",
+                                 HTML(paste0("# of top down ",add_help("bubbledown_q"))),
+                                 rv$bar_down, min=1,
+                                 width = "90%")
+                )
+                ,bsTooltip("bubbleup_q",HTML(up_bs),placement = "top")
+                ,bsTooltip("bubbledown_q",HTML(down_bs),placement = "top")
+            )
         )
+        
+
     }else{
-        numericInput("n_up_bubble",
-                     "# of top enriched gene sets to display",
-                     rv$bar_up, min=1)
+        fluidRow(
+            column(
+                12,
+                numericInput("n_up_bubble",
+                             HTML(paste0("# of top enriched gene sets to display ",add_help("oratop_q_bubble"))),
+                             rv$bar_up, min=1)
+                ,bsTooltip("oratop_q_bubble",HTML(oratop_bs),placement = "top")
+            )
+        )
+        
+
     }
 })
 
@@ -917,10 +1097,11 @@ output$ui_volcano_cutoff <- renderUI({
     column(
         width = 12,
         sliderTextInput("volcano_cutoff",
-                        label = "Adjust P or P.adj threshold:",
+                        label = HTML(paste0("Adjust P or P.adj threshold ",add_help("vol_pq_c_q"))),
                         choices= cutoff_slider,
                         selected=rv$volcano_cutoff, grid=T, force_edges=T
         )
+        ,bsTooltip("vol_pq_c_q",HTML(man_pq_c_bs),placement = "top")
     )
 })
 

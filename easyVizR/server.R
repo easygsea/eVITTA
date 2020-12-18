@@ -134,6 +134,21 @@ server <- function(input, output, session) {
     source("server/n_vis_single.R", local = TRUE)
     source("server/n_vis_network.R", local = TRUE)
     
+    #download sample data function and ui
+    output$download_sample_data <- renderUI({
+        fixedPanel(
+            bottom = 22,
+            left = 12,
+            downloadLink("dataset_download","Download Sample Data", style = "color: #FFFF99" )
+        )
+    })
+    output$dataset_download <- downloadHandler(
+        filename = "demo.zip",
+        content = function(file){
+            file.copy("www/demo.zip", file)
+        }
+    )
+    
 
     
     

@@ -9,7 +9,7 @@ observe({
   input2rv("n_ui_showpanel")
   
   # ins table settings
-  input2rv(c("n_ins_view"))
+  input2rv(c("n_ins_view", "n_ins_namelen"))
 
   # heatmap
   input2rv(c(
@@ -146,7 +146,10 @@ observeEvent(input$n_use_data,{
 
     
     # ---------------  intersection options
-    rv$n_ins_view == "Full"
+    # table
+    rv$n_ins_view <- "Full"
+    rv$n_ins_namelen <- 40
+    
     # venn
     rv$n_venn_label <- "counts"
     rv$n_venn_type <- "Basic"

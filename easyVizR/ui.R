@@ -37,6 +37,7 @@ sidebar <- dashboardSidebar(
                 tags$hr(style="border-color: #48617b;margin: 8px;")
                 
                 ,uiOutput("btn_demo")
+                ,uiOutput("download_sample_data")
                 
                 
                 # # ---------------- options panels -------------------

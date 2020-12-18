@@ -1,6 +1,12 @@
     #=======================================================================#
     ####----------------------- Functions: Calculation -------------------####
-    #=======================================================================# 
+    #=======================================================================#
+    # collapse the leadingedge column
+    collapse_last_col <- function(df, sep=";"){
+      df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = sep))
+      return(df)
+    }
+    
     # change heximal colors to 90% transparency
     addalpha <- function(colors, alpha=0.25) {
         r <- col2rgb(colors, alpha=T)
@@ -157,6 +163,8 @@
               arrange(desc(ES))
           }
           
+          rv$bar_tl <- df
+          
           if(is.null(df)==T || nrow(df)<1){
             rv$bar_error <- "0"
             return(NULL)
@@ -187,7 +195,7 @@
                            
                          ))) +
               geom_bar(stat="identity", width = 0.8) +
-              scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
+              scale_fill_gradientn(limits = c(-3,3),colours=gcols_div(), values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
               xlab("Enrichment Score (ES)") + ylab("") +
               geom_vline(xintercept=0, size=0.1) +
               theme_minimal() +
@@ -223,6 +231,8 @@
               arrange(desc(ES))
           }
           
+          rv$bar_tl <- df
+          
           if(is.null(df)==T || nrow(df)<1){
             rv$bar_error <- "0"
             return(NULL)
@@ -230,8 +240,6 @@
             rv$bar_error <- "l"
             return(NULL)
           }else{
-              df <- df %>%
-                dplyr::filter(pathway %in% rv$gss_selected)
               
                 rv$bubble_pathway_list = df[["pathway"]]
                 
@@ -261,7 +269,7 @@
                                ))) +
                     geom_point(alpha=0.5) +
                     scale_size(range = c(zmin, zmax)) +
-                    scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
+                    scale_color_gradientn(limits = c(-3,3),colours=gcols_div(), values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
                     xlab("Enrichment Score (ES)") + ylab("") +
                     geom_vline(xintercept=0, size=0.1) +
                     theme_minimal() +
@@ -312,7 +320,7 @@
                            ))) +
                 geom_point(alpha=0.5) +
                 # geom_text_repel(aes(x = ES, y =-log10(df[[pq]]), label = ifelse(pval<cutoff_p && padj<cutoff_q, pathway,""))) +
-                scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
+                scale_color_gradientn(limits = c(-3,3),colours=gcols_div(), values=gvalues, name=paste0("-log10(",pq,")*sign(ES)"), oob=squish) +
                 xlab("Enrichment Score (ES)") + ylab(paste0("-log10(",pq,")")) +
                 geom_vline(xintercept=0, size=0.1) +
                 theme_minimal() +
@@ -464,7 +472,7 @@
         if(cutoff_q < 1){
           df = df %>% dplyr::filter(padj < cutoff_q)
         }
-        
+
         if(is.null(df)==T || nrow(df)<1){
           return(NULL)
         }else{
@@ -517,11 +525,15 @@
               return(a)
             })
             
-            text = unlist(text)
+            tidy_data$text = unlist(text)
             
+            # save the keyword table to RV
+            rv$word_tl <- tidy_data
+            
+
             p <- tidy_data %>%
               ggplot(aes(word, n, text=text)) +
-              geom_col(show.legend = FALSE, fill = "#F8766D") +
+              geom_col(show.legend = FALSE, fill = word_color()) +
               labs(x = NULL, y = NULL, title = NULL) +
               coord_flip() +
               scale_x_reordered() +
@@ -611,6 +623,8 @@
               tidy_data = rbind(tidy_data,tidy_data0)
             }
             
+            rv$word_tl <- tidy_data
+            
             p <- tidy_data %>%
               dplyr::arrange(n) %>%
               dplyr::mutate(word = factor(word, levels = rev(unique(word)))) %>%
@@ -619,7 +633,7 @@
               labs(x = NULL, y = NULL, title = NULL) +
               coord_flip() +
               scale_x_reordered() +
-              scale_fill_manual(values = c("#00BFC4", "#F8766D")) +
+              scale_fill_manual(values = word_color_div()) +
               theme(
                 plot.title = element_text(size = 10,face = "bold",vjust=0) #hjust = 0.5
               )
@@ -652,20 +666,8 @@
             return(NULL)
         }else{
           df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+          rv$bar_tl <- df
           
-            # df = rv$fgseagg %>% 
-            #     dplyr::filter(db %in% pathways) %>% 
-            #     mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-            #   dplyr::arrange(padj)
-            # 
-            # if(cutoff_p < 1){
-            #     df = df %>% dplyr::filter(pval<cutoff_p)
-            # }
-            # if(cutoff_q < 1){
-            #     df = df %>% dplyr::filter(padj<cutoff_q)
-            # }
-            
-
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
@@ -693,7 +695,7 @@
                                    
                                ))) +
                     geom_bar(stat="identity", width = 0.8) +
-                    scale_fill_gradientn(limits = c(0,3),colours=gcols2, values=gvalues2, name=paste0("-log10(",pq,")"), oob=squish) +
+                    scale_fill_gradientn(limits = c(0,3),colours=g_color(), values=gvalues2, name=paste0("-log10(",pq,")"), oob=squish) +
                     xlab(paste0("-log10(",pq,")")) + ylab("") +
                     xlim(0,max(-log10(df[[pq]]))+0.5) +
                     theme_bw() +
@@ -722,23 +724,12 @@
             return(NULL)
         }else{
           df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+          rv$bar_tl <- df
           
-            # df = rv$fgseagg %>% 
-            #     dplyr::filter(db %in% pathways) %>% 
-            #     mutate_if(is.numeric,  ~replace(., . == 0, 0.00001)) %>%
-            #   dplyr::arrange(padj)
-            # 
-            # if(cutoff_p < 1){
-            #     df = df[which(df[["pval"]]<cutoff_p),]
-            # }
-            # if(cutoff_q < 1){
-            #     df = df[which(df[["padj"]]<cutoff_q),]
-            # }
-
             if(is.null(df)==T || nrow(df)<1){
                 return(NULL)
             }else{
-                                
+              
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
                 
@@ -770,7 +761,7 @@
                                ))) +
                     geom_point(alpha=0.5) +
                     scale_size(range = c(zmin, zmax)) +
-                    scale_color_gradientn(limits = c(0,3),colours=gcols2, values=gvalues2, name=paste0("-log10(",pq,")"), oob=squish) +
+                    scale_color_gradientn(limits = c(0,3),colours=g_color(), values=gvalues2, name=paste0("-log10(",pq,")"), oob=squish) +
                     xlab(paste0("-log10(",pq,")")) + ylab("") +
                     xlim(0,max(-log10(df[[pq]]))+0.5) +
                     # geom_vline(xintercept=0, size=0.1) +
@@ -959,8 +950,7 @@
         # get df
         # df = dfNEL()
         df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p,rv$vis_q)
-        print(df)
-
+        
         # print(nrow(df))
         if(is.null(df) || nrow(df)<1){
             rv$vis_status = "failed"
@@ -997,36 +987,88 @@
                 # edges_mat = edges_mat[edges_mat$percent>rv$percent_cutoff,]
                 rv$dendro_run = "success"
                 }
-            print(Sys.time())
+            # print(Sys.time())
             # nodes matrix
             # colors
-            get_colors = function(pq="padj"){
-                # colors = vector(mode="character", length=length(a))
-                colors = rep("white",nrow(df))
-                if(rv$run_mode == "gsea"){
-                    colors[df[[pq]]<0.25 & df$ES>0] = "rgba(254,224,144)" #lightyellow
-                    colors[df[[pq]]<0.1 & df$ES>0] = "rgba(253,174,97)" #yellow
-                    colors[df[[pq]]<0.05 & df$ES>0] = "rgba(244,109,67)" #orange
-                    colors[df[[pq]]<0.01 & df$ES>0] = "rgba(215,48,39)" #red
-                    colors[df[[pq]]<0.001 & df$ES>0] = "rgba(165,0,38)" #dark red
-                    
-                    colors[df[[pq]]<0.25 & df$ES<0] = "rgba(198,219,239)" #pale blue
-                    colors[df[[pq]]<0.1 & df$ES<0] = "rgba(158,202,225)" #light blue
-                    colors[df[[pq]]<0.05 & df$ES<0] = "rgba(107,174,214)" #blue
-                    colors[df[[pq]]<0.01 & df$ES<0] = "rgba(49,130,189)" #darker blue
-                    colors[df[[pq]]<0.001 & df$ES<0] = "rgba(8,81,156)" #cornflower
-                }else if(rv$run_mode == "glist"){
-                    colors[df[[pq]]<0.25] = "rgba(254,224,144)" #lightyellow
-                    colors[df[[pq]]<0.1] = "rgba(253,174,97)" #yellow
-                    colors[df[[pq]]<0.05] = "rgba(244,109,67)" #orange
-                    colors[df[[pq]]<0.01] = "rgba(215,48,39)" #red
-                    colors[df[[pq]]<0.001] = "rgba(165,0,38)" #dark red
+            get_colors <- function(pq=rv$vis_pq){
+              # colors = vector(mode="character", length=length(a))
+              colors = rep("white",nrow(df))
+              
+              
+              if(rv$run_mode == "gsea"){
+                # function to fetch predefined color gradients
+                get_col_gradient <- function(col){
+                  if(col == "red"){
+                    gcols_red
+                  }else if(col == "blue"){
+                    gcols_blue
+                  }else if(col == "salmon"){
+                    gcols_salmon
+                  }else if(col == "cyan"){
+                    gcols_cyan
+                  }else if(col == "orange"){
+                    gcols_orange
+                  }else if(col == "green"){
+                    gcols_green
+                  }else if(col == "purple"){
+                    gcols_purple
+                  }else if(col == "grey"){
+                    gcols_grey
+                  }
                 }
                 
+                # fetch colors for up and down separately
+                colup <- get_col_gradient(rv$up_color)
+                coldown <- get_col_gradient(rv$down_color)
                 
-                return(colors)
+                # assign colors for up and down separately
+                colors[df[[pq]]<0.25 & df$ES>0] = colup[1] #lightyellow
+                colors[df[[pq]]<0.05 & df$ES>0] = colup[2] #yellow
+                colors[df[[pq]]<0.01 & df$ES>0] = colup[3] #orange
+                colors[df[[pq]]<0.005 & df$ES>0] = colup[4] #red
+                colors[df[[pq]]<0.001 & df$ES>0] = colup[5] #dark red
+                
+                colors[df[[pq]]<0.25 & df$ES<0] = coldown[1] #pale blue
+                colors[df[[pq]]<0.05 & df$ES<0] = coldown[2] #light blue
+                colors[df[[pq]]<0.01 & df$ES<0] = coldown[3] #blue
+                colors[df[[pq]]<0.005 & df$ES<0] = coldown[4] #darker blue
+                colors[df[[pq]]<0.001 & df$ES<0] = coldown[5] #cornflower
+              }else if(rv$run_mode == "glist"){
+                # function to fetch predefined color gradients
+                get_col_gradient <- function(){
+                  if(rv$ora_color == "red"){
+                    gcols_red_vis
+                  }else if(rv$ora_color == "blue"){
+                    gcols_blue_vis
+                  }else if(rv$ora_color == "salmon"){
+                    gcols_salmon_vis
+                  }else if(rv$ora_color == "cyan"){
+                    gcols_cyan_vis
+                  }else if(rv$ora_color == "orange"){
+                    gcols_orange_vis
+                  }else if(rv$ora_color == "green"){
+                    gcols_green_vis
+                  }else if(rv$ora_color == "purple"){
+                    gcols_purple_vis
+                  }else if(rv$ora_color == "grey"){
+                    gcols_grey_vis
+                  }
+                }
+                
+                # fetch the color gradient
+                col_gradient <- get_col_gradient()
+                
+                # assign colors to cutoffs
+                colors[df[[pq]]<0.25] = col_gradient[1] #lightest
+                colors[df[[pq]]<0.05] = col_gradient[2] #
+                colors[df[[pq]]<0.01] = col_gradient[3] #
+                colors[df[[pq]]<0.005] = col_gradient[4] #
+                colors[df[[pq]]<0.001] = col_gradient[5] #darkest
+              }
+              return(colors)
             }
-            colors = get_colors((pq=rv$vis_pq))
+            
+            colors = get_colors()
             
             # shapes
             shapes = rep("dot",nrow(df))
@@ -1060,10 +1102,10 @@
             y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
             
             #get the clusters_id
-            
+            print(head(df))
             if(nrow(df) == 1){
               df <- df %>%
-                mutate(cluster_name= 1)
+                mutate(cluster_name = paste0("1: ", pathway))
               }
             else{
               edges_mat2 = edges_mat_zero_cutoff
@@ -1135,7 +1177,7 @@
                 dplyr::mutate(n = n()) %>%
                 filter(padj == min(padj)) %>%
                 filter(row_number()==1) %>%
-                dplyr::select(cluster, pathway, n, pval, ES, padj)
+                dplyr::select(cluster, pathway, n, pval, padj)
               }
             # assign the rvs that would be used in dendrogram
             rv$hc = hc
@@ -1168,7 +1210,7 @@
                 vis <- visNetwork(nodes, height = "1000px", width = "100%") %>%
                     # visEdges(smooth = FALSE) %>% #disable smooth curve for edges
                     # visIgraphLayout() %>% # decrease plotting time
-                    visNodes(borderWidth= 2) %>%
+                    visNodes(borderWidth= 1) %>%
                     visInteraction(navigationButtons = TRUE) %>% 
                     visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T), 
                                nodesIdSelection = TRUE, selectedBy = list(variable = "cluster")) %>% # , selectedBy = "group"once select a node, see relevant nodes and grey out the rest.
@@ -1190,7 +1232,7 @@
                 vis <- visNetwork(nodes, edges, height = "1000px", width = "100%") %>%
                     visEdges(smooth = FALSE) %>% #disable smooth curve for edges
                     # visIgraphLayout() %>% # decrease plotting time
-                    visNodes(borderWidth= 2) %>%
+                    visNodes(borderWidth= 1) %>%
                     visInteraction(navigationButtons = TRUE) %>% 
                     visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T), 
                                nodesIdSelection = TRUE, selectedBy = list(variable = "cluster")) %>% # once select a node, see relevant nodes and grey out the rest.
@@ -1206,7 +1248,7 @@
     # plot an interactive dendrogram
     plot_dendro <- function(){
       df = rv$df_vis
-      if(nrow(df)<=1){
+      if(is.null(df) || nrow(df)<=1){
         rv$dendro_run = "fail"
         return(NULL)
       }else{
@@ -1288,9 +1330,14 @@
                 axis.title.y = element_blank(),
                 panel.grid.major.y = element_blank()) +
           geom_hline(yintercept = 1 - cutoff_similarity, linetype="dashed", color = "grey") #scale_y_continuous(sec.axis = dup_axis())
+        
+        # adjust height accordingly
+        yh = nrow(df) * 18
+        if(yh<=rv$dendro_hp){yh=rv$dendro_hp}
+
         # convert it to interative plotly diagram
         ggplotly_dendro <- ggplot_dendro %>%
-          ggplotly(tooltip = c("name")) %>%
+          ggplotly(height = yh,tooltip = c("name")) %>%
           layout(showlegend = FALSE, margin = list(l = 0)) %>%
           style(textposition = "right") %>%
           event_register("plotly_click")
@@ -1303,7 +1350,7 @@
     
     plot_cluster_barplot <- function() {
       df = rv$df_vis
-      if(nrow(df)<=1){
+      if(is.null(df) || nrow(df)<=1){
         rv$cluster_bar_run = "fail"
         return(NULL)
       }else{
@@ -1381,37 +1428,76 @@
             else{return(paste0(substr(x, 0, abbreviate_length),"..."))}})
         }
         
-        df_padj_points <- df_padj_points %>% 
-        arrange(desc(cluster))  
-        
-        cluster_barplot <- df_padj_points %>%
-          ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
-                   fill=-log10(pval)*sign(ES),
-                   text=paste0(
-                     "<b>",df_padj_points[["complete_name"]],"</b>\n",
-                     "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
-                     "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
-                     "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
-                     "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
-        geom_bar(stat="identity", width = 0.8) +
-        scale_fill_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(P.value)*sign(ES)"), oob=squish) +
-        xlab("Enrichment Score (ES)") + ylab("") +
-        geom_vline(xintercept=0, size=0.1) +
-        theme_minimal() +
-        theme( axis.text.y = element_text(size = 11),
-              legend.title = element_text(size = 9))
-        # # scale_y_discrete(position = "right")
+        # rearrange the data frame based on users' selction(whether they would like to sort)
+        if(rv$sort_check == TRUE){
+          if(rv$run_mode == "gsea"){
+            df_padj_points <- df_padj_points %>%
+              arrange(desc(ES))
+          } else {
+            df_padj_points <- df_padj_points %>%
+              arrange(desc(-log10(pval)))
+          }
+        } else{
+          df_padj_points <- df_padj_points %>% 
+          arrange(desc(cluster))
+        }
 
+        # assign the the variable that decide the color and the text of the color bar, p or p.adj
+        color_value = rv$color_check
+        if(color_value == "pval"){
+          color_text = "P"
+        } else{
+          color_text = "P.adj"
+        }
+        
+        # generate the plot
+        if(rv$run_mode == "gsea"){
+          cluster_barplot <- df_padj_points %>%
+            ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
+                       fill=-log10(df_padj_points[[color_value]])*sign(ES),
+                       text=
+                         paste0(
+                           "<b>",df_padj_points[["complete_name"]],"</b>\n",
+                           "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
+                           "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
+                           "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
+                           "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
+            geom_bar(stat="identity", width = 0.8) +
+            scale_fill_gradientn(limits = c(-3,3),colours=gcols_div(), values=gvalues, name=paste0("-log10(", color_text, ")*sign(ES)"), oob=squish) +
+            xlab("Enrichment Score (ES)") + ylab("") +
+            geom_vline(xintercept=0, size=0.1) +
+            theme_minimal() +
+            theme( axis.text.y = element_text(size = 11),
+                   legend.title = element_text(size = 9))
+          
+        } else {
+          
+
+          cluster_barplot <- df_padj_points %>%
+            ggplot(aes(x=-log10(pval), y=factor(complete_name, levels = complete_name),
+                     fill=-log10(df_padj_points[[color_value]]),
+                     text=
+                       paste0(
+                       "<b>",df_padj_points[["complete_name"]],"</b>\n",
+                       "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
+                       "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
+                       "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
+          geom_bar(stat="identity", width = 0.8) +
+            scale_fill_gradientn(limits = c(0,3),colours=g_color(), values=gvalues2, name=paste0("-log10(",color_text,")"), oob=squish) +
+            xlab(paste0("-log10(",color_text,")")) + ylab("") +
+            geom_vline(xintercept=0, size=0.1) +
+          theme_minimal() +
+          theme( axis.text.y = element_text(size = 11),
+                legend.title = element_text(size = 9))
+        }
+        
         yh = nrow(df_padj_points) * 25 + 20
         if(yh<=500){yh=500}
         
       plotly_barplot <- ggplotly(cluster_barplot,
                                  height = yh,
-                                 tooltip = "text",
-                                 source = "bar_plot_click"
-      ) %>%
-        # layout(legend=list(colorbar=list(side="right"))) %>%
-        event_register("plotly_click")
+                                 tooltip = "text"
+      )
       plotly_barplot
       }
     }
@@ -1419,7 +1505,7 @@
     # Plot the cluster bubble plot
     plot_cluster_bubble <- function(zmin=rv$bubble_zmin,zmax=rv$bubble_zmax) {
       df = rv$df_vis
-      if(nrow(df)<=1){
+      if(is.null(df) || nrow(df)<=1){
         rv$cluster_bar_run = "fail"
         return(NULL)
       }else{
@@ -1496,40 +1582,76 @@
             else{return(paste0(substr(x, 0, abbreviate_length),"..."))}})
         }
         
-        # sort the table by the cluster id
-        df_padj_points <- df_padj_points %>% 
-          arrange(desc(cluster))
+        # rearrange the data frame based on users' selction(whether they would like to sort)
+        if(rv$sort_check == TRUE){
+          if(rv$run_mode == "gsea"){
+            df_padj_points <- df_padj_points %>%
+              arrange(desc(ES))
+          } else {
+            df_padj_points <- df_padj_points %>%
+              arrange(desc(-log10(pval)))
+          }
+        } else{
+          df_padj_points <- df_padj_points %>% 
+            arrange(desc(cluster))
+        }
         
-        cluster_bubble <- df_padj_points %>%
-          ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
-                     size = n,
-                     colour=-log10(pval)*sign(ES),
-                     text=paste0(
-                       "<b>",df_padj_points[["complete_name"]],"</b>\n",
-                       "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
-                       "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
-                       "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
-                       "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
-          geom_point(alpha = 0.5) +
-          scale_size(range = c(zmin, zmax)) +
-          scale_color_gradientn(limits = c(-3,3),colours=gcols, values=gvalues, name=paste0("-log10(P.value)*sign(ES)"), oob=squish) +
-          xlab("Enrichment Score (ES)") + ylab("") +
-          geom_vline(xintercept=0, size=0.1) +
-          theme_minimal() +
-          theme( axis.text.y = element_text(size = 11),
-                 legend.title = element_text(size = 9))
-        # # scale_y_discrete(position = "right")
+        color_value = rv$color_check
+        if(color_value == "pval"){
+          color_text = "P.value"
+        } else{
+          color_text = "P.adj"
+        }
+        # generate the plot
+        if(rv$run_mode == "gsea"){
+          cluster_bubble <- df_padj_points %>%
+            ggplot(aes(x=ES, y=factor(complete_name, levels = complete_name),
+                       size = n,
+                       colour=-log10(df_padj_points[[color_value]])*sign(ES),
+                       text=paste0(
+                         "<b>",df_padj_points[["complete_name"]],"</b>\n",
+                         "ES=",signif(df_padj_points[["ES"]],digits=3),"; ",
+                         "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
+                         "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
+                         "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
+            geom_point(alpha = 0.5) +
+            scale_size(range = c(zmin, zmax)) +
+            scale_color_gradientn(limits = c(-3,3),colours=gcols_div(), values=gvalues, name=paste0("-log10(", color_text,")*sign(ES)"), oob=squish) +
+            xlab("Enrichment Score (ES)") + ylab("") +
+            geom_vline(xintercept=0, size=0.1) +
+            theme_minimal() +
+            theme( axis.text.y = element_text(size = 11),
+                   legend.title = element_text(size = 9))
+          
+        } else {
+          
+          cluster_bubble <- df_padj_points %>%
+            ggplot(aes(x=-log10(pval), y=factor(complete_name, levels = complete_name),
+                       size = n,
+                       colour=-log10(df_padj_points[[color_value]]),
+                       text=paste0(
+                         "<b>",df_padj_points[["complete_name"]],"</b>\n",
+                         "P=",signif(df_padj_points[["pval"]],digits=3),"; ",
+                         "P.adj=",signif(df_padj_points[["padj"]],digits=3),"\n",
+                         "Cluster size = ",n,"\n", "Cluster annotation:   ", text_cluster))) +
+            geom_point(alpha = 0.5) +
+            scale_size(range = c(zmin, zmax)) +
+            scale_color_gradientn(limits = c(0,3),colours=g_color(), values=gvalues2, name=paste0("-log10(",color_text,")"), oob=squish) +
+            xlab(paste0("-log10(",color_text,")")) + ylab("") +
+            geom_vline(xintercept=0, size=0.1) +
+            theme_minimal() +
+            theme( axis.text.y = element_text(size = 11),
+                   legend.title = element_text(size = 9))
+        }
 
         yh = nrow(df_padj_points) * 25 + 20
         if(yh<=500){yh=500}
         
         plotly_bubble <- ggplotly(cluster_bubble,
                                    height = yh,
-                                   tooltip = "text",
-                                   source = "bubble_plot_click"
-        ) %>%
-          # layout(legend=list(colorbar=list(side="right"))) %>%
-          event_register("plotly_click")
+                                   tooltip = "text"
+        )
+        
         plotly_bubble
       }
     }
@@ -1788,6 +1910,8 @@
       
       rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
       rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
+      
+      rv$bar_tl=NULL;rv$word_tl=NULL
     }
     
     #===================================================#
@@ -1922,7 +2046,7 @@
         rv$no_down_025 = rv$no_down_025 + sum(fgseaRes$padj<0.025&fgseaRes$ES<0,na.rm=TRUE)
         
         sig_no <- rv$no_up_05 + rv$no_down_05
-        if(sig_no >= 1){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+        if(sig_no >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
         sig_no <- rv$no_up_01 + rv$no_down_01
         if(sig_no >= 100){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         sig_no <- rv$no_up_025 + rv$no_down_025
@@ -1962,7 +2086,7 @@
           rv$no_up_01 = rv$no_up_01 + sum(fgseaRes$padj<0.25,na.rm=TRUE)
           rv$no_up_05 = rv$no_up_05 + sum(fgseaRes$padj<0.05,na.rm=TRUE)
           
-          if(rv$no_up_05 >= 1){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+          if(rv$no_up_05 >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
           # if(rv$no_up_01 >= 1){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         }
         
@@ -2188,7 +2312,7 @@
       }
       
       fixedPanel(
-        bottom = 25,
+        bottom = 50,
         actionBttn(id,label
                    ,block = TRUE
                    ,style = style

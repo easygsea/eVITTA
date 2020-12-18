@@ -12,6 +12,7 @@ server <- function(input, output, session) {
     
     # toggle button for a demo run
     output$btn_demo <- renderUI({
+        req(is.null(rv$demo_yes))
         btn_demo("ee")
     })
     
@@ -33,5 +34,27 @@ server <- function(input, output, session) {
     source("server/3.server-network.R", local = TRUE)
     source("server/4.server-download.R", local = TRUE)
     
+    # the ui to download the files
+    output$sample_data_download <- renderUI({
+        fixedPanel(
+            bottom = 22,
+            left = 12,
+            if(is.null(input$selected_mode) || input$selected_mode == "gsea"){
+                downloadLink("dataset_download","Download Sample Data", style = "color: #FFFF99" )
+            } else {
+                downloadLink("dataset_download_ora","Download Sample Data", style = "color: #FFFF99" )
+            }
+        )
+    })
+    output$dataset_download <- downloadHandler(
+        filename = "hsa.zip",
+        content = function(file){file.copy("www/demo/hsa.zip", file)}
+        
+    )
+    output$dataset_download_ora <- downloadHandler(
+        filename = "hsa_list.txt",
+        content = function(file){file.copy("www/demo/hsa_list.txt", file)}
+        
+    )
     
 }

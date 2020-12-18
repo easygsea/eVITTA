@@ -1,5 +1,7 @@
 ####================= MULTIPLE - INTERSECT =====================####
 palette <- c("aquamarine","blue","darkgrey","darksalmon","red","lightgrey","lightblue","lightgreen","lightyellow","white","yellow") # this is the default base palette for venns
+n_wc_ignore_help_txt <- "Common expressions:<br><b>%.*$</b> - removes trailing identifiers from easyGSEA<br><b>[[:digit:]]</b> - removes digits"
+
 
 ####-------------------- Intersection selection ------------------------####
 
@@ -163,9 +165,9 @@ output$filters_summary <- renderUI({
     adddesc <- paste(name, ": ",
                      nterms, " ",
                      cur_sign, " entries with ",
-                     "p <= ",cur_p, ", ", 
-                     "FDR <= ", cur_q, ", ", 
-                     "|Stat| >= ", cur_Stat,
+                     "p < ",cur_p, ", ", 
+                     "FDR < ", cur_q, ", ", 
+                     "|Stat| > ", cur_Stat,
                      sep="")
     desc <- c(desc, adddesc)
   }
@@ -212,7 +214,9 @@ options = list(scrollX=TRUE,
                columnDefs = list(
                  list(
                    targets = 1,
-                   render = JS("$.fn.dataTable.render.ellipsis( 17, true )")
+                   render = JS(
+                     sprintf("$.fn.dataTable.render.ellipsis( %s, true )", toString(rv$n_ins_namelen))
+                     )
                  ),
                  list(
                    targets = "_all",
@@ -266,6 +270,7 @@ draw_upsetR_with_ins <- function(df, criteria, show_ins=T, color="red",
                                  lb_limit=20
                                  
 ){
+  req(is.null(show_ins)==F)
   if(show_ins==T){
     
     # ---------------- apply linebreaks
@@ -803,7 +808,8 @@ n_ins_wc_df <- reactive({
 
 n_ins_wc_plt <- reactive({
   df <- n_ins_wc_df()
-  req(max(df$Freq)>1) # blocks further processing if no repeated words are found
+  validate(need(max(df$Freq)>1,
+           "All words are of frequency 1. Please check your separator.")) # blocks further processing if no repeated words are found
   
   
   # only draw top x words
@@ -900,12 +906,36 @@ output$ins_table_panel <- renderUI({
                      placement = "right"),
         
     ),
-    bsTooltip("n_wc_dropdown", "Text enrichment wordcloud (for gene set-type terms)", placement = "top"),
-    div(style = "position: absolute; left: 4em; bottom: 1em", id="n2_4b",
+    div(style = "position: absolute; left: 4em; bottom: 1em",
+        dropdown(
+          sliderInput("n_ins_namelen",
+                      "Max string length for Name column:",
+                      min = 25,
+                      max = 80,
+                      value = rv$n_ins_namelen),
+          
+          size = "xs",
+          icon = icon("palette", class = "opt"),
+          up = TRUE, width=300
+        ),
+        
+    ),
+    
+    div(style = "position: absolute; left: 7em; bottom: 1em", id="n2_4b",
         dropdown(inputId="n_wc_dropdown",
+                 column(12, h4("Text enrichment wordcloud (for Name column)")),
                  column(8,
                         column(2, textInput("n_ins_wc_sep", "Separator:", value="_")),
-                        column(10, textInput("n_ins_Wc_ignore", "Ignore strings: (separated by spaces)", value="and or of GO KEGG WP RA C2")),
+                        column(10, textInput("n_ins_Wc_ignore", 
+                                             HTML(paste0(
+                                               "Ignore strings: (separated by spaces)",
+                                               add_help("n_wc_ignore_help", style="margin-left: 5px;"))
+                                             ), 
+                                             value="and or of GO KEGG WP RA C2"),
+                               bsTooltip("n_wc_ignore_help", 
+                                         n_wc_ignore_help_txt, 
+                                         placement = "top"),
+                               ),
                         
                         plotOutput("n_ins_wc"),
                  ),
@@ -919,8 +949,9 @@ output$ins_table_panel <- renderUI({
         )
         
     ),
+    # bsTooltip("n_wc_dropdown", "Text enrichment wordcloud (for gene set-type terms)", placement = "top"),
     
-    div(style = "position: absolute; left: 7em; bottom: 1em",
+    div(style = "position: absolute; left: 10em; bottom: 1em",
         dropdown(
           downloadButton("download_ins_df", "Download current table"),
           downloadButton("download_ins_gl", "Download gene list"),

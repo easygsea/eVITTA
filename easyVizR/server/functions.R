@@ -279,8 +279,20 @@ remove_ui <- function(id){
   # print("removed ui")
 
 }
+
+
+# ================================================= #
+#                  Filters text                     ####
+# ================================================= #
+
+# text for filters
 p_filter_text="P <:"
 stat_filter_text="<b>|Stat| ></b>:"
+q_filter_text="FDR <:"
+sign_filter_text="Direction:"
+
+
+
 # ================================================= #
 #                  Filter presets                   ####
 # ================================================= #
@@ -308,43 +320,43 @@ no_txt_color <- "#f4f4f4"
 no_bg_color <- "#444"
 filter_presets <- list(
   "p significant" = c("psig", 0.05, NA, NA, NA, 
-                      "<b>p</b> <= 0.05", 
+                      "<b>p</b> < 0.05", 
                       sig_icon, sig_txt_color, sig_bg_color),
   "q significant" = c("qsig", NA, 0.05, NA, NA, 
-                      "<b>FDR</b> <= 0.05", 
+                      "<b>FDR</b> < 0.05", 
                       sig_icon, sig_txt_color, sig_bg_color),
   "Changed 0.5x" = c("c0_5", NA, NA, 0.5, "All", 
-                     stat_replace("<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: All"), 
+                     stat_replace("<b>|Stat|</b> > 0.5 <br><b>Direction</b>: All"), 
                      both_icon, both_txt_color, both_bg_color),
   "Changed 1x" = c("c1", NA, NA, 1, "All", 
-                   stat_replace("<b>|Stat|</b> >= 1 <br><b>Direction</b>: All"),
+                   stat_replace("<b>|Stat|</b> > 1 <br><b>Direction</b>: All"),
                    both_icon, both_txt_color, both_bg_color),
   "Changed 1.5x" = c("c1_5", NA, NA, 1.5, "All", 
-                     stat_replace("<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: All"),
+                     stat_replace("<b>|Stat|</b> > 1.5 <br><b>Direction</b>: All"),
                      both_icon, both_txt_color, both_bg_color),
   "Up 0.5x" = c("up0_5", NA, NA, 0.5, "Positive", 
-                stat_replace("<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: +"),
+                stat_replace("<b>|Stat|</b> > 0.5 <br><b>Direction</b>: +"),
                 up_icon, up_txt_color, up_bg_color),
   "Up 1x" = c("up1", NA, NA, 1, "Positive", 
-              stat_replace("<b>|Stat|</b> >= 1 <br><b>Direction</b>: +"),
+              stat_replace("<b>|Stat|</b> > 1 <br><b>Direction</b>: +"),
               up_icon, up_txt_color, up_bg_color),
   "Up 1.5x" = c("up1_5", NA, NA, 1.5, "Positive", 
-                stat_replace("<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: +"),
+                stat_replace("<b>|Stat|</b> > 1.5 <br><b>Direction</b>: +"),
                 up_icon, up_txt_color, up_bg_color),
   "Down 0.5x" = c("down0_5", NA, NA, 0.5, "Negative", 
-                  stat_replace("<b>|Stat|</b> >= 0.5 <br><b>Direction</b>: -"),
+                  stat_replace("<b>|Stat|</b> > 0.5 <br><b>Direction</b>: -"),
                   down_icon, down_txt_color, down_bg_color),
   "Down 1x" = c("down1", NA, NA, 1, "Negative", 
-                stat_replace("<b>|Stat|</b> >= 1 <br><b>Direction</b>: -"),
+                stat_replace("<b>|Stat|</b> > 1 <br><b>Direction</b>: -"),
                 down_icon, down_txt_color, down_bg_color),
   "Down 1.5x" = c("down1_5", NA, NA, 1.5, "Negative", 
-                  stat_replace("<b>|Stat|</b> >= 1.5 <br><b>Direction</b>: -"),
+                  stat_replace("<b>|Stat|</b> > 1.5 <br><b>Direction</b>: -"),
                   down_icon, down_txt_color, down_bg_color),
   "Default" = c("default", 0.05, 1, 0, "All", 
-                stat_replace("Default:<br><b>p</b> <= 0.05 <br><b>FDR</b> <= 1<br><b>|Stat|</b> >= 0<br><b>Direction</b>: All"),
+                stat_replace("Default:<br><b>p</b> < 0.05 <br><b>FDR</b> < 1<br><b>|Stat|</b> > 0<br><b>Direction</b>: All"),
                 default_icon, no_txt_color, no_bg_color),
-  "No filter" = c("nofilter", 1, 1, 0, "All", 
-                  stat_replace("Remove all filters:<br><b>p</b> <= 1 <br><b>FDR</b> <= 1<br><b>|Stat|</b> >= 0<br><b>Direction</b>: All"),
+  "No filter" = c("nofilter", 1.1, 1.1, -0.1, "All", 
+                  stat_replace("Remove all filters:<br><b>p</b> < 1.1 <br><b>FDR</b> < 1.1<br><b>|Stat|</b> > -0.1<br><b>Direction</b>: All"),
                   no_icon, no_txt_color, no_bg_color)
   
 )
@@ -527,9 +539,9 @@ filter_to_gls <- function(filter_namespace, filter_var, filtered_df, input_range
   for (i in 1:length(input_range)){
     n <- input_range[[i]] # name
     ss <- df
-    ss <- ss[ss[[paste0("PValue","_", n)]]<=filter_var[[paste0(filter_namespace,"_p_",i)]], ] # filter by p
-    ss <- ss[ss[[paste0("FDR","_", n)]]<=filter_var[[paste0(filter_namespace,"_q_",i)]], ] # filter by q
-    ss <- ss[abs(ss[[paste0("Stat","_", n)]])>=filter_var[[paste0(filter_namespace,"_Stat_",i)]], ] # filter by stat
+    ss <- ss[ss[[paste0("PValue","_", n)]]<filter_var[[paste0(filter_namespace,"_p_",i)]], ] # filter by p
+    ss <- ss[ss[[paste0("FDR","_", n)]]<filter_var[[paste0(filter_namespace,"_q_",i)]], ] # filter by q
+    ss <- ss[abs(ss[[paste0("Stat","_", n)]])>filter_var[[paste0(filter_namespace,"_Stat_",i)]], ] # filter by stat
     ss <- filter_by_sign(ss, paste0("Stat","_", n), filter_var[[paste0(filter_namespace,"_sign_",i)]], tolerate=T) # filter by stat sign
     
     gl <- as.character(na.omit(ss$Name)) # format into vector genelist
@@ -568,13 +580,14 @@ gl_to_table <- function(name, gl, master_df, round=3, keep_stat=F){
 #        Convert filters to verbal summary          ####
 # ================================================= #
 
-
-
 # gathers filters about 1 dataset from namespace and summarizes them with a line of HTML text
 # -------------------------------------------------
 # call this inside HTML()
 # name: the name of the dataset
 # status: T/F/NA
+
+# NOTE. now, the filtering is set to <, > instead of <=, >=.
+# Thus, p/ q cutoff of 1 and below, and stat cutoff of 0 or above will be meaningful, and will be shown.
 
 summarize_filter <- function(filter_namespace, filter_var, name, status, include_name=T, input_range=rv$nx_n){
   req_filter_ns(filter_namespace, filter_var)
@@ -590,15 +603,15 @@ summarize_filter <- function(filter_namespace, filter_var, name, status, include
   if (is.na(status)==T){ # if NA
     stat_text=""
   } else if (status==F){ # if FALSE
-    if (cur_p<1){ # p cutoff is only meaningful if <1
+    if (cur_p<=1){ # p cutoff is only meaningful if <=1
       p_text <- paste0("p > ",cur_p)
     } else {p_text <- NA}
-    if (cur_q<1){ # q cutoff is only meaningful if <1
+    if (cur_q<=1){ # q cutoff is only meaningful if <=1
       q_text <- paste0("q > ",cur_q)
     } else {q_text <- NA}
     
     if (cur_sign=="All"){ # if FALSE and ALL
-      if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
+      if (cur_Stat>=0){ # |Stat| cutoff is only meaningful if >=0
         stat_text <- stat_replace1(paste0("|Stat| < ", cur_Stat), name)
       } else {stat_text <- NA} 
     } else if (cur_sign=="Positive"){ # if FALSE and POS
@@ -607,21 +620,21 @@ summarize_filter <- function(filter_namespace, filter_var, name, status, include
       stat_text <- stat_replace1(paste0("Stat >  ", cur_Stat), name)
     }
   } else if (status==T){ # if TRUE
-    if (cur_p<1){
-      p_text <- paste0("p <= ",cur_p)
+    if (cur_p<=1){ # p cutoff is only meaningful if <=1
+      p_text <- paste0("p < ",cur_p)
     } else {p_text <- NA}
-    if (cur_q<1){
-      q_text <- paste0("q <= ",cur_q)
+    if (cur_q<=1){ # q cutoff is only meaningful if <=1
+      q_text <- paste0("q < ",cur_q)
     } else {q_text <- NA}
     
     if (cur_sign=="All"){ # if TRUE and ALL
-      if (cur_Stat>0){ # |Stat| cutoff is only meaningful if >0
-        stat_text <- stat_replace1(paste0("|Stat| >= ", cur_Stat) , name)
+      if (cur_Stat>=0){ # |Stat| cutoff is only meaningful if >=0
+        stat_text <- stat_replace1(paste0("|Stat| > ", cur_Stat) , name)
       } else {stat_text <- NA} 
     } else if (cur_sign=="Positive"){ # if TRUE and POS
-      stat_text <- stat_replace1(paste0("Stat >= ", cur_Stat), name)
+      stat_text <- stat_replace1(paste0("Stat > ", cur_Stat), name)
     } else if (cur_sign=="Negative") { # if TRUE and NEG
-      stat_text <- stat_replace1(paste0("Stat <=  ", cur_Stat), name)
+      stat_text <- stat_replace1(paste0("Stat <  ", cur_Stat), name)
     }
   } 
   
@@ -1007,7 +1020,7 @@ btn_demo <- function(id){
   }
   
   fixedPanel(
-    bottom = 25,
+    bottom = 50,
     actionBttn(id,label
                ,block = TRUE
                ,style = style

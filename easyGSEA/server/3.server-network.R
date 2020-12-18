@@ -1,12 +1,17 @@
 # Overall bodyNetwork UI ------------------
 output$ui_bodyNetwork <- renderUI({
-    # if(is.null(rv$run) || rv$run != "success"){
-    #     # add an id for introjs
-    #     box(id = "enrichment_network_box",
-    #         title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
-    #         "Visualization available upon successful run."
-    #     )
-    # }else{
+    if(is.null(rv$run) || rv$run != "success"){
+        # add an id for introjs
+        box(id = "enrichment_network_box",
+            title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
+            "Visualization available upon successful run."
+        )
+    }else{
+    if(input$sidebarCollapsed == TRUE){
+        nav_left <- 35
+    }else{
+        nav_left <- 265
+    }
         fluidRow(
             # add an id for introjs
             box(id = "enrichment_network_box2",
@@ -64,22 +69,25 @@ output$ui_bodyNetwork <- renderUI({
                     right = 25,
                     top = 6
                 )
-                # ,div(
-                #     style="position:relative;z-index:1000",
-                #     fixedPanel(
-                #         fluidRow(
-                #             nav_btn_b("net_b"),
-                #             nav_btn_f("net_f")
-                #             
-                #             ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
-                #                        ,placement = "bottom")
-                #             ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
-                #                        ,placement = "bottom")
-                #         ),
-                #         left = 30,
-                #         bottom = 30
-                #     )
-                # )
+                ,
+                
+                div(
+                    style="position:relative;z-index:1000",
+                    fixedPanel(
+                        fluidRow(
+                            nav_btn_b("net_b"),
+                            nav_btn_f("net_f")
+                            
+                            ,bsTooltip("net_b",HTML("Return to <b>Enrichment Results</b>")
+                                       ,placement = "top")
+                            ,bsTooltip("net_f",HTML("Proceed to <b>Download</b>")
+                                       ,placement = "top")
+                        ),
+                        left = nav_left,
+                        bottom = 25
+                    )
+
+                )
             ),
             box(
                 id = "dendrogram_box",
@@ -116,7 +124,7 @@ output$ui_bodyNetwork <- renderUI({
                                 )
                             }
                         else{
-                                plotlyOutput("plot_dendrogram", width = "800px", height = '1320px')
+                                plotlyOutput("plot_dendrogram", width = "800px", height = paste0(rv$dendro_hp,"px"))
                         }
                     } else {
                         if(!is.null(rv$cluster_bar_run) && rv$cluster_bar_run == "fail"){
@@ -133,9 +141,9 @@ output$ui_bodyNetwork <- renderUI({
                             )
                         } else {
                             if(rv$dendro_or_barplot == "bar"){
-                               plotlyOutput("plot_cluster_bar", width = "900px", height = "660px")
+                               plotlyOutput("plot_cluster_bar", width = "900px", height = paste0(rv$dendro_hp,"px"))
                             } else if(rv$dendro_or_barplot == "bubble"){
-                                plotlyOutput("plot_cluster_bubble", width = "900px", height = "660px")
+                                plotlyOutput("plot_cluster_bubble", width = "900px", height = paste0(rv$dendro_hp,"px"))
                             } else if(rv$dendro_or_barplot == "table"){
                                 dataTableOutput("cluster_df")
                             }
@@ -215,8 +223,9 @@ output$ui_bodyNetwork <- renderUI({
                 )
 
             )
-        )
-    # }
+            
+         )
+    }
 })
 
 
@@ -282,6 +291,10 @@ observeEvent(input$vis_replot,{
         rv$vis_status = NULL
         
         rv$vis_pathway <- input$vis_pathway
+        
+        rv$ora_color <- input$vis_color
+        rv$up_color <- input$vis_color_up
+        rv$down_color <- input$vis_color_down
     }
     
 })
@@ -323,31 +336,35 @@ output$ui_vis_gear <- renderUI({
     #     collapsible = T, collapsed = T,
     div(div(
         align = "center",
-        tags$h4(tags$strong(tags$em("Advanced parameters for creating a network"))),br()
+        tags$h4(tags$strong(tags$em("Advanced parameters for creating the network"))),br()
     ),
     fluidRow(
         column(12,
                selectizeInput("vis_pathway",
-                              "Select database(s) to plot",
+                              HTML(paste0("Select database(s) to plot ",add_help("db_vis"))),
                               choices = dbs(),
                               selected = rv$vis_pathway,
                               multiple = TRUE
                               )
+               ,bsTooltip("db_vis",HTML(db_bs),placement = "top")
         ),
         column(
             width = 6,
             sliderTextInput("cutoff_vis_p",
-                            label = "Adjust P threshold:",
+                            label = HTML(paste0("Adjust P threshold ",add_help("p_vis"))),
                             choices= cutoff_slider,
                             selected=rv$vis_p, grid=T, force_edges=T)
         ),
         column(
             width = 6,
             sliderTextInput("cutoff_vis_q",
-                            label = "Adjust P.adj threshold:",
+                            label = HTML(paste0("Adjust P.adj threshold ",add_help("q_vis"))),
                             choices= cutoff_slider,
                             selected=rv$vis_q, grid=T, force_edges=T)
         )
+        ,bsTooltip("p_vis",HTML(p_bs),placement = "top")
+        ,bsTooltip("q_vis",HTML(q_bs),placement = "top")
+        
     ),br(),
     fluidRow(
         column(
@@ -378,7 +395,7 @@ output$ui_vis_gear <- renderUI({
             width = 6,
             conditionalPanel(
                 condition = "input.vis_percent == 'combined'",
-                numericInput("combined_k",HTML(paste0("Combined constant, K",add_help("q_ck"))),
+                numericInput("combined_k",HTML(paste0("Combined constant, K ",add_help("q_ck"))),
                              rv$vis_k, min = 0, max = 1, step = 0.01
                 )
                 ,bsTooltip("q_ck","Combined coefficient merges the Jaccard and Overlap coefficients. K is the proportion of Jaccard coefficient."
@@ -388,16 +405,19 @@ output$ui_vis_gear <- renderUI({
     ),
     fluidRow(
         column(
-            width = 6,
-            radioGroupButtons("p_or_q_vis","Color by",
+            width = 4,
+            radioGroupButtons("p_or_q_vis",
+                              label = HTML(paste0("Color by P or P.adj ",add_help("col_vis"))),
                               choiceNames = c("P", "P.adj"),
                               choiceValues = c("pval", "padj"),
                               selected = rv$vis_pq,
                               direction = "horizontal",status="default"
             )
+            ,bsTooltip("col_vis",HTML(pq_bs),placement = "top")
         ),
+        vis_col_div(),
         column(
-            width = 6,align="right",br(),
+            width = 12,align="right",br(),
             plot_confirm_btn("vis_replot","Replot!"
                        ,icon = icon("atom") #,lib="font-awesome"
                        ,block = T
@@ -447,22 +467,36 @@ output$dendro_option <- renderUI({
     #req(rv$dendro_run == "success")
     div(
             numericInput("dendro_cutoff",
-                         HTML(paste0("Similarity threshold :( 0 &#x2264 x &#x2264 1 )",add_help("dendro_help",style = "top: 1px; right:0px"))),
+                         HTML(paste0("Similarity threshold :( 0 &#x2264 x &#x2264 1 ) ",add_help("dendro_help",style = "top: 1px; right:0px"))),
                          value = rv$cutoff_point, min = 0, max = 1, step=0.01),
             #add_help("dendro_help",style = "position:absolute; top: 1px; right:0px"),
             bsTooltip("dendro_help", "Gene sets that have a similarity score larger than or equal to x are grouped together",placement = "top"),
             if(rv$dendro_or_barplot == "dendro")
                 {numericInput("dendro_label_size",
-                         HTML(paste0("Label text size : ( 0 &#x2264 y &#x2264 6 )",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
+                         HTML(paste0("Label text size : ( 0 &#x2264 y &#x2264 6 ) ",add_help("dendro_label_size_help",style = "top: 1px; right:0px"))),
                          value = rv$label_size, min = 0, max = 6, step=0.1)},
             #add_help("dendro_label_size_help",style = "top: 1px; right:0px")),
             bsTooltip("dendro_label_size_help", "The text size of the labels (cluster id and the most significant gene set) in the dendrogram",placement = "top"),
             numericInput("dendro_cluster_size",
-                         HTML(paste0("Minimum Cluster size for labels :", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," )",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
+                         HTML(paste0("Minimum Cluster size for labels ", br(), "( 0 &lt; z &#x2264 ", rv$max_cluster_size," ) ",add_help("cluster_size_help",style = "top: 1px; right:0px"))),
                          value = rv$cluster_size, min = 1, max = rv$max_cluster_size, step = 1),
             bsTooltip("cluster_size_help", "The clusters that have at least z gene sets are labeled",placement = "top"),
             if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
-                checkboxInput("abbreviate_check", HTML(paste0("Abbreviate the labels  ", add_help("abbreviate_help", style = "top: 1px; right:0px"))))
+                div(
+                    radioGroupButtons(
+                        inputId = "color_check",
+                        label = HTML(paste0("Color by P or P.adj ",add_help("col_vis_bar"))),
+                        choiceNames = c("P", "P.adj"),
+                        choiceValues = c("pval", "padj"),
+                        selected = rv$color_check,
+                        direction = "horizontal"
+                    ),
+                    checkboxInput("sort_check", HTML(paste0("Sort the pathways ", add_help("sort_help", style = "top: 1px; right:0px")))),
+                    checkboxInput("abbreviate_check", HTML(paste0("Abbreviate the labels  ", add_help("abbreviate_help", style = "top: 1px; right:0px")))),
+                    bsTooltip("sort_help", "Sort the pathways by ES in ascending order in GSEA mode, or by -log10(p.value) in ascending order in ORA mode"),
+                    bsTooltip("col_vis_bar",HTML(pq_bs),placement = "top")
+                
+                )
             },
             uiOutput("ui_abbreviate_length"),
             bsTooltip("abbreviate_help", "Abbreviate the labels when the texts are too long to be displayed", placement = "top"),
@@ -487,6 +521,8 @@ observeEvent(input$dendro_update,{
     }
     if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
         rv$abbreviate_check = input$abbreviate_check
+        rv$sort_check = input$sort_check
+        rv$color_check = input$color_check
         if(!is.null(input$abbreviate_length)){
             rv$abbreviate_length = input$abbreviate_length
         }
@@ -530,7 +566,8 @@ output$download_cluster_bubble <- downloadHandler(
 # ------------ render cluster table --------------
 output$cluster_df <- DT::renderDataTable({
     req(rv$dendro_or_barplot=="table")
-
+    req(!is.null(rv$df_download))
+    
     df <- rv$df_download %>%
         mutate_if(is.numeric, function(x) round(x, digits=3))
 
