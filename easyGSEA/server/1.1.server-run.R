@@ -27,7 +27,7 @@
 # # start rintrojs when users switch tabs
 # observeEvent(input$tabs,{
 #   if(input$tabs == "kegg"){
-#     later(~call_introjs(rbind(intros$ER_post,intros$ER_post_with_pathway)), 2)
+#     later(~call_introjs(rbind(intros$ER_post,intros$ER_post_with_pathway)), 0.1)
 #   } else if(input$tabs == "network"){
 #     later(~call_introjs(intros$EN_post), 3)
 #   } else if(input$tabs == "download"){
@@ -35,6 +35,11 @@
 #   } else {
 # 
 #   }
+# })
+# # when user switch tabs, call introjs
+# observeEvent(input$plot_type, {
+#   if(input$plot_type != "bar")
+#     later(~call_introjs(rbind(intros$ER_post,intros$ER_post_with_pathway)), 0.1)
 # })
 # # END--------------------------------------------------------------------------------
 
