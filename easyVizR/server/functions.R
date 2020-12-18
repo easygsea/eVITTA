@@ -279,8 +279,8 @@ remove_ui <- function(id){
   # print("removed ui")
 
 }
-
-
+p_filter_text="P <:"
+stat_filter_text="<b>|Stat| ></b>:"
 # ================================================= #
 #                  Filter presets                   ####
 # ================================================= #
@@ -288,7 +288,7 @@ remove_ui <- function(id){
 
 # initialize filter presets
 # ------------------------------------------
-p_filter_text="P <:"
+
 sig_icon <- "star-of-life"
 both_icon <- "sort"
 up_icon <- "arrow-up"
