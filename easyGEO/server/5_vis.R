@@ -37,7 +37,7 @@ output$ui_vis <- renderUI({
       ),
       
       tabPanel(
-        "Heatmap", value="heatmap",
+        span(id = "heatmap_text", "Heatmap"), value="heatmap",
         column(
           width = 8,
           uiOutput("hm_area")
@@ -49,13 +49,15 @@ output$ui_vis <- renderUI({
       ),
       
       tabPanel(
-        "Explore a gene", value="gene",
+        span(id ="explore_text", "Explore a gene"), value="gene",
         column(
           width = 8,
           radioGroupButtons(
-            "a_type",
-            NULL,
-            choices = list("Violin plot"="violin","Box plot"="box")
+            inputId = "a_type",
+            label = NULL,
+            #choices = list("Violin plot"="violin", HTML("<p>Box plot</p>")="box"),
+            choiceNames = list("Violin plot", HTML("<span id = 'boxplot_text'>Box plot</span>")),
+            choiceValues = list("violin", "box")
           ),
           # tooltips for radioGroupbuttons
           radioTooltip(id = "a_type", choice = "violin", 

@@ -3,4 +3,4 @@ heatmap_plot	Here's the interactive heatmap plot that highlights the top DEGs. H
 hplot_parameters	Parameters to generate the heatmap plot can be adjusted here.
 h_confirm	Click <b>Visualize</b> to re-draw the heatmap plot.
 ui_h_download	Click to download the heatmap plot for your record.
-	Click <b>Explore a gene</b> for a violin/box plot to visualize the expression changes in individual genes.
+explore_text	Click <b>Explore a gene</b> for a violin/box plot to visualize the expression changes in individual genes.

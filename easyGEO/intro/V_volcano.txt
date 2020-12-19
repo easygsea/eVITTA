@@ -5,4 +5,4 @@ ui_volcano	Volcano plot highlighted with the top regulated genes.
 vplot_parameters	Parameters to plot the volcano graph can be adjusted here. <b>Static</b> mode displays the top regulations in texts; <b>Interactive</b> mode shows details about each gene's statistics.
 volcano_confirm	Click <b>Visualize</b> to re-draw the Volcano plot.
 v_download	Click to download the volcano plot for your record.
-	Click <b>Heatmap</b> to visualize the results in a different way.
+heatmap_text	Click <b>Heatmap</b> to visualize the results in a different way.

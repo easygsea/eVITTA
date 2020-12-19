@@ -30,9 +30,25 @@
 #   } else if(input$menu1 == "tab4"){
 #     later(~call_introjs(rbind(intros$R_post,intros$R_post_deg)),2)
 #   } else if(input$menu1 == "tab5"){
-#     later(~call_introjs(intros$V_volcano), 2)
+#     later(~call_introjs(intros$V_volcano), 0.1)
 #   } else {
 # 
+#   }
+# })
+# # when user select different plots, triggering different introjs
+# observeEvent(input$visDEG, {
+#   if(input$visDEG == "heatmap"){
+#     later(~call_introjs(intros$V_heatmap), 0.1)
+#   } else if(input$visDEG == "gene"){
+#     later(~call_introjs(intros$V_explore_violin), 0.1)
+#   } else {
+#     
+#   }
+# })
+# # when user click the boxplot next to the violin plot, trigger an introjs
+# observeEvent(input$a_type, {
+#   if(input$a_type == "box"){
+#     call_introjs(intros$V_explore)
 #   }
 # })
 # # END-----------------------------------------------------------------------------
