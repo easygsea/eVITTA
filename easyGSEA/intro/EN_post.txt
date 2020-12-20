@@ -1,10 +1,10 @@
 element	intro
-enrichment_network_box2	Enriched gene sets are visualized in a network. Gene sets describing similar biology are connected together with edges. The similarity is defined using Jaccard, Overlap or Combined coefficient. Click the gear button to learn more and adjust parameters. Hover over each node for details about the enrichment statistics. Hover over each edge for details about the overlaps.
+	This page provides a network view of the enriched categories. Categories denoting similar biological processes or functions are grouped together, assessed by gene overlaps, to facilitate interpretation of your results. 
+enrichment_network_box2	Enriched gene sets are visualized in a network. Gene sets describing similar biology are connected together with edges. The similarity is defined using Jaccard, Overlap or Combined coefficient. Click the gear button to learn more and adjust parameters. Hover over each node for details about the enrichment statistics. Hover over each edge for details about the gene overlaps.
 nodeSelectvis_network	You can select the gene set you are interested in and explore its location in the network.
-selectedByvis_network	Hierarchical clustering is used for the dendrogram, and each pathway has a cluster id; you could select the cluster you are interested in and compared it with the network diagram. The most significant pathway is shown after the cluster id.
+selectedByvis_network	Functional categories are hierarchically clustered. Select the cluster you are interested in and explore it within the network diagram. The most significant pathway is chosen to denote the cluster it's in.
 gear_box	Click this button to adjust the parameters for creating the network.
 d_vis	Click this button to download the network diagram.
-dendrogram_box	The clustering of pathways are visualized in a dendrogram based on the distance matrix. Pathways that have higher similarity are sorted into the same cluster, and the height in the dendrogram represents the dissimilarity between pathways. The cutoff similarity can be adjusted by clicking the little button below; hover over each node for coordinates and name about the pathway.
-select_your_plot	Select the plot your would like to explore. A cluster barplot is available based on the dendrogram.
-dendro_dropdown	Click this button to adjuste the parameters for creating the dendrogram or barplot.
-d_dendro	Click this button to download the plot/table.
+dendrogram_box	Functional categories are visualized in a dendrogram based on their similarities between each other. Categories with similarity score &#8805 to a defined cutoff are sorted into the same group. The similarity cutoff can be adjusted by clicking the gear button on top right corner. In the dendrogram, height represents the dissimilarity between categories. The most significant pathway is displayed to denote the cluster it's in. Hover over each node for details.
+select_your_plot	Click and switch to a bar- or bubble-plot view of the clusters. Functional categories annotated with cluster IDs is also available.
+d_dendro	Click this button to download the corresponding plot or table.

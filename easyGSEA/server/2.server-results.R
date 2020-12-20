@@ -1229,7 +1229,7 @@ output$ui_es <- renderUI({
     fluidRow(
         column(
             width = 12
-            ,div(
+            ,div(id="ui_gsea_plots_radio_wrap",
                 style = "position: relative",
                 uiOutput("ui_gsea_plots"),
                 br(),

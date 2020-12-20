@@ -4,4 +4,5 @@ ui_aplot	Here's the violin/box plot that shows expression changes of the gene of
 aplot_parameters	Parameters to plot the violin/box plot can be adjusted here.
 a_stats	A small table containing logFC, P.value, adj.P.Value
 agene_confirm	Click <b>Visualize</b> to re-draw the plot.
-a_download	Click to download the plot (PDF) for your record.
+ui_a_download	Click to download the plot for your record.
+	<h4><b>Thank you.</b> <br><br>Should you have any questions, do not hesitate to reach eVITTA team at evitta@cmmt.ubc.ca</h>

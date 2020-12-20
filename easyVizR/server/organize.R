@@ -7,13 +7,14 @@
 #   req(rv$demo_n == 2)
 #   init_demo()
 #   showModal(modalDialog(title = tags$h3("Welcome to our easyVizR demo session"),
-#                         tags$h4("The demo session has the features of our app.
-#                         Please follow the intro tour and switch to different tabs to explore it."),
+#                         tags$h4("Explore the sample output that performs interactively in the same way as real output.")
+#                         ,br()
+#                         ,tags$h4("Click OK to follow the intro tour."),
 #                         size = "m",
 #                         easyClose = FALSE
 #                         ,footer = actionButton("welcome_modal",label = "OK")))
 #   rv$demo_n = 4
-#   
+# 
 # })
 # # when the user closed the modal, start rintrojs
 # observeEvent(input$welcome_modal, {
@@ -39,7 +40,7 @@
 #                                                      steps = intros$n2)
 #     ), 2)
 #   } else {
-#     
+# 
 #   }
 # })
 # # END ----------------------------------------------------------------------

@@ -1,8 +1,9 @@
 element	intro
-	This is the main page to explore and analyze your data in details.
+	This is the main page to explore the detailed functional enrichment of your dataset.
 plot_choice_box	Click here to explore your results in different ways. <b>Bar</b> and <b>Bubble</b> plots show the top regulations, <b>Keywords</b> mines for the top representing words, <b>Manhattan</b> plot displays all enrichment results and highlights the significant, and <b>Volcano</b> plot can be customized as continuous and static to highlight the significant enrichment.
 plot_area	Plots are interactive. Hover over each gene set for its detailed enrichment statistics. Click on each gene set to zoom into visualizations. 
-setting_button	Click this button to customize the plot.
-plot_download_button	Click to download the plot.
-explore_geneset_box	Visualizations and statistics for individual gene sets are displayed here.
-ui_gsea_plots_radio	Click to navigate the gene set's distributions in the genomic background using different visualizations.
+setting_button	Click the gear button to customize the plot by re-selecting database(s), adjusting P/P.adj threshold, and customizing the display options.
+gs_search_button	Click the search button to search for gene set(s) of interest for a bar/bubble plot.
+ora_color_div	Click the palette button to customize the colors for your plots
+plot_download_button	Click the download button to download the plot and its corresponding enrichment statistics.
+explore_geneset_box	Visualizations and statistics for individual gene sets are displayed here. Navigate the gene set's distributions in the genomic background using different visualizations.

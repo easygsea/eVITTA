@@ -1,7 +1,8 @@
 element	intro
-	This tab provides visualizations on gene expression changes.
-visDEG	Click here to explore different visualizations on the DEGs. <b>Volcano</b> and <b>Heatmap</b> plots display the top/significant changing genes. <b>Explore a gene</b> allows you to zoom into the trend of a single gene via violin and box plots. 
-ui_volcano	Here's the volcano plot that highlights the top DEGs.
-vplot_parameters	Parameters to generate the volcano plot can be adjusted here.
-volcano_confirm	Click <b>Visualize</b> to re-draw the volcano plot.
+	This tab provides visualizations on detailed gene expression changes.
+visDEG	<b>Volcano</b> and <b>Heatmap</b> plots display the top/significant changing genes. <b>Explore a gene</b> allows you to zoom into the trend of a single gene via violin and box plots. 
+ui_volcano	Volcano plot highlighted with the top regulated genes.
+vplot_parameters	Parameters to plot the volcano graph can be adjusted here. <b>Static</b> mode displays the top regulations in texts; <b>Interactive</b> mode shows details about each gene's statistics.
+volcano_confirm	Click <b>Visualize</b> to re-draw the Volcano plot.
 v_download	Click to download the volcano plot for your record.
+heatmap_text	Click <b>Heatmap</b> to visualize the results in a different way.

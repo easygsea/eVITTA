@@ -14,6 +14,7 @@ options(shiny.maxRequestSize=100*1024^2)
 server <- function(input, output, session) {
     # toggle button for a demo run
     output$btn_demo <- renderUI({
+        req(is.null(rv$demo_yes))
         btn_demo("ee")
     })
     
@@ -136,10 +137,11 @@ server <- function(input, output, session) {
     
     #download sample data function and ui
     output$download_sample_data <- renderUI({
+        req(is.null(rv$demo_yes))
         fixedPanel(
             bottom = 22,
-            left = 12,
-            downloadLink("dataset_download","Download Sample Data", style = "color: #FFFF99" )
+            left = 14,
+            downloadLink("dataset_download","Download Sample Data", style = "color: #FFFF99;font-size:90%;" ) #color: #FFFF99;
         )
     })
     output$dataset_download <- downloadHandler(

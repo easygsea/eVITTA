@@ -5,9 +5,10 @@
 # observe({
 #   init_demo_gsea()
 #   #init_demo_ora()
-#   showModal(modalDialog(title = tags$h3("Welcome to our easyGSEA demo session"),
-#                         tags$h4("The demo session has the features of our app.
-#                         Please follow the intro tour and switch to different tabs to explore it."),
+#   showModal(modalDialog(title = tags$h3("Welcome to easyGSEA demo session"),
+#                         tags$h4("Explore the sample output that performs interactively in the same way as real output.")
+#                         ,br()
+#                         ,tags$h4("Click OK to follow the intro tour."),
 #                         size = "m",
 #                         easyClose = FALSE
 #                         ,footer = actionButton("welcome_modal",label = "OK")))
@@ -74,20 +75,6 @@
     updateTabItems(session, "tabs","kegg")
   })
 
-
-    # --------------  1.1 select databases --------------------
-
-    # disable selection when user confirms gmts; enables upon modify
-    # this is to prevent accidentally messing up selections by changing species
-    observe({
-        req(is.null(rv$db_status)==F)
-        if (rv$db_status == "selected"){
-            shinyjs::disable("selected_species")
-        }
-        else if (rv$db_status == "modify"){
-            shinyjs::enable("selected_species")
-        }
-    })
 
     # --------------  1.2 select GMTs ---------------------------
 
@@ -370,6 +357,10 @@
           }
           rv$db_status <- "selected"
         }
+        
+        if (rv$db_status == "selected"){
+          shinyjs::disable("selected_species")
+        }
 
         # for(collection in sort(names(gmt_collections_paths[[species]]))){
         #     db_id = paste0(species,gsub(" ","_",collection))
@@ -386,6 +377,7 @@
     # reset species, at the same time reset rnk/glist
     observeEvent(input$add_db_modify, {
       rv$db_status <- "modify"
+      shinyjs::enable("selected_species")
 
       # clear RVs
       # rv$run = NULL

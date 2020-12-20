@@ -491,9 +491,8 @@ output$dendro_option <- renderUI({
                         selected = rv$color_check,
                         direction = "horizontal"
                     ),
-                    checkboxInput("sort_check", HTML(paste0("Sort the pathways ", add_help("sort_help", style = "top: 1px; right:0px")))),
-                    checkboxInput("abbreviate_check", HTML(paste0("Abbreviate the labels  ", add_help("abbreviate_help", style = "top: 1px; right:0px")))),
-                    bsTooltip("sort_help", "Sort the pathways by ES in ascending order in GSEA mode, or by -log10(p.value) in ascending order in ORA mode"),
+                    uiOutput("sort_pathways_ui"),
+                    checkboxInput("abbreviate_check", HTML(paste0("Abbreviate the labels  ", add_help("abbreviate_help", style = "top: 1px; right:0px"))), value = rv$abbreviate_check),
                     bsTooltip("col_vis_bar",HTML(pq_bs),placement = "top")
                 
                 )
@@ -522,6 +521,7 @@ observeEvent(input$dendro_update,{
     if(rv$dendro_or_barplot == "bar" || rv$dendro_or_barplot == "bubble"){
         rv$abbreviate_check = input$abbreviate_check
         rv$sort_check = input$sort_check
+        rv$sort_pq = input$sort_pq
         rv$color_check = input$color_check
         if(!is.null(input$abbreviate_length)){
             rv$abbreviate_length = input$abbreviate_length
@@ -529,6 +529,27 @@ observeEvent(input$dendro_update,{
     }
 
 
+})
+
+output$sort_pathways_ui <- renderUI({
+    if(rv$run_mode == "gsea"){
+        div(
+            checkboxInput("sort_check", HTML(paste0("Sort the pathways ", add_help("sort_help", style = "top: 1px; right:0px"))), value = rv$sort_check),
+            bsTooltip("sort_help", "Sort the pathways by ES in ascending order in GSEA mode")
+        )
+    } else {
+        div(
+            radioGroupButtons("sort_pq",
+                              label = HTML(paste0("Sort by P or P.adj ",add_help("sort_help_ora"))),
+                              choiceNames = c("P", "P.adj", "Cluster id"),
+                              choiceValues = c("pval", "padj", "cluster_id"),
+                              selected = rv$sort_pq,
+                              direction = "horizontal",status="default"
+            ),
+            bsTooltip("sort_help_ora", "Sort by P.value/P.adj in ascending order in ORA mode")
+        )
+    }
+  
 })
 
 # the input of the number of characters we like to abbreviate to

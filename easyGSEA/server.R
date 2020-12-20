@@ -36,13 +36,14 @@ server <- function(input, output, session) {
     
     # the ui to download the files
     output$sample_data_download <- renderUI({
+        req(is.null(rv$demo_yes))
         fixedPanel(
             bottom = 22,
-            left = 12,
+            left = 14,
             if(is.null(input$selected_mode) || input$selected_mode == "gsea"){
-                downloadLink("dataset_download","Download Sample Data", style = "color: #FFFF99" )
+                downloadLink("dataset_download","Download Sample Data", style = "color: #FFFF99;font-size:90%;" )
             } else {
-                downloadLink("dataset_download_ora","Download Sample Data", style = "color: #FFFF99" )
+                downloadLink("dataset_download_ora","Download Sample Data", style = "color: #FFFF99;font-size:90%;" )
             }
         )
     })
