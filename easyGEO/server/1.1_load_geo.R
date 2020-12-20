@@ -42,7 +42,7 @@
 #   } else if(input$visDEG == "gene"){
 #     later(~call_introjs(intros$V_explore_violin), 0.1)
 #   } else {
-#     
+# 
 #   }
 # })
 # # when user click the boxplot next to the violin plot, trigger an introjs
