@@ -1,0 +1,978 @@
+female sterile		sra	tta	Cad99C	Msp300	sax	mute	MED6	srl	Hmr	sesB	Raf	mRpL55	plu	Rbp9	aop	RecQ4	CanB2	eIF4E1	egh	egl	CSN5	bam	cta	ban	vig	okr	mxc	Myc	Akt1	Cdc27	tej	cmpy	sta	ctp	exu	stau	stg	fzy	sti	Mef2	ranshi	stl	Eip78C	stumps	ap	mino	chif	l(2)37Cc	fs(1)M43	rl	Lrrk	cup	sub	twe	D	bcd	pelo	Sec5	14-3-3epsilon	gammaTub37C	hop	ara	br	chic	kel	mim	Zw10	mtrm	mio	Grip71	CycB3	ssp2	sn	msps	dhd	p38c	bab2	bab1	btz	arx	Ppcs	mei-P26	Cenp-C	r	Brca2	Abd-B	fs(1)Yb	fs(1)Ya	dia	mir-184	asp	da	sina	vls	dl	Sxl	bel	Shc	slbo	Nop60B	mir-994	pag	Cks30A	fs(1)K10	mod(mdg4)	Hsf	chb	vret	par	ida	Dl	LpR2	Dp	vnc	Hcf	vg	RYBP	bwk	dally	pbl	Lis-1	cic	shu	psd	aux	PDZ-GEF	bru1	qui	Dronc	noi	Hus1-like	psq	fu	sable	Fkbp14	nos	E(z)	Cyt-b5	dec-1	wisp	gd	Inx2	grk	orb	ptg	grp	pcx	hts	gbb	csul	Src64B	Egfr	rhi	BubR1	Catsup	BicD	RpS2	hd	Ote	Fife	alphaTub67C	lqfR	Dp1	pum	osk	tefu	Lnk	faf	Pcyt1	loqs	rin	tra2	dnc	colt	krimp	cact	Col4a1	Vmat	upSET	Myd88	vas	clu	vri	fbl	ix	otu	hfp	Smn	Stat92E	wts	CycB	stil	wde	CycE	Ddx1	CycG	CkIIbeta	Pka-C1	dom	dop	wun	EcR	MED31	qin	Rpp30	tor	Mbs	tral	armi	cnn	Dab	ovo	ebi	snf	chico	snk	Klp3A	Dark	WRNexo	Zwilch	Iswi	Top1	Mcm3	bgcn	eca	ecd	M6	mago	mre11	neb	nopo	Trl	caup	Grip91	Dhod	Tbh	sov	mh	spn-F	phol	spn-E	tra	trk	Wee1	polo	E2f1	E2f2	dsh	fl(2)d	mud	Taf6	cher	sqd	Bpt	coro	amx	aPKC	tsl	alpha-Spec	Cp36	Pol32	su(Hw)	tsu	Ras85D	l(3)S033513	
+GO0005819:spindle		borr	cnn	stg	ifc	JIL-1	grp	pav	hts	mars	Invadolysin	cfo	Wee1	polo	BubR1	dsh	mud	Top2	asp	sub	twe	alphaTub67C	ric8a	AMPKalpha	gammaTub37C	tefu	Lkb1	pins	Arl1	ben	nopo	ncd	ball	pita	Zw10	Sas-4	nudE	Grip71	Dhc64C	dpa	vih	ms(3)Z2203	wupA	wisp	arm	Klp61F	msps	
+meiotic cell cycle defective		sra	ord	cnn	Pex1	mei-P26	c(3)G	Grip84	Zwilch	plu	gwl	Axs	Rab1	asp	Topors	alphaTub67C	eIF4E3	bgcn	CanB2	betaTub85D	eIF4E1	msi	bel	rec	Spc25	vilya	sgg	SA-2	Cks30A	Grip91	ms(3)Z2203	mei-S332	mod(mdg4)	Rae1	spn-E	mei-W68	Rab11	jnj	mei-217	asun	solo	spn-D	fbl	fwd	polo	corolla	endos	sub	twe	Sec8	eIF4G2	pelo	nod	Mps1	topi	orb2	mtsh	Ubi-p63E	SMC5	can	ncd	Zw10	mtrm	mei-9	trem	Sas-4	ssp2	wisp	
+lethal		Galt	RpL38	Atpalpha	Vps25	Egm	sesB	Raf	Gld	eIF4E3	Gli	eIF4E1	egh	egg	futsch	ksr	CG10939	disco	tea	EndoB	RpII215	Gale	EndoA	Rbf	Myb	vih	tef	mxc	Myc	Tgs1	Gmd	ras	Patr-1	Patj	kto	raw	Mef2	glo	Dsor1	glu	HLH54F	spin	fliI	Bin1	gfzf	salm	D	Abi	H	mys	N	kuz	upd1	Atg17	tgo	Sox14	Hsc70-4	d	Ace	h	cfo	Npc1a	Spc105R	abs	AdipoR	mir-8	POSH	AGO1	fs(1)Ya	elB	Chc	vls	CtBP	Chi	Rpn6	rdx	mir-1	CTCF	mEFTu1	slbo	Cks30A	ren	pan	chb	Dd	mir-190	Gs1	pav	beat-Ia	RpL15	Dl	Ent2	GatA	vnd	Dp	Dr	Nipped-A	Diap1	ana3	Tm1	emb	pbl	Pcl	l(1)16Fe	emc	cid	cic	Su(z)12	PDZ-GEF	tutl	Smg6	Sas-4	pck	Nuf2	wisp	EloC	grh	oho31	tkv	gro	grn	grp	Arpc1	pcx	Src64B	tll	Btk29A	gsb	Dscam1	Trpm	ago	rig	nab	Dhc64C	Cse1	Nbr	lin-52	nau	cact	Col4a1	CDase	JIL-1	Src42A	rost	clu	Tctp	Pgd	Pgi	Pka-R1	MED20	Cul3	Kat60	Nct	nbs	slif	ATP7	Tpi	ncd	Nsf2	Phm	tor	cno	Vps60	vtd	psidin	shakB	Cow	Lac	Klp3A	ndl	Lam	pho	Pis	esg	Cdk1	Alh	Alk	Atox1	Su(H)	Ubr3	cos	M6	pic	nec	neb	Trl	lab	Orc6	cpa	pim	nej	Ggamma1	Orc3	l(2)03659	lap	pit	cpo	Rab11	C15	trh	vvl	Gyc76C	trk	Mes2	Rop	Pkn	amd	trx	endos	Girdin	14-3-3zeta	tsh	Vps35	amx	crc	eve	Gr39a	tsr	crb	Opa1	l(2)gd1	slmb	l(1)10Ae	wako	Csk	Csp	crn	crp	RpS13	l(1)9Fl	ple	ttk	pll	slpr	l(1)9Fi	ttv	ewg	Hrb27C	plu	l(2)k10201	aop	RecQ4	l(2)gl	tub	Vha55	tud	Smox	aos	csw	Lkb1	slou	Mtor	tup	exd	Pc	Rbsn-5	ctp	exu	apt	dmGlut	eya	wapl	pnr	Hsp83	eyg	Klp68D	pnt	r2d2	Sec8	Sec6	Tfb5	RpS21	twi	Nle	Mlc2	tws	ara	pita	msps	Pdk1	HSPC300	dock	Pabp2	ppl	Sb	Abd-B	Lk6	Der-1	asp	U2af38	lig	run	Rho1	Tl	Psc	C1GalTA	RPA3	Sec61alpha	Psn	WASp	Pdp1	TfAP-2	HEATR2	RyR	Awh	nos	E(z)	not	mib2	mib1	alphaSnap	Inx2	ptc	slug	corto	Ns3	Hem	Sema1a	lawc	elav	BubR1	puc	lmd	Nrg	pum	Shark	tefu	Pvr	shot	Brms1	put	l(2)45Ac	hep	beta-Spec	her	nrd	prod	NAT1	SelD	mir-276a	trbl	Low	hfw	Dcr-2	Pka-C1	pasha	nrv2	DCTN1-p150	l(3)7-19	Su(Tpl)	fs(1)M3	GluRIID	wek	Nmnat	botv	Pym	Dab	galla-1	l(3)Lak	Ubx	Tsp66E	soba	CrebA	CTPsyn	beta-PheRS	pyd	nuf	hid	repo	dac	mre11	His2Av	dome	pros	dap	caup	yki	Su(z)2	PR-Set7	chem	para	LanB2	Ced-12	P5CDh1	Ddc	dco	alpha-Spec	Sema2a	Six4	l(2)23Ab	Ras85D	rad50	Ufo	mir-1000	ftz-f1	Pdxk	sas	sav	sau	RanBPM	Tsp74F	sax	MED6	Trxr-1	SERCA	Snap25	Scm	Scr	Dfd	ded	baf	sca	bap	east	Akt1	retn	robo1	SRm160	scu	Su(var)205	Syx1A	ap	glec	fs(1)M43	wls	bb	SMC1	bcd	fkh	jumu	bi	lwr	hop	sea	br	uif	chic	milt	IKKepsilon	bs	par-6	Gmer	trio	Fas2	Ca-alpha1D	Slbp	ci	hpo	ck	Rack1	brat	Hand	ct	flw	Fatp	Cp190	dia	da	Kdm2	dl	bel	ben	Shc	Vap33	Ptp69D	ds	SmD3	sgg	dx	nudE	CG3542	sgl	ash2	ash1	ea	ed	Hrb98DE	fng	Apc2	Cyt-c-p	babo	unc-104	mirr	en	trol	bft	shg	RYBP	shi	ex	E(sina)46C	ey	l(3)EX-G13	dally	Notum	mira	shn	Dll	Dronc	ft	sic	fw	Cyt-b5	abd-A	sim	hth	AP-2alpha	gd	dlp	hts	gt	Hr38	Egfr	Catsup	hb	l(3)65CEa	Sara	RpS3	hh	Dp1	skd	Sar1	dimm	dmt	Nrx-IV	mir-279	Doa	frc	if	Mlp84B	Vmat	Myd88	in	fru	tara	fry	Mad	sli	Smn	wts	Nc73EF	sls	CkIIbeta	dom	Max	dop	dos	RpS6	Jarid2	Arl1	smg	wun	smo	Spps	wupA	mam	Mbs	loco	Seipin	Nup160	mas	dpn	dpp	kn	sna	ftz	Iml1	snf	snk	Grip84	hyd	sns	DAAM	Sos	mbl	Iswi	Mcr	Top2	Top1	Ptp61F	lt	ush	mago	sog	Hel25E	bigmax	usp	MAGE	sov	Klp61F	mi	bnl	sd-13	Cdc42	spn-F	phol	spn-E	Med	spi	Pten	Lpin	fwe	E2f1	Klp64D	Mer	dsh	Hip14	fl(2)d	ph-d	Cdc37	spz	HDAC1	sqh	aPKC	oc	Eip74EF	msl-1	l(3)S033513	Snr1	msl-2	mew	sra	kay	Itp-r83A	pb	srp	Gbeta13F	l(3)100Ab	Hakai	ogre	LanA	CSN8	Mhc	CSN5	kcc	gammaTub23C	mgl	ball	RhoGAP93B	dve	Bsg	mgr	Cdc27	brk	fzr	brm	stc	stau	Xbp1	stg	Actn	sti	stj	Ptip	stumps	Rm62	l(2)37Cc	bsf	scrib	rl	Duox	Vsx1	sub	stai	Pp1-87B	SPARC	lola	14-3-3epsilon	sc	sd	Zw10	ken	Ten-m	AsnRS	vari	btl	alphaTub84B	Galphas	sr	Zasp52	sv	SCAR	sinu	svp	drosha	tn	bul	sing	stck	Khc	l(1)air16	Sxl	swm	Idh	Spc25	Syb	mod(mdg4)	sima	sxc	Calr	zen	mle	ida	mars	Syp	vg	vn	Shmt	fs(1)h	Rab6	mir-14	Rab5	Cyp18a1	wg	Dsp1	kis	mats	amos	Moe	comm	gbb	oro	SdhA	betaTub60D	sisA	byn	BicD	CkIalpha	comt	BRWD3	osa	phyl	mod	Gem3	osk	moi	Vav	mop	mor	gcm	Eb1	kkv	loqs	sced	zip	mei-W68	klg	Nf-YC	Syt1	vas	Gpdh	otu	18w	CycA	Uba1	Stat92E	Uba3	CycE	EDTP	Ge-1	EcR	lolal	Rpp30	dlg1	Mo25	Gcn5	sens	Mmp1	Mmp2	ovo	Pex1	mrn	ebi	cora	Cadps	l(1)air5	Tao	su(f)	eca	msi	ecd	msn	mst	Antp	mtg	Wnt5	Wnt4	tal	acal	Syx7	ver	Invadolysin	Adar	InR	edl	Sod2	Sod1	Cam	Cat	polo	Taf6	tbi	poly	blot	stnB	RasGAP1	heph	cac	stnA	unc-13	stout	Trf2	spdo	cas	RhoGEF2	Ctr1A	cav	Vhl	ttm50	
+female fertile		ord	defl	Gr32a	mir-932	mir-304	RpS3	csn	mir-92b	mir-92a	Act88F	lqfR	mir-2b-1	bam	hmw	mir-314	mir-278	mxc	wst	mir-274	fzo	stg	cln	mir-958	mir-957	eya	mir-956	ap	otu	mir-955	mir-317	mir-285	scrib	mir-284	yps	mir-283	mir-282	HtrA2	sub	Hs3st-B	twe	mir-263b	mir-31b	Sec5	mir-31a	mtsh	Ubi-p63E	mir-969	mir-967	mil	mir-966	br	tbrd-1	mir-965	chic	milt	lost	mir-971	mir-970	mir-210	alphaTub84B	porin	Ack	wash	mei-P26	snf	CR42858	mir-986	mir-981	mir-980	scat	mir-13b-2	bul	pyd	Sxl	lig	bel	mir-33	mir-988	mir-987	slbo	mir-990	Dhod	drl	mir-9c	mir-193	Wdr24	mei-218	mir-9a	didum	soti	LpR1	bft	mir-999	Sod1	vg	mir-1017	mlt	E2f1	Met	Oatp30B	limbo	blot	blanks	topi	mir-929	Pdcd4	mir-10	mir-927	mir-11	psq	Pol32	mir-137	Lasp	mir-133	mir-375	
+male sterile		ord	ifc	Cad99C	Rb97D	Root	Trxr-1	betaTub60D	Pex16	bb8	xmas-1	lds	csn	aop	mod	puf	Roc1b	betaTub85D	tud	lup-2	osk	ball	hmw	eRF3	loqs	mxc	wst	tra2	fzo	Rae1	ctp	ab	exu	Vmat	Fsn	stau	sti	asun	clu	fbl	ap	otu	mino	hfp	l(2)37Cc	cue	Stat92E	wts	CycB	Cul3	Ddx1	CkIIbeta	HtrA2	twe	pelo	Tfb5	Fmr1	Ntl	14-3-3epsilon	Nle	tbrd-2	mtsh	Ubi-p63E	hop	Bug22	nsr	mil	ara	tbrd-1	chic	lost	Zw10	Rpp30	Prosalpha6T	alphaTub84B	armi	cnn	Dab	Ibf2	porin	Ack	Klp3A	CdsA	Grip84	ref(2)P	knon	Pde1c	Vrp1	Dark	Abd-B	scat	dia	asp	sina	vls	bgcn	Trf	mago	bel	run	neb	Shc	Nop60B	wuho	pag	rux	caup	Grip91	ms(3)Z2203	Mst77F	mei-S332	Dlc90F	mod(mdg4)	chb	Wnt2	vret	prd	spn-E	mle	didum	soti	Torsin	eIF3m	bond	InR	Sod1	Dnah3	boc	dally	mlt	vn	Mer	cic	Cyt-c-d	shu	shv	aux	Pink1	eIF4G2	blanks	heph	Bpt	topi	Dronc	noi	Pkd2	can	Duba	Cyt-b5	Sas-4	Lasp	cav	
+viable		Mkp3	Rala	RpL36	Ccdc56	CR42657	Egm	inv	sesB	morgue	E(spl)m7-HLH	mwh	Ggamma30A	eIF4E1	PGAP3	egh	CrzR	futsch	disco	egr	vig	Gale	tef	mxc	Myc	tej	cmpy	CR44852	Patr-1	rau	CR43764	Myo61F	Mef2	Nsun2	Bin1	Hs3st-B	kuk	mip130	CR43753	mys	Abl	L	N	Acph-1	Atg16	CycB3	p38a	upd2	upd3	b	CR44874	h	porin	Ack	CR43306	CR43304	m	CR45727	ohgt	AGO2	w	Rel	z	mir-184	Pgam5	PQBP1	CTCF	Nop60B	Mettl3	pag	Tak1	Cks30A	tim	mei-S332	chb	Wdr24	Csas	CR44412	Dg	CR44413	Ubi-p5E	Dl	Ent2	vnc	chp	Dr	Sox21a	Diap2	Diap1	ana3	Gpo-1	CR32661	Tm2	Sirt1	emc	cic	Ube3a	acj6	CR44401	eIF4G2	Ogg1	Ncc69	HisCl1	Smg6	Atac2	pcm	EloA	wisp	lncRNA:TS1	lncRNA:TS2	lncRNA:TS3	pcs	grk	lncRNA:TS4	tkv	lncRNA:TS5	hppy	gro	grp	Src64B	Cyp6a17	Gr32a	Usp7	Nak	GAPsec	rho	Zyx	2mit	Eph	Clk	Rab23	Rab27	Spf45	rin	per	CenG1A	nau	cact	upSET	cln	Tctp	cmb	Piezo	Cul5	Buffy	Ih	nbs	AcCoAS	Fmr1	ATP7	THADA	Ubi-p63E	S6kII	Tpi	Npc2b	Npc2a	Nf1	tow	Con	cnn	Tnks	shakB	cv-d	CR43701	chico	CR42859	CR42858	Magi	Vrp1	Su(fu)	Lam	Pis	esn	Whamy	tapas	cos	M6	Chchd2	Trl	CR43939	Orc3	pix	cpo	CalpB	CalpA	CR43721	Rassf	vvl	Vang	trx	lama	ATP8B	Hsp27	topi	Pdcd4	Hsp23	tsh	CR44805	dysc	CR43718	tsl	G9a	nemy	Kank	ana	mir-137	tsr	tsu	shams	mir-133	mir-375	DJ-1alpha	Abp1	Csp	CR45006	Sdhaf3	ttk	mir-304	CR9284	csn	E(spl)mbeta-HLH	aop	RecQ4	Roc1b	Herc4	Den1	aos	PGRP-LC	PGRP-LA	tup	CR45242	ctp	Tollo	Lsd-2	Mrp4	asrij	mir-317	SkpA	pnr	pnt	Cyp4d21	lft	eys	twe	alpha-Est7	alpha-Est5	pelo	mir-31b	Nle	Drep2	ara	mGluR	Ir8a	mspo	CLIP-190	Pdk1	HSPC300	homer	Asx	crol	arx	wash	vig2	Poc1	nAChRalpha7	Sb	Cenp-C	mir-986	Brca2	Sh	RhoL	Abd-B	CR45054	cwo	asp	tyl	lig	scramb1	scramb2	mir-988	rux	CG8677	atk	Tk	Acp26Aa	CR45283	Sin1	LpR1	LpR2	Vha16-1	AkhR	bond	mir-999	Nos	prt	TfAP-2	noc	aux	noi	Hayan	RyR	psq	sable	lncRNA:TS18	lncRNA:TS17	Nmdar1	lncRNA:TS16	lncRNA:TS15	rho-5	mib2	lncRNA:TS10	alphaSnap	CG33298	lncRNA:TS14	lncRNA:TS13	lncRNA:TS12	ptc	lncRNA:TS11	GluRIIA	Oamb	Mnn1	awd	Fak	Hem	BubR1	Fer2	mir-92a	mir-2b-1	CR45630	tefu	Lnk	faf	p53	Nrt	hep	alpha-Man-IIa	borr	CR43484	CR44337	prom	mir-958	mir-957	dj-1beta	Roc2	mir-955	chas	Aldox89A	hfw	CR45670	Dcr-2	Yu	CR43492	PIG-V	CR44324	pall	lok	Fdh	mir-969	mir-967	CR45418	mir-966	DCTN1-p150	mir-965	mir-971	mir-970	Usp47	Prosalpha6T	Zw	Amph	Top3beta	ntc	gammaCOP	Bsg25D	Ubx	fdl	Kdm4A	Pde1c	Dark	Dyrk2	nub	pyd	bgcn	boss	repo	Dredd	CR44585	CR44344	Dis3l2	pyx	vilya	Thor	hiw	caup	Dlc90F	mei-218	PPO2	Corp	para	Myo31DF	CAP	dbo	cher	Ddc	Tis11	Pkd2	dco	ADD1	Sema2b	su(Hw)	Map205	CR44371	Ras85D	CR44131	Fic	CR43282	ftz-f1	Lsm12	Nost	CR43622	Cad99C	Msp300	hll	CR43862	Hml	sax	CR43625	Trx-2	Gos28	CR43627	Rbp6	CR17567	Unc-115a	Rbp9	Dfd	sbr	CR43852	CR44949	CR44943	CR43859	TM9SF4	timeout	ban	hmw	grnd	robo3	CadN2	XNP	Kebab	Akt1	robo1	GMF	Sdr	ac	ranshi	Cnx99A	Su(var)204	al	Syx1A	ap	mino	yps	Klf15	hog	REPTOR	bi	CR44967	br	path	bs	dmpd	NijA	bw	trio	ssp2	Fas2	Fas3	par-1	Hsp70Ba	Dif	CR45608	H15	Lsp1alpha	Ir25a	H217	ct	flw	rictor	Cp190	da	Sulf1	Kdm2	CG11700	CR43655	CR43416	Prosap	CR43414	dx	Dop1R1	fne	ec	fng	eg	Apc2	CR44776	CR43682	mirr	en	et	FIG4	Drice	shg	GstO2	Efhc1.1	dally	Notum	miple2	Tspo	Cyt-c-d	miple1	limbo	Dll	fj	CR43434	Gabat	fu	fw	fy	Cyt-b5	abd-A	Qtzl	Mdh1	bchs	hts	Root	Mul1	PGRP-SD	BTBD9	Egfr	lncRNA:TS27	lncRNA:TS26	lncRNA:TS20	RpS2	hd	lncRNA:TS25	lobo	lncRNA:TS24	lncRNA:TS23	hh	lncRNA:TS22	p120ctn	skl	Uvrag	mir-278	wst	SCCRO	Fsn	su(sable)	Myd88	klar	Got2	dnt	CR43802	sle	tara	Mad	sli	trsn	Smn	CR43807	slo	Osbp	mir-285	CkIIbeta	mir-283	GstS1	Reep1	Cp110	orb2	Arl5	dor	Uro	hook	qin	fd59A	Pvf1	Syngr	wupA	loco	Seipin	dpp	plum	numb	CR43823	snf	sni	Fuca	Fbxl7	SCCRO3	Lerp	WRNexo	DAAM	e(r)	CadN	Top2	Top1	e(y)2	Mcm10	mbt	bmm	Ptp61F	lt	Traf6	ush	mago	Aplip1	lz	foxo	MAGE	CR43819	Scamp	Dhod	mh	drl	mir-9c	Sprn	Cdc42	phol	roX1	mir-9a	soti	Toll-6	spi	Pten	spn-B	CR43608	ph-p	spn-D	CR43848	CRG	E2f1	dsh	ph-d	Met	boi	Oatp30B	otk2	eIF4EHP	HDAC6	Rab3-GEF	HDAC1	CR43835	aPKC	fz2	fz4	sra	CR44279	Dh31	CR44278	Itp-r83A	Pex16	Brd	pk	Mhc	Lrp4	ball	Aldh	okr	fzo	sta	Hmt4-20	sti	asun	Eip78C	rg	bsh	rk	rl	Lrrk	corolla	stan	bst	ry	14-3-3epsilon	Galphaf	mtsh	PRAS40	sd	Grip71	Trap1	Galphai	Rtca	sl	so	alphaTub84B	sr	key	MAPk-Ak2	ALiX	Syn2	svr	kat-60L1	knon	Clbn	Rab3	bul	CR45174	bun	sina	CR44081	tx	Sxl	Snx1	Appl	SCAP	ics	mod(mdg4)	sima	spartin	Snx6	zen	brv1	Syn	mars	modSP	Strica	vg	mlt	vn	Hus1-like	mir-10	mir-11	wg	Dsp1	Mnt	Lasp	Rac2	CR45187	drpr	Ephrin	lncRNA:TS6	ord	lncRNA:TS7	amos	lncRNA:TS8	lncRNA:TS9	gbb	Nlg3	Nlg2	nolo	sisA	Act88F	CarT	S6KL	CR44420	Pp1alpha-96A	gce	gcl	gcm	Su(var)3-9	loqs	twit	Rae1	CR45302	Socs36E	mei-W68	otk	Syt1	CR45542	Gpdh	Stat92E	CycB	CycE	CycG	HtrA2	mir-263b	DNaseII	CR43356	ihog	eag	Mt2	eas	conu	Myo95E	mrn	ebi	FER	CR45557	koi	Mtl	Wnt6	Lsp1gamma	ms(3)Z2203	Tbh	SH3PX1	Gclm	Wnt2	nSyb	tam	tal	mth	Debcl	CR44256	eIF3m	InR	Cln3	mtt	Sod2	Sod1	Vinc	unc79	azot	polo	Pldn	coro	Cbl	Cbp53E	Cby	inc	
+embryonic/larval midgut		Col4a1	dpp	Mdh2	Mef2	sax	Med	Syx1A	AkhR	Egfr	betaTub60D	srp	vn	trx	shn	emc	da	Alk	hkb	bmm	P5CDh1	mod	Dronc	Nopp140	mys	csw	rib	N	lab	wg	br	usp	bap	abd-A	tor	Eip74EF	mib2	pit	if	mesh	mew	
+lethal - all die before end of larval stage		Galt	Msp300	sas	sav	RpL36	Archease	Ccdc56	Egm	MED6	Itp-r83A	Trxr-1	SERCA	pont	krz	fray	Sce	Raf	plx	Scm	ogre	RecQ4	l(2)gl	eIF4E1	CSN8	Mhc	CSN5	kst	gammaTub23C	scb	exd	dve	RpII215	EndoA	Myb	Bsg	mxc	eRF1	Akt1	nclb	Gmd	Kap-alpha3	Vps16A	Atg1	Actn	cdi	sti	Rap1	cdm	Mrp4	glu	SkpA	Ext2	pnt	Schip1	Ser	stai	Sec6	jumu	Sec5	bi	lwr	hop	N	br	uif	milt	bs	pita	AsnRS	Fas2	prel	Hsc70-4	B52	APP-BP1	Asx	hpo	Rack1	ppl	Sfmbt	Npc1a	Bx	Abd-B	Rab2	asp	U2af38	stck	Chi	Rpn6	lic	Khc	l(1)air16	Pcf11	Vap33	Spc25	sgg	ash2	ash1	mod(mdg4)	Hsf	sxc	pan	Psc	fng	Dg	mle	didum	Caf1-180	babo	RpL15	RPA3	Nipped-B	Nipped-A	Pdp1	dally	Tm1	Nedd8	sktl	BHD	Su(z)12	Dronc	Oaz	ave	wg	mTerf3	E(z)	Cyt-b5	hth	AP-2alpha	Inx2	oho31	slug	Moe	gl	comm	gbb	dlt	betaTub60D	lawc	tll	Aos1	hb	RpS2	comt	mod	smid	lqfR	Gem3	Marf	AMPKalpha	Tcs3	nab	Mrtf	Uvrag	Crag	Dhc64C	Sln	zip	prod	obst-A	klg	Syt1	fry	SelD	18w	MED26	Smn	MED20	Cul1	CycE	Tor	Cul3	Slik	Nct	Pka-C1	dom	pasha	RpS6	ATP7	dor	Lpt	EcR	Nsf2	Mbs	dlg1	Mo25	dpp	Mmp1	ovo	Hr78	Pex1	mrn	Pex3	soba	CrebA	Cdk8	hyd	Lam	Ubc6	esg	Top1	Su(H)	su(f)	rept	Stim	ecd	Traf4	nito	Trl	mst	His2Av	dome	lab	Orc6	usp	Rheb	cpb	yki	Antp	Eaat1	Klp61F	lap	pzg	PR-Set7	cpo	tap	dbe	Vps45	Pten	para	InR	Cam	Prosbeta6	polo	trx	dsh	fl(2)d	LanB1	Taf6	poly	sd-1	Dap160	HDAC1	sqh	Ubc7	aPKC	JhI-1	dco	alpha-Spec	slmo	tsr	crb	Ctr1A	l(2)gd1	Eip74EF	l(2)23Ab	slmb	Ras85D	mew	
+some die during larval stage		Galt	Msp300	sas	sav	glob1	RpL36	Egm	Itp-r83A	Trxr-1	SERCA	pont	fray	Sce	Raf	plx	Scm	ogre	RecQ4	l(2)gl	eIF4E1	Mhc	CSN5	kst	gammaTub23C	disco	scb	exd	dve	RpII215	EndoA	Myb	Bsg	mxc	eRF1	Akt1	Gmd	Kap-alpha3	Atg1	Actn	cdi	sti	Rap1	cdm	Mrp4	glu	SkpA	Ext2	pnt	Ser	Sec6	jumu	Sec5	mir-31a	bi	hop	N	br	uif	milt	bs	pita	Zw10	AsnRS	Fas2	prel	Hsc70-4	B52	Asx	hpo	Rack1	ppl	Bx	Abd-B	asp	Chc	U2af38	stck	Chi	Rpn6	l(1)air16	Pcf11	mir-1	Vap33	Spc25	sgg	moody	ash2	ash1	mod(mdg4)	Hsf	sxc	pan	Psc	fng	mle	Caf1-180	babo	RpL15	RPA3	Nipped-B	bft	Drice	Nipped-A	Pdp1	Lkr	Tm1	Nedd8	sktl	Su(z)12	Dronc	Oaz	Hayan	wg	Ipk2	E(z)	Cyt-b5	hth	AP-2alpha	Inx2	oho31	slug	Moe	gl	comm	corto	gbb	dlt	betaTub60D	lawc	tll	hb	RpS2	comt	mod	smid	puf	Gem3	AMPKalpha	nab	Mrtf	Uvrag	Crag	Dhc64C	Sln	mir-274	zip	prod	obst-A	klg	Syt1	fry	SelD	18w	Smn	MED20	Cul1	CycE	Cul3	Clamp	Slik	Nct	Pka-C1	dom	RpS6	ATP7	dor	Lpt	EcR	Nsf2	Mbs	dlg1	Mo25	dpn	dpp	Mmp1	ovo	galla-1	Hr78	Pex1	mrn	soba	CrebA	hyd	esg	Top1	Su(H)	su(f)	rept	ecd	Traf4	neb	Trl	mst	His2Av	dome	lab	usp	Rheb	cpb	Antp	Eaat1	daw	Klp61F	lap	pzg	PR-Set7	Wnt4	cpo	acal	dbe	Vps45	para	InR	Cam	Prosbeta6	polo	trx	dsh	fl(2)d	LanB1	Taf6	sd-1	Dap160	HDAC1	sqh	Ubc7	aPKC	dco	alpha-Spec	jhamt	slmo	tsr	crb	Ctr1A	l(2)gd1	Eip74EF	l(2)23Ab	slmb	Sap-r	Ras85D	mew	
+phototaxis defective		cpo	Vmat	norpA	Ace	gl	ninaE	cdm	ninaC	svp	betaTub60D	CarT	sd-2	sd-1	sd-3	bi	Gycalpha99B	M6	Timp	Nmdar1	ken	EndoA	tor	Vha100-1	lap	Miro	Kap-alpha3	sd-13	
+flightless		eg	klar	Syt1	l(3)Lak	stj	Ppcs	clu	Gpdh	fbl	ap	Cam	betaTub60D	nolo	flw	Smn	Gpo-1	fliI	TpnC4	DAAM	sls	Tm2	spas	HtrA2	Act88F	Pink1	CanB2	hig	Mhc	mys	tsh	Mlc2	tutl	DCTN1-p150	br	Sema2a	dx	Atg17	mib2	wupA	Wnt2	dlg1	ss	
+visible		Rala	sav	RpL36	sax	Gos28	kek5	krz	sbb	Raf	mwh	Scm	zf30C	Scr	Gli	sbr	egg	ksr	kst	RpL13A	bowl	sca	mxc	Myc	Akt1	Kap-alpha3	ab	ac	Patj	glo	Rap1	Dsor1	al	Syx1A	ap	chif	sdk	salm	Ser	D	bi	H	mys	hop	Bug22	L	N	kuz	how	br	chic	bs	upd1	Atg17	bw	trio	Fas2	tgo	Hsc70-4	ca	Atg13	cd	bab2	Dif	sev	d	bab1	abd	scrt	f	ci	g	hpo	ck	h	Ack	cn	p	ct	flw	r	ohgt	mir-8	cv	v	Bx	w	y	AGO1	Rel	z	elB	Sulf1	CtBP	Chi	dl	Shc	ds	Nop60B	sgg	dx	dy	sgl	ash1	pan	chb	ec	ed	fng	eg	Apc2	Caf1-180	Dl	mirr	en	chn	sha	Dp	Nipped-B	Dr	bft	Drice	shg	RYBP	ex	Diap1	ey	dally	Notum	Pcl	emc	cic	rasp	Su(z)12	Dll	fj	pygo	PDZ-GEF	Dronc	ft	fu	Ipk2	Dlw	fw	fy	abd-A	fz	EloB	pcm	EloA	hth	AP-2alpha	htl	tkv	gro	grn	gl	Usp7	Egfr	rho	Zyx	RpS2	Sara	RpS3	Gp150	hh	TBPH	Rab23	lqfR	peb	Nrx-IV	pgant3	frc	rin	dnd	Nbr	if	lin-52	SCCRO	klar	rhea	in	JIL-1	cln	mus308	fry	Tctp	Mad	ix	wts	Cul3	sls	slif	Max	ATP7	dor	jv	S6kII	hook	smo	tor	wupA	mam	dpp	cno	kn	cv-d	numb	ftz	chico	SCCRO3	Magi	esc	Lam	Sos	esg	Cdk1	Iswi	e(y)2	mbt	Su(H)	cos	Traf6	M6	ush	mago	sog	lab	lz	nej	Grip91	Dhod	mi	net	bnl	Cdc42	spn-F	mir-9a	Rab11	trc	meru	spi	Pten	vvl	Vang	trk	ph-p	ASPP	na	E2f1	Klp64D	Mer	trx	dsh	ph-d	Met	Girdin	Pink1	HDAC1	Bpt	dsx	tsh	Vps35	amx	tsl	tsr	crb	oc	l(2)gd1	slmb	sra	crp	RpS13	tta	kibra	ttk	slpr	pb	ttv	Hrb27C	pk	aop	l(2)gl	aor	aos	CSN8	Mhc	ssh	px	CSN5	Uxs	tup	exd	PGRP-LF	Pc	dve	brk	fzr	brm	sta	ctp	stg	sti	eya	Rm62	Mip	pnr	eyg	rg	sty	stx	rk	lft	scrib	rl	Duox	Lrrk	stan	rn	ro	Pp1-87B	ru	Sec6	Tfb5	RpS21	Sec5	twi	14-3-3epsilon	ara	sc	sd	Zw10	ken	rst	sl	btl	sn	IP3K2	so	Dys	sr	ss	neur	st	sv	Asx	SCAR	btz	Ppcs	Sb	svr	Abd-B	cwi	tn	bul	asp	U2af38	sina	stck	tx	Khc	tyl	nmo	Appl	rux	Tl	rdgC	ics	ato	mod(mdg4)	Psc	opa	vg	TfAP-2	vn	hbs	noc	aux	Rab6	mir-14	sable	wg	Dsp1	Awh	E(z)	Mnt	not	kis	mib2	ptc	mats	ptg	corto	gbb	Ns3	betaTub60D	snama	elav	CkIalpha	osa	phyl	tuh1	Act88F	mod	tefu	Lnk	faf	Brms1	mor	put	lms	hep	Socs36E	ninaA	fbl	SelD	klu	CycA	Stat92E	CycE	hfw	Pka-C1	pasha	DCTN1-p150	mir-965	EcR	Usp47	dlg1	Mo25	botv	stmA	sens	ovo	ebi	Ubx	Gprk2	Dark	nub	Tao	hid	msi	dac	ecd	koi	Dredd	msn	Ilk	Optix	His2Av	pros	caup	Antp	Wnt2	tam	Wnt4	tal	eIF3m	InR	Sod1	azot	Caf1-105	tbi	Ddc	RasGAP1	cad	car	spdo	Ctr1A	Ras85D	ttm50	
+partially lethal - majority die		sra	Galt	l(1)9Fl	Trpml	Msp300	Atpalpha	RanBPM	sax	Trxr-1	slpr	l(1)9Fi	sesB	Hrb27C	aop	Scr	CanB2	egg	kst	tup	PGRP-LF	robo3	Bsg	mgr	Myc	XNP	Akt1	Cdc27	app	Plzf	senju	ras	sti	stj	dmGlut	Nprl2	Eip78C	scrib	salm	stai	Pp1-87B	pelo	Tfb5	ry	14-3-3epsilon	hop	N	kuz	ara	br	sc	chic	milt	Zw10	ken	trio	p38a	Sox15	Hsc70-4	p38b	Zasp52	Ace	Pabp2	hpo	ck	Hand	flw	rictor	Bx	AGO2	gsb-n	scat	bul	asp	U2af38	Kdm2	Hsromega	Khc	dl	Sxl	tyl	Shc	Snx3	Mettl3	moody	ato	mod(mdg4)	chb	Psc	ed	Dd	Hcf	trol	P32	PCB	Drice	RYBP	dally	Notum	PDZ-GEF	mir-14	Hayan	tutl	Lasp	mib1	rgn	grh	tkv	ifc	dlp	hts	Src64B	IKKbeta	Ns3	Hira	betaTub60D	nolo	Sema1a	elav	Catsup	Sara	BRWD3	Eph	Gp150	puf	TBPH	lqfR	PIP5K59B	Urm1	Vav	rig	nab	lms	gcm	Eb1	beta-Spec	her	frc	dnc	Miro	Nbr	Pak3	colt	cact	Claspin	Col4a1	clu	mir-282	spas	HtrA2	Pka-C1	dom	Fmr1	Mps1	orb2	ihog	lost	EcR	Rpp30	tor	Spps	cni	toy	Liprin-beta	Nup160	cnn	Mmp1	Dab	Mmp2	galla-1	ebi	Pex3	chico	CrebA	Grip84	Dark	Lam	DAAM	gwl	Lar	Atox1	Mcm10	Mcm3	msn	pyr	neb	Trl	His2Av	dome	bigmax	CPT2	daw	spoon	Utx	mi	lap	Wnt4	chem	Toll-9	Treh	trh	Torsin	Diedel	Lpin	Adar	Sod1	Cat	fl(2)d	mud	eIF4EHP	HDAC1	Bpt	stnA	beag	aPKC	Cbl	ADD1	Opa1	l(1)10Ae	Ras85D	msl-1	ttm50	Csp	
+electrophoretic variant		Dip-A	betaTub85D	alpha-Est5	Alp1	Adh	Aldox89A	Mdh1	Est-A	Gpdh	Idh	Acph-1	
+GO0005874:microtubule		spn-E	TBPH	betaTub85D	Khc	pav	futsch	aPKC	shot	foxo	Eb1	mio	nudE	Vhl	Cby	Lis-1	Kat60	dia	spas	chb	
+testis		ifc	gbb	Pex1	mei-P26	CR42859	CR42858	Pex16	bb8	w	Raf	dia	Ote	lncRNA:TS23	bgcn	betaTub85D	msi	bel	CR43416	bam	His2Av	Mtor	put	Nop60B	tut	pag	loqs	mxc	nclb	Klp61F	chb	Wnt2	CR43484	scu	sti	Myo31DF	Tctp	fbl	ix	chinmo	cue	boc	polo	Tor	shv	Fmr1	heph	Ubi-p63E	hop	JhI-1	how	can	chic	nos	Zw10	pcm	CR43282	oho31	tkv	
+spermatid axoneme		hmw	CdsA	betaTub85D	lup-2	Fmr1	asl	Bug22	nsr	Cyt-c-d	
+GO0005930:axoneme		Cp110	betaTub85D	ana3	Rb97D	orb2	asl	hop	
+seminal vesicle		betaTub85D	Vrp1	Cad99C	Mst77F	Dis3l2	ctp	
+fusion competent cell		siz	betaTub85D	Vrp1	ttk	mbc	N	Hem	
+presumptive embryonic salivary gland		klar	h	Src64B	eya	sli	srp	Btk29A	cora	gsb	LanB1	fog	hkb	ps	betaTub85D	Mtl	mys	rib	Orc6	Rho1	fz	lolal	tin	Rac1	drl	Inx2	if	robo1	robo2	htl	Wnt4	tkv	mew	
+Nebenkern derivative		betaTub85D	asl	Cby	clu	Bug22	fbl	
+cytokinesis defective		Rab11	ifc	pav	sti	ALiX	Pex1	fbl	fwd	CycB	polo	pbl	shn	dia	sktl	Rab1	asp	thr	twe	Sec8	bgcn	betaTub85D	AMPKalpha	sqh	mtsh	bel	tum	scra	aPKC	bam	Rho1	Zw10	pim	Sas-4	CycB3	rux	eRF3	Grip91	Klp61F	chb	
+GO0051321:meiotic cell cycle		Zw10	betaTub85D	ifc	polo	bel	Klp3A	
+spermatid		cnn	ifc	Cad99C	CR43862	Pex1	Ppcs	CR43306	CR42859	CR42858	Klp3A	CdsA	lncRNA:TS27	lncRNA:TS26	Dark	bb8	scat	asl	dia	Fadd	asp	lncRNA:TS23	Roc1b	betaTub85D	Dredd	CR43852	CR44585	bel	CR43416	gammaTub23C	bam	Tudor-SN	ms(3)Z2203	tra2	Dlc90F	ctp	CR44412	CR43484	CR45542	CR43802	spno	fbl	CR43848	Hsp83	polo	Ddx1	Cyt-c-d	Pink1	eIF4G2	pelo	Fmr1	topi	CR43753	orb2	Dronc	tbrd-2	mtsh	JhI-1	mil	Duba	tbrd-1	Zw10	Sas-4	Cby	lncRNA:TS1	lncRNA:TS2	lncRNA:TS3	
+spermatid & nucleus		Sec8	betaTub85D	fwd	ifc	Rab1	fbl	
+primary spermatocyte cyst		betaTub85D	Hsp83	cue	boc	polo	scat	
+spermatocyte		spn-E	scu	sti	asun	spno	Poc1	Egfr	eya	Hsp83	ana3	cue	Stat92E	cmet	Raf	AGO1	dia	Topors	twe	Cp110	eIF4G2	betaTub85D	pelo	Fmr1	mtsh	Ubi-p63E	bel	bam	His2Av	Spc25	can	Tudor-SN	Zw10	tra2	
+muscle founder cell		betaTub85D	lmd	Mef2	vnd	ttk	mbc	N	Hem	Vrp1	sns	sim	tin	Rac2	Alk	pcs	htl	
+tergite		Rab23	fj	abd	Debcl	bi	ATP7	mys	CTCF	Egfr	Mad	ix	ds	EcR	MED31	smo	Abd-B	Catsup	stx	mod(mdg4)	hh	
+lethal - all die before end of embryonic stage		ftz-f1	eff	Msp300	RpL38	Atpalpha	sax	sbb	Sce	cbt	Raf	Jra	Scr	Dfd	Gli	eIF4E1	bowl	RpII215	mxc	Akt1	retn	robo2	sals	raw	Mef2	scw	Rap1	Su(var)205	Dsor1	Syx1A	glu	fs(1)M43	salm	wls	Ser	D	sdt	bcd	fkh	H	mys	hop	Abl	N	kuz	how	chic	upd1	AP-1mu	dhd	Ace	ci	ck	h	E(spl)m8-HLH	brat	ct	r	POSH	AGO1	fs(1)Ya	mir-184	Chc	da	thr	vls	dl	ben	scra	SmD3	slbo	Nop60B	sgg	TfIIA-S	Cks30A	wor	tin	l(3)94Fa	pan	chb	ed	Apc2	Gs1	pav	Dl	mirr	en	chn	vnd	Nipped-A	shg	Diap1	pbl	Tm2	shn	Pcl	emc	fog	cid	cic	foi	pygo	Dronc	ft	sic	fu	kune	abd-A	pck	Gsc	sim	wisp	hth	AP-2alpha	gd	grh	Top3alpha	htl	tkv	gro	grn	grp	pcx	Src64B	tld	gt	Egfr	Usp8	tll	Btk29A	gsb	KCNQ	rho	hb	bib	Sara	hh	skd	zfh1	peb	nab	Dhc64C	fra	frc	if	cact	CDase	Myd88	JIL-1	rost	vri	Mad	odd	Poxm	Cul3	sls	gus	dop	Arl1	smg	ncd	MED31	wus	cnc	tor	wupA	mam	Sec24CD	Mbs	cni	loco	verm	mas	armi	U2A	dpp	cno	cnn	sna	cv-c	numb	ftz	snf	mbc	Klp3A	sno	ndl	esc	sns	Sos	mbl	CadN	Pis	esg	Cdk1	bmm	cos	M6	ush	mago	sog	lab	pim	Ggamma1	pix	Cdc42	spn-E	trh	spi	vvl	Vang	slp1	trk	slp2	Tsp	Rop	amd	trx	dsh	ph-d	spz	14-3-3zeta	HDAC1	tsg	amx	aPKC	crb	oc	slmb	crn	kay	Etf-QO	ple	ttk	fs(1)N	slpr	srp	ewg	srw	plu	aop	tub	Vha55	LanA	aos	Mhc	tum	Mtor	cta	tup	exd	Pc	brk	ctp	stc	exu	Plzf	stau	stg	fzy	apt	eya	stumps	wapl	pnr	pnt	rg	bsk	unpg	stan	twe	twi	mid	nkd	Mlc2	alpha-Cat	sc	btd	Zw10	Grip71	vari	Galphai	btl	arm	btn	so	fs(2)al	neur	arr	svp	rtv	bul	Khc	Sxl	run	Rho1	Tl	mod(mdg4)	Psc	opa	prd	zen	Sec61alpha	vn	sktl	Shmt	bru1	Rab5	psq	wg	barr	E(z)	mib2	alphaSnap	ptc	orb	ord	Mnn1	oro	Hira	snama	elav	sisA	puc	mod	alphaTub67C	Nrg	pum	osk	faf	shot	put	gcm	hep	beta-Spec	kkv	her	loqs	Claspin	zip	borr	Syt1	vas	parvin	Stat92E	Dlg5	CycE	Pka-C1	Mps1	EcR	GluRIID	stmA	ovo	knk	ebi	soba	zld	CrebA	cora	Dark	nuf	hid	repo	ecd	Ilk	Uba5	pyr	nopo	pros	nSyb	mtg	tal	mth	InR	Wee1	udd	Ced-12	mud	LanB1	hkb	sd-2	stnB	Mvl	Ddc	cac	stnA	unc-13	stout	spdo	cas	RhoGEF2	cav	blow	fand	
+some die during embryonic stage		ftz-f1	eff	Msp300	RpL38	Atpalpha	Tsp74F	sax	sbb	Sce	cbt	Raf	Jra	Scr	Dfd	Gli	eIF4E1	bowl	RpII215	mxc	Akt1	retn	robo2	sals	scu	raw	Mef2	scw	Rap1	Su(var)205	Dsor1	Syx1A	glu	fs(1)M43	salm	wls	Ser	D	sdt	bcd	fkh	jumu	H	mys	hop	Abl	N	kuz	how	chic	upd1	AP-1mu	dhd	Ace	ci	ck	h	E(spl)m8-HLH	brat	ct	r	AGO2	AGO1	fs(1)Ya	mir-184	Chc	da	thr	vls	dl	mir-1	ben	scra	SmD3	slbo	Nop60B	sgg	TfIIA-S	Cks30A	wor	tin	mir-193	l(3)94Fa	pan	chb	ed	Apc2	Gs1	pav	Dl	mirr	en	chn	vnd	Drice	Nipped-A	shg	Diap1	pbl	Tm2	shn	Pcl	emc	fog	cid	cic	foi	pygo	Dronc	ft	sic	fu	kune	abd-A	pck	Gsc	sim	wisp	hth	AP-2alpha	gd	grh	Top3alpha	htl	tkv	gro	grn	grp	pcx	Src64B	tld	gt	Egfr	Usp8	tll	Btk29A	gsb	KCNQ	rho	hb	bib	Sara	hh	Urm1	skd	zfh1	peb	nab	mir-279	Dhc64C	fra	frc	if	cact	CDase	Myd88	klar	JIL-1	rost	vri	Mad	odd	Poxm	Cul3	sls	mir-284	Fmr1	dop	Arl1	smg	ncd	MED31	wus	cnc	tor	wupA	mam	Sec24CD	Mbs	cni	loco	verm	mas	dpn	armi	U2A	dpp	cnn	sna	cv-c	numb	ftz	snf	mbc	mir-219	Klp3A	sno	ndl	esc	sns	WRNexo	Sos	mbl	CadN	Pis	esg	Cdk1	Mcm10	bmm	cos	M6	ush	mago	sog	lab	pim	Ggamma1	pix	Cdc42	spn-E	Toll-9	trh	spi	vvl	Vang	slp1	trk	slp2	Tsp	Rop	amd	trx	dsh	ph-d	spz	14-3-3zeta	eIF4EHP	HDAC1	tsg	aPKC	crb	oc	slmb	crn	kay	Etf-QO	ple	ttk	fs(1)N	slpr	srp	ewg	srw	plu	aop	tub	Vha55	LanA	aos	Mhc	tum	Mtor	cta	tup	exd	Pc	brk	ctp	stc	exu	Plzf	stau	stg	fzy	apt	eya	stumps	mir-316	wapl	pnr	pnt	rg	bsk	unpg	stan	twe	twi	mid	14-3-3epsilon	nkd	Mlc2	sc	btd	Zw10	Grip71	vari	Galphai	btl	arm	btn	so	fs(2)al	neur	arr	svp	rtv	bul	Khc	Sxl	run	mir-989	mir-987	Rho1	Tl	mir-990	mod(mdg4)	Psc	opa	prd	zen	Sec61alpha	vn	sktl	bru1	mir-14	Rab5	psq	wg	barr	E(z)	mib2	alphaSnap	ptc	orb	ord	ifc	Mnn1	oro	Hira	snama	elav	sisA	puc	mod	alphaTub67C	Nrg	pum	osk	faf	shot	put	gcm	hep	beta-Spec	kkv	her	loqs	Claspin	zip	borr	Syt1	vas	NAT1	mir-276b	parvin	Stat92E	CycE	EDTP	Pka-C1	Mps1	lost	EcR	GluRIID	stmA	ovo	knk	ebi	Tsp66E	soba	zld	CrebA	cora	Dark	nuf	hid	repo	ecd	Ilk	pyr	nopo	pros	nSyb	mtg	tal	mth	acal	InR	Wee1	Ced-12	mud	LanB1	tbi	hkb	sd-2	stnB	Mvl	Ddc	cac	stnA	unc-13	stout	mir-929	mir-927	spdo	cas	RhoGEF2	cav	blow	fand	
+embryonic/larval central nervous system		smid	Dl	baf	Med	trol	N	SkpA	br	abd-A	Dark	Orc3	oho31	hkb	fand	
+midgut constriction 2		arr	dpp	pygo	sax	tsh	Sec61alpha	Med	Egfr	stumps	wg	abd-A	sgl	byn	vn	trx	dsh	tin	arm	tkv	
+midgut constriction 3		abd-A	byn	vn	tin	Egfr	
+abdominal lch5 neuron		gcm	S	abd-A	Ppt1	spi	vvl	hth	ttk	robo1	Egfr	robo2	sli	
+abdominal lateral pentascolopidial chordotonal organ lch5		aop	Nrg	aos	spi	vvl	ttk	gcm	Nrx-IV	abd-A	atk	rho	ato	salm	
+midgut constriction		Mef2	mys	rib	mbc	EcR	Pc	abd-A	esc	SoxN	byn	mib2	shn	Pcl	LanB1	if	opa	mew	
+Keilin's organ		btd	S	abd-A	Sce	nkd	vn	rho	tsh	Egfr	wg	ptc	
+abdominal segment 1		aor	kni	ftz	run	Ubx	slp1	slp2	gcm	abd-A	Abd-B	hb	ph-d	hth	Ras85D	sxc	Hsc70-4	
+abdominal segment 2		gcm	tll	eve	abd-A	kni	Abd-B	Ras85D	slp1	Hsc70-4	slp2	
+abdominal segment 3		gcm	tll	abd-A	D	kni	Abd-B	ftz	Ras85D	run	slp1	Hsc70-4	slp2	
+abdominal segment 4		D	kni	slp1	slp2	gcm	tll	eve	Pc	abd-A	Abd-B	ph-d	Ras85D	sxc	Hsc70-4	
+abdominal segment 5		D	kni	ftz	run	gt	Trl	trk	gcm	tll	Pc	abd-A	Stat92E	Abd-B	tor	trx	Ras85D	fs(1)M3	sxc	Hsc70-4	
+abdominal segment 6		D	kni	run	CTCF	gt	Trl	trk	gcm	tll	eve	abd-A	Abd-B	ash1	tor	trx	mod(mdg4)	Ras85D	fs(1)M3	Hsc70-4	brm	
+abdominal segment 7		dpp	D	kni	sax	ftz	run	CTCF	gt	trk	tll	abd-A	Abd-B	tor	mod(mdg4)	Ras85D	fs(1)M3	Hsc70-4	
+abdominal segment 8		dpp	sax	CTCF	trk	tll	eve	abd-A	Stat92E	esc	Abd-B	tor	hb	mod(mdg4)	Ras85D	fs(1)M3	salm	Hsc70-4	
+mesothoracic segment		Pc	abd-A	Stat92E	Abd-B	caup	Antp	hb	run	ara	
+metathoracic segment		Pc	abd-A	Abd-B	trx	hb	run	
+abdominal 1 lateral pentascolopidial chordotonal organ lch5		btd	gcm	abd-A	pnt	aos	rho	ato	vvl	hth	Ras85D	rib	Egfr	
+abdominal 2 lateral pentascolopidial chordotonal organ lch5		btd	gcm	abd-A	pnt	aos	rho	ato	vvl	hth	Ras85D	rib	Egfr	
+abdominal 3 lateral pentascolopidial chordotonal organ lch5		btd	gcm	abd-A	pnt	aos	rho	ato	vvl	hth	Ras85D	rib	Egfr	
+abdominal 4 lateral pentascolopidial chordotonal organ lch5		btd	gcm	abd-A	pnt	aos	rho	ato	vvl	hth	Ras85D	rib	Egfr	
+abdominal 5 lateral pentascolopidial chordotonal organ lch5		btd	gcm	abd-A	pnt	aos	rho	ato	vvl	hth	Ras85D	rib	Egfr	
+abdominal 6 lateral pentascolopidial chordotonal organ lch5		btd	gcm	abd-A	pnt	aos	rho	ato	vvl	hth	Ras85D	rib	Egfr	
+abdominal 7 lateral pentascolopidial chordotonal organ lch5		btd	gcm	abd-A	pnt	aos	rho	ato	vvl	hth	Ras85D	rib	Egfr	
+copper cell		abd-A	dve	lab	Mad	alpha-Spec	
+embryonic/larval oenocyte		aop	boss	Cyp4g1	abd-A	aos	rho	CycG	ato	spi	salm	Egfr	how	
+gonad		par	tra	Invadolysin	sli	shg	Stat92E	Abd-B	Dlg5	Lam	gwl	bgcn	lola	mid	Sxl	hop	dsx	rib	cta	ball	nos	upd1	robo3	abd-A	ena	tra2	robo1	robo2	oho31	
+germline cell		dpp	Moe	ovo	AdamTS-A	srp	Mdr49	byn	puc	piwi	mir-92a	bgcn	tud	stwl	egh	pum	osk	mir-1	rib	bam	zfh1	mir-989	gcl	ban	mir-987	mir-314	robo3	mir-278	wun2	Myc	mir-990	tra2	robo1	mir-9c	robo2	tra	Invadolysin	eya	mir-956	mir-318	sli	otu	Jafrac1	mir-316	shg	Stat92E	stil	shn	shu	hkb	Pka-C1	Fmr1	lola	mid	noi	dsx	mael	mir-10	mir-969	wun	fu	nos	mim	abd-A	mir-137	smo	ena	wupA	arm	FoxL1	dlg1	pcs	tkv	
+gonadal sheath proper primordium		hid	tra	lola	mid	dsx	eya	zfh1	sli	shg	abd-A	Abd-B	ena	robo2	
+cardioblast		dpp	stg	mid	ush	numb	Hand	zfh1	stumps	sli	wg	shg	spdo	abd-A	pnr	CycA	pnt	tin	bib	puc	robo1	robo2	htl	hh	fand	
+embryonic/larval heart		pain	dpp	abd-A	mid	Ctr1A	Mef2	Tm2	tin	LanB1	Hand	da	
+embryo		dunk	kay	grp	sax	Egfr	Hira	srp	Exo84	Sce	cbt	Raf	Jra	hh	alphaTub67C	LanA	ric8a	Shark	csw	faf	rib	shot	peb	cta	tup	scb	p120ctn	hep	Dhc64C	Akt1	retn	sced	lin-52	cact	exu	zip	stg	rhea	apt	raw	vas	scw	Src42A	Rap1	Syx1A	trbl	wapl	bsk	kuk	bcd	jumu	Fmr1	gus	dop	mys	Arl1	smg	how	uif	EcR	lolal	tor	mam	arm	fs(1)M3	par-1	dhd	tral	fs(2)al	dpp	cno	cnn	sna	Dab	Pabp2	h	ebi	ftz	brat	rtv	cora	ndl	Dark	DAAM	dia	pyd	vls	nuf	Chi	hid	Khc	ecd	dl	ush	Trl	Shc	usp	Rho1	Nop60B	dap	sgl	Tl	ed	Cdc42	par	Apc2	Dl	Vang	trk	Diap1	Pkn	bwk	dally	dsh	shn	Shmt	14-3-3zeta	blot	HDAC1	pygo	sqh	wb	aPKC	tsl	sic	fu	wg	nos	eve	abd-A	crb	RhoGEF2	Ras85D	gd	tkv	
+heart primordium		abd-A	pnr	Mmp1	Mmp2	tin	sli	
+neuroanatomy defective		Galt	ftz-f1	sas	sav	hll	dnr1	Atpalpha	p130CAS	sesB	Sce	Unc-115a	Tet	egh	futsch	baf	scb	robo3	Adf1	EndoA	Akt1	CCKLR-17D1	iPLA2-VIA	robo1	cmpy	robo2	Patr-1	tey	Pmm2	glo	Su(var)205	Dsor1	cdm	Syx1A	ap	spin	Ppt1	salm	SMC1	D	fkh	jumu	Abi	mys	lwr	RhoGAP100F	Abl	N	kuz	chic	path	S	Atg16	Atg17	trio	Fas2	Fas1	Fas3	Atg6	Ca-alpha1D	seq	Ace	hpo	bdl	brat	wnd	H217	Npc1a	ct	Tig	mir-8	rictor	Pak	AGO1	mir-184	da	Ret	Chi	Rpn6	Gycalpha99B	Prosap	ben	scra	Vap33	Syx18	sgg	nudE	Mettl3	tim	ash2	wor	tin	chb	AP-2sigma	ed	Dg	babo	Dl	unc-104	en	chn	vnd	chp	Nipped-B	Drice	ana2	shi	Diap1	Efhc1.1	Tm1	mira	shn	ema	fog	Ube3a	foi	acj6	fh	Cdk5alpha	Su(z)12	Dll	Dronc	Ncc69	exex	ems	ft	tutl	abd-A	fz	ena	sim	Xport-A	Xport-B	hth	AP-2alpha	htl	tkv	grn	Mad1	gl	dlp	hts	Root	Src64B	Egfr	tll	Nak	rho	Dscam1	Eph	hh	Fife	TBPH	ckn	Atxn7	Tcs3	dimm	zfh1	nab	Nrx-IV	p120ctn	Uvrag	Eps-15	Dhc64C	fra	dnc	Nbr	if	per	Bace	Fsn	fru	fry	Mad	sli	aurA	Pka-R2	Smn	wts	slo	Mob2	Cul1	Cul3	Kat60	CkIIbeta	Nct	Fmr1	orb2	Nab2	sick	S6kII	Tpi	smg	hook	mt:ND2	Pvf1	Syngr	mam	loco	dpn	cnn	sna	psidin	plum	shakB	numb	sni	chico	mbc	esc	DAAM	CadN	Ald	Lar	Alk	esn	Mcm3	hyx	pins	Aplip1	Orc6	usp	nej	Rheb	Orc3	Dsk	lap	drl	Cdc42	spn-F	Dysb	tra	trc	trh	Torsin	Med	spi	Pten	vvl	Gyc76C	trp	Rop	mir-124	dsf	E2f1	Klp64D	trx	dsh	endos	spz	amn	Rab3-GEF	Pink1	HDAC1	ktub	sqh	dsx	dysc	aPKC	G9a	nemy	eve	Arfip	tsr	Liprin-alpha	slmb	Sap-r	sqz	wako	fz2	Abp1	Csp	mew	crq	Trpml	ttk	Pex16	ttv	ewg	pk	aop	LanA	Smox	Acsl	aos	ssh	Lrp4	cta	tup	ball	Pc	brk	fzr	brm	stau	fzy	eya	stumps	SkpA	pnr	pnt	rg	sty	SoxN	bsh	Ctr9	bsk	scrib	rl	Lrrk	stan	Vsx1	stai	Sec8	ru	Sec6	twf	Sec5	mir-31a	lola	mid	14-3-3epsilon	let-7-C	mGluR	Ten-m	rst	Galphai	Vha100-1	sn	so	prel	HSPC300	dock	ss	neur	Rx	SCAR	svp	kat-60L1	unc-5	Rab3	asp	bur	Khc	nmo	rut	ham	Appl	atl	ato	mod(mdg4)	spartin	Sin1	norpA	ida	C1GalTA	Syp	Strica	Nos	Nedd8	fs(1)h	aux	Rab7	Rab5	wg	nos	E(z)	not	mmy	Rac1	Rac2	ptc	drpr	Ephrin	mnb	mats	GluRIIA	amos	Moe	comm	hdc	gbb	Nlg3	Nlg2	Fak	Hem	Nlg4	Sema1a	elav	comt	BRWD3	Fer2	Gem3	Nrg	ric8a	AMPKalpha	S6KL	pum	tefu	Vav	shot	caps	gcm	Eb1	hep	beta-Spec	loqs	Syt4	Syt1	ninaE	CASK	TBCB	fbl	klu	CycA	CycE	Nrx-1	spas	PIG-V	Pka-C1	pasha	CdGAPr	DCTN1-p150	eas	Top3beta	dlg1	Liprin-beta	Nmnat	sens	Mmp1	Dab	Mmp2	Pex1	fdl	cora	Dark	nub	Tao	hid	repo	dac	ecd	Dredd	msn	Pfdn2	pyr	Thor	pros	dap	hiw	Antp	daw	Tbh	SH3PX1	Wnt2	PR-Set7	Wnt5	mth	tap	Lim1	Syx4	Treh	mts	Adar	InR	edl	Cln3	Sod2	CAP	Git	nvy	dbo	polo	Ced-12	LanB1	cher	gogo	Strip	hkb	Pldn	Dap160	RasGAP1	beag	Sema2a	Sema2b	spdo	cas	cav	Cbp53E	Ras85D	inc	mir-1000	fd3F	ind	
+neuroblast NB6-4 of abdomen		abd-A	CycA	stg	CycE	pbl	hth	
+neuroblast NB6-4 of thorax		pros	abd-A	CycA	stg	CycE	pbl	mira	hth	svp	
+genital disc primordium		cad	aos	spi	Egfr	wg	S	Pc	abd-A	pnt	Abd-B	sim	rho	ptc	
+cell shape defective		zip	Rab11	Syx7	gl	Mmp2	Src64B	ttk	Lpin	Myo31DF	svp	sli	shg	Sec23	flw	scrib	RabX1	pyd	Vha26	Dfd	pygo	mys	sqh	hop	ft	ds	wg	chic	kel	upd1	Sp1	p120ctn	abd-A	crb	Dhc64C	RhoGEF2	arm	Sec24CD	Inx2	Vha13	brm	ed	
+cell size defective		kel	borr	abd-A	Rheb	Asx	Rab5	yki	Akt1	dco	bft	
+abdominal sternite 6		RYBP	abd-A	JIL-1	Abd-B	dsx	arm	
+adult abdominal segment 3		exd	abd-A	Asx	Abd-B	bi	Pcl	
+adult abdominal segment 4		exd	Pc	abd-A	Asx	Abd-B	mxc	h	trx	Pcl	Scm	Ser	Dsp1	
+adult abdominal segment 5		Pc	abd-A	kis	Abd-B	trx	Pcl	Trl	brm	Scm	Ser	Dsp1	
+adult abdominal segment 6		exd	Pc	abd-A	Abd-B	trx	dsx	Pcl	Trl	brm	Scm	Ser	Dsp1	
+denticle		zip	mats	Apc2	dpp	f	ci	dlp	ovo	h	Syx1A	m	WASp	Sec23	ttv	Abd-B	SoxN	Klp64D	dsh	Hakai	hh	blot	l(2)gl	nyo	pygo	dl	tum	sog	rib	wg	sgg	smo	arm	Sec24CD	pan	fng	
+embryonic abdominal segment 8		Asx	cad	dos	psq	Shc	dome	trk	put	nos	tll	kis	Sce	esc	Abd-B	Raf	tor	rl	hb	Ras85D	fs(1)M3	
+embryonic abdominal segment 9		nos	Abd-B	Raf	rl	psq	put	
+genitalia		ken	dally	Abd-B	ash2	dsx	Iswi	ph-d	DENR	ph-p	
+adult abdomen		mod	tw	bi	ftz	Vang	neb	Hel25E	Drice	unc79	Timp	Grip	Tig	Mip	na	pnr	Bx	Abd-B	Grip91	Cdk1	hfw	Sox14	ec	
+body color defective		bab2	mats	b	bab1	Abd-B	bi	g	y	Torsin	dsx	sable	svr	
+embryonic/larval posterior spiracle		mod	ftz-f1	bcd	gbb	Egfr	dome	wg	Rho1	tll	Btk29A	Stat92E	Abd-B	tor	salm	hh	hkb	
+abdominal segment 9		cad	Abd-B	tor	Ras85D	fs(1)M3	salm	Hsc70-4	trk	
+stigmatophore		Btk29A	grn	Abd-B	gbb	ems	salm	dome	
+male genitalia		dpp	Debcl	PDZ-GEF	dsx	ix	Drice	br	exd	ken	Btk29A	Uvrag	Abd-B	trx	Fas2	cic	hh	
+adult abdominal segment 7		exd	Abd-B	trx	dsx	Scm	Ser	
+adult head		ftz-f1	sav	fab1	hpo	corto	Pten	Vps25	Cam	ex	pnr	eyg	Abd-B	Pburs	TfAP-2	trx	scrib	dsh	Iswi	asp	mod	l(2)gl	RpS21	cos	Hel25E	ft	br	Ipk2	Grip	fw	exd	crc	crb	hep	smo	hth	Ras85D	opa	ptc	
+antenna		bab2	dpp	bab1	hdc	cry	ct	Abd-B	pho	y	Pino	hh	Scr	LanA	cos	tefu	lz	put	bowl	exd	Pc	ash2	frc	Antp	ato	sxc	sta	opa	fng	en	18w	trp	ex	pnr	ey	dally	TfAP-2	trx	dsh	Pcl	rn	Pka-C1	Dll	N	wg	ken	l(2)gd1	tgo	hth	so	dlg1	ptc	ss	
+eye		sra	sav	fab1	kibra	sax	Vps25	ttk	Gos28	MED6	SERCA	ttv	Raf	pk	aop	RecQ4	LanA	egh	aos	CSN8	ksr	CSN5	kst	Uxs	bowl	Arr2	sca	exd	Rbf	mxc	Myc	inaC	Akt1	fzr	brm	Kap-alpha3	stg	rau	sti	Rap1	Dsor1	eya	chif	pnr	eyg	pnt	rg	sty	Schip1	sdk	scrib	rl	Lrrk	rn	wls	ro	eys	Scox	Pp1-87B	ru	Sec6	pelo	jumu	Sec5	H	mys	hop	L	N	tws	br	sd	upd1	Zw10	rst	bw	Rcc1	Fas2	sl	btl	arm	so	Hsc70-4	AP-1mu	Atg13	cd	neur	a	arr	sv	d	scrt	SCAR	hpo	Ack	Acn	E(spl)m8-HLH	Npc1a	Abd-B	w	AGO1	z	dia	asp	Vha26	Chi	Khc	lig	Shc	nmo	ds	sgg	dx	TfIIA-S	rux	ato	Syb	Vha13	l(3)94Fa	chb	ec	opa	ed	fng	norpA	Caf1-180	Dl	mirr	chn	Dp	Dr	ex	Diap1	ey	dally	Notum	hbs	foi	rasp	aux	fj	PDZ-GEF	Dronc	ft	wg	Smg6	fw	Awh	fz	kis	mmy	mib1	hth	grh	ptc	tkv	gl	dlp	corto	gbb	dlt	Ns3	Egfr	snama	elav	Catsup	CkIalpha	rho	BRWD3	Gp150	hh	lqfR	tefu	faf	mop	peb	put	Nrx-IV	hep	Uvrag	loqs	rin	lin-52	SCCRO	Socs36E	borr	klar	Syt1	cln	prom	Tctp	Mad	Stat92E	wts	CycE	nbs	Pka-C1	pasha	ATP7	dor	DCTN1-p150	EcR	smo	Usp47	cni	cnk	botv	dpp	cno	stmA	ovo	mrn	ebi	chico	Magi	cora	Lam	Sos	Pis	esg	Iswi	gwl	pyd	e(y)2	Su(H)	dac	ecd	koi	Ubr3	cos	hyx	M6	pic	neb	Optix	Trl	His2Av	lab	lz	foxo	nej	Rheb	Utx	bnl	tam	spi	Pten	Vang	l(2)40Fa	ASPP	trp	E2f1	Mer	trx	dsh	fl(2)d	ph-d	Met	RasGAP1	Bpt	coro	dsx	tsh	amx	dco	crb	Opa1	slmb	Sap-r	sag	Csk	Ras85D	rad50	DCAF12	
+eye-antennal disc		prod	Syx7	Vps25	Mad	Snap29	ex	eyg	ey	dally	Abd-B	E2f1	Mer	scrib	hh	aop	Pka-C1	Su(H)	dac	ecd	Dronc	Rab5	tefu	bowl	E(z)	hep	sgl	mask	Utx	ato	hth	Csk	dlg1	oho31	Atg13	
+head bristle		noc	neur	H	vvl	fry	Uxs	sc	pros	shams	Abd-B	Grip91	da	foi	tam	ptc	
+ocellus		noc	gro	LanA	gl	ci	cn	N	dx	cora	smo	Abd-B	w	trx	Fas2	dsh	ato	so	toy	foi	hh	ptc	
+ommatidium		Capr	gl	fab1	kibra	hdc	gbb	sax	ttk	Ns3	Egfr	SdhA	SERCA	Hrb27C	Raf	Jra	pk	Gp150	hh	aop	RecQ4	lqfR	aos	csw	ksr	kst	faf	Arr2	sca	EndoA	Rbf	Pcyt1	Myc	rin	Akt1	iPLA2-VIA	fzr	lin-52	Kap-alpha3	klar	stg	scu	cln	Dsor1	Syx1A	prom	ninaC	eya	ninaA	Mad	Shab	pnt	rg	wts	sty	CycE	bsk	sdk	scrib	rl	Lrrk	stan	rn	ro	eys	nbs	Pka-C1	ru	pelo	mys	hop	alpha-Man-Ia	L	N	Lst8	DCTN1-p150	br	upd1	S	rst	Usp47	Rcc1	Fas2	sl	arm	so	cni	neur	dpp	cno	sev	sv	d	sens	SCAR	hpo	ebi	Acn	chico	svp	cora	Dark	Abd-B	Lam	Sos	Iswi	bul	bun	sano	sina	mbt	Gba1b	Su(H)	msi	Khc	dac	msn	M6	lig	neb	Shc	lz	nmo	ds	foxo	Rho1	nej	sgg	dx	Rheb	rdgC	rdgB	ato	Syb	chb	ec	ed	fng	Cdc42	Apc2	Dg	norpA	Caf1-180	Dl	mirr	spi	Pten	Dp	Vang	InR	ASPP	shg	ex	ey	dally	E2f1	dsh	emc	aux	fj	HDAC1	RasGAP1	PDZ-GEF	Dronc	coro	Pld	amx	ft	dco	wg	Ipk2	fw	car	crb	fz	oc	Mnt	not	mmy	mib1	sag	hth	Csk	Ras85D	grh	ptc	tkv	
+sterile		sv	SCAR	ck	mrn	v	esc	Abd-B	gwl	Top2	asp	U2af38	aop	Sxl	M6	kst	p53	Trl	ban	Nop60B	Grip91	tra2	dnc	atl	sima	Nbr	Wnt4	nau	Apc2	clu	sle	fbl	ap	polo	CycE	Tor	Mer	spas	rn	PDZ-GEF	14-3-3epsilon	His4r	aPKC	JhI-1	DCTN1-p150	Dsp1	sc	Qtzl	trio	Rpp30	sn	fz2	l(3)S033513	orb	
+head		zip	arr	Patj	Mmp1	Mmp2	hdc	slp1	Egfr	shg	ex	pnr	eyg	Stat92E	wts	Abd-B	Tor	trx	Jra	ph-d	bcd	Asciz	Lnk	rib	N	how	wg	sd	Rho1	exd	EcR	Rheb	Tl	l(2)gd1	tor	Ras85D	fs(1)M3	Hsc70-4	
+female genitalia		exd	ken	tra	Abd-B	tra2	dsx	hth	ix	
+embryonic/first instar larval cuticle		sra	ftz-f1	gro	kay	Moe	dlp	sax	oro	gt	Egfr	Hira	srp	Gbeta13F	Exo84	Btk29A	ttv	cbt	Raf	hb	serp	bib	puc	osa	Scm	Hakai	hh	aop	l(2)gl	tub	csw	tum	faf	Sar1	rib	shot	cta	put	tup	Nrx-IV	hep	kkv	mxc	frc	Akt1	if	stc	cact	exu	zip	Patj	obst-A	raw	Rap1	Syx1A	Mad	Pka-R1	Ext2	pnr	Stat92E	pnt	SoxN	Bin1	bsk	wls	sdt	bcd	dop	14-3-3epsilon	mys	nkd	L	N	how	chic	smo	tor	wupA	arm	Sec24CD	Mbs	Hsc70-4	wek	dlg1	verm	Mo25	dpp	Asx	ci	ovo	knk	btz	cv-c	h	ftz	Sec23	rtv	cora	ndl	esc	Abd-B	dia	yrt	pyd	vls	CtBP	stck	Su(H)	Chi	eca	ecd	Kr	msn	dl	cos	sog	run	neb	Shc	usp	Rho1	pim	sgg	sgl	ea	sxc	pan	opa	mtg	ed	Cdc42	Apc2	Alas	zep	en	trh	Sec61alpha	Med	spi	Dp	InR	trk	shg	Mes2	Rop	dally	Notum	vn	trx	dsh	shn	spz	cic	Girdin	foi	14-3-3zeta	pygo	bru1	tsh	aPKC	wg	Dsp1	nos	eve	crb	RhoGEF2	mmy	hth	Ras85D	gd	Inx2	grh	pcs	ptc	tkv	fand	
+male terminalia		dpp	hid	Abd-B	her	Ras85D	ix	slpr	
+filzkorper		cact	dpp	grn	cv-c	Dl	scw	trh	sax	ebi	vvl	ttk	trk	pll	snk	ct	tll	Btk29A	Stat92E	Abd-B	Raf	dsh	shn	hb	phyl	bcd	dos	Oaz	dl	nkd	ush	faf	sog	ems	psq	Shc	dome	peb	wg	Rho1	sgg	tor	Ras85D	gd	wek	tkv	
+leg		mnb	ftz-f1	grn	hdc	gbb	dlt	Egfr	pb	pk	hh	mod	Rab23	LanA	tefu	put	exd	Nrx-IV	Pc	hep	frc	DENR	borr	al	Mad	ix	18w	CycC	rk	spas	stan	rn	wls	Pka-C1	dop	mys	Jarid2	eag	N	br	btd	EcR	Sp1	smo	tgo	dlg1	ss	bab2	botv	dpp	stmA	d	bab1	hpo	shakB	Sb	ct	Cdk8	Sh	esc	Abd-B	asl	nub	Chi	dac	hyx	ds	sgg	Antp	babo	C1GalTA	Dl	PhKgamma	Vang	vg	RYBP	ex	Pburs	TfAP-2	dsh	l(1)16Fe	emc	Su(z)12	Dll	fj	Ddc	pygo	coro	dsx	ft	dco	wg	Ipk2	E(z)	crc	fz	slmb	mib1	hth	ptc	tkv	
+spermathecum		Pka-C1	gcm	Stat92E	PDZ-GEF	Abd-B	
+mesothoracic leg sensillum		ac	klu	TfAP-2	Vang	N	sc	
+anterior dorsocentral bristle		ac	pnr	dally	Bx	Egfr	CtBP	wg	sc	
+posterior dorsocentral bristle		ac	pnr	dally	CtBP	wg	
+interocellar bristle		ac	oc	dx	Rab6	cora	fu	hh	
+interommatidial bristle		neur	sv	SCAR	sav	hpo	kibra	ttk	Itp-r83A	Magi	cora	egg	csw	M6	neb	lz	nmo	ban	pros	hep	Rbf	Rheb	ato	fzr	Kap-alpha3	ac	Rab11	klar	sti	vvl	Dp	Mad	bft	ASPP	ex	rg	CycE	Mer	sdk	dsh	Sec6	pelo	coro	nkd	hop	alpha-Man-Ia	N	ft	DCTN1-p150	Ipk2	fw	IKKepsilon	spdo	crb	rst	Usp47	sl	arm	DCAF12	cni	dlg1	
+posterior supraalar bristle		ac	dally	Hrb27C	mirr	N	CtBP	sc	
+dorsocentral bristle		ac	Dif	TBPH	Chi	gbb	ush	N	ap	Spc25	bft	put	tup	sca	Zw10	pnr	dally	Notum	Fas2	Rel	Iswi	stan	emc	pyd	ec	
+adult thorax & microchaeta		ac	sgg	ovo	h	dsh	
+macrochaeta		RpS13	amos	gro	Rala	gbb	RpL36	ple	Egfr	pll	Catsup	Raf	RpS2	bib	RpS3	tuh1	mod	lqfR	sbr	pum	tefu	put	tup	sca	hep	Myc	brm	sta	ctp	prod	stg	in	pnr	l(2)37Cc	klu	Cul3	rl	stan	salm	Ser	nbs	Pka-C1	jumu	RpS21	Nab2	ATP7	H	jv	N	tws	ara	DCTN1-p150	sc	chic	sd	bs	hook	AsnRS	l(3)7-19	tgo	sn	Hsc70-4	dlg1	sr	ss	neur	Dif	sv	bab1	f	ck	h	numb	ebi	Ubx	Dark	Sos	Rel	gwl	pyd	asp	U2af38	sina	e(y)2	CtBP	mbt	Su(H)	Khc	Dredd	dl	hyx	tyl	neb	Trl	Spc25	ds	sgg	ash2	caup	Grip91	Antp	Su(z)2	drk	chb	Psc	ed	spn-F	Dl	meru	vvl	Dr	dsh	emc	Dll	fj	Ddc	HDAC1	Rab6	ft	fw	Pol32	fy	spdo	slmb	mib1	Ras85D	ttm50	ptc	
+suppressor of variegation		Ace	Gas41	vig2	Sce	AGO2	w	nub	Scm	Mcm10	mod	Khc	Dp1	egg	lt	CTCF	His2Av	Su(var)3-9	Pc	vig	CG8677	ash1	XNP	Su(z)2	mod(mdg4)	Atf-2	Psc	Hmt4-20	PR-Set7	spn-E	Caf1-180	sti	Invadolysin	Su(var)204	Su(var)205	wapl	Low	r2d2	Pcl	Dcr-2	Pp1-87B	dom	Su(z)12	HDAC1	Jarid2	barr	ADD1	E(z)	kis	cav	Snr1	
+central nervous system		stc	zip	Ace	hdc	shakB	Pex1	vnd	sli	zld	abs	Rop	Stat92E	pnt	dally	Raf	E2f1	Cdk1	hkb	smid	Su(H)	pasha	repo	twi	hig	mys	Abl	disco	N	Tpi	ball	gcm	pros	Nrx-IV	dpa	sim	Rcc1	robo1	
+courtship behavior defective		nonA	pain	Dysb	Ace	tra	g	Syn	fru	CASK	Gr32a	Adar	ap	ix	otu	prt	spin	sesB	mlt	ppk23	w	mbl	dsf	y	tipE	Nrg	Fmr1	cac	Sxl	dsx	mGluR	pros	EcR	Gr39a	Tk	DopEcR	tra2	Tbh	dnc	retn	gb	Rac2	iav	per	fne	Csp	homer	
+optomotor response defective		nonA	Ace	bi	Ekar	Syn	CadN	dnc	ninaE	Lar	Ih	
+visual behavior defective		nonA	b	sev	norpA	Ace	ninaE	ttk	ninaC	lphA	Cam	trp	rl	Lar	aos	bi	Gycalpha99B	inaF-D	disco	trpl	oc	Appl	tim	inaC	rdgC	dnc	ato	so	per	Fic	Galphaq	
+GO0030424:axon		Ace	gl	comm	SCAR	brat	wnd	Hem	Nlg4	Sema1a	mir-8	DAAM	Nrg	Khc	futsch	Aplip1	shot	Nrt	rut	pros	Eb1	hep	nudE	atl	Miro	robo1	chb	Cdc42	tap	otk	babo	Gyc76C	sli	Srpk79D	Nos	Stat92E	bsk	Lis-1	dsh	spas	Strip	amn	Cdk5alpha	Nab2	Rab5	dysc	tutl	milt	path	sim	tgo	loco	Hsc70-4	Csp	Nmnat	seq	
+eye photoreceptor cell		Mkp3	gl	Trpml	sav	ttk	Gos28	Itp-r83A	SdhA	Sema1a	Raf	rho	pk	bib	Unc-115a	Gp150	aop	Marf	LanA	aos	PIP5K59B	ksr	inaF-D	Lnk	faf	Vav	peb	Arr2	Arr1	sca	robo3	hep	EndoA	Rbf	Pcyt1	frc	rin	mask	CDase	klar	stg	scu	Dsor1	Syx1A	ninaC	sli	pnt	rg	wts	CycE	rl	spas	stan	ro	Scox	Nct	Pp1-87B	PIG-V	Pka-C1	ru	Sec6	dos	hop	S6kII	N	DCTN1-p150	Rcc1	Fas2	sl	Nf1	arm	so	cnk	Galphaq	neur	cno	Ace	scrt	hpo	ebi	Acn	Dark	Fatp	Pis	Iswi	yrt	sano	da	sina	mbt	Khc	msn	lz	Rho1	nej	Cdc42	Dg	Rab11	norpA	didum	Dl	chn	spi	Vang	trp	E2f1	dsh	Taf6	14-3-3zeta	fh	aux	PDZ-GEF	Rab5	ft	fw	crb	fz	not	mmy	sag	hth	fz2	grh	ptc	tkv	
+locomotor behavior defective		sra	drpr	Galt	GluRIIA	Sdhaf3	gl	Trpml	glob1	hll	hts	Root	Atpalpha	Tmc	Trx-2	Nlg3	BTBD9	srl	nolo	Pex16	ttv	ewg	sesB	Dscam1	puc	Rbp9	Act88F	Fife	TBPH	Gem3	egg	Atxn7	tefu	Vav	disco	loqs	Miro	iPLA2-VIA	Nbr	robo1	park	SCCRO	Rbp	nau	Col4a1	Arc1	Vmat	sals	klar	Actn	fzy	Pmm2	ninaE	Cnx99A	stj	CASK	clu	Nprl2	Mrp4	dj-1beta	fbl	mir-276b	Pgk	Smn	rg	spin	slo	sls	mir-284	Ppt1	Lrrk	mir-282	spas	stan	HtrA2	Fmr1	orb2	Nab2	Bug22	Lpt	DCTN1-p150	mGluR	milt	mim	EcR	ken	Atg16	Atg17	Trap1	mir-210	Hasp	Dys	iav	loco	Galphas	Atg5	Zasp52	Ace	Pabp2	Rack1	Pex1	porin	Ppcs	ppk	Scsalpha	sni	Syn2	Npc1a	flw	mir-8	ref(2)P	Cadps	mir-981	POSH	w	Lam	mir-980	DAAM	CadN	mir-184	bun	Mcm3	Gba1b	ecd	Adh	Pgam5	ben	Chchd2	CanB	foxo	Scamp	sgg	Mettl3	atk	Orc3	Eaat1	Tbh	Dsk	lap	spartin	pzg	eg	pain	Dysb	Syn	unc-104	slgA	Torsin	Adar	Dr	Sod2	Cam	unc79	Git	na	mir-124	CRG	mud	Sirt1	Ube3a	Oatp30B	acj6	Cdk5alpha	Pink1	Pp2B-14D	cac	fon	stnA	ktub	Vps35	mir-11	RyR	aPKC	Orco	tutl	G9a	Dsp1	CanA-14F	slmo	Gr39a	mir-137	mir-252	Sap-r	gb	AP-2alpha	Rac2	pky	grh	Abp1	ptc	fd3F	
+RP2 motor neuron		mats	Ace	comm	SCAR	sav	Dl	numb	vnd	brat	Egfr	Dr	WASp	sli	Hem	klu	wts	gsb	SoxN	Cdk1	rho	hb	Ppt1	nub	Alh	Su(H)	D	jumu	mid	orb2	pins	Abl	N	ft	wg	pros	eve	spdo	Adf1	fz	Galphai	sim	Eaat1	dnc	mam	arm	robo1	ptc	
+aCC neuron		Ace	stg	comm	Dl	numb	Adar	sli	gsb	SoxN	Pak	hb	Ppt1	Dscam1	D	Nrg	N	gcm	pros	eve	spdo	Eaat1	dnc	mam	robo1	dock	mas	
+neurophysiology defective		wit	Trpml	Atpalpha	Slob	Snap25	ttv	sesB	pk	futsch	inaF-D	kcc	PGRP-LC	Arr2	scb	hmw	EndoA	inaC	Akt1	cmpy	park	Rbp	Shawn	Atg1	scu	apt	Cnx99A	stj	cdm	Syx1A	ppk28	rg	spin	kdn	scrib	rl	Ppt1	Lrrk	DCX-EMAP	Scox	Sec8	ru	Gr63a	bi	mys	Abl	mGluR	milt	ken	Ir8a	DopEcR	Fas2	Vha100-1	Fas1	Hsc70-4	Galphas	Galphaq	Ace	Gr64a	ppk	nAChRalpha7	brat	rtp	svp	Ir25a	Npc1a	ct	mir-8	Sh	Fatp	Rab3	dia	Chc	Khc	ben	Vap33	rut	Syx18	Appl	rdgC	atl	ato	spartin	Rh6	rdgA	pain	Csas	norpA	unc-104	Ent2	Syp	P32	shi	Efhc1.1	uncl	l(1)16Fe	Ube3a	acj6	fh	Rab7	Smg6	nos	Xport-A	Xport-B	gb	AP-2alpha	Rac2	nonA	mnb	GluRIIA	dlp	Root	gbb	Nlg3	Nlg2	Fak	Fife	CarT	TBPH	Marf	Nrg	S6KL	PIP5K59B	trpl	gcm	Eb1	Gbeta76C	Crag	Eps-15	dnc	twit	Miro	CDase	Vmat	Fsn	Syt4	Hk	Got2	Syt1	ninaE	ninaC	ninaA	Pgk	Smn	Shab	slo	Piezo	Kat60	spas	Ih	Fmr1	eag	S6kII	Gr59c	DCTN1-p150	hook	Nrd1	Phm	eas	tor	wupA	GluRIID	dlg1	Nmnat	stmA	cv-c	shakB	chico	cora	Dyrk2	Cadps	Ubc6	Pino	Alk	Ir64a	ecd	pyx	nej	hiw	Ekar	Ggamma1	Orc3	Eaat1	Tbh	Dsk	SH3PX1	lap	nSyb	mtg	sd-13	mth	Dysb	tau	Amt	Med	para	Adar	Dnai2	Cam	trp	Git	dbo	Rop	mir-124	Hip14	ATP8B	14-3-3zeta	amn	Pldn	sd-2	HDAC6	Rab3-GEF	sd-1	Pink1	stnB	Dap160	sd-3	stnA	unc-13	beag	ktub	Vps35	dysc	Orco	alpha-Spec	nemy	Sap-r	inc	mir-1000	Csp	Fic	fd3F	
+fertile		Dh31	Sdhaf3	Nost	Hml	Ccdc56	Trx-2	Gos28	kek5	Rbp6	Unc-115a	Ggamma30A	Herc4	Den1	CrzR	elfless	PGRP-LC	PGRP-LA	TM9SF4	timeout	Myc	XNP	Kebab	Kap-alpha3	GMF	ac	rau	Lsd-2	Myo61F	ranshi	Mrp4	asrij	lft	yps	Klf15	hog	kuk	ry	Galphaf	hop	PRAS40	Drep2	N	Acph-1	br	sd	Atg16	Ir8a	NijA	bw	Trap1	mspo	p38a	Rtca	so	CLIP-190	upd2	Atg13	upd3	homer	crol	SCAR	H15	vig2	Poc1	Hand	Lsp1alpha	Ir25a	ohgt	kat-60L1	AGO2	w	Lk6	Rab3	Sulf1	Hsromega	Pgam5	PQBP1	CTCF	slbo	dx	Dop1R1	Snx1	Appl	CG8677	atk	Tk	Acp26Aa	ics	spartin	Sin1	Snx6	Syn	mars	Vha16-1	bond	et	Strica	Nos	prt	Sox21a	GstO2	miple2	Sirt1	Ube3a	miple1	Ogg1	Hayan	Gabat	wg	Dsp1	Mnt	Atac2	pcm	hppy	Ephrin	grp	bchs	Mnn1	Mul1	Src64B	Cyp6a17	PGRP-SD	Nlg3	Fak	Nak	GAPsec	Zyx	puc	2mit	Eph	Fer2	CarT	S6KL	Rab27	Pp1alpha-96A	Lnk	Nrt	Spf45	p120ctn	skl	twit	CenG1A	Socs36E	klar	Got2	cln	CASK	dj-1beta	Roc2	Mad	trsn	hfp	chinmo	Smn	CycE	chas	Piezo	Buffy	Ih	nbs	Reep1	Cp110	AcCoAS	lin-28	pall	lok	Arl5	ihog	Fdh	Ubi-p63E	Mt2	S6kII	DCTN1-p150	Npc2b	Npc2a	Uro	hook	qin	Pvf1	Syngr	Nf1	conu	Top3beta	ntc	Seipin	Myo95E	Tnks	cv-d	Fuca	Fbxl7	Kdm4A	Lerp	FER	Pde1c	WRNexo	DAAM	e(r)	Atox1	esn	Whamy	tapas	koi	Mtl	M6	Aplip1	Thor	Wnt6	Scamp	cpb	Lsp1gamma	Gclm	mth	CalpB	mir-9a	Debcl	Rab14	Toll-6	Rassf	Myo31DF	Cln3	Sod2	Vinc	unc79	CAP	dbo	CRG	dsh	lama	boi	ATP8B	Pldn	HDAC6	Rab3-GEF	HDAC1	Hsp27	dysc	Tis11	Cbl	dco	G9a	Sema2b	Kank	Map205	DJ-1alpha	inc	l(3)S033513	Abp1	fz4	Fic	
+GO0030016:myofibril		Act88F	Zasp52	sals	Actn	CIA30	C1GalTA	Mhc	flw	Lasp	fliI	DAAM	sls	tn	wupA	Tm2	Dys	
+indirect flight muscle		Zasp52	Mef2	Mul1	porin	ap	flw	Smn	ref(2)P	slo	fliI	mir-980	DAAM	sls	Tm2	Sirt1	salm	cher	Act88F	Pink1	CanB2	twi	Mhc	foxo	br	wupA	Dys	
+indirect flight muscle & striated muscle thick filament		Act88F	Mhc	sls	wupA	Mlc2	
+flight defective		cpo	Hk	Actn	shakB	porin	Ppcs	Adar	fbl	FIG4	Cam	Pex16	Sh	slo	mir-124	slow	fliI	DCX-EMAP	Act88F	Pink1	Mhc	Nab2	Vap33	Dsp1	lms	Gyf	Lasp	mt:ND2	Tbh	
+wing		crp	tta	Sdhaf3	kay	sax	slpr	pont	inv	sbb	pk	mwh	zf30C	Scr	l(2)gl	LanA	aos	egg	Mhc	px	kst	slou	PGRP-LF	Pc	dve	Myc	brk	brm	ctp	ab	stg	Ilp8	Rap1	al	Syx1A	ap	Ext2	pnr	rg	rk	lft	rl	unpg	Duox	stan	rn	salm	Ser	Grasp65	D	jumu	Tfb5	twi	bi	H	mys	Bug22	N	kuz	how	ara	br	sc	chic	sd	bs	Zw10	Atg17	bw	trio	Fas2	sl	arm	tgo	IP3K2	Galphas	Ca-alpha1D	a	d	Asx	scrt	ci	hpo	h	Ppcs	m	svr	ct	Tig	flw	r	mir-8	Bx	cwi	asl	Pak	y	bul	asp	sina	stck	Chi	tx	nmo	ds	Snx3	sgg	dx	dy	sgl	ash1	ato	sxc	chb	ec	Dd	fng	eg	mle	RpL15	Dl	mirr	en	Hcf	Drice	shg	vg	RYBP	ex	dally	Pburs	vn	shn	Pcl	l(1)16Fe	sktl	emc	cic	rasp	Lgr3	fj	pygo	PDZ-GEF	Dronc	ft	fu	sable	wg	Dsp1	Ipk2	fz	kis	mib2	pcm	mib1	hth	AP-2alpha	grh	htl	ptc	tkv	hppy	mnb	mats	Dlish	dlp	hdc	gbb	Ns3	Usp7	Egfr	nolo	CkIalpha	Dscam1	osa	hh	Act88F	Vsp37A	lqfR	Shark	tefu	Lnk	Brms1	mor	put	Timp	lms	Nrx-IV	hep	Nbr	if	colt	borr	rhea	in	mus308	clu	Mad	fbl	SelD	18w	wts	CycE	Cul3	hfw	Slik	Pka-C1	dom	pasha	dop	Nab2	dor	EcR	smo	Spps	wupA	mam	botv	dpp	kn	cnn	Mmp1	ebi	Ubx	Cow	chico	Fbxl7	Kdm4A	Dark	Cdk1	nub	e(y)2	Su(H)	Ilk	cos	Traf6	neb	Trl	foxo	caup	Grip91	Antp	Dhod	Utx	Wnt2	Rassf	Pten	vvl	eIF3m	Vang	Adar	ASPP	azot	Caf1-105	Klp64D	trx	dsh	LanB1	tbi	Pink1	Ddc	HDAC1	RasGAP1	coro	tsh	dco	crc	car	l(2)gd1	slmb	rad50	mew	
+dorsal medial muscle		Act88F	CanB2	twi	Mef2	shakB	ush	ap	br	vg	flw	Smn	mib2	wupA	sr	
+GO0005865:striated muscle thin filament		Act88F	sals	Smn	Lasp	fliI	sls	wupA	
+adult somatic muscle		Act88F	Pink1	Gyf	Mhc	l(1)16Fe	
+somatic muscle		mod	Actn	fon	Mef2	hdc	mys	rost	Syx1A	wg	sns	pbl	rho	tin	retn	Miro	if	
+ovariole		bab2	bab1	Actn	btz	dbe	Ppcs	stl	Hs2st	srl	Hmr	Mad	otu	Stat92E	Bx	Iswi	mir-184	asp	Rbp9	PDZ-GEF	Dp1	bru1	pum	bam	fu	alpha-Spec	nos	S	wuho	RpII215	pag	loqs	sov	mod(mdg4)	Mbs	l(3)S033513	ctp	ptc	
+hypoactive		Xbp1	Mmp1	Actn	Atpalpha	slgA	WASp	Cam	Prosbeta6	Mes2	sesB	Cadps	Klp64D	Hip14	Sirt1	DCX-EMAP	sina	Scox	AcCoAS	Urm1	mir-1	Orco	alpha-Spec	nab	nej	Dop1R1	tor	daw	lap	Amph	iav	Galphas	nSyb	
+small body		Mmp1	CIA30	gbb	mrn	Pex3	chico	Ns3	Hand	Egfr	srl	SCCRO3	mir-8	Lerp	CTPsyn	rictor	Lk6	Zyx	bun	Mcm10	boss	Gem3	tw	Marf	Stim	AMPKalpha	CSN8	Nopp140	Urm1	Lnk	Tcs3	Lrp4	Gale	Rheb	Sln	Myc	mask	Akt1	atl	nclb	mi	pzg	tam	Wdr24	Col4a1	obst-A	Actn	Rassf	Med	clu	Hcf	InR	Tctp	Mad	Caf1-105	Pdp1	Smn	CycC	Tor	Ddx1	Lrrk	BHD	Slik	P5CDh1	fh	Max	Sec6	PIP4K	ATP7	Lst8	mTerf3	uif	tor	Nf1	fz2	Pdk1	Inx2	ttm50	p38b	
+chemical sensitive		Sdhaf3	grp	Mnn1	Atpalpha	Ppcs	Trx-2	sni	Lerp	Ccs	Brca2	Arf51F	Sh	Bx	WRNexo	esg	RecQ4	Adh	CSN5	Chchd2	rut	Thor	Aldh	MAGE	hep	Gale	okr	dnc	iPLA2-VIA	per	Gclm	Claspin	Gs1	sgll	mars	mus308	CASK	InR	dj-1beta	Sod2	fbl	mus301	SelD	Sod1	unc79	vg	na	Cat	GstO2	slo	rl	Met	mud	Klf15	HtrA2	Pka-C1	acj6	amn	alpha-Est7	AcCoAS	ry	dsx	Orco	eag	Mt2	Tpi	Uro	Nmdar1	Arfip	Trap1	DopEcR	Mdh1	iav	ine	homer	
+mating defective		lig	Lnk	al	ap	prt	pros	Btk29A	Sas-4	spin	Pde1c	tim	dsf	Cyp4d21	y	iav	per	
+arista		f	trc	C15	ck	sha	al	fry	Drice	ct	pb	ex	lawc	Poxn	Diap1	sbb	trx	y	Scr	Dll	Dronc	csw	disco	exd	ken	tgo	sta	ss	
+unguis		Chi	dpp	Dll	C15	csw	trh	al	disco	lz	dco	pb	sbb	pho	y	tgo	hh	ss	
+posterior scutellar bristle		sd	fw	vg	Dark	Appl	Dl	al	emc	jv	N	CtBP	wg	
+scutellum		gro	Gas41	en	ush	al	ara	ds	sable	tup	fw	crc	pnr	smo	caup	ptc	
+sternopleural bristle		aux	Pc	Appl	ovo	al	Ubx	N	wg	
+wing vein L1		drpr	gro	rho	al	IP3K2	wls	ara	
+meiosis & nuclear chromosome		spn-E	ord	nod	Mps1	wisp	Su(var)205	ncd	
+oocyte		kay	Arpc1	hts	Src64B	ttk	Egfr	BicD	RpS2	RecQ4	lqfR	egh	osk	egl	shot	EndoB	RpII215	Pcyt1	okr	Dhc64C	Myc	if	Vmat	vas	glo	TBCB	Syx1A	stl	mus301	otu	spin	stil	wde	CycE	Cul5	rn	Scox	twe	Pka-C1	Sec6	Fmr1	Sec5	Mps1	14-3-3epsilon	mys	N	chic	kel	EcR	mio	qin	Rpp30	ssp2	arm	sn	msps	Mbs	ovo	ck	arx	Rack1	Ppcs	Cenp-C	drosha	Lam	AGO1	Cdk1	asp	Top1	Khc	cos	Sxl	dap	nudE	Mettl3	vret	ed	fng	Cdc42	spn-E	Apc2	Dg	Dl	elgi	Dp	spn-B	spn-D	shg	Rop	Lis-1	Met	sqd	bru1	sqh	aPKC	JhI-1	fu	alpha-Spec	Ras85D	grk	ptc	mew	
+cuticle		zip	arr	dpp	zen	h	en	ple	mrn	slp1	Egfr	slp2	srp	inv	ttv	gsb	amd	y	ph-d	serp	hh	Pka-C1	l(2)gl	Ddc	HDAC1	ush	N	peb	exd	hep	sgg	kkv	smo	sgl	mib2	so	DCAF12	verm	
+anal pad		tll	cad	babo	amd	Raf	rho	
+learning defective		FoxP	Dysb	pigeon	Syn	Ent2	CASK	Psn	chico	Itp-r83A	prt	rg	Eph	Mcm3	amn	Fmr1	futsch	for	Drep2	eag	PQBP1	mGluR	G9a	scb	rut	Nmdar1	Appl	Orc3	Tbh	dnc	Nf1	drk	
+memory defective		neur	armi	svr	AGO2	w	mir-980	2mit	Mcm3	Su(H)	repo	M6	rut	Adf1	Scamp	hiw	Appl	Orc3	Tbh	dnc	drl	per	Ptp10D	stau	Dysb	pigeon	Syn	CASK	Psn	Nipped-B	mir-276a	PCB	Nsun2	rg	scrib	Ube3a	cher	Pka-C1	amn	Fmr1	Drep2	S6kII	N	mGluR	G9a	EcR	Nmdar1	DopEcR	Nf1	Rgk1	
+behavior defective		nonA	mnb	tta	gl	cry	ltr	Gr32a	nolo	sesB	pk	egh	disco	demo	Ggt-1	dnc	per	caboose	ctp	Syt1	ninaE	ninaC	fbl	lphA	lnr	rg	spin	slo	kdn	CkIIbeta	spas	Pka-C1	Fmr1	bi	eag	tws	Ca-alpha1T	eas	lgr	Nf1	wupA	Fas1	Fas3	iav	loco	Galphas	Galphaq	dpn	sv	scrt	g	shakB	nAChRalpha7	Sh	Dat	Pino	sina	Khc	hig	Trf	ben	neb	nmo	rut	lzb	tim	Tk	Orc3	Tbh	ato	drl	Rh6	cpo	Dg	norpA	slgA	Invadolysin	Adar	Sod2	WASp	Sod1	Cam	CAP	Tm1	dsf	E2f1	uncl	hby	acj6	amn	stnB	Mvl	cac	stnA	lkd	Orco	tutl	Sema2a	Rac2	grdf	pky	ine	
+pain response defective		ppk26	amn	pain	Tk	subdued	Piezo	ppk	
+GO0031594:neuromuscular junction		GluRIIA	cv-c	Atpalpha	Fak	Snap25	elav	Sh	sesB	Cadps	CkIIalpha	Lar	Alk	LanA	Khc	futsch	shot	scb	rut	Nrx-IV	Syx18	nej	hiw	dnc	Akt1	mod(mdg4)	nSyb	mtg	Cdc42	Syt4	Atg1	Syt1	apt	Syn	unc-104	Mef2	Syp	Med	Syx1A	Adar	spin	Nrx-1	CkIIbeta	Lrrk	LanB1	stan	stai	Pka-C1	amn	Fmr1	mys	eag	Sema2a	Fas2	Nf1	GluRIID	dock	dlg1	Csp	Ca-alpha1D	
+embryonic epidermis		neur	ftz-f1	dpp	gro	kay	ci	ovo	ebi	ftz	tld	sno	ndl	Dark	Raf	Jra	rho	bib	puc	osa	hh	l(2)gl	Su(H)	Shark	dl	cos	csw	sog	rib	neb	shot	cta	Rho1	Nrx-IV	hep	dap	sgg	Rbf	brk	ea	fzr	pan	Cdc42	Myd88	Dl	en	Syx1A	pnr	Diap1	CycA	Pkn	dally	bsk	dsh	shn	14-3-3zeta	D	sdt	HDAC1	RasGAP1	mys	nkd	lwr	amx	N	fu	wg	abd-A	crb	smo	tor	mam	arm	hth	cni	Inx2	dlg1	ptc	tkv	
+epidermis		zip	tub	hdc	sqh	amx	tld	N	Egfr	wg	crb	Stat92E	gsb	Catsup	E2f1	trx	Jra	ph-d	DENR	yrt	hh	
+nervous system		cdi	amx	tum	cic	den	kuz	
+sensory mother cell		neur	mir-9a	dlp	Dl	Psn	shg	nvy	Poxn	Dark	dally	Notum	Cul3	dsh	mud	emc	nub	bib	da	Su(H)	pins	amx	N	wg	sc	Fkbp14	sca	ato	ed	ptc	
+ectoderm		neur	zen	smog	Dl	hop	amx	N	cta	upd1	eve	crb	Stat92E	Ggamma1	hh	
+neuroblast		Chro	cnn	numb	brat	Egfr	Gbeta13F	BubR1	Sce	DAAM	rho	bib	Rab1	Scm	hh	Mcm3	smid	l(2)gl	Su(H)	Rpn6	AMPKalpha	Pfdn2	pins	Mtor	pros	Pc	Ggamma1	brk	PR-Set7	Cdc42	fzy	scu	sti	Dl	Su(var)205	sle	vnd	mts	TBCB	aurA	klu	E2f1	bsk	scrib	mud	Pp1-87B	poly	orb2	lwr	amx	ems	Zw10	ana	Sas-4	Grip71	cas	cav	mam	loco	dlg1	
+neurogenic phenotype		neur	Su(H)	gro	Gmer	pcx	Dl	mam	amx	bib	Gmd	N	
+thorax		Pink1	bcd	Kr	hpo	amx	gt	N	ds	br	ct	hep	eyg	Tl	Raf	hb	pk	stan	sr	
+lethal - all die before end of P-stage		Chro	d	awd	Hr38	Trxr-1	SERCA	Snap25	qrt	Aos1	pho	Pak	flfl	Kdm2	Gld	Scr	mod	l(2)gl	TBPH	hid	ecd	Pfdn2	ush	tefu	dome	nmo	timeout	exd	Eb1	Uvrag	beta-Spec	TfIIA-S	Eps-15	ash1	Myc	Antp	SKIP	Cdc27	chb	Nf-YC	ida	Mdh2	scu	DOR	al	LamC	MED24	ex	Pepck	Uba2	Cks85A	sty	wde	TfAP-2	Clamp	scrib	dsh	ema	cic	nbs	P5CDh1	fh	Dll	sd-3	Fmr1	Rab7	fon	bi	Nab2	coro	Abi	H	for	N	ft	Pli	fu	br	Ipk2	Fkbp14	E(z)	Nuf2	Eip74EF	sag	Csk	dlg1	Skp2	Ca-alpha1D	
+prothoracic leg		Scr	Pc	ash2	Antp	en	Pcl	hth	mor	Dsp1	
+some die during pharate adult stage		d	Trpml	awd	Hr38	Trxr-1	SERCA	Snap25	qrt	pho	Pak	flfl	Gld	Scr	mod	l(2)gl	TBPH	lqfR	ecd	ush	Vap33	dome	nmo	exd	Eb1	beta-Spec	TfIIA-S	Eps-15	ash1	Myc	Antp	Cdc27	chb	Nf-YC	al	ex	sty	TfAP-2	scrib	dsh	cic	nbs	Dll	sd-3	Fmr1	bi	Nab2	coro	H	N	ft	fu	br	E(z)	Nuf2	Eip74EF	sag	Csk	toy	dlg1	Ca-alpha1D	
+some die during immature adult stage		sra	Sas-4	TfAP-2	C15	Raf	Antp	Dsor1	nec	Sod2	tws	ap	nab	
+scutum		Pka-C1	Scr	Gas41	RpS21	Dl	mirr	mor	ds	wg	Dsp1	tup	vg	exd	Abd-B	Antp	vn	pk	
+lethal - all die before end of pupal stage		Lsm10	gro	Moe	Trpml	hdc	ltr	dlt	awd	Egfr	Usp8	Itp-r83A	Cyp4g1	ttv	Catsup	Raf	Scm	RecQ4	l(2)gl	TBPH	egh	egg	csw	CSN5	tefu	Lkb1	ban	hep	EndoA	Rbf	Dhc64C	Myc	caboose	ctp	Atg1	scu	Rap1	Mad	fbl	glu	lnr	aurA	MED24	Hsp83	eyg	Stat92E	wts	spin	CycC	bsf	sty	Tor	spas	Ser	Nct	nbs	Sec8	iab-8	bi	dor	Jarid2	Abl	N	br	sd	bs	Zw10	ken	dpa	Pvf1	rngo	lgr	arm	msps	Spn28Dc	Hsc70-4	dock	wek	dlg1	Atg13	neur	Slbp	dpp	Mmp1	Mmp2	Tig	Dark	pho	esg	Cdk1	dia	CtBP	bur	Su(H)	Rpn6	Traf4	msn	cos	lig	pins	mre11	ben	Ptp69D	lzb	ash2	Grip91	ash1	Antp	Orc3	daw	atl	Klp61F	mod(mdg4)	ed	eg	ver	Lim1	Elp3	Med	mts	Psn	Dp	l(2)40Fa	Cam	Drice	Caf1-105	Diap1	ey	Notum	trx	pbl	Met	rasp	hby	Sc2	Ddc	HDAC1	Bpt	Rab7	fon	lkd	Dronc	coro	sqh	ft	dco	fu	wg	Awh	crc	tsr	crb	not	slmb	mib1	sag	Csk	AP-2alpha	rad50	Synd	sit	pky	
+some die during pupal stage		Lsm10	gro	Moe	Trpml	corto	hdc	ltr	dlt	awd	Egfr	Usp8	Itp-r83A	Cyp4g1	ttv	Catsup	Raf	Scm	RecQ4	l(2)gl	puf	TBPH	egh	egg	csw	CSN5	tefu	Lkb1	ban	hep	Rbf	Dhc64C	Myc	caboose	ctp	Atg1	scu	Rap1	Mad	fbl	glu	lnr	aurA	MED24	eyg	Stat92E	wts	spin	CycC	sty	Tor	scrib	Kat60	spas	Ser	Nct	nbs	Sec8	bi	dor	Jarid2	Arl1	Abl	N	br	sd	bs	Zw10	ken	dpa	Pvf1	rngo	lgr	arm	msps	Spn28Dc	Hsc70-4	dock	wek	dlg1	Atg13	neur	dpn	Slbp	dpp	Mmp1	Mmp2	galla-1	Tig	Dark	pho	esg	Cdk1	dia	CtBP	bur	Su(H)	Rpn6	Traf4	msn	cos	lig	pins	mre11	ben	Vap33	Ptp69D	lzb	ash2	Grip91	ash1	Antp	Orc3	daw	atl	Klp61F	mod(mdg4)	ed	eg	acal	ver	Lim1	Treh	Med	mts	Psn	Dp	Hcf	l(2)40Fa	Cam	Drice	Diap1	ey	Notum	trx	pbl	Met	tbi	rasp	hby	Sc2	Ddc	HDAC1	Bpt	fon	mir-14	lkd	Dronc	coro	sqh	subdued	ft	dco	tutl	fu	wg	Awh	crc	Arfip	tsr	crb	not	slmb	mib1	sag	Csk	AP-2alpha	rad50	Synd	pky	
+midgut constriction 1		dpp	gbb	tsh	mbc	Egfr	sgg	pnt	sns	rols	byn	Antp	vn	trx	tin	
+femur		Su(H)	Dll	fj	grn	dac	disco	N	mor	btd	bs	exd	klu	TfAP-2	Antp	hth	fng	
+metatarsus		Dll	klu	fj	Antp	pk	hth	ss	bowl	odd	fng	
+tibia		Su(H)	Dll	D	fj	grn	dac	disco	N	mor	btd	klu	TfAP-2	Antp	hth	fng	
+EL neuron		l(2)gl	D	ric8a	Rca1	numb	kuz	nab	SoxN	Galphai	Antp	Rcc1	sqz	ptc	
+ganglion mother cell		pros	cnn	Rx	SoxN	Antp	Ggamma1	numb	mud	brat	Pp1-87B	Mcm3	
+neuroblast NB3-3		SoxN	Antp	Ctr9	sqz	nab	
+mesothoracic leg		Scr	Ubx	mor	ap	E(z)	Pc	Antp	pho	Pcl	ph-d	hth	sxc	Scm	Psc	
+partially lethal - majority live		MAPk-Ak2	Ibf2	gbb	chico	Ns3	slpr	sff	BubR1	Adi1	slow	Lam	e(r)	gsb-n	pk	tw	msn	cos	Sxl	ush	nec	Timp	nej	Pcyt1	Mettl3	Grip91	Antp	rin	Pak3	ctp	fng	Fsn	Apc2	sti	Dp	Smn	Tm1	dsh	Pka-C1	dom	Fmr1	gus	orb2	dco	tutl	jhamt	sc	pcm	so	FoxL1	ptc	
+scutum & macrochaeta		sv	klar	Rab6	H	Dl	N	kuz	sca	pros	Antp	mib1	CtBP	ctp	
+wing & macrochaeta		Dll	en	vvl	N	sd	bs	sca	fz	Antp	dsh	sktl	salm	ctp	
+metathoracic femur		dac	kis	Antp	pcm	Pcl	Ubx	wg	
+metathoracic tibia		dac	kis	Antp	trx	wg	
+third segment of antenna		exd	dpp	Dll	smo	Antp	en	ato	tgo	hth	disco	lz	ss	
+motor neuron		Cdk5alpha	Syt4	mid	beat-Ia	futsch	Ent2	vnd	wnd	sli	FIG4	DCTN1-p150	tup	chic	Sema1a	pros	fra	Antp	Fas2	dnc	hth	robo1	foi	Nmnat	hkb	
+homeotic		Asx	Ibf2	Ubx	pb	esc	Abd-B	CycE	stx	trx	hb	Pcl	Scm	Scr	Su(z)12	Dll	tsh	CTCF	Trl	Dsp1	Pc	abd-A	kis	mxc	ash1	Antp	hth	mod(mdg4)	sxc	brm	Psc	ss	
+photoreceptor cell R7		cno	sev	sens	Mkp3	gl	hdc	ttk	svp	Sos	Raf	CadN	Lar	sina	phyl	aop	boss	dac	Gycalpha99B	kst	ben	Vav	lz	pros	TfIIA-S	mask	rdgB	fzr	Kap-alpha3	rdgA	ed	Socs36E	rau	babo	Dsor1	spi	eya	E(sina)46C	pnt	rl	Met	emc	gogo	RasGAP1	RhoGAP100F	N	tutl	trio	Fas2	sl	sag	so	cnk	Liprin-beta	seq	
+chordotonal organ		aop	sens	ded	stg	aos	numb	Ubx	disco	shot	gt	SmD3	ct	sty	Raf	E2f1	Cby	rho	mmy	ato	
+A1-7 dorsal acute muscle 1		aop	lmd	klar	koi	Mef2	csw	numb	mbc	pnt	byn	mib2	Cdk1	sing	blow	
+embryonic/larval pericardial cell		aop	Col4a1	dpp	lmd	LanA	mid	numb	Hand	N	zfh1	stumps	spdo	pnr	pnt	Rab2	tin	retn	Klf15	LanB1	da	htl	fand	
+mesoderm		aop	dpp	smog	twi	dl	csw	ush	Rap1	pyr	stumps	cta	Gbeta13F	pnt	sgl	frc	Ggamma1	pbl	rho	Rac2	cni	fog	gd	htl	
+border follicle cell		Socs36E	CalpB	hpo	ttk	Vang	mbc	shg	Diap1	Stat92E	wts	Tm1	rols	dsh	Ced-12	14-3-3zeta	cher	aop	Pka-C1	l(2)gl	twf	ecd	Mhc	sqh	hop	Pvr	Shc	dome	alpha-Cat	mir-989	chic	slbo	upd1	mim	Mrtf	fz	Dhc64C	Pvf1	Fas2	spoon	arm	tgo	sima	GMF	dlg1	ptc	fng	
+follicle cell		drpr	kay	Dis3	Cad99C	kibra	ck	CoRest	Ppcs	dlt	Iml1	Vps25	ttk	chico	MED6	Egfr	ct	flw	Pis	fs(1)Yb	BicD	dia	RabX1	hd	da	hh	aop	Tao	l(2)gl	Su(H)	lqfR	AMPKalpha	egh	ecd	cos	CG10939	neb	shot	hep	Crag	Mettl3	Dhc64C	loqs	Myc	nclb	vret	ed	fng	Dg	Rab11	Syx7	stg	sti	vas	Dl	Rap1	Nprl2	TBCB	stl	chif	shg	Diap1	bwk	Dlg5	E2f1	r2d2	boi	14-3-3zeta	Pka-C1	pelo	Sec5	mid	Rab5	mys	sqh	hop	Vps35	aPKC	N	JhI-1	alpha-Cat	alpha-Spec	chic	pita	EcR	crb	Caf1-55	Vhl	arm	Ras85D	dlg1	san	ptc	mew	
+embryonic/larval cuticle		prd	botv	zip	acal	ftz-f1	Apc2	dpp	chem	Atg1	Etf-QO	knk	raw	gbb	ttk	Egfr	CrebA	pnr	cora	DAAM	pbl	pyd	Shmt	aop	Ge-1	sdt	Ddc	dl	osk	tsh	aPKC	alpha-Cat	dco	wg	par-6	crb	rin	mam	arm	pan	grh	PR-Set7	
+uncoordinated		drpr	sv	scrt	comm	Root	shakB	SERCA	Sh	CadN	asl	Pak	BicD	comt	sina	hig	ben	nab	Eb1	daw	ato	lap	nSyb	Syt1	unc-104	slgA	clu	Adar	fbl	ap	Smn	ana3	TfAP-2	Nrx-1	Klp64D	uncl	Hip14	DCX-EMAP	Girdin	Ih	eys	stnB	stnA	Bug22	tws	Atg17	Sas-4	dila	Fas2	caz	AP-2alpha	dock	Csp	
+embryonic/larval fat body		Mon1	Vps16A	Atg1	Lsd-1	Trpml	Lsd-2	gbb	Rack1	Torsin	Invadolysin	clu	Egm	Lpin	ap	srp	LanB2	Pis	Rab2	CycG	BHD	e(y)1	hh	poly	slif	Rab7	Rab5	lt	Lst8	eve	Uvrag	Atg17	Sap-r	Galphas	Atg6	Atg13	Seipin	Wdr24	
+coxal tergal remotor muscle		flw	mib2	wupA	ben	ap	br	
+lateral oblique dorsal muscle		vg	flw	wupA	ben	ap	br	
+tergosternal muscle		vg	flw	wupA	ben	ap	br	
+ovary		bab2	bab1	ovo	btz	hts	arx	Rack1	RanBPM	sax	Ppcs	Oga	mei-P26	snf	chico	srl	sno	Bx	tj	Lam	fs(1)Yb	BicD	mir-184	RpS2	da	bgcn	egh	Dp1	CSN8	Sxl	egl	CSN5	neb	shot	bam	pag	loqs	ash1	sov	nclb	mod(mdg4)	sima	chb	vret	Wdr24	fng	par	jnj	vas	Rap1	clu	vnc	Hcf	stl	fbl	ap	otu	shg	cue	CycB	stil	sty	Tor	Ddx1	EDTP	Met	sktl	rn	hog	bb	pelo	Fmr1	bru1	qui	DNaseII	coro	mael	PRAS40	psq	SMC5	alpha-Cat	fu	jhamt	br	nos	trem	mio	Rpp30	Ras85D	fz2	Inx2	l(3)S033513	orb	
+egg chamber		drpr	hts	RanBPM	sax	Src64B	Vps25	ttk	awd	Egfr	Hmr	Btk29A	sesB	Sce	BicD	RpS2	Scm	Rbp9	hh	LanA	Dp1	egl	Lnk	cta	hep	Doa	Pcyt1	Dhc64C	loqs	mxc	rin	dnc	nclb	ctp	nau	upSET	Atg1	vas	glo	Rap1	Nprl2	Mad	ap	mus301	otu	hfp	spin	stil	CycE	CycG	r2d2	Cul5	rn	cup	bb	Pka-C1	Sec6	pelo	Fmr1	DNaseII	mael	N	alpha-Cat	chic	kel	pita	EcR	mio	Rpp30	arm	sn	cni	dlg1	Acf	Pabp2	ovo	ALiX	mei-P26	Iml1	chico	ct	flw	CTPsyn	Su(fu)	Lam	fs(1)Yb	dia	RabX1	asp	Chc	da	ecd	mago	Hel25E	Trl	usp	slbo	Nop60B	wuho	Mettl3	Tbh	sov	spoon	Hsf	chb	vret	Hrb98DE	Wdr24	fng	spn-E	par	Apc2	Rab11	Dl	spno	vnc	Hcf	InR	ph-p	Strica	shg	Pkn	Tm1	Mer	emc	shu	cher	bru1	Dronc	sqh	aPKC	psq	JhI-1	fu	alpha-Spec	nos	E(z)	su(Hw)	tsu	Six4	pcm	Ras85D	Inx2	l(3)S033513	grk	ptc	
+haltere		dpp	stg	sna	Asx	sav	hpo	hdc	ftz	Ubx	ap	18w	vg	trx	emc	nub	rn	Pka-C1	Scr	Su(H)	Su(z)12	cos	mys	tsh	mor	wg	Dsp1	sd	crc	Pc	MED31	ash2	ash1	slmb	
+nurse cell		Arpc1	SCAR	ovo	hts	Src64B	Ppcs	mei-P26	chico	ct	Lam	Top1	Mcm10	Rbp9	egh	ecd	egl	shot	Mettl3	Myc	rin	dnc	spoon	nclb	Hsf	vret	Apc2	upSET	Atg1	vas	spno	Rap1	TBCB	Dp	vnc	spn-B	spn-D	ap	mus301	otu	shg	Pka-R2	Diap1	Pkn	spin	CycE	E2f1	Lis-1	CycG	Cul5	cher	Pka-C1	Fmr1	bru1	14-3-3epsilon	DNaseII	noi	sqh	aPKC	psq	JhI-1	fu	alpha-Spec	chic	kel	E(z)	pita	mio	arm	sn	Ras85D	Mbs	tral	Atg13	
+scutellar bristle		RpS13	dpp	mir-9a	stg	Debcl	Dl	gbb	chn	Ppcs	NAT1	Ssdp	ap	bft	chif	pnr	Hsp83	Dark	RpS3	TBPH	aux	Chi	Rab6	Khc	H	ush	N	Uxs	br	tup	sca	Zw10	crc	Rbf	Appl	Grip91	hth	ptc	
+heat stress response defective		Reep1	Hsromega	pain	Pink1	Pgam5	orb2	LUBEL	Mt2	Adar	Tpi	ap	Tre1	slpr	p120ctn	Scamp	Trap1	mt:ND2	Fatp	p38a	Nf1	spas	Atf-2	Sin1	p38b	
+semi-fertile		Timp	spn-F	Mettl3	fd59A	DNaseII	tim	Urm1	fru	SH3PX1	Trl	per	ap	
+stress response defective		Arc1	mth	Dif	Desat1	sav	ImpL2	hpo	Mnn1	IKKbeta	chico	AkhR	Adar	Slob	Mrp4	Sod2	ap	bft	ref(2)P	wts	emb	spas	puc	Reep1	bmm	boss	Tpi	foxo	Thor	hep	mt:ND2	tim	eas	p38a	Dsk	Hsf	sima	per	mtd	htl	homer	
+wing pouch		vg	smo	bi	ebi	dco	ap	
+male fertile		hts	Src64B	mir-87	Trx-2	Gr32a	mir-932	BubR1	BicD	Topors	mir-92b	mir-92a	mir-2b-1	futsch	Lnk	mir-314	okr	mir-278	her	mir-274	ctp	cln	ranshi	mir-958	mir-957	mir-956	mir-318	ap	mir-955	mir-317	mir-276b	mir-316	Nsun2	mir-285	mir-284	mir-282	Hs3st-B	dom	mir-263b	mir-31b	mir-31a	CG4021	mir-969	mir-967	mir-966	br	mir-965	mtrm	Grip71	mir-971	mir-970	mir-210	p38c	qkr58E-3	ovo	arx	mei-P26	snf	mir-986	mir-981	WRNexo	mir-980	mir-13b-2	bul	mir-184	pyd	Ptp61F	M6	lig	mre11	mir-33	Trl	lz	mir-989	mir-988	mir-987	mir-994	Cks30A	mir-990	Tbh	sov	mh	drl	mir-9c	mir-193	Wdr24	Sprn	phol	mei-218	spn-E	mir-9a	tra	Dnai2	mir-999	Drice	Wee1	vg	mir-1017	E2f1	dsh	mud	Nep2	endos	Oatp30B	cher	limbo	mir-929	mir-10	mir-11	sable	Pol32	mir-137	mir-133	mir-375	wisp	CG3927	Rac2	ttm50	
+metathoracic leg		Scr	ftz-f1	Gcn5	Ubx	mor	ap	wg	Dsp1	E(z)	mir-8	Pc	kis	ash2	pho	Pcl	hth	sxc	Psc	
+posterior crossvein		aux	dpp	kn	14-3-3epsilon	H	Dl	corto	gbb	cv-d	vvl	sog	Egfr	fbl	ap	svr	cv	vn	Sara	salm	Dys	Dd	
+posterior wing margin		r	mir-9a	pcm	N	ap	
+size defective		wit	hppy	Capr	botv	mnb	RpS13	dpp	d	cnn	Moe	Mmp1	Mad1	Dlish	fab1	sax	Ccdc56	ebi	chico	Fbxl7	pll	ohgt	krz	Dark	Bx	tj	Cdk1	GATAe	nub	RpS3	Ote	l(2)gl	Vha55	Chchd3	Smox	Traf4	lig	Asciz	Chchd2	mop	ds	yki	Myc	rin	Mst77F	atl	pan	ed	Cdc42	Sdr	babo	Dl	Ilp8	Torsin	ninaE	ap	bft	shg	ex	Smn	wts	scrib	spas	cher	Lgr3	Sec6	pelo	Fmr1	mir-14	bi	Dronc	H	aPKC	L	N	ft	tsl	JhI-1	dco	Lst8	wg	Sp1	smo	tor	pcm	Caf1-55	sl	wupA	Sox15	Snr1	Atg13	DNApol-epsilon58	
+wing blade posterior compartment		Dll	sgg	Stat92E	smo	mir-14	cos	en	vvl	Psc	ap	fu	
+wing vein		Mkp3	corto	gbb	sax	Egfr	inv	sbb	Raf	rho	Sara	l(2)gl	pum	px	CSN5	mor	put	Timp	Nrx-IV	Akt1	Rbsn-5	brk	colt	ctp	zip	Dsor1	ap	SelD	Ext2	Stat92E	spin	CycE	Cul3	rl	dop	bi	dos	H	mys	hop	S6kII	N	sd	bs	Zw10	EcR	smo	sl	cni	Mo25	neur	b	dpp	kn	crol	ci	h	Ppcs	ebi	mir-8	Gprk2	Su(fu)	Bx	Sos	Su(H)	eca	cos	hyx	sog	nmo	sgg	dx	Utx	sxc	drk	net	ed	Wnt4	fng	par	Apc2	Dl	en	vvl	Psn	Hcf	Cam	bwk	dally	vn	trx	shn	emc	cic	aux	Dll	fj	RasGAP1	PDZ-GEF	coro	ft	dco	ave	fu	crb	shams	kis	slmb	EloA	mib1	Ras85D	AP-2alpha	grh	ptc	tkv	
+GO0072686:mitotic spindle		l(2)gl	Dis3	bru1	orb2	sav	Pfdn2	hpo	mars	mst	Sas-4	wts	asp	lin-52	
+nurse cell fusome		kel	Btk29A	Khc	bru1	ovo	CSN5	Src64B	Cul5	bam	
+nurse cell ring canal		Cdc42	Rab11	tra	Arpc1	SCAR	hts	Src64B	otu	shg	ct	flw	Btk29A	Cul3	BicD	cher	Sec6	Sec5	bru1	sqh	egl	cta	chic	kel	EcR	rin	arm	Mbs	pcs	
+female germline cyst		dpp	Vps60	Rab11	Atg1	bru1	mys	Ppcs	Vps25	aPKC	Eip78C	JhI-1	shg	Mettl3	grk	
+embryonic dorsal epidermis		cact	zip	dpp	Rab11	kay	Dsor1	mbc	slpr	pnr	cora	gsb	POSH	scrib	Jra	dsh	shn	puc	RasGAP1	mys	put	chic	scb	Rho1	hep	Tl	arm	ed	tkv	
+embryonic head		dpp	kn	kay	sax	gt	Egfr	zld	srp	Btk29A	cora	gsb	Dark	Sce	Raf	hb	dia	pyd	stck	hh	hid	aos	csw	ush	faf	sog	neb	dome	lab	peb	put	tup	exd	pim	sgg	mxc	Psc	spn-F	exu	zip	stau	zen	apt	en	Rap1	slp1	InR	eya	shg	Pka-R1	Stat92E	SoxN	dsh	shn	Girdin	hkb	D	bcd	fkh	jumu	Dronc	dos	nkd	hop	aPKC	Pli	alpha-Cat	wg	btd	oc	kis	tor	arm	hth	Inx2	dhd	pcs	ptc	tkv	fand	
+segment polarity phenotype		pygo	dlp	sau	fu	wg	odd	dally	smo	sgl	frc	Klp64D	dsh	arm	wls	pan	hh	
+stomodeal invagination		sgg	ecd	RhoGEF2	sgl	dsh	arm	spi	wg	
+denticle belt		ftz-f1	gro	dlp	gt	Egfr	ttv	gsb	Sce	rho	mwh	Hakai	hh	aos	faf	rib	kkv	brk	stc	otk	NAT1	Syx1A	Ptip	Mad	odd	Ext2	Stat92E	pnt	SoxN	rl	Ge-1	D	mid	ihog	nkd	hop	jv	S	smo	tor	arm	Sec24CD	dpp	sna	f	ci	ovo	knk	btz	h	ebi	ftz	Ubx	Cow	Sb	snk	CrebA	rtv	cora	esc	AGO1	dia	Mcr	CtBP	cos	sog	run	Trl	Shc	ds	sgg	sgl	wor	ea	pan	Psc	opa	ed	prd	Apc2	zen	Dl	en	Sec61alpha	Med	spi	vvl	slp1	slp2	Notum	trx	dsh	shn	emc	cic	14-3-3zeta	hkb	HDAC1	pygo	tsh	aPKC	sic	fu	wg	eve	abd-A	kis	sim	hth	gd	grh	ptc	tkv	
+embryonic/larval dorsal vessel		neur	ci	Dl	scw	nkd	Rap1	tld	N	zfh1	stumps	how	wg	sgg	byn	dsh	arm	LanB1	bib	htl	hh	tkv	
+embryonic segment		HDAC1	cos	Src42A	en	ftz	fu	eve	oc	Stat92E	esc	mxc	frc	retn	arm	hth	Inx2	osa	Scm	pcs	opa	ed	hh	
+planar polarity defective		Dlish	Egfr	svp	Jra	pk	sano	mwh	hh	l(2)gl	Rab23	run	nmo	ds	Rho1	sca	sgg	Pcyt1	rin	Rbsn-5	fng	Cdc42	app	in	trc	Dl	mirr	Vang	ex	pnr	TfAP-2	chas	scrib	dsh	hbs	stan	ru	fj	PDZ-GEF	bi	hop	aPKC	ft	fw	upd1	eve	fy	fz	not	sl	arm	hth	grh	ptc	
+embryonic Malpighian tubule		zip	Kr	cv-c	btd	srp	pim	crb	sgg	pnt	sgl	rho	arm	LanB1	bib	Inx2	
+embryonic/larval dorsal branch		crp	Mmp1	twi	mir-14	Src42A	ttk	rib	Hs2st	Mad	wg	shg	stac	sty	arm	Mipp1	pyd	hh	tkv	
+embryonic/larval dorsal trunk		knk	Atpalpha	ple	sinu	wash	ttk	Lac	chico	Egfr	Sec23	rtv	esg	rho	hb	Mcr	serp	sano	Chc	Vha26	hh	aop	rib	zfh1	peb	dap	sgl	tin	Vha13	bnl	obst-A	Src42A	tnc	vvl	eya	shg	pnt	dsh	salm	fj	twi	sqh	nrv2	uif	S	kune	vari	pck	Vhl	btl	arm	Mipp1	Sec24CD	verm	
+embryonic/larval ganglionic branch		crp	ru	Atpalpha	vvl	rib	sli	aft	gcm	CycA	pnt	sty	sgl	arm	exp	bnl	
+embryonic/larval lateral trunk		sgl	arm	ttk	rib	exp	wg	tkv	
+embryonic/larval tracheal system		ftz-f1	knk	glob1	Hr78	ple	sinu	Lac	rtv	Sce	DAAM	esg	rho	Mcr	plx	serp	pyd	Vha26	hh	aop	rib	peb	kkv	sgl	Syb	Vha13	colt	PR-Set7	bnl	obst-A	Sec61alpha	vvl	stumps	Mad	shg	CycA	Stat92E	sty	trx	dsh	Oaz	nrv2	N	wg	uif	bs	pita	EcR	kune	crb	wus	vari	pck	Vhl	btl	bark	arm	tgo	sr	verm	tkv	
+adult cuticle & abdomen		sgg	Catsup	bi	mib2	arm	msps	
+follicle stem cell		Mmp2	ci	shg	ball	smo	Six4	CycE	dsh	mam	Iswi	arm	boi	hh	ptc	
+cell polarity defective		cno	d	sav	Egfr	Sec23	Exo84	cbt	Pis	yrt	CtBP	l(2)gl	AMPKalpha	Khc	aos	Lkb1	pins	run	nmo	ds	sca	sgg	frc	Ggamma1	Cdc42	Dg	Syx7	Patj	TBCB	sli	shg	scrib	dsh	stan	Ser	ru	fj	sqh	aPKC	ft	dco	eve	crb	fz	Sas-4	Vhl	arm	sn	Sec24CD	Ras85D	Mbs	dlg1	
+imaginal disc		botv	dpp	APP-BP1	Moe	Dis3	corto	gbb	sax	Sfmbt	dlt	Egm	MED6	krz	Aos1	BubR1	drosha	Raf	Cdk1	dia	asp	Top1	l(2)gl	lqfR	Traf4	baf	Asciz	Tcs3	gammaTub23C	His2Av	Spc25	Orc6	ball	hep	sgl	mxc	ash1	Orc3	Klp61F	prod	stg	ida	babo	sti	Invadolysin	Su(var)205	Pten	Tctp	Mad	SelD	SkpA	shg	Uba2	scrib	BHD	Pp1-87B	poly	nbs	dom	pasha	RpS21	Dronc	Yeti	ft	alpha-Cat	kuz	dco	br	Ipk2	Fkbp14	E(z)	pita	dpa	l(2)gd1	arm	Ras85D	dlg1	Top3alpha	ttm50	oho31	
+egg		kay	Msp300	pcx	Tsp74F	sax	Src64B	oro	ttk	Egfr	Hmr	fs(1)N	Btk29A	rhi	Hrb27C	l(2)gl	lqfR	tud	Dp1	CSN5	mor	Pcyt1	okr	Dhc64C	mxc	rin	retn	nau	Atg1	Syt1	vas	Mef2	Syx1A	stumps	Mad	fbl	mus301	otu	hfp	spin	fs(1)M43	sty	Cul3	Ddx1	scrib	Cul5	Sec5	gus	Abi	chic	Zw10	arm	sn	Dys	Mbs	cni	tral	Atg13	fs(2)al	armi	dpp	ovo	mei-P26	Tsp66E	Lsp1alpha	ndl	Lam	fs(1)Yb	fs(1)Ya	mir-184	ecd	msn	Sxl	M6	mago	Hel25E	Trl	usp	Nop60B	sgg	cpb	Lsp1gamma	spoon	chb	spn-F	spn-E	trc	Syp	spi	Pten	Dp	vnc	Hcf	spn-B	spn-D	shg	Rop	Pkn	polo	mud	sktl	sqd	noi	Rab5	sqh	dco	Dsp1	nos	E(z)	Lsp1beta	tsu	ena	wisp	Ras85D	gd	Top3alpha	grk	
+GO0005915:zonula adherens		crb	sdt	arm	RabX1	aPKC	
+GO0005634:nucleus		cnn	Arpc1	SCAR	zld	Dark	BubR1	AGO2	asl	plu	dia	Top1	BRWD3	Topors	nuf	Khc	Dp1	CR44420	tum	kirre	okr	rin	Mst77F	chb	Wdr24	Apc2	borr	jnj	CR45542	mars	Syp	Syx1A	Lpin	ph-p	Mad	Wee1	sls	BHD	Shmt	Nct	kuk	Fmr1	DNaseII	sqh	tbrd-2	Yeti	Arl1	SMC5	tbrd-1	Zw10	RhoGEF2	mspo	wupA	arm	DNApol-epsilon58	
+embryonic leading edge cell		zip	Rab11	Dab	Sec61alpha	shot	wg	chic	p120ctn	hep	cbt	POSH	dsh	mmy	arm	pyd	puc	Mbs	
+GO0015629:actin cytoskeleton		SCAR	Hem	kel	flw	Btk29A	Vrp1	RhoGEF2	rin	Cul3	btl	arm	if	nuf	
+GO0005912:adherens junction		Rap1	alpha-Cat	shg	obe	Sec23	sca	Magi	crb	rst	POSH	scrib	arm	Sec24CD	yrt	dlg1	ed	
+embryonic neuroblast		ric8a	stg	sav	pins	vnd	Egfr	gcm	fz	Gbeta13F	wts	Dark	SoxN	Galphai	Ggamma1	sim	rho	hb	arm	dlg1	ed	
+epithelial cell		shg	Col4a1	l(2)gl	Gli	pim	RhoGEF2	scrib	arm	mud	aPKC	dlg1	
+ventral furrow		sna	twi	dl	Rap1	Egfr	trk	cta	RhoGEF2	Raf	tor	dia	arm	fs(1)M3	fog	spz	htl	
+GO0005856:cytoskeleton		Pkn	dia	arm	Syx1A	Hem	
+GO0005884:actin filament		Cdc42	Apc2	Arpc1	SCAR	cdi	ssh	Src64B	Trl	kel	Btk29A	dia	arm	mwh	BRWD3	
+nurse cell & actin filament		Cdc42	kel	Sec5	Myc	arm	Dp	
+nurse cell & nucleus		kay	Msp300	noi	Src64B	otu	kel	pita	Nop60B	EcR	spin	CycE	arm	sktl	
+tracheal branch primordium		Mkp3	trh	hop	N	Egfr	shg	scb	Rop	btl	Akt1	rho	arm	LanB1	
+MP1 neuron		Abd-B	sim	CadN	Fas2	rho	arm	robo1	N	dock	sli	Wnt5	
+dMP2 neuron		Su(H)	gcm	spdo	Abd-B	Dl	CadN	Fas2	numb	mam	arm	robo1	N	
+pCC neuron		D	stg	Dl	numb	N	sli	pros	spdo	gsb	SoxN	mam	hb	Ppt1	arm	robo1	chb	dock	mas	
+vMP2 neuron		Su(H)	spdo	Dl	CadN	Fas2	numb	mam	arm	robo1	N	sli	
+dorsal trunk primordium		Nrg	Atpalpha	mys	hop	sinu	rib	dmt	nrv2	shot	Gyc76C	wg	rtv	stac	lolal	vari	pck	Fas2	dnd	btl	arm	Sec24CD	salm	conv	
+posterior spiracle primordium		shg	ct	RhoGEF2	cv-c	sqh	Pex1	arm	pll	
+female germline stem cell		neur	dpp	Rab11	fzy	vas	Dl	ALiX	gbb	sax	clu	Sfmbt	brat	InR	Mad	shg	AdipoR	dally	udd	tj	asl	AGO1	Iswi	shn	Nedd8	RpS2	Ote	piwi	bgcn	pelo	pum	Sxl	CSN5	mael	bam	N	foxo	ban	put	ball	nos	twin	mir-278	loqs	slmb	Caf1-55	arm	tkv	fng	
+cell migration defective		Mmp1	Mmp2	SCAR	hpo	wash	Gyc76C	Jafrac1	Hem	shg	srp	CycA	wts	LanB2	Dlg5	pbl	fog	Alk	hog	hh	Whamy	lola	sqh	pyr	Abl	rib	alpha-Cat	slbo	Rho1	fra	arm	tgo	sn	Mipp1	sima	htl	bnl	
+abdominal ventral denticle belt		pav	nkd	pbl	arm	tum	
+alula		dpp	D	HDAC1	ci	mirr	en	arm	Sox15	hth	Psc	ara	
+dorsal row		sens	arm	da	wg	sc	
+ventral row		sens	arm	da	wg	sc	
+segment		HDAC1	Dl	h	hop	fu	wg	odd	E(z)	inv	Stat92E	esc	sgl	arm	emc	pan	CtBP	
+commissure		siz	comm	vvl	vnd	ttk	Egfr	InR	sli	inv	Stat92E	pnt	elav	SoxN	Sos	AGO1	rho	mira	hb	foi	mid	Kr	csw	Abl	gcm	S	oc	fra	sim	arm	robo1	Wnt5	ctp	mas	
+longitudinal connective		siz	sas	comm	SCAR	ttk	Egfr	Hem	abs	Sema1a	inv	Sos	CadN	AGO1	rho	hb	Unc-115a	repo	Mtl	Kr	futsch	csw	Vav	shot	lab	RhoGAP93B	gcm	pros	robo3	fra	loqs	robo1	robo2	ctp	Cdc42	spi	vvl	Syx1A	InR	Dr	stumps	sli	ap	Stat92E	SoxN	mira	Ppt1	stan	foi	D	lola	mid	Abi	Abl	ems	N	kuz	chic	spdo	oc	trio	sim	mmy	arm	hth	loco	HSPC300	dock	Ca-alpha1D	mas	
+presumptive embryonic/larval central nervous system		arr	comm	ftz	p130CAS	Egfr	Sema1a	tll	sno	Dark	CadN	bib	da	aos	scra	rib	SmD3	gcm	pros	Pc	sgg	fra	drl	if	robo1	chb	ed	Wnt5	Cdc42	stc	zen	Dl	vvl	Psn	edl	stumps	sli	nvy	pnt	foi	D	twi	mid	Dronc	nkd	Abl	N	kuz	spdo	oc	cas	sim	wupA	mam	arm	HSPC300	mew	
+abdominal 1 ventral denticle belt		scw	nkd	en	Ubx	Egfr	wg	odd	sgg	dsh	arm	brk	hh	ptc	tkv	
+abdominal 2 ventral denticle belt		D	sgg	scw	nkd	en	dsh	arm	Egfr	wg	hh	ptc	tkv	
+abdominal 3 ventral denticle belt		D	scw	nkd	en	Egfr	wg	odd	sgg	dsh	arm	hh	ptc	tkv	
+abdominal 4 ventral denticle belt		D	scw	nkd	en	hop	Egfr	dome	wg	Dsp1	sgg	Stat92E	Sce	dsh	arm	hh	ptc	tkv	
+abdominal 5 ventral denticle belt		D	scw	nkd	en	hop	gt	Egfr	wg	Dsp1	odd	sgg	Stat92E	dsh	arm	hh	ptc	tkv	
+abdominal 6 ventral denticle belt		D	scw	nkd	en	hop	gt	Egfr	wg	sgg	Stat92E	dsh	arm	hh	ptc	tkv	
+abdominal 7 ventral denticle belt		D	scw	nkd	en	hop	gt	Egfr	wg	odd	sgg	Stat92E	dsh	arm	hh	ptc	tkv	
+non-enhancer of variegation, with P{hsp26-pt-T}39C-5		E(z)	Pc	Asx	ash1	trx	Pcl	Scm	Psc	
+non-suppressor of variegation, with P{hsp26-pt-T}39C-5		E(z)	Pc	Asx	Dp1	ash1	trx	Pcl	Scm	Psc	
+abdominal segment		stau	dpp	D	tud	vas	nos	Pc	Grip91	ash1	tor	trx	hb	vls	cic	
+haltere disc		E(z)	ex	hyd	ash1	pcm	oho31	
+proboscis		Scr	exd	pb	tta	ash2	TfAP-2	rn	Trl	
+prothoracic segment		Scr	ash2	osk	trx	tsh	hb	
+type I neuroblast		dpn	ana2	mir-124	Dhc64C	ash2	trx	
+type II neuroblast		dpn	ana2	pnt	wts	ash2	hpo	trx	numb	scrib	mts	brat	N	
+lethal - all die before end of prepupal stage		ida	sti	Psn	Vps25	Brms1	br	pita	not	Cks85A	ash2	ash1	Trpm	Top3alpha	e(y)1	
+some die during prepupal stage		mod	Gcn5	ida	sti	fru	Psn	Vps25	Brms1	br	pita	Cks85A	ash2	ash1	Trpm	Top3alpha	
+mitotic cell cycle defective		Capr	grp	hts	corto	ttk	Hira	Aos1	BubR1	Sce	Raf	Scm	hh	RecQ4	eIF4E1	tefu	Lkb1	luna	gammaTub23C	bam	ball	Pc	hep	Dhc64C	vih	mgr	Cdc27	fzr	Rae1	lin-52	borr	stg	JIL-1	sti	vas	asrij	Tctp	Mad	glu	chif	SkpA	aurA	hfp	trbl	CycA	Stat92E	pnt	wts	CycB	Cks85A	CycE	Schip1	sls	scrib	sub	Pp1-87B	Sec8	Fmr1	14-3-3epsilon	how	DCTN1-p150	sea	sc	ncd	sd	pita	Zw10	mei-9	Grip71	smo	CycB3	eas	msps	loco	dlg1	Skp2	DNApol-epsilon58	cnn	Dis3	ci	Pabp2	galla-1	hpo	brat	Spc105R	ct	Grip84	AGO2	cmet	WRNexo	Zwilch	Sos	Iswi	gwl	asp	Top1	thr	Mcm10	Su(H)	pins	mre11	neb	mst	Spc25	Orc6	Rho1	eco	pros	pim	dap	sgg	nudE	Cks30A	mei-S332	Klp61F	mh	mi	chb	Psc	PR-Set7	ida	pav	Dl	mars	spno	Invadolysin	ph-p	P32	Wee1	Pdp1	fwd	polo	Mer	trx	pbl	dsh	mud	BHD	endos	14-3-3zeta	HDAC1	aPKC	ft	JhI-1	ave	alpha-Spec	E(z)	crb	Sas-4	RhoGEF2	cav	slmb	wisp	Csk	Ras85D	AP-2alpha	rad50	grh	ttm50	san	ptc	tkv	
+GO0016006:Nebenkern		porin	Ppcs	fbl	Klp3A	ref(2)P	fwd	Hsp83	knon	polo	dia	Rab1	asp	Sec8	Pink1	pelo	orb2	bel	JhI-1	milt	Zw10	nudE	Opa1	rux	eRF3	ms(3)Z2203	fzo	Rae1	
+GO0005818:aster		Wee1	ifc	polo	eRF3	Lkb1	pins	asp	
+spermatocyte & spindle		polo	Grip91	gammaTub23C	asp	fbl	
+GO0005813:centrosome		cnn	grp	pav	Arpc1	mars	asun	numb	Invadolysin	cfo	SkpA	Wee1	Hsp83	ana3	polo	pbl	BicD	dia	mud	lds	asp	AMPKalpha	Fmr1	Pfdn2	gammaTub37C	Arl1	ben	aPKC	nopo	pim	Sas-4	nudE	Dhc64C	Grip91	slmb	wisp	Rae1	dlg1	
+GO0045169:fusome		nos	tra	ecd	Dhc64C	Raf	hts	asp	bam	otu	Rbp9	shu	ban	
+female semi-sterile		ord	klar	Pabp2	sti	ALiX	Hr78	Src64B	Gbs-70E	srl	P32	mir-276b	cue	mir-124	boc	Hrb27C	bul	Lrrk	corolla	Met	mir-282	Nep2	asp	Eph	mip130	Tfb5	Ptp61F	Lnk	gce	Trl	mir-989	gcl	jhamt	chic	pita	gcm	EndoB	wuho	trem	Lhr	her	Trap1	pcm	spoon	iPLA2-VIA	SCCRO	Wdr24	
+oocyte nucleus		twe	l(2)gl	LanA	Khc	Sec5	noi	vas	Dl	kibra	mago	alpha-Spec	mtrm	tsu	cnc	rngo	Mer	Lis-1	plu	sktl	msps	asp	cni	grk	ptc	
+embryonic/larval neuroblast		Dis3	JIL-1	Sse	numb	ana2	mir-8	klu	Ctr9	asp	endos	Mcm3	aos	lok	pins	aPKC	Spc25	sea	pros	spdo	Sas-4	Dhc64C	Klp61F	AP-2alpha	msps	AP-2sigma	ctp	
+tormogen cell		neur	mir-9a	sens	numb	vvl	ttk	aurA	Cdk1	dia	CtBP	phyl	l(2)gl	Su(H)	msi	H	N	tws	sc	sca	pros	ham	fz	ash2	AP-1mu	Kap-alpha3	seq	fand	
+trichogen cell		neur	sv	mir-9a	sens	Rala	Dl	corto	ck	numb	chn	vvl	ttk	aurA	Cul3	Cdk1	sina	l(2)gl	msi	H	CSN5	tws	sca	pros	ham	fz	fand	
+embryonic/larval brain		mnb	cnn	Mad1	Dis3	corto	gbb	numb	brat	Egfr	mir-8	Dark	Raf	Cdk1	l(1)air5	Top2	asp	Mcm10	RecQ4	smid	l(2)gl	Tet	l(1)air16	Smox	aos	Asciz	Lkb1	gammaTub23C	neb	Spc25	Orc6	ball	pros	Pc	sgg	Dhc64C	wor	ato	Klp61F	AP-2sigma	PR-Set7	zip	prod	ida	scu	babo	sti	Invadolysin	spi	mts	trol	InR	dj-1beta	fbl	SelD	aurA	polo	Cks85A	trx	scrib	BHD	endos	poly	RpS21	Dronc	nkd	Yeti	ems	N	Sas-4	tor	Sap-r	AP-2alpha	dlg1	Skp2	oho31	DNApol-epsilon58	
+adult cuticle		b	par	Dll	prod	fj	Ddc	ATP7	hpo	mys	Egfr	ds	tup	btd	sca	crc	smo	Catsup	Lam	y	dsh	
+tarsal segment		b	dpp	d	Dlish	Dl	en	Vang	Mad	odd	pb	klu	TfAP-2	pho	rk	Scr	Dll	D	dac	csw	disco	N	dco	mor	bowl	bs	fz	dve	tgo	hth	ss	tkv	tal	
+trochanter		exd	Dll	klu	hth	fng	
+anal plate		Pka-C1	Dll	smo	bi	sim	ix	
+female gonopod		Pka-C1	ken	Dll	smo	cos	en	
+Kenyon cell		amn	Cdk5alpha	Dll	babo	Pgam5	chico	hep	ey	bsk	CkIIbeta	mud	bun	mbt	Mcm3	
+chemosensitive behavior defective		Tao	acj6	pain	Dll	acj8	norpA	acj7	acj2	Gr63a	acj4	acj3	Orco	trpl	sd	rg	Sh	Tbh	Obp49a	ato	acj9	Ube3a	Galphaq	
+dorsal double row		l(2)gl	Su(H)	Dll	sax	N	sina	fu	
+dorsal triple row		l(2)gl	Poxn	Dll	dally	Dl	h	nub	salm	tkv	
+medial triple row		Dll	Notum	H	Dl	h	dsh	nub	salm	sina	tkv	sc	
+ventral double row		l(2)gl	Su(H)	Dll	sax	N	fu	
+ventral thoracic disc		Dll	d	RpS21	dac	ecd	Elp3	Psn	Ubx	N	br	E(z)	crc	hep	slmb	esg	dsh	PR-Set7	oho31	hh	Nct	DNApol-epsilon58	tkv	
+ventral triple row		Dll	Dl	nub	salm	tkv	
+wing blade anterior compartment		Pka-C1	Dll	gro	smo	Raf	cos	Cdk1	fu	ptc	
+wing margin bristle		neur	borr	mir-9a	ci	dlp	h	gbb	meru	Ubx	r	klu	dally	Notum	dsh	nub	wls	Sulf1	Gp150	TBPH	Dll	N	wg	Fkbp14	Wnt6	fy	dve	sgg	sgl	slmb	hth	pan	grh	
+epiproct		Pka-C1	Dll	smo	bi	cos	trx	dsx	
+ocular segment		bcd	Raf	tor	fs(1)M3	ems	trk	
+pole cell		Fsn	par	stau	cnn	Moe	btz	vas	csul	Syp	Rap1	Mdr49	Stat92E	Dlg5	AGO2	Tm1	Raf	Mer	dia	Cul5	vls	twe	blot	bcd	tud	Fmr1	gus	14-3-3epsilon	osk	hop	faf	psq	gcl	nos	MED31	Lasp	RhoGEF2	tor	wupA	Ras85D	
+embryonic thorax		exu	exd	dpp	bcd	hth	Psc	
+abdomen		tta	tw	bcd	Kr	btz	osk	scw	Dp	ft	trk	br	mir-965	Pol32	nos	srp	Ctr1A	Tl	tor	esg	pk	IP3K2	
+telson		nos	tll	bcd	Stat92E	Raf	tor	gbb	hop	fs(1)M3	trk	tkv	
+mitotic domain 1		zip	dpp	zen	stg	kni	grp	pav	scw	h	sax	ftz	Egfr	InR	srp	SoxN	srw	hb	fog	bcd	Fmr1	ecd	Kr	14-3-3epsilon	tsg	mys	ush	sqh	sog	run	L	shot	peb	tup	scb	nos	eve	Dhc64C	sced	if	tral	tkv	mew	
+embryonic/larval spiracle		cact	crb	sgg	bcd	Ctr1A	nkd	dome	
+embryonic/larval salivary gland		drpr	ftz-f1	sens	corto	dlt	CrebA	cora	Dark	Catsup	Pis	Cdk1	Iswi	Mcr	bib	Top2	da	lqfR	hid	l(1)air16	Tcs3	rib	lab	usp	exd	Nrx-IV	Utx	pit	if	zip	Fhos	Mdh2	trh	NAT1	Gyc76C	MED24	LanB2	Cks85A	CycG	BHD	poly	hkb	sdt	bcd	fkh	PIP4K	mys	wb	N	br	chic	Sema2a	pita	EcR	crb	Atg17	Eip74EF	AP-2alpha	DCAF12	FoxL1	AP-1mu	sage	Skp2	DNApol-epsilon58	mew	fand	
+embryonic abdominal segment 2		nos	exd	bcd	kis	Kr	tor	rl	hb	psq	put	
+embryonic abdominal segment 4		bcd	Kr	hop	psq	dome	put	nos	upd1	exd	Stat92E	kis	tor	rl	hb	
+embryonic mesothoracic segment		exd	eve	Su(z)12	bcd	kis	Kr	hb	
+embryonic metathoracic segment		exd	Su(z)12	bcd	kis	Kr	hb	
+embryonic prothoracic segment		Scr	Su(z)12	bcd	Kr	tsh	hb	gt	
+larval head		Scr	dpp	Pc	bcd	knk	h	hb	Med	gt	dco	
+embryonic thoracic segment		Pc	bcd	Sce	tor	dome	
+embryonic abdomen		exu	stau	dpp	bcd	en	hb	neb	Psc	pcs	
+cyst progenitor cell		shg	shv	Socs36E	Stat92E	CadN	hop	bel	Ras85D	His2Av	zfh1	Mtor	CtBP	
+decreased cell number		dpp	gl	Rx	numb	ttk	chico	Ns3	Egfr	srl	CR42858	ct	mir-8	Aos1	Sce	tj	AGO2	CadN	AGO1	Cdk1	bun	Scm	Ote	lncRNA:TS23	Mcm3	RecQ4	l(2)gl	lqfR	Vha55	Rpn6	tud	ecd	Pgam5	osk	ush	bel	pins	Lnk	Chchd2	shot	bam	Mtor	gcl	foxo	ban	gcm	Pc	EndoA	wun2	yki	Myc	DENR	pix	CR43484	vas	Nipped-B	Mad	shg	chinmo	ex	pnt	dally	Uba2	udd	vn	scrib	rl	CycG	Lrrk	Sirt1	stan	emc	Nct	slif	Pink1	pasha	HDAC1	mir-31a	aPKC	N	ft	wg	Smg6	Lasp	tor	sim	Caf1-55	hth	Ras85D	ttm50	
+increased cell death		mnb	Etf-QO	Moe	gl	Trpml	Src64B	Ccdc56	Usp5	Vps25	Egfr	krz	Aos1	Sara	RpS3	hh	l(2)gl	eIF4E1	egg	osk	csw	tefu	Pvr	Mtor	ban	Arr1	gcm	Rbf	Dhc64C	wun2	Myc	mask	Akt1	brk	SCCRO	Col4a1	CDase	borr	Eip78C	ninaA	fbl	ap	ix	glu	HLH54F	Uba2	Cks85A	Tor	scrib	Slik	Scox	nbs	pelo	fkh	mir-31a	DNaseII	Arl1	L	N	kel	smo	wupA	Sox15	so	Skp2	Atg5	dpp	Acf	APP-BP1	sens	Ppcs	sni	Hand	mir-8	AGO1	asp	Top1	Alk	Dredd	Ubr3	Asciz	bel	pyr	Chchd2	lz	Nop60B	pim	rdgC	rdgB	mi	vret	mir-9a	norpA	spi	Pten	vvl	vnd	Psn	Hcf	Sod2	bft	Drice	shg	trp	vg	fwe	Diap1	ey	trx	poly	Pink1	pygo	Dronc	aPKC	ems	ave	wg	Ipk2	nos	eve	crb	trem	Opa1	sim	slmb	mib2	pcm	Sap-r	Csk	Ras85D	rad50	Inx2	grh	Snr1	sage	htl	
+increased cell number		mnb	dpp	sav	Tnks	hpo	ttk	brat	ohgt	l(2)gl	Whamy	bgcn	Smox	Pfdn2	ush	bel	Vav	bam	ban	Tudor-SN	gcm	pros	tut	brk	Sdr	Pten	bft	ASPP	ex	pnt	wts	Schip1	Mer	trx	rk	scrib	cic	Nct	pygo	mir-31a	mir-14	Dronc	N	ft	kuz	dco	wg	Sas-4	Six4	sl	Sox15	Csk	msps	DCAF12	
+increased cell size		Sdr	chem	AMPKalpha	stg	RanBPM	bel	Pten	Nprl2	Iml1	brat	Lpin	wg	ban	ct	Mnt	E2f1	Cdk1	Sap-r	RabX1	Mcm3	
+male germline cell		chinmo	pag	bel	nclb	HtrA2	Ote	Drice	
+male germline stem cell		mth	Socs36E	cnn	ALiX	gbb	sax	Tctp	Mad	shg	Stat92E	CadN	asl	Ote	Cp110	shv	bgcn	PDZ-GEF	hop	bel	mael	His2Av	Mtor	how	put	ball	Sas-4	Cep97	tkv	
+spermatocyte fusome		Dhc64C	Raf	bel	Klp61F	ctp	
+spermatogonium		Tudor-SN	msi	tut	Stat92E	hop	bel	bam	JhI-1	put	
+GO0042600:chorion		dpp	Pabp2	ovo	vas	defl	mrn	Dp	vnc	spn-B	Egfr	spn-D	mus301	chif	bwk	stil	E2f1	BicD	CkIIbeta	hd	cup	cic	RecQ4	mip130	D	sqd	RasGAP1	ecd	mid	Shark	tefu	bel	mor	br	chic	okr	cnc	mxc	spoon	Ras85D	cni	tral	grk	ed	orb	fs(2)al	
+jumping defective		cv	Smn	stnA	Mhc	ben	nAChRalpha7	
+grooming behavior defective		Fmr1	Catsup	Nf1	ben	DCX-EMAP	Adar	
+mesothoracic extracoxal depressor muscle 66		drpr	flw	cv	twi	Mhc	Mef2	shakB	wupA	ben	br	
+giant fiber neuron		ken	Nrg	hiw	Sh	ben	nAChRalpha7	DCTN1-p150	
+lamina anlage		not	repo	egh	msn	ben	dock	sli	limbo	
+medulla anlage		Ephrin	dpp	klu	scrib	ben	so	InR	dock	Eph	wg	limbo	
+retina		drpr	dpp	cno	stmA	gl	hll	kibra	Culd	Gos28	SdhA	Npc1a	abs	elav	w	BicD	repo	aos	Atxn7	ben	Vav	Arr2	usp	EndoA	loqs	inaC	rdgC	rdgB	iPLA2-VIA	ec	rdgA	Cdc42	norpA	klar	ninaE	Cnx99A	ninaC	ninaA	fbl	Drice	trp	eyg	ey	rg	spin	Hip14	Scox	Sec6	Pld	mys	wg	fw	crb	Nrd1	Xport-A	Sap-r	Xport-B	AP-2alpha	so	Rac2	Galphaq	mew	
+rhabdomere R1		oc	ktub	rdgC	ninaE	Cnx99A	ben	ttk	
+rhabdomere R2		cno	oc	mbl	ktub	rdgC	ninaE	Cnx99A	ben	ttk	
+rhabdomere R3		cno	oc	mbl	ktub	rdgC	ninaE	Cnx99A	ben	ttk	
+rhabdomere R4		oc	mbl	ktub	rdgC	ninaE	Cnx99A	ben	ttk	
+rhabdomere R5		oc	mbl	ktub	rdgC	ninaE	Cnx99A	ben	ttk	
+rhabdomere R6		oc	ktub	rdgC	ninaE	Cnx99A	ben	ttk	
+rhabdomere R7		sev	oc	rdgB	ben	ttk	chp	tutl	
+optic cartridge		S	ru	ben	awd	Lar	Alk	Nmnat	
+photoreceptor cell R1		sev	norpA	hdc	shakB	ninaE	Dsor1	spi	eya	svp	ninaA	pnt	Sos	Raf	rl	emc	sina	phyl	aop	dac	aos	ben	faf	lz	ave	TfIIA-S	mask	rdgB	sag	so	fzr	dock	ed	
+photoreceptor cell R2		norpA	sens	Moe	klar	Dl	shakB	ninaE	Dsor1	spi	Egfr	ninaA	pnt	Sos	Raf	rl	aop	dac	aos	Abi	ben	faf	lz	rdgB	Ras85D	fzr	dock	ed	
+photoreceptor cell R3		norpA	Moe	klar	Dl	shakB	ninaE	Dsor1	spi	Vang	Egfr	svp	ninaA	pnt	Sos	Raf	rl	Jra	stan	aop	fj	dac	aos	Abi	ben	faf	ft	lz	ave	ds	dx	Pcyt1	rdgB	Ras85D	dock	ed	
+photoreceptor cell R4		norpA	Moe	klar	Dl	shakB	ninaE	Dsor1	spi	Vang	Egfr	svp	ninaA	pnt	Sos	Raf	rl	Jra	pk	stan	emc	Lar	aop	fj	dac	aos	msn	Abi	ben	faf	ft	lz	ave	ds	dx	Pcyt1	rdgB	Ras85D	dock	ed	
+photoreceptor cell R5		norpA	sens	Moe	klar	Dl	shakB	ninaE	Dsor1	spi	Egfr	ninaA	pnt	Sos	Raf	rl	aop	dac	aos	Abi	ben	faf	lz	rdgB	Ras85D	fzr	dock	ed	
+photoreceptor cell R6		sev	norpA	hdc	shakB	ninaE	Dsor1	spi	eya	svp	ninaA	pnt	Sos	Raf	rl	emc	sina	phyl	aop	dac	aos	ben	faf	lz	ave	TfIIA-S	mask	rdgB	sag	so	fzr	dock	ed	
+photoreceptor cell R8		cno	sev	sens	Moe	klar	Dl	hts	spi	Egfr	svp	Sos	Raf	rho	Met	stan	ro	Nct	gogo	aop	Su(H)	dac	aos	Gycalpha99B	ben	N	tutl	caps	br	sca	robo3	smo	rux	Fas2	ato	Ras85D	fzr	rdgA	ed	seq	
+GO0045202:synapse		Galt	mth	GluRIIA	Dysb	Syt1	Ent2	para	Syx1A	Adar	Fak	Sema1a	Pgk	ttv	Sh	Efhc1.1	ewg	CkIIbeta	spas	CkIIalpha	stai	Fife	Pldn	HDAC6	Fmr1	ecd	Rab7	futsch	ben	eag	Vap33	Lrp4	DCTN1-p150	mGluR	alpha-Spec	milt	rut	hook	hiw	Liprin-alpha	Fas2	dnc	Akt1	AP-2alpha	Rae1	Galphas	dlg1	ptc	
+oxidative stress response defective		Galt	mth	Sdhaf3	Atg1	AkhR	Mrp4	Sod3	dj-1beta	Cln3	Jafrac1	Sod1	Fatp	Tspo	puc	Gba1b	Pink1	HDAC1	Ogg1	Gr63a	Dredd	Urm1	Lnk	ben	Rpi	Tpi	Aldh	p120ctn	Trap1	p38a	Nf1	inaE	iPLA2-VIA	Akh	mir-1000	mtd	
+short lived		sra	drpr	hll	dnr1	Mnn1	Atpalpha	LUBEL	Trx-2	BTBD9	srl	slpr	Pex16	kek5	Ccs	sesB	Rbp9	mir-92b	puf	TBPH	egg	Atxn7	Urm1	tefu	PGRP-LC	loqs	rin	dnc	inaE	iPLA2-VIA	park	SCCRO	Col4a1	Vmat	Atg1	Gbs-70E	clu	Nprl2	Mrp4	Gpdh	dj-1beta	fbl	otu	mir-317	mir-276a	mir-276b	Pgk	pnr	Hsp83	spin	mir-284	mir-282	spas	Dcr-2	HtrA2	Ih	alpha-Est7	Fmr1	REPTOR	ry	orb2	Nab2	ATP7	dor	Drep2	Bug22	S6kII	Tpi	DCTN1-p150	mir-965	Npc2a	hook	Atg16	Atg17	Trap1	mt:ND2	mir-210	Hasp	p38a	Nf1	Sox15	iav	Dif	g	Tnks	Ibf2	Ppcs	wash	sni	Hand	Tre1	polyph	Kdm4A	SCCRO3	kat-60L1	ref(2)P	Clbn	mir-981	AGO2	WRNexo	mir-980	mir-13b-2	Rel	Ald	mir-184	bun	bmm	Gba1b	CG11700	Ptp61F	hig	ecd	lt	M6	nec	ben	Chchd2	PQBP1	foxo	Gyf	mir-995	Scamp	CPT2	Appl	mir-990	mir-9a	Toll-9	CG10527	Debcl	sgll	Syn	Vha16-1	Diedel	Adar	Lst	Cln3	Sod2	bft	Sod1	Drice	azot	Cat	GstO2	mir-124	Sirt1	ATP8B	spz	imd	Cdk5alpha	Pink1	REPTOR-BP	Hsp27	mir-14	Dronc	Hayan	mir-927	Gabat	Cbl	G9a	Mnt	dila	DJ-1alpha	gb	Rac2	inc	msl-1	mir-1000	Csp	
+wing disc		kay	Moe	sav	Ccdc56	dlt	Vps25	Egm	MED6	Egfr	ttv	Sara	RpS3	puc	hh	l(2)gl	Smox	tefu	Lnk	tup	hep	dve	Rbf	pgant3	Myc	brk	Gmd	stg	Mad	ap	pnt	wts	Uba2	Cks85A	Cul3	scrib	Ser	Grasp65	Cp110	jumu	RpS21	bi	lok	N	sc	sd	smo	wupA	Pdk1	Mbs	dlg1	Skp2	DNApol-epsilon58	botv	dpp	APP-BP1	d	Dis3	Mmp2	ci	hpo	Ubx	Scsalpha	chico	hyd	Clbn	Dark	asl	nub	da	Su(H)	Chi	hid	ecd	Chchd3	Ubr3	cos	lig	pic	ds	yki	mi	PR-Set7	ed	pix	fng	babo	Elp3	Med	Psn	Dp	Hcf	ph-p	Drice	shg	vg	Diap2	ex	E2f1	Mer	HDAC1	pygo	coro	Rab5	aPKC	ft	JhI-1	dco	ave	wg	Ipk2	Fkbp14	E(z)	crc	fz	RhoGEF2	slmb	pcm	Caf1-55	mib1	hth	Csk	Ras85D	rad50	Snr1	oho31	ptc	tkv	
+wing hinge		Poxn	D	bi	dsh	Sox15	hth	nub	ds	
+wing sensillum		tx	RasGAP1	bi	h	gbb	N	fu	sc	sd	vg	bs	sgg	dally	Notum	dsh	mib1	pyd	
+wing vein L3		dpp	kn	gro	ci	Dl	gbb	en	Mad	svr	dbr	sbb	vn	Cul3	rl	rho	Gp150	rasp	Su(H)	D	bi	N	ara	fu	EcR	slmb	hth	ptc	Dd	tkv	
+wing vein L4		dpp	kn	ci	bi	H	Dl	gbb	en	sax	vvl	Egfr	fu	svr	dbr	sbb	smo	vn	rl	rho	nub	rasp	hh	tkv	
+lobula plate		Pex16	bi	Met	H217	br	
+optic lobe		ftz-f1	zen	gl	babo	spi	Pten	Egfr	H217	Drice	ey	Uba2	Cdk1	Ald	Met	bib	asp	Vsx1	aos	bi	DCTN1-p150	br	exd	fra	Sap-r	ato	so	drl	tkv	
+lobula		Ephrin	egh	aos	bi	vvl	Met	Adar	dock	Eph	br	
+microchaeta		neur	sv	gro	sens	f	Rala	ck	h	numb	y	bib	mwh	sina	Su(H)	Rab23	Khc	Trl	ds	sca	sgg	dx	caup	Myc	ed	mir-9a	Dl	dally	Cul3	dsh	emc	Pka-C1	noc	fj	bi	Nab2	ATP7	H	jv	N	ft	tws	kuz	ara	sc	fw	smo	mam	mib1	sn	
+wing vein L5		dpp	bi	H	Dl	csw	gbb	en	N	vri	ara	svr	RYBP	dve	sbb	shams	dally	CycE	EloB	rl	rho	Pcl	nub	salm	rasp	
+embryonic/larval oenocyte precursor		sens	aos	ato	hth	bib	
+embryonic/larval somatic muscle		neur	crp	Zasp52	kn	Msp300	SCAR	numb	mute	mbc	Egfr	Hem	pll	Tig	slow	sns	DAAM	tn	bib	da	stck	Su(H)	tub	LanA	Mhc	Ilk	kon	mir-1	skd	tum	slou	shot	zfh1	SmD3	Grip	rut	Syx18	sgg	mask	dnc	retn	drl	Rae1	if	nau	pav	Dl	Mef2	en	spi	Gyc76C	stumps	sli	ap	FIG4	Smn	Stat92E	Poxm	Tor	vn	sls	spz	Pink1	twi	insc	mys	nkd	N	how	wg	br	S	eve	EloB	mib2	dock	sr	htl	
+peripheral glial cell		neur	TBPH	Nrg	numb	spi	N	how	Rho1	pros	unc-5	sim	Rac1	Rac2	bib	salm	fzr	foi	
+stomatogastric nervous system		aop	fkh	tor	Gsc	bib	hkb	
+embryonic myoblast		neur	siz	lmd	SCAR	Mef2	mbc	N	WASp	Hem	wg	Vrp1	sns	rols	Tor	mib2	Ced-12	Rac2	bib	sing	Pak3	blow	
+presumptive embryonic/larval nervous system		shg	neur	zip	eve	egh	frc	ftz	vvl	bib	da	N	dlg1	
+GO0016028:rhabdomere		neur	cno	sev	gl	Trpml	SCAR	hdc	h	ttk	rtp	Itp-r83A	SdhA	Npc1a	Lam	bib	mbt	aop	Gba1b	Cpn	lqfR	msi	fur	Khc	Acsl	aos	msn	Lnk	kst	Arr2	Arr1	usp	EndoA	Pcyt1	Crag	Akt1	rdgB	lin-52	Kap-alpha3	rdgA	CDase	Rab11	norpA	klar	didum	scu	Dl	ninaE	spi	prom	Vang	ninaC	chp	WASp	trp	E2f1	rl	Lrrk	PIG-U	eys	PIG-V	sdt	Sec6	RasGAP1	Rab7	mys	DCTN1-p150	car	crb	oc	Vha100-1	sag	Galphaq	
+multidendritic neuron		sens	ded	stg	Tmc	numb	disco	N	ct	spdo	ham	Tbh	dnc	stan	bib	gogo	
+embryonic/larval nervous system		gcm	ham	Khc	Appl	bib	Alh	
+germline cyst		spn-E	pelo	vas	Dl	hts	egl	Src64B	spn-B	bam	N	InR	how	spn-D	mus301	alpha-Spec	nos	Pcyt1	Dhc64C	fs(1)Yb	BicD	sov	orb	
+dorsal appendage		armi	dpp	kay	Msp300	defl	sax	Ppcs	ttk	Egfr	slpr	rhi	Brca2	Lam	fs(1)Yb	BicD	Jra	rho	mir-184	lqfR	Khc	egh	aos	Shark	mago	CSN5	tefu	sog	Hel25E	mor	usp	hep	okr	mxc	mask	dnc	spoon	brk	vret	fng	spn-F	spn-E	Atg1	vas	Mef2	mirr	Syp	glo	Dp	vnc	Hcf	spn-B	spn-D	fbl	mus301	otu	hfp	pnt	spin	bwk	stil	sty	CycE	Cul3	Ddx1	CycG	sktl	Ge-1	D	sqd	Sec5	RasGAP1	Cad74A	mid	noi	psq	br	chic	tsu	qin	dec-1	cnc	enc	Ras85D	Fas3	cni	tral	grk	Atg13	orb	
+photoreceptor cell		sev	gl	Trpml	hpo	shakB	Culd	ebi	awd	abs	Sh	Raf	BicD	Lar	hh	egh	aos	msn	futsch	ksr	inaF-D	Vav	PQBP1	put	Arr2	trpl	Gbeta76C	EndoA	TfIIA-S	rux	inaC	mask	rdgC	rdgB	ato	rdgA	ed	norpA	cln	ninaE	Pten	prom	ninaC	ninaA	Mad	Sod1	trp	ex	pnr	E2f1	bsk	trx	scrib	rl	dsh	Lrrk	eys	gogo	H	Vps35	DCTN1-p150	br	S	crb	oc	smo	Usp47	hth	Hsc70-4	dock	ptc	Galphaq	
+GO0000795:synaptonemal complex		spn-E	ranshi	egl	Nipped-B	spn-B	c(3)G	spn-D	mus301	tsu	Dhc64C	c(2)M	BicD	corolla	ctp	orb	
+adult brain		drpr	zip	FoxP	tra	Trpml	dnr1	Atpalpha	brat	sni	chico	Sod2	fbl	glu	Sod1	Npc1a	Nos	CadN	Ald	Top1	Gba1b	Pink1	mir-31a	Atxn7	futsch	sqh	ems	eag	Tpi	br	milt	Sema2b	CPT2	Appl	dnc	Sap-r	ato	iPLA2-VIA	Nbr	spartin	Atg5	
+embryonic/larval proventriculus		fkh	Mmp2	mys	hop	dome	bowl	br	crb	dve	Stat92E	Inx2	if	Ser	
+maxillary palpus		Scr	Dfd	norpA	Debcl	tsh	chico	Trl	lab	lz	br	slpr	pb	Wnt6	smo	trx	tgo	hth	opa	ss	
+developmental rate defective		hppy	ftz-f1	Moe	Trpml	RpL38	glob1	RpL36	sax	Ccdc56	Vps25	Ns3	Egfr	srl	Itp-r83A	Trxr-1	pont	Aos1	sesB	mRpL55	Trpm	Ote	RecQ4	mod	Gem3	eIF4E1	CSN8	Urm1	CSN5	Tcs3	gcm	p120ctn	EndoA	Pcyt1	Myc	Akt1	nclb	DENR	CenG1A	Atg1	Xbp1	scu	Ilp8	clu	sle	asrij	kdn	CycC	Cks85A	Tor	Clamp	Ddx1	scrib	CycG	stan	Vsx1	Slik	Max	Sec6	myo	twf	RpS21	RpS6	SMC5	br	Atg17	tor	Akh	Galphas	p38b	Mmp1	Dis3	cv-c	Pex1	Scsalpha	chico	SCCRO3	ohgt	mir-8	Cdk8	CTPsyn	rictor	Clbn	Lam	Lk6	tn	bun	Alh	tw	rept	Stim	ecd	Chchd3	Nopp140	Sxl	dome	foxo	bigmax	slbo	Nop60B	nej	sgg	SCAP	mi	pzg	Toll-9	Syx7	didum	jnj	trc	Elp3	Torsin	Lpin	AkhR	InR	Drice	Caf1-105	Pdp1	RYBP	BHD	poly	Lgr3	P5CDh1	fh	PIP4K	Dronc	Tis11	Cyp18a1	Cbl	tsl	jhamt	Ipk2	Sas-4	Ctr1A	pcm	Top3alpha	ttm50	
+morphogenetic furrow		dpp	Dl	Med	Psn	eya	Mad	Stat92E	wts	dia	emc	da	hh	dac	ecd	sqh	bel	put	br	chic	usp	Rho1	smo	ato	so	fzr	Mbs	ptc	tkv	
+medulla		sens	Moe	otk	gl	hts	Adar	svp	Hem	H217	Nlg4	CadN	Pak	dsh	gogo	bur	Tet	aos	msn	Abi	Vav	N	Ptp69D	br	Gyf	robo3	beta-Spec	hth	dock	Liprin-beta	
+tumorigenic		l(2)gl	mats	bgcn	Syx7	hpo	Sfmbt	brat	bam	otu	fu	Drice	Sox21a	pros	Pc	Sas-4	wts	Sce	yki	scrib	Iswi	mira	dlg1	hh	
+NMJ bouton		wit	Galt	mnb	Trpml	hpo	Atpalpha	brat	Nlg2	wnd	Fak	mir-8	elav	ewg	sesB	mir-184	comt	CkIIalpha	Lar	Rbp9	TBPH	Marf	Nrg	ecd	S6KL	futsch	Prosap	Aplip1	shot	ICA69	Vap33	nmo	rut	Syx18	EndoA	hiw	Mettl3	Appl	atl	Dsk	lap	CCKLR-17D1	Rae1	cmpy	spartin	Cdc42	Syt4	Dysb	C1GalTA	Syx4	Syn	Syp	Torsin	Cln3	Mad	SkpA	Smn	rg	slo	Efhc1.1	Mob2	Nrx-1	rl	Kat60	Lrrk	Cul5	spas	Ube3a	Pldn	Sec8	Pink1	Fmr1	beag	Vps35	dysc	Abl	S6kII	DCTN1-p150	nos	nemy	Arfip	trio	Syngr	Fas2	inc	Top3beta	mir-1000	GluRIID	dlg1	Csp	Liprin-beta	Ca-alpha1D	tkv	
+endocytosis defective		Git	mnb	Rab11	Syp	Ppt1	Vps25	lap	brat	Nlg3	cmpy	Ube3a	Atg6	
+wild-type		prd	ci	mys	Sxl	ush	Rap1	Abl	Ubx	Egfr	Brd	Cdk7	Stat92E	AGO2	w	Raf	dnd	Dcr-2	
+embryonic/larval hemocyte		cact	tub	Atg1	Toll-9	RpS21	Dronc	lwr	Galphaf	Elp3	Tcs3	Pvr	asrij	srp	nej	Raf	Iswi	eater	Rac2	brm	Sin1	
+enhancer of variegation		HDAC1	sti	vig2	CTCF	Hel25E	Trl	mor	barr	wapl	CG8878	not	E2f1	trx	mod(mdg4)	osa	brm	
+humeral bristle		IKKepsilon	corto	Hcf	neb	brm	bft	
+adult antennal lobe projection neuron DL1 adPN		acj6	pasha	HDAC1	Rab5	lwr	AGO1	TBCB	brm	Strip	tup	
+intestinal stem cell of posterior adult midgut epithelium		GATAe	Sara	N	brm	bft	
+embryonic mandibular segment		btd	Dfd	mod	gcm	cnc	bowl	
+eye color defective		cd	st	Vps16A	gl	cln	g	cn	Acn	p	Pex16	v	w	z	Iswi	ph-d	ry	cin	dor	lt	lz	DCTN1-p150	Uvrag	bw	ca	Psc	
+pigment cell		cd	neur	st	cno	scrt	gl	sav	g	hpo	cn	Acn	p	Dark	v	w	Lam	morgue	z	aos	lt	lz	ban	hep	nej	mxc	Su(z)2	fzr	Psc	cln	Dsor1	Rm62	ex	Low	rg	wts	CycE	sdk	rl	dsh	ru	Sec6	ry	cin	mys	S6kII	N	ft	DCTN1-p150	fw	car	bw	sag	Ufo	ca	
+Malpighian tubule		cd	zip	sna	g	trh	cn	spi	Egfr	svp	p	shg	ct	tll	pnt	sesB	w	byn	pbl	shn	emc	fog	thr	Pka-C1	blot	l(2)gl	Vha55	fkh	twi	cad	ry	Kr	dos	lt	rib	Shc	N	wg	br	trpl	pim	kkv	tim	per	ca	tkv	fand	
+song defective		nonA	cac	ato	Adar	per	
+paralytic		Csas	stmA	Atpalpha	Ppcs	PhKgamma	para	awd	Adar	P32	shi	Pgk	Snap25	Shab	kdn	sesB	sls	Ald	comt	stai	tipE	Khc	cac	unc-13	Rab5	kcc	Aplip1	shot	pyx	Nrx-IV	EndoA	Dhc64C	eas	Tusp	loco	GluRIID	Csp	mtg	
+embryonic/larval lymph gland		cact	dpp	kn	senju	prod	C1GalTA	corto	Ubx	Hand	pnr	dom	l(2)gl	Su(H)	RpS21	l(1)air16	RpS6	ush	Tcs3	N	zfh1	wg	mxc	tin	hth	oho31	
+hemocyte		cact	tub	dpp	fkh	Rab14	ecd	PDZ-GEF	lwr	gbb	ush	zfh1	pll	gcm	Cyt-b5	RhoL	Raf	Iswi	Dys	if	
+lamellocyte		cact	dpp	Zir	ecd	Raf	lwr	ush	Tcs3	Rac2	N	et	cher	
+melanotic mass phenotype		cact	Vps16A	senju	MAPk-Ak2	psidin	glob1	Elp3	mrn	InR	krz	Aos1	Clbn	Dark	Catsup	POSH	E2f1	l(1)air5	poly	l(2)gl	l(1)air16	CSN8	lwr	Yeti	Vps35	pita	Spn28Dc	Hsc70-4	Atg6	oho31	p38b	
+melanotic mass		cact	senju	l(3)mbn	Debcl	psidin	corto	mrn	InR	abs	Clbn	Dark	Catsup	POSH	l(1)air5	poly	l(1)air16	CSN8	lwr	CSN5	Vps35	mxc	mib2	Spn28Dc	Hsc70-4	PR-Set7	
+embryonic/larval digestive system		cact	Dark	gbb	ppl	Vps25	Ser	Alk	
+amnioproctodeal invagination		cact	ecd	RhoGEF2	dl	csw	sax	fog	cta	
+amnioserosa		cact	dpp	Rab11	sdt	LanA	scw	mys	ush	sax	tld	sog	Egfr	peb	tup	scb	srp	pnr	crb	hep	cbt	dsh	dia	gd	tkv	
+cephalic furrow		btd	cact	exu	dpp	eve	tor	sax	NAT1	fs(1)M3	trk	
+abdominal segment 10		cad	tor	Ras85D	fs(1)M3	Hsc70-4	trk	
+embryonic/larval hindgut		fkh	sna	cad	l(1)air16	MAPk-Ak2	Kr	trh	tnc	rib	Myo31DF	N	obst-E	bowl	shg	tll	crb	byn	pbl	Mcr	l(1)air5	fog	p38b	fand	
+adult midgut		neur	pygo	Ogg1	Tnks	Dl	Vha16-1	Hand	N	bft	Cat	pnt	Lam	rk	Sap-r	Sara	cic	
+enterocyte		Sox21a	neur	Pink1	Cat	Ras85D	
+intestinal stem cell		Tao	lin-28	Dredd	Tnks	H	hpo	ft	Mad	Cat	wts	rk	Rel	Ras85D	da	Gmd	mtd	cic	tkv	
+partially lethal		Mon1	mir-9a	jnj	mir-318	fbl	bft	mir-276a	mir-276b	obe	Gprk2	sbb	Cat	WRNexo	Ddx1	spz	cic	Mcm10	TBPH	Fmr1	lin-28	PDZ-GEF	REPTOR	ry	His4r	Galphaf	subdued	mir-11	SMC5	Uro	MAGE	Arfip	Rpp30	Csp	
+wing cell		bs	fy	fz	in	gbb	Cdk1	pk	stan	Vang	mwh	N	ed	
+embryonic/larval optic lobe		dpn	pasha	egh	ida	aos	Tcs3	spi	ems	InR	eya	SelD	Orc6	btd	dap	Aos1	Sce	Raf	E2f1	tor	Cdk1	dock	dlg1	
+chaeta		Mo25	Apc2	gro	sens	f	RpL38	Torsin	mrn	Ns3	Egfr	Sb	pnr	Hsp83	y	dsh	Cdk1	phyl	Max	H	tefu	N	fw	spdo	rad50	grh	seq	
+trichome		fw	f	trc	dsh	Cdk1	pk	Vang	
+lethal - all die during pupal stage		pasha	Atg1	Cad96Ca	CIA30	MED19	ball	Ptpa	Nrd1	pcm	Cdk1	Utx	Rpt1	ptc	DNApol-epsilon58	
+keyhole structure		Su(H)	ci	Dl	N	fng	
+trichome of the posterior wing margin		sens	sbb	ci	Dl	en	sax	da	tws	
+wing margin		Mo25	mir-9a	Debcl	ci	Ext2	MED26	sbb	dally	Notum	gwl	Chi	pygo	PDZ-GEF	gus	dop	coro	hyx	Vps35	N	ds	Fkbp14	sd	gcm	Snx3	crb	smo	EloA	Utx	mam	hth	Hsc70-4	ed	tkv	fng	
+wing hair		Cdc42	mats	app	borr	d	Asx	in	f	trc	Dlish	ck	h	sha	Vang	Ubx	fry	CycE	Cul3	dsh	Cdk1	pk	stan	mwh	Rab23	lqfR	fj	ssh	ft	tsl	dco	ds	fw	Rho1	fy	tsr	fz	sgg	Mnt	not	Akt1	Rbsn-5	Mbs	grh	ed	
+auditory perception defective		Ir64a	Amt	futsch	Root	ck	ktub	Dnai2	Cam	Arr2	trpl	CAP	ct	trp	Dnah3	hmw	sesB	Cby	ato	dia	DCX-EMAP	iav	Rh6	fd3F	
+eye disc		gl	sav	Vps25	Egm	Egfr	Sce	CkIalpha	puc	hh	l(2)gl	lqfR	Vha55	csw	tefu	Vav	put	bowl	sca	Pc	Rbf	okr	rin	Rbsn-5	Kap-alpha3	SCCRO	CDase	klar	eya	Mad	pnr	eyg	Stat92E	pnt	wts	Cks85A	CycE	Schip1	scrib	Nct	Pp1-87B	pasha	lok	L	N	rst	smo	Usp47	so	Mbs	toy	Skp2	DNApol-epsilon58	APP-BP1	d	ci	hpo	mrn	Magi	Sos	da	Lar	hid	Traf4	Ubr3	cos	Optix	lz	nmo	ds	rux	yki	ato	AP-2mu	Dg	Syx7	Dl	Vps45	spi	Pten	Psn	WASp	Drice	ex	ey	E2f1	trx	dsh	Nedd8	emc	foi	Dronc	Rab5	aPKC	ft	JhI-1	wg	crb	pcm	Caf1-55	mib1	sag	hth	Csk	Ras85D	AP-2alpha	ptc	tkv	
+Bolwig organ		aop	dpp	Debcl	gl	Dronc	beat-Ia	spi	ems	Egfr	eya	fu	shg	exd	smo	Fas2	ato	so	Hsc70-4	hh	ptc	
+visceral mesoderm		sna	twi	dl	scw	mys	tld	eya	stumps	wg	srp	pnt	LanB2	tor	tin	shn	LanB1	if	Alk	pcs	htl	hh	tkv	
+cone cell		cno	klar	gl	cln	hdc	ebi	ttk	Vang	eya	shg	rg	sty	Raf	CadN	sdk	rl	hbs	emc	BRWD3	aop	ru	LanA	pygo	RasGAP1	aos	Vav	S6kII	N	lz	nmo	ave	DCTN1-p150	wg	fw	oc	Rbf	Opa1	Usp47	Fas2	sl	sag	ec	ed	
+inter-ommatidial cell		hpo	Vav	N	ft	eya	wg	Magi	ex	p120ctn	rst	wts	Opa1	Schip1	DCAF12	
+ocellus pigment granule		gl	v	w	lt	cn	
+micropyle		dpp	hep	vas	mago	Jra	cni	Trl	
+ocellar bristle		noc	LanA	C15	H	N	fu	Zw10	oc	shams	cora	trx	Fas2	cni	hh	ptc	
+postvertical bristle		pnr	oc	LanA	shams	H	ush	trx	Fas2	cni	bft	hh	
+wing vein L2		dpp	gro	ci	H	Dl	gbb	al	vri	Mad	dve	rho	mod(mdg4)	nub	salm	cni	Sulf1	rasp	ptc	Dd	tkv	
+eye equator		pnr	cora	mirr	hop	Wnt4	ptc	fng	
+lethal - all die during embryonic stage		yem	dop	luna	NAT1	MED19	Pol32	crb	ttv	LanB2	cora	CycC	Gat	AGO1	bark	Iswi	Mcr	mh	BigH1	
+sex comb		dpp	bab1	ovo	corto	en	ph-p	ix	pb	klu	esc	trx	y	Pcl	ph-d	nub	rn	U2af38	Scm	Pka-C1	Scr	Su(z)12	HDAC1	RasGAP1	coro	cos	Trl	mor	Dsp1	Pc	lolal	kis	her	mxc	tra2	sxc	Psc	ptc	ss	tkv	
+clasper		Pka-C1	ken	dac	smo	cos	en	hth	wg	
+genital arch		Pka-C1	smo	cos	en	chico	ix	
+embryonic/larval esophagus		crb	fkh	tor	hkb	br	
+embryonic/larval pharynx		crb	cnc	Tm1	Raf	ppl	ems	
+trachea		l(2)gl	sdt	Mmp1	trh	sax	vvl	rib	stumps	bs	crb	Stat92E	pnt	pck	yrt	Spn28Dc	tkv	
+eye photoreceptor cell stalk		crb	sdt	Med	yrt	eys	
+secondary pigment cell		RasGAP1	gl	cln	Vang	N	Mad	nmo	DCTN1-p150	Sod1	crb	rg	esg	dsh	Cyt-c-d	tkv	
+tertiary pigment cell		p120ctn	crb	RasGAP1	cln	esg	dsh	Vang	Mad	Cyt-c-d	DCTN1-p150	put	
+rhabdomere of eye photoreceptor cell		fh	ninaE	Cnx99A	Culd	prom	chp	trp	crb	oc	Xport-A	rdgB	yrt	eys	Scox	
+hyperplasia		prod	Syx7	hpo	Nprl2	Iml1	Psn	Vps25	Mad	ex	polo	scrib	boi	l(2)gl	bgcn	RpS21	RpS6	Rab5	ush	bam	ft	dco	fu	Tudor-SN	crb	l(2)gd1	AP-2alpha	dlg1	oho31	tkv	
+ommatidial precursor cluster		sav	Vps25	ttk	Egfr	shg	pnt	wts	scrib	hh	mbt	LanA	msn	Dronc	Vav	S6kII	N	peb	lz	nmo	usp	Rho1	crb	rst	smo	mask	ato	Ras85D	
+cell adhesion defective		Mmp1	rhea	run	Vav	N	alpha-Cat	Jafrac1	shg	Sec23	eve	crb	bark	Sec24CD	LanB1	asp	Vha13	chb	Ote	bnl	Vha26	fng	
+adult thorax		mod	Pink1	kay	sna	msn	sav	Shark	Src42A	ush	Vang	Hel25E	ft	Ipk2	crc	pnr	hep	eyg	smo	trx	stan	ec	sr	
+anterior pupal spiracle		crc	Max	Cdk8	CycC	mir-14	DOR	Eip74EF	Sox14	Trf2	obst-E	
+pupa		Tig	crc	Lkr	beta-Spec	fon	coro	Spn28Dc	Galphas	Trxr-1	Cam	
+cell lethal		dpn	kay	Dl	ebi	fdl	MED6	Egfr	snama	lawc	cora	Aos1	Uba2	mRpL55	scrib	emc	RpS3	Chc	BRWD3	ogre	dom	l(2)gl	Sec5	pic	swm	aPKC	mst	His2Av	alpha-Cat	MED19	Fkbp14	RpII215	Dhc64C	slmb	mi	SCCRO	ptc	crn	tkv	
+photoreceptor		norpA	Patj	SCAR	beat-Ia	spi	Cam	trp	Shab	Sh	sdk	BRWD3	ru	Rab7	Abi	csw	Vav	N	trpl	milt	sca	S	Nrd1	inaC	Fas2	pan	Galphaq	fng	mew	
+Malpighian tubule primordium		tll	csw	Pex1	N	wg	
+A1-7 ventral acute muscle 2		zip	pnt	Raf	csw	rho	Ras85D	slou	
+external sensory organ		zip	l(2)gl	sens	fkh	msi	ded	stg	corto	numb	ttk	N	WASp	ct	sca	spdo	l(2)gd1	Cul3	mud	fand	
+scolopidium		ct	btd	Nrx-IV	Cad99C	ktub	rho	
+germarium		dpp	Atg1	bab1	jnj	hts	mirr	sax	Rap1	ph-p	Mad	shg	ct	tj	fs(1)Yb	Cul5	mir-282	asp	da	Rbp9	hh	pelo	Fmr1	Sxl	Pdcd4	bam	SMC5	fu	nos	loqs	Six4	spoon	
+dorsal multidendritic neuron ddaC		drpr	crq	trc	sav	hpo	hdc	Pten	fry	ct	wts	Dark	Nak	Cul1	spas	stan	Dscam1	Ube3a	esn	Fmr1	usp	ena	slmb	Rac1	Sin1	Nmnat	mew	
+antennal lobe glomerulus DM2		ct	Chi	robo3	dock	robo2	tup	
+antennal lobe glomerulus VA1v		ct	acj6	Chi	nub	tup	
+subesophageal ganglion		ct	Dfd	Chi	Lam	tup	
+GO0030425:dendrite		Cdc42	drpr	spn-F	norpA	Dysb	trc	hdc	sli	ct	Pex16	wts	mir-124	Dark	Nak	Pak	AGO1	spas	stan	Dscam1	esn	Strip	Pka-C1	fs(1)h	TBPH	AMPKalpha	Dronc	Rab5	lwr	usp	path	nos	pros	Sema2b	Pc	p120ctn	Adf1	nudE	Dhc64C	fra	ena	prel	robo1	dock	Wnt5	Sin1	Nmnat	seq	
+cephalopharyngeal skeleton		ftz-f1	dpp	kn	grn	knk	Hira	Sec23	srp	tll	rtv	Btk29A	Raf	rho	hb	phyl	aop	l(2)gl	hid	dl	ush	Shc	lab	peb	cta	tup	hep	kkv	retn	ea	robo2	scw	Sec61alpha	Bin1	dsh	emc	hkb	HDAC1	dos	nkd	alpha-Cat	sic	uif	btd	kis	cnc	tor	Sec24CD	hth	fs(1)M3	grh	dhd	tkv	
+posterior midgut primordium		sna	LanB2	twi	RhoGEF2	tor	mys	fog	trk	cta	
+segmental nerve branch SNa of A1-7		Sema1a	Cdk5alpha	Mmp1	Dab	Mmp2	14-3-3epsilon	fog	Gyc76C	cta	
+anterior crossvein		Cdc42	dpp	kn	14-3-3epsilon	mys	gbb	cv-d	en	sax	Egfr	fbl	fu	ds	svr	inv	EcR	cv	vn	Dd	tkv	
+GO0000278:mitotic cell cycle		cnn	stg	ida	fzy	grp	cfo	Hira	glu	Wee1	CycA	Hsp83	pnt	polo	BubR1	cmet	Raf	sls	asp	Top1	14-3-3zeta	N	ncd	eco	dap	Dhc64C	dpa	rux	Grip91	slmb	Cdc27	msps	chb	san	
+dorsal neurohemal organ		CycA	pnt	sim	rho	tin	spi	btn	sli	
+neuroblast NB7-3		eg	CycA	gsb	SoxN	nkd	hb	Egfr	wg	hh	ptc	
+ventral nerve cord commissure		siz	D	comm	SCAR	spi	ems	sli	tutl	Hem	fra	loqs	mmy	drl	robo1	HSPC300	dock	fand	
+ventral nerve cord		stc	neur	Debcl	comm	apt	SCAR	en	Pex1	numb	Rap1	spi	vvl	vnd	Syx1A	trol	WASp	sli	SelD	nvy	pnt	Dark	da	aux	Marf	Nrg	repo	egh	PDZ-GEF	Dronc	mys	Lkb1	Pvr	Abl	ems	N	Nrt	SmD3	pros	S	sim	wor	drl	if	robo1	dlg1	htl	fand	
+neuron		Syt1	shakB	h	numb	brat	Drice	Shab	Diap1	slo	pbl	dsh	emc	da	Su(H)	Pink1	mir-31a	mid	Dronc	H	disco	N	dco	barr	pros	Atg16	hep	dnc	Sap-r	fz2	Miro	fzr	dock	ptc	
+sense organ		gcm	H	numb	emc	da	Hsc70-4	ptc	sc	
+corpus cardiacum primordium		dpp	twi	gl	so	gt	da	N	Egfr	htl	wg	
+embryonic/larval peripheral nervous system		fray	egh	Dl	pk	da	N	
+lateral process		Dfd	exd	kn	cnc	retn	ems	slp1	robo2	Ser	dhd	
+mouth hooks		Dfd	ftz-f1	Max	stout	ATP7	osk	ple	Syx1A	ttk	disco	gt	lab	Lpt	rig	Btk29A	cnc	Ctr1A	hb	grh	Girdin	Ser	
+hypostomal sclerite		Dfd	aos	cv-c	stout	ftz	slp1	Egfr	exd	Btk29A	Raf	retn	hb	robo2	
+embryonic maxillary segment		Dfd	exu	mod	gcm	ftz	run	opa	bowl	odd	
+vibrissae		Dfd	aux	gbb	N	ft	lab	dco	opa	
+circadian rhythm defective		Pka-C1	Clk	norpA	cry	disco	sni	dco	Ca-alpha1T	slo	tim	CkIIbeta	cwo	so	per	
+locomotor rhythm defective		Lsm12	norpA	gl	Syt1	cry	Adar	Hand	na	Smn	slow	Bx	CkIIbeta	spz	Ube3a	Alk	eys	Fer2	Clk	smid	Fmr1	hop	dysc	disco	S6kII	dco	timeout	mir-279	tim	Tbh	dnc	Nf1	jet	per	
+embryonic/larval optic stalk		LanA	bdl	BicD	CdGAPr	so	disco	dock	lz	Fak	hh	
+some die during P-stage		Chro	hid	ida	Mdh2	Abi	DOR	ihog	disco	Pli	LamC	Sod1	timeout	MED24	Aos1	Uba2	Cks85A	wde	Eip74EF	scrib	Sap-r	ema	Skp2	
+crossvein		Cdc42	l(2)gl	dpp	d	Dlish	Dl	mys	gbb	Egfr	ds	chic	kek5	dbr	cv	Bx	vn	nub	
+RP2sib neuron		Su(H)	jumu	stg	Dl	numb	pins	vnd	N	Egfr	sli	wg	spdo	CycA	Galphai	sim	mam	Ppt1	robo1	
+U neuron		Su(H)	pros	spdo	gsb	SoxN	Dl	numb	mam	hb	N	
+Usib neuron		Su(H)	spdo	Dl	numb	mam	
+thorax & macrochaeta		Dl	dor	Fas2	Dp	N	
+embryonic proventriculus		chic	Cdc42	zip	Su(H)	Dl	sqh	N	fng	
+proventriculus inner layer primordium		Cdc42	Su(H)	Dl	N	fng	
+proventriculus intermediate layer primordium		Cdc42	Su(H)	Dl	N	fng	
+embryonic pericardial cell		dpp	Dl	numb	Ubx	Hand	stumps	kuz	sli	wg	spdo	pnr	CycA	wts	LanB2	tin	htl	
+dorsal hair		dpp	H	Dl	brk	rib	gt	fu	wg	
+interfollicle cell		Vps60	Mmp2	Dl	Src64B	Ppcs	Rap1	Vps25	stl	Hs2st	ph-p	Stat92E	Sce	fs(1)Yb	r2d2	boi	da	Scm	cher	egh	mys	N	fu	kel	Mettl3	so	ptc	fng	
+polar follicle cell		Pka-C1	Sec5	Dl	arx	hop	Ppcs	N	ph-p	fu	fz	spoon	Cul5	emc	ptc	fng	
+tarsal segment 3		klu	fj	Dl	pk	tgo	hth	Vang	Egfr	ss	bowl	odd	fng	
+tarsal segment 4		Chi	Dl	trh	Vang	Egfr	bowl	odd	klu	pk	tgo	hth	ss	fng	
+microtubule & oocyte		l(2)gl	Khc	14-3-3epsilon	btz	Dl	osk	mago	msps	par-1	
+intersegmental nerve		stc	HGTX	grn	otk	comm	babo	SCAR	beat-Ia	Dl	Mef2	p130CAS	Syx1A	Gyc76C	Hem	Sema1a	unc-5	pbl	stan	Lar	cher	Nrg	ckn	lola	exex	Abl	shot	zfh1	Ptp69D	tup	chic	Sema2a	gcm	eve	Ten-m	trio	fra	daw	if	chb	mew	
+pericardial cell		stg	aos	insc	Dl	mys	ush	numb	Src64B	zfh1	eve	kirre	byn	Rac2	per	htl	
+embryonic primordium of adult salivary gland		Scr	fkh	pnt	dl	sim	rho	hb	spi	sog	fand	
+endoderm		shg	sna	twi	dl	tor	tin	LanB1	Egfr	
+mesothoracic tergum		Dif	gro	Mmp1	Sec5	Dredd	sav	ATP7	dl	Trl	Egfr	ft	wg	Cam	tup	slpr	fw	vg	pnr	hep	chas	Rel	dia	emc	CtBP	
+majority die during embryonic stage		tap	glob1	raw	galla-1	dl	ALiX	Cow	Eip78C	Pol32	sesB	POSH	Mcr	sisRNA:4	sxc	
+immune response defective		drpr	Ephrin	mats	Dif	dpp	PGRP-SA	psidin	Hml	IKKbeta	wash	PGRP-SD	polyph	POSH	AGO2	Rel	Fadd	Eph	Zir	AMPKalpha	ecd	Spn42Dd	Dredd	CSN8	dl	Traf6	PGRP-LC	TM9SF4	Thor	PGRP-LF	Tak1	Tl	alpha-Man-IIa	sima	Atf-2	Cdc42	Rab14	PPO2	Diedel	modSP	bft	18w	Diap2	dally	scrib	r2d2	Dcr-2	spz	imd	poly	Mt2	Pli	G9a	br	GNBP1	p38a	Rac1	gb	Rac2	Galphas	upd2	san	upd3	Galphaq	p38b	key	
+bouton		Cdc42	GluRIIA	Syt1	unc-104	Med	Fak	dbo	shi	ttv	spin	rl	Lrrk	spas	Lar	stai	Pink1	Dap160	Fmr1	Sec5	futsch	Vap33	mGluR	scb	hook	Adf1	sgg	EndoA	hiw	Eps-15	Appl	Orc3	Fas2	Galphas	dlg1	
+GO0071212:subsynaptic reticulum		mir-8	Syx18	C1GalTA	unc-104	Pak	Prosap	Nlg2	dlg1	
+GO0005918:septate junction		Sec23	sca	Nrx-IV	Gli	Nrg	cora	vari	scrib	sinu	Mcr	Sec24CD	dlg1	
+brain		l(2)gl	sax	Egfr	dlg1	sub	ncd	
+type I bouton		Fsn	TBPH	Fmr1	Syp	Adar	nmo	foxo	mGluR	Pgk	rg	Tbh	scrib	Ras85D	lap	cmpy	dlg1	
+GO0005919:pleated septate junction		Nrx-IV	Gli	cora	vari	dlg1	
+cell death defective		drpr	Atg1	Fhos	Mdh2	Dronc	lok	DNaseII	hpo	numb	spi	dco	Drice	Strica	MED24	Diap2	skl	Diap1	spin	Dark	E2f1	Akt1	dsh	Top1	Atg13	
+visceral muscle fiber		Pgk	Sh	rols	Mef2	sls	dnc	esg	Ced-12	sr	
+mushroom body & neuron		Rho1	Fmr1	eas	dnc	aPKC	
+smell perception defective		pain	norpA	ptg	Amt	shakB	Sod2	trp	Sh	Dyrk2	scrib	Pino	ATP8B	acj6	Ir64a	AcCoAS	Pink1	CG33713	Gr63a	mys	Orco	eag	sws	Arr1	SLIRP1	rut	ana	east	Ir8a	SKIP	dnc	gb	Calr	Galphas	homer	mas	
+thermotaxis behavior defective		pain	Dg	norpA	ninaE	ple	HisCl1	trpl	pyx	rut	Dop1R1	rdgC	dnc	Rh6	rdgA	Galphaq	
+RP3 motor neuron		comm	mid	numb	shot	mir-8	trio	fra	Tl	Fas2	dnc	rho	Fas3	if	dock	
+embryonic/larval neuromuscular junction		wit	Galt	GluRIIA	stmA	Trpml	hts	plum	Nlg3	Nlg2	mir-8	sff	rictor	elav	Sh	ewg	Ubc6	Rab3	Rbp9	Fife	TBPH	Marf	Nrg	ecd	S6KL	futsch	Prosap	PGRP-LC	ICA69	foxo	rut	sgg	Rheb	hiw	Tbh	dnc	Akt1	atl	Dsk	SH3PX1	lap	CCKLR-17D1	Rae1	Rbp	Sin1	Shawn	Cdc42	Vmat	Fsn	stau	Dysb	Patr-1	Syt1	babo	Syx4	unc-104	Ent2	Pmm2	cdm	Cln3	Mad	SkpA	Git	dbo	Smn	rg	Efhc1.1	mir-124	Mob2	rl	Ppt1	Lrrk	spas	Ube3a	Sec8	Rab3-GEF	Pink1	stnB	Fmr1	S6kII	nos	nemy	Arfip	trio	Liprin-alpha	Phm	Syngr	Top3beta	HSPC300	GluRIID	Abp1	
+starvation stress response defective		Atg1	Lsd-1	Vha16-1	Scsalpha	AkhR	Cln3	Jafrac1	Tre1	trsn	Lerp	Cyp4g1	Dark	Fatp	Rab2	CycG	Sirt1	Gba1b	Cdk5alpha	AMPKalpha	REPTOR-BP	Hsp27	mir-14	REPTOR	THADA	Lnk	Gabat	Gnmt	Cbl	Aldh	Atg16	Atg17	CPT2	p38a	Tbh	dnc	iPLA2-VIA	Akh	p38b	
+sleep defective		sra	Dh31	Oamb	cry	yar	Nipped-B	BTBD9	tara	trsn	CycA	cue	nAChRalpha4	Alk	Ih	Gba1b	Pp2B-14D	CanB2	Fmr1	Rab27	Gabat	CanB	Ca-alpha1T	CanA-14F	rut	EcR	wake	tim	rho-5	dnc	Nf1	inc	per	homer	
+GO0005770:late endosome		Vps16A	Pcyt1	dor	Rab2	Lrrk	
+plasmatocyte		srp	dpp	egh	C1GalTA	lwr	ush	sn	Rac2	asrij	dome	TM9SF4	put	
+penis		Pka-C1	dpp	ken	en	ix	wg	hh	
+embryonic gnathal segment		exd	dpp	gro	nkd	hb	wg	hh	ptc	
+embryonic hindgut		dpp	fkh	Dl	hop	Syx1A	Myo31DF	N	wg	bowl	inv	tll	crb	Stat92E	vari	CycE	Inx2	hh	
+embryonic head epidermis		shg	dpp	zen	POSH	ems	Egfr	hh	
+embryonic optic lobe primordium		shg	dpp	zen	Egfr	hh	ptc	
+crystal cell		neur	Su(H)	dpp	stg	Syt1	C1GalTA	PPO2	corto	ush	ebi	lab	lz	Mad	put	gcm	srp	shn	eater	brk	U2af38	Ser	CtBP	tkv	
+cardiogenic mesoderm		dpp	pnr	tin	pcs	htl	wg	
+GO0045170:spectrosome		nos	dpp	tra	loqs	ovo	hts	RpS2	vret	piwi	tkv	
+embryonic/larval foregut		dpp	crb	fkh	Gsc	N	hh	
+antennal sense organ		acj6	dpp	en	vvl	ems	Orco	N	lz	wg	btd	sca	klu	hh	ss	
+egg operculum		dpp	Pcyt1	mirr	mago	Ppcs	sog	brk	
+gastric caecum		arr	dpp	l(1)air16	Mmp2	Mef2	corto	mys	gbb	Med	Mad	pnt	vn	if	tkv	
+joint		Su(H)	fj	dac	Dl	N	bowl	Sp1	fz	dve	TfAP-2	frc	dsh	pk	Ser	fng	tal	
+axon & dorsal cluster neuron		fz	hep	dsh	Rac1	fz2	Wnt2	Wnt5	
+wing blade dorsal compartment		Chi	fz	Bx	mys	dsh	pk	Ser	mew	
+class IV dendritic arborizing neuron		Dysb	glo	ppk	sli	Rop	wts	AGO1	dsh	Kat60	spas	stan	Pka-C1	Ret	fs(1)h	hid	Sec6	AMPKalpha	Fmr1	Khc	Sec5	Abl	smg	dco	path	nos	Sema2b	nudE	fra	Rac1	robo1	Sin1	
+mushroom body alpha-lobe		Cdc42	Tao	Ephrin	twf	Fmr1	dac	Nab2	ssh	sick	sle	Vap33	DAAM	eas	dsh	bun	drl	inc	Wnt5	
+mushroom body beta-lobe		Cdc42	Tao	twf	Fmr1	dac	ecd	Nab2	ssh	sick	sle	fdl	DAAM	eas	dsh	bun	inc	fne	Wnt5	
+abdominal 8 ventral denticle belt		D	nkd	en	hop	gt	trk	wg	Stat92E	tor	dsh	hb	hh	ptc	
+mesothoracic ventral denticle belt		exd	Stat92E	kis	dsh	hop	hth	odd	ptc	tkv	wg	
+metathoracic ventral denticle belt		exd	kis	stout	dsh	hth	Ubx	ptc	tkv	wg	
+prothoracic ventral denticle belt		exu	exd	ci	dsh	hth	ptc	tkv	wg	
+triple row		neur	sbb	sax	dsh	shn	pk	fry	ptc	
+macrochaeta & wing		sd	cno	sgg	dsh	N	
+embryonic ventral epidermis		l(2)gl	kay	aos	fzy	spi	Egfr	pll	shg	S	oc	pnt	RhoGEF2	Tl	sim	dsh	rho	brk	wek	
+lamina		dpn	gl	hll	hts	shakB	Med	Adar	svp	H217	Sema1a	dally	Pak	dsh	scrib	Lrrk	asp	bur	gogo	hh	aos	Abi	msn	Abl	Vav	fw	EndoA	hep	fra	loqs	so	fz2	dock	
+sex-determination defective		tra	her	stil	Sxl	tra2	dsx	ix	sc	
+genital disc		E(z)	dally	dsx	ix	oho31	hh	
+serotonergic neuron		eg	tra	Kr	dsx	Rac2	hkb	tup	
+eclosion rhythm defective		Rheb	Fmr1	cry	CkIIbeta	gwl	dco	
+calyx of adult mushroom body		rut	eas	Fas2	CkIIbeta	mud	stan	shot	mbt	Mcm3	
+macrochaeta & scutum		exd	cno	gro	sgg	msi	caup	H	N	ara	
+microchaeta & scutum		gro	msi	H	stan	N	
+anterior postalar bristle		noc	TBPH	gro	mirr	Egfr	CtBP	sc	
+non-suppressor of variegation		cnn	Su(var)204	Su(var)205	Dp	CTCF	Trl	E(z)	Su(var)3-9	Pc	kis	loqs	E2f1	p38a	Su(z)2	mod(mdg4)	Psc	Hmt4-20	
+abdominal sternite bristle		fy	in	Notum	Bin1	meru	mod(mdg4)	CTCF	mwh	hh	Dsp1	br	
+sternite		Rab23	MED31	Debcl	Abd-B	trx	mod(mdg4)	CTCF	Egfr	ix	wg	hh	
+GO0007049:cell cycle		E(z)	wts	Arpc1	sav	sim	Egfr	
+larval abdominal segment 1		E(z)	Sce	h	Pcl	Ubx	sxc	Scm	
+larval abdominal segment 2		E(z)	Sce	h	Pcl	sxc	Scm	
+larval abdominal segment 3		E(z)	Sce	h	Pcl	sxc	Scm	
+larval abdominal segment 4		E(z)	Pc	Sce	h	Pcl	sxc	Scm	
+larval abdominal segment 5		E(z)	Pc	Sce	h	Pcl	sxc	Scm	
+larval abdominal segment 6		E(z)	Sce	h	Pcl	sxc	gt	Scm	
+larval abdominal segment 7		E(z)	Sce	h	hb	Pcl	sxc	gt	Scm	
+GO0005700:polytene chromosome		E(z)	JIL-1	Clamp	Iswi	Invadolysin	Yeti	Su(var)205	Top2	Mcm10	
+dendrite & dorsal multidendritic neuron ddaC		milt	E(z)	kat-60L1	Pc	esc	prel	tutl	ss	
+bang sensitive		stnA	Syn	Atpalpha	kcc	Tpi	Sod2	kdn	sesB	mt:ND2	dila	eas	pk	stai	
+adult heart		RpS13	chico	Egfr	Sod2	pnr	v	tim	eas	Tm2	Sap-r	Klf15	RpS3	sima	per	park	
+primary pigment cell		shg	cno	rst	RasGAP1	gl	sl	Vav	N	ec	DCTN1-p150	Sod1	put	
+decreased cell death		ftz-f1	Atg1	Debcl	hpo	Dp	Drice	Strica	azot	Clbn	wts	Dark	Cul1	morgue	rk	Tspo	da	Buffy	Pka-C1	fkh	hid	Fmr1	Dredd	Dronc	lok	Lkb1	br	wg	Eip74EF	Myc	tin	DCAF12	Galphas	ec	
+larva		Asx	Lim1	Mmp1	ecd	babo	gbb	Psn	chico	CrebA	beta-Spec	Lk6	Tbh	slmb	y	Top1	Alh	stck	Nct	slug	
+macrochaeta & adult thorax		fz	ecd	in	pyd	ara	
+female germline cell		Sec6	Sec5	ecd	ALiX	clu	vnc	fu	CycB	pag	Dlg5	nclb	goe	Ote	
+lobe system of adult mushroom body		ecd	Fas2	Rac1	mud	Mcm3	mbt	
+body size defective		P5CDh1	ecd	lic	fon	14-3-3epsilon	HEATR2	Pex1	NAT1	Nipped-B	Trxr-1	obst-E	ohgt	Mes2	Akt1	CycG	stan	Miro	Rae1	
+embryonic/larval Malpighian tubule		exd	ecd	Kr	hth	mbc	
+midline glial cell		siz	Debcl	comm	spi	vvl	ttk	Egfr	Hem	sli	Drice	pnt	Dark	sty	rho	rl	foi	aop	D	aos	Dronc	N	pros	oc	sim	mam	tgo	Ras85D	
+embryonic/larval muscle system		zip	Dg	klar	Mef2	tum	Syx1A	mbc	Egfr	flw	Btk29A	sns	btl	sls	Hsc70-4	
+abdominal 2 dorsal acute muscle 1		eve	insc	vn	numb	rho	spi	Egfr	
+abdominal 2 lateral longitudinal muscle 1		mys	numb	rho	if	Egfr	
+abdominal 3 dorsal acute muscle 1		eve	insc	vn	numb	rho	spi	Egfr	
+abdominal 3 lateral longitudinal muscle 1		mys	numb	rho	if	Egfr	
+abdominal 4 dorsal acute muscle 1		eve	insc	vn	numb	rho	spi	Egfr	
+abdominal 4 lateral longitudinal muscle 1		mys	numb	rho	if	Egfr	
+abdominal 5 dorsal acute muscle 1		eve	insc	vn	numb	rho	spi	Egfr	
+abdominal 5 lateral longitudinal muscle 1		mys	numb	rho	if	Egfr	
+abdominal 6 dorsal acute muscle 1		eve	insc	vn	numb	rho	spi	Egfr	
+abdominal 6 lateral longitudinal muscle 1		mys	numb	rho	if	Egfr	
+abdominal 7 dorsal acute muscle 1		eve	insc	vn	numb	rho	spi	Egfr	
+abdominal 7 lateral longitudinal muscle 1		mys	numb	rho	if	Egfr	
+embryonic central brain		fkh	sim	vn	rho	Egfr	
+wound healing defective		Cdc42	zip	Hayan	sqh	wash	Egfr	lz	wnd	wg	chic	shg	hep	pcm	atl	spas	Spn28Dc	grh	
+embryonic anterior Malpighian tubule		S	pnt	rho	Pvr	spi	Ubx	Egfr	svp	
+embryonic posterior Malpighian tubule		S	pnt	rho	Egfr	svp	
+neuroblast MP2		SoxN	numb	vnd	Egfr	N	
+neuroblast NB5-2		SoxN	Dl	vnd	Egfr	N	wg	
+neuroblast NB7-1		SoxN	hb	vnd	Egfr	N	
+neuroblast NB4-2		gsb	SoxN	Egfr	N	hkb	ptc	wg	
+1st posterior cell		kn	aos	kis	dlp	sha	Sulf1	Egfr	hh	ptc	tkv	
+sensory neuron		amos	AMPKalpha	mid	numb	vvl	ttk	shot	Egfr	N	DCTN1-p150	gcm	pros	Sas-4	foi	Nmnat	ctp	
+dorsal air sac primordium		RasGAP1	pnt	Mmp2	sty	Sos	btl	ksr	Ras85D	Egfr	stumps	
+presumptive embryonic/larval tracheal system		Hs6st	zip	knk	Atpalpha	trh	spi	ttk	Hs2st	awd	Egfr	Gyc76C	shg	rtv	Stat92E	cora	pnt	Lam	rho	pyd	Chc	hop	rib	dome	bs	Rho1	Nrx-IV	wus	vari	Fas2	btl	tgo	Inx2	conv	grh	bnl	
+tracheal primordium		Rho1	zip	btl	trh	rho	Pten	spi	ems	salm	Egfr	fand	
+embryonic/larval trachea		Hs6st	crp	apt	hdc	trh	vvl	Egfr	Sec23	shg	Btk29A	pnt	DAAM	rho	serp	dmt	S	kkv	pck	btl	Sap-r	bark	mmy	Sec24CD	sima	bnl	verm	tal	tkv	
+tracheal lumen		aop	crp	tsr	Rab5	Egfr	
+embryonic/larval visceral branch		crp	sty	mys	rho	ttk	if	Egfr	hh	mew	
+embryonic stomatogastric nervous system		exd	fkh	spi	so	gt	Egfr	
+abdominal 1 ventral monoscolopidial chordotonal organ vch1		pnt	fra	rho	Ras85D	Egfr	
+interface glial cell		gcm	pros	robo3	dap	pnt	repo	robo1	Egfr	robo2	foi	
+pretarsus		Chi	klu	tgo	hth	Egfr	ss	bowl	odd	fng	
+tarsal segment 2		fj	pk	tgo	hth	Vang	Egfr	ss	bowl	odd	fng	
+bract		RasGAP1	in	aos	numb	spi	Egfr	fz	pnt	Raf	rho	dia	hth	Ras85D	
+embryonic precursor cell of adult midgut		vn	Ras85D	pit	Egfr	Mad	tkv	
+decreased cell size		hppy	Cdc42	chem	Rx	gbb	Hcf	Ubx	chico	Ns3	Nipped-B	Egfr	InR	klu	Tor	Pis	CycG	bun	Trpm	slif	RecQ4	mod	LTV1	l(2)gl	Whamy	lqfR	PIP4K	lic	Smox	Lnk	Tcs3	tsl	JhI-1	Lst8	bs	pros	Myc	sl	Akt1	Ras85D	mi	Pdk1	ttm50	Seipin	pix	p38b	
+leg & macrochaeta		sca	prod	y	pk	Egfr	
+posterior commissure		comm	mid	en	spi	vvl	sli	Sema1a	pros	spdo	oc	elav	gsb	cas	fra	SoxN	rho	hth	robo1	
+mesothoracic tergum & macrochaeta		Pka-C1	gcm	exd	H	h	chn	emc	
+dorsal branch primordium		bs	crp	pnt	Sec5	Lam	dnd	btl	elB	pyd	ems	robo2	put	
+ganglionic branch primordium		Cdc42	comm	Atpalpha	ems	nrv2	RhoGAP93B	pnt	vari	Lam	Fas2	btl	elB	pyd	robo1	robo2	bnl	
+fascicle		LanA	rau	mys	vnd	ems	N	InR	sli	Tig	gcm	fra	DAAM	robo1	robo2	Wnt5	mew	
+neurite		Sec8	robo3	Sec5	fru	ato	ems	
+antennal lobe		Sema2b	ems	drl	Dscam1	dock	
+dorsal bridge		srp	hid	Btk29A	cv-c	stout	Raf	ush	ems	peb	Ser	dco	tup	
+vertical bridge		srp	Btk29A	knk	ush	ems	peb	tup	
+sensillum campaniformium		bs	Poxn	sgg	Cul3	en	DCX-EMAP	
+anterior commissure		sas	comm	en	spi	vvl	sli	pros	spdo	oc	SoxN	CadN	rho	drl	robo1	
+radiation resistant		Dark	esc	Dredd	Tspo	imd	Drice	
+pair rule phenotype		prd	exd	ftz-f1	eve	HDAC1	pygo	Stat92E	h	hb	ftz	run	
+embryonic/larval visceral muscle		eve	sns	tin	RyR	if	
+lethal (with Df(2R)X1)		eve	Mef2	Jra	Syb	14-3-3zeta	
+embryonic abdominal segment		spn-F	stau	Moe	btz	vas	csul	Ubx	gt	Pka-R1	sbb	Stat92E	Sce	hb	vls	cic	Su(z)12	tud	Kr	neb	wg	nos	exd	Pc	tor	par-1	
+abdominal tergite 4		exd	Pc	trx	Pcl	Scm	
+metathoracic laterotergite		Scr	exd	trx	Ubx	mor	Dsp1	
+presumptive embryonic/larval peripheral nervous system		arr	raw	numb	chn	ttk	glu	sno	pbl	AGO1	rho	shn	stan	da	foi	Scr	aux	nkd	scra	rib	N	wg	SmD3	exd	pros	spdo	sgg	hth	if	seq	mew	
+Bolwig nerve		exd	pnt	gl	Hsc70-4	dock	
+embryonic abdominal segment 1		nos	exd	Kr	rl	hb	hth	psq	put	
+embryonic abdominal segment 3		nos	exd	Kr	tor	rl	psq	put	
+embryonic abdominal segment 5		Asx	Kr	hop	psq	gt	dome	put	nos	upd1	exd	Pc	Stat92E	tor	rl	
+labrum		exu	Btk29A	cnc	tor	fs(1)M3	trk	
+embryonic labral segment		exu	stau	cnc	tor	trk	
+adult mushroom body		drpr	Src64B	sle	chico	Nipped-B	ey	rg	CkIIbeta	Nedd8	mud	mbt	Mcm3	SMC1	Rpn6	twf	Fmr1	dac	Mtl	Pgam5	sqh	tsr	Dhc64C	Orc3	Rac1	drl	
+eo neuron		neur	l(2)gl	mir-9a	sens	H	numb	tws	sc	sca	spdo	ham	Dark	phyl	fand	
+ventral midline		pros	oc	RhoGEF2	Raf	sim	puc	Egfr	sli	wg	hh	fand	
+macrophage		gcm	sdt	fkh	repo	pall	PDZ-GEF	Abi	Rap1	wash	sn	Pvr	LanB1	
+anterior midgut primordium		fkh	sna	LanB2	twi	RhoGEF2	tor	mys	if	mew	
+salivary gland common duct primordium		Btk29A	fkh	Raf	tor	mys	Ras85D	if	mew	
+anterior embryonic/larval midgut		chic	zip	fkh	Mef2	gbb	sqh	tin	puc	
+longitudinal visceral muscle primordium		tll	fkh	twi	byn	tin	pyr	Alk	htl	HLH54F	
+embryonic brain		oc	fkh	Dark	babo	Pex1	tin	lab	hh	
+embryonic visceral muscle		lmd	fkh	LanB2	Mhc	Mef2	mib2	Ubx	mbc	SmD3	hkb	
+GO0030018:Z disc		flw	Zasp52	Gyf	fliI	Mhc	mys	sls	wupA	cher	
+epithelium		flw	Nrx-IV	Vps60	chem	sqh	Pis	dia	tum	Vps25	Hakai	
+germline stem cell		neur	bgcn	msi	hts	RanBPM	fs(1)Yb	Eip78C	
+mitosis & nuclear chromosome		prod	eIF4E1	fzy	grp	tefu	mre11	Trl	glu	ncd	eco	mei-9	polo	dpa	vih	cmet	sls	Cdc27	wisp	rad50	san	Pp1-87B	
+cell cycle defective		RecQ4	cnn	AMPKalpha	jnj	pins	TBCB	bam	SMC5	ft	Ipk2	Tudor-SN	chinmo	mio	Sas-4	polo	fs(1)Ya	RpS2	Mcm10	
+GO0005776:autophagosome		Mon1	Vps16A	Atg1	Rab7	Trpml	sav	fab1	lt	Rack1	wash	ft	Snap29	Gyf	Atg17	EndoA	Rab2	Sap-r	Lrrk	Atg6	
+embryonic/larval glial cell		neur	repo	Pex1	vnd	ttk	ft	gcm	pros	ex	CycA	pnt	SoxN	AGO1	mira	bul	fzr	loco	
+head capsule		Chi	Akt1	Pten	chico	ft	hh	ptc	
+embryonic labial segment		Scr	mod	h	tsh	hb	ftz	slp1	gt	odd	
+medial ocellus		oc	smo	so	fu	hh	ptc	
+sensillum campaniformium of dorsal radius		Su(fu)	Cul3	hth	ara	fu	
+cystoblast		mtrm	hts	Sxl	mael	bam	fu	
+neuropil		milt	FoxP	TBPH	Pink1	oc	fzy	fra	DAAM	tefu	Sap-r	robo1	Npc1a	
+lethal - all die before end of first instar larval stage		Cyt-c-p	Rab11	Xbp1	Syx7	RpL15	hpo	kibra	Ppcs	eIF3m	Tctp	Prp38	Npc1a	obst-E	Sec23	Btk29A	mRpL55	GATAe	Sec8	eIF4E1	Acsl	mid	hyx	ush	sqh	IKKepsilon	tsr	Pcyt1	lolal	Opa1	Vhl	alphaSnap	Sec24CD	Pak3	ttm50	Nmnat	mesh	
+some die during first instar larval stage		Cyt-c-p	Rab11	Xbp1	Syx7	RpL15	hpo	kibra	Ppcs	Hand	Tctp	Prp38	Npc1a	Sec23	Btk29A	mRpL55	Sec8	eIF4E1	Acsl	hyx	ush	sqh	Brms1	IKKepsilon	tsr	Pcyt1	lolal	Opa1	Vhl	alphaSnap	Sec24CD	ttm50	Nmnat	mesh	
+GO0005604:basement membrane		Sec23	l(2)gl	hep	C1GalTA	hll	Pis	Sec24CD	
+GO0005783:endoplasmic reticulum		fh	Pink1	Marf	pcx	hts	Torsin	Cnx99A	Sar1	Gos28	Vap33	ninaA	Sec23	Xport-A	atl	Sec24CD	spas	
+GO0005794:Golgi apparatus		Sec23	Dhc64C	Xport-A	Cnx99A	Arl1	Sec24CD	Rab1	Gos28	DCTN1-p150	
+embryonic/larval epidermis		Sec23	sax	Sec24CD	scra	Sar1	brk	pan	grh	hh	
+epicuticle		Sec23	rtv	knk	mmy	Sec24CD	grh	
+taenidial fold		Sec23	Btk29A	DAAM	sinu	Sec24CD	ttk	peb	
+ring gland		Marf	gl	l(1)air16	corto	oho31	poly	
+photoreceptor cell & axon		gl	msn	svp	Ptp69D	Hem	trpl	trp	trio	Pak	stan	dock	hh	seq	bur	
+cell number defective		senju	Fmr1	gl	hyx	Ctr9	Cul5	BHD	Mcm3	
+GO0005811:lipid particle		Marf	klar	Lsd-1	Lsd-2	dop	LpR2	THADA	Torsin	Lpin	AkhR	srl	DCTN1-p150	Pcyt1	CPT2	Dhc64C	e(y)1	Seipin	
+GO0005739:mitochondrion		Shawn	zip	CIA30	Trpml	scu	Mul1	porin	Invadolysin	clu	srl	dj-1beta	fbl	ref(2)P	knon	sesB	bb8	Ubc6	Lis-1	Lrrk	Trpm	Fer2	Gba1b	P5CDh1	fh	Pink1	Marf	Khc	Chchd3	Pgam5	futsch	sqh	Chchd2	Aplip1	S6kII	DCTN1-p150	milt	nos	Gyf	Dhc64C	Opa1	mask	spoon	Sap-r	Miro	iPLA2-VIA	prel	park	ttm50	
+procuticle		Sec23	rtv	knk	ttk	grh	obst-E	
+macrochaeta & thorax		Zw10	Grip84	gro	cpb	mi	ap	
+embryonic abdominal segment 6		nos	Pc	Asx	kis	rl	gt	psq	dome	put	
+embryonic abdominal segment 7		nos	Pc	Asx	Raf	hb	rl	gt	psq	dome	put	
+peripheral nervous system		Su(H)	zip	Nrg	Pex1	alpha-Man-Ia	dmt	gt	barr	pros	spdo	Stat92E	E2f1	Raf	hth	puc	mas	
+salivary gland		RecQ4	ftz-f1	mir-14	DOR	Asciz	Elp3	gt	br	Dark	Eip74EF	Kap-alpha3	Seipin	ctp	
+thecogen cell		neur	l(2)gl	spdo	sv	msi	sens	Dark	H	numb	ttk	phyl	tws	
+mechanosensory chaeta		l(2)gl	sens	Notum	dally	dlp	H	Hakai	N	
+chemosensory ventral triple row bristle		neur	l(2)gl	Poxn	dally	Dl	h	br	
+glial cell		drpr	Dg	LanA	repo	Kr	h	Pten	vvl	gcm	pnt	CycE	mira	hth	salm	fzr	Buffy	htl	hh	ths	
+embryonic/larval segmentation phenotype		lost	h	osk	Hakai	cic	
+larval mesothoracic segment		Sce	h	Pcl	hb	sxc	Scm	
+larval metathoracic segment		Sce	h	hb	Pcl	Ubx	sxc	Scm	
+larval prothoracic segment		Sce	hb	Pcl	sxc	Scm	
+lateral trunk anterior branch		pnt	sty	btl	vvl	elB	hh	
+germarium region 2b		tsu	Mmp2	Ppcs	da	hh	
+germarium region 3		tsu	Sce	ranshi	da	ph-p	hh	ptc	
+radiation sensitive		Debcl	grp	Caf1-180	Rassf	Ppcs	mrn	Rev1	chico	spn-B	dj-1beta	fbl	Sod1	azot	Diap2	Brca2	Clbn	rl	spz	nbs	RecQ4	ry	14-3-3epsilon	lok	tefu	mre11	mir-11	p53	His2Av	MAGE	okr	Myc	mh	rad50	
+germ band		crb	smog	POSH	mys	wb	Pli	peb	
+taenidium		uif	Mmp1	mmy	Sec24CD	ttk	peb	
+nurse follicle cell		Stat92E	qui	hop	otu	shu	fng	
+segmental nerve		Sema1a	beat-Ia	pk	p130CAS	Syx1A	shot	Unc-115a	if	stai	mew	
+abdominal tergite 6		bab2	bab1	Asx	trx	Pcl	Scm	ix	
+decreased cell growth		Xbp1	kay	Dis3	Myc	Archease	Torsin	BHD	wnd	Wdr24	
+metathoracic metatarsus		dac	kis	Pcl	Ubx	wg	
+lamina plexus		acj6	Dg	egh	msn	dysc	Unc-115a	dock	Hem	
+photoreceptor cell R1 & axon		Sema1a	not	otk	egh	msn	CSN5	dock	sli	Ptp69D	limbo	
+photoreceptor cell R2 & axon		Sema1a	not	otk	egh	msn	CSN5	svp	dock	sli	Ptp69D	limbo	
+photoreceptor cell R3 & axon		Sema1a	not	otk	egh	msn	CSN5	dock	sli	Ptp69D	limbo	
+photoreceptor cell R4 & axon		Sema1a	not	otk	egh	msn	CSN5	dock	sli	Ptp69D	limbo	
+photoreceptor cell R5 & axon		Sema1a	not	otk	egh	msn	CSN5	svp	dock	sli	Ptp69D	limbo	
+photoreceptor cell R6 & axon		Sema1a	not	otk	egh	msn	CSN5	dock	sli	Ptp69D	limbo	
+adult thorax & macrochaeta		mod	sca	sgg	Grip91	corto	tam	
+lethal - all die during P-stage		Shawn	dom	Tet	AMPKalpha	ttv	Syx4	stx	pcm	Asciz	DCAF12	
+intermediate longitudinal fascicle		gcm	robo3	sli	tutl	Wnt5	
+intersegmental nerve branch ISNb of A1-7		Cdk5alpha	Nrg	Mmp1	repo	ckn	Dab	Mmp2	14-3-3epsilon	exex	Gyc76C	tutl	Sema1a	mir-8	daw	
+lateral longitudinal fascicle		nvy	Sema1a	DAAM	Ced-12	mbc	sli	tutl	Wnt5	
+medial longitudinal fascicle		robo3	beta-Spec	robo1	sli	tutl	alpha-Spec	
+midline crossing tract		comm	Abl	Vav	robo1	kuz	sli	tutl	
+touch response defective		Vmat	pain	Smn	Cadps	Root	uncl	Piezo	plx	rpk	SCCRO	tutl	
+embryonic/larval transverse connective		dap	Mmp2	knk	vari	sinu	Lac	nrv2	chico	
+furrow canal		zld	Apc2	dop	RhoGEF2	sqh	Src64B	dia	
+Johnston organ		CAP	Eb1	Cad99C	Cby	ato	DCX-EMAP	Dnai2	
+some die during third instar larval stage		Dg	APP-BP1	mle	Mmp1	didum	Treh	stj	Ccdc56	Sfmbt	cdm	Egm	MED6	Npc1a	Cdk8	krz	Aos1	polo	dally	Lam	Tor	Kdm2	poly	TBPH	lqfR	pasha	eIF4E1	AMPKalpha	lic	CSN8	lwr	ago	Arl1	dco	ave	alpha-Spec	Orc6	sgg	Rbf	Crag	nclb	
+gravitaxis defective		cpo	Galt	Vmat	pain	cry	sni	Sod2	kat-60L1	na	Diap1	sff	Lam	CRG	Ube3a	Fer2	TBPH	Pink1	orb2	tefu	Bug22	nmo	pyx	Gyf	Cby	per	mir-1000	fd3F	
+presumptive embryonic/larval muscle system		inv	lmd	rst	Lam	Mef2	Ced-12	mbc	robo1	sli	pcs	foi	
+larval outer optic anlage		mnb	not	Dl	Treh	RPA2	numb	RPA3	N	dock	
+antennal lobe glomerulus		acj6	robo3	CadN	dock	robo2	
+GO0031941:filamentous actin		zip	Khc	ssh	mys	CG10939	kel	scb	tsr	POSH	DAAM	Cul3	Pak3	tkv	mew	
+ring canal		hfp	Dg	Sec5	Msp300	Mbs	
+embryonic heart cardioblast		spdo	Mmp1	Mmp2	mys	numb	kuz	
+abdominal segmental nerve		ab	stc	Con	Nrg	otk	lola	comm	babo	beat-Ia	shot	zfh1	Gyc76C	Ptp69D	Sema2a	nvy	Sema1a	trio	unc-5	daw	Ca-alpha1D	
+abdominal dorsal multidendritic neuron ddaE & dendrite		nvy	sens	sna	wor	ttk	
+dorsal multidendritic neuron ddaE & dendrite		nvy	sens	sna	Tm1	wor	ttk	
+hub cell		zip	shv	Lasp	mys	CadN	sqh	N	Ser	Ote	
+antennal lobe glomerulus DL1		acj6	Chi	lwr	CadN	tup	
+olfactory receptor neuron		amos	CadN	nub	drl	Csp	
+dopaminergic neuron		Pink1	Torsin	Lrrk	dj-1beta	tup	
+interneuron		Chi	robo1	ap	hkb	tup	
+transverse nerve		Sema2a	Sema1a	Cdk5alpha	plum	exex	tup	
+hyperactive		rg	Sh	Catsup	Trf	tor	shakB	Nf1	Gbs-70E	Orco	eag	homer	
+embryonic somatic muscle		aop	Zasp52	lmd	Mhc	mys	numb	pyr	sli	chic	Grip	rst	sim	mib2	wupA	LanB1	Rac2	robo2	ptc	
+Minute		mod	RpS13	borr	RpS21	RpL38	RpS6	RpL36	RpL13A	RpS3	Ns3	br	
+cell growth defective		l(2)gl	eyg	pygo	Lam	hpo	scrib	Vps25	so	ft	
+large body		l(2)gl	Syx7	Mnt	sav	fab1	Rab5	scrib	Pten	Csk	Vps25	
+neoplasia		l(2)gl	shi	wts	Schip1	slmb	scrib	Tcs3	Pten	Chc	
+mushroom body gamma-lobe		Nos	Tao	usp	robo3	Rpn6	dac	
+feeding behavior defective		Gba1b	AstA	CG33713	Desat1	unc-13	Pex1	ppl	Pkd2	mtt	uif	SLIRP1	fit	EcR	Mip	klu	Fatp	LanB1	Rac2	Inx2	5-HT2A	
+GO0005814:centriole		Cp110	cnn	stg	Poc1	Bug22	ana3	mio	Sas-4	Cep97	asl	Mbs	Rae1	Topors	
+long lived		mth	Atpalpha	Scsalpha	mir-958	Egm	chico	Mrp4	InR	dj-1beta	mir-955	Sod1	mir-932	azot	mir-8	v	Fatp	mir-285	mir-284	Tspo	puc	AdSS	bmm	AstA	Gba1a	HDAC1	Ogg1	Gr63a	Pgam5	14-3-3epsilon	Lnk	Rpi	Orco	mir-966	G9a	mir-965	EcR	p120ctn	mir-375	mir-990	Rac2	
+peptidergic neuron		hid	Fmr1	Dark	Dredd	Dronc	Drice	Strica	
+embryonic/larval neuron		gcm	Chi	jumu	comm	SoxN	mira	Abl	robo1	N	sli	ed	
+GO0000228:nuclear chromosome		Zw10	cnn	stg	polo	plu	Klp61F	ph-d	otu	Pp1-87B	
+GO0005876:spindle microtubule		BubR1	Pfdn2	Lkb1	Klp61F	sub	
+neuroblast NB6-4		gcm	gsb	SoxN	E2f1	nkd	mira	
+embryonic abdominal segment 10		nos	Raf	rl	psq	put	
+embryonic abdominal segment 11		nos	Raf	rl	psq	put	
+ventral longitudinal muscle		Grip	gcm	vn	kon	spi	sli	ed	mas	
+embryonic/larval midgut longitudinal visceral muscle		LanB2	pyr	mbc	Hem	blow	
+GO0000781:chromosome, telomeric region		ver	cav	moi	tefu	mre11	rad50	nbs	
+GO0000793:condensed chromosome		ball	SMC1	Fmr1	nudE	BubR1	AGO2	tefu	rad50	PR-Set7	sea	nbs	
+anterior scutellar bristle		lqfR	Dark	Appl	Dl	N	CtBP	wg	sc	
+organism		shg	RYBP	Apc2	sqh	scrib	Sec61alpha	dia	
+GO0008021:synaptic vesicle		Fife	Pldn	HDAC6	mth	Pink1	GluRIIA	stnB	Dysb	Fmr1	Syt1	stnA	Syn	Syp	foxo	mGluR	Git	Cadps	Liprin-alpha	scrib	SH3PX1	lap	CkIIalpha	Ube3a	Rbp	
+GO0044754:autolysosome		Mon1	Vps16A	Gyf	Uvrag	Rab7	lt	Rab2	wash	Sap-r	Atg6	Wdr24	
+GO0030017:sarcomere		zip	sals	Dg	tw	Lasp	C1GalTA	Mhc	DAAM	sls	Mlc2	cher	
+spermatozoon		Cad99C	CR43862	Ack	CR43306	Poc1	CR42859	CR42858	lncRNA:TS27	knon	lncRNA:TS26	scat	Iswi	lncRNA:TS23	Roc1b	tud	CR43852	Trf	CR44420	CR44585	CR43416	hmw	wuho	tra2	Rae1	chb	ctp	CR44412	CR43484	mle	didum	CR45542	asun	CR43802	ix	Dnai2	CR43848	Dnah3	Hsp83	HtrA2	Pink1	Ntl	blanks	heph	CR43753	mtsh	Pkd2	Zw10	dila	Prosalpha6T	pcm	lncRNA:TS1	lncRNA:TS2	lncRNA:TS3	CR43282	
+onion stage spermatid		chic	Zw10	polo	rux	eRF3	asun	lds	Rae1	fbl	
+GO0000090:mitotic anaphase		Wee1	pita	Zw10	Dp1	BubR1	cmet	msps	
+SO0000340:chromosome		RecQ4	mle	Sse	Cdc27	Yeti	Top2	PR-Set7	P32	timeout	
+external sensory organ precursor cell IIa		neur	sens	numb	mud	ttk	WASp	
+external sensory organ precursor cell IIb		neur	spdo	sens	numb	mud	ttk	WASp	
+muscle attachment site		Dg	tw	Mef2	mys	shot	Hem	WASp	sli	Vinc	CAP	Tsp	slow	if	sr	mew	
+wing blade		Asx	Ilp8	Nipped-B	svr	Magi	kek5	ohgt	Gprk2	krz	lft	y	CycG	Zyx	rl	Sulf1	Girdin	Pink1	fj	PDZ-GEF	mir-14	mys	Lnk	N	sgg	pgant3	sl	ics	Sox15	
+terminal tracheal cell		Cdc42	Rbcn-3A	aop	mir-14	Rab5	mys	aPKC	IKKepsilon	par-6	Dhc64C	sty	btl	Rbsn-5	pyd	Vha13	Hakai	Vha26	
+segment border muscle		aop	tub	Dl	Tor	kon	numb	pyr	rho	slou	N	
+centripetally migrating follicle cell		shg	Abi	SCAR	Mef2	spoon	N	fng	
+external sensory organ precursor cell		neur	sca	sgg	l(2)gd1	Fas2	meru	Sulf1	N	CtBP	Nct	tup	
+germarium cap cell		tud	tj	ovo	RanBPM	pyd	bam	N	Ote	
+neuroblast MNB		oc	sim	mam	tgo	N	sli	
+lens		neur	pros	sv	fj	aos	cln	sdk	ttk	N	lz	
+chemical resistant		Bacc	mth	CG10527	Syn	Gbs-70E	para	Itp-r83A	dj-1beta	Nos	vg	na	w	Met	Tspo	Sirt1	puc	5-HT2A	tipE	hig	Dronc	lok	gce	Orco	RyR	Tpi	Uro	Doa	DopEcR	ics	tank	
+macrochaeta & mesothoracic tergum		neur	spdo	sgg	Sec15	ssh	
+taste perception defective		sd	rut	pain	norpA	Sh	shakB	Gr64a	Gr32a	ppk28	trpl	mas	
+cystocyte		nos	Dhc64C	vas	CycE	hts	BicD	CSN5	Rbp9	alpha-Spec	
+GO0048786:presynaptic active zone		Fife	nos	Fmr1	Mettl3	dlp	Syx4	Syp	rl	S6kII	Nlg2	Lrp4	mGluR	
+adult olfactory receptor neuron		drpr	Sema2b	nub	Orco	Lrp4	
+abdominal 1 dorsal acute muscle 3		nau	kn	spdo	insc	numb	
+abdominal 2 dorsal acute muscle 3		ab	kn	spdo	insc	numb	rho	
+abdominal 3 dorsal acute muscle 3		ab	kn	spdo	insc	numb	rho	
+abdominal 4 dorsal acute muscle 3		ab	kn	spdo	insc	numb	rho	
+abdominal 5 dorsal acute muscle 3		ab	kn	spdo	insc	numb	rho	
+abdominal 6 dorsal acute muscle 3		ab	kn	spdo	insc	numb	rho	
+abdominal 7 dorsal acute muscle 3		ab	kn	spdo	insc	numb	rho	
+ganglion mother cell GMC1-1a		mid	Rca1	sim	numb	robo1	sli	
+ganglion mother cell GMC4-2a		CycA	stg	Rca1	numb	pins	Ppt1	nub	
+secondary neuroblast		ana2	spdo	ham	pnt	numb	pins	
+grandchildless		stau	tud	Lasp	vas	osk	mars	csul	vls	pcs	
+female sterile germline-dependent		spn-F	Sec6	Syx7	spin	bwk	Caf1-180	tor	CSN5	Hsf	snf	otu	
+GO0000785:chromatin		rin	Cdc27	gwl	Top2	Trl	otu	SkpA	
+cleavage nucleus		par	dop	KCNQ	tefu	Cp190	thr	
+sex comb tooth		Scr	prt	Pc	Cdk8	CycC	Hcf	
+abdominal tergite 5		bab2	Asx	Abd-B	trx	Pcl	
+semi-sterile		Gba1b	fws	Fmr1	RanBPM	subdued	Lpin	Dis3l2	spn-D	Drice	fan	Abd-B	cpb	tim	wupA	per	Mcm10	
+aging defective		Thor	p53	per	chb	Npc1a	
+circadian behavior defective		slo	tim	cry	Nipped-B	per	unc79	
+terminal phenotype		Raf	tor	Shc	cic	fs(1)N	
+GO0001940:male pronucleus		sra	yem	polo	wst	Iswi	plu	Hira	
+suppressor of variegation, with In(1)w[m4]		ADD1	Su(var)3-9	JIL-1	Su(var)205	Pp1-87B	
+antennal disc		Diap1	rst	mirr	scrib	wg	Nct	
+abdominal lateral adult muscle precursor cell		S	hid	Poxm	spi	slou	
+flight muscle		Pink1	CPT2	sesB	clu	Chchd2	srl	fbl	
+double row		sbb	smo	shn	hth	ptc	
+dorsal abdominal cluster		TBPH	amos	ham	chn	shn	robo1	sli	
+VUM neuron		sim	rho	tgo	dock	sli	
+chordotonal organ & axon		pros	mid	Ubx	shot	robo1	sli	
+A1-7 ventral longitudinal muscle 3		Sec5	lola	Poxm	DAAM	robo1	sli	
+A1-7 ventral longitudinal muscle 4		lola	Poxm	vnd	robo1	sli	
+lamina & neuron		repo	smo	spi	so	hh	
+karyosome		spn-E	jnj	vas	ranshi	tefu	Src64B	mael	spn-B	SMC5	spn-D	mus301	chic	hfp	kel	mtrm	dap	Btk29A	CycG	sub	
+mesothoracic bristle		Fkbp14	spn-F	Cdk8	Hsp83	CycC	Ctr1A	C15	gbb	chn	Vang	HSPC300	tup	
+embryonic hemocyte		drpr	Rho1	srp	Pvr	chb	
+GO0061176:type Ib terminal bouton		mir-8	stau	Patr-1	mir-124	Cbp53E	CASK	dysc	Psn	Abp1	
+GO0005771:multivesicular body		stnB	Vha55	hook	Trpml	stnA	Sap-r	
+outer photoreceptor cell		aux	sty	Abi	ktub	svp	
+mystery cell		sno	aos	sty	sdk	svp	
+cold stress response defective		brv1	brv2	Fatp	THADA	svr	
+adult		Lk6	Myc	Sxl	trx	y	
+GO0000794:condensed nuclear chromosome		Wee1	pita	cmet	baf	Invadolysin	thr	Mcm10	
+FlyBase_internaltransgene_features:cell lethal:cell lethal		Rab11	Rpn6	Doa	Sec5	Syb	Taf6	tkv	
+mushroom body neuroblast		dpn	ana2	tll	Rx	bun	foxo	
+terminal filament		usp	bab1	tud	tj	RanBPM	Ote	
+adult antennal lobe projection neuron		usp	Chi	babo	Lrp4	Wnt5	
+dendritic arborizing neuron		usp	Pink1	AMPKalpha	Fmr1	Mmp1	Efhc1.1	Mmp2	ena	Nak	Rac1	stan	Dscam1	
+metaphase & condensed nuclear chromosome		wapl	okr	Arpc1	cav	Top2	
+denticle row 2		ci	tsh	wg	hh	ptc	
+denticle row 3		ci	tsh	Ser	wg	hh	
+denticle row 4		ci	tsh	Ser	wg	hh	
+GO0030175:filopodium		zip	Mmp1	Mmp2	SCAR	Abi	unc-104	Galphaf	dia	Mipp1	shot	robo1	
+male semi-sterile		CR44412	CR45542	clu	Hcf	chico	CR42859	ix	CR42858	mir-304	Osbp	mlt	Iswi	mir-283	Topors	lobo	Ote	lncRNA:TS23	mod	Roc1b	eca	CR43753	orb2	CR44420	CR44585	CR44344	mir-927	CR43416	Pkd2	chic	Trap1	loqs	CR44371	Rac1	lncRNA:TS1	lncRNA:TS2	lncRNA:TS3	CR43282	
+individualization stage spermatid		blanks	heph	soti	Ack	Dis3l2	nsr	Osbp	Lasp	Mer	Mst77F	nclb	lds	ntc	
+elongation stage spermatid		blanks	heph	Mer	Ack	Bug22	Rae1	mil	
+spermatid cyst		didum	heph	Cad99C	orb2	aPKC	mil	Drice	tbrd-1	CdsA	wuho	Vrp1	Dhc64C	Mst77F	sktl	ctp	
+denticle row 1		ci	Notum	AGO1	tsh	hh	ptc	
+GO0070865:investment cone		fws	CR44412	CR43484	CR43852	CR45542	CR44420	CR44585	asun	CR43802	eIF3m	CR43414	nsr	CR42859	mil	CR42858	CR45727	lncRNA:TS15	lncRNA:TS26	Lasp	mlt	scat	CR44371	lncRNA:TS1	CR43282	
+lateral transverse muscle		Whamy	Khc	dnt	esg	drl	foi	ed	Wnt5	mas	
+GO0000093:mitotic telophase		Wee1	grp	Dp1	Top1	nuf	
+thoracic neuroblast		ball	ana	trol	grh	nab	
+apterous-expressing neuron of the lateral cluster of the thorax		spdo	hyx	Ctr9	gbb	tin	dimm	kuz	ap	ind	
+apterous-expressing neuron of the lateral cluster of the thorax Ap4		Ctr9	gbb	tin	dimm	ap	ind	
+GO0000089:mitotic metaphase		pita	grp	dpa	cmet	cav	Cdc27	Top2	chb	
+some die during second instar larval stage		Xbp1	Desat1	RPA2	defl	TBCB	Nipped-B	Npc1b	Smn	Lk6	Tor	sano	BRWD3	Scox	Tao	SMC1	AMPKalpha	mir-1	ago	aPKC	Brms1	dco	car	Syx18	Rbf	Rheb	Crag	Sec15	Atac2	frc	Caf1-55	Rae1	conv	
+GO0016007:mitochondrial derivative		milt	ref(2)P	bb8	tbrd-2	tbrd-1	
+myoblast		kirre	SCAR	sns	Mef2	rost	Ced-12	mbc	
+A1-7 ventral longitudinal muscle 1		Grip	lola	tey	kon	Tcs3	LanB1	
+embryonic/larval midgut primordium		Rbf	cv-c	Sec61alpha	Syx1A	LanB1	Myo31DF	Hakai	
+class I dendritic arborizing neuron		fs(1)h	Sema2b	Rop	Dscam1	Nmnat	
+dorsal multidendritic neuron ddaE		TBPH	mir-124	ena	Cul1	hdc	atl	spas	stan	Ube3a	
+ellipsoid body		Tao	robo3	bst	Nab2	TfAP-2	Vav	Mcm3	
+reticular neuropil associated glial cell		drpr	mir-31a	pyr	stumps	htl	
+alpha/beta Kenyon cell		pasha	drosha	Cul1	bsk	AGO1	Wnt5	Strip	
+gamma Kenyon cell		drpr	ftz-f1	pasha	Uvrag	drosha	Cul1	plum	bsk	slmb	Atg6	SkpA	
+cystic bulge		fan	Dark	Dronc	Prosalpha6T	Mst77F	porin	eIF3m	Bug22	Dis3l2	nsr	ctp	
+lethal - all die before end of second instar larval stage		Xbp1	Desat1	Pmm2	RPA2	defl	TBCB	Nipped-B	Npc1b	Smn	Lk6	Tor	sano	BRWD3	Scox	Tao	SMC1	AMPKalpha	Nopp140	mir-1	aPKC	JhI-1	car	Syx18	Rheb	Crag	Sec15	Atac2	EloB	Caf1-55	EloC	Rae1	conv	
+GO0005764:lysosome		Gba1b	hook	Trpml	Arl5	Rab2	wash	Sap-r	Vps35	bft	FIG4	
+GO0005768:endosome		Git	Mon1	hook	Arl5	ema	Vps35	Vps25	
+adult fat body		bmm	THADA	AkhR	ds	Seipin	
+GO0005886:plasma membrane		Apc2	AMPKalpha	dop	Src64B	Vps25	
+fat body		RecQ4	Atg1	Desat1	Caf1-180	Lsd-2	gbb	wash	Pten	Nprl2	srl	JhI-1	mir-8	Atg16	Pcyt1	Seipin	
+viable, with ScerGAL4[-]:		mei-W68	twf	Fmr1	PDZ-GEF	Dp1	Npc1a	ban	dan	Pka-R2	nej	Pvf1	morgue	elB	par-1	zf30C	
+lethal - all die during third instar larval stage		Marf	Gmer	unc-104	slmb	Usp5	EloC	tam	
+dopaminergic PPL1 neuron		Thor	Vmat	Pink1	EndoA	Chchd2	srl	
+lethal - all die during larval stage		SPARC	obst-A	Chchd3	LanB2	Suv3	Yeti	Optix	AdSS	l(2)dtl	
+eye, with ScerGAL4[GMR.PF]		nej	Fmr1	Rheb	PDZ-GEF	fru	ban	
+endomitotic cell cycle defective		RecQ4	Fmr1	Cks85A	Sse	nclb	mi	Skp2	DNApol-epsilon58	
+mushroom body		pasha	Fmr1	Rx	drosha	DAAM	let-7-C	AGO1	Dscam1	Strip	
+female semi-fertile		SCCRO3	ball	Acf	Nsun2	Fmr1	Adi1	Oga	
+male semi-fertile		CR43484	Fmr1	CR43852	CR43356	CR43862	CR43802	CR43306	CR43414	CR43848	CR45727	Tudor-SN	lncRNA:TS18	lncRNA:TS17	lncRNA:TS27	knon	lncRNA:TS15	lncRNA:TS26	Cby	CR45670	
+GO0070864:sperm individualization complex		blanks	mlt	bb8	orb2	Ack	Bug22	Dis3l2	
+chromosome		Orc6	ball	Dis3	cav	wupA	Top2	Mcm10	
+jump response defective		TBPH	TpnC41C	Syn	TpnC4	trsn	
+GO0014069:postsynaptic density		dbo	C1GalTA	unc-104	Syp	Nlg2	
+embryonic/larval garland cell		Vps16A	kirre	sns	fab1	Klf15	
+majority die during pharate adult stage		bigmax	Atg17	Nab2	tefu	clu	
+primary spermatocyte		Sas-4	asun	Bug22	Top2	Rae1	
+GO0042718:yolk granule		EndoB	Syx7	Rab5	Vps45	Rbsn-5	sktl	
+proboscis extension reflex defective		Mip	Root	Gr64a	ppk28	Ih	
+waste bag		CdsA	Dark	Dronc	porin	Bug22	Dis3l2	nsr	
+recessive		Galt	eff	Rala	RpL38	dnr1	Atpalpha	Ccdc56	Egm	pont	Ccs	krz	sesB	Raf	morgue	mwh	Topors	Gld	eIF4E3	eIF4E1	egh	egg	futsch	ksr	egl	CG10939	kst	disco	tea	EndoB	Adf1	RpII215	Gale	EndoA	Rbf	Myb	vih	tef	mxc	Myc	Tgs1	tej	cmpy	Gmd	sals	ras	Patr-1	kto	cdi	raw	Mef2	Rap1	Dsor1	Nprl2	cdm	glu	spin	fliI	Bin1	Ppt1	salm	D	myo	Abi	H	mys	Abl	L	N	kuz	upd1	p38a	tgo	Sox15	Hsc70-4	Atg13	p38b	Ace	scrt	Desat1	g	h	cfo	Npc1b	Npc1a	p	Spc105R	Tig	abs	r	AdipoR	mir-8	v	POSH	AGO2	w	Pak	fs(1)Yb	y	AGO1	Rel	fs(1)Ya	mir-184	GATAe	sano	Chc	thr	vls	CtBP	Chi	Rpn6	rdx	mir-1	scra	CTCF	mEFTu1	slbo	Nop60B	TfIIA-S	pag	Cks30A	tim	mei-S332	tin	ren	mir-193	l(3)94Fa	pan	chb	Wdr24	Dd	mir-190	Csas	par	Gs1	pav	Caf1-180	beat-Ia	RpL15	Dl	Ent2	slgA	GatA	spno	chn	vnd	Dp	Nipped-B	Dr	Nipped-A	Diap1	ana3	Gpo-1	Tm1	uncl	emb	pbl	Tm2	Pcl	ema	l(1)16Fe	emc	BHD	cic	acj6	Su(z)12	eIF4G2	acj8	acj7	acj2	PDZ-GEF	cin	acj4	acj3	HisCl1	tutl	kune	Sas-4	pck	Nuf2	Gsc	pcm	wisp	rgn	EloC	grh	acj9	oho31	tkv	hppy	gro	grn	grp	Arpc1	pcx	Src64B	tld	Prp38	tll	Btk29A	gsb	Nak	rho	Zyx	Dscam1	Rpt1	Trpm	Eph	TBPH	Rab23	zfh1	peb	rig	nab	Dhc64C	pgant3	rin	Cse1	Miro	per	nau	cact	Col4a1	CDase	upSET	JIL-1	cln	rost	clu	Tctp	vri	MED24	Pgi	MED20	Cul1	Tor	Cul3	Cul5	Ih	Nct	nbs	Fmr1	S6kII	Tpi	ncd	MED31	Nsf2	Phm	cnc	tor	cni	Spn28Dc	FoxP	armi	cno	cnn	vtd	psidin	shakB	cv-d	Lac	chico	Cdk8	ndl	esc	Zwilch	Lam	pho	esg	Cdk1	Ald	Lar	Alh	Alk	Su(H)	Chchd3	Trf	cos	M6	pins	nec	neb	Trl	lab	Gyf	cpa	pim	nej	Rheb	cpb	Ggamma1	Orc3	spoon	l(2)03659	lap	pit	net	pix	cpo	Rab11	tra	Amt	C15	trh	Vps45	vvl	Vang	slp1	trk	trp	Rop	Pkn	amd	trx	14-3-3zeta	amn	Pink1	tsg	tsh	Vps35	amx	dysc	Pli	tsl	crc	eve	ana	Gr39a	mir-137	crb	tsu	wake	Opa1	mir-375	l(2)gd1	slmb	wako	Csk	pky	Csp	crn	crp	RpS13	l(1)9Fl	kibra	cry	ple	ttk	mute	pll	slpr	l(1)9Fi	ttv	ewg	Hrb27C	plx	csn	l(2)k10201	aop	RecQ4	l(2)gl	AstA	tub	Vha55	aor	tud	lup-2	Smox	aos	csw	Lkb1	tum	slou	PGRP-LC	Mtor	cta	tup	exd	Pc	tut	Rbsn-5	caboose	ctp	exu	app	apt	dmGlut	Mrp4	eya	mir-318	mir-317	SkpA	mir-316	wapl	pnr	Hsp83	cue	eyg	Klp68D	pnt	Cyp4d21	lft	unpg	r2d2	cup	twe	Sec8	Sec6	pelo	Tfb5	RpS21	Sec5	twi	mir-31a	nkd	Nle	Mlc2	Drep2	tws	ara	mGluR	pita	rst	Lhr	lgr	arm	msps	Pdk1	prel	HSPC300	dock	FoxL1	homer	fs(2)al	neur	arr	Asx	Pabp2	ppl	ppk	nAChRalpha7	rtp	Sb	rtv	Brca2	Sh	Abd-B	mir-981	mir-980	Lk6	Der-1	cwo	asp	U2af38	Hsromega	Pcf11	tyl	lig	run	mir-989	nmo	mir-987	Rho1	rut	moody	rux	Tk	Tl	mir-990	atl	ato	Psc	prd	pain	didum	RPA2	RPA3	Sec61alpha	Psn	WASp	P32	Nos	Pdp1	Lkr	TfAP-2	hbs	Nedd8	hby	noc	psd	nod	lkd	noi	RyR	psq	ave	sable	Awh	nos	E(z)	not	rho-5	mib2	mib1	alphaSnap	Inx2	grdf	ptc	slug	GluRIIA	ptg	corto	hdc	awd	Ns3	Hira	Hem	mir-932	Sema1a	lawc	BubR1	Axs	puc	mir-92b	tipE	Fer2	Marf	Nrg	AMPKalpha	pum	Shark	tefu	Lnk	Pvr	faf	shot	Brms1	put	lms	Mrtf	hep	beta-Spec	her	tra2	krimp	nrd	prod	ninaE	CASK	ninaC	dj-1beta	ninaA	fbl	SelD	mir-955	mir-276a	lnr	mir-276b	hfp	Low	wde	Clamp	hfw	Dcr-2	Pka-C1	pasha	nrv2	nsr	mir-966	DCTN1-p150	mir-965	l(3)7-19	Prosalpha6T	Su(Tpl)	GluRIID	wek	tral	Liprin-beta	Pym	l(3)Lak	Ubx	fdl	Kdm4A	soba	CrebA	CTPsyn	Pde1c	Dark	Dat	pyd	nuf	Ir64a	bgcn	hid	rept	Stim	repo	dac	hig	Dredd	pyr	mre11	His2Av	dome	pros	dap	caup	yki	Su(z)2	Dlc90F	pzg	PR-Set7	chem	mei-217	dbe	para	Wee1	cher	Sc2	P5CDh1	sd-2	sd-1	Dap160	Ddc	sd-3	mir-929	mir-927	dco	alpha-Spec	Sema2a	su(Hw)	trem	sag	Ras85D	rad50	Ufo	mir-1000	fd3F	Lsm10	ftz-f1	Pdxk	Msp300	sas	Rb97D	sav	glob1	sax	ltr	Gos28	MED6	Hmr	Trxr-1	SERCA	kek5	Snap25	sbb	Sce	Jra	Scm	Scr	Dfd	ded	baf	bam	timeout	bowl	scb	sca	robo3	east	inaC	Akt1	retn	robo1	park	robo2	ab	ac	Atg1	SRm160	scu	scw	Su(var)205	al	Syx1A	ap	mino	chif	glec	fs(1)M43	Cks85A	sdk	DCX-EMAP	Ser	hog	bb	SMC1	sdt	bcd	fkh	jumu	Gr63a	bi	lwr	hop	how	br	uif	chic	milt	path	IKKepsilon	bs	par-6	Gmer	trio	rngo	Fas2	Fas1	Fas3	ca	Atg6	dhd	Ca-alpha1D	cd	bab2	Dif	sev	bab1	ci	hpo	ck	Rack1	cn	mei-P26	brat	Hand	wnd	H217	ct	flw	cv	sff	Fatp	gsb-n	mir-13b-2	Cp190	dia	da	Kdm2	Gycalpha99B	dl	bel	ben	Shc	Vap33	Ptp69D	ds	SmD3	lzb	sgg	dx	nudE	CG3542	sgl	ash2	ash1	wor	fs(1)K10	Hsf	ea	vret	ec	AP-2sigma	ed	fng	eg	Apc2	Cyt-c-p	Mdh2	babo	unc-104	mirr	en	sha	trol	bft	PCB	Drice	shg	shi	ex	E(sina)46C	ey	Efhc1.1	l(3)EX-G13	dally	Notum	mira	shn	fog	Cyt-c-d	shu	rasp	Cdk5alpha	Dll	fj	pygo	blanks	fon	Dronc	Oaz	for	ft	sic	fu	Dlw	fy	Cyt-b5	abd-A	Qtzl	fz	dila	sim	hth	AP-2alpha	gd	sit	Top3alpha	htl	gl	dlp	hts	Root	defl	dlt	gt	Hr38	BTBD9	Egfr	Catsup	hb	RpS2	hd	bib	Sara	RpS3	lobo	hh	smid	lqfR	Dp1	skd	Sar1	dimm	dmt	Nrx-IV	Uvrag	mir-279	Doa	Crag	fra	wst	frc	dnd	mir-274	dnc	if	Vmat	Myd88	klar	rhea	mus308	fru	sle	tara	fry	Mad	sli	ix	trsn	aurA	Smn	Shab	wts	slo	Poxm	Nc73EF	sls	CkIIbeta	mir-284	mir-282	Slik	dom	Max	dop	dos	RpS6	dor	Jarid2	Arl1	smg	wun	hook	mei-9	Nrd1	smo	wus	dpa	Spps	wupA	mam	Mbs	loco	Nup160	mas	dpn	U2A	dpp	kn	sna	Hr78	numb	ftz	Iml1	snf	mbc	mir-219	Grip84	sno	sns	DAAM	Sos	mbl	CadN	Iswi	Top2	Pino	Top1	e(y)2	Mcm10	mbt	bmm	lt	Traf6	ush	mago	sog	Hel25E	lz	usp	MAGE	Grip91	SKIP	sov	Utx	Klp61F	mi	bnl	sd-13	Cdc42	spn-F	phol	spn-E	mir-9a	Dysb	soti	Med	spi	Pten	Lpin	l(2)40Fa	Prosbeta6	fwe	na	fwd	boc	dsf	E2f1	Klp64D	Mer	dsh	Hip14	fl(2)d	ph-d	Cdc37	spz	HDAC1	Bpt	sqh	dsx	aPKC	Arfip	oc	Eip74EF	Sap-r	DCAF12	msl-1	l(3)S033513	Snr1	mew	sra	kay	Trpml	Slob	Itp-r83A	Pex16	pb	srp	Cyp4g1	Gbeta13F	fray	l(3)100Ab	srw	pk	AdSS	Hakai	ogre	LanA	Acsl	CSN8	Mhc	px	CSN5	kcc	gammaTub23C	Lrp4	mgl	RhoGAP93B	dve	okr	Bsg	eRF1	Cdc27	brk	fzo	fzr	brm	stc	stau	Xbp1	stg	Actn	fzy	sti	stj	stl	Eip78C	Ptip	stumps	Rm62	kdn	bsf	sty	stx	rk	scrib	rl	Duox	Lrrk	stan	rn	ro	sub	stai	Pp1-87B	SPARC	ru	lola	ry	14-3-3epsilon	mtsh	sc	sd	btd	kel	Zw10	ken	mtrm	Ten-m	mio	AsnRS	vari	mir-210	sl	btl	sn	btn	so	iav	Rgk1	alphaTub84B	Galphas	B52	sr	Galphaq	ss	st	Zasp52	sv	SCAR	Ppcs	sinu	svp	svr	qrt	cmet	scat	tn	bul	bun	sing	Rab1	sina	stck	bur	Khc	l(1)air16	Sxl	swm	Idh	Spc25	sws	Mst77F	rdgC	ics	Syb	mod(mdg4)	sxc	Calr	opa	Mon1	norpA	zen	mle	ida	brv1	brv2	Syp	vg	bwk	vn	Lis-1	sktl	Rab6	Rab7	bru1	mir-14	Rab5	Yeti	mir-11	Cyp18a1	wg	Dsp1	barr	kis	Sec15	Lasp	Rac2	orb	nonA	drpr	Ephrin	ord	amos	Moe	Gas41	ifc	comm	gbb	csul	oro	SdhA	betaTub60D	snama	sisA	byn	BicD	comt	BRWD3	osa	phyl	tuh1	Act88F	mod	alphaTub67C	Gem3	betaTub85D	Zir	osk	moi	mop	mor	gcl	gcm	Eb1	kkv	loqs	mask	sced	Rae1	Pak3	colt	zip	Syt4	mei-W68	obst-A	klg	Nf-YC	Syt1	vas	TBCB	Gpdh	otu	18w	obst-E	klu	CycA	Stat92E	Uba2	CycC	stil	Uba3	CycE	Ddx1	CycG	EDTP	Ge-1	eag	lost	EcR	lolal	Rpp30	eas	conv	dlg1	Mo25	stmA	Gcn5	sens	ovo	knk	Pex1	mrn	ebi	Arf51F	cora	Cadps	Ubc6	l(1)air5	Tao	Gba1b	su(f)	eca	msi	ecd	koi	msn	Ilk	nopo	Optix	mst	Antp	Tbh	Wnt2	nSyb	mtg	Wnt5	tam	Wnt4	tal	mth	Syx7	ver	Syx4	Invadolysin	mts	Adar	InR	edl	Cln3	mtt	Sod2	Sod1	Cam	Cat	polo	mud	Taf6	imd	poly	blot	stnB	Mvl	RasGAP1	heph	cac	stnA	unc-13	coro	stout	Ubc7	subdued	Trf2	can	car	spdo	cas	RhoGEF2	Ctr1A	cav	Vhl	inc	ttm50	
+dominant		RpS13	RpL38	Atpalpha	RpL36	sax	ple	Ccdc56	Itp-r83A	SERCA	Raf	pk	Scm	aop	Scr	eIF4E1	aos	Mhc	futsch	bam	timeout	tup	Arr1	scb	Pc	vig	Myc	robo1	brm	ab	Rap1	Su(var)205	Dsor1	ap	Rm62	pnr	spin	scrib	rl	r2d2	Duox	stai	D	RpS21	Sec5	14-3-3epsilon	bi	H	let-7-C	hop	Mlc2	N	mGluR	chic	sd	bs	mtrm	bw	Fas2	HSPC300	Hsc70-4	bab2	Dif	bab1	Ace	ci	SCAR	h	Rack1	vig2	nAChRalpha7	flw	Sh	Abd-B	POSH	AGO2	nAChRalpha4	Fatp	Rel	dia	CtBP	Chi	dl	Sxl	Prosap	nmo	dx	CG8677	ash1	Tl	atl	Hsf	Psc	eg	Caf1-180	Dl	Nipped-B	shg	vg	TfAP-2	Tm2	Pcl	Dll	nod	Rab6	Rab7	bru1	wg	abd-A	fz	not	kis	EloB	Rac1	grh	orb	tkv	mnb	Bacc	gro	corto	Egfr	Hem	Catsup	rho	hb	RpS3	puc	osa	Act88F	alphaTub67C	AMPKalpha	Dp1	osk	tefu	mor	Doa	dnd	dnc	if	cact	Col4a1	Vmat	ninaE	CASK	tara	Gpdh	sli	SelD	CycA	Stat92E	sls	spas	Dcr-2	nbs	Pka-C1	Fmr1	RpS6	DCTN1-p150	EcR	Phm	tor	wupA	dpp	Ibf2	cv-c	l(3)Lak	shakB	mrn	ftz	Ubx	snf	chico	esc	esg	gwl	nub	Mcm10	Su(H)	hid	repo	Dredd	lt	ush	Trl	His2Av	pros	Gyf	Rheb	cpb	Antp	Wnt2	tap	vvl	Vang	Adar	InR	l(2)40Fa	Sod2	trp	polo	trx	dsh	Met	HDAC1	RasGAP1	Bpt	tsh	Orco	cav	l(1)10Ae	Sap-r	crn	
+semidominant		abd	shakB	mei-P26	ttk	Gr32a	Gyc76C	mir-8	Shab	Tm2	CkIIbeta	pk	Met	alphaTub67C	betaTub85D	Fmr1	bi	tefu	RyR	PQBP1	dco	ncd	scb	tim	inaC	mei-S332	dnc	wupA	
+poor		aop	Dfd	HDAC1	msn	tyl	Src64B	spi	Hem	Dsp1	chic	slbo	vg	Hsc70-4	alphaTub84B	colt	tam	ctp	
+embryonic stage		sra	ftz-f1	kay	Etf-QO	sav	sax	ttk	pll	fs(1)N	srp	inv	ttv	cbt	Raf	plu	pk	Unc-115a	Hakai	aop	Dfd	l(2)gl	tub	eIF4E1	LanA	aos	csw	tum	bowl	tup	ball	RhoGAP93B	bap	exd	robo3	Pc	dve	vih	Akt1	Rbsn-5	fzr	robo1	stc	sals	stg	Lsd-2	apt	tey	raw	Mef2	scw	Dsor1	Syx1A	eya	stumps	mir-318	mir-316	pnt	stac	SoxN	Ctr9	scrib	r2d2	stan	salm	wls	Ser	twe	ru	sdt	bcd	fkh	lola	insc	mid	14-3-3epsilon	Abi	H	mys	nkd	gammaTub37C	Abl	N	SMC5	alpha-Cat	kuz	how	br	uif	chic	btd	Zw10	Ten-m	Fas2	btl	arm	Fas3	HSPC300	Hsc70-4	dock	seq	Zasp52	Rx	SCAR	Pabp2	Rack1	ppl	cfo	Hand	svp	ct	mir-8	RhoL	Abd-B	unc-5	rols	Pak	dia	mir-184	da	CtBP	Chi	Khc	l(1)air16	dl	mir-1	run	Shc	mir-989	sgg	Cks30A	sgl	atk	mir-990	tin	ato	ea	sxc	pan	chb	Psc	Dd	Apc2	pav	babo	Dl	en	chn	Sec61alpha	vnd	WASp	Drice	shg	RYBP	Tm1	vn	emb	pbl	shn	emc	Shmt	fog	cic	Cdk5alpha	Dll	PDZ-GEF	Dronc	mir-10	ems	ft	fu	wg	E(z)	abd-A	kis	ena	pck	Gsc	sim	mib2	hth	Inx2	grh	htl	ptc	tkv	mats	amos	siz	gro	grn	Moe	grp	comm	pcx	dlp	corto	gbb	dlt	Egfr	Hem	betaTub60D	Sema1a	tll	elav	Catsup	byn	CkIalpha	hb	bib	Sara	osa	hh	alphaTub67C	TBPH	lmd	Nrg	ckn	Dp1	Shark	osk	Pvr	rib	shot	zfh1	gcl	Nrt	put	nab	gcm	Nrx-IV	mir-278	fra	loqs	wun2	frc	dnd	if	lin-52	nau	zip	Col4a1	obst-A	Syt1	Src42A	NAT1	Tctp	sli	odd	Smn	CycA	Stat92E	wts	CycC	sls	Pka-C1	Fmr1	pall	dop	orb2	DNaseII	dos	ATP7	mir-969	wun	ncd	smo	Phm	cnc	tor	wupA	Mipp1	Sec24CD	loco	dlg1	Mo25	botv	Con	dpp	cnn	sens	Mmp1	sna	Dab	Mmp2	ovo	galla-1	numb	ftz	mbc	zld	cora	Dark	WRNexo	Cdk1	Iswi	gwl	l(1)air5	Alk	nuf	repo	Kr	msn	cos	pins	pyr	Chchd2	neb	Trl	dome	lab	Orc6	pros	dap	Antp	daw	pit	mir-9c	nSyb	mtg	bnl	phol	chem	Debcl	jnj	trh	Med	spi	vvl	Myo31DF	InR	Gyc76C	trk	ph-p	Rop	trx	dsh	Ced-12	LanB1	cher	gogo	hkb	P5CDh1	stnB	HDAC1	cad	stnA	sqh	Vps35	aPKC	alpha-Spec	eve	spdo	crb	oc	cas	RhoGEF2	Ctr1A	Eip74EF	Vhl	sqz	ttm50	fd3F	mew	fand	
+larval stage		sra	crq	Pdxk	Sse	glob1	Hml	sax	ltr	Vps25	Egm	Cyp4g1	Hakai	5-HT2A	ogre	Dfd	l(2)gl	tub	Vha55	Tet	Smox	futsch	csw	CSN5	disco	Ggt-1	timeout	ban	ball	scb	Aldh	EndoA	Akt1	nclb	cmpy	Gmd	park	caboose	Rbp	Atg1	Lsd-1	Actn	fzy	scu	Lsd-2	SkpA	pnt	Cks85A	Bin1	Schip1	scrib	rl	Klf15	Vsx1	sub	Sec6	14-3-3epsilon	lwr	hop	L	N	br	uif	chic	path	pita	Atg17	lgr	Fas2	arm	HSPC300	Hsc70-4	Galphas	Atg6	p38b	MAPk-Ak2	Pabp2	hpo	Rack1	Ppcs	ppl	brat	svp	ohgt	mir-8	Sh	asl	Rab2	y	Cp190	CtBP	Khc	mir-1	rut	Syx18	ham	lzb	sgg	sgl	tim	atk	ash2	atl	tin	ato	mod(mdg4)	Rh6	Sin1	Dd	prd	eg	pain	Csas	norpA	mle	babo	unc-104	trol	shg	ana2	Pdp1	RYBP	ex	uncl	BHD	cic	Lgr3	hby	acj6	PIP4K	Rab7	lkd	Dronc	HEATR2	Rab5	Ncc69	Yeti	ems	ft	tutl	mTerf3	Fkbp14	abd-A	Caf1-55	Rac1	gb	Rac2	Inx2	Top3alpha	oho31	tkv	drpr	Ephrin	Moe	gl	dlp	Root	Tmc	Egfr	Fak	betaTub60D	nolo	Aos1	Nak	CkIalpha	Sara	Dscam1	comt	Trpm	Eph	hh	smid	lqfR	Gem3	Marf	Nrg	Zir	AMPKalpha	gce	nab	beta-Spec	Pcyt1	Dhc64C	dnc	alpha-Man-IIa	Miro	lin-52	nau	cact	Vmat	borr	obst-A	klar	JIL-1	Syt1	ninaE	TBCB	ninaC	dj-1beta	fbl	SelD	lphA	lnr	odd	Smn	Stat92E	wts	Cul3	sls	Clamp	CycG	Cul5	spas	Slik	nbs	Cp110	Max	Fmr1	lok	ATP7	Lpt	ncd	Nsf2	Phm	cnc	Nf1	Amph	Spn28Dc	dlg1	Liprin-beta	Mo25	kn	Mmp1	Mmp2	ovo	plum	Pex1	mrn	ebi	Pex3	Scsalpha	chico	SCCRO3	CrebA	CTPsyn	Dark	esc	Lam	Cdk1	Iswi	Top2	Mcm10	Mcm3	Stim	hig	ecd	Chchd3	Traf4	msn	ush	pins	Aplip1	neb	Trl	mst	dome	pyx	Orc6	usp	hiw	Orc3	Eaat1	daw	Tbh	Klp61F	mi	lap	pit	pzg	nSyb	sd-13	Cdc42	Syx7	Dysb	PPO2	Torsin	Pten	mts	Adar	Cam	CAP	Prosbeta6	Rop	mir-124	polo	trx	Met	LanB1	endos	Oatp30B	poly	blot	P5CDh1	HDAC1	sqh	subdued	tsh	Vps35	aPKC	Pkd2	dco	tsr	RhoGEF2	Ctr1A	Vhl	Sap-r	Ras85D	pky	mir-1000	Csp	
+pupal stage		sra	drpr	Moe	Trpml	glob1	kibra	gbb	Egm	betaTub60D	ttv	Raf	mRpL55	Sara	mwh	BRWD3	Shark	csw	Vav	ban	hep	Uvrag	Rbf	beta-Spec	frc	Akt1	Miro	ctp	borr	Patj	Fhos	Actn	in	fru	NAT1	SkpA	MED24	wts	Bin1	Cul1	bsk	Ddx1	wls	Grasp65	nbs	Max	Sec6	orb2	hop	DCTN1-p150	br	Usp47	btl	Nf1	Sox14	Spn28Dc	HSPC300	dock	Chro	Mmp1	CIA30	Mmp2	hpo	plum	mrn	wash	Npc1a	Magi	ohgt	kat-60L1	Lam	dia	Lar	Mcm3	Whamy	boss	hid	msn	Asciz	Shc	Vap33	His2Av	dome	usp	nudE	mi	lap	ec	Dd	sd-13	spn-F	mle	meru	Pten	Hcf	Vang	Drice	ex	dsh	P5CDh1	pygo	mir-14	Dronc	ft	wg	fw	tsr	fz	slmb	mib1	DCAF12	oho31	
+male		nonA	ord	ifc	Mnn1	Gr32a	Ns3	Itp-r83A	mir-932	Btk29A	sesB	sisA	bb8	Scm	lncRNA:TS23	tipE	Scr	betaTub85D	CR44420	tefu	Pc	her	Myc	per	Vmat	Socs36E	CR43484	JIL-1	CR45542	fru	CASK	Su(var)205	eya	fbl	ap	ix	mir-955	mir-317	mir-276a	mir-276b	Stat92E	spin	Cyp4d21	hfw	bb	twe	Sec8	Fmr1	ry	orb2	bi	dor	mys	N	wun	mGluR	mir-965	chic	mir-210	Fas2	iav	homer	g	ovo	Poc1	snf	Scsalpha	chico	Tre1	CR42858	Klp3A	flw	knon	Abd-B	mir-981	w	mir-980	mir-13b-2	y	Iswi	dia	mir-184	Rab1	asp	Pino	CG11700	lt	Sxl	lig	Spc25	pros	dx	moody	cpb	ms(3)Z2203	mir-990	Mst77F	mei-S332	Tbh	mod(mdg4)	spn-E	mir-9a	tra	mle	Syn	Psn	Adar	Nipped-B	prt	RYBP	fwd	polo	dsf	trx	dsh	fl(2)d	Pcl	acj6	Dll	HDAC1	cac	topi	noi	dsx	mir-927	Orco	sable	abd-A	Gr39a	gb	hth	Ras85D	msl-1	Csp	
+precursor		neur	ac	stg	Dl	Ubx	Egfr	svp	pnt	Abd-B	Raf	vn	pbl	dsh	rho	pk	stan	bib	da	hh	aop	egh	aos	mys	csw	N	lz	gcm	exd	eve	spdo	abd-A	sgg	not	smo	arm	Ras85D	ptc	
+ectopic		Mkp3	sav	sax	pb	inv	sbb	Sce	Raf	pk	Scm	aop	Scr	l(2)gl	lup-2	egh	aos	ssh	px	egl	CSN5	bowl	tup	sca	exd	robo3	Pc	dve	Rbf	mxc	brk	fzr	robo1	brm	robo2	ac	asrij	pnr	pnt	bsh	Ctr9	rl	Ppt1	salm	ro	bcd	fkh	jumu	mid	14-3-3epsilon	bi	H	mys	nkd	hop	N	chic	sd	bs	rst	Fas2	sl	arm	tgo	so	Hsc70-4	dock	ss	seq	neur	Dif	bab1	Asx	crol	ci	hpo	ck	h	Ppcs	svp	ct	mir-8	Abd-B	Rel	da	CtBP	Chi	dl	nmo	ds	ham	sgg	dx	rux	ash2	ash1	mod(mdg4)	pan	Psc	ed	Dd	fng	didum	C1GalTA	Dl	mirr	en	Dp	Hcf	Drice	Strica	vg	Notum	Pcl	emc	cic	acj6	aux	Dll	fj	pygo	PDZ-GEF	bru1	Dronc	ft	fu	wg	Dsp1	abd-A	fz	kis	Lasp	sim	wisp	mib1	hth	grh	ptc	orb	tkv	gro	Arpc1	dlp	corto	gbb	gt	Egfr	Sema1a	gsb	BicD	rho	bib	Sara	Gp150	hh	lqfR	osk	faf	shot	mor	nac	put	nab	gcm	beta-Spec	tra2	dnc	zip	borr	klar	JIL-1	cln	vas	Mad	sli	ix	otu	Poxn	klu	CycA	Stat92E	wts	Poxm	CycE	Cul3	Slik	Pka-C1	Fmr1	S6kII	mir-965	EcR	lolal	smo	cnc	tor	cni	dlg1	Seipin	dpp	kn	numb	Ubx	Dark	esc	Lam	Sos	Cdk1	nub	Lar	Su(H)	eca	Dredd	cos	ush	pins	sog	Trl	pros	dap	Antp	drk	net	Cdc42	mir-9a	Syx7	tra	Pten	vvl	ph-p	Cam	Wee1	dbr	Klp64D	trx	dsh	cher	RasGAP1	dsx	tsh	aPKC	Sema2a	spdo	slmb	Ras85D	ind	
+dorsal closure stage		Cdc42	zip	kay	rhea	Dab	apt	raw	Src42A	Rap1	Sec61alpha	ftz	srp	Pkn	cora	Dark	cbt	POSH	bsk	Jra	shn	dia	pyd	hid	ecd	Shark	mys	ush	rib	aPKC	shot	peb	how	tup	nos	Rho1	EcR	p120ctn	abd-A	crb	hep	sim	retn	arm	ed	tkv	
+female		sra	bab2	bab1	ovo	hts	snf	Scsalpha	Ns3	c(3)G	Tre1	sesB	Hrb27C	Abd-B	mir-981	sisA	Fatp	asl	RabX1	bun	asp	Pino	Ote	mir-92b	hh	Sxl	tefu	Trl	bam	rec	vilya	fit	robo3	Pc	hep	cpb	her	Myc	mir-990	tra2	mei-S332	Tbh	dnc	Vmat	Rab11	tra	jnj	mei-217	al	Nipped-B	fbl	ap	ix	otu	bft	mir-317	mir-276a	mir-276b	spin	polo	stil	dsf	Cul3	fl(2)d	mir-284	corolla	mir-282	bb	twe	Dll	pelo	HDAC1	Mps1	Gr63a	mir-14	bi	noi	dor	hop	dsx	Orco	N	SMC5	wun	mir-966	sc	mir-965	fw	kel	Pol32	abd-A	mir-375	mib1	iav	
+somatic clone		ftz-f1	Cad99C	Msp300	sav	sax	Vps25	MED6	Snap29	SERCA	pont	krz	sbb	Sce	Raf	Jra	mwh	Scm	Scr	Dfd	egh	ksr	CG10939	bam	bowl	sca	robo3	Rbf	Myc	Akt1	robo1	Gmd	Kap-alpha3	robo2	Rbcn-3A	Atg1	Patj	scu	glo	Rap1	Nprl2	cdm	Syx1A	ap	chif	spin	wls	Ser	Scox	SMC1	D	sdt	jumu	bi	Abi	H	mys	lwr	RhoGAP100F	hop	Abl	L	N	kuz	how	br	chic	milt	path	bs	upd1	par-6	Atg16	trio	Fas2	tgo	AP-1mu	Atg6	Atg13	seq	sev	APP-BP1	d	Ace	ci	Desat1	hpo	ck	h	Rack1	Acn	brat	ct	flw	AdipoR	mir-8	rols	Fatp	AGO1	dia	GATAe	sano	da	Sulf1	CtBP	Chi	Rpn6	bel	Shc	MED19	Ptp69D	ds	slbo	sgg	sgl	ash2	pan	AP-2sigma	ed	Wdr24	fng	Dg	pav	Caf1-180	babo	Dl	mirr	en	chn	sha	bft	Drice	shg	Sox21a	ana2	RYBP	ex	Diap1	dally	Notum	uncl	shn	Pcl	emc	cic	foi	rasp	acj6	fh	Cdk5alpha	Dll	eIF4G2	fj	pygo	PDZ-GEF	Dronc	ems	ft	tutl	fu	Smg6	Fkbp14	fw	fz	Sas-4	ena	sim	hth	AP-2alpha	grh	htl	tkv	gro	grn	gl	dlp	hts	dlt	Egfr	Usp8	tll	Nak	rho	bib	Sara	RpS3	Dscam1	Eph	Gp150	hh	TBPH	lqfR	zfh1	peb	Uvrag	Doa	Pcyt1	Crag	Dhc64C	fra	frc	rin	Cse1	Miro	if	lin-52	SCCRO	rhea	in	fru	Tctp	Mad	odd	MED26	wts	Cul1	Tor	Cul3	CkIIbeta	Nct	dom	Max	Fmr1	lin-28	Nab2	sick	Ubi-p63E	Arl1	Sp1	Nrd1	smo	wupA	mam	Mbs	Seipin	dpp	cno	kn	Vps60	cnn	Dis3	psidin	Tnks	plum	numb	Iml1	Cow	chico	mbc	Fbxl7	Magi	Cdk8	esc	Lam	DAAM	Sos	CadN	Pis	esg	Cdk1	Iswi	Lar	Alk	Mcm3	Su(H)	Chchd3	Ubr3	cos	hyx	ush	pic	sog	Trl	lab	lz	usp	nej	Ggamma1	spoon	Utx	mi	lap	AP-2mu	bnl	pix	sd-13	Cdc42	Rab11	trc	trh	Vps45	Med	spi	Pten	vvl	Vang	ph-p	trp	fwe	Rop	mir-124	E2f1	Klp64D	Mer	trx	dsh	Hip14	fl(2)d	ph-d	14-3-3zeta	Pink1	HDAC1	sqh	tsh	Vps35	aPKC	JhI-1	tsr	crb	Opa1	l(2)gd1	slmb	sqz	Csk	DCAF12	Snr1	mew	kay	fab1	kibra	CoRest	ttk	Itp-r83A	pb	ttv	ewg	mRpL55	pk	Hakai	aop	RecQ4	l(2)gl	Vha55	LanA	Smox	Acsl	aos	CSN8	Mhc	ssh	px	CSN5	Mtor	tup	ball	exd	Pc	dve	Bsg	nclb	Rbsn-5	brk	brm	ctp	Xbp1	stg	Actn	stl	eya	stumps	SkpA	Ext2	pnr	eyg	pnt	stac	sty	Schip1	stx	bsh	bsk	scrib	r2d2	stan	Pp1-87B	LTV1	Sec6	pelo	Sec5	mir-31a	mid	nkd	let-7-C	alpha-Cat	Lst8	sd	btd	AsnRS	btl	Vha100-1	arm	so	Pdk1	prel	dock	Galphas	ss	neur	Asx	Rx	SCAR	svp	drosha	Abd-B	RabX1	sina	stck	Vha26	lic	Khc	Sxl	lig	swm	run	mir-989	nmo	Rho1	Snx3	ham	ato	Syb	sima	Vha13	opa	rdgA	Sin1	Mon1	didum	RPA2	RPA3	Sec61alpha	WASp	vg	TfAP-2	Nedd8	fs(1)h	Rab7	Rab5	mir-11	ave	wg	nos	E(z)	not	kis	Sec15	Caf1-55	mmy	mib1	Rac1	ptc	mats	Moe	comm	corto	hdc	gbb	SdhA	snama	Sema1a	elav	Aos1	CkIalpha	puc	BRWD3	phyl	mod	Marf	Nrg	AMPKalpha	PIP5K59B	pum	Shark	Lnk	Pvr	faf	Vav	shot	mop	Brms1	mor	put	gcm	Mrtf	hep	beta-Spec	mask	Socs36E	borr	prod	otk	Nf-YC	Syt1	TBCB	klu	Stat92E	Uba2	CycC	Dlg5	CycE	chas	spas	PIG-U	Pka-C1	pasha	EcR	eas	dlg1	Nmnat	Mo25	botv	sens	ovo	mrn	ebi	Ubx	fdl	cora	Dark	eater	nub	pyd	Tao	msi	dac	msn	Pfdn2	Ilk	Optix	His2Av	dome	pros	yki	Antp	nSyb	Wnt5	tal	Syx7	tap	mts	InR	nvy	dbr	polo	Ced-12	mud	LanB1	Taf6	gogo	poly	Strip	sd-2	sd-1	sd-3	RasGAP1	cad	dco	alpha-Spec	Sema2b	car	spdo	RhoGEF2	Six4	Vhl	sag	Ras85D	ttm50	san	
+partially		Mo25	ord	armi	bab1	ptg	Src64B	ebi	ftz	Egfr	Hmr	Trxr-1	Klp3A	mir-8	cv	cora	ndl	Dark	Abd-B	Lk6	Raf	Cp190	U2af38	Rbp9	aop	Dp1	Sxl	kst	ben	neb	p53	Ptp69D	put	tup	Nop60B	vih	loqs	sgl	mxc	Grip91	Cdc27	retn	Wnt5	Wnt4	ctp	spn-E	C1GalTA	vas	C15	Mef2	mars	vnd	Syx1A	eya	ap	otu	bft	Sod1	Drice	trbl	ey	Stat92E	spin	dally	CycE	E2f1	rl	fl(2)d	CkIIbeta	Met	Slik	cic	slif	pelo	Fmr1	bru1	mir-14	ry	Dronc	hop	Pkd2	Dsp1	br	ncd	fw	mim	Phm	RhoGEF2	sim	Fas2	msl-1	GluRIID	Csp	orb	tkv	
+adult stage		Galt	Lsm12	sav	glob1	hll	dnr1	Atpalpha	bb8	mwh	futsch	RpL13A	bam	ban	fit	robo3	EndoA	Cep97	ac	Atg1	Cnx99A	Nprl2	ap	hog	Scox	Gr63a	bi	H	mys	RhoGAP100F	Bug22	N	Ca-alpha1T	br	Atg16	Atg17	trio	p38a	Atg6	upd2	Atg13	Atg5	upd3	seq	p38b	Dif	sev	d	hpo	porin	Gr64a	Npc1a	ohgt	mir-8	Bx	POSH	w	Fatp	y	Rel	mir-184	GATAe	Sulf1	CtBP	Pgam5	Asciz	bel	CR43416	PQBP1	Vap33	dx	Dop1R1	Rh6	ed	Wdr24	Csas	Dg	Dl	chp	Nipped-B	bft	PCB	Drice	ex	uncl	Pcl	Sirt1	cic	Ube3a	Lgr3	acj6	fh	shv	Cdk5alpha	pygo	Dronc	for	ems	Gabat	ft	tutl	fu	Duba	fy	fz	Xport-A	Xport-B	gb	Tusp	hth	htl	tkv	gl	Dlish	PGRP-SA	hts	Root	Tmc	Cyp6a17	Gr32a	BTBD9	Catsup	rho	Zyx	RpS2	RpS3	lncRNA:TS23	hh	Fife	TBPH	Atxn7	trpl	Uvrag	Crag	Dhc64C	rin	dnc	Nbr	per	lin-52	SCCRO	tank	Col4a1	Vmat	in	fru	clu	Tctp	Mad	trsn	chinmo	Smn	wts	slo	Tor	Cul3	mir-284	Cul5	mir-282	Ih	Cp110	Fmr1	orb2	Nab2	ATP7	THADA	Sp1	Nrd1	Hasp	Nf1	Akh	dpp	psidin	Tnks	shakB	Culd	Iml1	sni	chico	CR42859	CR42858	Magi	Lam	DAAM	CadN	Lar	Mcm3	Su(H)	nec	Chchd2	neb	foxo	mi	net	bnl	Cdc42	spn-F	mir-9a	Rab11	Dysb	tra	Rab14	Amt	Rassf	Torsin	meru	Pten	Diedel	trp	mir-124	Klp64D	trx	dsh	spz	Girdin	Pink1	HDAC1	Pld	ktub	Orco	tsl	G9a	mir-137	crb	Opa1	Sap-r	DCAF12	Csp	sra	RpS13	Trpml	LUBEL	ple	ttk	srl	Itp-r83A	slpr	Pex16	ewg	pk	tud	Mhc	PGRP-LC	Lrp4	Mtor	Arr2	PGRP-LF	Pc	brk	sti	stj	Eip78C	Mrp4	Mip	rg	Schip1	stx	scrib	rl	Lrrk	stan	eys	Sec6	pelo	mir-31a	alpha-Cat	Lst8	mGluR	sc	kel	mim	ken	Trap1	mir-210	DopEcR	sl	btl	so	iav	Rgk1	Galphaq	Zasp52	SCAR	Ppcs	wash	Poc1	Syn2	knon	Abd-B	mir-981	mir-980	asl	RabX1	cwo	bun	Rab1	asp	sina	rut	ham	Appl	Tk	Mst77F	ics	rdgB	jet	ato	spartin	Sin1	pain	norpA	Syn	Vha16-1	Psn	Hcf	AkhR	Strica	prt	TfAP-2	vn	Lis-1	hbs	Rab7	mir-14	mir-11	Cyp18a1	Dsp1	Nmdar1	mib2	Caf1-55	ptc	drpr	mnb	Gas41	corto	Nlg3	Nlg4	Sema1a	comt	puc	Ote	Act88F	Marf	CR44420	tefu	Lnk	Vav	mop	gcm	loqs	CR43484	Syt1	CR45542	ninaE	CASK	TBCB	dj-1beta	fbl	otu	mir-276b	c(2)M	Ddx1	CycG	spas	PIG-V	Pka-C1	DCTN1-p150	GNBP1	eas	Usp47	Amph	Nmnat	botv	ovo	Scsalpha	polyph	ref(2)P	Dark	Dyrk2	Tao	Ir64a	Gba1b	bgcn	boss	hid	repo	Dredd	dome	Thor	pros	CPT2	yki	daw	Tbh	Wnt5	tap	tau	eIF3m	Adar	mtt	Sod2	Dnai2	Cam	CAP	imd	cher	gogo	Strip	cav	inc	san	CR43282	fd3F	
+germline clone		sra	Etf-QO	Msp300	sau	sax	mute	MED6	Gbeta13F	ttv	Hrb27C	Sce	Raf	mRpL55	Hakai	ogre	RecQ4	l(2)gl	CanB2	eIF4E1	LanA	egh	CSN8	csw	ksr	CSN5	bam	Mtor	ban	ball	RhoGAP93B	RpII215	Gale	EndoA	Akt1	retn	Rbsn-5	fzo	Gmd	Atg1	Patj	Actn	fzy	scu	glo	Rap1	Nprl2	Syx1A	Eip78C	Ptip	Ext2	wapl	spin	sty	Bin1	scrib	wls	bb	D	Sec6	Sec5	14-3-3epsilon	mys	hop	Abl	N	kuz	how	milt	path	pita	Zw10	S	mio	rngo	Galphai	arm	Atg13	neur	SCAR	Pabp2	Rack1	brat	drosha	cmet	AGO1	dia	yrt	Chc	CtBP	stck	Chi	Khc	Sxl	Shc	MED19	sgg	nudE	sgl	Hsf	pan	vret	ed	Wdr24	fng	Apc2	Dg	didum	ida	Caf1-180	babo	Dl	Syp	Psn	Dp	shg	dally	pbl	shn	Pcl	sktl	cic	shu	foi	DCP2	pygo	bru1	Dronc	Rab5	wb	fu	wg	Ipk2	Fkbp14	kis	ena	mib1	AP-2alpha	gd	ptc	tkv	drpr	gro	Arpc1	hts	Src64B	Egfr	lawc	Btk29A	BicD	rho	bib	comt	osa	phyl	hh	lqfR	ric8a	pum	Shark	tefu	luna	shot	mor	put	twin	hep	Doa	mir-278	Dhc64C	loqs	wun2	frc	lin-52	nau	cact	Myd88	Syt1	TBCB	Mad	Smn	Stat92E	CycC	wde	Cul3	CycG	EDTP	mir-282	Pka-C1	dom	Ge-1	Fmr1	DNaseII	dos	ATP7	EcR	smo	Nsf2	cnc	Rpp30	tor	Spps	wupA	mam	Mbs	wek	dlg1	tral	dpn	numb	Iml1	mbc	zld	CTPsyn	Dark	Lam	Iswi	Su(H)	eca	ecd	cos	mago	neb	Hel25E	Trl	mst	dome	usp	dap	Ggamma1	spoon	Cdc42	phol	Syx7	dbe	Vps45	Pten	InR	Mes2	Rop	Pkn	udd	dsh	Ced-12	Taf6	Girdin	14-3-3zeta	blot	HDAC1	sqh	aPKC	Pli	dco	alpha-Spec	tsu	Opa1	RhoGEF2	slmb	Ras85D	crn	
+third instar larval stage		Galt	Trpml	Ccdc56	Vps25	ttk	Slob	Snap29	krz	ewg	Sce	pk	Unc-115a	l(2)gl	egh	aos	CSN8	futsch	PGRP-LC	Mtor	kirre	EndoA	Myc	Akt1	CCKLR-17D1	fzr	cmpy	Kap-alpha3	Shawn	Rbcn-3A	senju	Atg1	Patr-1	sti	glo	stj	Nprl2	cdm	asrij	eya	ap	SkpA	ppk26	pnr	rg	Cks85A	scrib	Ppt1	Lrrk	Klf15	stai	ru	Sec6	myo	Sec5	Abi	Galphaf	Abl	N	alpha-Cat	Zw10	S	Atg16	Atg17	trio	Fas2	arm	sn	Sox15	so	prel	Atg6	Skp2	Atg13	Galphaq	Rx	hpo	bdl	wash	ppk	brat	wnd	Npc1a	ct	mir-8	rictor	Clbn	drosha	Pak	Rab2	Rab3	mir-184	asp	da	Sulf1	Vha26	tw	lic	Khc	Asciz	Prosap	Vap33	nmo	ds	rut	sgg	nudE	Mettl3	atl	ato	Vha13	spartin	Rh6	ed	Sin1	Wdr24	Mon1	pain	Dg	norpA	ida	Dl	unc-104	Ent2	Syp	Psn	Hcf	AkhR	FIG4	shg	ana2	ex	Diap1	Efhc1.1	Ube3a	fs(1)h	pygo	Rab7	mir-14	Rab5	Ncc69	Cyp18a1	tutl	wg	Ipk2	Fkbp14	Sas-4	ena	sim	pcm	hth	Top3alpha	Ephrin	mnb	GluRIIA	Moe	Mad1	gl	hts	gbb	Nlg3	Nlg2	Fak	Sema1a	elav	Aos1	CkIalpha	Dscam1	BRWD3	Eph	hh	Fife	TBPH	Marf	Nrg	Lnk	Tcs3	Vav	trpl	p120ctn	beta-Spec	Pcyt1	dnc	SCCRO	Col4a1	Fsn	borr	Syt4	klar	JIL-1	ninaE	CASK	fbl	Poxn	Smn	klu	wts	slo	Uba2	Mob2	Cul1	Piezo	Kat60	Max	pasha	Fmr1	lok	S6kII	DCTN1-p150	Phm	Syngr	Mbs	Top3beta	dlg1	DNApol-epsilon58	dpn	dpp	cnn	Mmp1	Mmp2	numb	Scsalpha	SCCRO3	Grip84	Dark	esc	Ubc6	eater	Top2	esn	Mcm3	bmm	hid	ecd	Chchd3	Pfdn2	ush	pic	pins	Aplip1	His2Av	Orc6	pros	dap	hiw	yki	Antp	Tbh	Dsk	lap	drl	PR-Set7	bnl	Wnt5	tam	Cdc42	Dysb	Syx4	Treh	Torsin	spi	InR	Cln3	Sod2	ph-p	CAP	dbo	Rop	mir-124	Mer	trx	dsh	gogo	poly	amn	Pldn	Rab3-GEF	Pink1	stnB	beag	dysc	aPKC	tsl	G9a	nemy	Sema2b	Arfip	crb	Ctr1A	slmb	Cbp53E	Csk	Ras85D	inc	Snr1	Abp1	
+rescuable maternal effect		Mo25	Apc2	pcx	SCAR	raw	Syx1A	WASp	slpr	sbb	Stat92E	ttv	Sce	Raf	dsh	Sara	tbi	wls	osa	foi	Su(H)	pygo	Dronc	Shark	cos	ihog	mys	csw	hop	amx	Abl	neb	dome	put	usp	hep	sgg	loqs	RhoGEF2	sgl	mxc	frc	retn	Inx2	pan	tkv	
+proximal		l(2)gl	Su(H)	Dll	grn	N	mor	fu	ds	H217	exd	dve	Antp	hth	rn	
+dorsal		dpp	amos	kay	cv-c	sax	tld	Hem	slpr	cora	Abd-B	cbt	Raf	Jra	rho	pyd	puc	stck	hh	aop	eca	msn	Shark	cos	ush	rib	put	tup	Rho1	exd	pros	Nrx-IV	hep	sgl	mxc	ash2	tin	brk	if	fng	cact	zip	spn-E	zen	raw	mirr	spi	spn-B	stumps	spn-D	ap	mus301	pnr	Pkn	bsk	dsh	shn	stan	spz	14-3-3zeta	bi	mys	tsh	dco	how	wg	chic	crc	cnc	ena	slmb	arm	hth	gd	htl	seq	tkv	
+reduced		ord	RpL36	mei-P26	Dr	Sb	ap	Sod1	ct	vg	polo	Dark	sesB	hfw	Met	RpS3	sub	aop	Act88F	blot	Sxl	lig	S6kII	Trl	tsl	fu	Lasp	Myc	SCAP	pcm	ttm50	Csp	
+heat sensitive		tta	hts	Mnn1	Egfr	SERCA	pb	sesB	hb	mwh	hh	tipE	Scr	Dfd	lqfR	osk	tefu	put	Pc	Myb	her	fzr	Gmd	ctp	Col4a1	stau	in	sti	ap	ix	otu	Pgk	Shab	fs(1)M43	fliI	Cks85A	Bin1	spas	eys	bcd	twf	Sec5	twi	ry	bi	dor	mys	hop	N	br	sc	EcR	Gmer	Atg17	Rpp30	tor	Nf1	arm	dlg1	dpp	stmA	bab1	ovo	galla-1	shakB	Ppcs	ftz	Gprk2	kat-60L1	cwi	w	mir-980	Cdk1	Ald	su(f)	Khc	ecd	dl	Sxl	mago	lab	lz	Ptp69D	pyx	dx	dy	ash1	Tl	mod(mdg4)	Wnt2	Sin1	par	zen	mle	sha	para	Vang	Adar	P32	Sod1	trp	shi	Mer	trx	fl(2)d	aux	Ddc	heph	PDZ-GEF	cac	wg	E(z)	mir-252	AP-2alpha	Csp	
+maternal effect		sra	ftz-f1	kay	Msp300	sav	Tsp74F	sax	pll	fs(1)N	slpr	ttv	Raf	Jra	plu	l(2)gl	tub	tud	csw	cta	okr	vih	Akt1	Rbsn-5	brk	Gmd	stc	exu	stau	Lsd-2	Rap1	Su(var)205	Syx1A	Ptip	SkpA	mir-316	Ext2	wapl	pnt	fs(1)M43	sty	Bin1	rl	r2d2	wls	sub	twe	bcd	14-3-3epsilon	mys	hop	Abl	N	SMC5	chic	pita	Zw10	Grip71	arm	Fas3	HSPC300	Hsc70-4	dock	dhd	fs(2)al	Pabp2	btz	ALiX	Ppcs	brat	r	fs(1)Ya	dia	mir-184	asp	vls	CtBP	Khc	dl	Shc	MED19	sgg	dx	Cks30A	Tl	ea	sxc	chb	Atf-2	fng	par	Apc2	Gs1	mirr	vnc	Jafrac1	P32	shg	sktl	Shmt	cic	aux	pygo	bru1	Dronc	psq	sic	fu	Ipk2	nos	E(z)	ena	wisp	gd	pcs	orb	tkv	ord	gro	grp	pcx	csul	Src64B	Egfr	Hira	nolo	obe	Btk29A	KCNQ	rho	hb	Sara	Trpm	tuh1	lqfR	Dp1	pum	osk	tefu	luna	faf	gcl	put	hep	Pcyt1	Dhc64C	her	wun2	sced	lin-52	cact	Claspin	Myd88	JIL-1	vas	Tctp	vri	Mad	fbl	mir-276b	Stat92E	wts	Cul3	CycG	CkIIbeta	Cul5	dom	Fmr1	gus	dop	ATP7	smg	DCTN1-p150	lost	MED31	tor	mam	fs(1)M3	Mbs	cni	botv	armi	cnn	ovo	Hr78	snf	Tsp66E	mir-219	snk	Klp3A	ndl	Cdk1	Iswi	gwl	pyd	sisRNA:4	nuf	bmm	eca	msn	mago	mre11	sog	neb	Trl	usp	spoon	mh	mir-9c	Cdc42	spn-F	phol	chem	jnj	Pten	Vang	trk	spn-D	Wee1	polo	dsh	Hip14	mud	spz	14-3-3zeta	eIF4EHP	HDAC1	sqd	RasGAP1	mir-929	sqh	mir-927	Vps35	amx	aPKC	RhoGEF2	Ctr1A	Vhl	Ras85D	ttm50	
+supernumerary		mats	sav	dlp	fab1	corto	Atpalpha	ttk	Ssdp	Egfr	Nlg2	Fak	sesB	Raf	morgue	Jra	bib	Sara	mwh	Hakai	phyl	hh	aop	l(2)gl	TBPH	lmd	lup-2	S6KL	aos	egl	CSN5	faf	Vav	shot	bam	nab	tup	scb	sca	gcm	Pc	p120ctn	kirre	rin	fzr	cmpy	Gmd	Fsn	Socs36E	Vps16A	Patr-1	in	Syt1	Pmm2	NAT1	fry	SkpA	pnr	Hsp83	pnt	wts	spin	slo	sty	rl	Ppt1	spas	salm	ro	Nct	Sec8	D	Fmr1	mid	Arl1	S6kII	N	kuz	br	hook	rst	smo	Phm	cnc	Usp47	mspo	Fas2	sl	mam	msps	AP-1mu	seq	Mo25	neur	dpp	sev	cnn	sens	Mmp2	ci	hpo	ck	h	numb	brat	svp	Magi	Grip84	Dark	Lam	Iswi	pyd	Rab1	Sulf1	sina	CtBP	piwi	Chi	msi	ecd	Pfdn2	lt	lig	foxo	ham	sgg	nudE	hiw	Mettl3	Antp	lap	spartin	ec	Psc	AP-2sigma	ed	Cdc42	Apc2	Dysb	Debcl	trc	C1GalTA	Dl	unc-104	Syp	Pten	vvl	vnd	mts	WASp	Drice	ana2	ex	fwd	Cat	Notum	Mer	dsh	mira	emc	Ube3a	Pldn	aux	Dap160	RasGAP1	PDZ-GEF	bru1	Dronc	coro	tsh	amx	ft	JhI-1	fu	spdo	fz	Sas-4	Sec15	cas	sqz	Csk	Ras85D	AP-2alpha	Rac2	DCAF12	inc	grh	ptc	ind	
+cell non-autonomous		sens	SCAR	Tnks	hpo	gbb	sax	Vps25	Ubx	Egfr	Sema1a	Sce	BicD	Cdk1	pk	l(2)gl	LanA	cos	ush	lz	ds	usp	sca	sgg	yki	pan	bnl	ed	fng	Dg	Dl	Vang	eya	bft	shg	Pdp1	ex	pnr	eyg	Notum	sty	chas	scrib	dsh	stan	cic	foi	Pka-C1	acj6	Dll	fj	pygo	bi	hop	N	ft	dco	fu	bs	fz	smo	Fas2	arm	hth	Ras85D	so	dock	grh	ptc	tkv	
+ventral		ci	Egfr	ndl	Abd-B	rho	CtBP	hh	Su(H)	dl	cos	slou	lab	cta	put	exd	sgl	brk	pan	opa	fng	zip	Myd88	fzy	raw	Dl	spi	vnd	sli	shg	pnt	vn	trx	pbl	dsh	ph-d	spz	sqd	tsh	aPKC	L	N	wg	S	RhoGEF2	sim	arm	hth	wek	tkv	
+cell autonomous		neur	sens	ci	comm	sav	g	hdc	Vps25	ttk	Ubx	brat	chico	Egfr	Sema1a	Dark	esc	Sos	Fatp	Cdk1	pk	Dscam1	Chc	mwh	Lar	CtBP	aop	Scr	mod	Su(H)	TBPH	lqfR	rept	lic	ssh	run	twin	sgg	yki	rdgA	ed	Sin1	Wdr24	fng	Dg	Xbp1	in	trc	Sec61alpha	TBCB	InR	Mad	shg	Stat92E	TfAP-2	Cul3	dsh	shn	ph-d	stan	acj6	Dll	fj	bi	Dronc	H	Ubi-p63E	hop	ems	N	ft	JhI-1	dco	path	bs	car	crb	kis	smo	arm	hth	Ras85D	Pdk1	dlg1	tkv	
+embryonic stage 4		Apc2	cnn	grp	Arpc1	dop	SCAR	mars	sqh	Arl1	faf	smg	sic	Wee1	polo	BubR1	AGO2	wupA	retn	dia	arm	Klp61F	14-3-3zeta	
+dominant, with P{wA}4-4		Pc	Sce	ash1	brm	Scm	Psc	
+distal		dpp	Dl	gbb	H217	vg	pb	RYBP	klu	dally	CycE	rho	rn	Scr	l(2)gl	Su(H)	Dll	fj	pygo	bi	N	fu	exd	dve	dx	slmb	tgo	hth	ss	tkv	
+anterior		Cdc42	exu	ci	Dl	Ubx	gt	Gbeta13F	Btk29A	cora	bwk	dally	Bin1	Raf	trx	Jra	dsh	hb	foi	hh	hkb	aop	D	bcd	Kr	bi	tefu	Trl	N	mor	ds	btd	nos	Rho1	hep	sgg	smo	fs(1)M3	Hsc70-4	ptc	
+extended germ band stage		cact	zip	dpp	zen	kni	scw	h	sax	ftz	Egfr	InR	trk	srp	Stat92E	SoxN	srw	hb	fog	bcd	ecd	Kr	mys	ush	sqh	hop	tum	sog	run	L	shot	Shc	peb	cta	tup	nos	upd1	eve	RhoGEF2	tor	retn	if	mew	
+non-rescuable maternal effect		Cdc42	ftz-f1	stau	Myd88	Moe	Arpc1	SCAR	dlp	vas	spno	Rap1	brat	Hira	vri	Wee1	Smn	Stat92E	Raf	dia	mud	vls	cic	blot	Chi	Dp1	hop	ben	aPKC	nopo	dome	sgg	MED31	Cks30A	mxc	Vhl	wisp	wek	
+posterior		exu	dpp	mir-9a	ci	MAPk-Ak2	hpo	mirr	en	spi	ftz	Ubx	brat	Egfr	trk	Mad	srp	Gbeta13F	Btk29A	CycE	Raf	Mer	dsh	hb	stai	hh	hkb	D	aos	bi	csw	sqh	Aplip1	dome	peb	lz	mor	how	fu	put	usp	exd	tor	hth	fs(1)M3	par-1	p38b	
+second instar larval stage		Dg	Xbp1	Dis3	Trpml	Desat1	Archease	MED6	Npc1a	mir-8	Poxn	Lk6	BRWD3	Scox	P5CDh1	TBPH	AMPKalpha	Nopp140	mir-1	Tcs3	Aplip1	aPKC	br	Ctr1A	Rtca	Rae1	CenG1A	bnl	
+dominant, with P{hsp26-pt-T}39C-27		Pc	Sce	trx	osa	brm	Scm	Psc	mor	
+dominant, with P{hsp26-pt-T}39C-31		Pc	Sce	osa	brm	Psc	mor	
+dominant, with P{hsp26-pt-T}39C-5		cnn	HDAC1	Su(var)204	Su(var)205	Dp	mor	Su(var)3-9	Pc	kis	Sce	Su(z)2	osa	brm	Scm	Psc	
+dominant, with In(1)w[m4]		cnn	Invadolysin	Su(var)204	Su(var)205	Dp	wapl	mod	Su(z)12	HDAC1	Dp1	Hel25E	Trl	His2Av	ADD1	E(z)	Su(var)3-9	Pc	CG8878	kis	XNP	Su(z)2	mod(mdg4)	brm	Psc	Hmt4-20	
+gastrula stage		cact	eve	ric8a	sna	Raf	tor	Rap1	dia	Ras85D	run	gd	dhd	
+chemical conditional		Galt	Pink1	Syt4	Atg1	ry	prom	nAChRalpha7	Tpi	Sod1	Uro	Dop1R1	Cat	Trap1	WRNexo	Tk	w	DopEcR	Atox1	eys	
+P-stage		Mmp1	gl	Mmp2	Cad99C	Rx	hpo	ttk	Trxr-1	pho	asl	pk	asp	Whamy	Cpn	Smox	tefu	pins	disco	Hel25E	lz	usp	sgl	per	ctp	tap	Ent2	Rap1	prom	Vang	Lpin	LamC	Cam	Drice	Nos	Schip1	dsh	mud	stan	eys	RpS21	Sec5	fon	ft	Cyp18a1	br	Ipk2	sc	sd	crb	fz	mib2	mib1	DCAF12	dock	dlg1	
+embryonic stage 17		zip	Col4a1	sqh	pyr	Vav	chic	Sec23	crb	trio	wus	mib2	Ppt1	Sec24CD	if	grh	
+conditional		drpr	Dif	dpp	Sdhaf3	d	Atpalpha	Archease	Trx-2	sni	wnd	polyph	Clbn	Dark	sesB	AGO2	w	Fatp	Rel	yrt	Rbp9	hid	Acsl	Dredd	dl	tefu	PGRP-LC	Arr2	bigmax	MAGE	okr	Crag	loqs	tim	Tk	Ekar	rdgC	Tbh	rdgB	sima	per	Xbp1	norpA	Dysb	Debcl	Syt1	mars	Gbs-70E	Cnx99A	prom	Adar	ninaA	bft	trp	Diap2	Diap1	Ddx1	r2d2	Tspo	Lrrk	Sirt1	Dcr-2	spz	imd	Ih	eys	Pldn	AcCoAS	Ogg1	lok	DNaseII	Pld	ktub	Hayan	Orco	wg	G9a	EcR	crb	Rtca	Xport-A	Vha100-1	gb	AP-2alpha	Csp	Galphaq	
+female limited		Gr63a	Ibf2	Sxl	Vav	disco	chico	N	Cln3	Cks30A	Myc	Fatp	Tbh	Cdc27	mud	da	Mcm3	
+oogenesis stage S14		kel	EcR	Atg1	kay	spin	DNaseII	mys	Met	if	Atg13	mew	
+cold sensitive		Dif	in	ovo	btz	ct	vg	rg	sesB	Rel	asp	tuh1	Act88F	pelo	noi	dor	mago	N	sic	Timp	smo	tor	slmb	pcm	Fas2	l(1)10Ae	mod(mdg4)	Hsc70-4	pcs	tkv	
+progressive		drpr	Galt	dpp	Sdhaf3	sav	glob1	hpo	dnr1	sni	Dark	mir-980	asl	Ald	bun	Gba1b	Sxl	tefu	Chchd2	Gyf	Crag	rdgB	iPLA2-VIA	Col4a1	Psn	dj-1beta	fbl	FIG4	shg	trp	chinmo	wts	udd	bsk	Sirt1	Scox	PIG-V	shv	Cdk5alpha	Pink1	Rab7	Pld	Vps35	ft	Sas-4	Lhr	Lasp	Trap1	mt:ND2	wupA	Sap-r	
+pupal stage P7		rst	ec	Mad	put	tkv	
+blastoderm stage		blot	par	dunk	ecd	Dhc64C	RhoGEF2	dia	dhd	fu	
+conditional ts		Scr	rut	EcR	ecd	Mer	hh	
+temperature conditional		ecd	jnj	Rack1	ninaE	para	N	SMC5	Egfr	lab	POSH	robo1	grh	Csp	
+lateral		aos	mid	numb	shot	gt	Egfr	dco	sli	shg	pros	Raf	trx	Rcc1	brk	robo1	spz	14-3-3zeta	ptc	seq	
+pharate adult stage		kay	Moe	Mmp1	mrn	Lpin	WASp	eyg	Catsup	w	Lam	asl	Hip14	hbs	Cp190	comt	asp	Vsx1	CtBP	l(2)gl	Max	Fmr1	dome	ft	put	Fkbp14	exd	EcR	beta-Spec	vih	loqs	l(2)gd1	mib2	Spps	Cdc27	mib1	caz	Sox14	DCAF12	Dd	
+late embryonic stage		Sec23	Whamy	Pabp2	Dronc	Sec24CD	Sar1	
+embryonic stage 16		zip	klar	sas	comm	knk	dnt	numb	tnc	sli	Sec23	srp	rtv	Exo84	Ppt1	koi	mys	sqh	Abl	N	kuz	tup	chic	lms	nos	gcm	pros	Sas-4	wun2	sim	mib2	mam	mmy	Sec24CD	drl	robo1	verm	Wnt5	
+first instar larval stage		Zasp52	Xbp1	Alas	Pabp2	glob1	Pmm2	Sec61alpha	Hand	Npc1a	Sec23	Mes2	Stat92E	Hip14	BRWD3	Ser	Alk	fs(1)h	ATP7	aPKC	N	bowl	nab	tup	slmo	Rheb	Ctr1A	Eaat1	slmb	mib1	Rbsn-5	Sec24CD	Gmd	ttm50	mesh	
+oogenesis stage S9		kel	lqfR	kay	Khc	btz	vas	pcm	tgo	Met	sktl	sima	
+embryonic stage 15		zip	lmd	Dronc	knk	Mef2	sqh	Pex1	numb	vvl	mbc	chic	scb	nos	srp	rtv	pnt	wun2	sim	Ppt1	sn	puc	sage	tkv	
+prepupal stage		Whamy	ftz-f1	Pink1	myo	fru	wash	Vps35	dome	br	Sp1	skl	hep	beta-Spec	Met	Sox14	Trpm	
+male limited		sqh	Ubi-p63E	Vav	Kdm4A	Uvrag	sesB	mlt	Bx	Trap1	Grip91	cav	tor	Fatp	Tspo	Rac2	per	Topors	
+germ-line clone		Cdc42	sra	Msp300	Arpc1	btz	Dl	glo	Dp	Gbeta13F	Btk29A	Hrb27C	cmet	AGO1	sktl	Pka-C1	l(2)gl	Su(H)	Khc	Sec5	ksr	tefu	shot	milt	pita	hep	RhoGEF2	ena	mib1	
+somatic clone - Minute background		Capr	Caf1-105	l(2)gl	Cdk8	Stat92E	Aos1	Opa1	CycC	trh	hth	MED19	
+drug conditional		Dysb	HDAC1	5-HT2A	Drice	p38b	
+late third instar larval stage		Mmp1	Smox	Dronc	DAAM	vn	Lpin	N	
+embryonic cycle 14		Capr	stg	grp	14-3-3epsilon	sced	nuf	
+wandering third instar larval stage		Pldn	Vps16A	GluRIIA	Dysb	Ace	fon	Dronc	lt	Vps25	Lpin	Uvrag	Rbf	Aos1	E2f1	wupA	e(y)1	Nct	
+embryonic stage 13		scb	nos	Rbf	sim	mam	yrt	N	Alk	htl	tkv	
+embryonic stage 12		nos	rhea	Dronc	sim	Ppt1	vnd	htl	odd	
+embryonic stage 5		Btk29A	Dab	dop	RhoGEF2	Raf	Src64B	vls	
+dominant, with In(1)w[m4h]		barr	dom	Su(var)3-9	Low	sti	E2f1	XNP	Su(var)205	Snr1	Pp1-87B	
+embryonic stage 14		tnc	vvl	uif	scb	nos	EcR	Mdr49	Sce	pck	sim	Fas2	Ppt1	sn	robo1	sage	tkv	
+medial		exd	pnr	tra	fru	tkv	
+embryonic cycle 11		Wee1	grp	dia	sced	smg	Mcm10	nuf	
+embryonic cycle 12		Wee1	Fmr1	grp	sced	Mcm10	tral	nuf	
+embryonic cycle 13		Wee1	Fmr1	grp	sced	tral	nuf	
+oogenesis stage S10		kel	Caf1-180	vas	rin	tgo	sn	Met	sktl	sima	
+oogenesis stage S11		kel	mtrm	Myc	rin	Met	
+oogenesis stage S6		kel	Dg	Sec6	ovo	vas	
+recessive, with ScerGAL4[-]:		aop	pain	Rab11	Fmr1	Dp1	ball	trbl	Nmdar1	nej	EndoA	Rheb	morgue	elB	Calr	
+nutrition conditional		hppy	drpr	Capr	Vps16A	Atg1	MAPk-Ak2	sgll	wash	Pten	Nprl2	Pex3	trsn	sesB	Adi1	Rel	Lrrk	BHD	AstA	REPTOR	lig	Gabat	Atg16	Uvrag	DopEcR	p38a	Akt1	Seipin	p38b	
+GO0048477:oogenesis		SCAR	Six4	Abi	spoon	CycG	

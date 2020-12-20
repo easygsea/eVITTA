@@ -3,6 +3,7 @@
 "cel","01_WormCat (Holdorf et al. 2020)","WormCat_Category_1.gmt;WormCat_Category_2.gmt;WormCat_Category_3.gmt"
 "cel","02_Pathway","KEGG.gmt;WikiPathways.gmt;Reactome_Pathway.gmt;Reactome_Location.gmt"
 "cel","03_Gene Ontology","Biological_Process.gmt;Cellular_Component.gmt;Molecular_Function.gmt"
+"cel","04_WormBase","Anatomy_Association.gmt;Phenotype.gmt;RNAi_Phenotype.gmt"
 "cel","07_Other","TF2DNA.gmt"
 "cfa","02_Pathway","KEGG.gmt"
 "cfa","03_Gene Ontology","Biological_Process.gmt;Cellular_Component.gmt;Molecular_Function.gmt"
