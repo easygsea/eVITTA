@@ -421,6 +421,7 @@ output$run_error <- renderUI({
                 tags$li("The selected species matches your query, and/or")
                 ,tags$li("You have selected the right gene identifier as well as its column, and/or")
                 ,tags$li("Your input file/gene list is correct.")
+                ,tags$li("Adjust the maximum and minimum gene set sizes according to the gene set library(ies) you've chosen.")
             )
         )
     }else{
@@ -431,6 +432,7 @@ output$run_error <- renderUI({
                 ,tags$li("Your uploaded GMT(s) match(es) the species in your query, and/or")
                 ,tags$li("The gene identifier of your query matches your uploaded GMT(s), and/or")
                 ,tags$li("Your input file/gene list is correct.")
+                ,tags$li("Adjust the maximum and minimum gene set sizes according to the gene set library(ies) you've chosen.")
             )
         )
     }

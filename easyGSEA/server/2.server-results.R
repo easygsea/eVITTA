@@ -179,7 +179,7 @@ sig_none <- reactive({
     req(rv$bar_p_cutoff)
     req(rv$bar_q_cutoff)
     
-    if(rv$plot_type == "bar" || rv$plot_type == "bubble" && rv$bar_error == "l"){
+    if(rv$bar_error == "l" && (rv$plot_type == "bar" || rv$plot_type == "bubble")){
         HTML(
             "We support plotting up to 200 data points."
             ,"Please click the bottom-left gear button to adjust thresholds, "
