@@ -17,6 +17,7 @@
         dendro_or_barplot = "dendro",
         abbreviate_check = FALSE,
         sort_check = FALSE,
+        sort_pq = "cluster_id",
         color_check = "pval",
         abbreviate_length = 45,
         

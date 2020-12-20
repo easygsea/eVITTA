@@ -1430,18 +1430,26 @@
             else{return(paste0(substr(x, 0, abbreviate_length),"..."))}})
         }
         
-        # rearrange the data frame based on users' selction(whether they would like to sort)
-        if(rv$sort_check == TRUE){
-          if(rv$run_mode == "gsea"){
+        # rearrange the data frame based on users' selection(whether they would like to sort)
+        if(rv$run_mode == "gsea"){
+          if(rv$sort_check == TRUE){
             df_padj_points <- df_padj_points %>%
               arrange(desc(ES))
           } else {
-            df_padj_points <- df_padj_points %>%
-              arrange(desc(-log10(pval)))
+            df_padj_points <- df_padj_points %>% 
+              arrange(desc(cluster))
           }
-        } else{
-          df_padj_points <- df_padj_points %>% 
-          arrange(desc(cluster))
+        } else {
+          if(rv$sort_pq == "pval"){
+            df_padj_points <- df_padj_points %>% 
+              arrange(desc(pval))
+          } else if(rv$sort_pq == "padj"){
+            df_padj_points <- df_padj_points %>% 
+              arrange(desc(padj))
+          } else {
+            df_padj_points <- df_padj_points %>% 
+              arrange(desc(cluster))
+          }
         }
 
         # assign the the variable that decide the color and the text of the color bar, p or p.adj
@@ -1584,19 +1592,40 @@
             else{return(paste0(substr(x, 0, abbreviate_length),"..."))}})
         }
         
-        # rearrange the data frame based on users' selction(whether they would like to sort)
-        if(rv$sort_check == TRUE){
-          if(rv$run_mode == "gsea"){
+        # rearrange the data frame based on users' selection(whether they would like to sort)
+        if(rv$run_mode == "gsea"){
+          if(rv$sort_check == TRUE){
             df_padj_points <- df_padj_points %>%
               arrange(desc(ES))
           } else {
-            df_padj_points <- df_padj_points %>%
-              arrange(desc(-log10(pval)))
+            df_padj_points <- df_padj_points %>% 
+              arrange(desc(cluster))
           }
-        } else{
-          df_padj_points <- df_padj_points %>% 
-            arrange(desc(cluster))
+        } else {
+          if(rv$sort_pq == "pval"){
+            df_padj_points <- df_padj_points %>% 
+              arrange(desc(pval))
+          } else if(rv$sort_pq == "padj"){
+            df_padj_points <- df_padj_points %>% 
+              arrange(desc(padj))
+          } else {
+            df_padj_points <- df_padj_points %>% 
+              arrange(desc(cluster))
+          }
         }
+        
+        # if(rv$sort_check == TRUE){
+        #   if(rv$run_mode == "gsea"){
+        #     df_padj_points <- df_padj_points %>%
+        #       arrange(desc(ES))
+        #   } else {
+        #     df_padj_points <- df_padj_points %>%
+        #       arrange(desc(-log10(pval)))
+        #   }
+        # } else{
+        #   df_padj_points <- df_padj_points %>% 
+        #     arrange(desc(cluster))
+        # }
         
         color_value = rv$color_check
         if(color_value == "pval"){
