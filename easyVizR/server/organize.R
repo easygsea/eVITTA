@@ -1,10 +1,10 @@
 # # DEMO SESSION CODE -------------------------------------------------------
 # 
 # library(later)
-# # rv$demo_n = 2
+# rv$demo_n = 2
 # # the modal to remind the user it is a demo session
 # observe({
-#   # req(rv$demo_n == 2)
+#   req(rv$demo_n == 2)
 #   init_demo()
 #   showModal(modalDialog(title = tags$h3("Welcome to our easyVizR demo session"),
 #                         tags$h4("Explore the sample output that performs interactively in the same way as real output.")
@@ -13,7 +13,7 @@
 #                         size = "m",
 #                         easyClose = FALSE
 #                         ,footer = actionButton("welcome_modal",label = "OK")))
-#   # rv$demo_n = 4
+#   rv$demo_n = 4
 # 
 # })
 # # when the user closed the modal, start rintrojs
