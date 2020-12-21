@@ -1089,17 +1089,26 @@
                              ,rv$gmax),
                 uiOutput("ui_nperm")
               )
+              ,materialSwitch(
+                inputId = "q_dynamic",
+                label = HTML(paste0("Allow dynamic adjustment on adjusted P-value threshold",add_help("q_dynamic_q"))),
+                value = rv$q_dynamic, inline = F, width = "100%",
+                status = "danger"
+              )
               ,style = "background:#e6f4fc;"
             ),
             bsTooltip("mymin_q", "Minimum gene set size", placement = "top"),
             bsTooltip("mymax_q", "Maximum gene set size", placement = "top")
+          ,bsTooltip("q_dynamic_q","If TRUE, easyGSEA will dynamically adjust the threshold to capture the most significantly enriched while minimizing false positives. Choose FALSE (the default) to be consistent in the threshold if you have multiple datasets to analyze."
+                     ,placement = "top")
           )
         )
       )
 
 
     })
-
+    
+    # number of permutation for GSEA run
     output$ui_nperm <- renderUI({
       req(input$selected_mode == "gsea")
       div(
@@ -1108,6 +1117,11 @@
                      ,rv$gperm),
         bsTooltip("nperm_q", "No. of permutations", placement = "top")
       )
+    })
+    
+    # dynamically change padj
+    observeEvent(input$q_dynamic,{
+      rv$q_dynamic <- input$q_dynamic
     })
 
 
