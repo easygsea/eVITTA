@@ -1069,7 +1069,7 @@
         width = "300px",circle = TRUE, status = "info",
         size = "xs",
         icon = icon("gear"),# class = "opt"),
-        up = FALSE,
+        up = T,
         tooltip = tooltipOptions(title = "Click to adjust run parameters"),
 
         fluidRow(
@@ -1099,7 +1099,7 @@
             ),
             bsTooltip("mymin_q", "Minimum gene set size", placement = "top"),
             bsTooltip("mymax_q", "Maximum gene set size", placement = "top")
-          ,bsTooltip("q_dynamic_q","If TRUE, easyGSEA will dynamically adjust the threshold to capture the most significantly enriched while minimizing false positives. Choose FALSE (the default) to be consistent in the threshold if you have multiple datasets to analyze."
+          ,bsTooltip("q_dynamic_q","If TRUE (the default), easyGSEA will dynamically adjust the adjusted P-value threshold to capture the most significantly enriched while minimizing false positives. Switch to FALSE if you have multiple datasets to be consistent in the threshold."
                      ,placement = "top")
           )
         )
