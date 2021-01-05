@@ -1937,6 +1937,7 @@
       
       rv$no_up_01 = 0;rv$no_up_05 = 0;rv$no_down_01 = 0;rv$no_down_05 = 0
       rv$no_up_025 = 0; rv$no_down_025 = 0
+      rv$bar_q_cutoff <- 1;rv$vis_q <- 1
       rv$es_term = NULL
       
       rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
