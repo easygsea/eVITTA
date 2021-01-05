@@ -766,9 +766,12 @@ output$data_matrix_df <- DT::renderDataTable({
   
   df <- rv$dmdf
   
+  print("rv$demo")
+  print(rv$demo)
+  print(is.null(rv$demo))
   # filter according to stored sample list
   if (input$dmdf_filter == "Filtered"){
-    if(is.null(rv$demo)){
+    if(rv$demo == ""){
       df <- filtered_data_showdf()
     }
   }
@@ -798,7 +801,7 @@ output$dmdf_filter_ui <- renderUI({
   }
   if(rv$run_mode == "manual"){
     fm <- paste0("Full matrix (",length(rv$dmdf_samples),")")
-    fl <- paste0("Filtered (",length(rv$dmdf_samples),")")
+    fl <- paste0("Filtered (",length(rv$samples),")")
   } else {
     fm <- paste0("Full matrix (",length(rv$all_samples),")")
     fl <- paste0("Filtered (",length(rv$samples),")")

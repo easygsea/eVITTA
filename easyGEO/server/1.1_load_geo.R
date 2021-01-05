@@ -311,6 +311,8 @@ read_design_matrix <- function(inFile){
   rownames(indf) <- indf$X
   indf[ ,1] <- NULL
   rv$fddf <- indf
+  rv$fddf_o <- indf
+  print(head(rv$fddf_o))
   print("function ends")
   
 }

@@ -568,7 +568,7 @@ init_demo <- function(){
   rv$gpl_choices <- readRDS(paste0(getwd(),"/rvs/gpl_choices.rds"))
   rv$dmdf <- readRDS(paste0(getwd(),"/rvs/dmdf.rds"))
   rv$all_samples <- readRDS(paste0(getwd(),"/rvs/all_samples.rds"))
-  rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds"))
+  # rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds"))
   rv$pdata <- readRDS(paste0(getwd(),"/rvs/pdata.rds"))
   rv$fddf <- readRDS(paste0(getwd(),"/rvs/fddf.rds"))
   rv$sup_source <- readRDS(paste0(getwd(),"/rvs/sup_source.rds"))
@@ -615,7 +615,7 @@ init_demo_d <- function(){
   rv$gpl_tooltips <- NULL
   rv$text <- NULL
   rv$matrix_ready <- NULL
-  rv$demo <- ""
+  rv$demo <- NULL
 }
 
 init_choices <- function(){

@@ -1,6 +1,6 @@
 # --------------- overall design tab UI -----------------
 output$ui_design <- renderUI({
-  if(is.null(rv$plat_id) && is.null(rv$fddf)){
+  if(is.null(rv$plat_id) && is.null(rv$fddf_o)){
     panel_null()
   }else{
     div(
@@ -84,14 +84,16 @@ output$ui_design <- renderUI({
                           
                           fluidRow(
                             column(12,
-                                   box(title=NULL, width = 6, solidHeader=T, status="primary",
-                                       radioGroupButtons(
-                                         inputId = "fddf_show_rown",
-                                         label = "Show column names as:", 
-                                         choices = c("GEO accession", "Sample name"),
-                                         selected = "Sample name"
-                                       )
-                                   ),
+                                   if(rv$run_mode == "auto"){
+                                     box(title=NULL, width = 6, solidHeader=T, status="primary",
+                                         radioGroupButtons(
+                                           inputId = "fddf_show_rown",
+                                           label = "Show column names as:", 
+                                           choices = c("GEO accession", "Sample name"),
+                                           selected = "Sample name"
+                                         )
+                                     )
+                                    },
                                    
                                    DT::dataTableOutput("filtered_design_df")
                                    
@@ -121,20 +123,26 @@ observeEvent(input$guide3,{
 # get full design matrix table -----------#
 
 design_df <- reactive({
-  req(is.null(rv$gse_all)==F || rv$run_mode == "manual")
-  req(is.null(gse())==F)
-  req(is.null(rv$plat_id)==F || rv$run_mode == "manual")
-  
-  # detect how many char columns there are; if only 1, try to parse differently
-  detected_var_num <- nrow(data.frame(t(data.frame(pData(phenoData(gse()))) %>% dplyr::select(contains("characteristics")))))
-  print(paste0("detected characteristics columns: ", detected_var_num))
-  if (detected_var_num>1){
-    char_list <- extract_char_list(gse(), oneline_guard=F)
-  } else {
-    char_list <- extract_char_list(gse(), oneline_guard=T)
+  if(rv$run_mode == "auto"){
+    req(is.null(rv$gse_all)==F)
+    req(is.null(gse())==F)
+    req(is.null(rv$plat_id)==F)
+ 
+    # detect how many char columns there are; if only 1, try to parse differently
+    detected_var_num <- nrow(data.frame(t(data.frame(pData(phenoData(gse()))) %>% dplyr::select(contains("characteristics")))))
+    print(paste0("detected characteristics columns: ", detected_var_num))
+    if (detected_var_num>1){
+      char_list <- extract_char_list(gse(), oneline_guard=F)
+    } else {
+      char_list <- extract_char_list(gse(), oneline_guard=T)
+    }
+    
+    char_mat <- char_mat_from_list(char_list)
+  } else{
+    char_mat <- rv$fddf_o
   }
-  
-  char_mat <- char_mat_from_list(char_list)
+  print("char_mat is like")
+  print(head(char_mat))
   char_mat
   
   # # tidy characteristics
@@ -188,13 +196,18 @@ design_df <- reactive({
 
 # variable summary (is a named list of named vectors in form of $var level:freq)
 var_summary <- reactive({
+  if(rv$run_mode == "manual"){
+    req(!is.null(rv$fddf_o))
+  }
   char_mat <- design_df()
+  
   # get named list of named vectors
   var_summary <- vector(mode="list", length=ncol(char_mat))
   for (i in 1: length(colnames(char_mat))){
     var_summary[[i]] <- table(char_mat[[colnames(char_mat)[[i]]]])
   }
   names(var_summary) <- colnames(char_mat)
+  print("var_summary_evaluated")
   var_summary
 })
 
@@ -224,8 +237,9 @@ design_summary <- reactive({
 
 
 output$design_summary_ui <- renderUI({
-  req(is.null(rv$gse_all)==F)
-  req(is.null(rv$plat_id)==F)
+  if(rv$run_mode == "auto"){
+    req(is.null(rv$gse_all)==F)
+    req(is.null(rv$plat_id)==F)
   
   div(
     strong(paste0("Study design for ", annotation(gse()), ": ")), br(),br(),
@@ -234,7 +248,9 @@ output$design_summary_ui <- renderUI({
     shiny::HTML(design_summary())
     
     
-  )
+  )} else {
+    div(shiny::HTML(design_summary()))
+  }
 })
 
 
@@ -244,7 +260,9 @@ output$design_summary_ui <- renderUI({
 
 # show summary valueboxes
 output$design_variables <- renderValueBox({
-  req(is.null(design_df())==F)
+  # if(rv$run_mode == "auto"){
+    req(is.null(design_df())==F)
+  
   
   valueBox(
     paste0(ncol(design_df()), " variables"), 
@@ -255,7 +273,9 @@ output$design_variables <- renderValueBox({
 })
 output$design_samples <- renderValueBox({
   req(is.null(filtered_design_df())==F)
-  req(is.null(design_df())==F)
+  # if(rv$run_mode == "auto") {
+    req(is.null(design_df())==F)
+  
   
   selected <- nrow(filtered_design_df())
   total <- nrow(design_df())
