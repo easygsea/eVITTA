@@ -121,9 +121,9 @@ observeEvent(input$guide3,{
 # get full design matrix table -----------#
 
 design_df <- reactive({
-  req(is.null(rv$gse_all)==F)
+  req(is.null(rv$gse_all)==F || rv$run_mode == "manual")
   req(is.null(gse())==F)
-  req(is.null(rv$plat_id)==F)
+  req(is.null(rv$plat_id)==F || rv$run_mode == "manual")
   
   # detect how many char columns there are; if only 1, try to parse differently
   detected_var_num <- nrow(data.frame(t(data.frame(pData(phenoData(gse()))) %>% dplyr::select(contains("characteristics")))))

@@ -129,7 +129,7 @@ observe({
 output$filter_vars_levels <- renderUI({
   req(is.null(rv$v)==F)
   # req(input$fddf_filter_mode=="variables")
-  
+  print("rv$v is not null")
   rv$v
 })
 

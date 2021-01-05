@@ -181,7 +181,7 @@ observeEvent(input$data_matrix_file, {
 
 # when the design matrix is uploaded, rv$fddf changed from NULL to a data frame
 observeEvent(input$design_matrix_file, {
-  print("tired as fuck")
+  print("below is fddf design matrix")
   print(rv$fddf)
   # read the design matrix into rv$fddf
   inFile <- input$design_matrix_file
@@ -316,13 +316,20 @@ read_design_matrix <- function(inFile){
 }
 
 output$sample_comparison <- renderUI({
+  # req(!is.null(rv$fddf_samples))
   number_of_matches <- 0
-  map(rv$dmdf_samples, function(x){
-    if(any(rv$fddf_samples) == x)
-      number_of_matches = number_of_matches + 1
-  })
+  print("error occured")
+  overlapped_vector <- intersect(rv$dmdf_samples, rv$fddf_samples)
+  number_of_matches = length(overlapped_vector)
   print(number_of_matches)
-  number_of_matches
+  if(!is.null(rv$fddf_samples)){
+    HTML(paste("In addition, there are", number_of_matches, 
+             "samples in both data matrix and design matrix."))
+  } else {
+    HTML(paste("In addition, you could click <b>Reset upload</b> and 
+               upload your design matrix on the right panel first, to view the overlapped samples of these two matrix."))
+  }
+  
 })
 
 
@@ -621,7 +628,7 @@ observeEvent(input$geo_platform, {
 
 # ---------- when all is done, show guide box to next page ---------
 output$guide_1a <- renderUI({
-  if (is.null(rv$plat_id)==F || is.null(rv$fddf)==F){ # user already selected a platform
+  if (is.null(rv$plat_id)==F || (is.null(rv$fddf)==F && (is.null(rv$dmdf)==F))){ # user already selected a platform
     msg = "Navigate to <b>2. Data matrix</b> to proceed"
     guide_box("guide1", msg)
   } else {

@@ -5,13 +5,20 @@ output$ui_dm <- renderUI({
   }else{
     fluidRow(
       column(4,
-             
-             box(title=span(HTML("<b>2.1.</b>"),icon("download"),"Get data matrix"), width = 12, solidHeader=F, status = "primary", 
+             if(rv$run_mode == "auto"){
+              box(title=span(HTML("<b>2.1.</b>"),icon("download"),"Get data matrix"), width = 12, solidHeader=F, status = "primary", 
                  id = "download_matrix",
                  
                  uiOutput("data_matrix_ui")
                  
-             ),
+              )} else {
+                box(title=span("Data matrix"), width = 12, solidHeader=F, status = "primary", 
+                    # id = "view_data_matrix",
+                    
+                    HTML("A brief intro about data matrix.")
+                    
+                )
+              },
              
              uiOutput("upload_matrix_ui"),
              
@@ -25,6 +32,7 @@ output$ui_dm <- renderUI({
                  
                  fluidRow(
                    column(12,
+                          if(rv$run_mode == "auto")
                           box(title=NULL, width = 6, solidHeader=T, status="primary",
                               radioGroupButtons(
                                 inputId = "dmdf_show_coln",
@@ -266,6 +274,7 @@ observeEvent(input$file_help,{
 
 output$example3 <- renderTable({(example_data3 <- read.csv(paste0(getwd(),"/server/easyGEO_example1.rnk"),header = TRUE, sep = "\t"))},escape = FALSE)
 
+# the function that read the data matrix in the both uploading mode
 read_data_matrix <- function(inFile){
 
   # the modal that appears when the file user upload exceeds 50MB, Version1
@@ -750,8 +759,8 @@ observeEvent(input$file, {
 # --------------- show data matrix df ---------------
 
 output$data_matrix_df <- DT::renderDataTable({
-  req(is.null(rv$gse_all)==F)
-  req(is.null(rv$plat_id)==F)
+  req(is.null(rv$gse_all)==F || rv$run_mode == "manual")
+  req(is.null(rv$plat_id)==F || rv$run_mode == "manual")
   req(is.null(rv$dmdf)==F)
   req(nchar(input$dmdf_filter))
   
@@ -765,14 +774,16 @@ output$data_matrix_df <- DT::renderDataTable({
   }
   
   # translate GSM column names to sample names on display
-  if (input$dmdf_show_coln == "Sample name"){
+  if (input$dmdf_show_coln == "Sample name" 
+        && rv$run_mode == "auto"){
     
     colnames(df) <- translate_sample_names(colnames(df),  # translating from
                                            rv$pdata[c("title", "geo_accession")],  # translation df
                                            "title") # translating to
   }
   
-  
+  print('enter or not')
+  print(head(df))
   df
   
 }, plugins="ellipsis",
@@ -781,13 +792,18 @@ options=dt_options(30, scrollX=T)
 
 # select whether to filter
 output$dmdf_filter_ui <- renderUI({
-  req(length(rv$all_samples)>0)
+  req(length(rv$all_samples)>0 || !is.null(rv$dmdf_samples))
   if(rv$demo == "yes"){
     rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds"))
   }
+  if(rv$run_mode == "manual"){
+    fm <- paste0("Full matrix (",length(rv$dmdf_samples),")")
+    fl <- paste0("Filtered (",length(rv$dmdf_samples),")")
+  } else {
+    fm <- paste0("Full matrix (",length(rv$all_samples),")")
+    fl <- paste0("Filtered (",length(rv$samples),")")
+  }
   
-  fm <- paste0("Full matrix (",length(rv$all_samples),")")
-  fl <- paste0("Filtered (",length(rv$samples),")")
   choices <- c("Full matrix", "Filtered")
   names(choices) <- c(fm, fl)
   box(title=NULL, width = 6, solidHeader=T, status="primary",
