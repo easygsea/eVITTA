@@ -521,9 +521,9 @@ output$data_matrix_df <- DT::renderDataTable({
   
   # filter according to stored sample list
   if (input$dmdf_filter == "Filtered"){
-    if(is.null(rv$demo)){
+    # if(is.null(rv$demo)){
       df <- filtered_data_showdf()
-    }
+    # }
   }
   
   # translate GSM column names to sample names on display
@@ -544,9 +544,9 @@ options=dt_options(30, scrollX=T)
 # select whether to filter
 output$dmdf_filter_ui <- renderUI({
   req(length(rv$all_samples)>0)
-  if(rv$demo == "yes"){
-    rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds"))
-  }
+  # if(rv$demo == "yes"){
+  #   rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds"))
+  # }
   
   fm <- paste0("Full matrix (",length(rv$all_samples),")")
   fl <- paste0("Filtered (",length(rv$samples),")")
