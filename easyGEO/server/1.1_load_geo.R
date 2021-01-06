@@ -139,30 +139,27 @@ output$ui_manual <- renderUI({
            ))
   )
 })
+# the help page for data matrix
 observeEvent(input$manual_help,{
   showModal(modalDialog(
     inputId = "file_help_1",
-    #title = "Ranked list file format (*.rnk)",
-    #includeHTML(paste0(getwd(),"/server/help_button_page.html")),
-    # dataTableOutput('example_data1'),
-    # includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
-    # includeMarkdown(knitr::knit(paste0(getwd(),"/inc/rnk_explaination.Rmd"),quiet=T)),
+    #title = "Data matrix file format",
+    includeHTML(paste0(getwd(),"/server/data_matrix_page.html")),
     easyClose = TRUE,size="l",
     footer = modalButton("OK")
   ))
 })
+# the help page for design matrix
 observeEvent(input$manual_help_2,{
   showModal(modalDialog(
     inputId = "file_help_2",
-    #title = "Ranked list file format (*.rnk)",
-    #includeHTML(paste0(getwd(),"/server/help_button_page.html")),
-    # dataTableOutput('example_data1'),
-    # includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
-    # includeMarkdown(knitr::knit(paste0(getwd(),"/inc/rnk_explaination.Rmd"),quiet=T)),
+    #title = "Design matrix file format",
+    includeHTML(paste0(getwd(),"/server/design_matrix_page.html")),
     easyClose = TRUE,size="l",
     footer = modalButton("OK")
   ))
 })
+
 # when the data matrix is uploaded
 observeEvent(input$data_matrix_file, {
   # generate data matrix
@@ -190,7 +187,7 @@ observeEvent(input$design_matrix_file, {
   print(head(rv$fddf))
 })
 
-# the buttons of the modal after file uploaded
+# the buttons of the modal after data matrix uploaded
 output$matrix_buttons <- renderUI({
   fluidRow(
     div(style="display:inline-block;",
@@ -201,22 +198,49 @@ output$matrix_buttons <- renderUI({
     )
   )   
 })
+# the buttons of the modal after design matrix uploaded
+output$design_matrix_buttons <- renderUI({
+  fluidRow(
+    div(style="display:inline-block;",
+        actionButton("design_matrix_confirm", "Confirm and Upload", clss = "btn_primary")
+    ),
+    div(style="display:inline-block;",
+        actionButton('design_matrix_reset', 'Reset upload')
+    )
+  )   
+})
 
 output$dm_confirm_button <- renderUI({
   actionButton("dm_confirm", "Confirm and Upload", class = "btn_primary")
 })
+
 # when user presses reset
 observeEvent(input$dm_reset, {
   # rv$folder_upload_state <- 'reset'
   shinyjs::reset("data_matrix_file")
+  # reset the existing sample names
+  rv$dmdf_samples <- NULL
+  removeModal()
+})
+observeEvent(input$design_matrix_reset, {
+  shinyjs::reset("design_matrix_file")
+  # reset the existing sample names
+  rv$fddf_samples <- NULL
+  rv$fddf <- NULL
   removeModal()
 })
 # when user clicks confirm and upload button
 observeEvent(input$dm_confirm, {
-  print("stay positive")
   print(rv$dmdf)
   #initialize rv$dmdf
   rv$dmdf <- rv$indf
+  rv$samples <- rv$dmdf_samples
+  removeModal()
+})
+observeEvent(input$design_matrix_confirm, {
+
+  #initialize rv$fddf
+  rv$fddf_o <- rv$fddf
   removeModal()
 })
 
@@ -311,9 +335,20 @@ read_design_matrix <- function(inFile){
   rownames(indf) <- indf$X
   indf[ ,1] <- NULL
   rv$fddf <- indf
-  rv$fddf_o <- indf
-  print(head(rv$fddf_o))
-  print("function ends")
+  
+  # display a modal that breifly descibes the deisign matrix
+  showModal(modalDialog(
+    title = div("File Upload",style = "font-size:170%"),
+    span(HTML("The uploaded file contains these <b>Samples:</b> "),
+         glue_collapse(rownames(indf)[1:10], sep = ", ", last = " and "), "... (",
+         length(rownames(indf)), HTML(" in total), and  these <b>attributes:</b>"),
+         glue_collapse(colnames(indf), sep = ", ", last = " and "), "(",
+         length(colnames(indf))-1, " in total).",br(), uiOutput("sample_comparison")," Please review them to proceed.",
+         style = "font-size:130%"),
+    easyClose = F,
+    size = "l",
+    footer = uiOutput("design_matrix_buttons")
+  ))
   
 }
 
@@ -324,12 +359,14 @@ output$sample_comparison <- renderUI({
   overlapped_vector <- intersect(rv$dmdf_samples, rv$fddf_samples)
   number_of_matches = length(overlapped_vector)
   print(number_of_matches)
-  if(!is.null(rv$fddf_samples)){
+  if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
     HTML(paste("In addition, there are", number_of_matches, 
              "samples in both data matrix and design matrix."))
-  } else {
+  } else if(is.null(rv$fddf_samples)){
     HTML(paste("In addition, you could click <b>Reset upload</b> and 
                upload your design matrix on the right panel first, to view the overlapped samples of these two matrix."))
+  } else {
+    
   }
   
 })

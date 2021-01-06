@@ -1,8 +1,10 @@
 # --------------- overall data matrix tab UI ---------------
 output$ui_dm <- renderUI({
-  if(is.null(rv$plat_id) && is.null(rv$dmdf)){
+  if(is.null(rv$plat_id) && rv$run_mode == "auto"){
     panel_null()
-  }else{
+  } else if(is.null(rv$dmdf) && rv$run_mode == "manual"){
+    panel_null(text = "Data available upon sucessfully uploading your data matrix (count matrix).")
+  } else {
     fluidRow(
       column(4,
              if(rv$run_mode == "auto"){
@@ -271,7 +273,7 @@ observeEvent(input$file_help,{
     footer = modalButton("OK")
   ))
 })
-
+# the data matrix example table
 output$example3 <- renderTable({(example_data3 <- read.csv(paste0(getwd(),"/server/easyGEO_example1.rnk"),header = TRUE, sep = "\t"))},escape = FALSE)
 
 # the function that read the data matrix in the both uploading mode
@@ -407,7 +409,7 @@ read_data_matrix <- function(inFile){
     
     rv$indf <- indf
     
-    # the modal that briefly show the datas inside the file that the user uploads
+    # the modal that briefly show the data inside the file that the user uploads
     showModal(modalDialog(
       title = div("File Upload",style = "font-size:170%"),
       span(HTML("The uploaded file contains these <b>Genes:</b> "),
@@ -765,15 +767,12 @@ output$data_matrix_df <- DT::renderDataTable({
   req(nchar(input$dmdf_filter))
   
   df <- rv$dmdf
-  
-  print("rv$demo")
-  print(rv$demo)
-  print(is.null(rv$demo))
+
   # filter according to stored sample list
   if (input$dmdf_filter == "Filtered"){
-    if(rv$demo == ""){
+    # if(rv$demo == ""){
       df <- filtered_data_showdf()
-    }
+    # }
   }
   
   # translate GSM column names to sample names on display
@@ -796,9 +795,7 @@ options=dt_options(30, scrollX=T)
 # select whether to filter
 output$dmdf_filter_ui <- renderUI({
   req(length(rv$all_samples)>0 || !is.null(rv$dmdf_samples))
-  if(rv$demo == "yes"){
-    rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds"))
-  }
+
   if(rv$run_mode == "manual"){
     fm <- paste0("Full matrix (",length(rv$dmdf_samples),")")
     fl <- paste0("Filtered (",length(rv$samples),")")

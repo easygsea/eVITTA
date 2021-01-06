@@ -1,7 +1,9 @@
 # --------------- overall design tab UI -----------------
 output$ui_design <- renderUI({
-  if(is.null(rv$plat_id) && is.null(rv$fddf_o)){
+  if(is.null(rv$plat_id) && rv$run_mode == "auto"){
     panel_null()
+  }else if(is.null(rv$fddf_o) && rv$run_mode == "manual"){
+    panel_null(text = "Data available upon successfully uploading your design matrix.")
   }else{
     div(
       column(12,
