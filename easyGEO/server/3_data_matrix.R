@@ -335,10 +335,18 @@ read_data_matrix <- function(inFile){
     showModal(modalDialog( 
       title = "Warning: The file you uploaded contains duplicate gene names",
       HTML(paste0("Only the first duplicate(s) will be kept.<br>",
-                  "If this is not what you intend, please double check your input file and re-upload.")),
+                  "If this is not what you intend, please double check your input file and re-upload.
+                  <br>Click <b>OK</b> to proceed, or click <b>Reset upload</b> to upload your file again. ")),
       size = "l",
       easyClose = TRUE
-      ,footer = confirm_and_reset_buttons("duplicated_confirm", "duplicated_reset")
+      ,footer = fluidRow(
+        div(style = "display:inline-block;",
+            actionButton("duplicated_reset", "Reset upload")
+        ),
+        div(style = "display:inline-block;",
+            actionButton("duplicated_proceed","OK")  
+        )
+      )
     ))
   }
   ###
@@ -912,10 +920,10 @@ observeEvent(input$wrong_format_reset, {
   shinyjs::reset("file")
   removeModal()
 })
-observeEvent(input$duplicated_confirm, {
-  confirm_and_jump()
-})
 observeEvent(input$duplicated_reset, {
   shinyjs::reset("file")
+  removeModal()
+})
+observeEvent(input$duplicated_proceed, {
   removeModal()
 })
