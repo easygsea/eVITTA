@@ -315,7 +315,8 @@ read_data_matrix <- function(inFile){
       title = "Your input file has a wrong format",
       HTML(paste0("Having trouble loading your file:<br>",
                   ErrorMessage,"<br>",
-                  "Please revise your input file according to our notes and reupload the file.")),
+                  "Please revise your input file according to our notes and reupload the file. <br>
+                  Click <b>Reset upload </b> to upload your tidied file again, or click <b>Confirm</b> to jump to the manual upload mode. ")),
       size = "l",
       easyClose = TRUE
       ,footer = confirm_and_reset_buttons("wrong_format_confirm", "wrong_format_reset") 

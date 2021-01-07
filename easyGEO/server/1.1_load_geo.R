@@ -170,13 +170,9 @@ observeEvent(input$data_matrix_file, {
 
 # when the design matrix is uploaded, rv$fddf changed from NULL to a data frame
 observeEvent(input$design_matrix_file, {
-  print("below is fddf design matrix")
-  print(rv$fddf)
   # read the design matrix into rv$fddf
   inFile <- input$design_matrix_file
   read_design_matrix(inFile)
-
-  print(head(rv$fddf))
 })
 
 # the buttons of the modal after data matrix uploaded
@@ -223,7 +219,6 @@ observeEvent(input$design_matrix_reset, {
 })
 # when user clicks confirm and upload button
 observeEvent(input$dm_confirm, {
-  print(rv$dmdf)
   #initialize rv$dmdf
   rv$dmdf <- rv$indf
   rv$samples <- rv$dmdf_samples
@@ -370,8 +365,8 @@ output$design_matrix_warning <- renderUI({
     }
   }
   if(number_of_numeric > 0){
-    HTML("The matrix you upload contains numeric variable; it might not be a design matrix.
-          Please be aware of the file.")
+    HTML("<p style = 'color:orange;'>The matrix you upload contains numeric variable; it might not be a design matrix.
+          Please be aware of the file.</p>")
   }else{
     
   }
@@ -381,8 +376,6 @@ output$design_matrix_warning <- renderUI({
 output$data_matrix_warning <- renderUI({
   df <- rv$indf[ , -1]
   number_of_nonnumeric = 0
-  print('element')
-  print(df[[1]][[2]])
   withProgress(message = 'Processing data matrix', value = 1,{
       for(i in seq_along(df)){
       for(j in seq_along(df[[i]])){
@@ -395,8 +388,8 @@ output$data_matrix_warning <- renderUI({
   })
   
   if(number_of_nonnumeric > 0){
-    HTML("The matrix you upload contains non-numeric variable; it might not be a data matrix.
-          Please be aware of the file.")
+    HTML("<p style='color:orange'>The matrix you upload contains non-numeric variable; it might not be a data matrix.
+          Please be aware of the file.</p>")
   }else{
     
   }
@@ -405,7 +398,6 @@ output$data_matrix_warning <- renderUI({
 output$sample_comparison <- renderUI({
   # req(!is.null(rv$fddf_samples))
   number_of_matches <- 0
-  print("error occured")
   overlapped_vector <- intersect(rv$fddf_samples, rv$dmdf_samples)
   different_vector <- setdiff(rv$fddf_samples, rv$dmdf_samples)
   
@@ -436,12 +428,10 @@ output$sample_comparison <- renderUI({
 output$design_matrix_sample_comparison <- renderUI({
   # req(!is.null(rv$fddf_samples))
   number_of_matches <- 0
-  print("error occured2")
   overlapped_vector <- intersect(rv$dmdf_samples, rv$fddf_samples)
   different_vector <- setdiff(rv$dmdf_samples, rv$fddf_samples)
   
   number_of_matches = length(overlapped_vector)
-  print(number_of_matches)
   if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
     HTML(paste("In addition, there are", number_of_matches, 
                "samples in both data matrix and design matrix",
