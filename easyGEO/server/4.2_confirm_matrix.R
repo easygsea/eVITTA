@@ -1,6 +1,6 @@
 # --------------- overall run tab UI ---------------
 output$ui_run <- renderUI({
-  if(is.null(rv$plat_id)){
+  if(is.null(rv$plat_id) && rv$run_mode == "auto"){
     panel_null()
   }else{
     fluidRow(

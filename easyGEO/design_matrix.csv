@@ -1,0 +1,79 @@
+"",cell.line,cell.type,strain,subject.status,time.after.treatment,time.point,tissue,tissue.cell.type,treatment
+Series1_NHBE_Mock_1,NHBE,primary human bronchial epithelial cells,N/A,N/A,N/A,24hrs after treatment,N/A,N/A,Mock treatment
+Series1_NHBE_Mock_2,NHBE,primary human bronchial epithelial cells,N/A,N/A,N/A,24hrs after treatment,N/A,N/A,Mock treatment
+Series1_NHBE_Mock_3,NHBE,primary human bronchial epithelial cells,N/A,N/A,N/A,24hrs after treatment,N/A,N/A,Mock treatment
+Series1_NHBE_SARS-CoV-2_1,NHBE,primary human bronchial epithelial cells,USA-WA1/2020,N/A,N/A,24hrs after treatment,N/A,N/A,SARS-CoV-2 infected (MOI 2)
+Series1_NHBE_SARS-CoV-2_2,NHBE,primary human bronchial epithelial cells,USA-WA1/2020,N/A,N/A,24hrs after treatment,N/A,N/A,SARS-CoV-2 infected (MOI 2)
+Series1_NHBE_SARS-CoV-2_3,NHBE,primary human bronchial epithelial cells,USA-WA1/2020,N/A,N/A,24hrs after treatment,N/A,N/A,SARS-CoV-2 infected (MOI 2)
+Series2_A549_Mock_1,A549,Lung adenocarcinoma,N/A,N/A,N/A,24hrs after treatment,N/A,N/A,Mock treatment
+Series2_A549_Mock_2,A549,Lung adenocarcinoma,N/A,N/A,N/A,24hrs after treatment,N/A,N/A,Mock treatment
+Series2_A549_Mock_3,A549,Lung adenocarcinoma,N/A,N/A,N/A,24hrs after treatment,N/A,N/A,Mock treatment
+Series2_A549_SARS-CoV-2_1,A549,Lung adenocarcinoma,USA-WA1/2020,N/A,N/A,24hrs after treatment,N/A,N/A,SARS-CoV-2 infected (MOI 0.2)
+Series2_A549_SARS-CoV-2_2,A549,Lung adenocarcinoma,USA-WA1/2020,N/A,N/A,24hrs after treatment,N/A,N/A,SARS-CoV-2 infected (MOI 0.2)
+Series2_A549_SARS-CoV-2_3,A549,Lung adenocarcinoma,USA-WA1/2020,N/A,N/A,24hrs after treatment,N/A,N/A,SARS-CoV-2 infected (MOI 0.2)
+Series3_A549_Mock_1,A549,Lung adenocarcinoma,N/A,N/A,N/A,24hrs after treatment,N/A,N/A,Mock treatment
+Series3_A549_Mock_2,A549,Lung adenocarcinoma,N/A,N/A,N/A,24hrs after treatment,N/A,N/A,Mock treatment
+Series3_A549_RSV_1,A549,Lung adenocarcinoma,A2,N/A,N/A,24hrs after treatment,N/A,N/A,RSV infected (MOI 15)
+Series3_A549_RSV_2,A549,Lung adenocarcinoma,A2,N/A,N/A,24hrs after treatment,N/A,N/A,RSV infected (MOI 15)
+Series4_A549_Mock_1,A549,Lung adenocarcinoma,N/A,N/A,N/A,9hrs after treatment,N/A,N/A,Mock treatment
+Series4_A549_Mock_2,A549,Lung adenocarcinoma,N/A,N/A,N/A,9hrs after treatment,N/A,N/A,Mock treatment
+Series4_A549_IAV_1,A549,Lung adenocarcinoma,A/Puerto Rico/8/1934 (H1N1),N/A,N/A,9hrs after treatment,N/A,N/A,IAV infected (MOI 5)
+Series4_A549_IAV_2,A549,Lung adenocarcinoma,A/Puerto Rico/8/1934 (H1N1),N/A,N/A,9hrs after treatment,N/A,N/A,IAV infected (MOI 5)
+Series5_A549_Mock_1,A549,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series5_A549_Mock_2,A549,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series5_A549_Mock_3,A549,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series5_A549_SARS-CoV-2_1,A549,N/A,USA-WA1/2020,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,SARS-CoV-2 infected (MOI 2)
+Series5_A549_SARS-CoV-2_2,A549,N/A,USA-WA1/2020,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,SARS-CoV-2 infected (MOI 2)
+Series5_A549_SARS-CoV-2_3,A549,N/A,USA-WA1/2020,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,SARS-CoV-2 infected (MOI 2)
+Series6_A549-ACE2_Mock_1,A549,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series6_A549-ACE2_Mock_2,A549,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series6_A549-ACE2_Mock_3,A549,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series6_A549-ACE2_SARS-CoV-2_1,A549,N/A,USA-WA1/2020,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,SARS-CoV-2 infected (MOI 0.2)
+Series6_A549-ACE2_SARS-CoV-2_2,A549,N/A,USA-WA1/2020,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,SARS-CoV-2 infected (MOI 0.2)
+Series6_A549-ACE2_SARS-CoV-2_3,A549,N/A,USA-WA1/2020,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,SARS-CoV-2 infected (MOI 0.2)
+Series7_Calu3_Mock_1,Calu-3,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series7_Calu3_Mock_2,Calu-3,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series7_Calu3_Mock_3,Calu-3,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series7_Calu3_SARS-CoV-2_1,Calu-3,N/A,USA-WA1/2020,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,SARS-CoV-2 infected (MOI 2)
+Series7_Calu3_SARS-CoV-2_2,Calu-3,N/A,USA-WA1/2020,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,SARS-CoV-2 infected (MOI 2)
+Series7_Calu3_SARS-CoV-2_3,Calu-3,N/A,USA-WA1/2020,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,SARS-CoV-2 infected (MOI 2)
+Series8_A549_Mock_1,A549,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series8_A549_Mock_2,A549,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series8_A549_Mock_3,A549,N/A,N/A,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,Mock treatment
+Series8_A549_RSV_1,A549,N/A,A2,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,RSV infected (MOI 2)
+Series8_A549_RSV_2,A549,N/A,A2,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,RSV infected (MOI 2)
+Series8_A549_RSV_3,A549,N/A,A2,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,RSV infected (MOI 2)
+Series8_A549_HPIV3_1,A549,N/A,JS,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,HPIV3 infected (MOI 3)
+Series8_A549_HPIV3_2,A549,N/A,JS,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,HPIV3 infected (MOI 3)
+Series8_A549_HPIV3_3,A549,N/A,JS,N/A,24 hours,N/A,N/A,Lung adenocarcinoma,HPIV3 infected (MOI 3)
+Series9_NHBE_Mock_1,N/A,N/A,N/A,N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,Mock treatment
+Series9_NHBE_Mock_2,N/A,N/A,N/A,N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,Mock treatment
+Series9_NHBE_Mock_3,N/A,N/A,N/A,N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,Mock treatment
+Series9_NHBE_Mock_4,N/A,N/A,N/A,N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,Mock treatment
+Series9_NHBE_IAV_1,N/A,N/A,A/Puerto Rico/8/1934 (H1N1),N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,IAV infected (MOI 3)
+Series9_NHBE_IAV_2,N/A,N/A,A/Puerto Rico/8/1934 (H1N1),N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,IAV infected (MOI 3)
+Series9_NHBE_IAV_3,N/A,N/A,A/Puerto Rico/8/1934 (H1N1),N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,IAV infected (MOI 3)
+Series9_NHBE_IAV_4,N/A,N/A,A/Puerto Rico/8/1934 (H1N1),N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,IAV infected (MOI 3)
+Series9_NHBE_IAVdNS1_1,N/A,N/A,A/Puerto Rico/8/1934 (H1N1) (dNS1),N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,IAVdNS1 infected (MOI 3)
+Series9_NHBE_IAVdNS1_2,N/A,N/A,A/Puerto Rico/8/1934 (H1N1) (dNS1),N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,IAVdNS1 infected (MOI 3)
+Series9_NHBE_IAVdNS1_3,N/A,N/A,A/Puerto Rico/8/1934 (H1N1) (dNS1),N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,IAVdNS1 infected (MOI 3)
+Series9_NHBE_IAVdNS1_4,N/A,N/A,A/Puerto Rico/8/1934 (H1N1) (dNS1),N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,IAVdNS1 infected (MOI 3)
+Series9_NHBE_IFNB_4h_1,N/A,N/A,N/A,N/A,4 hours,N/A,N/A,primary human bronchial epithelial cells,human IFNB treatment (100U/ml)
+Series9_NHBE_IFNB_4h_2,N/A,N/A,N/A,N/A,4 hours,N/A,N/A,primary human bronchial epithelial cells,human IFNB treatment (100U/ml)
+Series9_NHBE_IFNB_6h_1,N/A,N/A,N/A,N/A,6 hours,N/A,N/A,primary human bronchial epithelial cells,human IFNB treatment (100U/ml)
+Series9_NHBE_IFNB_6h_2,N/A,N/A,N/A,N/A,6 hours,N/A,N/A,primary human bronchial epithelial cells,human IFNB treatment (100U/ml)
+Series9_NHBE_IFNB_12h_1,N/A,N/A,N/A,N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,human IFNB treatment (100U/ml)
+Series9_NHBE_IFNB_12h_2,N/A,N/A,N/A,N/A,12 hours,N/A,N/A,primary human bronchial epithelial cells,human IFNB treatment (100U/ml)
+Series15_HealthyLungBiopsy_1,N/A,N/A,N/A,"No treatment - healthy 77 years old, male",N/A,N/A,N/A,Lung Biopsy,N/A
+Series15_HealthyLungBiopsy_2,N/A,N/A,N/A,"No treatment - healthy 72 years old, male",N/A,N/A,N/A,Lung Biopsy,N/A
+Series15_COVID19Lung_1,N/A,N/A,N/A,No treatment; >60 years old male COVID-19 deceased patient,N/A,N/A,N/A,Lung Biopsy,N/A
+Series15_COVID19Lung_2,N/A,N/A,N/A,No treatment; >60 years old male COVID-19 deceased patient,N/A,N/A,N/A,Lung Biopsy,N/A
+Series16_A549-ACE2_Mock_1,N/A,N/A,N/A,N/A,N/A,N/A,Lung adenocarcinoma,N/A,Mock treatment
+Series16_A549-ACE2_Mock_2,N/A,N/A,N/A,N/A,N/A,N/A,Lung adenocarcinoma,N/A,Mock treatment
+Series16_A549-ACE2_Mock_3,N/A,N/A,N/A,N/A,N/A,N/A,Lung adenocarcinoma,N/A,Mock treatment
+Series16_A549-ACE2_SARS-CoV-2_1,N/A,N/A,USA-WA1/2020,N/A,N/A,N/A,Lung adenocarcinoma,N/A,SARS-CoV-2 infected (MOI 2)
+Series16_A549-ACE2_SARS-CoV-2_2,N/A,N/A,USA-WA1/2020,N/A,N/A,N/A,Lung adenocarcinoma,N/A,SARS-CoV-2 infected (MOI 2)
+Series16_A549-ACE2_SARS-CoV-2_3,N/A,N/A,USA-WA1/2020,N/A,N/A,N/A,Lung adenocarcinoma,N/A,SARS-CoV-2 infected (MOI 2)
+Series16_A549-ACE2_SARS-CoV-2_Rux_1,N/A,N/A,USA-WA1/2020,N/A,N/A,N/A,Lung adenocarcinoma,N/A,SARS-CoV-2 infected (MOI 2)
+Series16_A549-ACE2_SARS-CoV-2_Rux_2,N/A,N/A,USA-WA1/2020,N/A,N/A,N/A,Lung adenocarcinoma,N/A,SARS-CoV-2 infected (MOI 2)
+Series16_A549-ACE2_SARS-CoV-2_Rux_3,N/A,N/A,USA-WA1/2020,N/A,N/A,N/A,Lung adenocarcinoma,N/A,SARS-CoV-2 infected (MOI 2)

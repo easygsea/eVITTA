@@ -1,0 +1,23 @@
+---
+title: "Note on uploading design matrix:"
+output: html_document
+runtime: shiny
+---
+<!-- rmarkdown::render('design_matrix_page.Rmd', output_file = 'C:/Users/15067/Desktop/eVITTA/easyGEO/server/design_matrix_page.html') -->
+### 1) the data should be in comma- or tab-delimited format (csv, tsv, tab, txt),
+<br/>
+      
+### 2) first row of matrix should be sample attributes; no duplicates are allowed,
+<br/>
+      
+### 3) first column of matrix should be sample names; must match the sample names,
+<br/>
+
+### For example,
+<br/>
+
+```{r echo=FALSE, results='asis'}
+# tableOutput("fddf_example")
+knitr::kable(read.csv("C:/Users/15067/Desktop/eVITTA/easyGEO/server/design_matrix.csv",header = TRUE))
+```
+

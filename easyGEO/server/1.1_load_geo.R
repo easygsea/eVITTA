@@ -54,6 +54,424 @@
 # # END-----------------------------------------------------------------------------
 
 
+# get the current run_mode ------------------------------------------------
+observe({
+  req(input$menu1 == "tab1")
+  rv$run_mode = input$selected_mode
+})
+# UI for the retrieval by GSE mode
+output$ui_tab1 <- renderUI({
+  if(rv$run_mode == "auto"){
+  fluidRow(
+    column(4,
+           
+           box(title=span(HTML("<b>1.1.</b>"),icon("search"), "Input GEO accession"), width = 12, solidHeader=F, status = "primary",
+               uiOutput("geo_accession_ui"),
+               
+           ),
+           
+           box(title=span(HTML("<b>1.2.</b>"),icon("hdd"),"Select Platform"), width = 12, solidHeader=F, status = "primary",
+               uiOutput("geo_platform_ui")
+           ),
+           
+           column(12,align="center",
+                  uiOutput("guide_1a")
+                  
+           )
+           
+           
+    ),
+    
+    column(8,
+           
+           tabBox(
+             title = NULL, width = 12,
+             id = "summary", height = "250px",
+             tabPanel("Summary",
+                      
+                      uiOutput("gse_summary_ui")
+                      
+             ),
+             tabPanel("Study info",
+                      
+                      DT::dataTableOutput("gse_meta_df")
+             ),
+             tabPanel("Experiment info",
+                      
+                      DT::dataTableOutput("gsm_meta_df")
+             )
+           )
+           
+           
+           
+    )
+    
+    
+    
+    
+  )}else{ uiOutput("ui_manual")}                  
+  
+})
+# UI for the manually uploading data mode
+output$ui_manual <- renderUI({
+  # req(input$selected_mode == "manual")
+  fluidRow(
+    column(6,
+             box(title=span(HTML("<b>1.1.</b>"),icon("upload"),"Upload Data Matrix"), width = 12, solidHeader=F, status = "primary", 
+                 id = "manual_data_matrix",
+                 
+                 div(
+                   fileInput("data_matrix_file",
+                             label = p("Upload tidied data matrix (CSV/TSV format):",
+                                       tags$style(type = "text/css", "#manual_help {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
+                                       bsButton("manual_help", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                             accept = c(
+                               "text/csv",
+                               "text/comma-separated-values,text/plain",
+                               ".csv",".tsv",".txt",".tab")
+                   ), 
+                   bsTooltip("manual_help", "Click to learn more", placement = "top")
+                 )
+               )
+           ),
+    column(6,
+           box(title=span(HTML("<b>1.2.</b>"),icon("upload"),"Upload Design Matrix"), width = 12, solidHeader=F, status = "primary", 
+               id = "manual_design_matrix",
+               
+               div(
+                 fileInput("design_matrix_file",
+                           label = p("Upload tidied design matrix (CSV/TSV format):",
+                                     tags$style(type = "text/css", "#manual_help_2 {display: inline-block;width: 20px;height: 20px;padding: 0;border-radius: 50%;vertical-align: baseline;}"),
+                                     bsButton("manual_help_2", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                           accept = c(
+                             "text/csv",
+                             "text/comma-separated-values,text/plain",
+                             ".csv",".tsv",".txt",".tab")
+                 ), 
+                 bsTooltip("manual_help_2", "Click to learn more", placement = "top")
+               )
+           ),
+           column(12,align="center",
+                  uiOutput("guide_1a")
+                  
+           ))
+  )
+})
+# the help page for data matrix
+observeEvent(input$manual_help,{
+  showModal(modalDialog(
+    inputId = "file_help_1",
+    #title = "Data matrix file format",
+    includeHTML(paste0(getwd(),"/server/data_matrix_page.html")),
+    easyClose = TRUE,size="l",
+    footer = modalButton("OK")
+  ))
+})
+# the help page for design matrix
+observeEvent(input$manual_help_2,{
+  showModal(modalDialog(
+    inputId = "file_help_2",
+    #title = "Design matrix file format",
+    includeHTML(paste0(getwd(),"/server/design_matrix_page.html")),
+    easyClose = TRUE,size="l",
+    footer = modalButton("OK")
+  ))
+})
+
+# when the data matrix is uploaded
+observeEvent(input$data_matrix_file, {
+  # generate data matrix
+  inFile <- input$data_matrix_file
+  read_data_matrix(inFile = inFile)
+ 
+})
+
+# when the design matrix is uploaded, rv$fddf changed from NULL to a data frame
+observeEvent(input$design_matrix_file, {
+  # read the design matrix into rv$fddf
+  inFile <- input$design_matrix_file
+  read_design_matrix(inFile)
+})
+
+# the buttons of the modal after data matrix uploaded
+output$matrix_buttons <- renderUI({
+  fluidRow(
+    div(style="display:inline-block;",
+        uiOutput("dm_confirm_button")
+    ),
+    div(style="display:inline-block;",
+        actionButton('dm_reset', 'Reset upload')
+    )
+  )   
+})
+# the buttons of the modal after design matrix uploaded
+output$design_matrix_buttons <- renderUI({
+  fluidRow(
+    div(style="display:inline-block;",
+        actionButton("design_matrix_confirm", "Confirm and Upload", class = "btn_primary")
+    ),
+    div(style="display:inline-block;",
+        actionButton('design_matrix_reset', 'Reset upload')
+    )
+  )   
+})
+
+output$dm_confirm_button <- renderUI({
+  actionButton("dm_confirm", "Confirm and Upload", class = "btn_primary")
+})
+
+# when user presses reset
+observeEvent(input$dm_reset, {
+  # rv$folder_upload_state <- 'reset'
+  shinyjs::reset("data_matrix_file")
+  # reset the existing sample names
+  rv$dmdf_samples <- NULL
+  removeModal()
+})
+observeEvent(input$design_matrix_reset, {
+  shinyjs::reset("design_matrix_file")
+  # reset the existing sample names
+  rv$fddf_samples <- NULL
+  rv$fddf <- NULL
+  removeModal()
+})
+# when user clicks confirm and upload button
+observeEvent(input$dm_confirm, {
+  #initialize rv$dmdf
+  rv$dmdf <- rv$indf
+  rv$samples <- rv$dmdf_samples
+  removeModal()
+})
+observeEvent(input$design_matrix_confirm, {
+
+  #initialize rv$fddf
+  rv$fddf_o <- rv$fddf
+  removeModal()
+})
+
+# the function that read the design matrix
+read_design_matrix <- function(inFile){
+  
+  # the modal that appears when the file user upload exceeds 10MB, Version1
+  if(inFile$size >= 10*1024^2){
+    showModal(modalDialog(
+      inputId = "size_reminder_modal",
+      # title = "The file size exceeds 100MB.",
+      div("The file you uploaded exceeds 10MB, please modify it to proceed. Try to delete unneeded columns and 
+            only keep the columns that you are interested in. 
+            Then press \"Browse...\" to upload it again. Thank you.",style="font-size:200%"),
+      easyClose = TRUE,size="l"
+      , footer = modalButton("OK")
+    ))
+  }
+  
+  #added try() here because there could be an error reading the file
+  indf <- try(read.csv(inFile$datapath, header=T, 
+                       colClasses=c("character")))
+  
+  # read in TAB delimited
+  if(ncol(indf)==1){
+    indf <- try(read.table(inFile$datapath, sep="\t",header=T, 
+                           colClasses=c("character")))
+  }
+  print(head(indf))
+  # read in space delimited
+  if(ncol(indf)==1){
+    indf <- try(read.table(inFile$datapath, sep=" ",header=T, 
+                           colClasses=c("character")))
+  }
+  
+  if(inherits(indf, "try-error")) {        
+    ErrorMessage <- conditionMessage(attr(indf, "condition"))  # the error message
+    #show a modal dialog if there is an error reading files causing crash
+    showModal(modalDialog( 
+      title = "Your input file has a wrong format",
+      HTML(paste0("Having trouble loading your file:<br>",
+                  ErrorMessage,"<br>",
+                  "Please revise your input file according to our notes and reupload the file.")),
+      size = "l",
+      easyClose = TRUE
+      ,footer = modalButton("OK")
+    ))
+  }
+  
+  
+  req(!inherits(indf, "try-error")) #require to be no error to proceed the following codes
+  
+  # This part removes duplicate rows of indf
+  DuplicateCheck <- as.data.frame(indf[,1], drop=FALSE) #extract first column of indf and check if there is 
+  DuplicateCheck <- duplicated(DuplicateCheck)
+  indf<-indf[!DuplicateCheck, ] #remove duplicate rows
+  DuplicateRows <- which(DuplicateCheck == TRUE, arr.ind=TRUE)
+  if(length(DuplicateRows) > 0){ # if there are duplicate rows
+    showModal(modalDialog( 
+      title = "Warning: The file you uploaded contains duplicate gene names",
+      HTML(paste0("Only the first duplicate(s) will be kept.<br>",
+                  "If this is not what you intend, please double check your input file and re-upload.")),
+      size = "l",
+      easyClose = TRUE
+      ,footer = modalButton("OK")
+    ))
+  }
+  ###
+  
+  indf_coln <- colnames(indf)
+  
+  #print(indf_coln)
+  #print(validUTF8(indf_coln))
+  #print(prod(validUTF8(indf_coln)))
+  #adding a IF statement to ensure that the characters in the column names are encoded correctly,
+  #which means there is no invalid characters inside the column names
+  if(prod(validUTF8(indf_coln))){
+    whether_contains_invalid <- FALSE
+  }
+  else{
+    #delete the column names that contain invalid characters
+    #indf_coln <- indf_coln[validUTF8(indf_coln)]
+    whether_contains_invalid <- TRUE
+    for(i in seq_along(indf_coln)){
+      #delete the unrecognized character
+      indf_coln[i] <- stringr::str_replace_all(indf_coln[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
+      # print(indf_coln[i])
+    }
+  }
+  
+  rv$fddf_samples <- indf$X
+  rownames(indf) <- indf$X
+  indf[ ,1] <- NULL
+  rv$fddf <- indf
+  
+  row_text <- ifelse(length(rownames(indf))>5, rownames(indf)[1:5], rownames(indf))
+  col_text <- ifelse(length(colnames(indf))>5, colnames(indf)[1:5], colnames(indf))
+  # display a modal that briefly describes the design matrix
+  showModal(modalDialog(
+    title = div("File Upload",style = "font-size:170%"),
+    span(HTML("The uploaded file contains these <b>Samples:</b> "),
+         if(length(rownames(indf))>5){
+          paste0(glue_collapse(rownames(indf)[1:5], sep = ", ", last = " and "), "...")
+          } else {
+            glue_collapse(rownames(indf), sep = ", ", last = " and ") 
+         }
+         , "(",
+         length(rownames(indf)), HTML("in total), and  these <b>attributes:</b>"),
+         if(length(colnames(indf)) > 5){
+           paste(glue_collapse(colnames(indf)[1:5], sep = ", ", last = " and "),"...")
+         } else {
+            glue_collapse(colnames(indf), sep = ", ", last = " and ")
+         }
+         , "(",
+         length(colnames(indf)), "in total).",br(), uiOutput("design_matrix_sample_comparison"),
+         uiOutput("design_matrix_warning"), "Please review them to proceed.",
+         style = "font-size:130%"),
+    easyClose = F,
+    size = "l",
+    footer = uiOutput("design_matrix_buttons")
+  ))
+  
+}
+# the warning that appears when the uploaded design matrix contains pure number variable
+output$design_matrix_warning <- renderUI({
+  df <- rv$fddf
+  number_of_numeric = 0
+  print(!grepl("\\D", df[[1]][2]))
+  for(i in seq_along(df)){
+    for(j in seq_along(df[[i]])){
+      if(!grepl("\\D", df[[i]][j])){
+        number_of_numeric = number_of_numeric + 1
+        break
+      }
+    }
+  }
+  if(number_of_numeric > 0){
+    HTML("<p style = 'color:orange;'>The matrix you upload contains numeric variable; it might not be a design matrix.
+          Please be aware of the file.</p>")
+  }else{
+    
+  }
+})
+# the warning that appears when the uploaded data matrix contains
+# variable that is not 0 or 'NA'; '\\D' in regular expression means non-digit.
+output$data_matrix_warning <- renderUI({
+  df <- rv$indf[ , -1]
+  number_of_nonnumeric = 0
+  withProgress(message = 'Processing data matrix', value = 1,{
+      for(i in seq_along(df)){
+      for(j in seq_along(df[[i]])){
+        if(grepl("\\D", df[[i]][j]) && df[[i]][j] != 'NA'){
+          number_of_nonnumeric = number_of_nonnumeric + 1
+          break
+        }
+      }
+    }
+  })
+  
+  if(number_of_nonnumeric > 0){
+    HTML("<p style='color:orange'>The matrix you upload contains non-numeric variable; it might not be a data matrix.
+          Please be aware of the file.</p>")
+  }else{
+    
+  }
+})
+
+output$sample_comparison <- renderUI({
+  # req(!is.null(rv$fddf_samples))
+  number_of_matches <- 0
+  overlapped_vector <- intersect(rv$fddf_samples, rv$dmdf_samples)
+  different_vector <- setdiff(rv$fddf_samples, rv$dmdf_samples)
+  
+  number_of_matches = length(overlapped_vector)
+  print(number_of_matches)
+  if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
+    HTML(paste("In addition, there are", number_of_matches, 
+               "samples in both data matrix and design matrix",
+               if(length(different_vector) > 0) {
+                 if(length(different_vector) > 5){
+                   paste0("; however, ", glue_collapse(different_vector[1:5], sep = ", ", last = " and "),
+                          "... (", length(different_vector), " in total) are not contained in your data matrix. ")
+                 } else {
+                   paste0("; however, ", glue_collapse(different_vector, sep = ", ", last = " and "),
+                          " (", length(different_vector), " in total) are not contained in your data matrix.")
+                 }
+               } else{
+                 "."
+               } ))
+  } else if(is.null(rv$fddf_samples)) {
+    HTML(paste("In addition, you could click <b>Reset upload</b> and 
+               upload your design matrix on the right panel first, to view the overlapped samples of these two matrix."))
+    } else {
+    
+  }
+})
+# when data matrix is uploaded first, compare the design matrix with the data matrix
+output$design_matrix_sample_comparison <- renderUI({
+  # req(!is.null(rv$fddf_samples))
+  number_of_matches <- 0
+  overlapped_vector <- intersect(rv$dmdf_samples, rv$fddf_samples)
+  different_vector <- setdiff(rv$dmdf_samples, rv$fddf_samples)
+  
+  number_of_matches = length(overlapped_vector)
+  if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
+    HTML(paste("In addition, there are", number_of_matches, 
+               "samples in both data matrix and design matrix",
+    if(length(different_vector) > 0) {
+      if(length(different_vector) > 5){
+        paste0("; however, ", glue_collapse(different_vector[1:5], sep = ", ", last = " and "),
+             "... (", length(different_vector), " in total) are not contained in your design matrix.")
+        } else {
+        paste0("; however, ", glue_collapse(different_vector, sep = ", ", last = " and "),
+                 " (", length(different_vector), " in total) are not contained in your design matrix.")
+      }
+    } else{
+        "."
+      } ))
+  } else {
+    
+  }
+  
+})
+
+
+
 # --------------- search GEO accession ---------------
 # currently checks if input exists
 # todo: check if input format is correct (GSEXXXXXX)
@@ -356,7 +774,7 @@ observeEvent(input$geo_platform, {
 
 # ---------- when all is done, show guide box to next page ---------
 output$guide_1a <- renderUI({
-  if (is.null(rv$plat_id)==F){ # user already selected a platform
+  if (is.null(rv$plat_id)==F || (is.null(rv$fddf)==F && (is.null(rv$dmdf)==F))){ # user already selected a platform
     msg = "Navigate to <b>2. Data matrix</b> to proceed"
     guide_box("guide1", msg)
   } else {
