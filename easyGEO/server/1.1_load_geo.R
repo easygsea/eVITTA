@@ -165,15 +165,7 @@ observeEvent(input$data_matrix_file, {
   # generate data matrix
   inFile <- input$data_matrix_file
   read_data_matrix(inFile = inFile)
-
-  # showModal(modalDialog(
-  #   title = "File Upload",
-  #   easyClose = F,
-  #   size = "l",
-  #   footer = uiOutput("matrix_buttons")
-  # ))
-  # 
-  # 
+ 
 })
 
 # when the design matrix is uploaded, rv$fddf changed from NULL to a data frame
@@ -202,7 +194,7 @@ output$matrix_buttons <- renderUI({
 output$design_matrix_buttons <- renderUI({
   fluidRow(
     div(style="display:inline-block;",
-        actionButton("design_matrix_confirm", "Confirm and Upload", clss = "btn_primary")
+        actionButton("design_matrix_confirm", "Confirm and Upload", class = "btn_primary")
     ),
     div(style="display:inline-block;",
         actionButton('design_matrix_reset', 'Reset upload')
@@ -247,12 +239,12 @@ observeEvent(input$design_matrix_confirm, {
 # the function that read the design matrix
 read_design_matrix <- function(inFile){
   
-  # the modal that appears when the file user upload exceeds 50MB, Version1
-  if(inFile$size >= 100*1024^2){
+  # the modal that appears when the file user upload exceeds 10MB, Version1
+  if(inFile$size >= 10*1024^2){
     showModal(modalDialog(
       inputId = "size_reminder_modal",
       # title = "The file size exceeds 100MB.",
-      div("The file you uploaded exceeds 100MB, please modify it to proceed. Try to delete unneeded columns and 
+      div("The file you uploaded exceeds 10MB, please modify it to proceed. Try to delete unneeded columns and 
             only keep the columns that you are interested in. 
             Then press \"Browse...\" to upload it again. Thank you.",style="font-size:200%"),
       easyClose = TRUE,size="l"
@@ -336,14 +328,27 @@ read_design_matrix <- function(inFile){
   indf[ ,1] <- NULL
   rv$fddf <- indf
   
-  # display a modal that breifly descibes the deisign matrix
+  row_text <- ifelse(length(rownames(indf))>5, rownames(indf)[1:5], rownames(indf))
+  col_text <- ifelse(length(colnames(indf))>5, colnames(indf)[1:5], colnames(indf))
+  # display a modal that briefly describes the design matrix
   showModal(modalDialog(
     title = div("File Upload",style = "font-size:170%"),
     span(HTML("The uploaded file contains these <b>Samples:</b> "),
-         glue_collapse(rownames(indf)[1:10], sep = ", ", last = " and "), "... (",
-         length(rownames(indf)), HTML(" in total), and  these <b>attributes:</b>"),
-         glue_collapse(colnames(indf), sep = ", ", last = " and "), "(",
-         length(colnames(indf))-1, " in total).",br(), uiOutput("sample_comparison")," Please review them to proceed.",
+         if(length(rownames(indf))>5){
+          paste0(glue_collapse(rownames(indf)[1:5], sep = ", ", last = " and "), "...")
+          } else {
+            glue_collapse(rownames(indf), sep = ", ", last = " and ") 
+         }
+         , "(",
+         length(rownames(indf)), HTML("in total), and  these <b>attributes:</b>"),
+         if(length(colnames(indf)) > 5){
+           paste(glue_collapse(colnames(indf)[1:5], sep = ", ", last = " and "),"...")
+         } else {
+            glue_collapse(colnames(indf), sep = ", ", last = " and ")
+         }
+         , "(",
+         length(colnames(indf)), "in total).",br(), uiOutput("design_matrix_sample_comparison"),
+         uiOutput("design_matrix_warning"), "Please review them to proceed.",
          style = "font-size:130%"),
     easyClose = F,
     size = "l",
@@ -351,20 +356,106 @@ read_design_matrix <- function(inFile){
   ))
   
 }
+# the warning that appears when the uploaded design matrix contains pure number variable
+output$design_matrix_warning <- renderUI({
+  df <- rv$fddf
+  number_of_numeric = 0
+  print(!grepl("\\D", df[[1]][2]))
+  for(i in seq_along(df)){
+    for(j in seq_along(df[[i]])){
+      if(!grepl("\\D", df[[i]][j])){
+        number_of_numeric = number_of_numeric + 1
+        break
+      }
+    }
+  }
+  if(number_of_numeric > 0){
+    HTML("The matrix you upload contains numeric variable; it might not be a design matrix.
+          Please be aware of the file.")
+  }else{
+    
+  }
+})
+# the warning that appears when the uploaded data matrix contains
+# variable that is not 0 or 'NA'; '\\D' in regular expression means non-digit.
+output$data_matrix_warning <- renderUI({
+  df <- rv$indf[ , -1]
+  number_of_nonnumeric = 0
+  print('element')
+  print(df[[1]][[2]])
+  withProgress(message = 'Processing data matrix', value = 1,{
+      for(i in seq_along(df)){
+      for(j in seq_along(df[[i]])){
+        if(grepl("\\D", df[[i]][j]) && df[[i]][j] != 'NA'){
+          number_of_nonnumeric = number_of_nonnumeric + 1
+          break
+        }
+      }
+    }
+  })
+  
+  if(number_of_nonnumeric > 0){
+    HTML("The matrix you upload contains non-numeric variable; it might not be a data matrix.
+          Please be aware of the file.")
+  }else{
+    
+  }
+})
 
 output$sample_comparison <- renderUI({
   # req(!is.null(rv$fddf_samples))
   number_of_matches <- 0
   print("error occured")
-  overlapped_vector <- intersect(rv$dmdf_samples, rv$fddf_samples)
+  overlapped_vector <- intersect(rv$fddf_samples, rv$dmdf_samples)
+  different_vector <- setdiff(rv$fddf_samples, rv$dmdf_samples)
+  
   number_of_matches = length(overlapped_vector)
   print(number_of_matches)
   if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
     HTML(paste("In addition, there are", number_of_matches, 
-             "samples in both data matrix and design matrix."))
-  } else if(is.null(rv$fddf_samples)){
+               "samples in both data matrix and design matrix",
+               if(length(different_vector) > 0) {
+                 if(length(different_vector) > 5){
+                   paste0("; however, ", glue_collapse(different_vector[1:5], sep = ", ", last = " and "),
+                          "... (", length(different_vector), " in total) are not contained in your data matrix. ")
+                 } else {
+                   paste0("; however, ", glue_collapse(different_vector, sep = ", ", last = " and "),
+                          " (", length(different_vector), " in total) are not contained in your data matrix.")
+                 }
+               } else{
+                 "."
+               } ))
+  } else if(is.null(rv$fddf_samples)) {
     HTML(paste("In addition, you could click <b>Reset upload</b> and 
                upload your design matrix on the right panel first, to view the overlapped samples of these two matrix."))
+    } else {
+    
+  }
+})
+# when data matrix is uploaded first, compare the design matrix with the data matrix
+output$design_matrix_sample_comparison <- renderUI({
+  # req(!is.null(rv$fddf_samples))
+  number_of_matches <- 0
+  print("error occured2")
+  overlapped_vector <- intersect(rv$dmdf_samples, rv$fddf_samples)
+  different_vector <- setdiff(rv$dmdf_samples, rv$fddf_samples)
+  
+  number_of_matches = length(overlapped_vector)
+  print(number_of_matches)
+  if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
+    HTML(paste("In addition, there are", number_of_matches, 
+               "samples in both data matrix and design matrix",
+    if(length(different_vector) > 0) {
+      if(length(different_vector) > 5){
+        paste0("; however, ", glue_collapse(different_vector[1:5], sep = ", ", last = " and "),
+             "... (", length(different_vector), " in total) are not contained in your design matrix.")
+        } else {
+        paste0("; however, ", glue_collapse(different_vector, sep = ", ", last = " and "),
+                 " (", length(different_vector), " in total) are not contained in your design matrix.")
+      }
+    } else{
+        "."
+      } ))
   } else {
     
   }

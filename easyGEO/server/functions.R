@@ -678,3 +678,16 @@ btn_demo_e <- function(){
     }
   })
 }
+
+# the function that creates a confirm and a reset button
+# add an oberveEvent to connect those buttons with their functions
+confirm_and_reset_buttons <- function(confirm_id, reset_id){
+  fluidRow(
+    div(style = "display:inline-block;",
+      actionButton(confirm_id, "Confirm")
+    ),
+    div(style = "display:inline-block;",
+      actionButton(reset_id, "Reset upload")  
+    )
+  )
+}

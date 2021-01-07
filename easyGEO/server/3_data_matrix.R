@@ -318,7 +318,7 @@ read_data_matrix <- function(inFile){
                   "Please revise your input file according to our notes and reupload the file.")),
       size = "l",
       easyClose = TRUE
-      ,footer = modalButton("OK")
+      ,footer = confirm_and_reset_buttons("wrong_format_confirm", "wrong_format_reset") 
     ))
   }
   
@@ -337,7 +337,7 @@ read_data_matrix <- function(inFile){
                   "If this is not what you intend, please double check your input file and re-upload.")),
       size = "l",
       easyClose = TRUE
-      ,footer = modalButton("OK")
+      ,footer = confirm_and_reset_buttons("duplicated_confirm", "duplicated_reset")
     ))
   }
   ###
@@ -413,10 +413,22 @@ read_data_matrix <- function(inFile){
     showModal(modalDialog(
       title = div("File Upload",style = "font-size:170%"),
       span(HTML("The uploaded file contains these <b>Genes:</b> "),
-           glue_collapse(indf$Name[1:10], sep = ", ", last = " and "), "... (",
+           # glue_collapse(indf$Name[1:10], sep = ", ", last = " and "), "... (",
+           if(length(indf$Name) > 5){
+             paste(glue_collapse(indf$Name[1:5], sep = ", ", last = " and "),"...")
+           } else {
+             glue_collapse(indf$Name, sep = ", ", last = " and ")
+           }
+           , "(",
            length(indf$Name), HTML(" in total), and  these <b>Samples:</b>"),
-           glue_collapse(colnames(indf)[2:10], sep = ", ", last = " and "), "... (",
-           length(colnames(indf))-1, " in total).",br(),uiOutput("sample_comparison"), " Please review them to proceed.",
+           if(length(colnames(indf)) > 6){
+             paste(glue_collapse(colnames(indf)[2:6], sep = ", ", last = " and "),"...")
+           } else {
+             glue_collapse(colnames(indf), sep = ", ", last = " and ")
+           }
+           , "(",
+           length(colnames(indf))-1, " in total).",br(),uiOutput("sample_comparison"),
+           uiOutput("data_matrix_warning"), " Please review them to proceed.",
            style = "font-size:130%"),
       easyClose = F,
       size = "l",
@@ -882,4 +894,27 @@ output$guide_box2 <- renderUI({
 
 observeEvent(input$guide2,{
   updateTabItems(session, "menu1", "tab2")
+})
+# ------------- the confirm and reset buttons function added ---------------------
+confirm_and_jump <- function() {
+  rv$dmdf <- NULL
+  rv$fddf <- NULL
+  rv$plat_id <- NULL
+  removeModal()
+  updateTabItems(session, inputId = "menu1", selected = "tab1")
+  updateRadioButtons(session, inputId = "selected_mode", selected = "manual")
+}
+observeEvent(input$wrong_format_confirm, {
+  confirm_and_jump()
+})
+observeEvent(input$wrong_format_reset, {
+  shinyjs::reset("file")
+  removeModal()
+})
+observeEvent(input$duplicated_confirm, {
+  confirm_and_jump()
+})
+observeEvent(input$duplicated_reset, {
+  shinyjs::reset("file")
+  removeModal()
 })
