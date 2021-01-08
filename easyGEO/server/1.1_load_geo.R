@@ -527,7 +527,7 @@ observeEvent(input$search_geo, {
 
       if(ErrorMessage == "object 'destfile' not found"){
           DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
-                                "Unable to process ",rv$geo_accession," from NCBI server due to internet connection issue."
+                                "Unable to process ",rv$geo_accession," from NCBI server due to internet connection issues."
                                 ,"<br><br>Please re-click <b>Search</b> to retrieve again."
                                 ,"<br><br>If you keep seeing this error message, please email eVITTA team at evitta@cmmt.ubc.ca"
                                 ,"<br><br>Thank you for your support."
