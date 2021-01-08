@@ -548,7 +548,7 @@ observeEvent(input$search_geo, {
         # DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
         DisplayText <- paste0("Unable to retrieve ",rv$geo_accession," data from NCBI server.", "<br>", ErrorMessage)
         showModal(modalDialog(
-          title = "Data fetching error",
+          title = "Data parsing error",
           HTML(DisplayText),
           size = "l",
           easyClose = TRUE
