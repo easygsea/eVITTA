@@ -544,7 +544,7 @@ observeEvent(input$search_geo, {
         }
       else if(ErrorMessage == "HTTP error 404."){
         DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
-                              "Unable to retrieve ",rv$geo_accession," from NCBI server.<br><br>Please double check your input and try again.")
+                              "Unable to retrieve ",rv$geo_accession," from NCBI server.<br><br>Please enter a valid GSE accession number and try again.")
         showModal(modalDialog(
           title = "Data fetching error",
           HTML(DisplayText),
@@ -555,7 +555,7 @@ observeEvent(input$search_geo, {
       }
       else if(ErrorMessage == "HTTP error 400."){
         DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
-                              "You probably inputted some upexpected character(s) such as a space.<br><br>Please double check your input and try again.")
+                              "You probably entered some upexpected character(s) such as a space.<br><br>Please double check your input and try again.")
         showModal(modalDialog(
           title = "Data fetching error",
           HTML(DisplayText),
