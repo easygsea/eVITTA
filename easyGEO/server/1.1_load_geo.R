@@ -558,10 +558,18 @@ observeEvent(input$search_geo, {
 
     if(inherits(rv$gse_all, "try-error")) {
       ErrorMessage <- conditionMessage(attr(rv$gse_all, "condition"))  # the error message
+      print(ErrorMessage)
       #Depending on what we entered, different types of errors could occur:
 
       if(ErrorMessage == "object 'destfile' not found"){
-          DisplayText <- "Your input is invalid. Please enter an existing accession number."
+          DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
+                                "Unable to process ",rv$geo_accession," from NCBI server due to internet connection issues."
+                                ,"<br><br>Please re-click <b>Search</b> to retrieve again."
+                                ,"<br><br>If you keep seeing this error message, please email eVITTA team at evitta@cmmt.ubc.ca"
+                                ,"<br><br>Thank you for your support."
+                                ,"<br><br>"
+                                ,ErrorMessage)
+          
           showModal(modalDialog(
             title = "Data fetching error",
             HTML(DisplayText),
@@ -570,8 +578,9 @@ observeEvent(input$search_geo, {
             ,footer = modalButton("OK")
           ))
         }
-      if(ErrorMessage == "HTTP error 400."){
-        DisplayText <- "Input format is invalid. Please double check and try again."
+      else if(ErrorMessage == "HTTP error 404."){
+        DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
+                              "Unable to retrieve ",rv$geo_accession," from NCBI server.<br><br>Please enter a valid and published GSE accession number and try again.")
         showModal(modalDialog(
           title = "Data fetching error",
           HTML(DisplayText),
@@ -580,11 +589,22 @@ observeEvent(input$search_geo, {
           ,footer = modalButton("OK")
         ))
       }
-      if((ErrorMessage != "object 'destfile' not found")&(ErrorMessage != "object 'destfile' not found")){
-        # DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
-        DisplayText <- paste0("Unable to retrieve ",rv$geo_accession," data from NCBI server.", "<br>", ErrorMessage)
+      else if(ErrorMessage == "HTTP error 400."){
+        DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
+                              "You probably entered some upexpected character(s) such as a space.<br><br>Please double check your input and try again.")
         showModal(modalDialog(
           title = "Data fetching error",
+          HTML(DisplayText),
+          size = "l",
+          easyClose = TRUE
+          ,footer = modalButton("OK")
+        ))
+      }
+      else {
+        # DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
+        DisplayText <- paste0("Unable to parse ",rv$geo_accession," data.", "<br>", ErrorMessage)
+        showModal(modalDialog(
+          title = "Data parsing error",
           HTML(DisplayText),
           size = "l",
           easyClose = TRUE

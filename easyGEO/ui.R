@@ -10,12 +10,12 @@ upload_mode <- conditionalPanel(
            
            radioButtons(
              inputId = "selected_mode",
-             label = div(style = "font-weight:400;", HTML(paste0("Upload mode:",add_help("mode_q")))),
-             choices = list("Retrieval by GSE Number" = "auto", "Manually Uploading Data" = "manual"),
+             label = div(style = "font-weight:400;", HTML(paste0("Mode of analysis:",add_help("mode_q")))),
+             choices = list("Retrieval by GSE Number" = "auto", "Manual Uploads" = "manual"),
              selected = "auto"
              # selected = "manual"
            )
-           ,bsTooltip("mode_q",HTML("Select the method for uploading your data matrix and design matrix.")
+           ,bsTooltip("mode_q",HTML("Select the method to analyze NCBI GEO expression data.")
                       ,placement = "right")
            ,tags$hr(style="border-color: #48617b;margin: 8px;")
     )
