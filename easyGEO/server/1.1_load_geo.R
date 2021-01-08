@@ -552,7 +552,22 @@ observeEvent(input$search_geo, {
 
   withProgress(message = 'Getting data. Please wait a minute...', value = 1, {
 
-    rv$geo_accession <- isolate(input$geo_accession)
+    rv$geo_accession <- isolate(input$geo_accession) %>% toupper(.)
+    
+    if(startsWith(rv$geo_accession,"GSE")){gse_y <- "yes"}else{gse_y <- "no"}
+    
+    if(gse_y == "no"){
+      showModal(modalDialog(
+        title = "Wrong input format",
+        HTML("Please enter a valid NCBI GEO accession number that <b>begins with GSE</b>."),
+        size = "l",
+        easyClose = TRUE
+        ,footer = modalButton("OK")
+      ))
+    }
+    
+    req(gse_y == "yes")
+    
     #It appears that this is where load happens and we need to test if we things are unexpected when loading
     rv$gse_all <- try(getGEO(input$geo_accession, GSEMatrix=T))
 
@@ -601,8 +616,16 @@ observeEvent(input$search_geo, {
         ))
       }
       else {
+        alink <- paste0("https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=",rv$geo_accession)
         # DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
-        DisplayText <- paste0("Unable to parse ",rv$geo_accession," data.", "<br>", ErrorMessage)
+        DisplayText <- paste0("Unable to parse ",rv$geo_accession," data. Error message:<br>"
+                              , ErrorMessage
+                              , "<br><br>GEO sequence submission procedures are designed to encourage provision of <a target='_blank' href='http://fged.org/projects/minseqe/'>MINSEQE</a> elements."
+                              , " This dataset was likely not meeting the standards."
+                              , "<br><br>Please download the study's gene expression data matrix and design matrix from <a target='_blank' href='",alink,"'>",alink,"</a>, process them into desirable formats ("
+                              ,"<a href='https://tau.cmmt.ubc.ca/bu/uploading_GEO_data_matrix.png' target='_blank'><b>data matrix</b></a> and <a href='https://tau.cmmt.ubc.ca/bu/uploading_GEO_design_matrix.png' target='_blank'><b>design matrix</b></a>"
+                              ,"), and use <b>Manual uploads</b> mode to continue."
+                              )
         showModal(modalDialog(
           title = "Data parsing error",
           HTML(DisplayText),
