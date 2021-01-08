@@ -544,7 +544,7 @@ observeEvent(input$search_geo, {
         }
       else if(ErrorMessage == "HTTP error 404."){
         DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
-                              "Unable to retrieve ",rv$geo_accession," from NCBI server.<br><br>Please enter a valid GSE accession number and try again.")
+                              "Unable to retrieve ",rv$geo_accession," from NCBI server.<br><br>Please enter a valid and published GSE accession number and try again.")
         showModal(modalDialog(
           title = "Data fetching error",
           HTML(DisplayText),
