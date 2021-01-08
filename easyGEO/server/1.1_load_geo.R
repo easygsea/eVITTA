@@ -546,7 +546,7 @@ observeEvent(input$search_geo, {
       }
       if((ErrorMessage != "object 'destfile' not found")&(ErrorMessage != "HTTP error 400.")){
         # DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
-        DisplayText <- paste0("Unable to retrieve ",rv$geo_accession," data from NCBI server.", "<br>", ErrorMessage)
+        DisplayText <- paste0("Unable to parse ",rv$geo_accession," data.", "<br>", ErrorMessage)
         showModal(modalDialog(
           title = "Data parsing error",
           HTML(DisplayText),
