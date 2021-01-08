@@ -55,8 +55,8 @@
 
 
 # get the current run_mode ------------------------------------------------
-observe({
-  req(input$menu1 == "tab1")
+observeEvent(input$selected_mode, {
+  # req(input$menu1 == "tab1")
   rv$run_mode = input$selected_mode
 })
 # UI for the retrieval by GSE mode
@@ -129,7 +129,9 @@ output$ui_manual <- renderUI({
                                "text/csv",
                                "text/comma-separated-values,text/plain",
                                ".csv",".tsv",".txt",".tab")
-                   ), 
+                   ),
+                    downloadLink("data_matrix_sample", "Download Sample Data Matrix", style = "position:relative; bottom: 20px")
+                   ,
                    bsTooltip("manual_help", "Click to learn more", placement = "top")
                  )
                )
@@ -148,6 +150,8 @@ output$ui_manual <- renderUI({
                              "text/comma-separated-values,text/plain",
                              ".csv",".tsv",".txt",".tab")
                  ), 
+                 downloadLink("design_matrix_sample", "Download Sample Design Matrix", style = "position:relative; bottom: 20px")
+                 ,
                  bsTooltip("manual_help_2", "Click to learn more", placement = "top")
                )
            ),
@@ -469,6 +473,20 @@ output$design_matrix_sample_comparison <- renderUI({
   }
   
 })
+
+# the function for the link to download the data matrix and design matrix
+output$data_matrix_sample <- downloadHandler(
+  filename = "data_matrix_sample.tsv",
+  content = function(file){
+    file.copy("data_matrix_sample.tsv", file)
+  }
+)
+output$design_matrix_sample <- downloadHandler(
+  filename = "design_matrix_sample.csv",
+  content = function(file){
+    file.copy("design_matrix_sample.csv", file)
+  }
+)
 
 
 

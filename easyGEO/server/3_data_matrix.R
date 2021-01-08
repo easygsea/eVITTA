@@ -342,7 +342,14 @@ read_data_matrix <- function(inFile){
                   Click <b>Reset upload </b> to upload your tidied file again, or click <b>Confirm</b> to jump to the manual upload mode. ")),
       size = "l",
       easyClose = TRUE
-      ,footer = confirm_and_reset_buttons("wrong_format_confirm", "wrong_format_reset") 
+      ,footer = fluidRow(
+        div(style = "display:inline-block;",
+            actionButton("wrong_format_reset", "Reset upload")
+        ),
+        div(style = "display:inline-block;",
+            actionButton("wrong_format_proceed","OK")  
+        )
+      ) 
     ))
   }
   
@@ -936,9 +943,9 @@ confirm_and_jump <- function() {
   updateTabItems(session, inputId = "menu1", selected = "tab1")
   updateRadioButtons(session, inputId = "selected_mode", selected = "manual")
 }
-observeEvent(input$wrong_format_confirm, {
-  confirm_and_jump()
-})
+# observeEvent(input$wrong_format_confirm, {
+#   confirm_and_jump()
+# })
 observeEvent(input$wrong_format_reset, {
   shinyjs::reset("file")
   removeModal()
@@ -948,5 +955,8 @@ observeEvent(input$duplicated_reset, {
   removeModal()
 })
 observeEvent(input$duplicated_proceed, {
+  removeModal()
+})
+observeEvent(input$wrong_format_proceed, {
   removeModal()
 })
