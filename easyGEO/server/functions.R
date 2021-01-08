@@ -711,10 +711,19 @@ btn_demo_e <- function(){
 confirm_and_reset_buttons <- function(confirm_id, reset_id){
   fluidRow(
     div(style = "display:inline-block;",
-      actionButton(confirm_id, "Confirm")
+      actionButton(confirm_id, "Manual Upload")
     ),
     div(style = "display:inline-block;",
-      actionButton(reset_id, "Reset upload")  
+      actionButton(reset_id, "OK")  
     )
   )
+}
+# the function to jump to the Manual Upload mode
+confirm_and_jump <- function() {
+  rv$dmdf <- NULL
+  rv$fddf <- NULL
+  rv$plat_id <- NULL
+  removeModal()
+  updateTabItems(session, inputId = "menu1", selected = "tab1")
+  updateRadioButtons(session, inputId = "selected_mode", selected = "manual")
 }

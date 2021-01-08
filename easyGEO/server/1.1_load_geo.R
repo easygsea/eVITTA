@@ -631,7 +631,7 @@ observeEvent(input$search_geo, {
           HTML(DisplayText),
           size = "l",
           easyClose = TRUE
-          ,footer = modalButton("OK")
+          ,footer = confirm_and_reset_buttons("parsing_error_confirm","parsing_error_reset")
         ))
       }
     }
@@ -863,4 +863,14 @@ output$progress_1 <- renderUI({
 
 observeEvent(input$next_p1, {
   updateTabItems(session, "menu1", "tab3")
+})
+
+# the functions of the buttons redirect to Manual upload, and reset upload
+observeEvent(input$parsing_error_confirm, {
+  removeModal()
+  confirm_and_jump()
+})
+observeEvent(input$parsing_error_reset, {
+  removeModal()
+  shinyjs::reset("geo_accession")
 })

@@ -935,14 +935,6 @@ observeEvent(input$guide2,{
   updateTabItems(session, "menu1", "tab2")
 })
 # ------------- the confirm and reset buttons function added ---------------------
-confirm_and_jump <- function() {
-  rv$dmdf <- NULL
-  rv$fddf <- NULL
-  rv$plat_id <- NULL
-  removeModal()
-  updateTabItems(session, inputId = "menu1", selected = "tab1")
-  updateRadioButtons(session, inputId = "selected_mode", selected = "manual")
-}
 # observeEvent(input$wrong_format_confirm, {
 #   confirm_and_jump()
 # })
