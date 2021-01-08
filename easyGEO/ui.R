@@ -11,7 +11,7 @@ upload_mode <- conditionalPanel(
            radioButtons(
              inputId = "selected_mode",
              label = div(style = "font-weight:400;", HTML(paste0("Mode of analysis:",add_help("mode_q")))),
-             choices = list("Retrieval by GSE Number" = "auto", "Manual Uploads" = "manual"),
+             choices = list("Retrieval by GSE number" = "auto", "Manual uploads" = "manual"),
              selected = "auto"
              # selected = "manual"
            )
