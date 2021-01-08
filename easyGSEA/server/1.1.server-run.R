@@ -216,6 +216,14 @@
       req(sum(input$gmt_c$size) < batch_mb_limit)
       req((sum(input$gmt_c$size) + sum(rv$GMTDF$size)) < total_mb_limit)
       
+      # Check the type of file you uploads, if the file is other types, remind the user
+      if(!tools::file_ext(input$gmt_c$name) %in% c(
+         'text/tab-separated-values','txt','tab','tsv','gmt'
+      )){
+        shinyalert("We only accept files that are .txt,.tab,.tsv,.gmt; 
+                   please check your file and upload the file with the correct file extensions .")
+      }
+      
       #add new files that are not in df already to the df
       rv$GMTDF<-rbind(rv$GMTDF,input$gmt_c[!(input$gmt_c$name %in% rv$GMTDF$name)])
       
