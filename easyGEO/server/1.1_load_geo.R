@@ -526,7 +526,14 @@ observeEvent(input$search_geo, {
       #Depending on what we entered, different types of errors could occur:
 
       if(ErrorMessage == "object 'destfile' not found"){
-          DisplayText <- "Your input is invalid. Please enter an existing accession number."
+          DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
+                                "Unable to process ",rv$geo_accession," from NCBI server due to internet connection issue."
+                                ,"<br><br>Please re-click <b>Search</b> to retrieve again."
+                                ,"<br><br>If you keep seeing this error message, please email eVITTA team at evitta@cmmt.ubc.ca"
+                                ,"<br><br>Thank you for your support."
+                                ,"<br><br>"
+                                ,ErrorMessage)
+          
           showModal(modalDialog(
             title = "Data fetching error",
             HTML(DisplayText),
@@ -537,7 +544,7 @@ observeEvent(input$search_geo, {
         }
       else if(ErrorMessage == "HTTP error 404."){
         DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
-                              "Unable to retrieve ",rv$geo_accession," from NCBI server.<br><br>Please double check and try again.")
+                              "Unable to retrieve ",rv$geo_accession," from NCBI server.<br><br>Please double check your input and try again.")
         showModal(modalDialog(
           title = "Data fetching error",
           HTML(DisplayText),
@@ -548,7 +555,7 @@ observeEvent(input$search_geo, {
       }
       else if(ErrorMessage == "HTTP error 400."){
         DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
-                              "You probably inputted some upexpected character(s) such as a space.<br><br>Please double check and try again.")
+                              "You probably inputted some upexpected character(s) such as a space.<br><br>Please double check your input and try again.")
         showModal(modalDialog(
           title = "Data fetching error",
           HTML(DisplayText),
