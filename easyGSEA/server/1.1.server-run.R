@@ -557,6 +557,7 @@
       req(rv$db_status == "selected")
       req(rv$file_upload_status == "uploaded")
       req(is.null(rv$infile_confirm) == T)
+      req(!is.null(rv$rnk_or_deg))
 
       showModal(modalDialog(
         title = "Select corresponding columns to continue",
