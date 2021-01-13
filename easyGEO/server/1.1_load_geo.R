@@ -349,7 +349,7 @@ read_design_matrix <- function(inFile){
   col_text <- ifelse(length(colnames(indf))>5, colnames(indf)[1:5], colnames(indf))
   # display a modal that briefly describes the design matrix
   showModal(modalDialog(
-    title = div("File Upload",style = "font-size:170%"),
+    title = div("Design Matrix Upload",style = "font-size:170%"),
     span(HTML("The uploaded file contains these <b>Samples:</b> "),
          if(length(rownames(indf))>5){
           paste0(glue_collapse(rownames(indf)[1:5], sep = ", ", last = " and "), "...")

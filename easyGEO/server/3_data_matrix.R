@@ -450,7 +450,7 @@ read_data_matrix <- function(inFile){
     
     # the modal that briefly show the data inside the file that the user uploads
     showModal(modalDialog(
-      title = div("File Upload",style = "font-size:170%"),
+      title = div("Data Matrix Upload",style = "font-size:170%"),
       span(HTML("The uploaded file contains these <b>Genes:</b> "),
            # glue_collapse(indf$Name[1:10], sep = ", ", last = " and "), "... (",
            if(length(indf$Name) > 5){
