@@ -467,7 +467,7 @@ read_data_matrix <- function(inFile){
            }
            , "(",
            length(colnames(indf))-1, " in total).",br(),uiOutput("sample_comparison"),
-           uiOutput("data_matrix_warning"), " Please review them to proceed.",
+           uiOutput("data_matrix_warning"), ul_txt,
            style = "font-size:130%"),
       easyClose = F,
       size = "l",

@@ -212,7 +212,7 @@ output$matrix_buttons <- renderUI({
 output$design_matrix_buttons <- renderUI({
   fluidRow(
     div(style="display:inline-block;",
-        bsButton("design_matrix_confirm", "Confirm and Upload", style = "primary")
+        bsButton("design_matrix_confirm", "Confirm and upload", style = "primary")
     ),
     div(style="display:inline-block;",
         actionButton('design_matrix_reset', 'Reset upload')
@@ -221,7 +221,7 @@ output$design_matrix_buttons <- renderUI({
 })
 
 output$dm_confirm_button <- renderUI({
-  bsButton("dm_confirm", "Confirm and Upload", style = "primary")
+  bsButton("dm_confirm", "Confirm and upload", style = "primary")
 })
 
 # when user presses reset
@@ -365,7 +365,7 @@ read_design_matrix <- function(inFile){
          }
          , "(",
          length(colnames(indf)), "in total).",br(), uiOutput("design_matrix_sample_comparison"),
-         uiOutput("design_matrix_warning"), "Please review them to proceed.",
+         uiOutput("design_matrix_warning"),ul_txt,
          style = "font-size:130%"),
     easyClose = F,
     size = "l",
@@ -423,26 +423,30 @@ output$sample_comparison <- renderUI({
   
   number_of_matches = length(overlapped_vector)
   print(number_of_matches)
-  if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
-    HTML(paste("In addition, there are", number_of_matches, 
-               "samples in both data matrix and design matrix",
-               if(length(different_vector) > 0) {
-                 if(length(different_vector) > 5){
-                   paste0("; however, ", glue_collapse(different_vector[1:5], sep = ", ", last = " and "),
-                          "... (", length(different_vector), " in total) are not contained in your data matrix. ")
-                 } else {
-                   paste0("; however, ", glue_collapse(different_vector, sep = ", ", last = " and "),
-                          " (", length(different_vector), " in total) are not contained in your data matrix.")
-                 }
-               } else{
-                 "."
-               } ))
-  } else if(is.null(rv$fddf_samples)) {
-    HTML(paste("In addition, you could click <b>Reset upload</b> and 
-               upload your design matrix on the right panel first, to view the overlapped samples of these two matrix."))
+  
+  if(length(different_vector) > 0) {
+    if(length(different_vector) > 5){
+      txt_a <- different_vector[1:5]
     } else {
+      txt_a <- different_vector
+    }
     
+    txt <- paste0(". Specifically, ", glue_collapse(txt_a, sep = ", ", last = " and "),
+                 " (", length(different_vector), " in total) are found in the design matrix (uploaded in the right panel), but missing in the uploaded data matrix.")
+  } else{
+    txt <- "."
   }
+  
+  if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
+    HTML(paste("<br><p style = 'color:darkorange;'>", number_of_matches, 
+               "samples are found in both data matrix and design matrix",
+               txt, "</p>"))
+  } #else if(is.null(rv$fddf_samples)) {
+  #   HTML(paste("<br>In addition, you could click <b>Reset upload</b> and 
+  #              upload your design matrix on the right panel first, to view the overlapped samples of these two matrix."))
+  #   } else {
+  #   
+  # }
 })
 # when data matrix is uploaded first, compare the design matrix with the data matrix
 output$design_matrix_sample_comparison <- renderUI({
@@ -451,25 +455,25 @@ output$design_matrix_sample_comparison <- renderUI({
   overlapped_vector <- intersect(rv$dmdf_samples, rv$fddf_samples)
   different_vector <- setdiff(rv$dmdf_samples, rv$fddf_samples)
   
-  number_of_matches = length(overlapped_vector)
-  if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
-    HTML(paste("In addition, there are", number_of_matches, 
-               "samples in both data matrix and design matrix",
-    if(length(different_vector) > 0) {
-      if(length(different_vector) > 5){
-        paste0("; however, ", glue_collapse(different_vector[1:5], sep = ", ", last = " and "),
-             "... (", length(different_vector), " in total) are not contained in your design matrix.")
-        } else {
-        paste0("; however, ", glue_collapse(different_vector, sep = ", ", last = " and "),
-                 " (", length(different_vector), " in total) are not contained in your design matrix.")
-      }
-    } else{
-        "."
-      } ))
-  } else {
+  if(length(different_vector) > 0) {
+    if(length(different_vector) > 5){
+      txt_a <- different_vector[1:5]
+    } else {
+      txt_a <- different_vector
+    }
+    txt <- paste0(". Specifically, ", glue_collapse(txt_a, sep = ", ", last = " and "),
+                  "... (", length(different_vector), " in total) are detected in the data matrix (uploaded on the left), but missing in the uploaded design matrix.")
     
+  } else{
+    txt <- "."
   }
   
+  number_of_matches = length(overlapped_vector)
+  if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
+    HTML(paste("<br><p style = 'color:darkorange;'>", number_of_matches, 
+               "samples are found in both data matrix and design matrix",
+               txt, "</p>"))
+  }
 })
 
 # the function for the link to download the data matrix and design matrix
