@@ -212,7 +212,7 @@ output$matrix_buttons <- renderUI({
 output$design_matrix_buttons <- renderUI({
   fluidRow(
     div(style="display:inline-block;",
-        actionButton("design_matrix_confirm", "Confirm and Upload", class = "btn_primary")
+        bsButton("design_matrix_confirm", "Confirm and Upload", style = "primary")
     ),
     div(style="display:inline-block;",
         actionButton('design_matrix_reset', 'Reset upload')
@@ -221,7 +221,7 @@ output$design_matrix_buttons <- renderUI({
 })
 
 output$dm_confirm_button <- renderUI({
-  actionButton("dm_confirm", "Confirm and Upload", class = "btn_primary")
+  bsButton("dm_confirm", "Confirm and Upload", style = "primary")
 })
 
 # when user presses reset
@@ -387,10 +387,8 @@ output$design_matrix_warning <- renderUI({
     }
   }
   if(number_of_numeric > 0){
-    HTML("<p style = 'color:orange;'>The matrix you upload contains numeric variable; it might not be a design matrix.
-          Please be aware of the file.</p>")
-  }else{
-    
+    HTML("<br><p style = 'color:red;'><b>The matrix you have upload contains pure numeric values. It's probably a data matrix.
+          Please double check and reupload if necessary.</b></p>")
   }
 })
 # the warning that appears when the uploaded data matrix contains
@@ -410,8 +408,8 @@ output$data_matrix_warning <- renderUI({
   })
   
   if(number_of_nonnumeric > 0){
-    HTML("<p style='color:orange'>The matrix you upload contains non-numeric variable; it might not be a data matrix.
-          Please be aware of the file.</p>")
+    HTML("<br><p style='color:red'>The matrix you have uploaded contains non-numeric values. It's probably a design matrix. 
+          Please double check and reupload if necessary.</p>")
   }else{
     
   }
