@@ -50,8 +50,15 @@ output$ui_dm <- renderUI({
                             DT::dataTableOutput("data_matrix_df"),
                           # display text to remind the users about the column matching errors
                             if(rv$column_match_error == TRUE){
-                              HTML("<p style = 'color:red'> <strong>Your data matrix does not contain all samples in your design matrix.
-                                   Please adjust the filters on the next tab, or check and reupload your matrices.</strong></p>")
+                              fluidRow(
+                                column(
+                                  12,
+                                  HTML("<p style = 'color:red'> <strong>Your data matrix cannot be filtered using the criteria in 3.Filter/review design matrix: Samples indicated in your design matrix are missing in the provided data matrix. 
+                                   Please adjust the filters on the next tab, or check and reupload your data</strong></p>")
+                                  
+                                )
+                                                                
+                              )
                             }
 
                    )
