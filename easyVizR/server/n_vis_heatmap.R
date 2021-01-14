@@ -108,6 +108,7 @@ output$n_heatmap <- renderUI({
   # saveRDS(rv$n_to_plot, file = "rvs/n_to_plot.rds")
   # saveRDS(rv$heatmap_sortby, file = "rvs/heatmap_sortby.rds")
   #req(length(rv$ll) >= 1)
+
   req(rv$df_n)
   # req(input$draw_heatmap)
   req(is.null(heatmap)==F)
@@ -161,7 +162,7 @@ output$n_heatmap <- renderUI({
 
 # plotly dynamic heatmap
 n_hm_plt <- reactive({
-  
+
   # print(head(df))
   
   # withProgress(message = 'Drawing heatmap...', value = 0, {
@@ -181,6 +182,8 @@ n_hm_plt <- reactive({
     to_match <- paste0(rv$n_to_plot, "_")
     plotted <- data.frame(t(dplyr::select(df,contains(to_match))))
     req(nrow(plotted) > 0)
+    
+    
     # incProgress(0.1)
     rownames(plotted) <- stat_replace1(rownames(plotted), rv$nx_n, mode="each")
     # print(head(plotted))
@@ -188,7 +191,12 @@ n_hm_plt <- reactive({
     # make matrix for plot
     dat <- expand.grid(x = rownames(plotted), y = addlinebreaks(names,30,"<br>"))
     dat$z <- unlist(plotted)
+    validate(need(length(dat$z)>0,"Selected intersection is empty; please double check your selection in Intersection of Interest"))
     req(length(dat$z)>0)
+    
+    
+    
+    
     # incProgress(0.2)
     
     # put all the shared columns in the hovertext (as many as you have).
@@ -233,7 +241,12 @@ n_hm_plt <- reactive({
   fig
 })
 output$heatmapp <- renderPlotly({
+  
+  
+  
   req(rv$df_n)
+  
+  
   
   n_hm_plt()
   

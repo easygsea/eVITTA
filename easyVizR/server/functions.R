@@ -706,6 +706,14 @@ req_cols <- function(df, col_list){
   }
 }
 
+# validate multiple cols in a df
+# example: validate_cols(df, c("Name_data1", "Stat_data1", "PValue_data1", "FDR_data1"))
+validate_cols <- function(df, col_list){
+  for (i in col_list){
+    validate(need(df[[i]],"Selected intersection is empty; please double check your selection in Intersection of Interest"))
+  }
+}
+
 # req multiple vars to be not NULL
 # example: req_vars(c(input$a, input$b, input$c), check_len=T, FUN=length)
 # check_len: checks if lengths are >0
