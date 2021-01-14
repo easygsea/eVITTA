@@ -50,8 +50,8 @@ output$ui_dm <- renderUI({
                             DT::dataTableOutput("data_matrix_df"),
                           # display text to remind the users about the column matching errors
                             if(rv$column_match_error == TRUE){
-                              HTML("<p style = 'color:red'> Your data matrix does not contain all samples in your design matrix.
-                                   Please adjust the filters on the next tab, or check and reupload your matrices.</p>")
+                              HTML("<p style = 'color:red'> <strong>Your data matrix does not contain all samples in your design matrix.
+                                   Please adjust the filters on the next tab, or check and reupload your matrices.</strong></p>")
                             }
 
                    )
