@@ -123,6 +123,8 @@ output$nx_bar_dl <- downloadHandler(
 output$nx_vol_colthresh_opt <- renderUI({
   req(rv$n_ui_showpanel == "Single")
   req(is.null(rv$nx_selected)==F)
+  
+  
   div(
     HTML(paste0(
       "<b>Color threshold:</b>",
@@ -162,7 +164,8 @@ nx_vol_plt <- reactive({
   qcol <- paste0("FDR_", name)
   statcol <- paste0("Stat_", name)
   
-  req_cols(df, c("Name", pcol, qcol, statcol))
+  validate_cols(df, c("Name", pcol, qcol, statcol))
+  
   
   df <- df[, c("Name",pcol,qcol,statcol)]
   
@@ -213,10 +216,13 @@ nx_vol_plt <- reactive({
   return(fs_volcano)
 })
 output$nx_vol <- renderPlotly({
+  
   req(is.null(rv$nx_selected)==F)
+  
   req(is.null(n_ins_full())==F)
   
   nx_vol_plt()
+  
 })
 
 # download plotly html graph

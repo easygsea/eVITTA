@@ -383,6 +383,7 @@ n_upset_plt <- reactive({
 
 # gl ver (uses the shared reactive)
 output$df_n_upset <- renderPlot({
+  validate(need(nrow(df)>0, "Selected intersection is empty; please double check your selection in 3.2 Intersection of Interest"))
   req(rv$df_n)
   req(is.null(rv$n_upset_showempty)==F)
   req(is.null(rv$n_upset_sortby)==F)

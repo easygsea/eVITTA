@@ -303,10 +303,11 @@ nxy_sc_plt <- reactive({
 
 
 output$df_nxy_scatter <- renderPlotly({
+  
   req(is.null(n_ins_full())==F)
   req(is.null(rv$nxy_colormode)==F)
+  validate(need(nrow(n_ins_full()) > 0, "Selected intersection is empty; please double check your selection in Intersection of Interest"))
   req(nrow(n_ins_full()) > 0)
-  
   nxy_sc_plt()
 })
 
@@ -451,6 +452,7 @@ output$nxyz_colormode_options <- renderUI({
 
 # main graph
 n_3ds_plt <- reactive({
+  validate(need(nrow(n_ins_full()) > 0, "Selected intersection is empty; please double check your selection in Intersection of Interest"))
   req(nrow(n_ins_full())>0)
   req_vars(c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z))
   req(rv$nxy_selected_z!="None")
