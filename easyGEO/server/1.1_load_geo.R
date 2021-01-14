@@ -156,7 +156,7 @@ output$ui_manual <- renderUI({
                )
            ),
            column(12,align="center",
-                  uiOutput("guide_1a")
+                  uiOutput("guide_1a_manual")
                   
            ))
   )
@@ -268,6 +268,19 @@ read_design_matrix <- function(inFile){
       , footer = modalButton("OK")
     ))
   }
+  # check if the file (name) extensions are correct; if not, reset the file upload
+  if(!tools::file_ext(inFile$name) %in% c(
+    "text/csv",
+    "text/comma-separated-values,text/plain",
+    "csv","tsv","txt","tab")){
+    shinyjs::reset("design_matrix_file")
+    shinyalert("We only accept files that are .csv,.tsv,.txt,.tab; 
+                   please check your file and upload the file with the correct file (name) extensions .")
+  }
+  req(tools::file_ext(inFile$name) %in% c(
+    "text/csv",
+    "text/comma-separated-values,text/plain",
+    "csv","tsv","txt","tab"))
   
   #added try() here because there could be an error reading the file
   indf <- try(read.csv(inFile$datapath, header=T, 
@@ -837,15 +850,26 @@ observeEvent(input$geo_platform, {
 
 # ---------- when all is done, show guide box to next page ---------
 output$guide_1a <- renderUI({
-  if (is.null(rv$plat_id)==F || (is.null(rv$fddf)==F && (is.null(rv$dmdf)==F))){ # user already selected a platform
+  if (is.null(rv$plat_id)==F){ # user already selected a platform
     msg = "Navigate to <b>2. Data matrix</b> to proceed"
     guide_box("guide1", msg)
   } else {
     return(NULL)
   }
 })
+output$guide_1a_manual <- renderUI({
+  if (is.null(rv$fddf)==F && (is.null(rv$dmdf)==F)){ # user already selected a platform
+    msg = "Navigate to <b>2. Data matrix</b> to proceed"
+    guide_box("guide1_manual", msg)
+  } else {
+    return(NULL)
+  }
+})
 
 observeEvent(input$guide1,{
+  updateTabItems(session, "menu1", "tab3")
+})
+observeEvent(input$guide1_manual,{
   updateTabItems(session, "menu1", "tab3")
 })
 

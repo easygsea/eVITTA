@@ -2,7 +2,7 @@
 output$ui_dm <- renderUI({
   if(is.null(rv$plat_id) && rv$run_mode == "auto"){
     panel_null()
-  } else if(is.null(rv$dmdf) && rv$run_mode == "manual"){
+  } else if(rv$run_mode == "manual" && is.null(rv$dmdf)){
     panel_null(text = "Data available upon sucessfully uploading your data matrix (count matrix).")
   } else {
     fluidRow(
@@ -47,9 +47,13 @@ output$ui_dm <- renderUI({
                           
                           uiOutput("dmdf_filter_ui"),
                           
-                          
-                          DT::dataTableOutput("data_matrix_df")
-                          
+                            DT::dataTableOutput("data_matrix_df"),
+                          # display text to remind the users about the column matching errors
+                            if(rv$column_match_error == TRUE){
+                              HTML("<p style = 'color:red'> Your data matrix does not contain all samples in your design matrix.
+                                   Please adjust the filters on the next tab, or check and reupload your matrices.</p>")
+                            }
+
                    )
                    
                    
@@ -314,6 +318,20 @@ read_data_matrix <- function(inFile){
       , footer = modalButton("OK")
     ))
   }
+  # check the file name extensions to make sure the file has the correct format
+  if(!tools::file_ext(inFile$name) %in% c(
+    "text/csv",
+    "text/comma-separated-values,text/plain",
+    "csv","tsv","txt","tab")){
+    shinyjs::reset("data_matrix_file")
+    shinyalert("We only accept files that are .csv,.tsv,.txt,.tab; 
+                   please check your file and upload the file with the correct file (name) extensions .")
+  }
+  req(tools::file_ext(inFile$name) %in% c(
+    "text/csv",
+    "text/comma-separated-values,text/plain",
+    "csv","tsv","txt","tab"))
+  
   
   #added try() here because there could be an error reading the file
   indf <- try(read.csv(inFile$datapath, header=F, 
@@ -355,7 +373,7 @@ read_data_matrix <- function(inFile){
   
   
   req(!inherits(indf, "try-error")) #require to be no error to proceed the following codes
-  
+ 
   # This part removes duplicate rows of indf
   DuplicateCheck <- as.data.frame(indf[,1], drop=FALSE) #extract first column of indf and check if there is 
   DuplicateCheck <- duplicated(DuplicateCheck)
@@ -821,9 +839,12 @@ output$data_matrix_df <- DT::renderDataTable({
 
   # filter according to stored sample list
   if (input$dmdf_filter == "Filtered"){
-    # if(is.null(rv$demo)){
+    if(rv$column_match_error == FALSE){
       df <- filtered_data_showdf()
-    # }
+    } else {
+      # when there is match column error, return a null df
+      df <- NULL
+    }
   }
   
   # translate GSM column names to sample names on display
@@ -875,7 +896,19 @@ filtered_data_showdf <- reactive({
   req(length(rv$samples)>0)
   
   dmdf <- rv$dmdf
-  dmdf <- dmdf[,c("Name", rv$samples)]
+  print(head(dmdf))
+  print(rv$samples)
+  if(rv$run_mode == "auto"){
+    dmdf <- dmdf[,c("Name", rv$samples)]
+  } else {
+        # check if there are samples that at in design matrix but not in data matrix
+    if(length(setdiff(rv$samples, rv$dmdf_samples))>0){
+      
+    }else{
+      dmdf <- dmdf[,c("Name", rv$samples)]
+    }
+  }
+
   dmdf
   
 })
@@ -887,7 +920,20 @@ filtered_data_df <- reactive({
   req(length(rv$samples)>0)
 
   dmdf <- rv$dmdf
-  dmdf <- dmdf[,c("Name", rv$samples)]
+  # check if there are samples that exist in design matrix but not in data matrix
+  # if yes, there is a column match error while displaying the filter data matrix
+  print("whatever")
+  print(length(setdiff(rv$samples, rv$dmdf_samples)))
+  if(rv$run_mode == "auto"){
+    dmdf <- dmdf[,c("Name", rv$samples)]
+  } else {
+    if(length(setdiff(rv$samples, rv$dmdf_samples))>0){
+      rv$column_match_error = TRUE
+    }else{
+      dmdf <- dmdf[,c("Name", rv$samples)]
+      rv$column_match_error = FALSE
+    }
+  }
   dmdf[dmdf==""]<-NA # replace empty string with na
   dmdf <- dmdf[complete.cases(dmdf),] # get rid of na values
   
