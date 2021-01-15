@@ -217,13 +217,17 @@
       req((sum(input$gmt_c$size) + sum(rv$GMTDF$size)) < total_mb_limit)
       
       # Check the type of file you uploads, if the file is other types, remind the user
+      ext_check <- ""
       if(!tools::file_ext(input$gmt_c$name) %in% c(
          'text/tab-separated-values','txt','tab','tsv','gmt'
       )){
+        ext_check <- "no"
+        shinyjs::reset("gmt_c")
         shinyalert("We only accept files that are .txt,.tab,.tsv,.gmt; 
-                   please check your file and upload the file with the correct file extensions .")
+                   please check your file(s) and re-upload file(s) with the correct file extensions .")
       }
       
+      req(ext_check != "no")
       #add new files that are not in df already to the df
       rv$GMTDF<-rbind(rv$GMTDF,input$gmt_c[!(input$gmt_c$name %in% rv$GMTDF$name)])
       
@@ -539,6 +543,19 @@
 
     # read in RNK file path name, disable widget
     observeEvent(input$rnkfile, {
+      # Check the type of file you uploads, if the file is other types, remind the user
+      ext_check <- ""
+      if(!tools::file_ext(input$rnkfile$name) %in% c(
+        'text/tab-separated-values','txt','tab','tsv'
+      )){
+        ext_check <- "no"
+        shinyjs::reset("rnkfile")
+        shinyalert("We only accept files that are .txt,.tab,.tsv. 
+                   Please click the help button for accepted file formats.")
+      }
+      
+      req(ext_check != "no")
+      
         rv$file_upload_status = "uploaded"
         rv$infile_name = input$rnkfile$name
         rv$infile_path = input$rnkfile$datapath

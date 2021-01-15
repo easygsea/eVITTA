@@ -326,19 +326,18 @@ read_data_matrix <- function(inFile){
     ))
   }
   # check the file name extensions to make sure the file has the correct format
+  ext_check <- ""
   if(!tools::file_ext(inFile$name) %in% c(
     "text/csv",
     "text/comma-separated-values,text/plain",
     "csv","tsv","txt","tab")){
+    ext_check <- "no"
     shinyjs::reset("data_matrix_file")
     shinyalert("We only accept files that are .csv,.tsv,.txt,.tab; 
                    please check your file and upload the file with the correct file (name) extensions .")
   }
-  req(tools::file_ext(inFile$name) %in% c(
-    "text/csv",
-    "text/comma-separated-values,text/plain",
-    "csv","tsv","txt","tab"))
   
+  req(ext_check != "no")
   
   #added try() here because there could be an error reading the file
   indf <- try(read.csv(inFile$datapath, header=F, 
