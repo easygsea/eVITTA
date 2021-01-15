@@ -79,6 +79,7 @@ server <- function(input, output, session) {
     
     # server side functions
     source("server/functions.R", local = TRUE)
+    source("server/functions_vis.R", local = TRUE)
     
     
     #======================================================================#

@@ -1,7 +1,19 @@
-# ================================================= #
-#                     Info box                      ####
-# ================================================= #
+#======================================================================#
+####                    INITIALIZE UI MSGS                          ####
+#======================================================================#
 
+# --------------- plot validation --------------------
+# to use in validate need():
+df_n_empty_msg = "Plot unavailable: No genes in the table." # min(lengths(n_ins_gls()))>0
+gls_has_empty_msg = "Plot unavailable: At least one of your gene lists is empty." # nrow(rv$df_n)>0
+
+
+
+
+
+#======================================================================#
+####                      UI FUNCTIONS                              ####
+#======================================================================#
 
 # ------------- enhanced page progress infobox ------------------
 # call in renderUI on the server side. you need to wrap this in a box
@@ -244,7 +256,7 @@ stat_replace <- function(vec){
 
 
 # ================================================= #
-#                  UI manipulation                  ####
+#                  UI refreshing                  ####
 # ================================================= #
 
 
@@ -666,7 +678,7 @@ summarize_filter <- function(filter_namespace, filter_var, name, status, include
 
 
 # ================================================= #
-#           More convenience functions              ####
+#                  Tooltips                      ####
 # ================================================= #
 
 
@@ -695,6 +707,12 @@ radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hov
   ")))
   htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
 }
+
+
+# ================================================= #
+#                 Req and Validate               ####
+# ================================================= #
+
 
 # Multiple reqs
 #-----------------------------------------------------
@@ -792,7 +810,7 @@ extract_intersection <- function(gls, criteria, df, out_type="Full", include_bac
   req(length(gls)==length(criteria))
   
   if (include_background==T){
-    all_genes <- df$Name
+    all_genes <- unique(df$Name)
   } else if (include_background==F){
     all_genes <- unique(unlist(gls))
   }
@@ -832,6 +850,10 @@ extract_intersection <- function(gls, criteria, df, out_type="Full", include_bac
   out
 }
 
+
+# ================================================= #
+#                 Table Filtering                ####
+# ================================================= #
 
 
 # filter df according to a specified dflogic
@@ -901,6 +923,11 @@ addlinebreaks2 <- function(x, max, lbtype="<br>", break_type="punct"){
   }
   
 }
+
+
+#======================================================================#
+####                    INITIALIZE DEMO RVS                         ####
+#======================================================================#
 
 # the function to initialize the RVs for the demo session
 init_demo <- function(){

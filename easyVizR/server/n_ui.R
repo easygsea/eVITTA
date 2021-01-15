@@ -815,16 +815,6 @@ output$n_panels <- renderUI({
         
       ),
       
-      # fluidRow(
-      #   column(12,
-      #          box(
-      #            width = 12, status = "primary",solidHeader = F,
-      #            title = span(icon("table"),"Filter summary"),
-      #            uiOutput("filters_summary")
-      #          ),
-      #          
-      #   ),
-      # ),
       div(
         conditionalPanel("input.n_ui_showpanel == 'Heatmap'",
                          div(
