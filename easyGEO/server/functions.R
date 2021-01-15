@@ -710,12 +710,16 @@ btn_demo_e <- function(){
 # add an oberveEvent to connect those buttons with their functions
 confirm_and_reset_buttons <- function(confirm_id, reset_id){
   fluidRow(
-    div(style = "display:inline-block;",
-      actionButton(confirm_id, "Manual Upload")
-    ),
-    div(style = "display:inline-block;",
-      actionButton(reset_id, "OK")  
+    column(
+      12,
+      div(style = "display:inline-block;",
+          bsButton(confirm_id, "Manual Upload",style="primary")
+      ),
+      div(style = "display:inline-block;",
+          actionButton(reset_id, "Dismiss")  
+      )
     )
+    
   )
 }
 # the function to jump to the Manual Upload mode

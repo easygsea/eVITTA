@@ -7,10 +7,10 @@ runtime: shiny
 ### 1) the data should be in comma- or tab-delimited format (csv, tsv, tab, txt),
 <br/>
       
-### 2) first row of matrix should be sample names; must match the sample names,
+### 2) the first row of the matrix should be sample names; must match the sample names in the design matrix,
 <br/>
       
-### 3) first column of matrix should be gene names; no duplicates are allowed,
+### 3) the first column of the matrix should be gene names; no duplicates are allowed,
 <br/>
 
 ### For example,

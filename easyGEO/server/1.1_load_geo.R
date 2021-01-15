@@ -637,8 +637,8 @@ observeEvent(input$search_geo, {
                               , ErrorMessage
                               , "<br><br>GEO sequence submission procedures are designed to encourage provision of <a target='_blank' href='http://fged.org/projects/minseqe/'>MINSEQE</a> elements."
                               , " This dataset was likely not meeting the standards."
-                              , "<br><br>Please download the study's gene expression data matrix and design matrix from <a target='_blank' href='",alink,"'>",alink,"</a>, process them into desirable formats ("
-                              ,"<a href='https://tau.cmmt.ubc.ca/bu/uploading_GEO_data_matrix.png' target='_blank'><b>data matrix</b></a> and <a href='https://tau.cmmt.ubc.ca/bu/uploading_GEO_design_matrix.png' target='_blank'><b>design matrix</b></a>"
+                              , "<br><br>Please download the study's gene expression data matrix and design matrix from <a target='_blank' href='",alink,"'><b>",alink,"</b></a>, process them into desirable formats ("
+                              ,"<a href='https://tau.cmmt.ubc.ca/bu/data_matrix.png' target='_blank'>data matrix</a> and <a href='https://tau.cmmt.ubc.ca/bu/design_matrix.png' target='_blank'>design matrix</a>"
                               ,"), and use <b>Manual uploads</b> mode to continue."
                               )
         showModal(modalDialog(
@@ -898,5 +898,5 @@ observeEvent(input$parsing_error_confirm, {
 })
 observeEvent(input$parsing_error_reset, {
   removeModal()
-  shinyjs::reset("geo_accession")
+  # shinyjs::reset("geo_accession")
 })
