@@ -14,8 +14,6 @@ update_tab_3 <- function(include_top_widgets=T){
 
 update_tab_4 <- function(include_top_widgets=T){
   
-  move_ui("ins_table_panel", "vis_pg_bottom", "afterEnd")
-  
   if (include_top_widgets==T){
     move_ui("n_filters", "n_filters_here", "afterEnd")
     move_ui("select_graph_to_display","select_graph_to_display_anchor","afterEnd")
@@ -35,6 +33,17 @@ update_tab_4 <- function(include_top_widgets=T){
   move_ui("dataset_selection","dataset_selection_anchor","afterEnd")
   move_ui("network_selection","network_selection_anchor","afterEnd")
   move_ui("network_dropdowns","network_dropdowns_anchor","afterEnd")
+  
+  move_ui("ins_table_panel", "vis_pg_bottom", "afterEnd")
+}
+
+# conditionally refresh tab 3 or tab 4; use to manually refresh
+refresh_vis_ui <- function(){
+  if (input$tabs == "tab_ins"){ # intersection tab
+    update_tab_3()
+  } else if (input$tabs == "tab3"){ # vis tab
+    update_tab_4()
+  }
 }
 
 
@@ -295,11 +304,7 @@ observeEvent(input$nic_applytorv, {
   update_filters_rv("nic", "nic", input)
   update_filters("nic", "nic", rv)
   
-  if (input$tabs == "tab_ins"){ # intersection tab
-    update_tab_3()
-  } else if (input$tabs == "tab3"){ # vis tab
-    update_tab_4()
-  }
+  refresh_vis_ui()
   
 })
 
@@ -485,17 +490,13 @@ output$n_igl_nm <- renderUI({
 })
 observeEvent(input$n_igl_update,{
   rv$n_igl <- input$n_igl
-  
-  if (input$tabs == "tab_ins"){ # intersection tab
-    update_tab_3()
-  } else if (input$tabs == "tab3"){ # vis tab
-    update_tab_4()
-  }
+  refresh_vis_ui()
 
 })
 observeEvent(input$n_igl_reset,{
   updateTextAreaInput(session, "n_igl", value="")
   rv$n_igl <- ""
+  refresh_vis_ui()
 })
 
 
