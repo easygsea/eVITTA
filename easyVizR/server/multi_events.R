@@ -126,6 +126,9 @@ observeEvent(input$n_use_data,{
     
     # ---------------  input genelist
     rv$n_igl <- ""
+    
+    # # --------------- data options
+    # rv$opt_easygsea_import <- "original"
 
     # ---------------  initialize filters
     for (i in 1:length(rv$nx_n)){
@@ -252,6 +255,7 @@ observeEvent(input$n_use_data,{
     
     
   })
+  rv$df_n_orig <- df_n
   rv$df_n <- df_n
   
   # manually reload the UI
@@ -328,6 +332,16 @@ outputOptions(output, "n_3ds_status", suspendWhenHidden = F)
 
 df_n_basic <- reactive({
   df <- rv$df_n
+  
+  # # optionally get rid of easygsea identifier
+  # if (is.null(rv$opt_easygsea_import)==F){
+  #   if (rv$opt_easygsea_import=="hidden"){
+  #     df$Name <- gsub("%.*$","",df$Name)
+  #   } 
+  # }
+  
+  
+  
   if (nchar(rv$n_igl)>0){
     igl <- isolate(as.list(strsplit(toupper(rv$n_igl), '\\n+')))[[1]]
     print(igl)

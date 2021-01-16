@@ -245,7 +245,7 @@ output$f_highlights <- renderUI({
 # show a message if there are unapplied filters
 #-----------------------------------------------
 output$f_msg <- renderUI({
-  req(nrow(rv$df_n)>0)
+  req(nrow(df_n_basic())>0)
 
   notequal <- vector()
   
@@ -306,7 +306,7 @@ observeEvent(input$f_applytorv, {
 f_temp_gls <- reactive({
   req_filter_ns("f", input)
   
-  filter_to_gls("f",input,rv$df_n)
+  filter_to_gls("f",input,df_n_basic())
 })
 
 
@@ -320,7 +320,7 @@ observe({
       
       df <- gl_to_table(name = rv$nx_n[[x]], 
                         gl = f_temp_gls()[[x]], 
-                        master_df = rv$df_n, 
+                        master_df = df_n_basic(), 
                         round=3)
       rv[[paste0("f_temp_rown_",x)]] <- nrow(df)
       df
@@ -334,7 +334,7 @@ observe({
     req(is.null(rv[[paste0("f_temp_rown_",x)]])==F)
     output[[paste0('T_info', x)]] <- renderUI({
       HTML(paste0("<i>", rv[[paste0("f_temp_rown_",x)]],
-                  " out of ", nrow(rv$df_n), " total</i>"))
+                  " out of ", nrow(df_n_basic()), " total</i>"))
     })
   })
 })
@@ -347,7 +347,7 @@ observe({
       
       df <- gl_to_table(name = rv$nx_n[[x]], 
                         gl = n_ins_gls()[[x]], 
-                        master_df = rv$df_n, 
+                        master_df = df_n_basic(), 
                         round=3)
       rv[[paste0("f_rv_rown_",x)]] <- nrow(df) # save the rown into rv for display
       df
@@ -368,7 +368,7 @@ observe({
           
           df <- gl_to_table(name = rv$nx_n[[x]], 
                             gl = n_ins_gls()[[x]], 
-                            master_df = rv$df_n, 
+                            master_df = df_n_basic(), 
                             round=0) # no rounding
           df
           
@@ -459,7 +459,7 @@ output$f_filtering_ui <- renderUI({
                              placement = "top"),
                    br(),
                    HTML(paste0("<i>", length(n_ins_gls()[[i]]),
-                               " out of ", nrow(rv$df_n), " total</i>")),
+                               " out of ", nrow(df_n_basic()), " total</i>")),
                    div(dataTableOutput(paste0('TT', i)), style="font-size:90%;"),
                    
                    # dropdowns
