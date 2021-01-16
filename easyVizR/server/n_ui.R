@@ -86,7 +86,8 @@ div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;", id="n1_3
       materialSwitch(
         inputId = "n_hm_ylabs", label = "Show y labels?", status="primary",
         value = rv$n_hm_ylabs
-      )
+      ),
+      uiOutput("n_hm_ylabs_len")
       ,
       size = "xs",
       icon = icon("palette", class = "opt"),

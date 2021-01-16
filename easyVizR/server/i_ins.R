@@ -147,6 +147,7 @@ output$intersection_summary <- renderUI({
 
 ####-------------------- Intersection table ------------------------####
 
+
 # show intersection table
 output$n_ins_tbl <- DT::renderDataTable({
   req_vars(c(
@@ -163,11 +164,8 @@ output$n_ins_tbl <- DT::renderDataTable({
   # to abbreviate the long column names...take first 5 letters
   char_limit <- 56 / length(colnames(df))
   # print(char_limit)
-  colnames(df) <- sapply(names(df), function(x){
-    if (nchar(x)>char_limit)
-    {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
-    else{return (x)}
-  })
+  colnames(df) <- abbreviate_vector(vec=colnames(df), 
+                                    char_limit=char_limit)
   
   # to round everything down to 3 decimals
   df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., 3))
@@ -402,62 +400,22 @@ output$n_venn_ui <- renderUI({
 
 
 
-
-####--------------------wordcloud for pathways------------------------####
-
-map2color<-function(x,pal,limits=NULL){
-  if(is.null(limits)) limits=range(x)
-  pal[findInterval(x,seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
-}
+#======================================================================#
+####                3.2.1 WORDCLOUD                          ####
+#======================================================================#
 
 # compute the frequency table
 n_ins_wc_df <- reactive({
-  vc <- n_ins_full()$Name
-  sep <- input$n_ins_wc_sep
-  words <- unlist(lapply(vc, function(x){
-    toupper(unlist(strsplit(x, sep)))
-  }))
-  words <- gsub("[[:punct:]]$", "", words) # get rid of punctuations at end
-  words <- gsub("^[[:punct:]]", "", words) # get rid of punctuations at beginning
-  
-  df <- data.frame(table(words))
-  
-  # ignore certain words (supports regex pattern!!)
-  ignore <- unlist(strsplit(input$n_ins_Wc_ignore, "\\s+"))
-  # ignore <- c("GO", "KEGG", "of", "and", "pathway")
-  # df <- df[df$words %in% ignore ==F,]
-  pattern <- paste(ignore, collapse = "|")
-  df <- df[-grep(pattern, df$words, ignore.case=TRUE),]
+  df <- generate_wc_freq_table(
+    vec=n_ins_full()$Name,
+    sep=input$n_ins_wc_sep,
+    ignored=input$n_ins_Wc_ignore
+  )
   
   df
 })
 
-n_ins_wc_plt <- reactive({
-  df <- n_ins_wc_df()
-  validate(need(max(df$Freq)>1,
-           "All words are of frequency 1. Please check your separator.")) # blocks further processing if no repeated words are found
-  
-  
-  # only draw top x words
-  df <- df[order(df$Freq, decreasing = TRUE), ]
-  if (nrow(df)>150){
-    df <- df[1:150, ] #or set 150 to whatever
-  }
-  
-  # print(head(df))
-  wordcloud(df$words, df$Freq, 
-            min.freq = 1, max.words=200, scale=c(3,.5),
-            random.order=FALSE, 
-            rot.per=0.2, # freq of vertical words
-            colors=brewer.pal(8, "Dark2"))
-})
-
-output$n_ins_wc <- renderPlot({
-  req(length(n_ins_full()$Name)>0)
-  
-  n_ins_wc_plt()
-})
-
+# show the frequency table
 output$n_ins_wc_df <- DT::renderDataTable({
   req(nrow(n_ins_wc_df())>0)
   n_ins_wc_df()[order(n_ins_wc_df()$Freq, decreasing=T),]
@@ -468,6 +426,25 @@ options=list(scrollX=T, scrollY=T, dom= 'tp',
 ),
 rownames= FALSE
 )
+
+# draw wordcloud plot
+n_ins_wc_plt <- reactive({
+  
+  validate(
+    need(nrow(n_ins_wc_df())>0, wc_no_word), # if no words in table
+    need(max(n_ins_wc_df()$Freq)>1, wc_no_repeated_word) # if no repeated words are found
+  ) 
+  df <- n_ins_wc_df()
+  generate_wc_plot(df)
+  
+})
+
+# show wordcloud plot
+output$n_ins_wc <- renderPlot({
+  req(length(n_ins_full()$Name)>0)
+  
+  n_ins_wc_plt()
+})
 
 
 #======================================================================#

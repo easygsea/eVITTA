@@ -2,6 +2,42 @@
 ####                 UPDATE upon tab switching                      ####
 #======================================================================#
 
+update_tab_3 <- function(include_top_widgets=T){
+  move_ui("ins_main_panels", "ins_main_panels_here", "afterEnd")
+  move_ui("ins_table_panel", "ins_pg_bottom", "afterEnd")
+  if (include_top_widgets==T){
+    move_ui("n_filters", "ins_filters_here", "afterEnd")
+  }
+  move_ui("venn_dropdowns","venn_dropdowns_anchor","afterEnd") 
+  move_ui("upset_dropdowns","upset_dropdowns_anchor","afterEnd") 
+}
+
+update_tab_4 <- function(include_top_widgets=T){
+  
+  move_ui("ins_table_panel", "vis_pg_bottom", "afterEnd")
+  
+  if (include_top_widgets==T){
+    move_ui("n_filters", "n_filters_here", "afterEnd")
+    move_ui("select_graph_to_display","select_graph_to_display_anchor","afterEnd")
+  }
+  
+  move_ui("heatmap_dropdowns","heatmap_dropdowns_anchor","afterEnd")
+  #Scatter
+  move_ui("scatter_selection","scatter_selection_anchor","afterEnd")
+  move_ui("scatter_3d_dropdowns","scatter_3d_dropdowns_anchor","afterEnd")
+  move_ui("scatter_2d_dropdowns","scatter_2d_dropdowns_anchor","afterEnd")
+  #Single
+  move_ui("single_dropdowns","single_dropdowns_anchor","afterEnd")
+  move_ui("single_selections","single_selections_anchor","afterEnd")
+  move_ui("nx_bar_panel_dropdowns","nx_bar_panel_dropdowns_anchor","afterEnd")
+  #Network Graph
+  #move_ui("network_selection","network_selection_anchor","afterEnd")
+  move_ui("dataset_selection","dataset_selection_anchor","afterEnd")
+  move_ui("network_selection","network_selection_anchor","afterEnd")
+  move_ui("network_dropdowns","network_dropdowns_anchor","afterEnd")
+}
+
+
 # UPON ENTERING EACH TAB, update SHARED WIDGETS in that tab
 
 observeEvent(input$tabs, {
@@ -13,39 +49,10 @@ observeEvent(input$tabs, {
     update_filters("f","nic", rv)
     
   } else if (input$tabs == "tab_ins"){ # intersection tab
-    move_ui("ins_main_panels", "ins_main_panels_here", "afterEnd")
-    move_ui("ins_table_panel", "ins_pg_bottom", "afterEnd")
-    move_ui("n_filters", "ins_filters_here", "afterEnd")
-    move_ui("venn_dropdowns","venn_dropdowns_anchor","afterEnd") 
-    move_ui("upset_dropdowns","upset_dropdowns_anchor","afterEnd") 
-    
+    update_tab_3()
     
   } else if (input$tabs == "tab3"){ # vis tab
-    
-    move_ui("select_graph_to_display","select_graph_to_display_anchor","afterEnd")
-    move_ui("ins_table_panel", "vis_pg_bottom", "afterEnd")
-    move_ui("n_filters", "n_filters_here", "afterEnd")
-    move_ui("heatmap_dropdowns","heatmap_dropdowns_anchor","afterEnd")
-    #Scatter
-    move_ui("scatter_selection","scatter_selection_anchor","afterEnd")
-    move_ui("scatter_3d_dropdowns","scatter_3d_dropdowns_anchor","afterEnd")
-    move_ui("scatter_2d_dropdowns","scatter_2d_dropdowns_anchor","afterEnd")
-    #Single
-    move_ui("single_dropdowns","single_dropdowns_anchor","afterEnd")
-    move_ui("single_selections","single_selections_anchor","afterEnd")
-    move_ui("nx_bar_panel_dropdowns","nx_bar_panel_dropdowns_anchor","afterEnd")
-    #Network Graph
-    #move_ui("network_selection","network_selection_anchor","afterEnd")
-    move_ui("dataset_selection","dataset_selection_anchor","afterEnd")
-    move_ui("network_selection","network_selection_anchor","afterEnd")
-    move_ui("network_dropdowns","network_dropdowns_anchor","afterEnd")
-    
-    
-    
-    
-    
-    
-    
+    update_tab_4()
     
   }
 })
@@ -288,6 +295,12 @@ observeEvent(input$nic_applytorv, {
   update_filters_rv("nic", "nic", input)
   update_filters("nic", "nic", rv)
   
+  if (input$tabs == "tab_ins"){ # intersection tab
+    update_tab_3()
+  } else if (input$tabs == "tab3"){ # vis tab
+    update_tab_4()
+  }
+  
 })
 
 
@@ -472,6 +485,13 @@ output$n_igl_nm <- renderUI({
 })
 observeEvent(input$n_igl_update,{
   rv$n_igl <- input$n_igl
+  
+  if (input$tabs == "tab_ins"){ # intersection tab
+    update_tab_3()
+  } else if (input$tabs == "tab3"){ # vis tab
+    update_tab_4()
+  }
+
 })
 observeEvent(input$n_igl_reset,{
   updateTextAreaInput(session, "n_igl", value="")

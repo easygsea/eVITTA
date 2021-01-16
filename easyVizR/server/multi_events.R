@@ -14,7 +14,7 @@ observe({
   # heatmap
   input2rv(c(
     "n_to_plot",
-    "heatmap_sortby", "n_hm_ylabs"
+    "heatmap_sortby", "n_hm_ylabs","n_hm_ylabs_len"
     ))
   
   # venn and upset
@@ -143,6 +143,7 @@ observeEvent(input$n_use_data,{
     rv$heatmap_sortby <- rv$nx_n[[1]]
     #rv$heatmap_sortby <- heatmap_sortby_initializer
     rv$n_hm_ylabs <- F
+    rv$n_hm_ylabs_len <- 15
 
     
     # ---------------  intersection options

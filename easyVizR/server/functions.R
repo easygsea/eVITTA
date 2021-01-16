@@ -6,7 +6,11 @@
 # to use in validate need():
 df_n_empty_msg = "Plot unavailable: No genes in the table." # min(lengths(n_ins_gls()))>0
 gls_has_empty_msg = "Plot unavailable: At least one of your gene lists is empty." # nrow(rv$df_n)>0
+select_ins_empty_msg="Selected intersection is empty; please double check your selection in Intersection of Interest"
 
+
+wc_no_word = "Cannot generate word frequency table."
+wc_no_repeated_word = "All words are of frequency 1. Please check your separator."
 
 
 
@@ -908,6 +912,16 @@ get_df_by_dflogic <- function(selected, dflogic, gls, user_criteria, starting_df
 }
 
 
+# add line breaks to long texts (1)
+#-----------------------------------------------
+# use to break long hovertexts in heatmap
+
+addlinebreaks <- function(x, max, 
+                          lbtype="<br>", 
+                          cut_at="\\s|;|_|\\.|\\|" # this cuts at spaces/ ;/ underscore/ period / vertical bar
+                          ){
+  gsub(paste0('(.{1,',max,'})(',cut_at,'|$)'), paste0('\\1',lbtype), x)
+}
 
 
 # add line breaks (2)
@@ -922,6 +936,22 @@ addlinebreaks2 <- function(x, max, lbtype="<br>", break_type="punct"){
     gsub(paste0('(.{1,',max,'})(\\s|;|-|_|\\.|\\W|$)'), paste0('\\1',lbtype), x)
   }
   
+}
+
+
+# abbreviate elements of a vector to first x characters
+# outputs as "xxxxx..."
+#----------------------------------------------
+abbreviate_vector <- function(vec, # vector of strings
+                              char_limit # character limit, an integer
+){
+  vec<-as.character(vec)
+  vec <- unlist(lapply(vec, function(x){
+    if (nchar(x)>char_limit)
+    {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
+    else{return (x)}
+  }))
+  vec
 }
 
 

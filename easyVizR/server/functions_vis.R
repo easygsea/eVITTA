@@ -361,3 +361,147 @@ draw_upsetR_with_ins <- function(df, criteria, show_ins=T, color="red",
   }
   
 }
+
+
+
+
+
+####--------------------wordcloud for pathways------------------------####
+
+# Set up color palette
+#-----------------------------------------
+map2color<-function(x,pal,limits=NULL){
+  if(is.null(limits)) limits=range(x)
+  pal[findInterval(x,seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
+}
+
+
+# compute frequency table for wordcloud
+#-----------------------------------------
+generate_wc_freq_table <- function(vec, # vector of names
+                                   sep, # separator for subdividing names into words
+                                   ignored, # string that specifies ignored words
+                                   ignored_sep="\\s+" # separator for ignored
+){
+  
+  words <- unlist(lapply(vec, function(x){
+    toupper(unlist(strsplit(x, sep)))
+  }))
+  words <- gsub("[[:punct:]]$", "", words) # get rid of punctuations at end
+  words <- gsub("^[[:punct:]]", "", words) # get rid of punctuations at beginning
+  
+  df <- data.frame(table(words))
+  
+  # ignore certain words (supports regex pattern!!)
+  ignore <- unlist(strsplit(ignored, ignored_sep))
+  # ignore <- c("GO", "KEGG", "of", "and", "pathway")
+  # df <- df[df$words %in% ignore ==F,]
+  pattern <- paste(ignore, collapse = "|")
+  df <- df[-grep(pattern, df$words, ignore.case=TRUE),]
+}
+
+# generate wordcloud plot from table
+#------------------------------------------
+generate_wc_plot <- function(freq_table, # freq table with colnames=c("words", "Freq")
+                             max_words=150,
+                             min_freq=1,
+                             scale=c(3,.5),
+                             rot_per=0.2 # freq of vertical words
+){
+  df <- freq_table
+  # only draw top x words
+  df <- df[order(df$Freq, decreasing = TRUE), ]
+  if (nrow(df)>max_words){
+    df <- df[1:max_words, ] # default max is 150
+  }
+  
+  # print(head(df))
+  wordcloud(df$words, df$Freq, 
+            min.freq = min_freq, max.words=max_words, scale=scale,
+            random.order=FALSE, 
+            rot.per=rot_per, 
+            colors=brewer.pal(8, "Dark2"))
+}
+
+#======================================================================#
+####                       4,1 HEATMAP                          ####
+#======================================================================#
+
+# draw heatmap
+#----------------------------------------
+
+draw_heatmap <- function(df, 
+                         sortby_dataset, # sort by which dataset (e.g. dataset1)
+                         sortby_statistic, # sort by which statistic (e.g. PValue)
+                         show_ylabs=F, # whether or not to show Y labels
+                         ylabs_len, # max length of y labels
+                         hovertext_linebreak = 30, # max line length for hovertexts
+                         sharedcols = rv$n_sharedcols,
+                         nx_n=rv$nx_n
+){
+
+  
+  rownames(df) <- df$Name # put genename as index
+  
+  # order by selected column
+  sortby_coln <- paste0(sortby_dataset,"_", sortby_statistic)
+  df <- df[order(-df[sortby_coln]),] 
+  names <- df$Name # preserve formatting in vector
+  
+  # extract plotted values
+  to_match <- paste0(sortby_dataset, "_")
+  plotted <- data.frame(t(dplyr::select(df,contains(to_match))))
+  req(nrow(plotted) > 0)
+  
+  rownames(plotted) <- stat_replace1(rownames(plotted), nx_n, mode="each")
+  # print(head(plotted))
+  
+  # make matrix for plot
+  dat <- expand.grid(x = rownames(plotted), y = addlinebreaks(names,hovertext_linebreak,"<br>"))
+  dat$z <- unlist(plotted)
+  
+  validate(need(length(dat$z)>0, select_ins_empty_msg))
+  
+  # put all the shared columns in the hovertext (as many as you have).
+  addlabel <- ""
+  for (coln in sharedcols){
+    le <- unlist(data.frame(t(dplyr::select(df,matches(paste0("^",coln,"_"))))))
+    if (is.numeric(le)){
+      le <- round(le,3)
+    }
+    else if (is.character(le)){
+      le <- addlinebreaks(le,hovertext_linebreak,"<br>")
+    }
+    if (coln == "Stat"){
+      replace_stat <- stat_replace1(rep("Stat", length(nx_n)), nx_n, mode="each")
+      replace_coln <- rep(replace_stat, nrow(df))
+      addlabel <- paste(addlabel, paste0(replace_coln, ": ", le), sep="<br>")
+    } else {
+      addlabel <- paste(addlabel, paste0(coln, ": ", le), sep="<br>")
+    }
+    
+  }
+  full_y= dat$y
+  
+  # define the hovertext
+  textt <- paste(full_y, addlabel)
+  
+  # if ylabel is shown, abbreviate
+  if (show_ylabs==T){
+    dat$y <- abbreviate_vector(dat$y, ylabs_len)
+  }
+  
+  fig <- plot_ly() %>%
+    add_trace(data = dat, x = ~x, y = ~y, z = ~z, type = "heatmap",
+              colorscale  = cscale_simple,zauto = T, zmid= 0, colorbar = list(title = stat_replace1(sortby_dataset, nx_n)),
+              hoverinfo = 'text',
+              text = textt)
+  
+  fig <- fig %>% layout(
+    xaxis = list(title = "", showticklabels = T),
+    yaxis = list(title = "", showticklabels = show_ylabs)
+    # ,margin = list(l=200)
+  )
+  
+  fig
+}
