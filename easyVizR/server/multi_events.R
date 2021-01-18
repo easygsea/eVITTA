@@ -14,7 +14,7 @@ observe({
   # heatmap
   input2rv(c(
     "n_to_plot",
-    "heatmap_sortby", "n_hm_ylabs"
+    "heatmap_sortby", "n_hm_ylabs","n_hm_ylabs_len"
     ))
   
   # venn and upset
@@ -126,6 +126,9 @@ observeEvent(input$n_use_data,{
     
     # ---------------  input genelist
     rv$n_igl <- ""
+    
+    # # --------------- data options
+    # rv$opt_easygsea_import <- "original"
 
     # ---------------  initialize filters
     for (i in 1:length(rv$nx_n)){
@@ -143,6 +146,7 @@ observeEvent(input$n_use_data,{
     rv$heatmap_sortby <- rv$nx_n[[1]]
     #rv$heatmap_sortby <- heatmap_sortby_initializer
     rv$n_hm_ylabs <- F
+    rv$n_hm_ylabs_len <- 15
 
     
     # ---------------  intersection options
@@ -251,6 +255,7 @@ observeEvent(input$n_use_data,{
     
     
   })
+  rv$df_n_orig <- df_n
   rv$df_n <- df_n
   
   # manually reload the UI
@@ -327,6 +332,16 @@ outputOptions(output, "n_3ds_status", suspendWhenHidden = F)
 
 df_n_basic <- reactive({
   df <- rv$df_n
+  
+  # # optionally get rid of easygsea identifier
+  # if (is.null(rv$opt_easygsea_import)==F){
+  #   if (rv$opt_easygsea_import=="hidden"){
+  #     df$Name <- gsub("%.*$","",df$Name)
+  #   } 
+  # }
+  
+  
+  
   if (nchar(rv$n_igl)>0){
     igl <- isolate(as.list(strsplit(toupper(rv$n_igl), '\\n+')))[[1]]
     print(igl)
@@ -385,63 +400,3 @@ n_ins_df <- reactive({
   df
 })
 
-
-
-# ####### -------------- Processing for all scatter related analysis. ---------------
-# 
-# # redo cutoffs using either or modes (this is substitute for n_basic_df())
-# n_nxy_df <- reactive({
-#   req(nrow(rv$df_n)>0)
-#   req(length(rv$s)>0)
-#   req(length(rv$s)==length(rv$nx_i))
-#   req(is.null(rv$nxy_selected_x)==F)
-#   req(is.null(rv$nxy_selected_y)==F)
-#   req(is.null(rv$nxy_selected_z)==F)
-#   req(is.null(rv$n_sc_logic)==F)
-#   
-#   df <- df_n_basic()
-#   
-#   if (rv$nxy_selected_z=="None"){
-#     selected <- c(rv$nxy_selected_x, rv$nxy_selected_y)
-#   } else {
-#     selected <- c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z)
-#   }
-#   
-#   
-#   
-#   # cut out only selected datasets
-#   df <- dplyr::select(df, contains(c("Name", selected)))
-#   
-#   # get rid of rows with all NA
-#   df <- df[complete.cases(df[ , -1]),]
-#   
-#   
-#   
-#   cuts <- vector(mode="list", length=length(selected))
-#   for (n in 1:length(selected)){
-#     xi <- match(selected[[n]], rv$nx_n) # get the index from name
-#     
-#     # try to apply cutoff
-#     if (rv[[paste0("nic_apply_",xi)]]==T){
-#       x_filtered <- apply_single_cutoff(df, selected[[n]], p=rv[[paste0("nic_p_",xi)]], q=rv[[paste0("nic_q_",xi)]], stat=rv[[paste0("nic_Stat_",xi)]], 
-#                                         tolerate=rv[[paste0("nic_na_",xi)]])
-#       x_filtered <- filter_by_sign(x_filtered, paste0("Stat_",selected[[n]]), 
-#                                    rv[[paste0("nic_sign_",xi)]], 
-#                                    tolerate=rv[[paste0("nic_na_",xi)]])
-#     } else {
-#       x_filtered <- df
-#     }
-#     
-#     cuts[[n]] <- x_filtered$Name
-#   }
-#   
-#   if (rv$n_sc_logic == "Both"){
-#     df <- df[df$Name %in% Reduce(intersect, cuts), ]
-#   } else if (rv$n_sc_logic == "Either"){
-#     df <- df[df$Name %in% Reduce(union, cuts), ]
-#   }
-# 
-#   
-#   df
-#   
-# })
