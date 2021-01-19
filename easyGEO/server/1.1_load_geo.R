@@ -161,12 +161,33 @@ output$ui_manual <- renderUI({
            ))
   )
 })
+output$data_matrix_example = DT::renderDataTable(
+  df <- read_tsv(paste0(getwd(), "/server/data_matrix.tsv")) %>%
+    remove_rownames() %>%
+    column_to_rownames("X1")
+)
+
+output$design_matrix_example = DT::renderDataTable(
+  df <- read_csv(paste0(getwd(), "/server/design_matrix.csv")) %>%
+    remove_rownames() %>%
+    column_to_rownames("X1")
+)
+
 # the help page for data matrix
 observeEvent(input$manual_help,{
   showModal(modalDialog(
     inputId = "file_help_1",
-    #title = "Data matrix file format",
-    includeHTML(rmarkdown::render(paste0(getwd(),"/server/data_matrix_page.Rmd"))),
+    title = h1("Note on uploading data matrix"),
+    h3('1) the data should be in comma- or tab-delimited format (csv, tsv, tab, txt)'),
+    br(),
+    h3('2) the first row of the matrix should be sample names; must match the sample names in the design matrix'),
+    br(),
+    h3("3) the first column of the matrix should be gene names; no duplicates are allowed"),
+    br(),
+    h3("For example,"),
+    br(),
+    DT::dataTableOutput("data_matrix_example"),
+    #includeMarkdown(rmarkdown::render(paste0(getwd(),"/server/data_matrix_page.Rmd"))),
     #includeHTML(paste0(getwd(),"/server/data_matrix_page.html")),
     easyClose = TRUE,size="l",
     footer = modalButton("OK")
@@ -176,8 +197,17 @@ observeEvent(input$manual_help,{
 observeEvent(input$manual_help_2,{
   showModal(modalDialog(
     inputId = "file_help_2",
-    #title = "Design matrix file format",
-    HTML(markdown::markdownToHTML(knit('server/design_matrix_page.Rmd', quiet = TRUE))),
+    title = h1("Note on uploading design matrix"),
+    h3("1) the data should be in comma- or tab-delimited format (csv, tsv, tab, txt)"),
+    br(),
+    h3("2) the first row of the matrix should be sample attributes (e.g. strain names, experimental conditions, patient groups); no duplicates are allowed,"),
+    br(),
+    h3("3) the first column of the matrix should be sample names; must match the sample names in the data matrix,"),
+    br(),
+    h3("For example,"),
+    br(),
+    DT::dataTableOutput("design_matrix_example"),
+    # HTML(markdown::markdownToHTML(knit('server/design_matrix_page.Rmd', quiet = TRUE))),
     # includeHTML(paste0(getwd(),"/server/design_matrix_page.html")),
     easyClose = TRUE,size="l",
     footer = modalButton("OK")
