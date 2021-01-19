@@ -61,7 +61,7 @@ observeEvent(input$selected_mode, {
 })
 # UI for the retrieval by GSE mode
 output$ui_tab1 <- renderUI({
-  if(rv$run_mode == "auto"){
+  if(input$selected_mode == "auto"){
   fluidRow(
     column(4,
            
@@ -166,7 +166,8 @@ observeEvent(input$manual_help,{
   showModal(modalDialog(
     inputId = "file_help_1",
     #title = "Data matrix file format",
-    includeHTML(paste0(getwd(),"/server/data_matrix_page.html")),
+    includeHTML(rmarkdown::render(paste0(getwd(),"/server/data_matrix_page.Rmd"))),
+    #includeHTML(paste0(getwd(),"/server/data_matrix_page.html")),
     easyClose = TRUE,size="l",
     footer = modalButton("OK")
   ))
@@ -176,7 +177,8 @@ observeEvent(input$manual_help_2,{
   showModal(modalDialog(
     inputId = "file_help_2",
     #title = "Design matrix file format",
-    includeHTML(paste0(getwd(),"/server/design_matrix_page.html")),
+    HTML(markdown::markdownToHTML(knit('server/design_matrix_page.Rmd', quiet = TRUE))),
+    # includeHTML(paste0(getwd(),"/server/design_matrix_page.html")),
     easyClose = TRUE,size="l",
     footer = modalButton("OK")
   ))
