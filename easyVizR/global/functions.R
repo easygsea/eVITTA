@@ -57,14 +57,7 @@ tidy_filename <- function(name, ll){
   return(name)
 }
 
-# add line breaks to long texts
-#-----------------------------------------------
-# use to break long hovertexts
 
-addlinebreaks <- function(x, max, lbtype="<br>"){
-  # this cuts at spaces/ ;/ underscore/ period
-  gsub(paste0('(.{1,',max,'})(\\s|;|_|\\.|$)'), paste0('\\1',lbtype), x)
-}
 
 
 

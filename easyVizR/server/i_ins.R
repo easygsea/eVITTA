@@ -3,6 +3,10 @@ palette <- c("aquamarine","blue","darkgrey","darksalmon","red","lightgrey","ligh
 n_wc_ignore_help_txt <- "Common expressions:<br><b>%.*$</b> - removes trailing identifiers from easyGSEA<br><b>[[:digit:]]</b> - removes digits"
 
 
+#======================================================================#
+####                3.2 INTERSECTION TABLE                          ####
+#======================================================================#
+
 ####-------------------- Intersection selection ------------------------####
 
 # generates dynamic ui for selection
@@ -77,6 +81,7 @@ observe({
   
 })
 
+# Draws radiogroupbuttons ui for intersection selection
 output$ui_intersections <- renderUI({
   req(nrow(rv$df_n)>0)
   append(x = rv$s, value=rv$s_button, length(rv$s))
@@ -112,8 +117,10 @@ observeEvent(input$ins_applytorv, {
 
 # summarizes verbally what is in the selected intersection
 output$intersection_summary <- renderUI({
-  req(is.null(rv$ins_criteria)==F)
-  req(length(rv$ins_criteria)>0)
+  req_vars(c(
+    rv$df_n, n_ins_gls(), rv$ins_criteria, rv$nx_n
+  ), check_len=T)
+  
   
   desc <-list()
   criteria <- rv$ins_criteria
@@ -138,54 +145,16 @@ output$intersection_summary <- renderUI({
   
 })
 
-# summarizes verbally the filters used to trim gene lists
-output$filters_summary <- renderUI({
-  
-  desc <-list()
-  
-  for (i in 1:length(rv$nx_n)){
-    req(rv[[paste0("nic_p_",i)]])
-    req(rv[[paste0("nic_q_",i)]])
-    req(rv[[paste0("nic_Stat_",i)]])
-    req(rv[[paste0("nic_sign_",i)]])
-    
-    name <- rv$nx_n[[i]]
-    cur_p <- rv[[paste0("nic_p_",i)]]
-    cur_q <- rv[[paste0("nic_q_",i)]]
-    cur_Stat <- rv[[paste0("nic_Stat_",i)]]
-    cur_sign <- rv[[paste0("nic_sign_",i)]]
-    if (cur_sign=="All"){
-      cur_sign = "Positive and Negative"
-    } else {
-      cur_sign <- cur_sign
-    }
-    
-    nterms <- length(n_ins_gls()[[i]]) # number of genes in genelist
-    
-    adddesc <- paste(name, ": ",
-                     nterms, " ",
-                     cur_sign, " entries with ",
-                     "p < ",cur_p, ", ", 
-                     "FDR < ", cur_q, ", ", 
-                     "|Stat| > ", cur_Stat,
-                     sep="")
-    desc <- c(desc, adddesc)
-  }
-  text <- paste(desc, collapse="<br>")
-  
-  
-  HTML(text)
-})
-
-
-
-
 ####-------------------- Intersection table ------------------------####
 
-# show intersection preview table
+
+# show intersection table
 output$n_ins_tbl <- DT::renderDataTable({
-  req(is.null(rv$df_n)==F)
-  req(length(rv$ins_criteria)>0)
+  req_vars(c(
+    rv$df_n, n_ins_gls(), rv$ins_criteria, rv$nx_n,
+    n_ins_df(),
+    rv$n_ins_namelen
+  ), check_len=T)
 
   df <- n_ins_df()
   # print(head(n_ins_df()))
@@ -195,11 +164,8 @@ output$n_ins_tbl <- DT::renderDataTable({
   # to abbreviate the long column names...take first 5 letters
   char_limit <- 56 / length(colnames(df))
   # print(char_limit)
-  colnames(df) <- sapply(names(df), function(x){
-    if (nchar(x)>char_limit)
-    {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
-    else{return (x)}
-  })
+  colnames(df) <- abbreviate_vector(vec=colnames(df), 
+                                    char_limit=char_limit)
   
   # to round everything down to 3 decimals
   df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., 3))
@@ -254,109 +220,13 @@ output$download_ins_gl <- downloadHandler(
 
 
 
-####-------------------- Upset plot ------------------------####
-
-# draws a upsetR plot, highlighting the selected intersection
-#---------------------------------------------------
-# df must be a T/F or 0/1 matrix (i.e. fromList(gls))
-# names(criteria) should match the column names of df
-# text_scale: c(intersection size title, intersection size tick labels, set size title, set size tick labels, set names, numbers above bars)
-
-
-draw_upsetR_with_ins <- function(df, criteria, show_ins=T, color="red", 
-                                 empty_intersections=F, 
-                                 order_by="freq", 
-                                 text_scale=c(1.3, 2, 1.3, 1, 1.1, 2),
-                                 lb_limit=20
-                                 
-){
-  req(is.null(show_ins)==F)
-  if(show_ins==T){
-    
-    # ---------------- apply linebreaks
-    names(criteria) <- addlinebreaks2(names(criteria), lb_limit, "\n")
-    colnames(df) <- addlinebreaks2(colnames(df), lb_limit, "\n")
-    
-    #----------------- parse criteria
-    ins_true <- names(criteria[criteria==T & is.na(criteria)==F])
-    ins_false <- names(criteria[criteria==F & is.na(criteria)==F])
-    ins_na <- names(criteria[is.na(criteria)==T])
-    
-    # ---------------- get all iterations
-    
-    # build truth table for NA sections
-    # function to apply permutations to the selected # of n
-    if (length(ins_na)>0){
-      my_permute <- function(vect, n, repeats = TRUE) {
-        gtools::permutations(length(vect), n, vect, repeats.allowed = repeats)
-      }
-      x <- my_permute(vect=c(T,F), n=length(ins_na))
-      colnames(x) <- ins_na
-      
-      # build possible combinations
-      ins_iterations <- list()
-      for (i in 1:nrow(x)){
-        add = x[i,]
-        add <- add[add==T]
-        addname <- names(add)
-        toadd <- c(ins_true, addname)
-        ins_iterations <- c(ins_iterations, list(toadd))
-      }
-    } else {
-      ins_iterations <- list(ins_true)
-    }
-    
-    
-    sel_ins=vector(mode="list", length=length(ins_iterations))
-    
-    for (i in 1:length(ins_iterations)){
-      
-      # check if there are genes in this intersection 
-      check_range <- df[,names(criteria)] # extract the relevant columns
-      check_range <- as.data.frame(lapply(check_range, as.logical))
-      # print(check_range)
-      # make a ref criteria vector
-      ref <- rep(F, length(criteria))
-      names(ref) <- names(criteria)
-      ref[ins_iterations[[i]]] <- T
-      # get matching rows
-      found <- match_skipna_rows(check_range, ref)
-      
-      # if the combination is not empty, write it to list. if empty, leave as null.
-      if (is.null(found)==F){ 
-        sel_ins[[i]] <- list(query = intersects,
-                             params= as.list(ins_iterations[[i]]), color=color, active=T)
-      }
-    }
-    # finally remove the combinations that are not found (shown in list as null element)
-    sel_ins[sapply(sel_ins, is.null)] <- NULL
-  } else {
-    sel_ins=NULL
-  }
-  
-  if (length(sel_ins)==0){ sel_ins <- NULL }
-  
-  if (empty_intersections==T){
-    upset(df, 
-          order.by = order_by,
-          queries = sel_ins, 
-          empty.intersections = "on",
-          text.scale = text_scale
-    )
-  } else if (empty_intersections==F) {
-    upset(df, 
-          order.by = order_by,
-          queries = sel_ins, 
-          text.scale = text_scale
-    )
-  }
-  
-}
-
-
+#======================================================================#
+####                3.1B UPSET PLOT                          ####
+#======================================================================#
 
 
 n_upset_plt <- reactive({
+  
   gls <- n_ins_gls()
   
   draw_upsetR_with_ins(fromList(gls), rv$ins_criteria, 
@@ -366,31 +236,21 @@ n_upset_plt <- reactive({
                        text_scale=c(1.3, 2, 1.3, 1, 1.1, 2)
   )
   
-  # names(gls) <- gsub(".csv","",names(gls))
-  # #c(intersection size title, intersection size tick labels, set size title, set size tick labels, set names, numbers above bars)
-  # textscale <- c(1.3, 2, 1.3, 1, 1.1, 2)
-  # if (rv$n_upset_showempty==F){
-  #   upset <- upset(fromList(gls), order.by = rv$n_upset_sortby,
-  #                  text.scale = textscale)
-  # }
-  # else if (rv$n_upset_showempty==T){
-  #   upset <- upset(fromList(gls), empty.intersections = "on", order.by = rv$n_upset_sortby,
-  #                  text.scale = textscale)
-  # }
-  # upset
 })
 
 
 # gl ver (uses the shared reactive)
 output$df_n_upset <- renderPlot({
-  validate(need(nrow(df)>0, "Selected intersection is empty; please double check your selection in 3.2 Intersection of Interest"))
-  req(rv$df_n)
-  req(is.null(rv$n_upset_showempty)==F)
-  req(is.null(rv$n_upset_sortby)==F)
-  req(max(lengths(n_ins_gls()))>0)
-  req(min(lengths(n_ins_gls()))>0)
-  req(length(n_ins_gls())>1)
+  req_vars(c(
+    rv$df_n, n_ins_gls(), rv$ins_criteria,
+    rv$n_upset_showempty, rv$n_upset_sortby,
+    rv$n_upset_c1, rv$n_upset_show_ins
+  ), check_len=T)
   
+  validate( 
+    need(min(lengths(n_ins_gls()))>0, gls_has_empty_msg),
+    need(nrow(rv$df_n)>0, df_n_empty_msg)
+  )
   
   n_upset_plt()
 })
@@ -406,8 +266,9 @@ output$n_upset_dl <- downloadHandler(
 
 
 
-
-####-------------------- Venn plot ------------------------####
+#======================================================================#
+####                3.1A.2 AREA PROPORTIONAL VENN                          ####
+#======================================================================#
 
 output$n_npvenn_dl <- downloadHandler(
   filename = function() { paste("venn1-multiple-",Sys.Date(), '.png', sep='') },
@@ -426,103 +287,22 @@ output$n_venn_dl <- downloadHandler(
 )
 
 
-#------------------- eulerR area proportional venn
-# draws an eulerr diagram with intersection highlighted
-#------------------------------------------
-# gls: named list of vectors
-# ins: named vector
-draw_eulerr_with_ins <- function(gls, ins, print_mode="counts", show_ins=T, ins_color="red", base_colors=palette,
-                                 adjust_labels=T, lb_limit=20){
-  # apply linebreaks
-  names(gls) <- addlinebreaks2(names(gls), lb_limit, "\n")
-  names(ins) <- addlinebreaks2(names(ins), lb_limit, "\n")
-  
-  fit2 <- euler(gls)
-  # get t/f/na subsets
-  t_sections <- names(ins[ins==T & is.na(ins)==F])
-  f_sections <- names(ins[ins==F & is.na(ins)==F])
-  na_sections <- names(ins[is.na(ins)==T])
-  
-  selector <- names(fit2[[2]])
-  # first get the ins that has all the true sections, if any
-  if (length(t_sections)>0){
-    temp=vector(mode="list", length=length(t_sections)) # get the sections that contain ALL the T substrings
-    for (i in 1:length(t_sections)){
-      temp[[i]] <- selector[grep(t_sections[[i]], selector)]
-    }
-    selector <- Reduce(intersect, temp)
-    
-  }
-  # second get rid of any ins that contains the false sections, if any
-  if (length(f_sections)>0){
-    for (f in f_sections){
-      selector <- selector[-grep(f, selector)]
-    }
-  }
-  # we don't care about the na sections
-  
-  # assign colors to venn
-  colors <- fit2[[2]]
-  
-#Now we deal with color
-    if(length(rv$ins_venn_palette) < length(gls)){
-      temp = rv$ins_venn_palette
-      while (length(temp) < length(gls)) {
-        temp = append(temp,"white")
-      }
-    }
-    else{
-      temp = rv$ins_venn_palette[1:length(gls)]
-      
-    }
-  #This part split the color column based on names, so we will know which color to mix later
-  ColorSplitName <- names(colors)
-  ColorSplitName <- strsplit(ColorSplitName, "&")
-  
-  while(length(temp) < length(colors)){
-    colorsToMix = c()
-    for (GLSIndex in 1:length(gls)) {
-     
-     #print(ColorSplitName[[GLSIndex]])
-     #print(ColorSplitName[[length(temp)+1]])
-     if(ColorSplitName[[GLSIndex]] %in% ColorSplitName[[length(temp)+1]]){
-       colorsToMix = append(colorsToMix,temp[GLSIndex]) 
-     }
-    }
-    colorsToMix<-col2rgb(colorsToMix)
-    colorsToMix <-rowMeans(colorsToMix)
-    temp = append(temp,rgb(colorsToMix[[1]],colorsToMix[[2]],colorsToMix[[3]],max = 255))
-    colorsToMix <- NULL
-    
-  }
-    #TODO: Add a mix color here!
-  
-  colors[] <- temp
-  
-  if (show_ins==T){ # if highlight the ins, will show all else as white
-    colors[which(names(colors) %in% selector)] <- ins_color
-  }
-    
-    #print(colors[1])
-    #print(names(colors))
-  #} 
-  #else { # if don't highlight the ins, will show base colors
-  #  colors <- palette[1:length(gls)] # assign base circle colors
-  #}
-  
-  # draw the venn
-  venn <- plot(fit2, quantities = list(type = print_mode), fills =colors, adjust_labels=adjust_labels)
-  venn
-}
+
 
 
 
 # gl ver (uses the shared reactive)
 n_venn_plt <- reactive({
-  # gls <- n_ins_gls()
-  # # names(gls) <- addlinebreaks2(names(gls), 20, "\n")
-  # fit2 <- euler(gls)
-  # venn <- plot(fit2, quantities = list(type = rv$n_venn_label))
+  
+  req_vars(c(
+    rv$df_n, n_ins_gls(), rv$ins_criteria, rv$nx_n,
+    rv$n_venn_label, rv$n_venn_show_ins, rv$ins_venn_c1, rv$ins_venn_palette
+  ), check_len=T)
+  
+  validate( 
+    need(min(lengths(n_ins_gls()))>0, gls_has_empty_msg),
+    need(nrow(rv$df_n)>0, df_n_empty_msg)
+  )
   
   
   draw_eulerr_with_ins(n_ins_gls(), rv$ins_criteria, 
@@ -533,183 +313,28 @@ n_venn_plt <- reactive({
 })
 
 output$df_n_venn <- renderPlot({
-  req(length(n_ins_gls())>0)
-  req(max(lengths(n_ins_gls()))>0)
   req(rv$n_venn_type=="Area-proportional")
-  req_vars(rv$ins_criteria)
   
   n_venn_plt()
 })
 
 
-# find closest label to each circle, and use that to match the ins criteria.
-#-------------------------------------------
-# used within draw_venn_with_ins()
-find_closest_label <- function(circle_coords, labs, nx_n, lb_limit){
-  # req_vars(c(circle_coords, labs, nx_n, lb_limit))
-  
-  textlabs<-labs[which(labs$label %in% nx_n),] # find the text labels within labs and their xy
-  spts<- SpatialPoints(textlabs[1:2]) # get text label xy
-  grobpts <- SpatialPoints(lapply(circle_coords, function(x){x[seq(1, length(x), 200)]})) # extract every 200th point on the circle, get xy.
-  dmat=gDistance(spts, grobpts, byid = TRUE) # calculate dist matrix of text labels vs circle points
-  closest <- colnames(dmat)[which(dmat == min(dmat), arr.ind = TRUE)[[2]]] # find index of closest text label
-  textlabs[closest, "label"]
-}
 
+#======================================================================#
+####                3.1A.1 NON AREA PROPORTIONAL VENN                          ####
+#======================================================================#
 
-# draw venn from gene lists and highlight intersection
-#---------------------------------------------
-# for gls: pass in a named list of vectors
-# for ins: pass in a named vector with T/F/NA as true/false/ignore
-draw_venn_with_ins <- function(gls, ins, nx_n=rv$nx_n, print_mode="raw", lb_limit=20, show_ins=T, ins_color="red", base_color=palette){
-  # get needed parameters
-  d <- gls
-  ins <- ins
-  nx_n <- addlinebreaks2(nx_n, lb_limit, "\n")
-  names(d) <- addlinebreaks2(names(d), lb_limit, "\n")
-  names(ins) <- addlinebreaks2(names(ins), lb_limit, "\n")
-  
-  if (show_ins==F){
-    fill=base_color[1:length(gls)]
-    #print(fill)
-    alpha=0.5
-  } else if (show_ins==T){
-    #fill="white"
-
-  if(length(rv$ins_venn_palette) <= length(gls)){
-      temp = rv$ins_venn_palette
-      while (length(temp) < length(gls)) {
-        temp = append(temp,"white")
-      }
-      fill = temp
-    }
-    else{
-      fill = rv$ins_venn_palette[1:length(gls)]
-    }
-    
-    #print(fill)
-    alpha=1
-  }
-  
-  # draw venn diagram
-  vp <- venn.diagram(d, filename = NULL,
-                     lwd = 1, # border width
-                     fontfamily = "sans",
-                     cat.fontface = "bold",
-                     cex = 1, # catname size
-                     # cat.pos = rep(180,len), # catname position
-                     cat.cex = 1, # areaname size
-                     cat.fontfamily = "sans",
-                     fill = fill, # area fill
-                     alpha = alpha, # area alpha
-                     ext.text=T, # draw label outside in case no space
-                     ext.line.lty = "dotted", # pattern of extline
-                     sigdigs = 2,
-                     print.mode = print_mode,
-                     category.names=names(d)
-  )
-  
-  if (show_ins==F){
-    grid.newpage()
-    grid.draw(vp)
-  } else if (show_ins==T){
-    # get labels from venn
-    ix <- sapply(vp, function(x) grepl("text", x$name, fixed = TRUE))
-    labs <- do.call(rbind.data.frame, lapply(vp[ix], `[`, c("x", "y", "label")))
-    
-    # get circles and names from venn
-    all_circ <- vector(mode="list", length=length(d))
-    all_names <- vector()
-    
-    # transform the circles into accepted format
-    for (i in 1:length(d)){
-      
-      # important:
-      # if any expected circle is missing (i.e. due to overlaps), immediately break and don't proceed to highlight intersection
-      if(length(vp[[2+i]][[1]])<2 & length(vp[[2+i]][[2]])<2){
-        return(grid.draw(vp))
-      }
-      
-      circ <- list(list(x = as.vector(vp[[2+i]][[1]]), y = as.vector(vp[[2+i]][[2]]))) # get x and y
-      all_circ[[i]] <- circ # put circle x y into list
-      nn <- find_closest_label(circ[[1]], labs, nx_n, lb_limit)
-      all_names <- c(all_names, nn) # try to find closest label (because the labels are all jumbled.)
-    }
-    names(all_circ) <- all_names
-    
-    t_sections <- all_circ[which(ins[names(all_circ)]==T)]
-    f_sections <- all_circ[which(ins[names(all_circ)]==F)]
-    na_sections <- all_circ[which(is.na(ins[names(all_circ)]))]
-    # find the intersection
-    # op=c("intersection", "union", "minus", "xor")
-    
-    # calculate which intersection to color
-    if (length(t_sections)>0){ # first intersect all the T circles
-      sel_int <- Reduce(function(x, y) polyclip(x, y, op="intersection"), 
-                        t_sections)
-    } else {
-      sel_int <- Reduce(function(x, y) polyclip(x, y, op="union"), 
-                        na_sections)
-    }
-    if (length(f_sections)>0){ # next minus all the F circles
-      sel_int <- Reduce(function(x, y) polyclip(x, y, op="minus"), 
-                        c(sel_int, f_sections))
-    }
-    
-    # replot the diagram
-    grid.newpage()
-    par(mar=c(0, 0, 0, 0), xaxs='i', yaxs='i')
-    plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", axes = FALSE, xlab = "", ylab = ""
-    )
-    for (i in 1:length(d)){ # draw the circles
-      polygon(all_circ[[i]][[1]],col =alpha(rv$ins_venn_palette[i],0.8), border = "black")
-    }
-    if (length(sel_int)>0 & identical(unname(ins), rep(F,length(d)))==F){ # if intersection is valid
-      polygon(sel_int[[1]], col = ins_color)
-    }
-    for (i in 1:length(d)){ # draw the circles
-      polygon(all_circ[[i]][[1]],col = alpha(rv$ins_venn_palette[i],0), border = "black")
-    }
-
-    
-    text(x = labs$x, y = labs$y, labels = labs$label)
-    
-  }
-  
-  
-
-  
-  # if (show_ins==T){
-  # 
-  # 
-  # } else if (show_ins==F){
-  # 
-  #   
-  #   # replot the diagram
-  #   grid.newpage()
-  #   par(mar=c(0, 0, 0, 0), xaxs='i', yaxs='i')
-  #   plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", axes = FALSE, xlab = "", ylab = ""
-  #   )
-  #   ordered_colors <- unlist(lapply(1:length(all_names),function(x){
-  #     base_color[[match(all_names[[x]], nx_n)]]
-  #   }))
-  #   for (i in 1:length(d)){ # draw the circles
-  #     polygon(all_circ[[i]][[1]], col=adjustcolor(ordered_colors[[i]],alpha.f=0.5)  )
-  #   }
-  #   
-  #   text(x = labs$x, y = labs$y, labels = labs$label)
-  # }
-  
-}
-
-
-
-# #------------------- VennDiagram non area proportional venn
 n_npvenn_plt <- reactive({
-  # req(length(n_ins_gls())>0)
-  # req(max(lengths(n_ins_gls()))>0)
-  # req(n_ins_gls())
-  # req(length(rv$ins_criteria)==length(rv$nx_n))
+  
+  req_vars(c(
+    rv$df_n, n_ins_gls(), rv$ins_criteria, rv$nx_n,
+    rv$n_venn_label, rv$n_venn_show_ins, rv$ins_venn_c1, rv$ins_venn_palette
+  ), check_len=T)
+  
+  validate( 
+    need(min(lengths(n_ins_gls()))>0, gls_has_empty_msg),
+    need(nrow(rv$df_n)>0, df_n_empty_msg)
+  )
   
   grid.newpage()
   
@@ -738,9 +363,7 @@ n_npvenn_plt <- reactive({
 })
 
 output$df_n_npvenn <- renderPlot({
-  # req(length(n_ins_gls())>0)
-  # req(max(lengths(n_ins_gls()))>0)
-  # req_vars(rv$n_venn_label)
+
   grid.draw(n_npvenn_plt())
 
   
@@ -777,62 +400,22 @@ output$n_venn_ui <- renderUI({
 
 
 
-
-####--------------------wordcloud for pathways------------------------####
-
-map2color<-function(x,pal,limits=NULL){
-  if(is.null(limits)) limits=range(x)
-  pal[findInterval(x,seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
-}
+#======================================================================#
+####                3.2.1 WORDCLOUD                          ####
+#======================================================================#
 
 # compute the frequency table
 n_ins_wc_df <- reactive({
-  vc <- n_ins_full()$Name
-  sep <- input$n_ins_wc_sep
-  words <- unlist(lapply(vc, function(x){
-    toupper(unlist(strsplit(x, sep)))
-  }))
-  words <- gsub("[[:punct:]]$", "", words) # get rid of punctuations at end
-  words <- gsub("^[[:punct:]]", "", words) # get rid of punctuations at beginning
-  
-  df <- data.frame(table(words))
-  
-  # ignore certain words (supports regex pattern!!)
-  ignore <- unlist(strsplit(input$n_ins_Wc_ignore, "\\s+"))
-  # ignore <- c("GO", "KEGG", "of", "and", "pathway")
-  # df <- df[df$words %in% ignore ==F,]
-  pattern <- paste(ignore, collapse = "|")
-  df <- df[-grep(pattern, df$words, ignore.case=TRUE),]
+  df <- generate_wc_freq_table(
+    vec=n_ins_full()$Name,
+    sep=input$n_ins_wc_sep,
+    ignored=input$n_ins_Wc_ignore
+  )
   
   df
 })
 
-n_ins_wc_plt <- reactive({
-  df <- n_ins_wc_df()
-  validate(need(max(df$Freq)>1,
-           "All words are of frequency 1. Please check your separator.")) # blocks further processing if no repeated words are found
-  
-  
-  # only draw top x words
-  df <- df[order(df$Freq, decreasing = TRUE), ]
-  if (nrow(df)>150){
-    df <- df[1:150, ] #or set 150 to whatever
-  }
-  
-  # print(head(df))
-  wordcloud(df$words, df$Freq, 
-            min.freq = 1, max.words=200, scale=c(3,.5),
-            random.order=FALSE, 
-            rot.per=0.2, # freq of vertical words
-            colors=brewer.pal(8, "Dark2"))
-})
-
-output$n_ins_wc <- renderPlot({
-  req(length(n_ins_full()$Name)>0)
-  
-  n_ins_wc_plt()
-})
-
+# show the frequency table
 output$n_ins_wc_df <- DT::renderDataTable({
   req(nrow(n_ins_wc_df())>0)
   n_ins_wc_df()[order(n_ins_wc_df()$Freq, decreasing=T),]
@@ -843,6 +426,25 @@ options=list(scrollX=T, scrollY=T, dom= 'tp',
 ),
 rownames= FALSE
 )
+
+# draw wordcloud plot
+n_ins_wc_plt <- reactive({
+  
+  validate(
+    need(nrow(n_ins_wc_df())>0, wc_no_word), # if no words in table
+    need(max(n_ins_wc_df()$Freq)>1, wc_no_repeated_word) # if no repeated words are found
+  ) 
+  df <- n_ins_wc_df()
+  generate_wc_plot(df)
+  
+})
+
+# show wordcloud plot
+output$n_ins_wc <- renderPlot({
+  req(length(n_ins_full()$Name)>0)
+  
+  n_ins_wc_plt()
+})
 
 
 #======================================================================#

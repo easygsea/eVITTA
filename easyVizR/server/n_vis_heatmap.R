@@ -1,77 +1,5 @@
-# ####-------------------- table ------------------------####
-# 
-# df_n_tbl <- reactive({
-#   
-#   # df <- n_basic_df()
-#   df <- n_ins_full()
-#   
-#   # tidy row names
-#   if (nrow(df)>0){rownames(df) <- seq(1,nrow(df),1)}
-#   
-#   # to replace the stat col names
-#   colnames(df) <- gsub("Stat", rv$tt[[rv$nx_i[[1]]]], colnames(df))
-#   
-#   df
-# })
-# 
-# # display table
-# output$df_n_tbl <- DT::renderDataTable({
-#   #req(length(rv$ll) >= 1)
-#   req(rv$df_n)
-#   
-#   df <- df_n_tbl()
-#   
-#   rv$df_n_fullcols <- colnames(df)
-#   
-#   # to abbreviate the long column names...take first 5 letters
-#   char_limit <- 56 / length(colnames(df))
-#   # print(char_limit)
-#   colnames(df) <- sapply(names(df), function(x){
-#     if (nchar(x)>char_limit)
-#     {return (paste0(substr(x, start = 1, stop = char_limit),"..."))}
-#     else{return (x)}
-#   })
-#   
-#   # to round everything down to 3 decimals
-#   df[-1] <- df[-1] %>% mutate_if(is.numeric, ~round(., 3))
-#   
-#   
-#   df
-#   
-#   
-# }, plugins = "ellipsis",
-# options = list(scrollX=TRUE, 
-#                columnDefs = list(
-#                  list(
-#                    targets = 1,
-#                    render = JS("$.fn.dataTable.render.ellipsis( 17, true )")
-#                  ),
-#                  list(
-#                    targets = "_all",
-#                    render = JS("$.fn.dataTable.render.ellipsis( 6, true )")
-#                  )
-#                ),
-#                headerCallback= JS("function(thead, data, start, end, display){",
-#                                   sprintf("  var tooltips = [%s];", toString(paste0("'", rv$df_n_fullcols, "'"))),
-#                                   "  for(var i = 1; i <= tooltips.length; i++){",
-#                                   "    $('th:eq('+i+')',thead).attr('title', tooltips[i-1]);",
-#                                   "  }",
-#                                   "}")))
-# 
-# 
-# 
-# # download current df
-# output$download_n_df <- downloadHandler(
-#   filename = function() {
-#     paste("data", "-", "multiple", "-", Sys.Date(), ".csv", sep="")},
-#   content = function(file) {
-#     write.csv(df_n_tbl(), file, 
-#               row.names = F, quote=TRUE)})
-# 
 
-
-
-####--------------------multiple deg heatmap------------------------####
+####-------------------- options ------------------------####
 
 
 # sort by which dataset
@@ -102,8 +30,22 @@ output$n_to_plot <- renderUI({
   )
 })
 
+# max len for y labels
+output$n_hm_ylabs_len <- renderUI({
+  req(rv$n_hm_ylabs == T )
+  
+  sliderInput("n_hm_ylabs_len",
+              "Max string length for y labels:",
+              min = 10,
+              max = 50,
+              value = rv$n_hm_ylabs_len)
+})
 
 
+####-------------------- heatmap ------------------------####
+
+
+# show heatmap
 output$n_heatmap <- renderUI({
   # saveRDS(rv$n_to_plot, file = "rvs/n_to_plot.rds")
   # saveRDS(rv$heatmap_sortby, file = "rvs/heatmap_sortby.rds")
@@ -121,7 +63,47 @@ output$n_heatmap <- renderUI({
 
 
 
-# # pheatmap static heatmap
+# draw plotly heatmap
+n_hm_plt <- reactive({
+  
+  req_vars(c(
+    rv$df_n, n_ins_gls(), rv$ins_criteria, rv$nx_n,
+    n_ins_full(), rv$n_to_plot, rv$heatmap_sortby,
+    rv$n_hm_ylabs
+  ), check_len=T)
+  
+  if (rv$n_hm_ylabs==T){
+    req(is.null(rv$n_hm_ylabs_len)==F)
+  }
+  
+  
+  draw_heatmap( df = n_ins_full(),
+                sortby_dataset = rv$n_to_plot,
+                sortby_statistic = rv$heatmap_sortby,
+                show_ylabs = rv$n_hm_ylabs,
+                ylabs_len = rv$n_hm_ylabs_len
+                )
+})
+
+# show plotly heatmap
+output$heatmapp <- renderPlotly({
+  req(rv$df_n)
+  
+  n_hm_plt()
+  
+})
+
+
+# download plotly html heatmap
+output$n_hm_dl <- downloadHandler(
+  filename = function() {paste("heatmap-multiple-", Sys.Date(), ".html", sep = "")},
+  content = function(file) {saveWidget(as_widget(n_hm_plt()), file, selfcontained = TRUE)})
+
+
+
+
+# # pheatmap static heatmap (obsolete)
+#-----------------------------------------
 # output$heatmap <- renderPlot({
 #     req(rv$df_n)
 #     req(is.null(rv$n_hm_showna)==F)
@@ -156,106 +138,3 @@ output$n_heatmap <- renderUI({
 #                   show_rownames=F, show_colnames=T) 
 #     return (hmplot)
 # })
-
-
-
-
-# plotly dynamic heatmap
-n_hm_plt <- reactive({
-
-  # print(head(df))
-  
-  # withProgress(message = 'Drawing heatmap...', value = 0, {
-    
-    # df <- n_basic_df()
-    df <- n_ins_full()
-    
-    rownames(df) <- df$Name # put genename as index
-    
-    # order by selected column
-    sortby_coln <- paste0(rv$n_to_plot,"_", rv$heatmap_sortby)
-    df <- df[order(-df[sortby_coln]),] 
-    names <- df$Name # preserve formatting in vector
-    # incProgress(0.1)
-    
-    # extract plotted values
-    to_match <- paste0(rv$n_to_plot, "_")
-    plotted <- data.frame(t(dplyr::select(df,contains(to_match))))
-    req(nrow(plotted) > 0)
-    
-    
-    # incProgress(0.1)
-    rownames(plotted) <- stat_replace1(rownames(plotted), rv$nx_n, mode="each")
-    # print(head(plotted))
-    
-    # make matrix for plot
-    dat <- expand.grid(x = rownames(plotted), y = addlinebreaks(names,30,"<br>"))
-    dat$z <- unlist(plotted)
-    validate(need(length(dat$z)>0,"Selected intersection is empty; please double check your selection in Intersection of Interest"))
-    req(length(dat$z)>0)
-    
-    
-    
-    
-    # incProgress(0.2)
-    
-    # put all the shared columns in the hovertext (as many as you have).
-    sharedcols <- rv$n_sharedcols
-    addlabel <- ""
-    for (coln in sharedcols){
-      le <- unlist(data.frame(t(dplyr::select(df,matches(paste0("^",coln,"_"))))))
-      if (is.numeric(le)){
-        le <- round(le,3)
-      }
-      else if (is.character(le)){
-        le <- addlinebreaks(le,30,"<br>")
-      }
-      if (coln == "Stat"){
-        replace_stat <- stat_replace1(rep("Stat", length(rv$nx_n)), rv$nx_n, mode="each")
-        replace_coln <- rep(replace_stat, nrow(df))
-        addlabel <- paste(addlabel, paste0(replace_coln, ": ", le), sep="<br>")
-      } else {
-        addlabel <- paste(addlabel, paste0(coln, ": ", le), sep="<br>")
-      }
-      
-    }
-    # incProgress(0.2)
-    # print(addlabel)
-    # define the hovertext
-    textt <- ~paste(dat$y, addlabel)
-    
-    fig <- plot_ly() %>%
-      add_trace(data = dat, x = ~x, y = ~y, z = ~z, type = "heatmap",
-                colorscale  = cscale_simple,zauto = T, zmid= 0, colorbar = list(title = stat_replace1(rv$n_to_plot, rv$nx_n)),
-                hoverinfo = 'text',
-                text = textt)
-    # incProgress(0.2)
-    fig <- fig %>% layout(
-      xaxis = list(title = "", showticklabels = T),
-      yaxis = list(title = "", showticklabels = rv$n_hm_ylabs)
-      # ,margin = list(l=200)
-    )
-    
-  # })
-  
-  fig
-})
-output$heatmapp <- renderPlotly({
-  
-  
-  
-  req(rv$df_n)
-  
-  
-  
-  n_hm_plt()
-  
-})
-
-
-
-# download plotly html graph
-output$n_hm_dl <- downloadHandler(
-  filename = function() {paste("heatmap-multiple-", Sys.Date(), ".html", sep = "")},
-  content = function(file) {saveWidget(as_widget(n_hm_plt()), file, selfcontained = TRUE)})
-
