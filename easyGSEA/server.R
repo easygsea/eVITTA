@@ -3,13 +3,13 @@
 options(shiny.maxRequestSize=50*1024^2) 
 
 server <- function(input, output, session) {
-    # a lovely reminder to remind the user about gprofiler
-    showModal(modalDialog(title = tags$h3("Please be aware:"),
-                                                  tags$h4("Our ID conversion function is not working properly. ")
-                                                  ,br(),
-                                                  size = "m",
-                                                  easyClose = TRUE
-                                                  ,footer = modalButton("OK")))
+    # # a lovely reminder to remind the user about gprofiler
+    # showModal(modalDialog(title = tags$h3("Please be aware:"),
+    #                                               tags$h4("Our ID conversion function is not working properly. ")
+    #                                               ,br(),
+    #                                               size = "m",
+    #                                               easyClose = TRUE
+    #                                               ,footer = modalButton("OK")))
     waiter_hide() # will hide *on_load waiter
 
     # addClass(selector = "body", class = "sidebar-collapse")
