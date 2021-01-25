@@ -546,7 +546,7 @@
       # Check the type of file you uploads, if the file is other types, remind the user
       ext_check <- ""
       if(!tools::file_ext(input$rnkfile$name) %in% c(
-        'text/tab-separated-values','txt','tab','tsv'
+        'text/tab-separated-values','txt','tab','tsv', 'csv', 'rnk'
       )){
         ext_check <- "no"
         shinyjs::reset("rnkfile")
@@ -577,12 +577,12 @@
 # ------------- 3.1.2 select corresponding table columns -----------------
     # UI: select columns to
     # output$feedbacks <- renderUI
-    observe({
+    observeEvent(rv$file_upload_status, {
       req(input$selected_mode == "gsea")
       req(rv$db_status == "selected")
       req(rv$file_upload_status == "uploaded")
       req(is.null(rv$infile_confirm) == T)
-      req(!is.null(rv$rnk_or_deg))
+      # req(!is.null(rv$rnk_or_deg))
 
       showModal(modalDialog(
         title = "Select corresponding columns to continue",
