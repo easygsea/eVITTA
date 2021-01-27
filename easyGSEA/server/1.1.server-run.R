@@ -577,7 +577,7 @@
 # ------------- 3.1.2 select corresponding table columns -----------------
     # UI: select columns to
     # output$feedbacks <- renderUI
-    observeEvent(rv$file_upload_status, {
+    observe({
       req(input$selected_mode == "gsea")
       req(rv$db_status == "selected")
       req(rv$file_upload_status == "uploaded")
@@ -699,14 +699,16 @@
 
 
 # ----------------- 3.1.4 check and store input file content into rv$data_head -----------------------
-    observe({
-        req(is.null(rv$infile_name)==F)
+    observeEvent(rv$infile_name,{
+        # req(is.null(rv$infile_name)==F)
         rv$infile_check=NULL
         rv$input_symbol = NULL
         rv$gene_lists_mat1 = NULL
         rv$run = NULL
+        print(rv$infile_name)
 
         rv$rnkll <- strsplit(isolate(rv$infile_name),"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1] # add value to rv
+        print(rv$rnkll)
         ranks <- read_delim(isolate(rv$infile_path), ",", locale = locale(encoding = 'ISO-8859-1'))# , escape_double = FALSE, trim_ws = TRUE)
 
         if(ncol(ranks)==1){
