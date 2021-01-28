@@ -1422,3 +1422,8 @@
       removeModal()
       updateTabItems(session, "tabs", "kegg")
     })
+    
+    # when user click the help button for selected mode, open a new window for the help page
+    observeEvent(input$mode_q, {
+      browseURL("https://tau.cmmt.ubc.ca/eVITTA/documentation/index2.html#files")
+    })
