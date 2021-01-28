@@ -506,7 +506,7 @@
 
 
             ),
-            bsTooltip("q1", "Comma- or tab-delimited. <b>Click</b> to learn more and load our <u>example data</u> for a trial run!", placement = "top")
+            bsTooltip("q1", "Comma- or tab-delimited. <b><i>Click</i></b> to learn more and load our <u>example data</u> for a trial run!", placement = "top")
 
 
         )
