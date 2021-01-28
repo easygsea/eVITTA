@@ -928,7 +928,7 @@
     #---------------- 3.2.2 read in GList-----------------
     
     # observe if genes are uploaded
-    observe({
+    observeEvent(rv$gene_lists,{
       if (is.null(rv$gene_lists)==F){
         shinyjs::disable("gene_list")
         shinyjs::disable("glist_name")
