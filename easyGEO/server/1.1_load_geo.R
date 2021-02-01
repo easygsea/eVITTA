@@ -422,13 +422,11 @@ read_design_matrix <- function(inFile){
 output$design_matrix_warning <- renderUI({
   df <- rv$fddf
   number_of_numeric = 0
-  print(!grepl("\\D", df[[1]][2]))
+
   for(i in seq_along(df)){
-    for(j in seq_along(df[[i]])){
-      if(!grepl("\\D", df[[i]][j])){
-        number_of_numeric = number_of_numeric + 1
-        break
-      }
+    if(all(!grepl("\\D", df[[i]]))){
+      number_of_numeric = number_of_numeric + 1
+      break
     }
   }
   if(number_of_numeric > 0){
@@ -443,12 +441,14 @@ output$data_matrix_warning <- renderUI({
   number_of_nonnumeric = 0
   withProgress(message = 'Processing data matrix', value = 1,{
       for(i in seq_along(df)){
-      for(j in seq_along(df[[i]])){
-        if(grepl("\\D", df[[i]][j]) && df[[i]][j] != 'NA'){
+        if(any(grepl("\\D", df[[i]])) && !anyNA(df[[i]])){
           number_of_nonnumeric = number_of_nonnumeric + 1
           break
         }
-      }
+      # for(j in seq_along(df[[i]])){
+      #   if(grepl("\\D", df[[i]][j]) && df[[i]][j] != 'NA'){
+      #   }
+      # }
     }
   })
   
