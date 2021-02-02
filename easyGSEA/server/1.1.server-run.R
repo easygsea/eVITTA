@@ -616,7 +616,7 @@
 
 
           ),
-          column(12,
+          column(12, style="word-break:break-all;",
                  p("Review your uploaded file:"),
                  uiOutput("feedback_filecontent")
           )
