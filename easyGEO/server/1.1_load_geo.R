@@ -319,18 +319,18 @@ read_design_matrix <- function(inFile){
                        colClasses=c("character")))
   
   # read in TAB delimited
-  if(ncol(indf)==1){
+  if(is.null(ncol(indf)) || ncol(indf)==1){
     indf <- try(read.table(inFile$datapath, sep="\t",header=T, 
                            colClasses=c("character")))
   }
   print(head(indf))
   # read in space delimited
-  if(ncol(indf)==1){
+  if(is.null(ncol(indf)) || ncol(indf)==1){
     indf <- try(read.table(inFile$datapath, sep=" ",header=T, 
                            colClasses=c("character")))
   }
   
-  if(inherits(indf, "try-error")) {        
+  if(inherits(indf, "try-error")) { 
     ErrorMessage <- conditionMessage(attr(indf, "condition"))  # the error message
     #show a modal dialog if there is an error reading files causing crash
     showModal(modalDialog( 
@@ -346,6 +346,14 @@ read_design_matrix <- function(inFile){
   
   
   req(!inherits(indf, "try-error")) #require to be no error to proceed the following codes
+  
+  # check the number of columns of the matrix
+  if(ncol(indf) < 2){
+    shinyalert("You uploaded a file with < 2 columns, that is not an accepted format. Please click the help button for accepted file formats.")
+    shinyjs::reset("design_matrix_file")
+  }
+  
+  req(ncol(indf) >= 2)
   
   # This part removes duplicate rows of indf
   DuplicateCheck <- as.data.frame(indf[,1], drop=FALSE) #extract first column of indf and check if there is 
@@ -384,9 +392,8 @@ read_design_matrix <- function(inFile){
       # print(indf_coln[i])
     }
   }
-  
-  rv$fddf_samples <- indf$X
-  rownames(indf) <- indf$X
+  rv$fddf_samples <- indf[[1]]
+  rownames(indf) <- indf[[1]]
   indf[ ,1] <- NULL
   rv$fddf <- indf
   
@@ -483,7 +490,7 @@ output$sample_comparison <- renderUI({
   }
   
   if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
-    HTML(paste("<br><p style = 'color:darkorange;'>", number_of_matches, 
+    HTML(paste("<br><p style = 'color:green;'>", number_of_matches, 
                "samples are found in both data matrix and design matrix",
                txt, "</p>"))
   } #else if(is.null(rv$fddf_samples)) {
@@ -515,7 +522,7 @@ output$design_matrix_sample_comparison <- renderUI({
   
   number_of_matches = length(overlapped_vector)
   if(!is.null(rv$fddf_samples) && !is.null(rv$dmdf_samples)){
-    HTML(paste("<br><p style = 'color:darkorange;'>", number_of_matches, 
+    HTML(paste("<br><p style = 'color:green;'>", number_of_matches, 
                "samples are found in both data matrix and design matrix",
                txt, "</p>"))
   }

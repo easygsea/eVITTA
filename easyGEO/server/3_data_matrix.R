@@ -344,13 +344,13 @@ read_data_matrix <- function(inFile){
                        colClasses=c("character")))
   
   # read in TAB delimited
-  if(ncol(indf)==1){
+  if(is.null(ncol(indf)) ||ncol(indf)==1){
     indf <- try(read.table(inFile$datapath, sep="\t",header=F, 
                            colClasses=c("character")))
   }
   print(head(indf))
   # read in space delimited
-  if(ncol(indf)==1){
+  if(is.null(ncol(indf)) ||ncol(indf)==1){
     indf <- try(read.table(inFile$datapath, sep=" ",header=F, 
                            colClasses=c("character")))
   }
@@ -379,7 +379,14 @@ read_data_matrix <- function(inFile){
   
   
   req(!inherits(indf, "try-error")) #require to be no error to proceed the following codes
- 
+  
+  # check the number of columns of the matrix
+  if(ncol(indf) <= 2){
+      shinyalert("You uploaded a file with <= 2 columns, that is not an accepted format. Please click the help button for accepted file formats.")
+      shinyjs::reset("data_matrix_file")
+  }
+  
+  req(ncol(indf) > 2)
   # This part removes duplicate rows of indf
   DuplicateCheck <- as.data.frame(indf[,1], drop=FALSE) #extract first column of indf and check if there is 
   DuplicateCheck <- duplicated(DuplicateCheck)
