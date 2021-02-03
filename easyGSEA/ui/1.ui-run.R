@@ -7,7 +7,11 @@ a_mode <- conditionalPanel(
                
                radioButtons(
                    inputId = "selected_mode",
-                   label = div(style = "font-weight:400;", label_with_help_bttn("Select mode of analysis:","mode_q",bttn_style = "vertical-align:baseline !important; ")), #HTML(paste0("Select mode of analysis: ",add_help("mode_q")))
+                   label = div(style = "font-weight:400;", p(style="margin-block-end: 2px;",
+                                                             "Select mode of analysis:",
+                                                             tags$style(type = "text/css", paste0("#","mode_q","{display: inline-block;width: 17px;height: 17px;padding: 0;border-radius: 50%;vertical-align: text-top;margin-left: 3px;font-size: 10px;padding-top: 1px;","vertical-align:baseline !important; ","}")),
+                                                             bsButton("mode_q", label = "", icon = icon("question"), style = "info", size = "extra-small", onclick ="window.open('https://tau.cmmt.ubc.ca/eVITTA/documentation/index2.html#files')"))
+                               ),
                    choices = run_modes,
                    selected = "gsea"
                    #demo session for ora analysis, where the default selected mode is "glist" please be careful here
