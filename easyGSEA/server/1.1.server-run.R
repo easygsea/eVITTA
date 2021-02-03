@@ -616,21 +616,38 @@
 
 
           ),
-          column(12,
+          column(12, style="word-break:break-all;",
                  p("Review your uploaded file:"),
                  uiOutput("feedback_filecontent")
+          )
+          ,column(12,#align="right",
+                  bsButton(
+                    "filecontent_reset",
+                    "Reset upload",
+                    # block = TRUE,
+                    style = "default"
+                  )
           )
         ),
 
         easyClose = F,
-        footer = bsButton(
-          "filecontent_confirm",
-          h4("Confirm and continue!"),
-          block = TRUE,
-          style = "primary"
+        footer = fluidRow(
+          column(12,
+            bsButton(
+              "filecontent_confirm",
+              h4("Confirm and continue!"),
+              block = TRUE,
+              style = "primary"
+            )
+          )
         )
       ))
 
+    })
+    
+    observeEvent(input$filecontent_reset,{
+      reset_rnk()
+      removeModal()
     })
 
     # ------------ 3.1.2.2 select numeric namespace -----------

@@ -60,15 +60,17 @@ output$feedback_filecontent <- renderTable({
     req(rv$file_upload_status == "uploaded")
     req(is.null(rv$infile_confirm) == T)
     
-    df = rv$data_head_o %>%
+    df <- rv$data_head_o %>%
         head(.,n=2) %>%
         dplyr::mutate_if(is.numeric, function(x) round(x,2)) %>%
         dplyr::mutate_if(is.character, function(x) substr(x,1,7))
     
     arow = rep("...",ncol(df))
     
-    rbind(df,arow)
-        
+    df <- rbind(df,arow)
+    
+    df
+    
 })
 
 # ----------- *** If no colnames, reset rv$data_head_o ----------
