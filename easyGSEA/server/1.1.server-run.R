@@ -316,11 +316,21 @@
     output$bs_reset_db <- renderUI({
       req(input$selected_species != "")
       req(is.null(rv$db_status)==T || rv$db_status == "modify")
-      bsButton(
-        inputId = "reset_db",
-        label = "Reset to default selections",
-        # style = "primary",
-        type = "button")
+      div(
+        style="display: inline-block;vertical-align:top;",
+        bsButton(
+          inputId = "reset_db",
+          label = "Reset to default selections",
+          # style = "primary",
+          type = "button")
+        ,bsButton(
+          inputId = "deselect_db",
+          label = "Deselect all",
+          # style = "primary",
+          type = "button")
+        
+      )
+      
     })
 
     # observe modal "select" bsbutton, dismiss modal
@@ -340,6 +350,7 @@
         removeModal()
       }
     })
+    
 
     #-------------- 1.3 select GMTs ----------------
 
@@ -450,7 +461,7 @@
 
     })
 
-    # reset button
+    # reset dbs button
     observeEvent(input$reset_db, {
         rv$run = NULL
         
@@ -474,6 +485,24 @@
           }
 
         }
+    })
+    
+    # deselect dbs button
+    observeEvent(input$deselect_db,{
+      rv$run = NULL
+      
+      rv$glist_check = NULL
+      rv$gene_lists = NULL
+      rv$gene_lists_after = NULL
+      
+      species <- input$selected_species
+      for(collection in names(gmt_collections_paths[[species]])){
+        updateCheckboxGroupInput(session,
+                                 inputId = paste0(species,gsub(" ","_",collection)),
+                                 selected = ""
+        )
+      }
+      
     })
 
 
