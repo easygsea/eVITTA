@@ -144,6 +144,7 @@ body <- dashboardBody(
         tabItem(tabName = "tab2",
                 uiOutput("ui_design"),
                 fixedPanel(
+                  style = "z-index:9999",
                   uiOutput("floating_button_2"),
                   right = 30,
                   bottom = 30
