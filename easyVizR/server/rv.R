@@ -1,7 +1,7 @@
 ####---------------------- REACTIVE VALUES---------------------------####
 
 rv <- reactiveValues(
-                     demo = "", # "yes" for a demo session, NULL for regular runs
+                     demo = NULL, # "yes" for a demo session, NULL for regular runs
                      demo_n = 1, # odd for load, even for unload
                      
                      upload_state = NULL, 

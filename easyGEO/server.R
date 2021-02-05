@@ -201,6 +201,9 @@ shinyServer(function(input, output, session) {
     # - filtered sample list: rv$samples
     # - full design matrix: design_df()
     # - filtered design matrix: rv$fddf
+    # - full design matrix: rv$fddf_o
+    # - data matrix sample names(first row of the df): rv$dmdf_samples
+    # - design matrix sample names(first column of the df): rv$fddf_samples
     # 
     # params:
     #     - selected variable: input$sp_select_var

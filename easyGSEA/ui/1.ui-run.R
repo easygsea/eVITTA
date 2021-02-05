@@ -7,13 +7,17 @@ a_mode <- conditionalPanel(
                
                radioButtons(
                    inputId = "selected_mode",
-                   label = div(style = "font-weight:400;", HTML(paste0("Select mode of analysis: ",add_help("mode_q")))),
+                   label = div(style = "font-weight:400;", p(style="margin-block-end: 2px;",
+                                                             "Select mode of analysis:",
+                                                             tags$style(type = "text/css", paste0("#","mode_q","{display: inline-block;width: 17px;height: 17px;padding: 0;border-radius: 50%;vertical-align: text-top;margin-left: 3px;font-size: 10px;padding-top: 1px;","vertical-align:baseline !important; ","}")),
+                                                             bsButton("mode_q", label = "", icon = icon("question"), style = "info", size = "extra-small", onclick ="window.open('https://tau.cmmt.ubc.ca/eVITTA/documentation/index2.html')"))
+                               ),
                    choices = run_modes,
                    selected = "gsea"
                    #demo session for ora analysis, where the default selected mode is "glist" please be careful here
                    # selected = "glist"
                )
-               ,bsTooltip("mode_q",HTML("Select the method for functional enrichment analysis")
+               ,bsTooltip("mode_q",HTML('Method for functional enrichment analysis. <b><i>Click</i></b> to visit <a target="_blank" href="https://tau.cmmt.ubc.ca/eVITTA/documentation/index2.html">easyGSEA User Guide</a> for more information')
                           ,placement = "right")
                # ,bsButton("loadx","Example Run")
                ,tags$hr(style="border-color: #48617b;margin: 8px;")

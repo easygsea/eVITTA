@@ -1,8 +1,15 @@
 rv <- reactiveValues(
+  
+  run_mode = "auto", # auto for retrieval by GSE; manual for manual uploads 
+  
   demo = "", # "yes" for a demo session, NULL for regular runs
   demo_n = 1, # odd for load, even for unload
   matrix_ready = NULL, # introjs use this variable as well
-
+  
+  # the error that occurs when there are 
+  # samples in design matrix but not in data matrix
+  column_match_error = FALSE, 
+  
   gse_all = NULL,
 
   demo_acc = NULL, # default accession no

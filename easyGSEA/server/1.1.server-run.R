@@ -216,6 +216,18 @@
       req(sum(input$gmt_c$size) < batch_mb_limit)
       req((sum(input$gmt_c$size) + sum(rv$GMTDF$size)) < total_mb_limit)
       
+      # Check the type of file you uploads, if the file is other types, remind the user
+      ext_check <- ""
+      if(!tools::file_ext(input$gmt_c$name) %in% c(
+         'text/tab-separated-values','txt','tab','tsv','gmt'
+      )){
+        ext_check <- "no"
+        shinyjs::reset("gmt_c")
+        shinyalert("We only accept files that are .txt,.tab,.tsv,.gmt; 
+                   please check your file(s) and re-upload file(s) with the correct file extensions .")
+      }
+      
+      req(ext_check != "no")
       #add new files that are not in df already to the df
       rv$GMTDF<-rbind(rv$GMTDF,input$gmt_c[!(input$gmt_c$name %in% rv$GMTDF$name)])
       
@@ -304,11 +316,21 @@
     output$bs_reset_db <- renderUI({
       req(input$selected_species != "")
       req(is.null(rv$db_status)==T || rv$db_status == "modify")
-      bsButton(
-        inputId = "reset_db",
-        label = "Reset to default selections",
-        # style = "primary",
-        type = "button")
+      div(
+        style="display: inline-block;vertical-align:top;",
+        bsButton(
+          inputId = "reset_db",
+          label = "Reset to default selections",
+          # style = "primary",
+          type = "button")
+        ,bsButton(
+          inputId = "deselect_db",
+          label = "Deselect all",
+          # style = "primary",
+          type = "button")
+        
+      )
+      
     })
 
     # observe modal "select" bsbutton, dismiss modal
@@ -328,6 +350,7 @@
         removeModal()
       }
     })
+    
 
     #-------------- 1.3 select GMTs ----------------
 
@@ -438,7 +461,7 @@
 
     })
 
-    # reset button
+    # reset dbs button
     observeEvent(input$reset_db, {
         rv$run = NULL
         
@@ -462,6 +485,24 @@
           }
 
         }
+    })
+    
+    # deselect dbs button
+    observeEvent(input$deselect_db,{
+      rv$run = NULL
+      
+      rv$glist_check = NULL
+      rv$gene_lists = NULL
+      rv$gene_lists_after = NULL
+      
+      species <- input$selected_species
+      for(collection in names(gmt_collections_paths[[species]])){
+        updateCheckboxGroupInput(session,
+                                 inputId = paste0(species,gsub(" ","_",collection)),
+                                 selected = ""
+        )
+      }
+      
     })
 
 
@@ -494,7 +535,7 @@
 
 
             ),
-            bsTooltip("q1", "Comma- or tab-delimited. Click to learn more and load our <u>example data</u> for a trial run", placement = "top")
+            bsTooltip("q1", "Comma- or tab-delimited. <b><i>Click</i></b> to learn more and load our <u>example data</u> for a trial run!", placement = "top")
 
 
         )
@@ -531,6 +572,19 @@
 
     # read in RNK file path name, disable widget
     observeEvent(input$rnkfile, {
+      # Check the type of file you uploads, if the file is other types, remind the user
+      ext_check <- ""
+      if(!tools::file_ext(input$rnkfile$name) %in% c(
+        'text/tab-separated-values','txt','tab','tsv', 'csv', 'rnk'
+      )){
+        ext_check <- "no"
+        shinyjs::reset("rnkfile")
+        shinyalert("We only accept files that are .txt,.tab,.tsv. 
+                   Please click the help button for accepted file formats.")
+      }
+      
+      req(ext_check != "no")
+      
         rv$file_upload_status = "uploaded"
         rv$infile_name = input$rnkfile$name
         rv$infile_path = input$rnkfile$datapath
@@ -557,6 +611,7 @@
       req(rv$db_status == "selected")
       req(rv$file_upload_status == "uploaded")
       req(is.null(rv$infile_confirm) == T)
+      req(!is.null(rv$rnk_or_deg))
 
       showModal(modalDialog(
         title = "Select corresponding columns to continue",
@@ -590,21 +645,38 @@
 
 
           ),
-          column(12,
+          column(12, style="word-break:break-all;",
                  p("Review your uploaded file:"),
                  uiOutput("feedback_filecontent")
+          )
+          ,column(12,#align="right",
+                  bsButton(
+                    "filecontent_reset",
+                    "Reset upload",
+                    # block = TRUE,
+                    style = "default"
+                  )
           )
         ),
 
         easyClose = F,
-        footer = bsButton(
-          "filecontent_confirm",
-          h4("Confirm and continue!"),
-          block = TRUE,
-          style = "primary"
+        footer = fluidRow(
+          column(12,
+            bsButton(
+              "filecontent_confirm",
+              h4("Confirm and continue!"),
+              block = TRUE,
+              style = "primary"
+            )
+          )
         )
       ))
 
+    })
+    
+    observeEvent(input$filecontent_reset,{
+      reset_rnk()
+      removeModal()
     })
 
     # ------------ 3.1.2.2 select numeric namespace -----------
@@ -673,14 +745,16 @@
 
 
 # ----------------- 3.1.4 check and store input file content into rv$data_head -----------------------
-    observe({
-        req(is.null(rv$infile_name)==F)
+    observeEvent(rv$infile_name,{
+        # req(is.null(rv$infile_name)==F)
         rv$infile_check=NULL
         rv$input_symbol = NULL
         rv$gene_lists_mat1 = NULL
         rv$run = NULL
+        print(rv$infile_name)
 
         rv$rnkll <- strsplit(isolate(rv$infile_name),"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1] # add value to rv
+        print(rv$rnkll)
         ranks <- read_delim(isolate(rv$infile_path), ",", locale = locale(encoding = 'ISO-8859-1'))# , escape_double = FALSE, trim_ws = TRUE)
 
         if(ncol(ranks)==1){
@@ -900,7 +974,7 @@
     #---------------- 3.2.2 read in GList-----------------
     
     # observe if genes are uploaded
-    observe({
+    observeEvent(rv$gene_lists,{
       if (is.null(rv$gene_lists)==F){
         shinyjs::disable("gene_list")
         shinyjs::disable("glist_name")

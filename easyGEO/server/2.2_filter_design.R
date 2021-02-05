@@ -129,7 +129,6 @@ observe({
 output$filter_vars_levels <- renderUI({
   req(is.null(rv$v)==F)
   # req(input$fddf_filter_mode=="variables")
-  
   rv$v
 })
 
@@ -139,8 +138,8 @@ output$filter_vars_levels <- renderUI({
 filtered_design_df <- reactive({
   # req(length(input$filter_vars)>0)
   # req(nchar(input$fddf_filter_mode)>0)
-  
-  df <- design_df()
+  # if(rv$run_mode == "auto"){
+    df <- design_df()
   
   validate(
     need(ncol(df)>1,
@@ -171,27 +170,31 @@ filtered_design_df <- reactive({
   
   rv$samples <- rownames(df) # update filtered samples into rv
   rv$fddf <- df # update filtered table into rv
-  
-  
+  print(rv$samples)
+  print("below is df")
+  print(nrow(df))
   df
 })
 
 
 # show filtered design matrix
 output$filtered_design_df <- DT::renderDataTable({
-  req(is.null(rv$gse_all)==F)
-  req(is.null(rv$plat_id)==F)
+  if(rv$run_mode == "auto") {
+    req(is.null(rv$gse_all)==F)
+    req(is.null(rv$plat_id)==F)
+  }
   # req(length(input$filter_vars)>0)
   
   df <- filtered_design_df()
   
   # translate GSM column names to sample names on display
-  if (input$fddf_show_rown == "Sample name"){
+  if (input$fddf_show_rown == "Sample name" && rv$run_mode == "auto"){
     rownames(df) <- translate_sample_names(rownames(df),  # translating from
                                            rv$pdata[c("title", "geo_accession")],  # translation df
                                            "title") # translating to
   }
   df_no(df)
+  # fwrite(df, file = "design_matrix.csv", row.names = TRUE)
   
 }#, plugins="ellipsis",options=dt_options(30, scrollX=T)
 # ,

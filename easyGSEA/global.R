@@ -26,6 +26,7 @@ library(lobstr)
 library(rintrojs)
 library(dendextend) # for dendrogram
 library(ggdendro) # for dendrogram
+library(tools) # for finding file (name) extensions
 
 options(repos = BiocManager::repositories())
 

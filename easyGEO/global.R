@@ -21,6 +21,7 @@ library(shinyalert)
 library(lobstr)
 library(shinydisconnect)
 library(rintrojs)
+library(knitr) #might need for transforming rmd to html
 
 
 

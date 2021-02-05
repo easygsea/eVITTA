@@ -595,7 +595,7 @@ init_demo <- function(){
   rv$gpl_choices <- readRDS(paste0(getwd(),"/rvs/gpl_choices.rds"))
   rv$dmdf <- readRDS(paste0(getwd(),"/rvs/dmdf.rds"))
   rv$all_samples <- readRDS(paste0(getwd(),"/rvs/all_samples.rds"))
-  rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds"))
+  # rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds"))
   rv$pdata <- readRDS(paste0(getwd(),"/rvs/pdata.rds"))
   rv$fddf <- readRDS(paste0(getwd(),"/rvs/fddf.rds"))
   rv$sup_source <- readRDS(paste0(getwd(),"/rvs/sup_source.rds"))
@@ -642,7 +642,7 @@ init_demo_d <- function(){
   rv$gpl_tooltips <- NULL
   rv$text <- NULL
   rv$matrix_ready <- NULL
-  rv$demo <- ""
+  rv$demo <- NULL
 }
 
 init_choices <- function(){
@@ -704,4 +704,30 @@ btn_demo_e <- function(){
       init_demo()
     }
   })
+}
+
+# the function that creates a confirm and a reset button
+# add an oberveEvent to connect those buttons with their functions
+confirm_and_reset_buttons <- function(confirm_id, reset_id){
+  fluidRow(
+    column(
+      12,
+      div(style = "display:inline-block;",
+          bsButton(confirm_id, "Manual Upload",style="primary")
+      ),
+      div(style = "display:inline-block;",
+          actionButton(reset_id, "Dismiss")  
+      )
+    )
+    
+  )
+}
+# the function to jump to the Manual Upload mode
+confirm_and_jump <- function() {
+  rv$dmdf <- NULL
+  rv$fddf <- NULL
+  rv$plat_id <- NULL
+  removeModal()
+  updateTabItems(session, inputId = "menu1", selected = "tab1")
+  updateRadioButtons(session, inputId = "selected_mode", selected = "manual")
 }

@@ -1002,8 +1002,7 @@ observeEvent(input$submit, {
     }
   }
   
-  
-  
+
   # replace the important column names to prevent error later on
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$gene_column, "Name")
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$Stat_column, "Stat")
@@ -1012,17 +1011,16 @@ observeEvent(input$submit, {
   load_cols_list <- c(c("Name", "Stat", "PValue", "FDR"),input$load_other_cols)
   # print(load_cols_list)
   # print(in_df)
-  
   # tidy duplicate names
   if (any(duplicated(in_df$Name))){
-    in_df$Name <- make.names(in_df$Name, unique=TRUE)
+    in_df$Name <- make.unique(in_df$Name)
     show_reminder_dup1 <- TRUE 
   } else {show_reminder_dup1 <- F}
-  
-  
+
   in_df <- in_df[,load_cols_list]
   in_df <- remove_nas(in_df)
   
+  # print(head(in_df))
   
   # set data type
   in_df$Name <- as.character(in_df$Name) # convert name column to character
@@ -1095,7 +1093,7 @@ observeEvent(input$delete_deg_confirm, {
 
 output$delete_deg <- renderUI({
   # #restoring RVs for the demo session
-  if(rv$demo == "yes"){
+  if(!is.null(rv$demo) && rv$demo == "yes"){
     init_demo()
   }
   
