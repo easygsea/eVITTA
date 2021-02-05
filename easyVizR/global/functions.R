@@ -405,6 +405,11 @@ collapseInput <- function(inputId, boxId) {
     )
   )
 }
+# ================================================= #
+#                RRHO functions                ####
+# ================================================= #
 
+#This section is dedicated to functions related to RRHO, 
+#which is a new feature we are plannnig to develop in Visr visualization tab
 
 

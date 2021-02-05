@@ -36,6 +36,8 @@ library(rjson)
 library(rgeos)
 library(polyclip)
 library(colorspace)
+library(RColorBrewer)
+library(RRHO)
 
 # library(dashboardthemes)
 options(repos = BiocManager::repositories())

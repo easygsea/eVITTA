@@ -512,6 +512,48 @@ sc_table_panel <- reactive({
   )
 })
 
+
+#======================================================================#
+####                     RRHO UI                                 ####
+#======================================================================#
+####TODO: CHANGE RV VLUE
+
+#RIGHT NOW I JUST PUT IN SOME RANDOM THINGS 
+#and if it can be correctly displayed I will do the rest
+output$RRHO_selections <- renderUI({
+  div(
+    box(
+      title = NULL, status = "primary", solidHeader = F, width=12,
+      div(id="rrho_lists_selections",
+          selectInput(
+            inputId = "rrho_x",
+            label = "Selected x:",
+            choices = c("Dataset1","Dataset2"),
+            selected = "Dataset1"
+          ),
+          selectInput(
+            inputId = "rrho_y",
+            label = "Selected y:",
+            choices = c("Dataset1","Dataset2"),
+            selected = "Dataset2"
+          ),
+      ))
+  )
+  
+})
+output$rrho_dup_selections <- renderUI({
+  div(id="rrho_select_single",
+      selectInput(
+        inputId = "nx_selected",
+        label = "View dataset:",
+        choices = rv$nx_n,
+        selected = rv$nx_selected
+      )
+  )
+})
+
+
+
 #======================================================================#
 ####                     single UI                                  ####
 #======================================================================#
@@ -765,7 +807,7 @@ output$network_dropdowns <- renderUI({
 output$select_graph_to_display <- renderUI({
 div(div(id="n1_1",
     radioGroupButtons("n_ui_showpanel",
-                      choices=c("Heatmap", "Scatter", "Single", "Network"),
+                      choices=c("Heatmap", "Scatter","RRHO", "Single", "Network"),
                       selected=rv$n_ui_showpanel, status="primary",
                       checkIcon = list(
                         yes = tags$i(class = "fa fa-check-square", 
@@ -839,7 +881,6 @@ output$n_panels <- renderUI({
                                       title = span( icon("chart-area"), "3D Scatter"), status = "primary", solidHeader = F, width=12,
                                       plotlyOutput("df_n_3ds",
                                                    width = "100%",height = "600px"),
-                                      
                                       div(id = "scatter_3d_dropdowns_anchor")
                                       
                                     )  
@@ -864,6 +905,33 @@ output$n_panels <- renderUI({
                            ),
                          )
         ),
+        
+        conditionalPanel("input.n_ui_showpanel == 'RRHO'",
+                         div(
+                           fluidRow(
+                             column(4,
+                                    box(
+                                      title = "Select datasets to compare", status = "primary", solidHeader = F, width=12,
+                                      uiOutput("rrho_selections")
+                                      
+                                    ),
+                                    box(
+                                      title = "p value is here", status = "primary", solidHeader = F, width=12,
+                                      uiOutput("rrho_dup_selections")
+                                    ),
+                             ),
+                             column(8,
+                                                     box(
+                                                       title = span( icon("chart-area"), "Level Plot"), status = "primary", solidHeader = F, width=12,
+                                                       #JUST PUT HERE TO SHOW some graph, but even this one cannot be displayed
+                                                       plotlyOutput("df_n_3ds",
+                                                                    width = "100%",height = "600px"),
+                                                     )  
+                             ),
+                           ),
+                         )
+        ),
+        
         conditionalPanel("input.n_ui_showpanel == 'Single'",
                          #uiOutput("n_ui_single")
                          div(
