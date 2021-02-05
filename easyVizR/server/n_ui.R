@@ -520,7 +520,7 @@ sc_table_panel <- reactive({
 
 #RIGHT NOW I JUST PUT IN SOME RANDOM THINGS 
 #and if it can be correctly displayed I will do the rest
-output$RRHO_selections <- renderUI({
+output$rrho_selections <- renderUI({
   div(
     box(
       title = NULL, status = "primary", solidHeader = F, width=12,
