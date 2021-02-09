@@ -195,3 +195,30 @@ gcols_div <- function(col1 = rv$up_color, col2 = rv$down_color){
     unique(c(rev(col_down),col_up))
   }
 }
+
+# display db name & id display options
+# ------- display/remove db name & id -----------
+tv_div <- reactive({
+  fluidRow(
+    column(
+      12,
+      checkboxInput(
+        "db_name_y",
+        HTML(paste0("Display dababase prefix ",add_help("db_name_y_q")))
+        ,value = rv$db_name_y
+      )
+    )
+    ,column(
+      12,
+      checkboxInput(
+        "db_id_y",
+        HTML(paste0("Display gene set ID ",add_help("db_id_y_q")))
+        ,value = rv$db_id_y
+      )
+    )
+    ,bsTooltip("db_name_y_q",HTML("By default, each gene set is prefixed by its originating database (abbreviated). Unselect to delete the prefix.")
+               ,placement = "top")
+    ,bsTooltip("db_id_y_q",HTML("By defualt, each gene set is annotated with its unique ID (if any) in the original database. Unselect to delete the ID string.")
+               ,placement = "top")
+  )
+})

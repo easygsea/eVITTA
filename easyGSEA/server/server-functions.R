@@ -69,6 +69,14 @@
             dplyr::select(-db) %>% 
             dplyr::arrange(padj)
         
+        # when prompted, remove db name and id
+        if(!rv$db_name_y){
+          df <- remove_db_name(df)
+        }
+        if(!rv$db_id_y){
+          df <- remove_db_id(df)
+        }
+        
         df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = ";"))
         
         return(df)

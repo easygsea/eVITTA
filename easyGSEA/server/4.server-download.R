@@ -42,7 +42,7 @@ output$ui_downloadbox <- renderUI({
                             column(12, align="center",
                                    p(HTML("Download enrichment table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons")),
                                    
-                                   # div(
+                                   div(
                                    #     style="display: inline-block;vertical-align:top;",
                                        downloadBttn("gs_tbl_dl",
                                                     label = "Download enrichment table (.csv)"
@@ -51,11 +51,11 @@ output$ui_downloadbox <- renderUI({
                                        )
                                    # ,bsTooltip("gs_tbl_dl",HTML("Download converted DEG table and proceed to <b>easyVizR</b> for multiple comparisons on functional categories")
                                    #            ,placement = "top")
-                                   # ),
-                                   # div(
-                                   #     style="display: inline-block;vertical-align:top;",
-                                   #     uiOutput("ui_tl_cut")
-                                   # )
+                                   )
+                                   ,div(
+                                       style="position: absolute; right: 5.2em; top: 3.2em;",
+                                       uiOutput("ui_tl_cut")
+                                   )
                             )
                         )
                         
@@ -98,35 +98,36 @@ output$menu_download_table <- renderUI({
 # ----------UI table cut-------------
 output$ui_tl_cut <- renderUI({
     dropdownButton(
-        sliderTextInput("cutoff_p_tl",
-                        label = "P threshold:",
-                        choices= cutoff_slider,
-                        selected=rv$tl_p, grid=T, force_edges=T
-        ),
-        sliderTextInput("cutoff_q_tl",
-                        label = "P.adj threshold:",
-                        choices= cutoff_slider,
-                        selected=rv$tl_q, grid=T, force_edges=T
-        ),
-        radioGroupButtons(
-            inputId = "up_or_down_tl",
-            label = "Direction of change:",
-            choiceNames = c("Up", "Down", "Both"),
-            choiceValues = c("up", "down", "both"),
-            selected = rv$tl_ES,
-            direction = "horizontal"
-        ),
-        br(),
-        bsButton(
-            inputId = "confirm_tl",
-            label = span(icon("cut"),"Cut table"),
-            style = "primary"
-        ),
-        width = "300px",circle = TRUE, status = "warning",
+        # sliderTextInput("cutoff_p_tl",
+        #                 label = "P threshold:",
+        #                 choices= cutoff_slider,
+        #                 selected=rv$tl_p, grid=T, force_edges=T
+        # ),
+        # sliderTextInput("cutoff_q_tl",
+        #                 label = "P.adj threshold:",
+        #                 choices= cutoff_slider,
+        #                 selected=rv$tl_q, grid=T, force_edges=T
+        # ),
+        # radioGroupButtons(
+        #     inputId = "up_or_down_tl",
+        #     label = "Direction of change:",
+        #     choiceNames = c("Up", "Down", "Both"),
+        #     choiceValues = c("up", "down", "both"),
+        #     selected = rv$tl_ES,
+        #     direction = "horizontal"
+        # ),
+        # br(),
+        # bsButton(
+        #     inputId = "confirm_tl",
+        #     label = span(icon("cut"),"Cut table"),
+        #     style = "primary"
+        # )
+        tv_div()
+        ,width = "300px",circle = TRUE, status = "info",
         size = "xs",
-        icon = icon("fas fa-cut"),# class = "opt"),
+        icon = icon("gear"),# "fas fa-cut"
         up = FALSE,
-        tooltip = tooltipOptions(title = "Click to filter table")
+        tooltip = tooltipOptions(title = "Click to adjust enrichment table settings")
     )
 })
 
