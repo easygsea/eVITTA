@@ -148,6 +148,17 @@ gcols_grey_vis <- c(
 gvalues2 = rescale(c(0,-log10(0.25),1,-log10(0.05),2,3))
 
 
+#===================== GMT collections' names =====================
+gmt_abbr <- read_tsv(paste0(getwd(),"/inc/gmt_abbreviations.tsv"),col_names = F)
+gmt_names <- as.list(gmt_abbr$X2)
+names(gmt_names) <- gmt_abbr$X1
+
+# function to retrieve abbreviations
+retrieve_abbr <- function(name){
+  name <- strsplit(name, "-(?=[^-]+$)", perl=TRUE)[[1]][1]
+  gmt_names[grepl(paste0("^",name),gmt_names,ignore.case = T)][1] %>% names(.)
+}
+
 
 #===================== GMT collections =====================
 # initialize three list vectors
@@ -167,17 +178,17 @@ for(i in seq_along(dbs)){
   # tidy up database names by removing ".gmt" and the dates it's created; convert _ to spaces
   names <- gsub(".gmt$","",dbs[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
   # # 1) the below 2 lines store the databases in abbreviated strings and named them in full in a named vector
-  # names_abbr = abbreviate_string(names); coll = names_abbr
-  # names(coll) = names
+  names_abbr = sapply(names, function(x) retrieve_abbr(x));  coll = names_abbr #names_abbr = abbreviate_string(names); coll = names_abbr
+  names(coll) = names
   # # 2) the below 1 line stores the databases' names in full
-  coll = names
+  # coll = names
   
   # store databases names into the list vector that stores collections
   gmt_collections = c(gmt_collections, list(coll))
   
   # paths to GMT files
   paths = paste0(getwd(),"/www/gmts/",test$V1[[i]],"/",test$V2[[i]],"/",dbs[[i]])
-  names(paths) = names # names_abbr
+  names(paths) = names_abbr #names
   
   gmt_collections_paths = c(gmt_collections_paths, list(paths))
   
@@ -203,10 +214,10 @@ for(i in seq_along(dbs)){
   # tidy up database names by removing ".gmt" and the dates it's created; convert _ to spaces
   names <- gsub(".gmt$","",dbs[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
   # # 1) the below 2 lines store the databases in abbreviated strings and named them in full in a named vector
-  # names_abbr = abbreviate_string(names); coll = names_abbr
-  # names(coll) = names
+  names_abbr = sapply(names, function(x) retrieve_abbr(x)); coll = names_abbr #names_abbr = abbreviate_string(names); coll = names_abbr
+  names(coll) = names
   # # 2) the below 1 line stores the databases' names in full
-  coll = names
+  # coll = names
   
   # store databases names into the list vector that stores collections
   gmt_collections_selected = c(gmt_collections_selected, list(coll))
@@ -217,6 +228,7 @@ names(gmt_collections_selected) = test$V2
 gmt_collections_selected = split(gmt_collections_selected,test$V1)
 
 remove(test); remove(dbs)
+
 
 #============= numeric namespaces ================
 num_space <- list(

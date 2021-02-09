@@ -14,8 +14,8 @@ C1	WormCat Category 1
 C2	WormCat Category 2
 C3	WormCat Category 3
 AA	Anatomy Association
-DAorth	Disease Association by Orthology
 DA	Disease Association
+DAO	Disease Associations.by Orthology
 DEA	Development Association
 PA	Phenotype Association
 RP	RNAi Phenotypes
@@ -26,7 +26,7 @@ PI	Physical Interactions Mitab
 C1P	c1.Positional Gene Sets
 C2CGP	c2.Chemical and Genetic Perturbations
 C2B	c2.BIOCARTA
-C2P	c2.PID
+C2PID	c2.PID
 C3TF	c3.TFT GTRD
 C3TFL	c3.TFT Legacy
 C3miRL	c3.MIR Legacy
