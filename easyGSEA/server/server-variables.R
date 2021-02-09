@@ -166,15 +166,18 @@ dbs = strsplit(test$V3,";")
 for(i in seq_along(dbs)){
   # tidy up database names by removing ".gmt" and the dates it's created; convert _ to spaces
   names <- gsub(".gmt$","",dbs[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
-  names_abbr = abbreviate_string(names); coll = names_abbr
-  names(coll) = names
+  # # 1) the below 2 lines store the databases in abbreviated strings and named them in full in a named vector
+  # names_abbr = abbreviate_string(names); coll = names_abbr
+  # names(coll) = names
+  # # 2) the below 1 line stores the databases' names in full
+  coll = names
   
   # store databases names into the list vector that stores collections
   gmt_collections = c(gmt_collections, list(coll))
   
   # paths to GMT files
   paths = paste0(getwd(),"/www/gmts/",test$V1[[i]],"/",test$V2[[i]],"/",dbs[[i]])
-  names(paths) = names_abbr
+  names(paths) = names # names_abbr
   
   gmt_collections_paths = c(gmt_collections_paths, list(paths))
   
@@ -199,8 +202,11 @@ dbs = strsplit(test$V3,";")
 for(i in seq_along(dbs)){
   # tidy up database names by removing ".gmt" and the dates it's created; convert _ to spaces
   names <- gsub(".gmt$","",dbs[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
-  names_abbr = abbreviate_string(names); coll = names_abbr
-  names(coll) = names
+  # # 1) the below 2 lines store the databases in abbreviated strings and named them in full in a named vector
+  # names_abbr = abbreviate_string(names); coll = names_abbr
+  # names(coll) = names
+  # # 2) the below 1 line stores the databases' names in full
+  coll = names
   
   # store databases names into the list vector that stores collections
   gmt_collections_selected = c(gmt_collections_selected, list(coll))
