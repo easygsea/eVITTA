@@ -524,33 +524,23 @@ output$rrho_selections <- renderUI({
   div(
     box(
       title = NULL, status = "primary", solidHeader = F, width=12,
-      div(id="rrho_lists_selections",
+      div(id="n3_3",
           selectInput(
             inputId = "rrho_x",
             label = "Selected x:",
-            choices = c("Dataset1","Dataset2"),
-            selected = "Dataset1"
+            choices = rv$nx_n,
+            selected = rv$rrho_x
           ),
           selectInput(
             inputId = "rrho_y",
             label = "Selected y:",
-            choices = c("Dataset1","Dataset2"),
-            selected = "Dataset2"
-          ),
+            choices = rv$nx_n,
+            selected = rv$rrho_y
+          )
       ))
   )
-  
 })
-output$rrho_dup_selections <- renderUI({
-  div(id="rrho_select_single",
-      selectInput(
-        inputId = "nx_selected",
-        label = "View dataset:",
-        choices = rv$nx_n,
-        selected = rv$nx_selected
-      )
-  )
-})
+
 
 
 
@@ -907,25 +897,22 @@ output$n_panels <- renderUI({
         ),
         
         conditionalPanel("input.n_ui_showpanel == 'RRHO'",
+                         View(rv$nx_n),
+                         View(rv$df_n),
                          div(
+                           
                            fluidRow(
                              column(4,
-                                    box(
-                                      title = "Select datasets to compare", status = "primary", solidHeader = F, width=12,
-                                      uiOutput("rrho_selections")
-                                      
-                                    ),
-                                    box(
-                                      title = "p value is here", status = "primary", solidHeader = F, width=12,
-                                      uiOutput("rrho_dup_selections")
-                                    ),
+                                    div(id = "rrho_selections_anchor"),
+                                    #uiOutput("scatter_selection"),
+                                    #uiOutput("nxy_sc_cor_panel")
                              ),
                              column(8,
                                                      box(
                                                        title = span( icon("chart-area"), "Level Plot"), status = "primary", solidHeader = F, width=12,
                                                        #JUST PUT HERE TO SHOW some graph, but even this one cannot be displayed
-                                                       plotlyOutput("df_n_3ds",
-                                                                    width = "100%",height = "600px"),
+                                                       #plotlyOutput("df_n_3ds",
+                                                      #            width = "100%",height = "600px"),
                                                      )  
                              ),
                            ),

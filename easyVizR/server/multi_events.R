@@ -203,7 +203,9 @@ observeEvent(input$n_use_data,{
     rv$nxyz_sc_outlinecolor <- "white"
     rv$nxyz_sc_plotmode <- "Focus"
     rv$nxyz_sc_dflogic <- "Ins"
-    
+    # ------------- rrho
+    rv$rrho_x <- rv$nx_n[[1]]
+    rv$rrho_y <- rv$nx_n[[2]]
     
     # --------------- single options
     rv$nx_vol_plotmode <- "Focus"
@@ -267,7 +269,7 @@ observeEvent(input$n_use_data,{
   remove_ui("scatter_selection")
   remove_ui("scatter_3d_dropdowns")
   remove_ui("scatter_2d_dropdowns")
-  #remove_ui("rrho_selection")
+  remove_ui("rrho_selections")
   remove_ui("single_dropdowns")
   remove_ui("single_selections")
   remove_ui("nx_bar_panel_dropdowns")
