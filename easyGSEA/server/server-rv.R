@@ -82,6 +82,7 @@
         ##### RVs for shared GSEA & ORA runs #####
         #========================================#
         q_dynamic=TRUE,plot_type="bar",
+        db_name_y=T,db_id_y=T,
 
         # org_db=NULL,
         dbs=NULL,fgseagg=NULL,gmts=NULL,gmts_length=NULL,

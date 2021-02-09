@@ -9,19 +9,11 @@ output$ui_bodyResults <- renderUI({
         panel_null()
     }else{
         if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
-            # if(rv$run_mode == "gsea"){
-            #     em_w <- "8em"
-            # }else{
-                em_w <- "11.5em"
-            # }
-        }else if(rv$plot_type=="word"){
-            # if(rv$run_mode == "gsea"){
-            #     em_w <- "4.5em"
-            # }else{
-                em_w <- "8em"
-            # }
+            em_w <- "15em"
+        # }else if(rv$plot_type=="word"){
+        #     em_w <- "8em"
         }else{
-            em_w <- "4.5em"
+            em_w <- "8em"
         }
         fluidRow(
             column(
@@ -86,6 +78,7 @@ output$ui_bodyResults <- renderUI({
                         },
                         # bsTooltip("gs_search_button",HTML(paste0("Click to search, select, and visualize gene set(s) of interest with a ",rv$plot_type," plot"))
                         #           ,placement = "bottom"),
+                        # # dropdown to adjust color tones
                         if(rv$plot_type=="bar" || rv$plot_type=="bubble" || rv$plot_type=="word"){
                             if(rv$plot_type=="bar" || rv$plot_type=="bubble"){
                                 em_w_col <- "8em"
@@ -106,6 +99,46 @@ output$ui_bodyResults <- renderUI({
                                     size = "xs",
                                     icon = icon("palette", class = "opt"),
                                     up = TRUE,width = "200px"
+                                )
+                            )
+                        },
+                        # # dropdown to adjust db name & id display
+                        if(rv$plot_type=="bar" || rv$plot_type=="bubble" || rv$plot_type=="manhattan" || rv$plot_type=="volcano"){
+                            if(rv$plot_type=="bar" || rv$plot_type=="bubble"){
+                                em_w_t <- "11.5em"
+                            }else{
+                                em_w_t <- "4.5em"
+                            }
+                            div(id = "txt_div",
+                                align = "left",
+                                style = sprintf("position: absolute; left: %s; bottom: 1em;",em_w_t),
+                                dropdown(
+                                    fluidRow(
+                                        column(
+                                            12,
+                                            checkboxInput(
+                                                "db_name_y",
+                                                HTML(paste0("Display dababase prefix ",add_help("db_name_y_q")))
+                                                ,value = rv$db_name_y
+                                            )
+                                        )
+                                        ,column(
+                                            12,
+                                            checkboxInput(
+                                                "db_id_y",
+                                                HTML(paste0("Display gene set ID ",add_help("db_id_y_q")))
+                                                ,value = rv$db_id_y
+                                            )
+                                        )
+                                        ,bsTooltip("db_name_y_q",HTML("By default, each gene set is prefixed by its originating database (abbreviated). Unselect to delete the prefix.")
+                                                   ,placement = "top")
+                                        ,bsTooltip("db_id_y_q",HTML("By defualt, each gene set is annotated with its unique ID (if any) in the original database. Unselect to delete the ID string.")
+                                                   ,placement = "top")
+                                    )
+                                    ,
+                                    size = "xs",
+                                    icon = icon("tv", class = "opt"),
+                                    up = TRUE,width = "250px"
                                 )
                             )
                         },
@@ -172,6 +205,15 @@ observeEvent(input$up_color,{
 
 observeEvent(input$down_color,{
     rv$down_color <- input$down_color
+})
+
+# change db name & id displays
+observeEvent(input$db_name_y,{
+    rv$db_name_y <- input$db_name_y
+})
+
+observeEvent(input$db_id_y,{
+    rv$db_id_y <- input$db_id_y
 })
 
 # feedbacks on no significant enrichment
@@ -603,6 +645,14 @@ p_man <- reactive({
     data = rv$fgseagg
     pq = rv$volcano_pq
     cutoff = rv$volcano_cutoff
+    
+    # when prompted, remove db name and id
+    if(!rv$db_name_y){
+        data <- remove_db_name(data)
+    }
+    if(!rv$db_id_y){
+        data <- remove_db_id(data)
+    }
 
     # determine colors
     color_n = length(dbs)

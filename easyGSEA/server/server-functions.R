@@ -1,6 +1,23 @@
     #=======================================================================#
     ####----------------------- Functions: Calculation -------------------####
     #=======================================================================#
+    # remove db names and IDs in gsea table
+    remove_db_name <- function(df){
+      df$pathway <- lapply(df$pathway, function(x){
+        str_split(x,"_",n=2)[[1]][2]
+      })
+      
+      df
+    }
+    
+    remove_db_id <- function(df){
+      df$pathway <- lapply(df$pathway, function(x){
+        strsplit(x, "%(?=[^%]+$)", perl=TRUE)[[1]][1]
+      })
+      
+      df
+    }
+    
     # collapse the leadingedge column
     collapse_last_col <- function(df, sep=";"){
       df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = sep))
@@ -175,6 +192,14 @@
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
             rv$bar_pathway_list = df[["pathway"]]
+
+            # when prompted, remove db name and id
+            if(!rv$db_name_y){
+              df <- remove_db_name(df)
+            }
+            if(!rv$db_id_y){
+              df <- remove_db_id(df)
+            }
             
             # get rid of db id
             y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
@@ -243,6 +268,14 @@
               
                 rv$bubble_pathway_list = df[["pathway"]]
                 
+                # when prompted, remove db name and id
+                if(!rv$db_name_y){
+                  df <- remove_db_name(df)
+                }
+                if(!rv$db_id_y){
+                  df <- remove_db_id(df)
+                }
+                
                 # get rid of db id
                 y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
                 
@@ -308,6 +341,14 @@
             # temporarily save pathway order into rv
             rv$volcano_pathway_list = df$pathway
             
+            # when prompted, remove db name and id
+            if(!rv$db_name_y){
+              df <- remove_db_name(df)
+            }
+            if(!rv$db_id_y){
+              df <- remove_db_id(df)
+            }
+            
             fig <- df %>% 
                 ggplot(aes(x=ES, y=-log10(df[[pq]]), color=-log10(df[[pq]])*sign(ES),
                            text=paste0(
@@ -354,6 +395,14 @@
             # temporarily save pathway order into rv
             rv$volcano_pathway_list = df$pathway
             
+            # when prompted, remove db name and id
+            if(!rv$db_name_y){
+              df <- remove_db_name(df)
+            }
+            if(!rv$db_id_y){
+              df <- remove_db_id(df)
+            }
+            
             colors = rep("grey",nrow(df))
             # if(cutoff < 1){
                 colors[df[[pq]] < cutoff] = "red"
@@ -396,7 +445,14 @@
                 dplyr::filter(db %in% pathways) %>% 
                 mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
-            y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
+            # when prompted, remove db name and id
+            if(!rv$db_name_y){
+              df <- remove_db_name(df)
+            }
+            if(!rv$db_id_y){
+              df <- remove_db_id(df)
+            }
+            # y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
             
             # threshold by p & q cutoffs
             if(cutoff < 1){
@@ -679,6 +735,14 @@
                 
                 rv$bar_pathway_list = df[["pathway"]]
                 
+                # when prompted, remove db name and id
+                if(!rv$db_name_y){
+                  df <- remove_db_name(df)
+                }
+                if(!rv$db_id_y){
+                  df <- remove_db_id(df)
+                }
+                
                 # get rid of db id
                 y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
                 
@@ -736,6 +800,14 @@
                 #   dplyr::slice_min(padj,n=up)
                 
                 rv$bubble_pathway_list = df[["pathway"]]
+                
+                # when prompted, remove db name and id
+                if(!rv$db_name_y){
+                  df <- remove_db_name(df)
+                }
+                if(!rv$db_id_y){
+                  df <- remove_db_id(df)
+                }
                 
                 # get rid of db id
                 y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
