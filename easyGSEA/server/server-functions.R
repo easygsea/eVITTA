@@ -2066,7 +2066,7 @@
       }else{
         db <- rep(cat_name, nrow(fgseaRes))
         fgseaRes <- cbind(db,fgseaRes)
-        #print(head(fgseaRes))
+        fgseaRes$pathway <- paste0(cat_name,"_",fgseaRes$pathway)
         rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
         # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
         rv$no_up_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
@@ -2117,6 +2117,7 @@
         }else{
           db <- rep(cat_name, nrow(fgseaRes))
           fgseaRes <- cbind(db,fgseaRes)
+          fgseaRes$pathway <- paste0(cat_name,"_",fgseaRes$pathway)
           rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
           rv$no_up_25 = sum(fgseaRes$padj<0.25,na.rm=TRUE)
           rv$no_up_05 = sum(fgseaRes$padj<0.05,na.rm=TRUE)
