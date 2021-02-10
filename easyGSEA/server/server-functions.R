@@ -525,10 +525,10 @@
       if(is.null(pathways)==T){
         return(NULL)
       }else{
-        df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
+        df <- rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
         
-        df = df %>% 
-          dplyr::filter(db %in% pathways) %>% 
+        df <- df %>% 
+          dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>% 
           mutate_if(is.numeric,  ~replace(., . == 0, p_min))
         
         if(cutoff_p < 1){
@@ -541,12 +541,10 @@
         if(is.null(df)==T || nrow(df)<1){
           return(NULL)
         }else{
-          # transform df to tibble
+          # transform df to tibble and remove db prefices
           data <- df %>% 
             as_tibble() %>%
-            dplyr::select(-db) %>%
-            dplyr::arrange(padj) %>%
-            mutate_if(is.numeric, function(x) round(x, digits=3))
+            remove_db_name(.)
           
           if(rv$run_mode == "glist"){
             # create data for word freq count plots
@@ -554,11 +552,7 @@
               dplyr::mutate(linenumber = row_number(),text = pathway) %>%
               dplyr::select(text,linenumber)
             
-            data$text <- lapply(data$text,function(x) strsplit(x,"%")[[1]][1]) %>%
-              lapply(.,function(x){
-                if(grepl("_",x))
-                  regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]
-                }) %>%
+            data$text <- lapply(data$text,function(x) strsplit(x, "%(?=[^%]+$)", perl=TRUE)[[1]][1]) %>%
               lapply(., function(x) gsub("_"," ",x)) %>%
               unlist(.)
             
@@ -637,8 +631,7 @@
               if(nrow(i0) < 1){next}
               i = i0
 
-              i$text <- lapply(i$text,function(x) strsplit(x,"%")[[1]][1]) %>%
-                lapply(.,function(x) regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]) %>%
+              i$text <- lapply(i$text,function(x) strsplit(x, "%(?=[^%]+$)", perl=TRUE)[[1]][1]) %>%
                 lapply(., function(x) gsub("_"," ",x)) %>%
                 unlist(.)
               
