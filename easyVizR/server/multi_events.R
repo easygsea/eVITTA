@@ -127,8 +127,9 @@ observeEvent(input$n_use_data,{
     # ---------------  input genelist
     rv$n_igl <- ""
     
-    # # --------------- data options
-    # rv$opt_easygsea_import <- "original"
+    # # --------------- easyGSEA integration options
+    rv$opt_easygsea_remove <- NULL
+    rv$opt_easygsea_resolve_dup <- "keep_orig"
 
     # ---------------  initialize filters
     for (i in 1:length(rv$nx_n)){
@@ -327,18 +328,28 @@ outputOptions(output, "n_3ds_status", suspendWhenHidden = F)
 
 ####-------------------- Process and filter data ------------------------####
 
+
 # 0. cut first by input genelist (if any); 
 # if no gene list is found, return the full df.
 
 df_n_basic <- reactive({
   df <- rv$df_n
   
-  # # optionally get rid of easygsea identifier
-  # if (is.null(rv$opt_easygsea_import)==F){
-  #   if (rv$opt_easygsea_import=="hidden"){
-  #     df$Name <- gsub("%.*$","",df$Name)
-  #   } 
-  # }
+  
+  # optionally get rid of easygsea identifier
+  if (is.null(rv$opt_easygsea_remove)==F){
+    resolve_dup_mode=rv$opt_easygsea_resolve_dup
+    remove_mode=rv$opt_easygsea_remove
+    
+    if (length(remove_mode)>0){
+      df$Name <- dedup_names(df$Name,
+                             output_trans_df = F,
+                             FUN= remove_easygsea_identifiers, 
+                             remove_mode=remove_mode, 
+                             mode=resolve_dup_mode
+      )
+    }
+  }
   
   
   

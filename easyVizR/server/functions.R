@@ -955,6 +955,63 @@ abbreviate_vector <- function(vec, # vector of strings
 }
 
 
+# ================================================= #
+#          Processing easyGSEA datasets          ####
+# ================================================= #
+
+
+# remove identifiers on gsea outputs
+#------------------------------------------
+remove_easygsea_identifiers <- function(vec, 
+                                        remove_mode="trailing" # leading, trailing, etc, see below
+){
+  out <- vec
+  if ("trailing" %in% remove_mode){ # remove trailing (%xxxxxx) first 
+    out <- gsub("%.*$","",vec)
+  }
+  if ("leading" %in% remove_mode){ # remove leading (DB_) next
+    out <- gsub("^.*?_","",out)
+  }
+  out
+}
+
+# deduplicate identifiers generated from another function
+#-----------------------------------------
+dedup_names <- function(vec, 
+                        output_trans_df=F,
+                        FUN=remove_easygsea_identifiers, 
+                        remove_mode=c("trailing"), 
+                        mode="keep_orig"
+){
+  vec=vec
+  processed= FUN(vec, remove_mode=remove_mode)
+  
+  trans_df=data.frame(orig=vec, root=processed)
+  
+  # deduplication function
+  if(any(duplicated(trans_df$root))){ # if any duplicated
+    if (mode=="keep_orig"){
+      # 1. keep original on the duplicated ones
+      dup_names = names(table(trans_df$root)[table(trans_df$root)>1]) # roots that are duplicated
+      trans_df$new <- if_else(trans_df$root %in% dup_names, trans_df$orig, trans_df$root)
+    } else if (mode=="make_unique"){
+      # 2. use the make.unique function
+      trans_df$new <- make.unique(trans_df$root)
+    } else if (mode=="keep_dup"){
+      # 3. keep as duplicated
+      trans_df$new <- trans_df$root
+    }
+  } else { # if no duplicated entries
+    trans_df$new <- trans_df$root
+  }
+  
+  if (output_trans_df==T){
+    trans_df
+  } else (trans_df$new)
+  
+}
+
+
 #======================================================================#
 ####                    INITIALIZE DEMO RVS                         ####
 #======================================================================#

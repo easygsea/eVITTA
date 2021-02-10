@@ -644,7 +644,7 @@ observeEvent(input$batch_submit, {
     
     # tidy duplicate names
     if (any(duplicated(in_df$Name))){
-      in_df$Name <- make.names(in_df$Name, unique=TRUE)
+      in_df$Name <- make.unique(in_df$Name)
       show_reminder_dup2 <- TRUE 
     } else {show_reminder_dup2 <- F}
     
