@@ -269,22 +269,51 @@
       showModal(modalDialog(
         id = "gmt_modal",
         title = HTML(paste0("Name your uploaded GMTs ",add_help("gmt_modal_q"))),
-        bsTooltip("gmt_modal_q",HTML("Enter a unique abbreviation for each uploaded GMT")
+        bsTooltip("gmt_modal_q",HTML("Enter a unique abbreviation for each uploaded GMT. easyGSEA recognizes any string before the first occurrence of an underscore (\"_\") as the identifier for each gene set database/library.")
                   ,placement = "right"),
-        fluidRow(
-          lapply(rv$gmt_cs_new, function(x){
-            i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
-            id <- paste0("GMT",i)
-            column(6,
-                   textInput(
-                     id,
-                     label = x,
-                     value = id
-                   )
-            )
-          })
+        div(
+          materialSwitch(
+            inputId = "gmt_name_in_file",
+            label = HTML(paste0("Abbreviation(s) already included in uploaded GMT(s)?",add_help("gmt_name_in_file_q"))),
+            value = rv$gmt_name_in_file, inline = TRUE, width = "100%",
+            status = "danger"
+          ),
+          bsTooltip("gmt_name_in_file_q",HTML("Click and switch to TRUE if your uploaded GMT(s) already include(s) a database identifier in each gene set name, formated as \"XXX_YYYYY\", where \"XXX\" = the database name, and \"YYYYY\" = the gene set name.")
+                    ,placement = "right")
+        )
+        , uiOutput("ui_name_gmt")
+        , easyClose = F,size="m"
+        , footer = tagList(
+          modalButton('Cancel'),
+          bsButton('named_gmt', 'Confirm to proceed', style = "primary", block=F)
+        )
+      ))
+    })
+    
+    # --------- 1.2b2.manual GMT naming by user ----------
+    observeEvent(input$gmt_name_in_file,{rv$gmt_name_in_file <- input$gmt_name_in_file})
+    
+    output$ui_name_gmt <- renderUI({
+      req(!rv$gmt_name_in_file)
+      
+      div(
+        wellPanel(
+          style = paste0("background:",bcol3),
+          fluidRow(
+            lapply(rv$gmt_cs_new, function(x){
+              i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
+              id <- paste0("GMT",i)
+              column(6,
+                     textInput(
+                       id,
+                       label = x,
+                       value = id
+                     )
+              )
+            })
+            ,uiOutput("ui_highlight")
+          )
           
-          ,uiOutput("ui_highlight")
         )
         ,fluidRow(
           column(
@@ -298,40 +327,40 @@
         ,fluidRow(
           column(
             12,
-            br(),
-            tags$hr(style="border-top: 0.5px dashed black;"),
-            h4("Color codes for errors:")
+            tags$hr(style="border: 0.5px dashed black; margin-bottom: 1em;"),
+            HTML("<span style='font-size:110%;margin-bottom: 1em;'>Error color codes (box borders):</span>")
           )
           ,column(
-            3,
+            4,
             tags$hr(style="border: 1px solid lightgrey; margin-top: 0.5em; margin-bottom: 0.5em;"),
             p("Valid entry")
           )
           ,column(
-            3,
+            4,
             tags$hr(style="border: 1px solid salmon; margin-top: 0.5em; margin-bottom: 0.5em;"),
             p("Duplicate entries")
           )
           ,column(
-            3,
+            4,
             tags$hr(style="border: 1px solid orange; margin-top: 0.5em; margin-bottom: 0.5em;"),
-            p("Entry used for another upload")
+            p("Entry been used")
           )
           ,column(
-            3,
+            4,
             tags$hr(style="border: 1px solid navy; margin-top: 0.5em; margin-bottom: 0.5em;"),
             p("Empty entry")
           )
+          ,column(
+            4,
+            tags$hr(style="border: 1px solid orchid; margin-top: 0.5em; margin-bottom: 0.5em;"),
+            p("Entry contains underscore(s)")
+          )
         )
-        , easyClose = F,size="m"
-        , footer = tagList(
-          modalButton('Cancel'),
-          bsButton('named_gmt', 'Confirm to proceed', style = "primary", block=F)
-        )
-      ))
+      )
+      
     })
     
-    # highlight if a textinput is empty
+    # highlight if a textinput has an error
     output$ui_highlight <- renderUI({
       req(is.null(rv$gmt_cs_new) == F)
       
@@ -347,20 +376,29 @@
       # observe if repetitive name use in the RVs
       used_d <- lapply(str_split(names(rv$gmt_cs), ":", n=2), function(x) x[1]) 
       
+      # boxes' parameters
+      shadow_w <- "0 0 .5em"
+      border_w <- ".5px"
+      cl1 <- ""; cl2 <- ""
+      
       for(x in rv$gmt_cs_new){
         i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
         id <- paste0("GMT",i)
         
         if(sum(used %in% input[[id]])>1){
-          ss <- "{box-shadow: 0 0 3px salmon; border: 0.1em solid salmon;}"
+          cl1 <- cl2 <- "salmon"
         }else if(input[[id]] %in% used_d){
-          ss <- "{box-shadow: 0 0 3px orange; border: 0.1em solid orange;}"
+          cl1 <- cl2 <- "orange"
         }else if(nchar(input[[id]])==0){
-          ss <- "{box-shadow: 0 0 3px navy; border: 0.1em solid navy;}"
+          cl1 <- cl2 <-"navy"
+        }else if(grepl("_",input[[id]])){
+          cl1 <- cl2 <- "orchid"
         }else{
-          ss <- "{box-shadow: none; border: 1px solid lightgrey;}"
+          cl1 <- "none"; cl2 <- "lightgrey"; shadow_w <- ""
         }
         
+        # generate the styles
+        ss <- sprintf("{box-shadow:%s %s; border:%s solid %s;}",shadow_w,cl1,border_w,cl2)
         htag <- c(htag, paste0("#",id,ss))
       }
       

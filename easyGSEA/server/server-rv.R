@@ -26,6 +26,7 @@
         gmt_cs=list(), gmt_cs_paths=list(), # uploaded GMTs for custom analysis
         gmt_cs_new=list(), gmt_cs_paths_new=list(), # newly uploaded GMTs temporarily stored
         gmt_temp=NULL, # temporary vector for input$gmt_c
+        gmt_name_in_file=F,
         
         box_h_a = "594px", box_h = "574px", box_hp = 574, es_h = "245px",
         dendro_hp = 660,
