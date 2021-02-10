@@ -180,10 +180,10 @@ gmt_collections_selected <- vector("list")
 test = read.csv(paste0(getwd(),"/www/gmts/gmts_list.csv"),header=F,stringsAsFactors = F)
 
 # names of databases
-dbs = strsplit(test$V3,";")
-for(i in seq_along(dbs)){
+dbs_o = strsplit(test$V3,";")
+for(i in seq_along(dbs_o)){
   # tidy up database names by removing ".gmt" and the dates it's created; convert _ to spaces
-  names <- gsub(".gmt$","",dbs[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
+  names <- gsub(".gmt$","",dbs_o[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
   # # 1) the below 2 lines store the databases in abbreviated strings and named them in full in a named vector
   names_abbr = sapply(names, function(x) retrieve_abbr(x));  coll = names_abbr #names_abbr = abbreviate_string(names); coll = names_abbr
   names(coll) = names
@@ -194,7 +194,7 @@ for(i in seq_along(dbs)){
   gmt_collections = c(gmt_collections, list(coll))
   
   # paths to GMT files
-  paths = paste0(getwd(),"/www/gmts/",test$V1[[i]],"/",test$V2[[i]],"/",dbs[[i]])
+  paths = paste0(getwd(),"/www/gmts/",test$V1[[i]],"/",test$V2[[i]],"/",dbs_o[[i]])
   names(paths) = names_abbr #names
   
   gmt_collections_paths = c(gmt_collections_paths, list(paths))
@@ -216,10 +216,10 @@ gmt_collections_paths = split(gmt_collections_paths,test$V1)
 ## read in GMTs selected as default
 test = read.csv(paste0(getwd(),"/www/gmts/gmts_list_selected.csv"),header=F,stringsAsFactors = F)
 # names of databases
-dbs = strsplit(test$V3,";")
-for(i in seq_along(dbs)){
+dbs_o = strsplit(test$V3,";")
+for(i in seq_along(dbs_o)){
   # tidy up database names by removing ".gmt" and the dates it's created; convert _ to spaces
-  names <- gsub(".gmt$","",dbs[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
+  names <- gsub(".gmt$","",dbs_o[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
   # # 1) the below 2 lines store the databases in abbreviated strings and named them in full in a named vector
   names_abbr = sapply(names, function(x) retrieve_abbr(x)); coll = names_abbr #names_abbr = abbreviate_string(names); coll = names_abbr
   names(coll) = names
@@ -234,7 +234,7 @@ for(i in seq_along(dbs)){
 names(gmt_collections_selected) = test$V2
 gmt_collections_selected = split(gmt_collections_selected,test$V1)
 
-remove(test); remove(dbs)
+remove(test); remove(dbs_o)
 
 
 #============= numeric namespaces ================

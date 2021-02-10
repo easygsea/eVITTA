@@ -68,9 +68,8 @@
     
     combine_df <- function(df=rv$fgseagg,db_selected=unlist(gs_selected())){
         df <- df %>% 
-            dplyr::filter(db %in% db_selected) %>% 
-            dplyr::select(-db) %>% 
-            dplyr::arrange(padj)
+          dplyr::filter(str_detect(pathway, paste0("^(",paste0(db_selected, collapse = "|"),")_"))) %>% 
+          dplyr::arrange(padj)
         
         # when prompted, remove db name and id
         if(!rv$db_name_y){
@@ -134,9 +133,8 @@
     
     filter_plot_df <- function(pathways, up, down, cutoff_p, cutoff_q){
       df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
-      
       df = df %>% 
-        dplyr::filter(db %in% pathways) %>% 
+        dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>% 
         mutate_if(is.numeric,  ~replace(., . == 0, p_min)) %>%
         dplyr::arrange(padj)
       
@@ -2151,8 +2149,6 @@
         if(cat_name %in% db_prs){fgseaRes <- remove_db_name(fgseaRes)}
         
         # add db prefices
-        db <- rep(cat_name, nrow(fgseaRes))
-        fgseaRes <- cbind(db,fgseaRes)
         fgseaRes$pathway <- paste0(cat_name,"_",fgseaRes$pathway)
         
         # write into RV
@@ -2207,8 +2203,6 @@
           # if db has a abbreviation prefix, get rid of it
           if(cat_name %in% db_prs){fgseaRes <- remove_db_name(fgseaRes)}
           
-          db <- rep(cat_name, nrow(fgseaRes))
-          fgseaRes <- cbind(db,fgseaRes)
           fgseaRes$pathway <- paste0(cat_name,"_",fgseaRes$pathway)
           rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
           rv$no_up_25 = sum(fgseaRes$padj<0.25,na.rm=TRUE)
