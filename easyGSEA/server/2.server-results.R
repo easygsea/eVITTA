@@ -3,21 +3,22 @@
 #=============================================================#
 # ------------ Overall bodyResults UI ------------------
 output$ui_bodyResults <- renderUI({
-    # saveRDS(rv$gene_lists, file = "rvs/gene_lists.rds")
-    # saveRDS(rv$fgseagg, file = "rvs2/fgseagg.rds")
-    # saveRDS(rv$gmts, file = "rvs2/gmts.rds")
-    # saveRDS(rv$dbs, file = "rvs2/dbs.rds")
-    # saveRDS(rv$gmts_length, file = "rvs2/gmts_length.rds")
-    # saveRDS(rv$gmt_cs_paths, file = "rvs2/gmt_cs_paths.rds")
-    # saveRDS(rv$db_modal, file = "rvs2/db_modal.rds")
-    # saveRDS(rv$gmt_cs, file = "rvs2/gmt_cs.rds")
-    # saveRDS(rv$sd_high, file = "rvs2/sd_high.rds")
-    # saveRDS(rv$gmin, file = "rvs2/gmin.rds")
-    # saveRDS(rv$gmax, file = "rvs2/gmax.rds")
-    # saveRDS(rv$gperm, file = "rvs2/gperm.rds")
-    # saveRDS(rv$bar_pathway, file = "rvs2/bar_pathway.rds")
-    # saveRDS(rv$bubble_pathway, file = "rvs2/bubble_pathway.rds")
-    # saveRDS(rv$run_n, file = "rvs2/run_n.rds")
+    if(rv$run_mode == "glist" && !is.null(rv$demo_save) && rv$demo_save == "yes"){
+        saveRDS(rv$fgseagg, file = "rvs2/fgseagg.rds")
+        saveRDS(rv$gmts, file = "rvs2/gmts.rds")
+        saveRDS(rv$dbs, file = "rvs2/dbs.rds")
+        saveRDS(rv$gmts_length, file = "rvs2/gmts_length.rds")
+        saveRDS(rv$gmt_cs_paths, file = "rvs2/gmt_cs_paths.rds")
+        saveRDS(rv$db_modal, file = "rvs2/db_modal.rds")
+        saveRDS(rv$gmt_cs, file = "rvs2/gmt_cs.rds")
+        saveRDS(rv$sd_high, file = "rvs2/sd_high.rds")
+        saveRDS(rv$gmin, file = "rvs2/gmin.rds")
+        saveRDS(rv$gmax, file = "rvs2/gmax.rds")
+        saveRDS(rv$gperm, file = "rvs2/gperm.rds")
+        saveRDS(rv$bar_pathway, file = "rvs2/bar_pathway.rds")
+        saveRDS(rv$bubble_pathway, file = "rvs2/bubble_pathway.rds")
+        saveRDS(rv$run_n, file = "rvs2/run_n.rds")
+    }
 
     if(is.null(rv$run) || rv$run != "success"){
         panel_null()

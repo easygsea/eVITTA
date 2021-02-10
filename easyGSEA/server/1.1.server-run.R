@@ -1572,20 +1572,23 @@
               incProgress(0.1)
             }
         })
-        # saveRDS(rv$fgseagg, file = "rvs/fgseagg.rds")
-        # saveRDS(rv$gmts, file = "rvs/gmts.rds")
-        # saveRDS(rv$dbs, file = "rvs/dbs.rds")
-        # saveRDS(rv$gmts_length, file = "rvs/gmts_length.rds")
-        # saveRDS(rv$gmt_cs_paths, file = "rvs/gmt_cs_paths.rds")
-        # saveRDS(rv$db_modal, file = "rvs/db_modal.rds")
-        # saveRDS(rv$gmt_cs, file = "rvs/gmt_cs.rds")
-        # saveRDS(rv$sd_high, file = "rvs/sd_high.rds")
-        # saveRDS(rv$gmin, file = "rvs/gmin.rds")
-        # saveRDS(rv$gmax, file = "rvs/gmax.rds")
-        # saveRDS(rv$gperm, file = "rvs/gperm.rds")
-        # saveRDS(rv$bar_pathway, file = "rvs/bar_pathway.rds")
-        # saveRDS(rv$bubble_pathway, file = "rvs/bubble_pathway.rds")
-        # saveRDS(rv$run_n, file = "rvs/run_n.rds")
+        
+        if(!is.null(rv$demo_save) && rv$demo_save == "yes"){
+          saveRDS(rv$fgseagg, file = "rvs/fgseagg.rds")
+          saveRDS(rv$gmts, file = "rvs/gmts.rds")
+          saveRDS(rv$dbs, file = "rvs/dbs.rds")
+          saveRDS(rv$gmts_length, file = "rvs/gmts_length.rds")
+          saveRDS(rv$gmt_cs_paths, file = "rvs/gmt_cs_paths.rds")
+          saveRDS(rv$db_modal, file = "rvs/db_modal.rds")
+          saveRDS(rv$gmt_cs, file = "rvs/gmt_cs.rds")
+          saveRDS(rv$sd_high, file = "rvs/sd_high.rds")
+          saveRDS(rv$gmin, file = "rvs/gmin.rds")
+          saveRDS(rv$gmax, file = "rvs/gmax.rds")
+          saveRDS(rv$gperm, file = "rvs/gperm.rds")
+          saveRDS(rv$bar_pathway, file = "rvs/bar_pathway.rds")
+          saveRDS(rv$bubble_pathway, file = "rvs/bubble_pathway.rds")
+          saveRDS(rv$run_n, file = "rvs/run_n.rds")
+        }
 
     })
 
