@@ -122,7 +122,7 @@ output$ui_tl_cut <- renderUI({
         #     label = span(icon("cut"),"Cut table"),
         #     style = "primary"
         # )
-        tv_div()
+        tv_d_div()
         ,width = "300px",circle = TRUE, status = "info",
         size = "xs",
         icon = icon("gear"),# "fas fa-cut"

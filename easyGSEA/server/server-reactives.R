@@ -222,3 +222,31 @@ tv_div <- reactive({
                ,placement = "top")
   )
 })
+
+tv_d_div <- reactive({
+  fluidRow(
+    column(
+      12,
+      checkboxInput(
+        "db_name_d_y",
+        HTML(paste0("Display dababase prefix ",add_help("db_name_y_q")))
+        ,value = rv$db_name_y
+      )
+    )
+    ,column(
+      12,
+      checkboxInput(
+        "db_id_d_y",
+        HTML(paste0("Display gene set ID ",add_help("db_id_y_q")))
+        ,value = rv$db_id_y
+      )
+    )
+    ,bsTooltip("db_name_y_q",HTML("By default, each gene set is prefixed by its originating database (abbreviated). Unselect to delete the prefix.")
+               ,placement = "top")
+    ,bsTooltip("db_id_y_q",HTML("By defualt, each gene set is annotated with its unique ID (if any) in the original database. Unselect to delete the ID string.")
+               ,placement = "top")
+  )
+})
+
+observeEvent(input$db_name_d_y,{rv$db_name_y <- input$db_name_d_y})
+observeEvent(input$db_id_d_y,{rv$db_id_y <- input$db_id_d_y})
