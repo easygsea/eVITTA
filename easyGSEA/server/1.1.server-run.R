@@ -150,7 +150,7 @@
     batch_mb_limit <- 300*(1024^2)
     total_mb_limit <- 300*(1024^2)
 
-    # -------------- 1.2b upload GMT -------------------
+    # -------------- 1.2b1 upload GMT -------------------
     output$gmt_upload <- renderUI({
       # initialize RVs for our demo session
       if(rv$demo_mode == "gsea"){
@@ -384,6 +384,8 @@
       for(x in rv$gmt_cs_new){
         i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
         id <- paste0("GMT",i)
+        
+        req(is.null(input[[id]])==F)
         
         if(sum(used %in% input[[id]])>1){
           cl1 <- cl2 <- "salmon"
