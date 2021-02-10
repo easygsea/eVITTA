@@ -646,20 +646,14 @@ output$gmt_box <- renderUI({
 output$delete_gmt <- renderUI({
     if(length(rv$gmt_cs) >= 1){
         div(
-            tags$head(
-                tags$style(".multi-wrapper {height: fit-content;}"), 
-                tags$style(".multi-wrapper .non-selected-wrapper, .multi-wrapper .selected-wrapper {height: 100%;}")
-            ),
-            div(
-                multiInput(inputId = "delete_gmt",
-                           label = NULL,
-                           choices = rv$gmt_cs,
-                           width = "100%",
-                           options = list(
-                               enable_search = FALSE,
-                               non_selected_header = "Loaded GMT(s):",
-                               selected_header = "Delete GMT(s):")
-                )
+            multiInput(inputId = "delete_gmt",
+                       label = NULL,
+                       choices = rv$gmt_cs,
+                       width = "100%",
+                       options = list(
+                           enable_search = FALSE,
+                           non_selected_header = "Loaded GMT(s):",
+                           selected_header = "Delete GMT(s):")
             )
         )
         

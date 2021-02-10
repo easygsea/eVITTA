@@ -484,24 +484,29 @@
         # proceed only if a name is assigned to each GMT
         req(error_d == 0)
         
-        #add new files that are not in df already to the df
-        rv$GMTDF<-rbind(rv$GMTDF,rv$gmt_temp[!(rv$gmt_temp$name %in% rv$GMTDF$name)])
-        
-        #IMPORTANT: GMT seems to assume all uploaded GMTs are unique, so we need to drop duplicates
-        
         ids <- sapply(rv$gmt_cs_new, function(x){
           i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
           id <- paste0("GMT",i)
           return(input[[id]])
         })
       }else{
-        
+        ids <- sapply(rv$gmt_cs_new, function(x){
+          fname <- rv$gmt_cs_new[match(x,rv$gmt_cs_new)][[1]]
+          gmt_name <- gmtPathways(rv$gmt_temp[rv$gmt_temp$name %in% fname,][["datapath"]])[1] %>%
+            names(.) %>% str_split(.,"_",n=2) %>% .[[1]] %>% .[1]
+          return(gmt_name)
+        })
       }
-
+      
+      #add new files that are not in size-monitoring df already to the df
+      rv$GMTDF<-rbind(rv$GMTDF,rv$gmt_temp[!(rv$gmt_temp$name %in% rv$GMTDF$name)])
+      
+      #IMPORTANT: GMT seems to assume all uploaded GMTs are unique, so we need to drop duplicates
 
       # name the uploaded GMT files
+      gmt_names <- paste0(ids,":",rv$gmt_cs_new)
       rv$gmt_cs_new <- ids
-      names(rv$gmt_cs_new) <- paste0(ids,":",rv$gmt_cs_new)
+      names(rv$gmt_cs_new) <- gmt_names
       
       # update the core RVs
       rv$gmt_cs <- c(rv$gmt_cs,rv$gmt_cs_new)
@@ -509,6 +514,7 @@
       
       # clear temporary rv
       rv$gmt_cs_new <- NULL
+      rv$gmt_temp <- NULL
 
       removeModal()
     })
