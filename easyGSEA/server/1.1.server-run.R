@@ -504,7 +504,7 @@
       }
       
       #add new files that are not in size-monitoring df already to the df
-      rv$GMTDF<-rbind(rv$GMTDF,rv$gmt_temp[!(rv$gmt_temp$name %in% rv$GMTDF$name)])
+      rv$GMTDF<-rbind(rv$GMTDF,rv$gmt_temp[!(rv$gmt_temp$name %in% rv$GMTDF$name),])
       
       #IMPORTANT: GMT seems to assume all uploaded GMTs are unique, so we need to drop duplicates
 
