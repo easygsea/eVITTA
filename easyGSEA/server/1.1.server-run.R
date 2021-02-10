@@ -168,7 +168,7 @@
               div(class="input-group",
                   tags$label(class="input-group-btn input-group-prepend",
                     HTML('<span id="gmt_cc" style="width: 100%;" class="btn btn-default btn-file">')
-                    ,HTML('<img src="upload.jpg" width="18%" class="mx-2"><br>Drag your <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
+                    ,HTML('<img src="upload.jpg" width="18%" class="mx-2"><br>Drag <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
                     ,HTML('
         <input id="gmt_c" name="gmt_c" type="file" style="display: none;" multiple="multiple" accept="text/tab-separated-values,.txt,.tab,.tsv,.gmt"/>
     ')
