@@ -188,6 +188,19 @@
     
     # read in GMTs
     observeEvent(input$gmt_c,{
+      # Check the type of file you uploads, if the file is other types, remind the user
+      ext_check <- ""
+      if(!tools::file_ext(input$gmt_c$name) %in% c(
+        'text/tab-separated-values','txt','tab','tsv','gmt'
+      )){
+        ext_check <- "no"
+        shinyjs::reset("gmt_c")
+        shinyalert("We only accept files that are .txt,.tab,.tsv,.gmt; 
+                   please check your file(s) and re-upload file(s) with the correct file extensions .")
+      }
+      
+      req(ext_check != "no")
+      
       if(sum(input$gmt_c$size) >= batch_mb_limit){  
         showModal(modalDialog(
           inputId = "size_reminder_modal1",
@@ -216,51 +229,212 @@
       req(sum(input$gmt_c$size) < batch_mb_limit)
       req((sum(input$gmt_c$size) + sum(rv$GMTDF$size)) < total_mb_limit)
       
-      # Check the type of file you uploads, if the file is other types, remind the user
-      ext_check <- ""
-      if(!tools::file_ext(input$gmt_c$name) %in% c(
-         'text/tab-separated-values','txt','tab','tsv','gmt'
-      )){
-        ext_check <- "no"
-        shinyjs::reset("gmt_c")
-        shinyalert("We only accept files that are .txt,.tab,.tsv,.gmt; 
-                   please check your file(s) and re-upload file(s) with the correct file extensions .")
-      }
+      # # render a feedback on uploaded GMTs
+      # showModal(modalDialog(
+      #   fluidRow(
+      #     column(12, style="font-size:150%;",
+      #       HTML("You have uploaded <b>",length(gmt_names),"</b> file(s):<br><br>")
+      #       ,HTML(paste0(gmt_names,collapse = "<br>"))
+      #     )
+      #   )
+      #   ,easyClose = T
+      #   ,footer = modalButton("OK")
+      # ))
       
-      req(ext_check != "no")
-      #add new files that are not in df already to the df
-      rv$GMTDF<-rbind(rv$GMTDF,input$gmt_c[!(input$gmt_c$name %in% rv$GMTDF$name)])
+      rv$gmt_cs_new <- list()
+      rv$gmt_temp <- NULL
       
-      #IMPORTANT: GMT seems to assume all uploaded GMTs are unique, so we need to drop duplicates
+      df <- input$gmt_c
+      rv$gmt_temp <- df
       
-      df = input$gmt_c
-
       gmt_names = list()
       for(i in 1:nrow(df)){
         gmt = df[i,]
-        gmt_name = gmt$name
+        gmt_name_o = gmt$name
         gmt_path = gmt$datapath
 
-        gmt_names = c(gmt_names,gmt_name)
-
-        if(!gmt_name %in% rv$gmt_cs){
-          rv$gmt_cs = c(rv$gmt_cs, gmt_name)
-          rv$gmt_cs_paths = c(rv$gmt_cs_paths, gmt_path)
+        # add a number to the file name is already uploaded
+        if(gmt_name_o %in% rv$gmt_cs){
+          if(grepl("\\([[:digit:]]+\\)$",gmt_name_o)){
+            n <- gsub("(.*)\\(([[:digit:]]+)\\)$", "\\2", gmt_name_o)
+            n <- as.numeric(n) + 1
+            gmt_name <- gsub("(.*)\\(([[:digit:]]+)\\)$", paste0("\\1(",n,")"), gmt_name_o)
+          }else{
+            gmt_name <- paste0(gmt_name_o,"(1)")
+          }
+          
+          print(rv$gmt_temp$name)
+          # rename the file
+          rv$gmt_temp$name[rv$gmt_temp$name == gmt_name_o] <- gmt_name
+        }else{
+          gmt_name <- gmt_name_o
         }
+        
+        # write data into corresponding RVs
+        rv$gmt_cs_new = c(rv$gmt_cs_new, gmt_name)
+        rv$gmt_cs_paths_new = c(rv$gmt_cs_paths, gmt_path)
       }
-
+      
+      # render a modal after uploads
       showModal(modalDialog(
+        id = "gmt_modal",
+        title = HTML(paste0("Name your uploaded GMTs ",add_help("gmt_modal_q"))),
+        bsTooltip("gmt_modal_q",HTML("Enter a unique abbreviation for each uploaded GMT")
+                  ,placement = "right"),
         fluidRow(
-          column(12, style="font-size:150%;",
-            HTML("You have uploaded <b>",length(gmt_names),"</b> file(s):<br><br>")
-            ,HTML(paste0(gmt_names,collapse = "<br>"))
+          lapply(rv$gmt_cs_new, function(x){
+            i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
+            id <- paste0("GMT",i)
+            column(6,
+                   textInput(
+                     id,
+                     label = x,
+                     value = id
+                   )
+            )
+          })
+          ,column(
+            12,align="left",
+            bsButton(
+              "reset_gmt_names",
+              "Reset to default naming system"
+            )
           )
+          ,uiOutput("ui_highlight")
         )
-        ,easyClose = T
-        ,footer = modalButton("OK")
+        , easyClose = F,size="m"
+        , footer = tagList(
+          modalButton('Cancel'),
+          bsButton('named_gmt', 'Confirm to proceed', style = "primary", block=F)
+        )
       ))
     })
+    
+    # highlight if a textinput is empty
+    output$ui_highlight <- renderUI({
+      req(is.null(rv$gmt_cs_new) == F)
+      
+      htag <- c()
+      
+      # observe if duplicate names entered
+      used <- sapply(rv$gmt_cs_new, function(x){
+        i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        input[[id]]
+      })
+      
+      # observe if repetitive name use in the RVs
+      used_d <- lapply(str_split(names(rv$gmt_cs), ":", n=2), function(x) x[1]) 
+      
+      for(x in rv$gmt_cs_new){
+        i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        
+        if(sum(used %in% input[[id]])>1){
+          ss <- "{box-shadow: 0 0 3px red; border: 0.1em solid red;}"
+        }else if(input[[id]] %in% used_d){
+          ss <- "{box-shadow: 0 0 3px orange; border: 0.1em solid orange;}"
+        }else if(nchar(input[[id]])==0){
+          ss <- "{box-shadow: 0 0 3px blue; border: 0.1em solid blue;}"
+        }else{
+          ss <- "{box-shadow: none; border: 1px solid #d2d6de;}"
+        }
+        
+        htag <- c(htag, paste0("#",id,ss))
+      }
+      
+      tags$head(tags$style(HTML(
+        paste0(htag, collapse = " ")
+      )))
+    })
+    
+    # reset to default naming system
+    observeEvent(input$reset_gmt_names,{
+      for(x in rv$gmt_cs_new){
+        i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        updateTextInput(session,
+          id, label = x, value = id
+        )
+      }
+    })
+    
+    # load uploaded GMTs into RV when confirmed
+    observeEvent(input$named_gmt,{
+      # observe if any textinput is empty
+      error_0 <- 0
+      # observe if repetitive name use in the RVs
+      error_d <- 0
+      # check if duplicate names are entered
+      used <- c()
+      # already-used names
+      used_d <- lapply(str_split(names(rv$gmt_cs), ":", n=2), function(x) x[1]) 
+      
+      for(x in rv$gmt_cs_new){
+        i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        
+        if(nchar(input[[id]])==0){
+          error_0 <- error_0 + 1
+        }else{
+          used <- c(used, input[[id]])
+          if(input[[id]] %in% used_d){
+            error_d <- error_d + 1
+          }
+        }
+      }
+      
+      if(error_0 > 0){
+        shinyalert("Please enter a name for each uploaded GMT file.")
+      }
+      
+      # proceed only if a name is assigned to each GMT
+      req(error_0 == 0)
+      
+      # observe if repetitive name use in the inputs
+      error_f <- 0
 
+      if(T %in% duplicated(used)){
+        error_f <- error_f + 1
+        shinyalert("Please enter a unique name for each uploaded GMT file.")
+      }
+      
+      # proceed only if a name is assigned to each GMT
+      req(error_f == 0)
+      
+            
+      # render alert if same names identified
+      if(error_d > 0){
+        shinyalert("You've already used the orange-highlighted name(s) in your uploaded GMT(s). Please enter a unique name for each GMT.")
+      }
+      
+      # proceed only if a name is assigned to each GMT
+      req(error_d == 0)
+      
+      #add new files that are not in df already to the df
+      rv$GMTDF<-rbind(rv$GMTDF,rv$gmt_temp[!(rv$gmt_temp$name %in% rv$GMTDF$name)])
+      
+      #IMPORTANT: GMT seems to assume all uploaded GMTs are unique, so we need to drop duplicates
+      
+      ids <- sapply(rv$gmt_cs_new, function(x){
+        i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        return(input[[id]])
+      })
+
+
+      # name the uploaded GMT files
+      names(rv$gmt_cs_new) <- paste0(ids,":",rv$gmt_cs_new)
+      
+      # update the core RVs
+      rv$gmt_cs <- c(rv$gmt_cs,rv$gmt_cs_new)
+      rv$gmt_cs_paths = c(rv$gmt_cs_paths,rv$gmt_cs_paths_new)
+      
+      # clear temporary rv
+      rv$gmt_cs_new <- NULL
+
+      removeModal()
+    })
 
     # --------------  1.2.2 show databases in a modal ---------------------------
     observeEvent(input$showdbs,{
@@ -381,7 +555,7 @@
           rv$db_status <- "selected"
         }
         
-        if (rv$db_status == "selected"){
+        if (is.null(rv$db_status)==F && rv$db_status == "selected"){
           shinyjs::disable("selected_species")
         }
 
@@ -396,6 +570,7 @@
         # }
 
     })
+    
 
     # reset species, at the same time reset rnk/glist
     observeEvent(input$add_db_modify, {

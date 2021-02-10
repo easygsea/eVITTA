@@ -1,5 +1,5 @@
     #=======================================================================#
-    ####----------------------- Functions: Calculation -------------------####
+    ####----------------- Functions: filtering and UI -------------------####
     #=======================================================================#
     # remove db names and IDs in gsea table
     remove_db_name <- function(df){
@@ -18,6 +18,14 @@
       df
     }
     
+    # highlight the boxes of textinput if empty
+    highlight_box <- function(){
+      
+    }
+    
+    #=======================================================================#
+    ####----------------------- Functions: Calculation -------------------####
+    #=======================================================================#
     # collapse the leadingedge column
     collapse_last_col <- function(df, sep=";"){
       df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = sep))
