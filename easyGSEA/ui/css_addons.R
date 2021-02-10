@@ -53,7 +53,7 @@ css_addons <-
       }"
       
       ,"#gmt_cc:hover {
-      background-color: #f3e5f5;
+      background-color: #e6e6ff;
       }"
       
       # GMT upload progress bar
