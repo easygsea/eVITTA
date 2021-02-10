@@ -1185,7 +1185,7 @@
             y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
             
             #get the clusters_id
-            print(head(df))
+            # print(head(df))
             if(nrow(df) == 1){
               df <- df %>%
                 mutate(cluster_name = paste0("1: ", pathway))
@@ -1241,7 +1241,7 @@
             rv$df_further = df_further
             rv$df_download <- df_further %>%
               dplyr::rename(c("cluster_size" = "n", "cluster_id" = "cluster")) %>%
-              dplyr::select(cluster_id, -cluster_size, everything(), -cluster_size, -db) %>%
+              dplyr::select(cluster_id, -cluster_size, everything(), -cluster_size) %>%
               dplyr::arrange(cluster_id)
             # print(head(rv$df_download))
             
