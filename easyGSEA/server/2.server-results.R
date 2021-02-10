@@ -4,6 +4,7 @@
 # ------------ Overall bodyResults UI ------------------
 output$ui_bodyResults <- renderUI({
     # saveRDS(rv$gene_lists, file = "rvs/gene_lists.rds")
+    # saveRDS(rv$fgseagg, file = "rvs2/fgseagg.rds")
 
     if(is.null(rv$run) || rv$run != "success"){
         panel_null()
