@@ -229,19 +229,9 @@
       req(sum(input$gmt_c$size) < batch_mb_limit)
       req((sum(input$gmt_c$size) + sum(rv$GMTDF$size)) < total_mb_limit)
       
-      # # render a feedback on uploaded GMTs
-      # showModal(modalDialog(
-      #   fluidRow(
-      #     column(12, style="font-size:150%;",
-      #       HTML("You have uploaded <b>",length(gmt_names),"</b> file(s):<br><br>")
-      #       ,HTML(paste0(gmt_names,collapse = "<br>"))
-      #     )
-      #   )
-      #   ,easyClose = T
-      #   ,footer = modalButton("OK")
-      # ))
-      
+      # reset and initialize temporary RVs
       rv$gmt_cs_new <- list()
+      rv$gmt_cs_paths_new <- list()
       rv$gmt_temp <- NULL
       
       df <- input$gmt_c
@@ -272,7 +262,7 @@
         
         # write data into corresponding RVs
         rv$gmt_cs_new = c(rv$gmt_cs_new, gmt_name)
-        rv$gmt_cs_paths_new = c(rv$gmt_cs_paths, gmt_path)
+        rv$gmt_cs_paths_new = c(rv$gmt_cs_paths_new, gmt_path)
       }
       
       # render a modal after uploads
@@ -293,14 +283,45 @@
                    )
             )
           })
-          ,column(
-            12,align="left",
+          
+          ,uiOutput("ui_highlight")
+        )
+        ,fluidRow(
+          column(
+            12,
             bsButton(
               "reset_gmt_names",
               "Reset to default naming system"
             )
           )
-          ,uiOutput("ui_highlight")
+        )
+        ,fluidRow(
+          column(
+            12,
+            br(),
+            tags$hr(style="border-top: 0.5px dashed black;"),
+            h4("Color codes for errors:")
+          )
+          ,column(
+            3,
+            tags$hr(style="border: 1px solid lightgrey; margin-top: 0.5em; margin-bottom: 0.5em;"),
+            p("Valid entry")
+          )
+          ,column(
+            3,
+            tags$hr(style="border: 1px solid salmon; margin-top: 0.5em; margin-bottom: 0.5em;"),
+            p("Duplicate entries")
+          )
+          ,column(
+            3,
+            tags$hr(style="border: 1px solid orange; margin-top: 0.5em; margin-bottom: 0.5em;"),
+            p("Entry used for another upload")
+          )
+          ,column(
+            3,
+            tags$hr(style="border: 1px solid navy; margin-top: 0.5em; margin-bottom: 0.5em;"),
+            p("Empty entry")
+          )
         )
         , easyClose = F,size="m"
         , footer = tagList(
@@ -331,13 +352,13 @@
         id <- paste0("GMT",i)
         
         if(sum(used %in% input[[id]])>1){
-          ss <- "{box-shadow: 0 0 3px red; border: 0.1em solid red;}"
+          ss <- "{box-shadow: 0 0 3px salmon; border: 0.1em solid salmon;}"
         }else if(input[[id]] %in% used_d){
           ss <- "{box-shadow: 0 0 3px orange; border: 0.1em solid orange;}"
         }else if(nchar(input[[id]])==0){
-          ss <- "{box-shadow: 0 0 3px blue; border: 0.1em solid blue;}"
+          ss <- "{box-shadow: 0 0 3px navy; border: 0.1em solid navy;}"
         }else{
-          ss <- "{box-shadow: none; border: 1px solid #d2d6de;}"
+          ss <- "{box-shadow: none; border: 1px solid lightgrey;}"
         }
         
         htag <- c(htag, paste0("#",id,ss))
@@ -424,6 +445,7 @@
 
 
       # name the uploaded GMT files
+      rv$gmt_cs_new <- ids
       names(rv$gmt_cs_new) <- paste0(ids,":",rv$gmt_cs_new)
       
       # update the core RVs
