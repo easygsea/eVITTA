@@ -51,11 +51,12 @@ output$ui_downloadbox <- renderUI({
                                        )
                                    # ,bsTooltip("gs_tbl_dl",HTML("Download converted DEG table and proceed to <b>easyVizR</b> for multiple comparisons on functional categories")
                                    #            ,placement = "top")
+                                       ,div(
+                                           style="position: relative; right: -11.5em; top: -3.5em;",
+                                           uiOutput("ui_tl_cut")
+                                       )
                                    )
-                                   ,div(
-                                       style="position: absolute; right: 5.2em; top: 3.2em;",
-                                       uiOutput("ui_tl_cut")
-                                   )
+                                   
                             )
                         )
                         
