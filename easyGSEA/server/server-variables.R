@@ -1,5 +1,8 @@
 col_f = c("01_WormCat (Holdorf et al. 2020)","02_Pathway","03_Gene Ontology")
 
+# databases has prefices
+db_prs <- c("KEGG","RAL","RA","WP","BP","CC","MF","C1","C2","C3")
+
 # width of shadows
 shadow_width <- ".3em"
 line_width <- ".5px"

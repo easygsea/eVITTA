@@ -2147,9 +2147,15 @@
       if(inherits(frun, "try-error")) {        
         errors = errors + 1
       }else{
+        # if db has a abbreviation prefix, get rid of it
+        if(cat_name %in% db_prs){fgseaRes <- remove_db_name(fgseaRes)}
+        
+        # add db prefices
         db <- rep(cat_name, nrow(fgseaRes))
         fgseaRes <- cbind(db,fgseaRes)
         fgseaRes$pathway <- paste0(cat_name,"_",fgseaRes$pathway)
+        
+        # write into RV
         rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
         # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
         rv$no_up_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
@@ -2198,6 +2204,9 @@
         if(inherits(frun, "try-error")) {        
           errors = errors + 1
         }else{
+          # if db has a abbreviation prefix, get rid of it
+          if(cat_name %in% db_prs){fgseaRes <- remove_db_name(fgseaRes)}
+          
           db <- rep(cat_name, nrow(fgseaRes))
           fgseaRes <- cbind(db,fgseaRes)
           fgseaRes$pathway <- paste0(cat_name,"_",fgseaRes$pathway)
