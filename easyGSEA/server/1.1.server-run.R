@@ -332,27 +332,27 @@
           )
           ,column(
             4,
-            tags$hr(style="border: 1px solid lightgrey; margin-top: 0.5em; margin-bottom: 0.5em;"),
+            tags$hr(style=sprintf("border: %s solid lightgrey; margin-top: 0.5em; margin-bottom: 0.5em;",line_width)),
             p("Valid entry")
           )
           ,column(
             4,
-            tags$hr(style="border: 1px solid salmon; margin-top: 0.5em; margin-bottom: 0.5em;"),
+            tags$hr(style=sprintf("border: %s solid %s; margin-top: 0.5em; margin-bottom: 0.5em; box-shadow: 0 0 %s %s;",line_width,"salmon",shadow_width,"salmon")),
             p("Duplicate entries")
           )
           ,column(
             4,
-            tags$hr(style="border: 1px solid orange; margin-top: 0.5em; margin-bottom: 0.5em;"),
+            tags$hr(style=sprintf("border: %s solid %s; margin-top: 0.5em; margin-bottom: 0.5em; box-shadow: 0 0 %s %s;",line_width,"orange",shadow_width,"orange")),
             p("Entry been used")
           )
           ,column(
             4,
-            tags$hr(style="border: 1px solid navy; margin-top: 0.5em; margin-bottom: 0.5em;"),
+            tags$hr(style=sprintf("border: %s solid %s; margin-top: 0.5em; margin-bottom: 0.5em; box-shadow: 0 0 %s %s;",line_width,"navy",shadow_width,"navy")),
             p("Empty entry")
           )
           ,column(
             4,
-            tags$hr(style="border: 1px solid orchid; margin-top: 0.5em; margin-bottom: 0.5em;"),
+            tags$hr(style=sprintf("border: %s solid %s; margin-top: 0.5em; margin-bottom: 0.5em; box-shadow: 0 0 %s %s;",line_width,"orchid",shadow_width,"orchid")),
             p("Entry contains underscore(s)")
           )
         )
@@ -377,8 +377,8 @@
       used_d <- lapply(str_split(names(rv$gmt_cs), ":", n=2), function(x) x[1]) 
       
       # boxes' parameters
-      shadow_w <- "0 0 .5em"
-      border_w <- ".5px"
+      shadow_w <- paste0("0 0 ",shadow_width)
+      border_w <- line_width
       cl1 <- ""; cl2 <- ""
       
       for(x in rv$gmt_cs_new){

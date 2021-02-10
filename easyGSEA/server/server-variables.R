@@ -1,5 +1,9 @@
 col_f = c("01_WormCat (Holdorf et al. 2020)","02_Pathway","03_Gene Ontology")
 
+# width of shadows
+shadow_width <- ".3em"
+line_width <- ".5px"
+
 # p_min to convert p=0
 p_min = 1e-300
 
