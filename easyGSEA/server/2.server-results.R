@@ -1158,14 +1158,14 @@ output$gs_stats_tl <- DT::renderDataTable({
     df = df %>% mutate_if(is.numeric, function(x) round(x, digits=3))
 
     df = t(df)
-    r_names <- names(df[-1,])
-    c_names = df[[2]]
-
-    df = tibble(df)
-    # # remove db cat
-    df = df[-1,]
-    rownames(df) = r_names
-    colnames(df) = c_names
+    # r_names <- names(df[-1,])
+    # c_names = df[[2]]
+    # 
+    # df = tibble(df)
+    # # # remove db cat
+    # df = df[-1,]
+    # rownames(df) = r_names
+    colnames(df) = df[[1]]
 
 
     DT::datatable(df,
