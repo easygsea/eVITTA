@@ -227,6 +227,7 @@
           }else{
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
 
+            # remove/add tags, create temporary list for clicking
             df <- df_tags_op(df)
             rv$bar_pathway_list <- df_clickrv_op(df)
             
@@ -239,13 +240,13 @@
             }
             
             fig <- df %>% 
-              ggplot(aes(x=ES, y=factor(pathway, levels=pathway), fill=-log10(df[[pq]])*sign(ES),
+              ggplot(aes(x=ES, y=factor(pathway, levels=pathway), fill=-log10(.data[[pq]])*sign(ES),
                          text=paste0(
-                           "<b>",df[["pathway"]],"</b>\n",
-                           "ES=",signif(df[["ES"]],digits=3),"; ",
-                           "P=",signif(df[["pval"]],digits=3),"; ",
-                           "P.adj=",signif(df[["padj"]],digits=3),"\n",
-                           tail(colnames(df),n=1)," (",size_g,"/",df[["size"]],"): \n",addlinebreaks(df[[ncol(df)]])
+                           "<b>",.data[["pathway"]],"</b>\n",
+                           "ES=",signif(.data[["ES"]],digits=3),"; ",
+                           "P=",signif(.data[["pval"]],digits=3),"; ",
+                           "P.adj=",signif(.data[["padj"]],digits=3),"\n",
+                           tail(colnames(df),n=1)," (",size_g,"/",.data[["size"]],"): \n",addlinebreaks(df[[ncol(df)]])
                            
                          ))) +
               geom_bar(stat="identity", width = 0.8) +
