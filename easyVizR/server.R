@@ -133,6 +133,7 @@ server <- function(input, output, session) {
     # vis tabs:
     source("server/n_vis_heatmap.R", local = TRUE)
     source("server/n_vis_scatter.R", local = TRUE)
+    source("server/n_vis_rrho.R", local = TRUE)
     source("server/n_vis_single.R", local = TRUE)
     source("server/n_vis_network.R", local = TRUE)
     

@@ -520,6 +520,7 @@ sc_table_panel <- reactive({
 
 #RIGHT NOW I JUST PUT IN SOME RANDOM THINGS 
 #and if it can be correctly displayed I will do the rest
+
 output$rrho_selections <- renderUI({
   div(
     box(
@@ -538,6 +539,13 @@ output$rrho_selections <- renderUI({
             selected = rv$rrho_y
           )
       ))
+  )
+})
+
+output$rrho_pvalue_panel <- renderUI({
+  box(
+    title = span( icon("calculator"), "P Value"), status = "primary", solidHeader = F, width=12,
+    uiOutput("rrho_p_value")
   )
 })
 
@@ -897,15 +905,11 @@ output$n_panels <- renderUI({
         ),
         
         conditionalPanel("input.n_ui_showpanel == 'RRHO'",
-                         View(rv$nx_n),
-                         View(rv$df_n),
                          div(
-                           
                            fluidRow(
                              column(4,
                                     div(id = "rrho_selections_anchor"),
-                                    #uiOutput("scatter_selection"),
-                                    #uiOutput("nxy_sc_cor_panel")
+                                    uiOutput("rrho_pvalue_panel")
                              ),
                              column(8,
                                                      box(
