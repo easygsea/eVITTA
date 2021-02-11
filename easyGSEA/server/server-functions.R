@@ -3,19 +3,50 @@
     #=======================================================================#
     # remove db names and IDs in gsea table
     remove_db_name <- function(df){
-      df$pathway <- lapply(df$pathway, function(x){
-        str_split(x,"_",n=2)[[1]][2]
-      })
+      df <- df %>%
+        rowwise() %>%
+        dplyr::mutate(db = str_split(pathway,"_",n=2)[[1]][1], pathway = str_split(pathway,"_",n=2)[[1]][2])
       
       df
     }
     
     remove_db_id <- function(df){
-      df$pathway <- lapply(df$pathway, function(x){
-        strsplit(x, "%(?=[^%]+$)", perl=TRUE)[[1]][1]
-      })
+      df <- df %>%
+        rowwise() %>%
+        dplyr::mutate(id = strsplit(pathway, "%(?=[^%]+$)", perl=TRUE)[[1]][2], pathway = strsplit(pathway, "%(?=[^%]+$)", perl=TRUE)[[1]][1])
       
       df
+    }
+    
+    df_tags_op <- function(df){
+      # when prompted, remove db name and id
+      if(!rv$db_name_y){
+        df <- remove_db_name(df) %>%
+          dplyr::distinct(pathway,.keep_all=T)
+      }
+      if(!rv$db_id_y){
+        df <- remove_db_id(df) %>%
+          dplyr::distinct(pathway,.keep_all=T)
+      }
+      
+      return(df)
+    }
+    
+    df_clickrv_op <- function(df){
+      rv_click_list <- c()
+      
+      # save pathway names into a temporary RV
+      if(!is.null(df[["db"]]) && !is.null(df[["id"]])){
+        rv_click_list = paste0(df[["db"]],"_",df[["pathway"]],"%",df[["id"]])
+      }else if(!is.null(df[["id"]])){
+        rv_click_list = paste0(df[["pathway"]],"%",df[["id"]])
+      }else if(!is.null(df[["db"]])){
+        rv_click_listt = paste0(df[["db"]],"_",df[["pathway"]])
+      }else{
+        rv_click_list = df[["pathway"]]
+      }
+      
+      return(rv_click_list)
     }
     
     #=======================================================================#
@@ -195,16 +226,9 @@
             return(NULL)
           }else{
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
-            
-            rv$bar_pathway_list = df[["pathway"]]
 
-            # when prompted, remove db name and id
-            if(!rv$db_name_y){
-              df <- remove_db_name(df)
-            }
-            if(!rv$db_id_y){
-              df <- remove_db_id(df)
-            }
+            df <- df_tags_op(df)
+            rv$bar_pathway_list <- df_clickrv_op(df)
             
             # get rid of db id
             y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
