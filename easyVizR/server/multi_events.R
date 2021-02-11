@@ -130,6 +130,7 @@ observeEvent(input$n_use_data,{
     # # --------------- easyGSEA integration options
     rv$opt_easygsea_remove <- NULL
     rv$opt_easygsea_resolve_dup <- "keep_orig"
+    
 
     # ---------------  initialize filters
     for (i in 1:length(rv$nx_n)){
@@ -236,6 +237,11 @@ observeEvent(input$n_use_data,{
     names(rv$ins_criteria) <- rv$nx_n
     
     
+    # --------------- initialize detected databases
+    rv$detected_dbs <- get_db_identifier_freqs(df_n$Name)
+    rv$opt_easygsea_filter_db <- rv$detected_dbs$choices
+    
+    
     #  --------------- initialize dynamic ui
     
     if (length(rv$nx_i) <= 5){rv$n_venn_status <- "ok"}
@@ -311,7 +317,11 @@ observeEvent(input$n_use_data,{
   # saveRDS(rv$nx_n, file = "rvs/nx_n.rds")
   # saveRDS(rv$df_n, file = "rvs/df_n.rds")
   # saveRDS(rv$nic, file = "rvs/nic.rds")
-  # 
+  # saveRDS(rv$detected_dbs, file = "rvs/detected_dbs.rds")
+  # saveRDS(rv$opt_easygsea_filter_db, file = "rvs/opt_easygsea_filter_db.rds")
+  
+  
+  
   shinyjs::enable("n_use_data")
 })
 
@@ -336,20 +346,34 @@ df_n_basic <- reactive({
   df <- rv$df_n
   
   
-  # optionally get rid of easygsea identifier
-  if (is.null(rv$opt_easygsea_remove)==F){
-    resolve_dup_mode=rv$opt_easygsea_resolve_dup
-    remove_mode=rv$opt_easygsea_remove
+  # ------------- for easygsea results only
+  
+  if(is.null(rv$detected_dbs$choices)==F | max(rv$detected_dbs$freq_df$Freq)>1){ # detect if is easygsea output
     
-    if (length(remove_mode)>0){
-      df$Name <- dedup_names(df$Name,
-                             output_trans_df = F,
-                             FUN= remove_easygsea_identifiers, 
-                             remove_mode=remove_mode, 
-                             mode=resolve_dup_mode
-      )
+    # 1. filter by selected dbs
+    if (length(rv$opt_easygsea_filter_db)>0){ # if 1 or more db selected
+      df <- filter_df_by_dbs(df, rv$opt_easygsea_filter_db, "Name")
     }
+    
+    # 2. get rid of easygsea identifier
+    if (is.null(rv$opt_easygsea_remove)==F){
+      resolve_dup_mode=rv$opt_easygsea_resolve_dup
+      remove_mode=rv$opt_easygsea_remove
+      
+      if (length(remove_mode)>0){
+        df$Name <- dedup_names(df$Name,
+                               output_trans_df = F,
+                               FUN= remove_easygsea_identifiers, 
+                               remove_mode=remove_mode, 
+                               mode=resolve_dup_mode
+        )
+      }
+    }
+    
   }
+  
+  
+  
   
   
   
