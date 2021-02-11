@@ -26,7 +26,7 @@ output$feedback_dbs <- renderUI({
     if(input$selected_species != "other"){
         db_selected = names(rv$dbs)
     }else{
-        db_selected = rv$gmt_cs
+        db_selected = names(rv$gmt_cs)
     }
     HTML(
         "Selected databases:<br/><b>",

@@ -244,10 +244,12 @@
         gmt_path = gmt$datapath
         
         # add a number to the file name is already uploaded
-        if(gmt_name_o %in% rv$gmt_cs){
-          gmt_name_o2 <- grepl(paste0("^",gmt_name_o,"\\([[:digit:]]+\\)$"),rv$gmt_cs)
+        # recall the file names
+        c_names <- names(rv$gmt_cs) %>% str_split(.,":",n=2) %>% lapply(., function(x) x[2])
+        if(gmt_name_o %in% c_names){
+          gmt_name_o2 <- grepl(paste0("^",gmt_name_o,"\\([[:digit:]]+\\)$"),c_names)
           if(T %in% gmt_name_o2){
-            gmt_name_o <- rv$gmt_cs[gmt_name_o2]
+            gmt_name_o <- c_names[gmt_name_o2]
             if(length(gmt_name_o)>1){gmt_name_o <- gmt_name_o[-1]}
             
             n <- gsub("(.*)\\(([[:digit:]]+)\\)$", "\\2", gmt_name_o)
@@ -407,9 +409,7 @@
         htag <- c(htag, paste0("#",id,ss))
       }
       
-      tags$head(tags$style(HTML(
-        paste0(htag, collapse = " ")
-      )))
+      tags$head(tags$style(HTML(paste0(htag, collapse = " "))))
     })
     
     # reset to default naming system
@@ -510,6 +510,7 @@
 
       # name the uploaded GMT files
       gmt_names <- paste0(ids,":",rv$gmt_cs_new)
+      rv$gmt_cs_new <- ids
       names(rv$gmt_cs_new) <- gmt_names
       
       # update the core RVs
