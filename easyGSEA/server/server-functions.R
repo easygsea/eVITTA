@@ -124,18 +124,14 @@
       )
       
     }
-    enrichmentplot <- function() {
-        ranks = rv$rnkgg
-        names(ranks) = toupper(names(ranks))
-        gmt = rv$gmts[[rv$es_term]] %>% toupper(.)
-        plotEnrichment(gmt,ranks) + labs(title = rv$es_term)
-    }
-    
+
     filter_plot_df <- function(pathways, up, down, cutoff_p, cutoff_q){
-      df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
-      df = df %>% 
-        dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>% 
-        mutate_if(is.numeric,  ~replace(., . == 0, p_min)) %>%
+      df <- rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
+      
+      df <- df %>% 
+        dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+        dplyr::distinct(.,pathway,.keep_all = TRUE) %>%        mutate_if(is.numeric,  ~replace(.
+, . == 0, p_min)) %>%
         dplyr::arrange(padj)
       
       if(cutoff_p < 1){
@@ -866,6 +862,14 @@
     
     
     # enrichment plots ------------------
+    enrichmentplot <- function() {
+      ranks = rv$rnkgg
+      names(ranks) = toupper(names(ranks))
+      gmt = rv$gmts[[rv$es_term]]
+      term <- str_split(rv$es_term,"_",n=2)[[1]][2]
+      plotEnrichment(gmt,ranks) + labs(title = term)
+    }
+    
     density_plot <- function(term=rv$es_term){
         if(is.null(term)){
             return(NULL)
@@ -2118,11 +2122,16 @@
     
     run_gsea <- function(cat_name,gmt_path,ranks,errors){
       m_list <- gmtPathways(gmt_path)
+      # if db has a abbreviation prefix, get rid of it
+      names(m_list) <- gsub(paste0("^(",paste0(db_prs,collapse = "|"),")_"),"",names(m_list))
+      # add db prefices
+      names(m_list) <- paste0(cat_name,"_",names(m_list))
+
+      # toupper
+      m_list <- lapply(m_list, function(x) toupper(x))
       
       # save GMT into RV
       rv$gmts = c(rv$gmts,m_list)
-      
-      m_list <- lapply(m_list, function(x) toupper(x))
 
       # calculate gene #s in each term
       a_lens = lengths(m_list)
@@ -2138,12 +2147,6 @@
       if(inherits(frun, "try-error")) {        
         errors = errors + 1
       }else{
-        # if db has a abbreviation prefix, get rid of it
-        if(cat_name %in% db_prs){fgseaRes <- remove_db_name(fgseaRes)}
-        
-        # add db prefices
-        fgseaRes$pathway <- paste0(cat_name,"_",fgseaRes$pathway)
-        
         # write into RV
         rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
         # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
