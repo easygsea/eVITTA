@@ -640,14 +640,10 @@ p_man <- reactive({
     pq = rv$volcano_pq
     cutoff = rv$volcano_cutoff
     
-    # when prompted, remove db name and id
-    if(!rv$db_name_y){
-        data <- remove_db_name(data)
-    }
-    if(!rv$db_id_y){
-        data <- remove_db_id(data)
-    }
-
+    # add db column
+    tmp <- str_split(data$pathway, "_", n=2, simplify = T)
+    data <- data %>% tibble::add_column(db = tmp[,1], .before = "pathway")
+    
     # determine colors
     color_n = length(dbs)
     colors = c(addalpha(brewer.pal(n = color_n, name = 'Set2')),brewer.pal(n = color_n, name = 'Set2'))
