@@ -40,14 +40,25 @@
       # save pathway names into a temporary RV
       if(!is.null(df[["db"]]) && !is.null(df[["id"]])){
         rv_click_list = paste0(df[["db"]],"_",df[["pathway"]],"%",df[["id"]])
+        # get rid of pure % at the end
+        rv_click_list <- gsub("%$","",rv_click_list)
+        # get rid of pure _ at the begining
+        rv_click_list <- gsub("^_","",rv_click_list)
+        
       }else if(!is.null(df[["id"]])){
         rv_click_list = paste0(df[["pathway"]],"%",df[["id"]])
+        # get rid of pure % at the end
+        rv_click_list <- gsub("%$","",rv_click_list)
+        
       }else if(!is.null(df[["db"]])){
         rv_click_list = paste0(df[["db"]],"_",df[["pathway"]])
+        # get rid of pure _ at the begining
+        rv_click_list <- gsub("^_","",rv_click_list)
+        
       }else{
         rv_click_list = df[["pathway"]]
       }
-      
+
       return(rv_click_list)
     }
     
