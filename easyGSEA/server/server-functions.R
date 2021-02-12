@@ -20,14 +20,14 @@
       return(df)
     }
     
-    df_tags_op <- function(df){
+    df_tags_op <- function(df,add_a_column=T){
       # when prompted, remove db name and id
       if(!rv$db_name_y){
-        df <- remove_db_name(df) %>%
+        df <- remove_db_name(df,add_a_column=add_a_column) %>%
           dplyr::distinct(pathway,.keep_all=T)
       }
       if(!rv$db_id_y){
-        df <- remove_db_id(df) %>%
+        df <- remove_db_id(df,add_a_column=add_a_column) %>%
           dplyr::distinct(pathway,.keep_all=T)
       }
       
@@ -370,7 +370,6 @@
             # remove/add tags, create temporary list for clicking
             df <- df_tags_op(df)
             rv$bar_pathway_list <- df_clickrv_op(df)
-            print(str(rv$bar_pathway_list))
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
             # get rid of db id
@@ -1150,8 +1149,6 @@
     # plot vis network
     
     vis <- function(){
-        print(Sys.time())
-        
         # req(is.null(rv$vis_status) == T)
         rv$vis = NULL
         rv$vis_status = NULL
@@ -1159,6 +1156,9 @@
         # df = dfNEL()
         df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p,rv$vis_q)
         
+        # remove/add tags
+        df <- df_tags_op(df,add_a_column=F)
+
         # print(nrow(df))
         if(is.null(df) || nrow(df)<1){
             rv$vis_status = "failed"

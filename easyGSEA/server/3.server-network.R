@@ -389,7 +389,7 @@ output$ui_vis_gear <- renderUI({
             bsTooltip("q_vis_edge_threshold", "Click to learn more!", placement = "top")
         )
 
-    ),br(),
+    ),
     fluidRow(
         column(
             width = 6,
@@ -403,6 +403,7 @@ output$ui_vis_gear <- renderUI({
             )
         )
     ),
+    tv_vis_div(),
     fluidRow(
         column(
             width = 4,
