@@ -51,6 +51,78 @@
       return(rv_click_list)
     }
     
+    check_tags <- function(vector){
+      # observe if any entry is empty
+      error_0 <- 0
+      # observe if repetitive name use in the RVs
+      error_d <- 0
+      # observe if underscore use in entries
+      error_u <- 0
+      # check if duplicate names are entered
+      used <- c()
+      # already-used names
+      used_d <- lapply(str_split(names(rv$gmt_cs), ":", n=2), function(x) x[1]) 
+      
+      for(x in vector){
+        i <- match(x,vector) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        
+        if(nchar(input[[id]])==0){
+          error_0 <- error_0 + 1
+        }else{
+          used <- c(used, input[[id]])
+          if(input[[id]] %in% used_d){
+            error_d <- error_d + 1
+          }
+          if(grepl("_", input[[id]])){
+            error_u <- error_u + 1
+          }
+        }
+      }
+      
+      # render an error msg if empty entry
+      if(error_0 > 0){
+        shinyalert("Please enter an abbreviation for each uploaded GMT file.")
+      }
+      # proceed only if a name is assigned to each GMT
+      req(error_0 == 0)
+      
+      # render an error msg if underscore in entry
+      if(error_u > 0){
+        shinyalert("Please avoid using underscores (\"_\").")
+      }
+      # proceed only if no underscore
+      req(error_u == 0)
+      
+      # observe if repetitive name use in the inputs
+      error_f <- 0
+      
+      if(T %in% duplicated(used)){
+        error_f <- error_f + 1
+        shinyalert("Please enter a unique abbreviation for each uploaded GMT file.")
+      }
+      
+      # proceed only if a name is assigned to each GMT
+      req(error_f == 0)
+      
+      
+      # render alert if same names identified
+      if(error_d > 0){
+        shinyalert("Abbreviations(s) highlighted in orange have been used in a previous upload. Please enter a unique abbreviation for each GMT.")
+      }
+      
+      # proceed only if a name is assigned to each GMT
+      req(error_d == 0)
+      
+      ids <- sapply(rv$gmt_cs_new, function(x){
+        i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        return(input[[id]])
+      })
+      
+      return(ids)
+    }
+    
     #=======================================================================#
     ####----------------------- Functions: Calculation -------------------####
     #=======================================================================#
