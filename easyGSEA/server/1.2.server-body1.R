@@ -669,6 +669,12 @@ output$delete_gmt_confirm <- renderUI({
 })
 
 observeEvent(input$delete_gmt_confirm,{
+    if(is.null(input$delete_gmt)){
+        shinyalert("Please select the GMT(s) you'd like to delete. Or, click Confirm to continue in the RUN Analysis panel to proceed.")
+    }
+    
+    req(!is.null(input$delete_gmt))
+    
     to_delete_i <- which(rv$gmt_cs %in% input$delete_gmt)
     
     rv$gmt_cs <- rv$gmt_cs[-to_delete_i]
