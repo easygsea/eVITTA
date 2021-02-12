@@ -295,6 +295,10 @@ observeEvent(input$vis_replot,{
         rv$ora_color <- input$vis_color
         rv$up_color <- input$vis_color_up
         rv$down_color <- input$vis_color_down
+        
+        
+        rv$db_name_y <- input$db_name_v_y
+        rv$db_id_y <- input$db_id_v_y
     }
     
 })

@@ -279,5 +279,3 @@ tv_vis_div <- reactive({
   )
 })
 
-observeEvent(input$db_name_v_y,{rv$db_name_y <- input$db_name_v_y})
-observeEvent(input$db_id_v_y,{rv$db_id_y <- input$db_id_v_y})
