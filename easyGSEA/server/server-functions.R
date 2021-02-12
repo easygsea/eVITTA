@@ -52,6 +52,30 @@
     #=======================================================================#
     ####----------------------- Functions: Calculation -------------------####
     #=======================================================================#
+    # automatically add an increment onto a new entry if already detected in an vector/list
+    add_increment <- function(entry, vector){
+      if(entry %in% vector){
+        # search and retrieve matched patterns in the vector
+        pattern = paste0("^",entry,"\\(([[:digit:]])+\\)$")
+        entry2 <- grepl(pattern,vector)
+        
+        # if increment(s) added before, extract the last number and +1
+        if(T %in% entry2){
+          entry3 <- vector[entry2]
+          if(length(entry3)>1){entry3 <- entry3[length(entry3)]}
+          
+          n <- gsub(pattern, "\\1", entry3)
+          n <- as.numeric(n) + 1
+          
+          # increment
+          entry <- paste0(entry,"(",n,")")
+        }else{
+          entry <- paste0(entry,"(1)")
+        }
+      }
+      return(entry)
+    }
+    
     # collapse the leadingedge column
     collapse_last_col <- function(df, sep=";"){
       df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = sep))

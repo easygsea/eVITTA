@@ -246,24 +246,28 @@
         # add a number to the file name is already uploaded
         # recall the file names
         c_names <- names(rv$gmt_cs) %>% str_split(.,":",n=2) %>% lapply(., function(x) x[2])
-        if(gmt_name_o %in% c_names){
-          gmt_name_o2 <- grepl(paste0("^",gmt_name_o,"\\([[:digit:]]+\\)$"),c_names)
-          if(T %in% gmt_name_o2){
-            gmt_name_o <- c_names[gmt_name_o2]
-            if(length(gmt_name_o)>1){gmt_name_o <- gmt_name_o[-1]}
-            
-            n <- gsub("(.*)\\(([[:digit:]]+)\\)$", "\\2", gmt_name_o)
-            n <- as.numeric(n) + 1
-            gmt_name <- gsub("(.*)\\(([[:digit:]]+)\\)$", paste0("\\1(",n,")"), gmt_name_o)
-          }else{
-            gmt_name <- paste0(gmt_name_o,"(1)")
-          }
-
-          # rename the file
-          rv$gmt_temp$name[rv$gmt_temp$name == gmt_name_o] <- gmt_name
-        }else{
-          gmt_name <- gmt_name_o
-        }
+        
+        gmt_name <- add_increment(gmt_name_o, c_names)
+        # rename the file
+        rv$gmt_temp$name[rv$gmt_temp$name == gmt_name_o] <- gmt_name
+        # if(gmt_name_o %in% c_names){
+        #   gmt_name_o2 <- grepl(paste0("^",gmt_name_o,"\\([[:digit:]]+\\)$"),c_names)
+        #   if(T %in% gmt_name_o2){
+        #     gmt_name_o3 <- c_names[gmt_name_o2]
+        #     if(length(gmt_name_o3)>1){gmt_name_o3 <- gmt_name_o3[-1]}
+        #     
+        #     n <- gsub("(.*)\\(([[:digit:]]+)\\)$", "\\2", gmt_name_o3)
+        #     n <- as.numeric(n) + 1
+        #     gmt_name <- gsub("(.*)\\(([[:digit:]]+)\\)$", paste0("\\1(",n,")"), gmt_name_o3)
+        #   }else{
+        #     gmt_name <- paste0(gmt_name_o,"(1)")
+        #   }
+        # 
+        #   # rename the file
+        #   rv$gmt_temp$name[rv$gmt_temp$name == gmt_name_o] <- gmt_name
+        # }else{
+        #   gmt_name <- gmt_name_o
+        # }
         
         # write data into corresponding RVs
         rv$gmt_cs_new = c(rv$gmt_cs_new, gmt_name)
@@ -274,16 +278,16 @@
       showModal(modalDialog(
         id = "gmt_modal",
         title = HTML(paste0("Name your uploaded GMTs ",add_help("gmt_modal_q"))),
-        bsTooltip("gmt_modal_q",HTML("Enter a unique abbreviation for each uploaded GMT. easyGSEA recognizes any string before the first occurrence of an underscore (\"_\") as the identifier for each gene set database/library.")
+        bsTooltip("gmt_modal_q",HTML("Enter a unique tag (abbreviation) for each uploaded GMT. easyGSEA recognizes any string before the first occurrence of an underscore (\"_\") as the identifier for each gene set database/library.")
                   ,placement = "right"),
         div(
           materialSwitch(
             inputId = "gmt_name_in_file",
-            label = HTML(paste0("Abbreviation(s) already included in uploaded GMT(s)?",add_help("gmt_name_in_file_q"))),
+            label = HTML(paste0("Tag(s) already included in uploaded GMT(s)?",add_help("gmt_name_in_file_q"))),
             value = rv$gmt_name_in_file, inline = TRUE, width = "100%",
             status = "danger"
           ),
-          bsTooltip("gmt_name_in_file_q",HTML("Click and switch to TRUE if your uploaded GMT(s) already include(s) a database identifier in each gene set name, formated as \"XXX_YYYYY\", where \"XXX\" = the database name, and \"YYYYY\" = the gene set name.")
+          bsTooltip("gmt_name_in_file_q",HTML("Click and switch to TRUE if your uploaded GMT(s) already include(s) a database identifier in each gene set name, formated as \"XXX_YYYYY\", where \"XXX\" = the database name tag, and \"YYYYY\" = the gene set name.")
                     ,placement = "right")
         )
         , uiOutput("ui_name_gmt")
@@ -496,11 +500,24 @@
         })
       }else{
         ids <- sapply(rv$gmt_cs_new, function(x){
-          fname <- rv$gmt_cs_new[match(x,rv$gmt_cs_new)][[1]]
+          fname <- rv$gmt_cs_new[match(x,rv$gmt_cs_new)]
           gmt_name <- gmtPathways(rv$gmt_temp[rv$gmt_temp$name %in% fname,][["datapath"]])[1] %>%
             names(.) %>% str_split(.,"_",n=2) %>% .[[1]] %>% .[1]
           return(gmt_name)
         })
+        
+        # if tags already been used
+        if(T %in% (ids %in% rv$gmt_cs)){
+          ids_converted <- c()
+          ids_exist <- ids[ids %in% rv$gmt_cs]
+          for(id_exist in ids_exist){
+            # find the largest tag, if any
+            id_exist3 <- add_increment(id_exist,rv$gmt_cs)
+            # save to vector
+            ids_converted <- c(ids_converted,id_exist3)
+          }
+          ids <- c(ids[!ids %in% rv$gmt_cs],ids_converted)
+        }
       }
       
       #add new files that are not in size-monitoring df already to the df
