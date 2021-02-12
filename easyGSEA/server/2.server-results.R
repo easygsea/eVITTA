@@ -25,8 +25,8 @@ output$ui_bodyResults <- renderUI({
     }else{
         if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
             em_w <- "15em"
-        # }else if(rv$plot_type=="word"){
-        #     em_w <- "8em"
+        }else if(rv$plot_type=="manhattan"){
+            em_w <- "4.5em"
         }else{
             em_w <- "8em"
         }
@@ -118,7 +118,7 @@ output$ui_bodyResults <- renderUI({
                             )
                         },
                         # # dropdown to adjust db name & id display
-                        if(rv$plot_type=="bar" || rv$plot_type=="bubble" || rv$plot_type=="manhattan" || rv$plot_type=="volcano"){
+                        if(rv$plot_type=="bar" || rv$plot_type=="bubble" || rv$plot_type=="volcano"){
                             if(rv$plot_type=="bar" || rv$plot_type=="bubble"){
                                 em_w_t <- "11.5em"
                             }else{
