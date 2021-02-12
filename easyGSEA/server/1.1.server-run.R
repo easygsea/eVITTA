@@ -373,47 +373,7 @@
     output$ui_highlight <- renderUI({
       req(is.null(rv$gmt_cs_new) == F)
       
-      htag <- c()
-      
-      # observe if duplicate names entered
-      used <- sapply(rv$gmt_cs_new, function(x){
-        i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
-        id <- paste0("GMT",i)
-        input[[id]]
-      })
-      
-      # observe if repetitive name use in the RVs
-      used_d <- lapply(str_split(names(rv$gmt_cs), ":", n=2), function(x) x[1]) 
-      
-      # boxes' parameters
-      shadow_w <- paste0("0 0 ",shadow_width)
-      border_w <- line_width
-      cl1 <- ""; cl2 <- ""
-      
-      for(x in rv$gmt_cs_new){
-        i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
-        id <- paste0("GMT",i)
-        
-        req(is.null(input[[id]])==F)
-        
-        if(sum(used %in% input[[id]])>1){
-          cl1 <- cl2 <- "salmon"
-        }else if(input[[id]] %in% used_d){
-          cl1 <- cl2 <- "orange"
-        }else if(nchar(input[[id]])==0){
-          cl1 <- cl2 <-"navy"
-        }else if(grepl("_",input[[id]])){
-          cl1 <- cl2 <- "orchid"
-        }else{
-          cl1 <- "none"; cl2 <- "lightgrey"; shadow_w <- ""
-        }
-        
-        # generate the styles
-        ss <- sprintf("{box-shadow:%s %s; border:%s solid %s;}",shadow_w,cl1,border_w,cl2)
-        htag <- c(htag, paste0("#",id,ss))
-      }
-      
-      tags$head(tags$style(HTML(paste0(htag, collapse = " "))))
+      highlight_name_boxes(rv$gmt_cs_new)
     })
     
     # reset to default naming system

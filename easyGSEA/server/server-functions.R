@@ -114,13 +114,57 @@
       # proceed only if a name is assigned to each GMT
       req(error_d == 0)
       
-      ids <- sapply(rv$gmt_cs_new, function(x){
-        i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
+      ids <- sapply(vector, function(x){
+        i <- match(x,vector) + length(rv$gmt_cs)
         id <- paste0("GMT",i)
         return(input[[id]])
       })
       
       return(ids)
+    }
+    
+    highlight_name_boxes <- function(vector){
+      htag <- c()
+      
+      # observe if duplicate names entered
+      used <- sapply(vector, function(x){
+        i <- match(x,vector) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        input[[id]]
+      })
+      
+      # observe if repetitive name use in the RVs
+      used_d <- lapply(str_split(names(rv$gmt_cs), ":", n=2), function(x) x[1]) 
+      
+      # boxes' parameters
+      shadow_w <- paste0("0 0 ",shadow_width)
+      border_w <- line_width
+      cl1 <- ""; cl2 <- ""
+      
+      for(x in vector){
+        i <- match(x,vector) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        
+        req(is.null(input[[id]])==F)
+        
+        if(sum(used %in% input[[id]])>1){
+          cl1 <- cl2 <- "salmon"
+        }else if(input[[id]] %in% used_d){
+          cl1 <- cl2 <- "orange"
+        }else if(nchar(input[[id]])==0){
+          cl1 <- cl2 <-"navy"
+        }else if(grepl("_",input[[id]])){
+          cl1 <- cl2 <- "orchid"
+        }else{
+          cl1 <- "none"; cl2 <- "lightgrey"; shadow_w <- ""
+        }
+        
+        # generate the styles
+        ss <- sprintf("{box-shadow:%s %s; border:%s solid %s;}",shadow_w,cl1,border_w,cl2)
+        htag <- c(htag, paste0("#",id,ss))
+      }
+      
+      tags$head(tags$style(HTML(paste0(htag, collapse = " "))))
     }
     
     #=======================================================================#
