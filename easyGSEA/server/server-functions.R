@@ -2,20 +2,18 @@
     ####----------------- Functions: filtering and UI -------------------####
     #=======================================================================#
     # remove db names and IDs in gsea table
-    remove_db_name <- function(df){
-      df <- df %>%
-        rowwise() %>%
-        dplyr::mutate(db = str_split(pathway,"_",n=2)[[1]][1], pathway = str_split(pathway,"_",n=2)[[1]][2])
-      
-      df
+    remove_db_name <- function(df,add_a_column=T){
+      tmp <- str_split(df$pathway, "_", n=2, simplify = T)
+      df$pathway <- tmp[,2]
+      if(add_a_column){df$db <- tmp[,1]}
+      return(df)
     }
     
-    remove_db_id <- function(df){
-      df <- df %>%
-        rowwise() %>%
-        dplyr::mutate(id = strsplit(pathway, "%(?=[^%]+$)", perl=TRUE)[[1]][2], pathway = strsplit(pathway, "%(?=[^%]+$)", perl=TRUE)[[1]][1])
-      
-      df
+    remove_db_id <- function(df,add_a_column=T){
+      tmp <- str_split(df$pathway, "%(?=[^%]+$)", simplify = T)
+      df$pathway <- tmp[,1]
+      if(add_a_column){df$id <- tmp[,2]}
+      return(df)
     }
     
     df_tags_op <- function(df){
@@ -128,10 +126,10 @@
         
         # when prompted, remove db name and id
         if(!rv$db_name_y){
-          df <- remove_db_name(df)
+          df <- remove_db_name(df,add_a_column = F)
         }
         if(!rv$db_id_y){
-          df <- remove_db_id(df)
+          df <- remove_db_id(df,add_a_column = F)
         }
         
         df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = ";"))
@@ -769,7 +767,7 @@
             return(NULL)
         }else{
           df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) %>%
-            dplyr::arrange(desc(.[[pq]]))
+            dplyr::arrange(desc(pval))
           
           rv$bar_tl <- df
           
