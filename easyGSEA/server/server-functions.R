@@ -254,6 +254,7 @@
             # remove/add tags, create temporary list for clicking
             df <- df_tags_op(df)
             rv$bar_pathway_list <- df_clickrv_op(df)
+            print(str(rv$bar_pathway_list))
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
             # get rid of db id
@@ -322,7 +323,7 @@
           }else{
             # remove/add tags, create temporary list for clicking
             df <- df_tags_op(df)
-            rv$bar_pathway_list <- df_clickrv_op(df)
+            rv$bubble_pathway_list <- df_clickrv_op(df)
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
             # get rid of db id
@@ -753,19 +754,13 @@
                 
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
-                
-                rv$bar_pathway_list = df[["pathway"]]
-                
-                # when prompted, remove db name and id
-                if(!rv$db_name_y){
-                  df <- remove_db_name(df)
-                }
-                if(!rv$db_id_y){
-                  df <- remove_db_id(df)
-                }
-                
+
+                # remove/add tags, create temporary list for clicking
+                df <- df_tags_op(df)
+                rv$bar_pathway_list <- df_clickrv_op(df)
+
                 # get rid of db id
-                y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
+                y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
                 
                 # abbreviate gene set names on y axis if too long
                 if(abby == "y"){
@@ -820,19 +815,13 @@
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
                 
-                rv$bubble_pathway_list = df[["pathway"]]
-                
-                # when prompted, remove db name and id
-                if(!rv$db_name_y){
-                  df <- remove_db_name(df)
-                }
-                if(!rv$db_id_y){
-                  df <- remove_db_id(df)
-                }
-                
-                # get rid of db id
-                y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
-                
+              # remove/add tags, create temporary list for clicking
+              df <- df_tags_op(df)
+              rv$bubble_pathway_list <- df_clickrv_op(df)
+              
+              # get rid of db id
+              y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
+              
                 # abbreviate gene set names on y axis if too long
                 if(abby == "y"){
                     y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
