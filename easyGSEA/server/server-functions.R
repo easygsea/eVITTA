@@ -4,15 +4,19 @@
     # remove db names and IDs in gsea table
     remove_db_name <- function(df,add_a_column=T){
       tmp <- str_split(df$pathway, "_", n=2, simplify = T)
-      df$pathway <- tmp[,2]
-      if(add_a_column){df$db <- tmp[,1]}
+      if(ncol(tmp)>1){
+        df$pathway <- tmp[,2]
+        if(add_a_column){df <- df %>% tibble::add_column(db = tmp[,1], .before = "pathway")}
+      }
       return(df)
     }
     
     remove_db_id <- function(df,add_a_column=T){
       tmp <- str_split(df$pathway, "%(?=[^%]+$)", simplify = T)
-      df$pathway <- tmp[,1]
-      if(add_a_column){df$id <- tmp[,2]}
+      if(ncol(tmp)>1){
+        df$pathway <- tmp[,1]
+        if(add_a_column){df <- df %>% tibble::add_column(db = tmp[,2], .before = "pathway")}
+      }
       return(df)
     }
     
@@ -39,7 +43,7 @@
       }else if(!is.null(df[["id"]])){
         rv_click_list = paste0(df[["pathway"]],"%",df[["id"]])
       }else if(!is.null(df[["db"]])){
-        rv_click_listt = paste0(df[["db"]],"_",df[["pathway"]])
+        rv_click_list = paste0(df[["db"]],"_",df[["pathway"]])
       }else{
         rv_click_list = df[["pathway"]]
       }
@@ -183,9 +187,9 @@
       
       df <- df %>% 
         dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
-        dplyr::distinct(.,pathway,.keep_all = TRUE) %>%        mutate_if(is.numeric,  ~replace(.
-, . == 0, p_min)) %>%
-        dplyr::arrange(padj)
+        dplyr::distinct(.,pathway,.keep_all = TRUE) %>%        
+        mutate_if(is.numeric,  ~replace(., . == 0, p_min)) %>%
+        dplyr::arrange(desc(padj))
       
       if(cutoff_p < 1){
         df = df %>% dplyr::filter(pval < cutoff_p)
@@ -247,14 +251,13 @@
             rv$bar_error <- "l"
             return(NULL)
           }else{
-            size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
-
             # remove/add tags, create temporary list for clicking
             df <- df_tags_op(df)
             rv$bar_pathway_list <- df_clickrv_op(df)
+            size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
             # get rid of db id
-            y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
+            y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
             
             # abbreviate gene set names on y axis if too long
             if(abby == "y"){
@@ -766,8 +769,7 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) %>%
-            dplyr::arrange(desc(pval))
+          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) #%>% dplyr::arrange(desc(pval))
           
           rv$bar_tl <- df
           
