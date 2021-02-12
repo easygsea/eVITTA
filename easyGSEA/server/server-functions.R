@@ -320,20 +320,14 @@
             rv$bar_error <- "l"
             return(NULL)
           }else{
-              
-                rv$bubble_pathway_list = df[["pathway"]]
-                
-                # when prompted, remove db name and id
-                if(!rv$db_name_y){
-                  df <- remove_db_name(df)
-                }
-                if(!rv$db_id_y){
-                  df <- remove_db_id(df)
-                }
-                
-                # get rid of db id
-                y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
-                
+            # remove/add tags, create temporary list for clicking
+            df <- df_tags_op(df)
+            rv$bar_pathway_list <- df_clickrv_op(df)
+            size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
+            
+            # get rid of db id
+            y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
+            
                 # abbreviate gene set names on y axis if too long
                 if(abby == "y"){
                     y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
@@ -388,22 +382,14 @@
             return(NULL)
         }else{
             df = rv$fgseagg %>% 
-                dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, p_min))
+              dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+              mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
             # temporarily save pathway order into rv
             rv$volcano_pathway_list = df$pathway
-            
-            # when prompted, remove db name and id
-            if(!rv$db_name_y){
-              df <- remove_db_name(df)
-            }
-            if(!rv$db_id_y){
-              df <- remove_db_id(df)
-            }
-            
+
             fig <- df %>% 
                 ggplot(aes(x=ES, y=-log10(df[[pq]]), color=-log10(df[[pq]])*sign(ES),
                            text=paste0(
@@ -440,8 +426,8 @@
             return(NULL)
         }else{
             df = rv$fgseagg %>% 
-                dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, p_min))
+              dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+              mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
             df = df[order(df[[pq]]),]
             
@@ -449,14 +435,6 @@
             
             # temporarily save pathway order into rv
             rv$volcano_pathway_list = df$pathway
-            
-            # when prompted, remove db name and id
-            if(!rv$db_name_y){
-              df <- remove_db_name(df)
-            }
-            if(!rv$db_id_y){
-              df <- remove_db_id(df)
-            }
             
             colors = rep("grey",nrow(df))
             # if(cutoff < 1){
@@ -497,17 +475,13 @@
             return(NULL)
         }else{
             df = rv$fgseagg %>% 
-                dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, p_min))
+              dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+              mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
-            # when prompted, remove db name and id
-            if(!rv$db_name_y){
-              df <- remove_db_name(df)
-            }
-            if(!rv$db_id_y){
-              df <- remove_db_id(df)
-            }
-            # y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
+            # remove/add tags, create temporary list for clicking
+            df <- df_tags_op(df)
+            # get rid of db id
+            y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
             
             # threshold by p & q cutoffs
             if(cutoff < 1){
