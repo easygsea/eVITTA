@@ -15,7 +15,7 @@
       tmp <- str_split(df$pathway, "%(?=[^%]+$)", simplify = T)
       if(ncol(tmp)>1){
         df$pathway <- tmp[,1]
-        if(add_a_column){df <- df %>% tibble::add_column(db = tmp[,2], .before = "pathway")}
+        if(add_a_column){df <- df %>% tibble::add_column(id = tmp[,2], .before = "pathway")}
       }
       return(df)
     }
@@ -1004,7 +1004,7 @@
         }else{
             ranks <- rv$rnkgg
             names(ranks) = toupper(names(ranks))
-            x <- toupper(rv$gmts[term][[1]])
+            x <- rv$gmts[[term]]
             ranks2 <- ranks[x]
             ranks2 <- ranks2[!is.na(ranks2)]
             x <- rv$fgseagg[rv$fgseagg$pathway == term]$leadingEdge[[1]]
@@ -2252,7 +2252,13 @@
       m_list <- gmtPathways(gmt_path)
       # if db has a abbreviation prefix, get rid of it
       if(input$selected_species != "other"){
-        names(m_list) <- gsub(paste0("^(",paste0(db_prs,collapse = "|"),")_"),"",names(m_list))
+        if(cat_name %in% db_prs){
+          if(cat_name %in% c("BP","CC","MF")){
+            names(m_list) <- gsub(paste0("^(GO)_"),"",names(m_list))
+          }else{
+            names(m_list) <- gsub(paste0("^(",cat_name,")_"),"",names(m_list))
+          }
+        }
       }
       # add db prefices
       names(m_list) <- paste0(cat_name,"_",names(m_list))
@@ -2303,10 +2309,15 @@
     
     run_ora <- function(cat_name,gmt_path,genelist,errors){
       m_list <- gmtPathways(gmt_path)
-      
       # if db has a abbreviation prefix, get rid of it
       if(input$selected_species != "other"){
-        names(m_list) <- gsub(paste0("^(",paste0(db_prs,collapse = "|"),")_"),"",names(m_list))
+        if(cat_name %in% db_prs){
+          if(cat_name %in% c("BP","CC","MF")){
+            names(m_list) <- gsub(paste0("^(GO)_"),"",names(m_list))
+          }else{
+            names(m_list) <- gsub(paste0("^(",cat_name,")_"),"",names(m_list))
+          }
+        }
       }
       # add db prefices
       names(m_list) <- paste0(cat_name,"_",names(m_list))

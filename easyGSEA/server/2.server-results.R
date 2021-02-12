@@ -1149,7 +1149,7 @@ output$ui_volcano_cutoff <- renderUI({
 output$gs_stats_tl <- DT::renderDataTable({
     # req(input$selected_es_term != "")
     req(rv$es_term)
-    df = rv$fgseagg[which((rv$fgseagg)$pathway == rv$es_term)]
+    df = rv$fgseagg[which((rv$fgseagg)$pathway == rv$es_term)][1,]
 
     df = df %>% mutate_if(is.numeric, function(x) round(x, digits=3))
 
