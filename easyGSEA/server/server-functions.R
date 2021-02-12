@@ -2172,7 +2172,9 @@
     run_gsea <- function(cat_name,gmt_path,ranks,errors){
       m_list <- gmtPathways(gmt_path)
       # if db has a abbreviation prefix, get rid of it
-      names(m_list) <- gsub(paste0("^(",paste0(db_prs,collapse = "|"),")_"),"",names(m_list))
+      if(input$selected_species != "other"){
+        names(m_list) <- gsub(paste0("^(",paste0(db_prs,collapse = "|"),")_"),"",names(m_list))
+      }
       # add db prefices
       names(m_list) <- paste0(cat_name,"_",names(m_list))
 
@@ -2223,10 +2225,18 @@
     run_ora <- function(cat_name,gmt_path,genelist,errors){
       m_list <- gmtPathways(gmt_path)
       
+      # if db has a abbreviation prefix, get rid of it
+      if(input$selected_species != "other"){
+        names(m_list) <- gsub(paste0("^(",paste0(db_prs,collapse = "|"),")_"),"",names(m_list))
+      }
+      # add db prefices
+      names(m_list) <- paste0(cat_name,"_",names(m_list))
+      
+      # toupper
+      m_list <- lapply(m_list, function(x) toupper(x))
+      
       # save GMT into RV
       rv$gmts = c(rv$gmts,m_list)
-      
-      m_list <- lapply(m_list, function(x) toupper(x))
       
       # get all genes
       a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
@@ -2245,10 +2255,6 @@
         if(inherits(frun, "try-error")) {        
           errors = errors + 1
         }else{
-          # if db has a abbreviation prefix, get rid of it
-          if(cat_name %in% db_prs){fgseaRes <- remove_db_name(fgseaRes)}
-          
-          fgseaRes$pathway <- paste0(cat_name,"_",fgseaRes$pathway)
           rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
           rv$no_up_25 = sum(fgseaRes$padj<0.25,na.rm=TRUE)
           rv$no_up_05 = sum(fgseaRes$padj<0.05,na.rm=TRUE)
