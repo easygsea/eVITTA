@@ -54,25 +54,9 @@ sc_coloring_explanation_3 <- "Displays significance value of X and Y as color an
 ####                        Heatmap UI                              ####
 #======================================================================#
 
-# output$n_ui_basic <- renderUI({
-#   req(rv$n_ui_showpanel == "Heatmap")
-#   div(
-#     heatmap_panel(),
-#     # hm_table_panel()
-#     
-#   )
-#   
-# })
 output$heatmap_dropdowns <- renderUI({
 div(div(style = "position: absolute; left: 1em; bottom: 1em",id="n1_3b",
         dropdown(
-          # req(rv$df_n),
-          # radioButtons(
-          #   inputId = "heatmap_sortby",
-          #   label= "Sort heatmap by:",
-          #   choices = rv$nx_n,
-          #   selected = rv$select_sortby_p2
-          # ),
           uiOutput("select_sortby_p2"),
           uiOutput("n_to_plot"),
           
@@ -108,11 +92,13 @@ div(style = "position: absolute; left: 7em; bottom: 1em", id="n1_3c",
 
 
 heatmap_panel <- reactive({
+  
   #----------------- heatmap --------------------
   box(
     title = span( icon("chart-area"), "Heatmap"), status = "primary", solidHeader = F, width=8,
     
     div(id="n1_3",
+        "test here",
         uiOutput("n_heatmap")
     ), 
     div(id = "heatmap_dropdowns_anchor"),
@@ -819,8 +805,7 @@ output$n_panels <- renderUI({
       div(
         conditionalPanel("input.n_ui_showpanel == 'Heatmap'",
                          div(
-                           heatmap_panel(),
-                           # hm_table_panel()
+                           heatmap_panel()
                          )
                          
                          ),
