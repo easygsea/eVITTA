@@ -156,13 +156,13 @@ gvalues2 = rescale(c(0,-log10(0.25),1,-log10(0.05),2,3))
 
 
 #===================== GMT collections' names =====================
-gmt_abbr <- read_tsv(paste0(getwd(),"/inc/gmt_abbreviations.tsv"),col_names = F)
+gmt_abbr <- read_tsv(paste0(getwd(),"/www/gmt_abbreviations.tsv"),col_names = F)
 gmt_names <- as.list(gmt_abbr$X2)
 names(gmt_names) <- gmt_abbr$X1
 
 # function to retrieve abbreviations
 retrieve_abbr <- function(name){
-  name <- strsplit(name, "-(?=[^-]+$)", perl=TRUE)[[1]][1]
+  name <- str_split(name, "-(?=[^-]+$)")[[1]][1]
   gmt_names[grepl(paste0("^",name),gmt_names,ignore.case = T)][1] %>% names(.)
 }
 

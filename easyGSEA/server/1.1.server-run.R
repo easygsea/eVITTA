@@ -283,7 +283,7 @@
         div(
           materialSwitch(
             inputId = "gmt_name_in_file",
-            label = HTML(paste0("Tag(s) already included in your uploaded GMT(s)?",add_help("gmt_name_in_file_q"))),
+            label = HTML(paste0("Identifier(s) already included in your uploaded GMT(s)?",add_help("gmt_name_in_file_q"))),
             value = rv$gmt_name_in_file, inline = TRUE, width = "100%",
             status = "danger"
           ),
