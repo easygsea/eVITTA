@@ -100,7 +100,10 @@ output$vis_network_panel <- renderPlot({
 # plot
 output$vis_network <- renderVisNetwork({
   req(nchar(rv$nw_le_sep)>0)
-  validate(need(nrow(n_ins_full()) > 0, "Selected intersection is empty; please double check your selection in Intersection of Interest"))
+  validate(need(nrow(n_ins_full()) > 0, "Selected intersection is empty; please double check your selection in Intersection of Interest"),
+           need(any(duplicated(n_ins_full()$Name))==F, 
+                "Network is disabled because there are duplicated names."))
+
   withProgress(message = 'Generating plots ...',value = 1, {
     rv$vis = vis()
     return(rv$vis)

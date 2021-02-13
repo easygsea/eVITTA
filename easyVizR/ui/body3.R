@@ -8,7 +8,7 @@ body3 <- tabItem(tabName = "tab3",
                      column(
                        width = 12,
                        div(id="n0_4", style="height:400px",
-                           uiOutput("n_header"),
+                           # uiOutput("n_header"),
                            uiOutput("n_panels")
                        )
                        
