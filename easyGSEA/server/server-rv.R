@@ -1,6 +1,7 @@
    rv <- reactiveValues(
         demo_mode = "", # "gsea" for a demo session for GSEA mode, "ora" for ORA mode, 
         demo_n = 1, # odd for load, even for unload
+        demo_save = "no", # yes for save the variables, no for regular run
         
         #NULL for regular runs
            
@@ -24,7 +25,10 @@
         db_status=NULL, # selected
         db_modal=NULL, # check if modal if used or not
         gmt_cs=list(), gmt_cs_paths=list(), # uploaded GMTs for custom analysis
-        
+        gmt_cs_new=list(), gmt_cs_paths_new=list(), # newly uploaded GMTs temporarily stored
+        gmt_temp=NULL, # temporary vector for input$gmt_c
+        gmt_name_in_file=F, # if user-uploaded GMT has abbreviation already
+
         box_h_a = "594px", box_h = "574px", box_hp = 574, es_h = "245px",
         dendro_hp = 660,
         
@@ -82,6 +86,7 @@
         ##### RVs for shared GSEA & ORA runs #####
         #========================================#
         q_dynamic=TRUE,plot_type="bar",
+        db_name_y=T,db_id_y=T,
 
         # org_db=NULL,
         dbs=NULL,fgseagg=NULL,gmts=NULL,gmts_length=NULL,

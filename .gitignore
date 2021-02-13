@@ -49,3 +49,39 @@ easyGSEA - Copy
 easyVizR - Copy
 easyVizR/.Rhistory
 .DS_Store
+easyGSEA/www/gmts/hsa/02_Pathway/KEGG.gmt
+easyGSEA/www/gmts/hsa/02_Pathway/Reactome_Location.gmt
+easyGSEA/www/gmts/hsa/02_Pathway/Reactome_Pathway.gmt
+easyGSEA/www/gmts/hsa/02_Pathway/WikiPathways.gmt
+easyGSEA/www/gmts/hsa/03_Gene Ontology/Biological_Process.gmt
+easyGSEA/www/gmts/hsa/03_Gene Ontology/Cellular_Component.gmt
+easyGSEA/www/gmts/hsa/03_Gene Ontology/Molecular_Function.gmt
+easyGSEA/www/gmts/hsa/04_DrugBank v5-1-8/Approved_Drugs.gmt
+easyGSEA/www/gmts/hsa/04_DrugBank v5-1-8/Experimental_Drugs.gmt
+easyGSEA/www/gmts/hsa/04_DrugBank v5-1-8/Illicit_Drugs.gmt
+easyGSEA/www/gmts/hsa/04_DrugBank v5-1-8/Investigational_Drugs.gmt
+easyGSEA/www/gmts/hsa/04_DrugBank v5-1-8/Nutraceuticals.gmt
+easyGSEA/www/gmts/hsa/04_DrugBank v5-1-8/Withdrawn_drugs.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c1.Positional_Gene_Sets.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c2.BIOCARTA.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c2.Chemical_and_Genetic_Perturbations.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c2.PID.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c3.MIR_Legacy.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c3.miRDB.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c3.TFT_GTRD.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c3.TFT_Legacy.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c4.Cancer_Gene_Neighborhoods.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c4.Cancer_Modules.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c5.Human_Phenotype_Ontology.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c6.Oncogenic_signatures.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/c7.Immunologic_signatures.gmt
+easyGSEA/www/gmts/hsa/05_MSigDB v7.2/h.Hallmark_Gene_Sets.gmt
+easyGSEA/www/gmts/hsa/06_DisGeNET v7/DisGeNET_all.gmt
+easyGSEA/www/gmts/hsa/06_DisGeNET v7/DisGeNET_curated.gmt
+easyGSEA/www/gmts/hsa/07_BioGRID/BIOGRID-ORGANISM-Homo_sapiens.gmt
+easyGSEA/www/gmts/hsa/07_BioGRID/BIOGRID-PROJECT-covid19_coronavirus_project-INTERACTIONS.gmt
+easyGSEA/www/gmts/hsa/07_BioGRID/BIOGRID-PROJECT-fanconi_anemia_project-INTERACTIONS.gmt
+easyGSEA/www/gmts/hsa/07_BioGRID/BIOGRID-PROJECT-glioblastoma_project-INTERACTIONS.gmt
+easyGSEA/www/gmts/hsa/07_BioGRID/BIOGRID-PROJECT-kinome_project_sc-INTERACTIONS.gmt
+easyGSEA/www/gmts/hsa/10_Other/ChEA_transcriptional_regulation_inferred_from_ChIP-X.gmt
+easyGSEA/www/gmts/hsa/10_Other/Human_Cancer_Metastasis_Database.gmt

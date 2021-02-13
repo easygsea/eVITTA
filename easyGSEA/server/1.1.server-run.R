@@ -150,7 +150,7 @@
     batch_mb_limit <- 300*(1024^2)
     total_mb_limit <- 300*(1024^2)
 
-    # -------------- 1.2b upload GMT -------------------
+    # -------------- 1.2b1 upload GMT -------------------
     output$gmt_upload <- renderUI({
       # initialize RVs for our demo session
       if(rv$demo_mode == "gsea"){
@@ -168,7 +168,7 @@
               div(class="input-group",
                   tags$label(class="input-group-btn input-group-prepend",
                     HTML('<span id="gmt_cc" style="width: 100%;" class="btn btn-default btn-file">')
-                    ,HTML('<img src="upload.jpg" width="18%" class="mx-2"><br>Drag your <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
+                    ,HTML('<img src="upload.jpg" width="18%" class="mx-2"><br>Drag <b>GMT</b> file(s) here or click to browse') #<div style="font-weight:400;line-height:200%;">
                     ,HTML('
         <input id="gmt_c" name="gmt_c" type="file" style="display: none;" multiple="multiple" accept="text/tab-separated-values,.txt,.tab,.tsv,.gmt"/>
     ')
@@ -188,6 +188,19 @@
     
     # read in GMTs
     observeEvent(input$gmt_c,{
+      # Check the type of file you uploads, if the file is other types, remind the user
+      ext_check <- ""
+      if(!tools::file_ext(input$gmt_c$name) %in% c(
+        'text/tab-separated-values','txt','tab','tsv','gmt'
+      )){
+        ext_check <- "no"
+        shinyjs::reset("gmt_c")
+        shinyalert("We only accept files that are .txt,.tab,.tsv,.gmt; 
+                   please check your file(s) and re-upload file(s) with the correct file extensions .")
+      }
+      
+      req(ext_check != "no")
+      
       if(sum(input$gmt_c$size) >= batch_mb_limit){  
         showModal(modalDialog(
           inputId = "size_reminder_modal1",
@@ -216,51 +229,211 @@
       req(sum(input$gmt_c$size) < batch_mb_limit)
       req((sum(input$gmt_c$size) + sum(rv$GMTDF$size)) < total_mb_limit)
       
-      # Check the type of file you uploads, if the file is other types, remind the user
-      ext_check <- ""
-      if(!tools::file_ext(input$gmt_c$name) %in% c(
-         'text/tab-separated-values','txt','tab','tsv','gmt'
-      )){
-        ext_check <- "no"
-        shinyjs::reset("gmt_c")
-        shinyalert("We only accept files that are .txt,.tab,.tsv,.gmt; 
-                   please check your file(s) and re-upload file(s) with the correct file extensions .")
-      }
+      # reset and initialize temporary RVs
+      rv$gmt_cs_new <- list()
+      rv$gmt_cs_paths_new <- list()
+      rv$gmt_temp <- NULL
       
-      req(ext_check != "no")
-      #add new files that are not in df already to the df
-      rv$GMTDF<-rbind(rv$GMTDF,input$gmt_c[!(input$gmt_c$name %in% rv$GMTDF$name)])
+      df <- input$gmt_c
+      rv$gmt_temp <- df
       
-      #IMPORTANT: GMT seems to assume all uploaded GMTs are unique, so we need to drop duplicates
-      
-      df = input$gmt_c
-
       gmt_names = list()
       for(i in 1:nrow(df)){
         gmt = df[i,]
-        gmt_name = gmt$name
+        gmt_name_o = gmt$name
         gmt_path = gmt$datapath
-
-        gmt_names = c(gmt_names,gmt_name)
-
-        if(!gmt_name %in% rv$gmt_cs){
-          rv$gmt_cs = c(rv$gmt_cs, gmt_name)
-          rv$gmt_cs_paths = c(rv$gmt_cs_paths, gmt_path)
-        }
+        
+        # add a number to the file name is already uploaded
+        # recall the file names
+        c_names <- names(rv$gmt_cs) %>% str_split(.,":",n=2) %>% lapply(., function(x) x[2])
+        
+        gmt_name <- add_increment(gmt_name_o, c_names)
+        # rename the file
+        rv$gmt_temp$name[rv$gmt_temp$name == gmt_name_o] <- gmt_name
+        # if(gmt_name_o %in% c_names){
+        #   gmt_name_o2 <- grepl(paste0("^",gmt_name_o,"\\([[:digit:]]+\\)$"),c_names)
+        #   if(T %in% gmt_name_o2){
+        #     gmt_name_o3 <- c_names[gmt_name_o2]
+        #     if(length(gmt_name_o3)>1){gmt_name_o3 <- gmt_name_o3[-1]}
+        #     
+        #     n <- gsub("(.*)\\(([[:digit:]]+)\\)$", "\\2", gmt_name_o3)
+        #     n <- as.numeric(n) + 1
+        #     gmt_name <- gsub("(.*)\\(([[:digit:]]+)\\)$", paste0("\\1(",n,")"), gmt_name_o3)
+        #   }else{
+        #     gmt_name <- paste0(gmt_name_o,"(1)")
+        #   }
+        # 
+        #   # rename the file
+        #   rv$gmt_temp$name[rv$gmt_temp$name == gmt_name_o] <- gmt_name
+        # }else{
+        #   gmt_name <- gmt_name_o
+        # }
+        
+        # write data into corresponding RVs
+        rv$gmt_cs_new = c(rv$gmt_cs_new, gmt_name)
+        rv$gmt_cs_paths_new = c(rv$gmt_cs_paths_new, gmt_path)
       }
-
+      
+      # render a modal after uploads
       showModal(modalDialog(
-        fluidRow(
-          column(12, style="font-size:150%;",
-            HTML("You have uploaded <b>",length(gmt_names),"</b> file(s):<br><br>")
-            ,HTML(paste0(gmt_names,collapse = "<br>"))
-          )
+        id = "gmt_modal",
+        title = HTML(paste0("Name your uploaded GMTs ",add_help("gmt_modal_q"))),
+        bsTooltip("gmt_modal_q",HTML("Enter a unique tag (identifier) for each uploaded GMT. easyGSEA recognizes any string before the first occurrence of an underscore (\"_\") as the identifier for each gene set database/library.")
+                  ,placement = "right"),
+        div(
+          materialSwitch(
+            inputId = "gmt_name_in_file",
+            label = HTML(paste0("Tag(s) already included in your uploaded GMT(s)?",add_help("gmt_name_in_file_q"))),
+            value = rv$gmt_name_in_file, inline = TRUE, width = "100%",
+            status = "danger"
+          ),
+          bsTooltip("gmt_name_in_file_q",HTML("Click and switch to TRUE if your uploaded GMT(s) already include(s) a database identifier in each gene set name, formated as \"XXX_YYYYY\", where \"XXX\" = the database name tag, and \"YYYYY\" = the gene set name.")
+                    ,placement = "right")
         )
-        ,easyClose = T
-        ,footer = modalButton("OK")
+        , uiOutput("ui_name_gmt")
+        , easyClose = F,size="m"
+        , footer = tagList(
+          modalButton('Cancel'),
+          bsButton('named_gmt', 'Confirm to proceed', style = "primary", block=F)
+        )
       ))
     })
+    
+    # --------- 1.2b2.manual GMT naming by user ----------
+    observeEvent(input$gmt_name_in_file,{rv$gmt_name_in_file <- input$gmt_name_in_file})
+    
+    output$ui_name_gmt <- renderUI({
+      req(!rv$gmt_name_in_file)
+      
+      div(
+        wellPanel(
+          style = paste0("background:",bcol3),
+          fluidRow(
+            lapply(rv$gmt_cs_new, function(x){
+              i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
+              id <- paste0("GMT",i)
+              column(6,
+                     textInput(
+                       id,
+                       label = x,
+                       value = id
+                     )
+              )
+            })
+            ,uiOutput("ui_highlight")
+          )
+          
+        )
+        ,fluidRow(
+          column(
+            12,
+            bsButton(
+              "reset_gmt_names",
+              "Reset to default naming system"
+            )
+          )
+        )
+        ,fluidRow(
+          column(
+            12,
+            tags$hr(style="border: 0.5px dashed black; margin-bottom: 1em;"),
+            HTML("<span style='font-size:110%;margin-bottom: 1em;'>Error color codes (box borders):</span>")
+          )
+          ,column(
+            4,
+            tags$hr(style=sprintf("border: %s solid lightgrey; margin-top: 0.5em; margin-bottom: 0.5em;",line_width)),
+            p("Valid entry")
+          )
+          ,column(
+            4,
+            tags$hr(style=sprintf("border: %s solid %s; margin-top: 0.5em; margin-bottom: 0.5em; box-shadow: 0 0 %s %s;",line_width,"salmon",shadow_width,"salmon")),
+            p("Duplicate entries")
+          )
+          ,column(
+            4,
+            tags$hr(style=sprintf("border: %s solid %s; margin-top: 0.5em; margin-bottom: 0.5em; box-shadow: 0 0 %s %s;",line_width,"orange",shadow_width,"orange")),
+            p("Entry been used")
+          )
+          ,column(
+            4,
+            tags$hr(style=sprintf("border: %s solid %s; margin-top: 0.5em; margin-bottom: 0.5em; box-shadow: 0 0 %s %s;",line_width,"navy",shadow_width,"navy")),
+            p("Empty entry")
+          )
+          ,column(
+            4,
+            tags$hr(style=sprintf("border: %s solid %s; margin-top: 0.5em; margin-bottom: 0.5em; box-shadow: 0 0 %s %s;",line_width,"orchid",shadow_width,"orchid")),
+            p("Entry contains underscore(s)")
+          )
+        )
+      )
+      
+    })
+    
+    # highlight if a textinput has an error
+    output$ui_highlight <- renderUI({
+      req(is.null(rv$gmt_cs_new) == F)
+      
+      highlight_name_boxes(rv$gmt_cs_new)
+    })
+    
+    # reset to default naming system
+    observeEvent(input$reset_gmt_names,{
+      for(x in rv$gmt_cs_new){
+        i <- match(x,rv$gmt_cs_new) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        updateTextInput(session,
+          id, label = x, value = id
+        )
+      }
+    })
+    
+    # load uploaded GMTs into RV when confirmed
+    observeEvent(input$named_gmt,{
+      # if GMTs are named manually
+      if(!rv$gmt_name_in_file){
+        ids <- check_tags(rv$gmt_cs_new)
+      }else{
+        ids <- sapply(rv$gmt_cs_new, function(x){
+          fname <- rv$gmt_cs_new[match(x,rv$gmt_cs_new)]
+          gmt_name <- gmtPathways(rv$gmt_temp[rv$gmt_temp$name %in% fname,][["datapath"]])[1] %>%
+            names(.) %>% str_split(.,"_",n=2) %>% .[[1]] %>% .[1]
+          return(gmt_name)
+        })
+        
+        # if tags already been used
+        if(T %in% (ids %in% rv$gmt_cs)){
+          ids_converted <- c()
+          ids_exist <- ids[ids %in% rv$gmt_cs]
+          for(id_exist in ids_exist){
+            # find the largest tag, if any
+            id_exist3 <- add_increment(id_exist,rv$gmt_cs)
+            # save to vector
+            ids_converted <- c(ids_converted,id_exist3)
+          }
+          ids <- c(ids[!ids %in% rv$gmt_cs],ids_converted)
+        }
+      }
+      
+      #add new files that are not in size-monitoring df already to the df
+      rv$GMTDF<-rbind(rv$GMTDF,rv$gmt_temp[!(rv$gmt_temp$name %in% rv$GMTDF$name),])
+      
+      #IMPORTANT: GMT seems to assume all uploaded GMTs are unique, so we need to drop duplicates
 
+      # name the uploaded GMT files
+      gmt_names <- paste0(ids,":",rv$gmt_cs_new)
+      rv$gmt_cs_new <- ids
+      names(rv$gmt_cs_new) <- gmt_names
+      
+      # update the core RVs
+      rv$gmt_cs <- c(rv$gmt_cs,rv$gmt_cs_new)
+      rv$gmt_cs_paths = c(rv$gmt_cs_paths,rv$gmt_cs_paths_new)
+      
+      # clear temporary rv
+      rv$gmt_cs_new <- NULL
+      rv$gmt_temp <- NULL
+
+      removeModal()
+    })
 
     # --------------  1.2.2 show databases in a modal ---------------------------
     observeEvent(input$showdbs,{
@@ -381,7 +554,7 @@
           rv$db_status <- "selected"
         }
         
-        if (rv$db_status == "selected"){
+        if (is.null(rv$db_status)==F && rv$db_status == "selected"){
           shinyjs::disable("selected_species")
         }
 
@@ -396,6 +569,7 @@
         # }
 
     })
+    
 
     # reset species, at the same time reset rnk/glist
     observeEvent(input$add_db_modify, {
@@ -1310,19 +1484,23 @@
               incProgress(0.1)
             }
         })
-        # saveRDS(rv$fgseagg, file = "rvs/fgseagg.rds")
-        # saveRDS(rv$gmts, file = "rvs/gmts.rds")
-        # saveRDS(rv$gmts_length, file = "rvs/gmts_length.rds")
-        # saveRDS(rv$gmt_cs_paths, file = "rvs/gmt_cs_paths.rds")
-        # saveRDS(rv$db_modal, file = "rvs/db_modal.rds")
-        # saveRDS(rv$gmt_cs, file = "rvs/gmt_cs.rds")
-        # saveRDS(rv$sd_high, file = "rvs/sd_high.rds")
-        # saveRDS(rv$gmin, file = "rvs/gmin.rds")
-        # saveRDS(rv$gmax, file = "rvs/gmax.rds")
-        # saveRDS(rv$gperm, file = "rvs/gperm.rds")
-        # saveRDS(rv$bar_pathway, file = "rvs/bar_pathway.rds")
-        # saveRDS(rv$bubble_pathway, file = "rvs/bubble_pathway.rds")
-        # saveRDS(rv$run_n, file = "rvs/run_n.rds")
+        
+        if(!is.null(rv$demo_save) && rv$demo_save == "yes"){
+          saveRDS(rv$fgseagg, file = "rvs/fgseagg.rds")
+          saveRDS(rv$gmts, file = "rvs/gmts.rds")
+          saveRDS(rv$dbs, file = "rvs/dbs.rds")
+          saveRDS(rv$gmts_length, file = "rvs/gmts_length.rds")
+          saveRDS(rv$gmt_cs_paths, file = "rvs/gmt_cs_paths.rds")
+          saveRDS(rv$db_modal, file = "rvs/db_modal.rds")
+          saveRDS(rv$gmt_cs, file = "rvs/gmt_cs.rds")
+          saveRDS(rv$sd_high, file = "rvs/sd_high.rds")
+          saveRDS(rv$gmin, file = "rvs/gmin.rds")
+          saveRDS(rv$gmax, file = "rvs/gmax.rds")
+          saveRDS(rv$gperm, file = "rvs/gperm.rds")
+          saveRDS(rv$bar_pathway, file = "rvs/bar_pathway.rds")
+          saveRDS(rv$bubble_pathway, file = "rvs/bubble_pathway.rds")
+          saveRDS(rv$run_n, file = "rvs/run_n.rds")
+        }
 
     })
 

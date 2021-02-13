@@ -200,9 +200,10 @@ dt_options <- function(max_char=80, scrollX=T, scrollY=F, paging=T, searching=T,
 #       df_no(df)
 #   })
 
-df_no <- function(df,extensions=c('Scroller'), dom = NULL, buttons = NULL, scrollY = "380px", scroller = TRUE, scrollX=TRUE){
+df_no <- function(df,extensions=c('Scroller'), dom = NULL, buttons = NULL, scrollY = "380px", scroller = TRUE, scrollX=TRUE,other=""){
   DT::datatable(df,
                 extensions=extensions,
+                filter = list(position = "bottom", clear = T, plain = T),
                 options = list(
                   # sDom  = '<"top">lrt<"bottom">ip',
                   dom = dom,
@@ -210,7 +211,9 @@ df_no <- function(df,extensions=c('Scroller'), dom = NULL, buttons = NULL, scrol
                   scrollY = scrollY,
                   scroller = scroller,
                   scrollX = scrollX
-                ))
+                )
+                # ,other
+  )
 }
 
 

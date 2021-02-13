@@ -295,6 +295,10 @@ observeEvent(input$vis_replot,{
         rv$ora_color <- input$vis_color
         rv$up_color <- input$vis_color_up
         rv$down_color <- input$vis_color_down
+        
+        
+        rv$db_name_y <- input$db_name_v_y
+        rv$db_id_y <- input$db_id_v_y
     }
     
 })
@@ -389,7 +393,7 @@ output$ui_vis_gear <- renderUI({
             bsTooltip("q_vis_edge_threshold", "Click to learn more!", placement = "top")
         )
 
-    ),br(),
+    ),
     fluidRow(
         column(
             width = 6,
@@ -403,6 +407,7 @@ output$ui_vis_gear <- renderUI({
             )
         )
     ),
+    tv_vis_div(),
     fluidRow(
         column(
             width = 4,

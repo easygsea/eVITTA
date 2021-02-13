@@ -26,7 +26,7 @@ output$feedback_dbs <- renderUI({
     if(input$selected_species != "other"){
         db_selected = names(rv$dbs)
     }else{
-        db_selected = rv$gmt_cs
+        db_selected = names(rv$gmt_cs)
     }
     HTML(
         "Selected databases:<br/><b>",
@@ -645,15 +645,18 @@ output$gmt_box <- renderUI({
 
 output$delete_gmt <- renderUI({
     if(length(rv$gmt_cs) >= 1){
-        multiInput(inputId = "delete_gmt",
-                   label = NULL,
-                   choices = rv$gmt_cs,
-                   width = "100%",
-                   options = list(
-                       enable_search = FALSE,
-                       non_selected_header = "Loaded GMT(s):",
-                       selected_header = "Delete GMT(s):")
+        div(
+            multiInput(inputId = "delete_gmt",
+                       label = NULL,
+                       choices = rv$gmt_cs,
+                       width = "100%",
+                       options = list(
+                           enable_search = FALSE,
+                           non_selected_header = "Loaded GMT(s):",
+                           selected_header = "Delete GMT(s):")
+            )
         )
+        
     } else {
         HTML("No GMT loaded.")
     }
@@ -666,6 +669,12 @@ output$delete_gmt_confirm <- renderUI({
 })
 
 observeEvent(input$delete_gmt_confirm,{
+    if(is.null(input$delete_gmt)){
+        shinyalert("Please select the GMT(s) you'd like to delete. Or, click Confirm to continue in the RUN Analysis panel to proceed.")
+    }
+    
+    req(!is.null(input$delete_gmt))
+    
     to_delete_i <- which(rv$gmt_cs %in% input$delete_gmt)
     
     rv$gmt_cs <- rv$gmt_cs[-to_delete_i]
