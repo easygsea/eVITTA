@@ -705,16 +705,14 @@ observeEvent(input$search_geo, {
     }else{
       rv$platforms <- names(GPLList(rv$gse_all))
       rv$gpl_summary <- summarize_gpl_F(rv$gse_all)
-      print(rv$gpl_summary)
     }
 
     # initialize gpl selection choices
     choices <- lapply(rv$gpl_summary, function(x){
       HTML(paste0(x[["ID"]],": ", x[["Organism"]], " (", x[["Samples"]]," samples)" ))
     })
-    rv$gpl_choices <- invert_vector(choices)
     
-
+    rv$gpl_choices <- invert_vector(choices)
   })
 
 })

@@ -20,7 +20,7 @@ summarize_gpl_F <- function(gse){
       }
       type <- paste(Meta(gse)$type, collapse=", ") # wrap in paste to ensure atomic
       rv$gpl_type <- c(rv$gpl_type, type)
-      rv$gpl_count <- c(rv$gpl_count, samplen)
+      rv$gpl_count <- c(rv$gpl_count, Meta(gsmlist[[1]])$channel_count)
       c(ID=id, Organism=organism, Samples=samplen, Type=type, Molecule=molecule, Strategy=strategy)
     })
   
