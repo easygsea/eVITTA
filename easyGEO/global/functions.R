@@ -157,6 +157,7 @@ summarize_gpl <- function(gse){
       fn <- tempp[grep(nn, names(tempp))]
       if (length(fn)>0){
         assign(nn, paste(unique(fn[[1]]), collapse=", ")) # wrap in paste to ensure atomic
+        print(paste(unique(fn[[1]]), collapse=", "))
       } else {
         assign(nn, "")
       }

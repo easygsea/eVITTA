@@ -670,35 +670,50 @@ observeEvent(input$search_geo, {
         ))
       }
       else {
-        alink <- paste0("https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=",rv$geo_accession)
-        # DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
-        DisplayText <- paste0("Unable to parse ",rv$geo_accession," data. Error message:<br>"
-                              , ErrorMessage
-                              , "<br><br>GEO sequence submission procedures are designed to encourage provision of <a target='_blank' href='http://fged.org/projects/minseqe/'>MINSEQE</a> elements."
-                              , " This dataset was likely not meeting the standards."
-                              , "<br><br>Please download the study's gene expression data matrix and design matrix from <a target='_blank' href='",alink,"'><b>",alink,"</b></a>, process them into desirable formats ("
-                              ,"<a href='https://tau.cmmt.ubc.ca/bu/data_matrix.png' target='_blank'>data matrix</a> and <a href='https://tau.cmmt.ubc.ca/bu/design_matrix.png' target='_blank'>design matrix</a>"
-                              ,"), and use <b>Manual uploads</b> mode to continue."
-                              )
-        showModal(modalDialog(
-          title = "Data parsing error",
-          HTML(DisplayText),
-          size = "l",
-          easyClose = TRUE
-          ,footer = confirm_and_reset_buttons("parsing_error_confirm","parsing_error_reset")
-        ))
+        # switch to matrix == F
+        rv$gse_all <- try(getGEO(input$geo_accession, GSEMatrix=F))
+        
+        if(inherits(rv$gse_all, "try-error")) {
+          alink <- paste0("https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=",rv$geo_accession)
+          # DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
+          DisplayText <- paste0("Unable to parse ",rv$geo_accession," data. Error message:<br>"
+                                , ErrorMessage
+                                , "<br><br>GEO sequence submission procedures are designed to encourage provision of <a target='_blank' href='http://fged.org/projects/minseqe/'>MINSEQE</a> elements."
+                                , " This dataset was likely not meeting the standards."
+                                , "<br><br>Please download the study's gene expression data matrix and design matrix from <a target='_blank' href='",alink,"'><b>",alink,"</b></a>, process them into desirable formats ("
+                                ,"<a href='https://tau.cmmt.ubc.ca/bu/data_matrix.png' target='_blank'>data matrix</a> and <a href='https://tau.cmmt.ubc.ca/bu/design_matrix.png' target='_blank'>design matrix</a>"
+                                ,"), and use <b>Manual uploads</b> mode to continue."
+                                )
+          showModal(modalDialog(
+            title = "Data parsing error",
+            HTML(DisplayText),
+            size = "l",
+            easyClose = TRUE
+            ,footer = confirm_and_reset_buttons("parsing_error_confirm","parsing_error_reset")
+          ))
+        }else{
+          rv$getgeo_mode <- F
+        }
       }
     }
 
     req(!inherits(rv$gse_all, "try-error"))
+    
+    if(rv$getgeo_mode){
+      rv$platforms <- tabulate(rv$gse_all, annotation)
+      rv$gpl_summary <- summarize_gpl(rv$gse_all)
+    }else{
+      rv$platforms <- names(GPLList(rv$gse_all))
+      rv$gpl_summary <- summarize_gpl_F(rv$gse_all)
+      print(rv$gpl_summary)
+    }
 
-    rv$platforms <- tabulate(rv$gse_all, annotation)
-    rv$gpl_summary <- summarize_gpl(rv$gse_all)
     # initialize gpl selection choices
     choices <- lapply(rv$gpl_summary, function(x){
       HTML(paste0(x[["ID"]],": ", x[["Organism"]], " (", x[["Samples"]]," samples)" ))
     })
     rv$gpl_choices <- invert_vector(choices)
+    
 
   })
 
@@ -763,22 +778,28 @@ study_type <- reactive({
   req(is.null(rv$gse_all)==F)
   req(length(rv$platforms)>0)
   req(is.null(input$plat)==F)
+  
+  if(rv$getgeo_mode){
+    gse_temp <- rv$gse_all[[match(input$plat, rv$platforms)]]
+    # print(gse_temp)
+    
+    req(is.null(gse_temp)==F)
+    
+    # get channel count
+    gsm_meta_temp <- find_repeating_values(pData(phenoData(gse_temp)))
+    channel_count <- gsm_meta_temp$channel_count
+    
+    # get study type
+    gse_meta_temp <- notes(experimentData(gse_temp))
+    type <- gse_meta_temp$type
+    return(list("type" = type, "channel_count" = channel_count))
+  }else{
+    return(list("type" = rv$gpl_type[[match(input$plat, rv$platforms)]], "channel_count" = rv$gpl_count[[match(input$plat, rv$platforms)]]))
+  }
 
 
-  gse_temp <- rv$gse_all[[match(input$plat, rv$platforms) ]]
-  # print(gse_temp)
+  
 
-  req(is.null(gse_temp)==F)
-
-  # get channel count
-  gsm_meta_temp <- find_repeating_values(pData(phenoData(gse_temp)))
-  channel_count <- gsm_meta_temp$channel_count
-
-  # get study type
-  gse_meta_temp <- notes(experimentData(gse_temp))
-  type <- gse_meta_temp$type
-
-  return(list("type" = type, "channel_count" = channel_count))
 })
 
 output$study_type_feedback <- renderUI({

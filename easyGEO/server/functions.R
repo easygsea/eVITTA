@@ -1,3 +1,32 @@
+# summarize gpl info when GSEMatrix = F
+summarize_gpl_F <- function(gse){
+  ids <- c()
+  out <- GPLList(gse) %>%
+    lapply(., function(x) {
+      metadata <- Meta(x)
+      id <- metadata[["geo_accession"]]
+      ids <- c(ids, id)
+      gsmlist <- Filter(function(gsm) {Meta(gsm)$platform_id==id},GSMList(gse))
+      samplen <- length(gsmlist)
+      query <- c("organism", "molecule", "strategy")
+      tempp <- Meta(gsmlist[[1]])
+      for (nn in query){
+        fn <- tempp[grep(nn, names(tempp))]
+        if (length(fn)>0){
+          assign(nn, paste(unique(fn[[1]]), collapse=", ")) # wrap in paste to ensure atomic
+        } else {
+          assign(nn, "")
+        }
+      }
+      type <- paste(Meta(gse)$type, collapse=", ") # wrap in paste to ensure atomic
+      rv$gpl_type <- c(rv$gpl_type, type)
+      rv$gpl_count <- c(rv$gpl_count, samplen)
+      c(ID=id, Organism=organism, Samples=samplen, Type=type, Molecule=molecule, Strategy=strategy)
+    })
+  
+  out
+}
+
 # -------------------------------------------------------------------- #
 #                       render datatable options                       #
 # -------------------------------------------------------------------- #
