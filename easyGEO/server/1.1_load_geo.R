@@ -605,6 +605,7 @@ observeEvent(input$search_geo, {
   rv$identifiers <- NULL
   
   rv$getgeo_mode <- T; rv$gpl_type = list(); rv$gpl_count = list(); rv$gsmlist = list()
+  rv$organism <- NULL
 
   withProgress(message = 'Getting data. Please wait a minute...', value = 1, {
 

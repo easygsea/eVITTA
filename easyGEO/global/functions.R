@@ -18,7 +18,7 @@ find_repeating_values <- function(df){
 
 named_list_to_df <- function(list, colnames){
   df <- data.frame(cbind(as.character(names(list)),
-                         as.character(unname(unlist(list)))
+                         as.character(list)
   ))
   colnames(df) <- colnames
   df

@@ -11,9 +11,12 @@ gse <- reactive({
 
 # get full gse metadata as list. call using gse_meta()
 gse_meta <- reactive({
-  req(is.null(gse())==F)
-  
-  notes(experimentData(gse()))
+  if(rv$getgeo_mode){
+    req(is.null(gse())==F)
+    notes(experimentData(gse()))
+  }else{
+    Meta(rv$gse_all)
+  }
 })
 
 # get full gse metadata as dataframe. call using gse_meta_df()
@@ -25,19 +28,28 @@ gse_meta_df <- reactive({
 
 # GSM metadata -----------
 gse_samples <- reactive({
-  req(is.null(gse())==F)
-  
-  sampleNames(phenoData(gse()))
+  if(rv$getgeo_mode){
+    req(is.null(gse())==F)
+    sampleNames(phenoData(gse()))
+  }else{
+    rv$samples
+  }
 })
 
 # get metadata shared among all GSMs as list. 
 gsm_meta <- reactive({
-  req(is.null(gse())==F)
-  req(is.null(gse_samples())==F)
+  if(rv$getgeo_mode){
+    req(is.null(gse())==F)
+    req(is.null(gse_samples())==F)
+    vals <- find_repeating_values(pData(phenoData(gse())))
+    samples <- gse_samples()
+  }else{
+    vals <- Meta(gsmlist[[1]]) #gse_meta()
+    samples <- rv$samples
+  }
   
-  vals <- find_repeating_values(pData(phenoData(gse())))
-  c("samples" = paste(gse_samples(), collapse=" "), # add sample info to the phenodata list
-    "sample_count" = length(gse_samples()),
+  c("samples" = paste(samples, collapse=" "), # add sample info to the phenodata list
+    "sample_count" = length(samples),
     vals)
 })
 
