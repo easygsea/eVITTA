@@ -110,14 +110,14 @@ output$download_dmdf <- downloadHandler(
 
 output$data_matrix_ui <- renderUI({
     # check supplementary data in GSE
-  gse_sup <- unlist(gse_meta_df()[grep("supplementary_file", gse_meta_df()$Field),"Value"])
-  print(gse_sup)
+  gse_sup <- unlist(gse_meta()[grep("supplementary_file", names(gse_meta()))])
   gse_sup[gse_sup=="NONE"] <- NA # convert NONE to NA
-  print(gse_sup)
   gse_sup <- gse_sup[is.na(gse_sup)==F] # delete NA
   print(gse_sup)
-  if(!identical(gse_sup, character(0))){
-    gse_sup <- strsplit(gse_sup, "\n")[[1]]
+  if(rv$getgeo_mode){
+    if(!identical(gse_sup, character(0))){
+      gse_sup <- strsplit(gse_sup, "\n")[[1]]
+    }
   }
   print(gse_sup)
   
@@ -131,7 +131,7 @@ output$data_matrix_ui <- renderUI({
   
   
   # detect where the data is
-  if (nrow(exprs(gse()))>0){
+  if (nrow(rv$dmdf)>0){
     source = "table"
     text <- "<strong>Detected data source: <br>as preloaded datatable.</strong> 
                         <br>Datatable will be shown on the right."

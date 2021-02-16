@@ -6,7 +6,7 @@ tabulate <- function(object, FUN){
 
 # find columns that have one value and return named list of those values
 find_repeating_values <- function(df){
-  df <- df[vapply(df, function(x) length(unique(x)) == 1, logical(1L))]
+  df <- df[,as.vector(vapply(df, function(x) length(unique(x)) == 1, logical(1L)))]
   as.list(df[1,])
 }
 

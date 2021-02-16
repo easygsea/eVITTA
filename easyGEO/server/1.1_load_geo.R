@@ -913,7 +913,8 @@ observeEvent(input$geo_platform, {
       rv$pdata <- pData(phenoData(gse()))
     }else{
       rv$all_samples <- rv$samples <- names(rv$gsmlist)
-      rv$pdata <- rbindlist(lapply(rv$gsmlist, function(x) as.data.frame(t(Meta(x)), stringsAsFactors=FALSE)), fill=T)
+      rv$pdata <- rbindlist(lapply(rv$gsmlist, function(x) as.data.frame(t(Meta(x)), stringsAsFactors=FALSE)), fill=T) %>%
+        as.data.frame()
       rownames(rv$pdata) <- names(rv$gsmlist)
     }
     

@@ -44,9 +44,11 @@ gsm_meta <- reactive({
     vals <- find_repeating_values(pData(phenoData(gse())))
     samples <- gse_samples()
   }else{
-    vals <- Meta(rv$gsmlist[[1]]) #gse_meta()
-    vals <- vals[names(vals) != "title"]
-    samples <- rv$samples
+    req(length(rv$gsmlist)>0)
+    # vals <- Meta(rv$gsmlist[[1]])
+    # vals <- vals[names(vals) != "title"]
+    vals <- find_repeating_values(rv$pdata)
+    samples <- rv$all_samples
   }
   
   c("samples" = paste(samples, collapse=" "), # add sample info to the phenodata list
