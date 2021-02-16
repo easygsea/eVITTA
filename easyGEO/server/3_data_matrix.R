@@ -906,6 +906,7 @@ output$dmdf_filter_ui <- renderUI({
 # filter count matrix by selected samples (DISPLAY ONLY)
 filtered_data_showdf <- reactive({
   req(is.null(rv$dmdf)==F)
+  req(nrow(rv$dmdf)>0)
   req(length(rv$samples)>0)
   
   dmdf <- rv$dmdf
@@ -930,6 +931,7 @@ filtered_data_showdf <- reactive({
 # filter count matrix by selected samples (USE FOR ANALYSIS)
 filtered_data_df <- reactive({
   req(is.null(rv$dmdf)==F)
+  req(nrow(rv$dmdf)>0)
   req(length(rv$samples)>0)
 
   dmdf <- rv$dmdf
