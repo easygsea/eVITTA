@@ -156,7 +156,7 @@ panel_null <- function(text = "Data available upon selection of a platform."){
 # note: this guards against cases where many characteristics dimensions are condensed in one string
 # e.g. "Gender: female, Age: Premenopausal, Tissue: Normal Breast"
 
-extract_char_list <- function(gse,
+extract_char_list <- function(#gse,
                               oneline_guard= T, # to guard against one-line characteristics
                               sep_guard = ", ", # delimiter of one-line characteristics
                               replace_empty=T, # whether or not to replace empty string as NA
@@ -164,13 +164,20 @@ extract_char_list <- function(gse,
 ){
   
   # tidy characteristics
-  char_list <- data.frame(t(data.frame(pData(phenoData(gse))) %>% dplyr::select(contains(keyword))))
+  char_list <- data.frame(t(data.frame(rv$pdata) %>% dplyr::select(contains(keyword)))) #pData(phenoData(gse))
+  colnames(char_list) <- rv$all_samples
+  
   if (replace_empty==T){
     char_list[char_list==""] <- NA
   }
+  
   if (oneline_guard==T){
-    char_list <- lapply(char_list, function(x){paste(x, collapse=sep_guard)}) # squeeze down to one dimension
-    char_list <- lapply(char_list, function(x){strsplit(x, sep_guard)[[1]]}) # restore dimensionality
+    if(rv$getgeo_mode){
+      char_list <- lapply(char_list, function(x){paste(x, collapse=sep_guard)}) # squeeze down to one dimension
+    }else{
+      char_list <- lapply(char_list, function(x){paste(unlist(x), collapse=sep_guard)}) # squeeze down to one dimension
+    }
+      char_list <- lapply(char_list, function(x){strsplit(x, sep_guard)[[1]]}) # restore dimensionality
   }
   
   char_list <- as.list(char_list)

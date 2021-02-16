@@ -130,7 +130,7 @@ translate_sample_names <- function(original_vector, dict_df, output_type){
   
   # translate according to dict df. if not found, preserve the original value
   output_vector <- unlist(lapply(original_vector, function(x){
-    output_value <- dict_df[dict_df[[input_coln]]==x, output_type]
+    output_value <- dict_df[which(dict_df[[input_coln]]==x), ] %>% dplyr::select(all_of(output_type))
     if (identical(output_value, character(0))) {
       return (x)
     } else {

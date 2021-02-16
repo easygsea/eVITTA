@@ -38,10 +38,10 @@ shinyServer(function(input, output, session) {
         # req(is.null(rv$pdata)==F)
         
         if (is.null(rv$gse_all)==F & is.null(rv$plat_id)==F & is.null(rv$samples)==F & is.null(rv$pdata)==F){
-            
             to_show <- translate_sample_names(rv$samples,  # translating from
-                                              rv$pdata[c("title", "geo_accession")],  # translation df
+                                              rv$pdata[,c("title", "geo_accession")],  # translation df
                                               "title") # translating to
+            
             if (length(to_show)>30){
                 to_show_txt <- paste0(paste(to_show[1:30], collapse= ", "), "<br><i>... and ", length(to_show)-30 ," more</i>")
             } else {

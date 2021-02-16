@@ -603,6 +603,8 @@ observeEvent(input$search_geo, {
   rv$deg <- NULL
   rv$identifiers_df <- NULL
   rv$identifiers <- NULL
+  
+  rv$getgeo_mode <- T; rv$gpl_type = list(); rv$gpl_count = list(); rv$gsmlist = list()
 
   withProgress(message = 'Getting data. Please wait a minute...', value = 1, {
 
@@ -818,6 +820,8 @@ output$study_type_feedback <- renderUI({
     )
     box_color = "yellow"
   }
+  
+  if(study_type == "Expression profiling by array"){rv$microarray <- "yes"}else{rv$microarray <- "no"}
 
   # making sure the channel_count is not null to run the function
   if(is.null(channel_count) == F){
@@ -828,8 +832,6 @@ output$study_type_feedback <- renderUI({
                                   Only data in the first channel will be read.")
       )
       box_color = "yellow"
-    }else{
-      rv$microarray = "yes"
     }
   }
   msg <- paste(msgs, collapse="<br>")
@@ -858,32 +860,67 @@ observeEvent(input$geo_platform, {
 
   plat <- isolate(input$plat)
   rv$plat_id <- match(plat, rv$platforms)
-  
+  print(plat)
   withProgress(message = 'Loading data...', value = 1, {
-  
-    # initialize the count matrix (even if it's empty) with first row = Name
-    exprs <- exprs(gse())
+    if(rv$getgeo_mode){
+      # initialize the count matrix (even if it's empty) with first row = Name
+      exprs <- exprs(gse())
+    }else{
+      rv$gsmlist <- Filter(function(gsm) {Meta(gsm)$platform_id==plat},GSMList(rv$gse_all))
+      # get the probeset ordering
+      gpllist <- GPLList(rv$gse_all)
+      gpl <- gpllist[[names(gpllist)==plat]]
+      probesets <- Table(gpl)$ID
+      # make the data matrix from the VALUE columns from each GSM
+      # being careful to match the order of the probesets in the platform
+      # with those in the GSMs
+      exprs <- do.call('cbind',lapply(rv$gsmlist,function(x) {
+        tab <- Table(x)
+        mymatch <- match(probesets,tab$ID_REF)
+        return(tab$VALUE[mymatch])
+      }))
+      
+      if(!is.null(exprs)){
+        if (nrow(exprs) >0){
+          exprs <- apply(exprs,2,function(x) {as.numeric(as.character(x))})
+          rownames(exprs) <- probesets
+          colnames(exprs) <- names(rv$gsmlist)
+        }
+      }else{
+        exprs <- data.frame()
+      }
+    }
+    
     if (nrow(exprs) >0){ # put gene names onto first column
       dmdf <- cbind(Name = rownames(exprs), exprs)
     } else {
       dmdf <- cbind(Name = character(0), exprs)
     }
+    
     rownames(dmdf) <- c() # remove rownames
     rv$dmdf <- dmdf
     rv$dmdf_o <- dmdf
-  
+
     incProgress(0.5)
-  
-    # initialize samples list
-    rv$all_samples <- sampleNames(gse()) # this one stays the same
-    rv$samples <- sampleNames(gse()) # this one will change
-  
-    # initialize pdata
-    rv$pdata <- pData(phenoData(gse()))
-  
+    
+    if(rv$getgeo_mode){
+      # initialize samples list
+      rv$all_samples <- sampleNames(gse()) # this one stays the same
+      rv$samples <- sampleNames(gse()) # this one will change
+      
+      # initialize pdata
+      rv$pdata <- pData(phenoData(gse()))
+    }else{
+      rv$all_samples <- rv$samples <- names(rv$gsmlist)
+      rv$pdata <- rbindlist(lapply(rv$gsmlist, function(x) as.data.frame(t(Meta(x)), stringsAsFactors=FALSE)), fill=T)
+      rownames(rv$pdata) <- names(rv$gsmlist)
+    }
+    
+    
     # initialize fddf
     rv$fddf <- design_df() # initially unfiltered, will update when filter
-    
+
+        
     incProgress(0.2)
     
     # initialize gene identifiers
@@ -891,14 +928,19 @@ observeEvent(input$geo_platform, {
       # GPL probes' info
       # gset <- rv$gse_all[[match(plat, rv$platforms)]]
       
-      df <- pData(featureData(gse())) 
+      # currently only support GSEMatrix == T
+      if(rv$getgeo_mode){
+        df <- pData(featureData(gse()))
+      }else{
+        df <- Table(gpl)
+      }
+
       df <- df %>%
         dplyr::select(any_of(c(matches(accepted_gene_identifiers, ignore.case = T),ends_with("_id", ignore.case = T))))
   
       
       rv$identifiers <- colnames(df)
       rv$identifiers_df <- df
-      
     }
     incProgress(0.3)
   
