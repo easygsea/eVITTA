@@ -888,7 +888,10 @@ observeEvent(input$geo_platform, {
           colnames(exprs) <- names(rv$gsmlist)
         }
       }else{
-        exprs <- data.frame()
+        gsms <- names(rv$gsmlist)
+        exprs <- data.frame(matrix(vector(), 0, length(gsms),
+                                   dimnames=list(c(), c(gsms))),
+                            stringsAsFactors=F)
       }
     }
     
