@@ -381,12 +381,12 @@ read_data_matrix <- function(inFile){
   req(!inherits(indf, "try-error")) #require to be no error to proceed the following codes
   
   # check the number of columns of the matrix
-  if(ncol(indf) <= 2){
-      shinyalert("You uploaded a file with <= 2 columns, that is not an accepted format. Please click the help button for accepted file formats.")
+  if(ncol(indf) < 2){
+      shinyalert("You uploaded a file with < 2 columns, that is not an accepted format. Please click the help button for accepted file formats.")
       shinyjs::reset("data_matrix_file")
   }
   
-  req(ncol(indf) > 2)
+  req(ncol(indf) > 1)
   # This part removes duplicate rows of indf
   DuplicateCheck <- as.data.frame(indf[,1], drop=FALSE) #extract first column of indf and check if there is 
   DuplicateCheck <- duplicated(DuplicateCheck)
@@ -440,7 +440,7 @@ read_data_matrix <- function(inFile){
       # print(indf_coln[i])
     }
   }
-  print(indf_coln)
+  # print(indf_coln)
   # if(prod(validUTF8(indf_coln))){indf_coln <- translate_sample_names(toupper(indf_coln),  # translating from (upper case)
   #                                     translation_df,  # translation df
   if(rv$run_mode == "auto"){
@@ -449,17 +449,14 @@ read_data_matrix <- function(inFile){
                                      "geo_accession") # translating to
  
   }  
-   #print(indf_coln)
     colnames(indf) <- indf_coln[-1]
-  #print("a small indicator here")
+  # print("a small indicator here")
   # print(head(indf))
   
   if(rv$run_mode == "auto"){
       # then, match each column to rv$dmdf and update the values into it
       rvdf <- rv$dmdf
-      print(rv$dmdf)
-      print(nrow(rv$dmdf) >=  1)
-      
+
       dmdf <- data.frame(matrix(NA, nrow = nrow(indf), ncol = ncol(rvdf))) # initialize empty df
       dmdf <- data.frame(lapply(colnames(rvdf), function(x){ # update values into dmdf (leaves NA if not found)
         if (x %in% colnames(indf)){

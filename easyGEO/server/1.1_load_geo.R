@@ -889,9 +889,10 @@ observeEvent(input$geo_platform, {
         }
       }else{
         gsms <- names(rv$gsmlist)
-        exprs <- data.frame(matrix(vector(), 0, length(gsms),
-                                   dimnames=list(c(), c(gsms))),
-                            stringsAsFactors=F)
+        # initiate an empty df
+        exprs <- data.frame(matrix(NA, nrow = 0, ncol = length(gsms),
+                                   dimnames=list(c(), gsms)),
+                              stringsAsFactors=F)
       }
     }
     
