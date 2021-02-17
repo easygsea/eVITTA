@@ -267,7 +267,7 @@ output$design_summary_ui <- renderUI({
     req(is.null(rv$plat_id)==F)
   
   div(
-    strong(paste0("Study design for ", annotation(gse()), ": ")), br(),br(),
+    strong(paste0("Study design for ", rv$platform, ": ")), br(),br(),
     
     
     shiny::HTML(design_summary())

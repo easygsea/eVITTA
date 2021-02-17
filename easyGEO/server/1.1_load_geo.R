@@ -861,7 +861,7 @@ observeEvent(input$geo_platform, {
 
   plat <- isolate(input$plat)
   rv$plat_id <- match(plat, rv$platforms)
-  print(plat)
+  rv$platform <- plat
   withProgress(message = 'Loading data...', value = 1, {
     if(rv$getgeo_mode){
       # initialize the count matrix (even if it's empty) with first row = Name
