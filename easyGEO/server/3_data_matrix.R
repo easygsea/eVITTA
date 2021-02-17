@@ -129,9 +129,8 @@ output$data_matrix_ui <- renderUI({
   gsm_sup <- unlist(gsm_sup)
   print(gsm_sup)
   
-  
   # detect where the data is
-  if (nrow(rv$dmdf)>0){
+  if (rv$expr_nrow>0){
     source = "table"
     text <- "<strong>Detected data source: <br>as preloaded datatable.</strong> 
                         <br>Datatable will be shown on the right."

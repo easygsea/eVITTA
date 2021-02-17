@@ -605,7 +605,7 @@ observeEvent(input$search_geo, {
   rv$identifiers <- NULL
   
   rv$getgeo_mode <- T; rv$gpl_type = list(); rv$gpl_count = list(); rv$gsmlist = list()
-  rv$organism <- NULL
+  rv$expr_nrow <- 0; rv$organism <- NULL
 
   withProgress(message = 'Getting data. Please wait a minute...', value = 1, {
 
@@ -896,7 +896,10 @@ observeEvent(input$geo_platform, {
       }
     }
     
-    if (nrow(exprs) >0){ # put gene names onto first column
+    # nrow of exprs
+    rv$expr_nrow <- nrow(exprs)
+    
+    if (rv$expr_nrow >0){ # put gene names onto first column
       dmdf <- cbind(Name = rownames(exprs), exprs)
     } else {
       dmdf <- cbind(Name = character(0), exprs)
