@@ -525,7 +525,7 @@ output$rrho_selections <- renderUI({
   div(
     box(
       title = NULL, status = "primary", solidHeader = F, width=12,
-      div(id="n3_3",
+      div(id="rrho_select",
           selectInput(
             inputId = "rrho_x",
             label = "Selected x:",
@@ -905,6 +905,7 @@ output$n_panels <- renderUI({
         ),
         
         conditionalPanel("input.n_ui_showpanel == 'RRHO'",
+                         #View(rv$df_n),
                          div(
                            fluidRow(
                              column(4,
@@ -914,9 +915,9 @@ output$n_panels <- renderUI({
                              column(8,
                                                      box(
                                                        title = span( icon("chart-area"), "Level Plot"), status = "primary", solidHeader = F, width=12,
-                                                       #JUST PUT HERE TO SHOW some graph, but even this one cannot be displayed
-                                                       #plotlyOutput("df_n_3ds",
-                                                      #            width = "100%",height = "600px"),
+                                                       
+                                                       plotOutput("rrho_level",
+                                                                    width = "100%",height = "600px")
                                                      )  
                              ),
                            ),

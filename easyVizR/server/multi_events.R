@@ -24,6 +24,11 @@ observe({
     "n_upset_show_ins", "n_upset_c1"
     ))
   
+  #rrho
+  input2rv(c(
+    "rrho_x","rrho_y"
+             ))
+  
   # 2D scatter
   input2rv(c(
     "nxy_selected_x","nxy_selected_y","nxy_selected_z",
@@ -52,6 +57,8 @@ observe({
   input2rv(c(
     "nx_bar_sig","nx_bar_to_plot"
   ))
+  
+  
   
   
   # network
