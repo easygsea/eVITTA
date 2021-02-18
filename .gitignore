@@ -85,3 +85,8 @@ easyGSEA/www/gmts/hsa/07_BioGRID/BIOGRID-PROJECT-glioblastoma_project-INTERACTIO
 easyGSEA/www/gmts/hsa/07_BioGRID/BIOGRID-PROJECT-kinome_project_sc-INTERACTIONS.gmt
 easyGSEA/www/gmts/hsa/10_Other/ChEA_transcriptional_regulation_inferred_from_ChIP-X.gmt
 easyGSEA/www/gmts/hsa/10_Other/Human_Cancer_Metastasis_Database.gmt
+easyGSEA/www/gmts/hsa/08_BioGrid/BIOGRID-ORGANISM-Homo_sapiens.gmt
+easyGSEA/www/gmts/hsa/08_BioGrid/BIOGRID-PROJECT-covid19_coronavirus_project-INTERACTIONS.gmt
+easyGSEA/www/gmts/hsa/08_BioGrid/BIOGRID-PROJECT-fanconi_anemia_project-INTERACTIONS.gmt
+easyGSEA/www/gmts/hsa/08_BioGrid/BIOGRID-PROJECT-glioblastoma_project-INTERACTIONS.gmt
+easyGSEA/www/gmts/hsa/08_BioGrid/BIOGRID-PROJECT-kinome_project_sc-INTERACTIONS.gmt

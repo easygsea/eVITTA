@@ -1968,15 +1968,21 @@
             #     lst = NULL
             # }else{
                 # input is not SYMBOL, rename genes
-                genes_mat = distinct(results, input, .keep_all = TRUE)
-                genes_after = genes[tolower(genes) %in% tolower(genes_mat$input)]
-                genes_after = genes_mat$name#[tolower(genes_mat$input) %in% tolower(genes_after)]
-                genes_after = unique(genes_after)
+                genes_mat = distinct(results, input, .keep_all = TRUE) %>%
+                  dplyr::filter(name != "nan" & !(is.null(name)))
+                if(nrow(genes_mat)<1){
+                  lst <- NULL
+                }else{
+                  genes_after = genes[tolower(genes) %in% tolower(genes_mat$input)]
+                  genes_after = genes_mat$name#[tolower(genes_mat$input) %in% tolower(genes_after)]
+                  genes_after = unique(genes_after)
+                  
+                  # percent of genes maintained after conversion
+                  g_perc = length(genes_after)/length(genes)
+                  
+                  lst = list(g_perc,genes_after,genes_mat)
+                }
                 
-                # percent of genes maintained after conversion
-                g_perc = length(genes_after)/length(genes)
-                
-                lst = list(g_perc,genes_after,genes_mat)
             # }
         }
         
@@ -2015,19 +2021,26 @@
             #     lst = NULL
             # }else{
                 # input is not SYMBOL, rename genes
-                genes_mat = distinct(results, input, .keep_all = TRUE)
-                ranks_after = ranks[tolower(genes_o) %in% tolower(genes_mat$input)]
-                names(ranks_after) = genes_mat$name#[tolower(genes_mat$input) %in% tolower(names(ranks_after))]
-                
-                # # rename DEG table
-                df = df %>% dplyr::filter(tolower(.data[[input$gene_column]]) %in% tolower(genes_mat$input))
-                df[[input$gene_column]] = genes_mat$name
-                rv$data_head_o = df
+                genes_mat = distinct(results, input, .keep_all = TRUE) %>%
+                  dplyr::filter(name != "nan" & !(is.null(name)))
 
-                # percent of genes maintained after conversion
-                g_perc = length(ranks_after)/length(ranks)
+                if(nrow(genes_mat)<1){
+                  lst <- NULL
+                }else{
+                  ranks_after = ranks[tolower(genes_o) %in% tolower(genes_mat$input)]
+                  names(ranks_after) = genes_mat$name#[tolower(genes_mat$input) %in% tolower(names(ranks_after))]
+                  
+                  # # rename DEG table
+                  df = df %>% dplyr::filter(tolower(.data[[input$gene_column]]) %in% tolower(genes_mat$input))
+                  df[[input$gene_column]] = genes_mat$name
+                  rv$data_head_o = df
+                  
+                  # percent of genes maintained after conversion
+                  g_perc = length(ranks_after)/length(ranks)
+                  
+                  lst = list(g_perc,ranks_after,genes_mat)
+                }
                 
-                lst = list(g_perc,ranks_after,genes_mat)
             # }
         }
         
