@@ -839,13 +839,15 @@ observeEvent(input$file, {
 # --------------- show data matrix df ---------------
 
 output$data_matrix_df <- DT::renderDataTable({
+  # saveRDS(rv$samples, file = "rvs/samples.rds")
+  
   req(is.null(rv$gse_all)==F || rv$run_mode == "manual")
   req(is.null(rv$plat_id)==F || rv$run_mode == "manual")
   req(is.null(rv$dmdf)==F)
   req(nchar(input$dmdf_filter))
   
   df <- rv$dmdf
-
+  
   # filter according to stored sample list
   if (input$dmdf_filter == "Filtered"){
     if(rv$column_match_error == FALSE){
@@ -859,13 +861,12 @@ output$data_matrix_df <- DT::renderDataTable({
   # translate GSM column names to sample names on display
   if (input$dmdf_show_coln == "Sample name" 
         && rv$run_mode == "auto"){
-    
-    colnames(df) <- translate_sample_names(colnames(df),  # translating from
+
+      colnames(df) <- translate_sample_names(colnames(df),  # translating from
                                            rv$pdata[c("title", "geo_accession")],  # translation df
                                            "title") # translating to
   }
   
-  print('enter or not')
   print(head(df))
   df
   
@@ -901,6 +902,10 @@ output$dmdf_filter_ui <- renderUI({
 
 # filter count matrix by selected samples (DISPLAY ONLY)
 filtered_data_showdf <- reactive({
+  print(is.null(rv$dmdf)==F)
+  print(nrow(rv$dmdf)>0)
+  print(length(rv$samples)>0)
+  
   req(is.null(rv$dmdf)==F)
   req(nrow(rv$dmdf)>0)
   req(length(rv$samples)>0)

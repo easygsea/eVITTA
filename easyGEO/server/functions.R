@@ -648,6 +648,7 @@ init_demo <- function(){
   rv$gpl_tooltips <- readRDS(paste0(getwd(),"/rvs/gpl_tooltips.rds"))
   rv$text <- readRDS(paste0(getwd(),"/rvs/text.rds"))
   rv$matrix_ready <- readRDS(paste0(getwd(),"/rvs/matrix_ready.rds")) 
+  rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds")) 
   rv$demo <- "yes"
 }
 
