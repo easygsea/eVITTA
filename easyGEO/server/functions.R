@@ -679,7 +679,7 @@ init_demo_d <- function(){
   rv$gpl_tooltips <- NULL
   rv$text <- NULL
   rv$matrix_ready <- NULL
-  rv$demo <- NULL
+  rv$demo <- ""
 }
 
 init_choices <- function(){
