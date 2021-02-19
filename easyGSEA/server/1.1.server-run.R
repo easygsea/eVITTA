@@ -519,6 +519,8 @@
 
       if(length(dbs)<1){
         shinyalert("Select at least one database")
+      }else if(length(dbs)>10){
+        shinyalert("We support up to 10 gene set libraries analyzed at a time. Unselect where appropriate. Thank you.")
       }else{
         removeModal()
       }
