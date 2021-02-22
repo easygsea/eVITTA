@@ -918,7 +918,14 @@ output$n_panels <- renderUI({
                                                        
                                                        plotOutput("rrho_level",
                                                                     width = "100%",height = "600px")
-                                                     )  
+                                                     ),
+                                                      box(
+                                                      title = span( icon("chart-area"), "Rank Scatter Plot"), status = "primary", solidHeader = F, width=12,
+                                      
+                                                      plotOutput("rrho_scatter_plot",
+                                                      width = "100%",height = "600px")
+                                    ),
+                                                      
                              ),
                            ),
                          )

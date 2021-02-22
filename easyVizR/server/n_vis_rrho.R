@@ -56,14 +56,6 @@ run_rrho <- function (rnk1, rnk2,
 {
   #This step is to only keep the ones in common
   
-  original_names <- names(rnk1)
-  rnk_merge <- merge(rnk1,rnk2,by.x = "GeneIdentifier",by.y ="GeneIdentifier")
-  rnk_merge <- na.omit(rnk_merge)
-  View(rnk_merge)
-  rnk1 <- data.frame(rnk_merge$GeneIdentifier,rnk_merge$RankingVal.x)
-  names(rnk1) <- original_names
-  rnk2 <- data.frame(rnk_merge$GeneIdentifier,rnk_merge$RankingVal.y)
-  names(rnk2) <- original_names
   RRHO.xy <- RRHO(rnk1, rnk2, 
                   plots = F, 
                   outputdir = paste0(getwd(),"//RRHOtest"),
@@ -85,6 +77,8 @@ run_rrho <- function (rnk1, rnk2,
 #DataGeneIdentifier,pvalue,STAT
 rrho_level_value <- reactive({
   req(is.null(n_ins_full())==F)
+
+  
   datasets <- rrho_data_handler(rv$rrho_x,rv$rrho_y)
   data1 <- data.frame(datasets[[1]],datasets[[2]],datasets[[3]])
   names(data1) <- c("Name","STAT","PValue")
@@ -92,20 +86,49 @@ rrho_level_value <- reactive({
   names(data2) <- c("Name","STAT","PValue")
   rnk1 <- get_rrho_rnk(data1,DataGeneIdentifier = "Name",pvalue = "PValue",STAT = "STAT")
   rnk2 <- get_rrho_rnk(data2,DataGeneIdentifier = "Name",pvalue = "PValue",STAT = "STAT")
+  #Remove NA
+  original_names <- names(rnk1)
+  rnk_merge <- merge(rnk1,rnk2,by.x = "GeneIdentifier",by.y ="GeneIdentifier")
+  rnk_merge <- na.omit(rnk_merge)
+  rnk1 <- data.frame(rnk_merge$GeneIdentifier,rnk_merge$RankingVal.x)
+  names(rnk1) <- original_names
+  rnk2 <- data.frame(rnk_merge$GeneIdentifier,rnk_merge$RankingVal.y)
+  names(rnk2) <- original_names
+  #Remove NA
   rv$result_plot <-             run_rrho(rnk1, rnk2,
                                     BY=F,
                                     to_put_alternative = "two.sided",
                                     log10.ind=T,
                                     palette="default",
                                     reverse = F)
-  print(rv$result_plot[[2]])
+  rv$rnk1 <- rnk1
+  rv$rnk2 <- rnk2
+  View(rv$rnk1)
   rrho_level_fig <- rv$result_plot[[1]]
   rrho_level_fig
   
 })
-
+#THIS Reactive is for scatter plot
+rrho_scatter_value <- reactive({
+list1  <- rv$rnk1[order(rv$rnk1[,2],decreasing=TRUE),]
+list2  <- rv$rnk2[order(rv$rnk2[,2],decreasing=TRUE),]
+list2ind  <- match(list1[,1],list2[,1])
+list1ind  <- 1:length(list1[,1])
+corval  <- cor(list1ind,list2ind,method="spearman")
+plot(list1ind,list2ind,xlab=paste(rv$rrho_x,"(Rank)"), 
+     ylab=paste(rv$rrho_x,"(Rank)"), pch=20, 
+     main=paste(
+       "Rank-Rank Scatter (rho = ",signif(corval,digits=3),")"
+       ,sep=""), cex=0.5)
+model  <- lm(list2ind~list1ind)
+lines(predict(model),col="red",lwd=3)
+})
 output$rrho_level <- renderPlot(
   rrho_level_value()
+)
+
+output$rrho_scatter_plot <- renderPlot(
+  rrho_scatter_value()
 )
 
 
