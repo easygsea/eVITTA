@@ -10,11 +10,11 @@ bodyResults <- tabItem(tabName = "kegg",
     #uiOutput("p_value_help_div")
     # uiOutput("ui_manhattan_table"),
     ,div(
-        style="position:relative;z-index:1000",
         fixedPanel(
-        uiOutput("floating_button_tab2"),
-        right = 30,
-        bottom = 30
+            style = "z-index:9999",
+            uiOutput("floating_button_tab2"),
+            right = 30,
+            bottom = 30
     ))
 )
 

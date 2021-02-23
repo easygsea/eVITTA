@@ -19,6 +19,7 @@ body2 <- tabItem(tabName = "tab2",
                  )
                  ,
                  fixedPanel(
+                   style = "z-index:9999",
                    uiOutput("x_floating_buttons"),
                    right = 30,
                    bottom = 30

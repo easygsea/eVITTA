@@ -80,7 +80,7 @@ observeEvent(input$tabs, {
 
 
 output$n_filters <- renderUI({
-  div(
+  div(style = "z-index:9999",
     div(id="n_filter_opt", style="display: inline-block;margin-right: 5px;", data_options()),
     bsTooltip("data_options", "Options for easyGSEA output"),
     div(id="n_filter_cuts", style="display: inline-block;margin-right: 5px;", customize_filters()),

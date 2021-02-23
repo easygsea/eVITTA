@@ -133,6 +133,7 @@ body <- dashboardBody(
                 ,
                 fixedPanel(
                   uiOutput("floating_button_1"),
+                  style = "z-index:9999",
                   right = 30,
                   bottom = 30
                 )
@@ -157,6 +158,7 @@ body <- dashboardBody(
         tabItem(tabName = "tab3",
                 uiOutput("ui_dm"),
                 fixedPanel(
+                  style = "z-index:9999",
                   uiOutput("floating_button_3"),
                   right = 30,
                   bottom = 30
@@ -170,6 +172,7 @@ body <- dashboardBody(
         tabItem(tabName = "tab4",
                 uiOutput("ui_run"),
                 fixedPanel(
+                  style = "z-index:9999",
                   uiOutput("floating_button_4"),
                   right = 30,
                   bottom = 30
@@ -180,6 +183,7 @@ body <- dashboardBody(
         tabItem(tabName = "tab5",
                 uiOutput("ui_vis")
                 ,fixedPanel(
+                  style = "z-index:9999",
                   uiOutput("floating_button_5"),
                   right = 30,
                   bottom = 30

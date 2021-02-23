@@ -5,6 +5,7 @@ body_ins <- tabItem(tabName = "tab_ins",
                  uiOutput("ins_main_panels"),
                  
                  fixedPanel(
+                   style = "z-index:9999",
                    uiOutput("i_floating_buttons"),
                    right = 30,
                    bottom = 30
