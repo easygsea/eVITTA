@@ -2,66 +2,34 @@
     ####----------------- Functions: filtering and UI -------------------####
     #=======================================================================#
     # remove db names and IDs in gsea table
-    remove_db_name <- function(df,add_a_column=T){
-      tmp <- str_split(df$pathway, "_", n=2, simplify = T)
-      if(ncol(tmp)>1){
-        df$pathway <- tmp[,2]
-        if(add_a_column){df <- df %>% tibble::add_column(db = tmp[,1], .before = "pathway")}
-      }
+    remove_db_name <- function(df){
+      df$pathway <- gsub("^.*?_","",df$pathway_o)
       return(df)
     }
     
-    remove_db_id <- function(df,add_a_column=T){
-      tmp <- str_split(df$pathway, "%(?=[^%]+$)", simplify = T)
-      if(ncol(tmp)>1){
-        df$pathway <- tmp[,1]
-        if(add_a_column){df <- df %>% tibble::add_column(id = tmp[,2], .before = "pathway")}
-      }
+    remove_db_id <- function(df){
+      df$pathway <- gsub("?%.*$","",df$pathway_o)
       return(df)
     }
     
-    df_tags_op <- function(df,add_a_column=T){
+    df_tags_op <- function(df){
       # when prompted, remove db name and id
-      if(!rv$db_name_y){
-        df <- remove_db_name(df,add_a_column=add_a_column) %>%
+      if(!rv$db_name_y & !rv$db_id_y){
+        df <- remove_db_name(df)
+        df$pathway <- gsub("?%.*$","",df$pathway)
+        df <- df %>%
           dplyr::distinct(pathway,.keep_all=T)
-      }
-      if(!rv$db_id_y){
-        df <- remove_db_id(df,add_a_column=add_a_column) %>%
+      }else if(!rv$db_name_y){
+        df <- remove_db_name(df) %>%
           dplyr::distinct(pathway,.keep_all=T)
-      }
-      
-      return(df)
-    }
-    
-    df_clickrv_op <- function(df){
-      rv_click_list <- c()
-      
-      # save pathway names into a temporary RV
-      if(!is.null(df[["db"]]) && !is.null(df[["id"]])){
-        rv_click_list = paste0(df[["db"]],"_",df[["pathway"]],"%",df[["id"]])
-        # get rid of pure % at the end
-        rv_click_list <- gsub("%$","",rv_click_list)
-        # get rid of pure _ at the begining
-        rv_click_list <- gsub("^_","",rv_click_list)
-        
-      }else if(!is.null(df[["id"]])){
-        rv_click_list = paste0(df[["pathway"]],"%",df[["id"]])
-        # get rid of pure % at the end
-        rv_click_list <- gsub("%$","",rv_click_list)
-        
-      }else if(!is.null(df[["db"]])){
-        rv_click_list = paste0(df[["db"]],"_",df[["pathway"]])
-        # get rid of pure _ at the begining
-        rv_click_list <- gsub("^_","",rv_click_list)
-        
-      }else{
-        rv_click_list = df[["pathway"]]
+      }else if(!rv$db_id_y){
+        df <- remove_db_id(df) %>%
+          dplyr::distinct(pathway,.keep_all=T)
       }
 
-      return(rv_click_list)
+      return(df)
     }
-    
+
     check_tags <- function(vector){
       # observe if any entry is empty
       error_0 <- 0
@@ -252,18 +220,15 @@
     
     combine_df <- function(df=rv$fgseagg,db_selected=unlist(gs_selected())){
         df <- df %>% 
-          dplyr::filter(str_detect(pathway, paste0("^(",paste0(db_selected, collapse = "|"),")_"))) %>% 
+          dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(db_selected, collapse = "|"),")_"))) %>% 
           dplyr::arrange(padj)
         
         # when prompted, remove db name and id
-        if(!rv$db_name_y){
-          df <- remove_db_name(df,add_a_column = F)
-        }
-        if(!rv$db_id_y){
-          df <- remove_db_id(df,add_a_column = F)
-        }
+        df <- df_tags_op(df)
         
         df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = ";"))
+        
+        df <- df %>% dplyr::select(-pathway_o)
         
         return(df)
     }
@@ -309,11 +274,11 @@
       
     }
 
-    filter_plot_df <- function(pathways, up, down, cutoff_p, cutoff_q){
+    filter_plot_df <- function(pathways, up, down, cutoff_p, cutoff_q, tags_op = T){
       df <- rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
       
       df <- df %>% 
-        dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+        dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
         dplyr::distinct(.,pathway,.keep_all = TRUE) %>%        
         mutate_if(is.numeric,  ~replace(., . == 0, p_min)) %>%
         dplyr::arrange(desc(padj))
@@ -353,6 +318,12 @@
               dplyr::slice_min(padj,n=up)
           }
         }
+        
+        # when prompted, remove db name and id
+        if(tags_op){
+          df <- df_tags_op(df)
+        }
+        
         return(df)
       }
     }
@@ -378,17 +349,15 @@
             rv$bar_error <- "l"
             return(NULL)
           }else{
-            # remove/add tags, create temporary list for clicking
-            df <- df_tags_op(df)
-            rv$bar_pathway_list <- df_clickrv_op(df)
+            rv$bar_pathway_list <- df$pathway_o
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
-            # get rid of db id
-            y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
+            # # get rid of db id
+            # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
             
             # abbreviate gene set names on y axis if too long
             if(abby == "y"){
-              y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
+              y_pathway = lapply(df$pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
             }
             
             fig <- df %>% 
@@ -447,17 +416,15 @@
             rv$bar_error <- "l"
             return(NULL)
           }else{
-            # remove/add tags, create temporary list for clicking
-            df <- df_tags_op(df)
-            rv$bubble_pathway_list <- df_clickrv_op(df)
+            rv$bubble_pathway_list <- df$pathway_o
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
-            # get rid of db id
-            y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
+            # # get rid of db id
+            # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
             
                 # abbreviate gene set names on y axis if too long
                 if(abby == "y"){
-                    y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
+                    y_pathway = lapply(df$pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
                 }
                 size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
 
@@ -509,13 +476,13 @@
             return(NULL)
         }else{
             df = rv$fgseagg %>% 
-              dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+              dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
               mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
             # temporarily save pathway order into rv
-            rv$volcano_pathway_list = df$pathway
+            rv$volcano_pathway_list = df$pathway_o
 
             fig <- df %>% 
                 ggplot(aes(x=ES, y=-log10(df[[pq]]), color=-log10(df[[pq]])*sign(ES),
@@ -553,7 +520,7 @@
             return(NULL)
         }else{
             df = rv$fgseagg %>% 
-              dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+              dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
               mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
             df = df[order(df[[pq]]),]
@@ -561,7 +528,7 @@
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
             # temporarily save pathway order into rv
-            rv$volcano_pathway_list = df$pathway
+            rv$volcano_pathway_list = df$pathway_o
             
             colors = rep("grey",nrow(df))
             # if(cutoff < 1){
@@ -602,13 +569,12 @@
             return(NULL)
         }else{
             df = rv$fgseagg %>% 
-              dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+              dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
               mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
-            # remove/add tags, create temporary list for clicking
-            df <- df_tags_op(df)
             # get rid of db id
-            y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
+            df <- df_tags_op(df)
+            y_pathway = df$pathway
             
             # threshold by p & q cutoffs
             if(cutoff < 1){
@@ -675,7 +641,7 @@
         df <- rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
         
         df <- df %>% 
-          dplyr::filter(str_detect(pathway, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>% 
+          dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>% 
           mutate_if(is.numeric,  ~replace(., . == 0, p_min))
         
         if(cutoff_p < 1){
@@ -881,16 +847,14 @@
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
 
-                # remove/add tags, create temporary list for clicking
-                df <- df_tags_op(df)
-                rv$bar_pathway_list <- df_clickrv_op(df)
+                rv$bar_pathway_list <- df$pathway_o
 
-                # get rid of db id
-                y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
+                # # get rid of db id
+                # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
                 
                 # abbreviate gene set names on y axis if too long
                 if(abby == "y"){
-                    y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
+                    y_pathway = lapply(df$pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
                 }
                 
                 fig <- df %>% 
@@ -940,17 +904,15 @@
               
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
-                
-              # remove/add tags, create temporary list for clicking
-              df <- df_tags_op(df)
-              rv$bubble_pathway_list <- df_clickrv_op(df)
+
+              rv$bubble_pathway_list <- df$pathway_o
               
-              # get rid of db id
-              y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
+              # # get rid of db id
+              # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
               
                 # abbreviate gene set names on y axis if too long
                 if(abby == "y"){
-                    y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
+                    y_pathway = lapply(df$pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
                 }
                 
 
@@ -1004,7 +966,17 @@
       ranks = rv$rnkgg
       names(ranks) = toupper(names(ranks))
       gmt = rv$gmts[[rv$es_term]]
-      term <- str_split(rv$es_term,"_",n=2)[[1]][2]
+      # term <- str_split(rv$es_term,"_",n=2)[[1]][2]
+      # when prompted, remove db name and id
+      if(!rv$db_name_y & !rv$db_id_y){
+        term <- gsub("?%.*$","",rv$es_term) %>% gsub("^.*?_","",.)
+      }else if(!rv$db_name_y){
+        term <- gsub("^.*?_","",rv$es_term)
+      }else if(!rv$db_id_y){
+        term <- gsub("?%.*$","",rv$es_term)
+      }else{
+        term <- rv$es_term
+      }
       plotEnrichment(gmt,ranks) + labs(title = term)
     }
     
@@ -1165,10 +1137,7 @@
         rv$vis_status = NULL
         # get df
         # df = dfNEL()
-        df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p,rv$vis_q)
-        
-        # remove/add tags
-        df <- df_tags_op(df,add_a_column=F)
+        df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p, rv$vis_q, tags_op=F)
 
         # print(nrow(df))
         if(is.null(df) || nrow(df)<1){
@@ -2307,6 +2276,8 @@
       if(inherits(frun, "try-error")) {        
         errors = errors + 1
       }else{
+        # add a column to store unique GS names
+        fgseaRes <- fgseaRes %>% dplyr::mutate(pathway_o = pathway, .before = pathway)
         # write into RV
         rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
         # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
@@ -2369,6 +2340,7 @@
         if(inherits(frun, "try-error")) {        
           errors = errors + 1
         }else{
+          fgseaRes <- fgseaRes %>% dplyr::mutate(pathway_o = pathway, .before = pathway)
           rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
           rv$no_up_25 = sum(fgseaRes$padj<0.25,na.rm=TRUE)
           rv$no_up_05 = sum(fgseaRes$padj<0.05,na.rm=TRUE)
@@ -2434,8 +2406,8 @@
       rv$infile_check <- readRDS(paste0(getwd(),"/rvs/infile_check.rds"))
       rv$rnk_check <- readRDS(paste0(getwd(),"/rvs/rnk_check.rds"))
       rv$gene_lists_mat1 <- readRDS(paste0(getwd(),"/rvs/gene_lists_mat1.rds"))
-      rv$total_genes_after <- 23710
-      rv$total_genes <- 23710
+      # rv$total_genes_after <- 23710
+      # rv$total_genes <- 23710
       # rv$es_term <- "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"
       # rv$kegg_confirm <- "yes"
       rv$es_term <- "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"

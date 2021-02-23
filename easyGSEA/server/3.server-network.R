@@ -297,8 +297,8 @@ observeEvent(input$vis_replot,{
         rv$down_color <- input$vis_color_down
         
         
-        rv$db_name_y <- input$db_name_v_y
-        rv$db_id_y <- input$db_id_v_y
+        # rv$db_name_y <- input$db_name_v_y
+        # rv$db_id_y <- input$db_id_v_y
     }
     
 })
@@ -407,7 +407,7 @@ output$ui_vis_gear <- renderUI({
             )
         )
     ),
-    tv_vis_div(),
+    # tv_vis_div(),
     fluidRow(
         column(
             width = 4,
