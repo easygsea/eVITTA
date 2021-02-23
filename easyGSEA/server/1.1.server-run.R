@@ -1347,8 +1347,8 @@
               )
               ,style = "background:#e6f4fc;"
             ),
-            bsTooltip("mymin_q", "Minimum gene set size", placement = "top"),
-            bsTooltip("mymax_q", "Maximum gene set size", placement = "top")
+            bsTooltip("mymin_q", "Minimum gene set size, default 15", placement = "top"),
+            bsTooltip("mymax_q", "Maximum gene set size, default 200", placement = "top")
           ,bsTooltip("q_dynamic_q","If TRUE (the default), easyGSEA will dynamically adjust the adjusted P-value threshold to capture the most significantly enriched while minimizing false positives. Switch to FALSE if you have multiple datasets to be consistent in the threshold."
                      ,placement = "top")
           )
@@ -1365,7 +1365,7 @@
         numericInput("nperm",
                      HTML(paste0("# perm:",add_help("nperm_q")))
                      ,rv$gperm),
-        bsTooltip("nperm_q", "No. of permutations", placement = "top")
+        bsTooltip("nperm_q", "No. of permutations, default 1000", placement = "top")
       )
     })
     
@@ -1386,10 +1386,42 @@
         names(ranks) = toupper(names(ranks))
 
         sd = sd(ranks); rv$sd_high = sd * 2.5
-
-        if(is.null(input$mymin)==F){rv$gmin=input$mymin}
-        if(is.null(input$mymax)==F){rv$gmax=input$mymax}
-        if(is.null(input$nperm)==F){rv$gperm=input$nperm}
+        
+        error_par <- 0
+        if(is.null(input$mymin)==F){
+          if(input$mymin <= 0){
+            shinyalert("Please enter a positive value for Min to define the minimum gene set size.")
+            error_par <- error_par + 1
+          }else if(input$mymin %% 1 != 0){
+            shinyalert("Please enter an integer value for Min to define the minimum gene set size.")
+            error_par <- error_par + 1
+          }else{
+            rv$gmin=input$mymin
+          }
+        }
+        if(is.null(input$mymax)==F){
+          if(input$mymax <= 0){
+            shinyalert("Please enter a positive value for Max to define the maximum gene set size.")
+            error_par <- error_par + 1
+          }else if(input$mymax %% 1 != 0){
+            shinyalert("Please enter an integer value for Max to define the maximum gene set size.")
+            error_par <- error_par + 1
+          }else{
+            rv$gmax=input$mymax
+          }
+        }
+        if(is.null(input$nperm)==F){
+          if(input$nperm <= 0){
+            shinyalert("Please enter a positive value for the number of permutations parameter, # perm.")
+            error_par <- error_par + 1
+          }else if(input$nperm %% 1 != 0){
+            shinyalert("Please enter an integer value for the number of permutations parameter, # perm.")
+            error_par <- error_par + 1
+          }else{
+            rv$gperm=input$nperm
+          }
+        }
+        req(error_par == 0)
 
         # reset RVs
         reset_rvs()
@@ -1521,8 +1553,30 @@
 
         genelist = toupper(rv$gene_lists_after)
 
-        if(is.null(input$mymin)==F){rv$gmin=input$mymin}
-        if(is.null(input$mymax)==F){rv$gmax=input$mymax}
+        error_par <- 0
+        if(is.null(input$mymin)==F){
+          if(input$mymin <= 0){
+            shinyalert("Please enter a positive value for Min to define the minimum gene set size.")
+            error_par <- error_par + 1
+          }else if(input$mymin %% 1 != 0){
+            shinyalert("Please enter an integer value for Min to define the minimum gene set size.")
+            error_par <- error_par + 1
+          }else{
+            rv$gmin=input$mymin
+          }
+        }
+        if(is.null(input$mymax)==F){
+          if(input$mymax <= 0){
+            shinyalert("Please enter a positive value for Max to define the maximum gene set size.")
+            error_par <- error_par + 1
+          }else if(input$mymax %% 1 != 0){
+            shinyalert("Please enter an integer value for Max to define the maximum gene set size.")
+            error_par <- error_par + 1
+          }else{
+            rv$gmax=input$mymax
+          }
+        }
+        req(error_par == 0)
 
         # save dbs for plots
         if(species != "other"){
