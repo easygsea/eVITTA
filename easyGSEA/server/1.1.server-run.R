@@ -1387,41 +1387,52 @@
 
         sd = sd(ranks); rv$sd_high = sd * 2.5
         
-        error_par <- 0
-        if(is.null(input$mymin)==F){
+        rv$error_par <- 0
+        
+        if(is.na(input$mymin)){
+          shinyalert("Please enter a value for Min to define the minimum gene set size.")
+          rv$error_par <- rv$error_par + 1
+        }else{
           if(input$mymin <= 0){
             shinyalert("Please enter a positive value for Min to define the minimum gene set size.")
-            error_par <- error_par + 1
+            rv$error_par <- rv$error_par + 1
           }else if(input$mymin %% 1 != 0){
             shinyalert("Please enter an integer value for Min to define the minimum gene set size.")
-            error_par <- error_par + 1
-          }else{
-            rv$gmin=input$mymin
+            rv$error_par <- rv$error_par + 1
           }
         }
-        if(is.null(input$mymax)==F){
+        if(is.na(input$mymax)){
+          shinyalert("Please enter a value for Max to define the minimum gene set size.")
+          rv$error_par <- rv$error_par + 1
+        }else{
           if(input$mymax <= 0){
             shinyalert("Please enter a positive value for Max to define the maximum gene set size.")
-            error_par <- error_par + 1
+            rv$error_par <- rv$error_par + 1
           }else if(input$mymax %% 1 != 0){
             shinyalert("Please enter an integer value for Max to define the maximum gene set size.")
-            error_par <- error_par + 1
-          }else{
-            rv$gmax=input$mymax
+            rv$error_par <- rv$error_par + 1
           }
         }
-        if(is.null(input$nperm)==F){
+        if(is.na(input$nperm)){
+          shinyalert("Please enter a value for the number of permutations parameter, # perm.")
+          rv$error_par <- rv$error_par + 1
+        }else{  
           if(input$nperm <= 0){
             shinyalert("Please enter a positive value for the number of permutations parameter, # perm.")
-            error_par <- error_par + 1
+            rv$error_par <- rv$error_par + 1
           }else if(input$nperm %% 1 != 0){
             shinyalert("Please enter an integer value for the number of permutations parameter, # perm.")
-            error_par <- error_par + 1
-          }else{
-            rv$gperm=input$nperm
+            rv$error_par <- rv$error_par + 1
           }
         }
-        req(error_par == 0)
+        
+        req(rv$error_par == 0)
+        
+        # update RVs
+        rv$gmin=input$mymin
+        rv$gmax=input$mymax
+        rv$gperm=input$nperm
+        
 
         # reset RVs
         reset_rvs()
@@ -1553,30 +1564,38 @@
 
         genelist = toupper(rv$gene_lists_after)
 
-        error_par <- 0
-        if(is.null(input$mymin)==F){
+        rv$error_par <- 0
+        
+        if(is.na(input$mymin)){
+          shinyalert("Please enter a value for Min to define the minimum gene set size.")
+          rv$error_par <- rv$error_par + 1
+        }else{
           if(input$mymin <= 0){
             shinyalert("Please enter a positive value for Min to define the minimum gene set size.")
-            error_par <- error_par + 1
+            rv$error_par <- rv$error_par + 1
           }else if(input$mymin %% 1 != 0){
             shinyalert("Please enter an integer value for Min to define the minimum gene set size.")
-            error_par <- error_par + 1
-          }else{
-            rv$gmin=input$mymin
+            rv$error_par <- rv$error_par + 1
           }
         }
-        if(is.null(input$mymax)==F){
+        if(is.na(input$mymax)){
+          shinyalert("Please enter a value for Max to define the minimum gene set size.")
+          rv$error_par <- rv$error_par + 1
+        }else{
           if(input$mymax <= 0){
             shinyalert("Please enter a positive value for Max to define the maximum gene set size.")
-            error_par <- error_par + 1
+            rv$error_par <- rv$error_par + 1
           }else if(input$mymax %% 1 != 0){
             shinyalert("Please enter an integer value for Max to define the maximum gene set size.")
-            error_par <- error_par + 1
-          }else{
-            rv$gmax=input$mymax
+            rv$error_par <- rv$error_par + 1
           }
         }
-        req(error_par == 0)
+        
+        req(rv$error_par == 0)
+        
+        # update RVs
+        rv$gmin=input$mymin
+        rv$gmax=input$mymax
 
         # save dbs for plots
         if(species != "other"){
