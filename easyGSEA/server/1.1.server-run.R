@@ -1376,6 +1376,31 @@
 
 
     #===============================================#
+    #####           4.0 fix parameters             #####
+    #===============================================#
+    observeEvent(list(input$mymin, input$mymax, input$nperm),{
+      if(input$selected_mode == "gsea"){
+        req(is.null(rv$rnk_check)==F)
+        req(is.null(rv$rnkgg)==F)
+        lst <- c("mymin","mymax","nperm")
+      }else if(input$selected_mode == "glist"){
+        req(is.null(rv$glist_check)==F)
+        req(is.null(rv$gene_lists_after)==F)
+        lst <- c("mymin","mymax")
+      }
+      lapply(lst, function(x){
+        n <- input[[x]]
+        req(!is.na(n))
+        n <- floor(input[[x]]); if(n<1){n <- 1}
+        updateNumericInput(
+          session,
+          x,
+          value = n
+        )
+      })
+    })
+    
+    #===============================================#
     #####           4.1 run GSEA!!!             #####
     #===============================================#
     # runs upon the analysis name is provided.
@@ -1392,38 +1417,14 @@
         if(is.na(input$mymin)){
           shinyalert("Please enter a value for Min to define the minimum gene set size.")
           rv$error_par <- rv$error_par + 1
-        }else{
-          if(input$mymin <= 0){
-            shinyalert("Please enter a positive value for Min to define the minimum gene set size.")
-            rv$error_par <- rv$error_par + 1
-          }else if(input$mymin %% 1 != 0){
-            shinyalert("Please enter an integer value for Min to define the minimum gene set size.")
-            rv$error_par <- rv$error_par + 1
-          }
         }
         if(is.na(input$mymax)){
           shinyalert("Please enter a value for Max to define the minimum gene set size.")
           rv$error_par <- rv$error_par + 1
-        }else{
-          if(input$mymax <= 0){
-            shinyalert("Please enter a positive value for Max to define the maximum gene set size.")
-            rv$error_par <- rv$error_par + 1
-          }else if(input$mymax %% 1 != 0){
-            shinyalert("Please enter an integer value for Max to define the maximum gene set size.")
-            rv$error_par <- rv$error_par + 1
-          }
         }
         if(is.na(input$nperm)){
           shinyalert("Please enter a value for the number of permutations parameter, # perm.")
           rv$error_par <- rv$error_par + 1
-        }else{  
-          if(input$nperm <= 0){
-            shinyalert("Please enter a positive value for the number of permutations parameter, # perm.")
-            rv$error_par <- rv$error_par + 1
-          }else if(input$nperm %% 1 != 0){
-            shinyalert("Please enter an integer value for the number of permutations parameter, # perm.")
-            rv$error_par <- rv$error_par + 1
-          }
         }
         
         req(rv$error_par == 0)
@@ -1569,26 +1570,10 @@
         if(is.na(input$mymin)){
           shinyalert("Please enter a value for Min to define the minimum gene set size.")
           rv$error_par <- rv$error_par + 1
-        }else{
-          if(input$mymin <= 0){
-            shinyalert("Please enter a positive value for Min to define the minimum gene set size.")
-            rv$error_par <- rv$error_par + 1
-          }else if(input$mymin %% 1 != 0){
-            shinyalert("Please enter an integer value for Min to define the minimum gene set size.")
-            rv$error_par <- rv$error_par + 1
-          }
         }
         if(is.na(input$mymax)){
           shinyalert("Please enter a value for Max to define the minimum gene set size.")
           rv$error_par <- rv$error_par + 1
-        }else{
-          if(input$mymax <= 0){
-            shinyalert("Please enter a positive value for Max to define the maximum gene set size.")
-            rv$error_par <- rv$error_par + 1
-          }else if(input$mymax %% 1 != 0){
-            shinyalert("Please enter an integer value for Max to define the maximum gene set size.")
-            rv$error_par <- rv$error_par + 1
-          }
         }
         
         req(rv$error_par == 0)
