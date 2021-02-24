@@ -1144,7 +1144,7 @@
             rv$vis_status = "failed"
             return(NULL)
         # check if it exceeds the maximum data points
-        } else if (nrow(df) > 500) {
+        } else if (nrow(df) > 200) {
           rv$vis_status = "max exceeded"
           return(NULL)
         }
