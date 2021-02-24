@@ -1415,9 +1415,9 @@
         
 
         # update run parameters in RVs
-        if(!is.null(input$mymin) & !is.na(input$mymin)){rv$gmin=input$mymin}
-        if(!is.null(input$mymax) & !is.na(input$mymax)){rv$gmax=input$mymax}
-        if(!is.null(input$nperm) & !is.na(input$nperm)){rv$gperm=input$nperm}
+        if(!is.null(input$mymin)){if(!is.na(input$mymin)){rv$gmin=input$mymin}}
+        if(!is.null(input$mymax)){if(!is.na(input$mymax)){rv$gmax=input$mymax}}
+        if(!is.null(input$nperm)){if(!is.na(input$nperm)){rv$gperm=input$nperm}}
 
         # reset RVs
         reset_rvs()
@@ -1550,8 +1550,8 @@
         genelist = toupper(rv$gene_lists_after)
 
         # update run parameters in RVs
-        if(!is.null(input$mymin) & !is.na(input$mymin)){rv$gmin=input$mymin}
-        if(!is.null(input$mymax) & !is.na(input$mymax)){rv$gmax=input$mymax}
+        if(!is.null(input$mymin)){if(!is.na(input$mymin)){rv$gmin=input$mymin}}
+        if(!is.null(input$mymax)){if(!is.na(input$mymax)){rv$gmax=input$mymax}}
 
         # save dbs for plots
         if(species != "other"){

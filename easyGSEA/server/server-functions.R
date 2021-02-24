@@ -328,6 +328,16 @@
       }
     }
     
+    # small function to abbreviate y axis labels
+    abbr_y <- function(df,abby,abbn){
+      if(abby == "y"){
+        y_pathway = lapply(df$pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
+      }else{
+        y_pathway <- df$pathway
+      }
+      return(y_pathway)
+    }
+    
     bar_plot <- function(pathways=rv$bar_pathway,up=rv$bar_up,down=rv$bar_down,pq=rv$bar_pq,cutoff_p=rv$bar_p_cutoff,cutoff_q=rv$bar_q_cutoff,abby=rv$bar_abb,abbn=rv$bar_abb_n){
         if(is.null(pathways)==T){
             return(NULL)
@@ -356,9 +366,7 @@
             # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
             
             # abbreviate gene set names on y axis if too long
-            if(abby == "y"){
-              y_pathway = lapply(df$pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
-            }
+            y_pathway <- abbr_y(df,abby,abbn)
             
             fig <- df %>% 
               ggplot(aes(x=ES, y=factor(pathway, levels=pathway), fill=-log10(.data[[pq]])*sign(ES),
@@ -422,10 +430,9 @@
             # # get rid of db id
             # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
             
-                # abbreviate gene set names on y axis if too long
-                if(abby == "y"){
-                    y_pathway = lapply(df$pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
-                }
+            # abbreviate gene set names on y axis if too long
+            y_pathway <- abbr_y(df,abby,abbn)
+            
                 size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
 
                 # values = size_g
@@ -853,9 +860,7 @@
                 # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
                 
                 # abbreviate gene set names on y axis if too long
-                if(abby == "y"){
-                    y_pathway = lapply(df$pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
-                }
+                y_pathway <- abbr_y(df,abby,abbn)
                 
                 fig <- df %>% 
                     ggplot(aes(x=-log10(df[[pq]]), y=factor(pathway, levels=pathway), fill=-log10(df[[pq]]),
@@ -910,10 +915,8 @@
               # # get rid of db id
               # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
               
-                # abbreviate gene set names on y axis if too long
-                if(abby == "y"){
-                    y_pathway = lapply(df$pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
-                }
+              # abbreviate gene set names on y axis if too long
+              y_pathway <- abbr_y(df,abby,abbn)
                 
 
                 values = df$overlap
