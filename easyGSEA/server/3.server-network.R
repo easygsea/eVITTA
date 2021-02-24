@@ -28,7 +28,8 @@ output$ui_bodyNetwork <- renderUI({
                         div(
                             br(),
                             p("We support a maximum of 200 data points in Enrichment Network.",
-                                    "Please adjust the P and/or P.adj thresholds by clicking the top-right gear button"),
+                              "Please adjust the selected database(s), and/or the P and/or P.adj thresholds by clicking the top-right gear button."
+                            ),
                             br()
                         )
                     } else {
