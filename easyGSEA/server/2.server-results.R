@@ -787,7 +787,7 @@ observeEvent(input$bar_confirm,{
         rv$error_par <- check_numericInput_na("n_up_bar", rv$error_par, "# of top up")
         rv$error_par <- check_numericInput_na("n_down_bar", rv$error_par, "# of top down")
         #rv$error_par <- check_numericInput_na("abb_bar_n", rv$error_par, "String Length")
-        print(rv$error_par)
+        #print(rv$error_par)
         req(rv$error_par == 0)
         rv$bar_pathway = input$pathway_to_plot_bar
         rv$bar_pq = input$p_or_q_bar
@@ -844,6 +844,13 @@ observeEvent(input$bubble_confirm,{
     if(is.null(input$pathway_to_plot_bubble)==T){
         shinyalert("Please select at least 1 database to plot.")
     }else{
+        # check the inputs are not NAs
+        rv$error_par <- 0
+        rv$error_par <- check_numericInput_na("n_up_bubble", rv$error_par, "# of top up")
+        rv$error_par <- check_numericInput_na("n_down_bubble", rv$error_par, "# of top down")
+        #rv$error_par <- check_numericInput_na("abb_bubble_n", rv$error_par, "String Length")
+        #print(rv$error_par)
+        req(rv$error_par == 0)
         rv$bar_pathway = input$pathway_to_plot_bubble
         rv$bar_pq = input$p_or_q_bubble
         rv$bar_q_cutoff = input$cutoff_q_bubble
@@ -991,6 +998,11 @@ observeEvent(input$word_confirm,{
     if(is.null(input$pathway_to_plot_word)==T){
         shinyalert("Please select at least 1 database to plot.")
     }else{
+        # check for input$n_word to confirm it is not NA
+        rv$error_par <- 0
+        rv$error_par <- check_numericInput_na("n_word", rv$error_par, "# of top words")
+        req(rv$error_par == 0)
+        
         rv$bar_pathway = input$pathway_to_plot_word
         rv$bar_p_cutoff = input$cutoff_word_p
         rv$bar_q_cutoff = input$cutoff_word_q
