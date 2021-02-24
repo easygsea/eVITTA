@@ -1365,7 +1365,7 @@
         numericInput("nperm",
                      HTML(paste0("# perm:",add_help("nperm_q")))
                      ,rv$gperm),
-        bsTooltip("nperm_q", "No. of permutations, default 1000", placement = "top")
+        bsTooltip("nperm_q", "No. of permutations, default 1000, maximum 5000", placement = "top")
       )
     })
     
@@ -1392,6 +1392,7 @@
         n <- input[[x]]
         req(!is.na(n))
         n <- floor(input[[x]]); if(n<1){n <- 1}
+        if(n > 5000){n <- 5000}
         updateNumericInput(
           session,
           x,
@@ -1423,7 +1424,7 @@
           rv$error_par <- rv$error_par + 1
         }
         if(is.na(input$nperm)){
-          shinyalert("Please enter a value for the number of permutations parameter, # perm.")
+          shinyalert("Please enter a value for the number of permutations parameter, # perm")
           rv$error_par <- rv$error_par + 1
         }
         
