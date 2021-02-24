@@ -36,7 +36,7 @@ C4CGN	c4.Cancer Gene Neighborhoods
 C5PO	c5.Human Phenotype Ontology
 C6OS	c6.Oncogenic signatures
 C7IS	c7.Immunologic signatures
-h	h.Hallmark Gene Sets
+HALLMARK	h.Hallmark Gene Sets
 Da	Approved Drugs
 De	Experimental Drugs
 Dil	Illicit Drugs

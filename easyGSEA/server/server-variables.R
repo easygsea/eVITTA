@@ -1,7 +1,7 @@
 col_f = c("01_WormCat (Holdorf et al. 2020)","02_Pathway","03_Gene Ontology")
 
 # databases has prefices
-db_prs <- c("KEGG","RAL","RA","WP","GO","BP","CC","MF","C1","C2","C3")
+db_prs <- c("KEGG","RAL","RA","WP","GO","BP","CC","MF","C1","C2","C3","HALLMARK")
 
 # width of shadows
 shadow_width <- ".3em"
@@ -267,3 +267,5 @@ manual_bs <- "Manually search, select and plot the gene set(s) of interest"
 bubble_size_bs <- "Drag the slider to adjust the maximum and minimum bubble sizes"
 vol_mode_bs <- "<b>Continuous</b> and <b>Discrete</b> are hoverable, clickable and interactive. <b>Static</b> labels the top regulations with texts."
 col_tone_bs <- "Scroll down and click to select the color tone"
+db_bs <- "By default, each gene set is prefixed by its originating database, i.e. the identifier. Unselect to delete the identifier."
+id_bs <- "By defualt, each gene set is annotated with its unique ID (if any) in the original database. Unselect to delete the ID string."
