@@ -1422,7 +1422,7 @@
           shinyalert("Please enter a value for Max to define the minimum gene set size.")
           rv$error_par <- rv$error_par + 1
         }
-        if(is.na(input$nperm)){
+        if(!is.null(input$nperm) && is.na(input$nperm)){
           shinyalert("Please enter a value for the number of permutations parameter, # perm.")
           rv$error_par <- rv$error_par + 1
         }
@@ -1521,7 +1521,7 @@
               rv$gmts_length = sum(l)
 
               # determine if success or warnings
-              if(nrow(rv$fgseagg)>0){
+              if(!is.null(rv$fgseagg) && nrow(rv$fgseagg)>0){
                 rv$run = "success"
                 rv$run_n = rv$run_n + 1
               } else {

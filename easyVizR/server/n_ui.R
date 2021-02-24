@@ -785,14 +785,15 @@ output$n_panels <- renderUI({
       #            )
       #          ))
       # ),
-      fluidRow(
+      fluidRow(style = "position:relative;z-index:9999",
         div(style="height:3.5em",
             column(6,
               div(id = "select_graph_to_display_anchor")
                    
             ),
             column(6, align= "right",
-                   div(id="n_filters_here"),
+                   div(
+                       id="n_filters_here"),
                    # uiOutput("n_filters")
                    
                    

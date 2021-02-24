@@ -783,6 +783,12 @@ observeEvent(input$bar_confirm,{
     if(is.null(input$pathway_to_plot_bar)==T){
         shinyalert("Please select at least 1 database to plot.")
     }else{
+        rv$error_par <- 0
+        rv$error_par <- check_numericInput_na("n_up_bar", rv$error_par, "# of top up")
+        rv$error_par <- check_numericInput_na("n_down_bar", rv$error_par, "# of top down")
+        #rv$error_par <- check_numericInput_na("abb_bar_n", rv$error_par, "String Length")
+        print(rv$error_par)
+        req(rv$error_par == 0)
         rv$bar_pathway = input$pathway_to_plot_bar
         rv$bar_pq = input$p_or_q_bar
         rv$bar_p_cutoff = input$cutoff_bar_p
@@ -2153,3 +2159,26 @@ observeEvent(input$confirm_kegg_plot,{
                
             )
     }
+    
+observeEvent(input$abb_bar_n, {
+    check_numericInput("abb_bar_n", 40)
+})
+observeEvent(input$n_word, {
+    check_numericInput("n_word", 10)
+})
+observeEvent(input$n_up_bar, {
+    check_numericInput("n_up_bar", 10)
+})
+observeEvent(input$n_down_bar, {
+    check_numericInput("n_down_bar", 10)
+})
+observeEvent(input$abb_bubble_n, {
+    check_numericInput("abb_bubble_n", 40)
+})
+observeEvent(input$n_up_bubble, {
+    check_numericInput("n_up_bubble", 10)
+})
+observeEvent(input$n_down_bubble, {
+    check_numericInput("n_down_bubble", 10)
+})
+

@@ -610,3 +610,22 @@ output$download_cluster_df <- downloadHandler(
         fwrite(df, file, row.names = T, quote=T)
     }
 )
+
+observeEvent(input$vis_percent_cutoff, {
+  check_numericInput("vis_percent_cutoff", 0.25, minimum = 0, maximum = 1, integer_check = FALSE)
+})
+observeEvent(input$combined_k, {
+  check_numericInput("combined_k", 0.5, minimum = 0, maximum = 1, integer_check = FALSE)
+})
+observeEvent(input$dendro_cutoff, {
+  check_numericInput("dendro_cutoff", 0.25, minimum = 0, maximum = 1, integer_check = FALSE)
+})
+observeEvent(input$dendro_label_size, {
+  check_numericInput("dendro_label_size", 4, minimum = 0, maximum = 6, integer_check = FALSE)
+})
+observeEvent(input$dendro_cluster_size, {
+  check_numericInput("dendro_cluster_size", 2, minimum = 1, maximum = rv$max_cluster_size)
+})
+observeEvent(input$abbreviate_length, {
+  check_numericInput("abbreviate_length", 45)
+})

@@ -2610,3 +2610,36 @@
                      
                    })
     }
+    
+    # check the value of numericInput, if it is between minimum and maximum
+    # parameters: input_id: input id; default: default value; integer check: would you like it to be integer or not
+    check_numericInput <- function(input_id, default, minimum = 1, maximum = NULL, integer_check = TRUE){
+      n <- input[[input_id]]
+      req(!is.na(n))
+      if(is.null(maximum)){
+        if(integer_check == TRUE){
+          n <- floor(input[[input_id]]); if(n<minimum){n <- default}
+        } else {
+          n <- n; if(n<minimum){n <- default}
+        }
+      } else{
+        if(integer_check == TRUE){
+          n <- floor(input[[input_id]]); if(n<minimum || n>maximum){n <- default}
+        } else {
+          n <- n; if(n<minimum || n>maximum){n <- default}
+        }
+      }
+      updateNumericInput(
+        session,
+        input_id,
+        value = n
+      )
+    }
+
+    check_numericInput_na <- function(input_id, number_of_error, variable_name){
+      if(is.na(input[[input_id]])){
+        shinyalert(paste0("Please enter a value for ", variable_name))
+        number_of_error <- number_of_error + 1
+      }
+      return(number_of_error)
+    }
