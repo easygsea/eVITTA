@@ -1413,28 +1413,11 @@
 
         sd = sd(ranks); rv$sd_high = sd * 2.5
         
-        rv$error_par <- 0
-        
-        if(is.na(input$mymin)){
-          shinyalert("Please enter a value for Min to define the minimum gene set size.")
-          rv$error_par <- rv$error_par + 1
-        }
-        if(is.na(input$mymax)){
-          shinyalert("Please enter a value for Max to define the minimum gene set size.")
-          rv$error_par <- rv$error_par + 1
-        }
-        if(is.na(input$nperm)){
-          shinyalert("Please enter a value for the number of permutations parameter, # perm")
-          rv$error_par <- rv$error_par + 1
-        }
-        
-        req(rv$error_par == 0)
-        
-        # update RVs
-        rv$gmin=input$mymin
-        rv$gmax=input$mymax
-        rv$gperm=input$nperm
-        
+
+        # update run parameters in RVs
+        if(is.null(input$mymin)==F){rv$gmin=input$mymin}
+        if(is.null(input$mymax)==F){rv$gmax=input$mymax}
+        if(is.null(input$nperm)==F){rv$gperm=input$nperm}
 
         # reset RVs
         reset_rvs()
@@ -1566,22 +1549,9 @@
 
         genelist = toupper(rv$gene_lists_after)
 
-        rv$error_par <- 0
-        
-        if(is.na(input$mymin)){
-          shinyalert("Please enter a value for Min to define the minimum gene set size.")
-          rv$error_par <- rv$error_par + 1
-        }
-        if(is.na(input$mymax)){
-          shinyalert("Please enter a value for Max to define the minimum gene set size.")
-          rv$error_par <- rv$error_par + 1
-        }
-        
-        req(rv$error_par == 0)
-        
-        # update RVs
-        rv$gmin=input$mymin
-        rv$gmax=input$mymax
+        # update run parameters in RVs
+        if(is.null(input$mymin)==F){rv$gmin=input$mymin}
+        if(is.null(input$mymax)==F){rv$gmax=input$mymax}
 
         # save dbs for plots
         if(species != "other"){
