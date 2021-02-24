@@ -1137,14 +1137,14 @@
         rv$vis_status = NULL
         # get df
         # df = dfNEL()
-        df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p, rv$vis_q, tags_op=F)
+        df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p, rv$vis_q, tags_op=T)
 
         # print(nrow(df))
         if(is.null(df) || nrow(df)<1){
             rv$vis_status = "failed"
             return(NULL)
         # check if it exceeds the maximum data points
-        } else if (nrow(df) > 200) {
+        } else if (nrow(df) > 300) {
           rv$vis_status = "max exceeded"
           return(NULL)
         }

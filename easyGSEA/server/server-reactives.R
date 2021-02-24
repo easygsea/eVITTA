@@ -217,9 +217,9 @@ tv_div <- reactive({
         ,value = rv$db_id_y
       )
     )
-    ,bsTooltip("db_name_y_q",HTML("By default, each gene set is prefixed by its originating database, i.e. the identifier. Unselect to delete the identifier. If duplicated gene set names are found after identifier trimming, the first gene set well be kept.")
+    ,bsTooltip("db_name_y_q",HTML(db_bs)
                ,placement = "top")
-    ,bsTooltip("db_id_y_q",HTML("By defualt, each gene set is annotated with its unique ID (if any) in the original database. Unselect to delete the ID string. If duplicated gene set names are found after ID trimming, the first gene set well be kept.")
+    ,bsTooltip("db_id_y_q",HTML(id_bs)
                ,placement = "top")
   )
 })
@@ -243,9 +243,9 @@ tv_d_div <- reactive({
         ,value = rv$db_id_y
       )
     )
-    ,bsTooltip("db_name_d_y_q",HTML("By default, each gene set is prefixed by its originating database, i.e. the identifier. Unselect to delete the identifier.")
+    ,bsTooltip("db_name_d_y_q",HTML(db_bs)
                ,placement = "top")
-    ,bsTooltip("db_id_d_y_q",HTML("By defualt, each gene set is annotated with its unique ID (if any) in the original database. Unselect to delete the ID string.")
+    ,bsTooltip("db_id_d_y_q",HTML(id_bs)
                ,placement = "top")
   )
 })
@@ -253,29 +253,29 @@ tv_d_div <- reactive({
 observeEvent(input$db_name_d_y,{rv$db_name_y <- input$db_name_d_y})
 observeEvent(input$db_id_d_y,{rv$db_id_y <- input$db_id_d_y})
 
-# # UI for vis network page
-# tv_vis_div <- reactive({
-#   fluidRow(
-#     column(
-#       6,
-#       checkboxInput(
-#         "db_name_v_y",
-#         HTML(paste0("Display dababase prefix ",add_help("db_name_y_q")))
-#         ,value = rv$db_name_y
-#       )
-#     )
-#     ,column(
-#       6,
-#       checkboxInput(
-#         "db_id_v_y",
-#         HTML(paste0("Display gene set ID ",add_help("db_id_y_q")))
-#         ,value = rv$db_id_y
-#       )
-#     )
-#     ,bsTooltip("db_name_y_q",HTML("By default, each gene set is prefixed by its originating database (abbreviated). Unselect to delete the prefix.")
-#                ,placement = "top")
-#     ,bsTooltip("db_id_y_q",HTML("By defualt, each gene set is annotated with its unique ID (if any) in the original database. Unselect to delete the ID string.")
-#                ,placement = "top")
-#   )
-# })
+# UI for vis network page
+tv_vis_div <- reactive({
+  fluidRow(
+    column(
+      6,
+      checkboxInput(
+        "db_name_v_y",
+        HTML(paste0("Display dababase prefix ",add_help("db_name_v_y_q")))
+        ,value = rv$db_name_y
+      )
+    )
+    ,column(
+      6,
+      checkboxInput(
+        "db_id_v_y",
+        HTML(paste0("Display gene set ID ",add_help("db_id_v_y_q")))
+        ,value = rv$db_id_y
+      )
+    )
+    ,bsTooltip("db_name_v_y_q",HTML(db_bs)
+               ,placement = "top")
+    ,bsTooltip("db_id_v_y_q",HTML(id_bs)
+               ,placement = "top")
+  )
+})
 

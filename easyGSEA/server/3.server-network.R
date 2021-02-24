@@ -27,7 +27,7 @@ output$ui_bodyNetwork <- renderUI({
                     if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                         div(
                             br(),
-                            p("We support a maximum of 200 data points in Enrichment Network.",
+                            p("We support a maximum of 300 data points in Enrichment Network.",
                               "Please adjust the selected database(s), and/or the P and/or P.adj thresholds by clicking the top-right gear button."
                             ),
                             br()
@@ -263,7 +263,7 @@ output$vis_error <- renderUI({
 output$vis_network <- renderVisNetwork({
     req(is.null(rv$fgseagg)==F)
     # N = 10
-    withProgress(message = 'Generating network view of enriched gene sets ...',value = 1, {
+    withProgress(message = 'Generating network view of enriched gene sets. Please wait a minute ...',value = 1, {
         rv$vis = vis()
         return(rv$vis)
     })
@@ -298,8 +298,8 @@ observeEvent(input$vis_replot,{
         rv$down_color <- input$vis_color_down
         
         
-        # rv$db_name_y <- input$db_name_v_y
-        # rv$db_id_y <- input$db_id_v_y
+        rv$db_name_y <- input$db_name_v_y
+        rv$db_id_y <- input$db_id_v_y
     }
     
 })
@@ -408,7 +408,7 @@ output$ui_vis_gear <- renderUI({
             )
         )
     ),
-    # tv_vis_div(),
+    tv_vis_div(),
     fluidRow(
         column(
             width = 4,
