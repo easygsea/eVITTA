@@ -786,7 +786,6 @@ observeEvent(input$bar_confirm,{
         rv$error_par <- 0
         rv$error_par <- check_numericInput_na("n_up_bar", rv$error_par, "# of top up")
         rv$error_par <- check_numericInput_na("n_down_bar", rv$error_par, "# of top down")
-        #rv$error_par <- check_numericInput_na("abb_bar_n", rv$error_par, "String Length")
         #print(rv$error_par)
         req(rv$error_par == 0)
         rv$bar_pathway = input$pathway_to_plot_bar
@@ -797,7 +796,12 @@ observeEvent(input$bar_confirm,{
         rv$bar_down = input$n_down_bar
         
         rv$bar_abb = input$abb_bar
-        if(rv$bar_abb == "y"){if(is.null(input$abb_bar_n)){rv$bar_abb_n = 40}else{rv$bar_abb_n = input$abb_bar_n}}
+        if(rv$bar_abb == "y"){if(is.null(input$abb_bar_n)){rv$bar_abb_n = 40}
+            else{
+                rv$error_par <- check_numericInput_na("abb_bar_n", rv$error_par, "String Length")
+                req(rv$error_par == 0)
+                rv$bar_abb_n = input$abb_bar_n}
+            }
         
         rv$bar_mode <- "cutoff"
     }
@@ -848,7 +852,6 @@ observeEvent(input$bubble_confirm,{
         rv$error_par <- 0
         rv$error_par <- check_numericInput_na("n_up_bubble", rv$error_par, "# of top up")
         rv$error_par <- check_numericInput_na("n_down_bubble", rv$error_par, "# of top down")
-        #rv$error_par <- check_numericInput_na("abb_bubble_n", rv$error_par, "String Length")
         #print(rv$error_par)
         req(rv$error_par == 0)
         rv$bar_pathway = input$pathway_to_plot_bubble
@@ -859,7 +862,11 @@ observeEvent(input$bubble_confirm,{
         rv$bar_down = input$n_down_bubble
         
         rv$bar_abb = input$abb_bubble
-        if(rv$bar_abb == "y"){if(is.null(input$abb_bubble_n)){rv$bar_abb_n = 40}else{rv$bar_abb_n = input$abb_bubble_n}}
+        if(rv$bar_abb == "y"){if(is.null(input$abb_bubble_n)){rv$bar_abb_n = 40}
+            else{
+                rv$error_par <- check_numericInput_na("abb_bubble_n", rv$error_par, "String Length")
+                req(rv$error_par == 0)
+                rv$bar_abb_n = input$abb_bubble_n}}
         
         rv$bubble_zmin = input$bubble_slider[1]
         rv$bubble_zmax = input$bubble_slider[2]
