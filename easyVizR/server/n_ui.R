@@ -98,7 +98,6 @@ heatmap_panel <- reactive({
     title = span( icon("chart-area"), "Heatmap"), status = "primary", solidHeader = F, width=8,
     
     div(id="n1_3",
-        "test here",
         uiOutput("n_heatmap")
     ), 
     div(id = "heatmap_dropdowns_anchor"),
