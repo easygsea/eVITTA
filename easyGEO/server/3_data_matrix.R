@@ -311,7 +311,7 @@ output$example3 <- renderTable({(example_data3 <- read.csv(paste0(getwd(),"/serv
 
 # the function that read the data matrix in the both uploading mode
 read_data_matrix <- function(inFile){
-
+  withProgress(message = 'Reading data matrix. Please wait a minute...', value = 1, {
   # the modal that appears when the file user upload exceeds 50MB, Version1
   if(inFile$size >= 100*1024^2){
     showModal(modalDialog(
@@ -502,9 +502,7 @@ read_data_matrix <- function(inFile){
     ))
     
   }
-  print("break")
-  print(colnames(rvdf))
-  print(head(rvdf))
+
   
   if(rv$run_mode == "auto"){
     matched_cols <- intersect(colnames(rvdf)[-1], colnames(indf)) # a vector of GSM id for matched cols
@@ -536,7 +534,7 @@ read_data_matrix <- function(inFile){
     print("end")
   }
 
-  
+  })
   
   # -------------- potential terms in DEG file, so as to tell users it's already analyzed files -------------
   deg_colnames <- c("logfc","fc","log2_fold_change"
