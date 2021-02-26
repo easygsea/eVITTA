@@ -2641,7 +2641,7 @@
 
     check_numericInput_na <- function(input_id, number_of_error, variable_name){
       if(is.na(input[[input_id]])){
-        shinyalert(paste0("Please enter a value for ", variable_name))
+        shinyalert(paste0("Please enter a valid value for ", variable_name))
         number_of_error <- number_of_error + 1
       }
       return(number_of_error)
