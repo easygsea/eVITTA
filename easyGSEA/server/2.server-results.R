@@ -1697,8 +1697,8 @@ observeEvent(input$confirm_kegg_plot,{
 
                     # KEGG gene set name & id
                     term = rv$es_term
-                    kegg_id = unlist(strsplit(term,"%"))[[2]]
-                    # print(str(kegg_id))
+                    kegg_id = unlist(strsplit(term,"%"))
+                    kegg_id = kegg_id[length(kegg_id)]
 
 
 

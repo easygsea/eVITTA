@@ -8,7 +8,7 @@
     }
     
     remove_db_id <- function(df){
-      df$pathway <- gsub("?%.*$","",df$pathway_o)
+      df$pathway <- gsub("%[^%]*$","",df$pathway_o)
       return(df)
     }
     
