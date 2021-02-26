@@ -30,6 +30,9 @@ library(tools) # for finding file (name) extensions
 
 options(repos = BiocManager::repositories())
 
+# fix functions in loaded packages
+source("global/fix.R", local = TRUE)
+
 # --------------- Initialize introjs -------------------
 intropath <- paste0(getwd(), "/intro/")
 # intropath <- paste0(getwd(), "/intro_demo/") # initialize demo introjs

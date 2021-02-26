@@ -1147,28 +1147,6 @@
 
     #---------------- 3.2.2 read in GList-----------------
     
-    # observe if genes are uploaded
-    observeEvent(rv$gene_lists,{
-      if (is.null(rv$gene_lists)==F){
-        shinyjs::disable("gene_list")
-        shinyjs::disable("glist_name")
-        shinyjs::disable("num_acc")
-      }
-      else if (is.null(rv$gene_lists)){
-        shinyjs::reset("gene_list")
-        shinyjs::enable("gene_list")
-        shinyjs::reset("glist_name")
-        shinyjs::enable("glist_name")
-        shinyjs::reset("num_acc")
-        shinyjs::enable("num_acc")
-        
-        updateTextAreaInput(session,
-                            inputId = "gene_list",
-                            value = ""
-        )
-      }
-    })
-    
     # from input field
     observeEvent(input$gene_list_add,{
         species = isolate(input$selected_species)
@@ -1225,6 +1203,12 @@
                     }else{
                         rv$rnkll = input$glist_name
                     }
+                    
+                    if (is.null(rv$gene_lists)==F){
+                      shinyjs::disable("gene_list")
+                      shinyjs::disable("glist_name")
+                      shinyjs::disable("num_acc")
+                    }
                 }
             }else{
               shinyalert("Please input your query. Click example data for a trial run.")
@@ -1247,6 +1231,18 @@
         rv$glist_check = NULL
         rv$gene_lists = NULL
         rv$gene_lists_after = NULL
+        
+        shinyjs::reset("gene_list")
+        shinyjs::enable("gene_list")
+        shinyjs::reset("glist_name")
+        shinyjs::enable("glist_name")
+        shinyjs::reset("num_acc")
+        shinyjs::enable("num_acc")
+        
+        updateTextAreaInput(session,
+                            inputId = "gene_list",
+                            value = ""
+        )
 
         # updateTextInput(session,
         #                 inputId = "glist_name",
