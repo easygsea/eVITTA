@@ -308,6 +308,8 @@ observeEvent(input$vis_replot,{
         
         rv$db_name_y <- input$db_name_v_y
         rv$db_id_y <- input$db_id_v_y
+        
+        rv$edge_mode <- input$edge_mode
     }
     
 })
@@ -360,6 +362,14 @@ output$ui_vis_gear <- renderUI({
                               multiple = TRUE
                               )
                ,bsTooltip("db_vis",HTML(db_bs),placement = "top")
+        ),
+        column(12,
+               selectizeInput("edge_mode",
+                              HTML(paste0("Select mode to plot edges ",add_help("edge_q"))),
+                              choices = rv$lg_name,
+                              selected = rv$edge_mode
+               )
+               ,bsTooltip("edge_q",HTML(edge_bs),placement = "top")
         ),
         column(
             width = 6,

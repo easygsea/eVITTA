@@ -6,6 +6,10 @@
         #NULL for regular runs
            
         run_mode=NULL, #gsea glist
+        edge_mode=NULL, # edges of visnetwork: gs=gene set, lg=leadingedge
+        lg_name = list("By similarities between leading-edge genes"="lg"
+                       ,"By similarities between original gene sets"="gs"
+                       ),
         run_n = 0,
         
         #rv for dendrogram

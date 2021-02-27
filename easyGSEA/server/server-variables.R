@@ -269,3 +269,4 @@ vol_mode_bs <- "<b>Continuous</b> and <b>Discrete</b> are hoverable, clickable a
 col_tone_bs <- "Scroll down and click to select the color tone"
 db_bs <- "By default, each gene set is prefixed by its originating database, i.e. the identifier. Unselect to delete the identifier."
 id_bs <- "By defualt, each gene set is annotated with its unique ID (if any) in the original database. Unselect to delete the ID string."
+edge_bs <- "Reference data to calculate gene set similarities"

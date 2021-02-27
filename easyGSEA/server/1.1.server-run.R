@@ -1502,6 +1502,10 @@
 
               # determine if success or warnings
               if(!is.null(rv$fgseagg) && nrow(rv$fgseagg)>0){
+                if(is.null(rv$edge_mode)){rv$edge_mode <- "lg"}
+                rv$lg_name <- list("By similarities between leading-edge genes"="lg"
+                                   ,"By similarities between original gene sets"="gs"
+                )
                 rv$run = "success"
                 rv$run_n = rv$run_n + 1
                 gsea_filter()
@@ -1617,6 +1621,10 @@
 
               # determine if success or warnings
               if(is.null(rv$fgseagg)==F && nrow(rv$fgseagg)>0){
+                if(is.null(rv$edge_mode)){rv$edge_mode <- "lg"}
+                rv$lg_name <- list("By similarities between overlap genes"="lg"
+                                   ,"By similarities between original gene sets"="gs"
+                )
                 rv$run = "success"
                 rv$run_n = rv$run_n + 1
                 

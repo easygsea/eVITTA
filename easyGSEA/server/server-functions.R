@@ -1155,15 +1155,17 @@
             rv$vis_status = "success"
             
             rv$df_vis = df
-
-            # leading edge genes
-            a = df[[ncol(df)]] #df$leadingEdge
-            # a = sapply(a, function(x) strsplit(x," "))
+            
+            if(rv$edge_mode=="gs"){
+              # GMT genes
+              a = rv$gmts[names(rv$gmts) %in% df$pathway]
+            }else{
+              a = df[[ncol(df)]] #df$leadingEdge
+              # a = sapply(a, function(x) strsplit(x," "))
+            }
+            
             names(a) <- df$pathway
-            
-            # GMT genes
-            a_gmt = rv$gmts[names(rv$gmts) %in% df$pathway]
-            
+
             edges_mat = NULL
             if(nrow(df)>1){
                 # pathway combinations
@@ -1171,7 +1173,8 @@
                 
                 # edge pre-matrix
                 # edges_mat = edges(a,a_gmt,b_combn)
-                rv$edges_mat_zero_cutoff = edges(a,b_combn, cutoff = 0)
+                rv$edges_mat_zero_cutoff = edges(a,b_combn, cutoff = 0)# leading edge genes
+
                 edges_mat_zero_cutoff = rv$edges_mat_zero_cutoff
                 edges_mat <- filter(edges_mat_zero_cutoff, percent >= rv$percent_cutoff)
                 # rv$hc_edges = edges_mat[,c("from","to","percent")]
@@ -2391,6 +2394,7 @@
     
     # =========== initialize RVs for a demo run ==================
     init_demo_gsea <- function(){
+      rv$edge_mode <- "lg"
       updateSelectizeInput(session,"selected_species",selected = "hsa")
       #Demo session RVs for GSEA data store in rvs folder.
       rv$data_head_o <- readRDS(paste0(getwd(),"/rvs/data_head_o.rds"))
@@ -2444,6 +2448,7 @@
     }
     
     init_demo_ora <- function(){
+      rv$edge_mode <- "lg"
       updateRadioButtons(session,"selected_mode",selected = "glist")
       updateSelectizeInput(session,"selected_species",selected = "cel")
       updateTextAreaInput(session,
@@ -2487,6 +2492,7 @@
     
     # unload example
     init_demo_gsea_d <- function(){
+      rv$edge_mode <- NULL
       updateSelectizeInput(session,"selected_species",selected = "")
       shinyjs::enable("selected_species")
       #Demo session RVs for GSEA data store in rvs folder.
@@ -2539,6 +2545,7 @@
     }
     
     init_demo_ora_d <- function(){
+      rv$edge_mode <- NULL
       updateSelectizeInput(session,"selected_species",selected = "")
       shinyjs::enable("selected_species")
       updateTextAreaInput(session,
