@@ -913,18 +913,27 @@ output$n_panels <- renderUI({
                                     uiOutput("rrho_pvalue_panel")
                              ),
                              column(8,
-                                                     box(
-                                                       title = span( icon("chart-area"), "Level Plot"), status = "primary", solidHeader = F, width=12,
+                                    tabBox(
+                                      height = "650px",
+                                      width = 16,
+                                      selected = "Level Plot",
+                                      tabPanel("Level Plot", plotOutput("rrho_level",
+                                                                        width = "90%",height = "600px")),
+                                      tabPanel("Scatter Plot",plotOutput("rrho_scatter_plot",
+                                                                         width = "90%",height = "600px"))
+                             ),
+                                                     #box(
+                                                      # title = span( icon("chart-area"), "Level Plot"), status = "primary", solidHeader = F, width=12,
                                                        
-                                                       plotOutput("rrho_level",
-                                                                    width = "100%",height = "600px")
-                                                     ),
-                                                      box(
-                                                      title = span( icon("chart-area"), "Rank Scatter Plot"), status = "primary", solidHeader = F, width=12,
-                                      
-                                                      plotOutput("rrho_scatter_plot",
-                                                      width = "100%",height = "600px")
-                                    ),
+                                                       #plotOutput("rrho_level",
+                                                      #              width = "100%",height = "600px")
+                                                     #),
+                                     #                 box(
+                                     #                 title = span( icon("chart-area"), "Rank Scatter Plot"), status = "primary", solidHeader = F, width=12,
+                                    #  
+                                    #                  plotOutput("rrho_scatter_plot",
+                                    #                  width = "100%",height = "600px")
+                                    #),
                                                       
                              ),
                            ),
