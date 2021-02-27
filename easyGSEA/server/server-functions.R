@@ -1158,7 +1158,7 @@
             
             if(rv$edge_mode=="gs"){
               # GMT genes
-              a = rv$gmts[names(rv$gmts) %in% df$pathway]
+              a = rv$gmts[names(rv$gmts) %in% df$pathway_o]
             }else{
               a = df[[ncol(df)]] #df$leadingEdge
               # a = sapply(a, function(x) strsplit(x," "))
