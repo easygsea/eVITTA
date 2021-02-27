@@ -1147,7 +1147,7 @@
             rv$vis_status = "failed"
             return(NULL)
         # check if it exceeds the maximum data points
-        } else if (nrow(df) > 300) {
+        } else if (nrow(df) > 350) {
           rv$vis_status = "max exceeded"
           return(NULL)
         }
@@ -2301,7 +2301,7 @@
           if(sig_no >= 20){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
         }
         
-        incProgress(0.2)
+        # incProgress(0.2)
       }
     }
     
@@ -2357,7 +2357,7 @@
           # if(rv$no_up_01 >= 1){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         }
         
-        incProgress(0.2)
+        # incProgress(0.2)
         
       }
       

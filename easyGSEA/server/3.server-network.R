@@ -27,7 +27,7 @@ output$ui_bodyNetwork <- renderUI({
                     if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                         div(
                             br(),
-                            p("We support a maximum of 300 data points in Enrichment Network.",
+                            p("We support a maximum of 350 data points in Enrichment Network.",
                               "Please adjust the selected database(s), and/or the P and/or P.adj thresholds by clicking the top-right gear button."
                             ),
                             br()
