@@ -2285,20 +2285,23 @@
         rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
         # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
         rv$no_up_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
+        rv$no_up_1 = sum(fgseaRes$padj<0.1&fgseaRes$ES>0,na.rm=TRUE)
+        rv$no_up_075 = sum(fgseaRes$padj<0.075&fgseaRes$ES>0,na.rm=TRUE)
         rv$no_up_05 = sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
         rv$no_up_01 =sum(fgseaRes$padj<0.01&fgseaRes$ES>0,na.rm=TRUE)
         
         rv$no_down_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
+        rv$no_down_1 = sum(fgseaRes$padj<0.1&fgseaRes$ES<0,na.rm=TRUE)
+        rv$no_down_075 = sum(fgseaRes$padj<0.075&fgseaRes$ES<0,na.rm=TRUE)
         rv$no_down_05 = sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
         rv$no_down_01 = sum(fgseaRes$padj<0.01&fgseaRes$ES<0,na.rm=TRUE)
         
         if(rv$q_dynamic == TRUE){
-          sig_no <- rv$no_up_25 + rv$no_down_25
-          if(sig_no >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
-          sig_no <- rv$no_up_05 + rv$no_down_05
-          if(sig_no >= 20){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
-          sig_no <- rv$no_up_01 + rv$no_down_01
-          if(sig_no >= 20){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
+          sig_no <- rv$no_up_25 + rv$no_down_25; if(sig_no >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+          sig_no <- rv$no_up_1 + rv$no_down_1; if(sig_no >= 20){rv$bar_q_cutoff <- .1;rv$vis_q <- .1}
+          sig_no <- rv$no_up_075 + rv$no_down_075; if(sig_no >= 20){rv$bar_q_cutoff <- .075;rv$vis_q <- .075}
+          sig_no <- rv$no_up_05 + rv$no_down_05; if(sig_no >= 20){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
+          sig_no <- rv$no_up_01 + rv$no_down_01; if(sig_no >= 20){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
         }
         
         # incProgress(0.2)
@@ -2346,11 +2349,15 @@
           fgseaRes <- fgseaRes %>% dplyr::mutate(pathway_o = pathway, .before = pathway)
           rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
           rv$no_up_25 = sum(fgseaRes$padj<0.25,na.rm=TRUE)
+          rv$no_up_1 = sum(fgseaRes$padj<0.1,na.rm=TRUE)
+          rv$no_up_075 = sum(fgseaRes$padj<0.075,na.rm=TRUE)
           rv$no_up_05 = sum(fgseaRes$padj<0.05,na.rm=TRUE)
           rv$no_up_01 = sum(fgseaRes$padj<0.01,na.rm=TRUE)
           
           if(rv$q_dynamic == TRUE){
             if(rv$no_up_25 >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+            if(rv$no_up_1 >= 20){rv$bar_q_cutoff <- .1;rv$vis_q <- .1}
+            if(rv$no_up_075 >= 20){rv$bar_q_cutoff <- .075;rv$vis_q <- .075}
             if(rv$no_up_05 >= 20){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
             if(rv$no_up_01 >= 20){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
           }
