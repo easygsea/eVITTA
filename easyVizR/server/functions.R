@@ -368,7 +368,7 @@ filter_presets <- list(
   "Down 1.5x" = c("down1_5", NA, NA, 1.5, "Negative", 
                   stat_replace("<b>|Stat|</b> > 1.5 <br><b>Direction</b>: -"),
                   down_icon, down_txt_color, down_bg_color),
-  "Default" = c("default", 0.05, 1, 0, "All", 
+  "Default" = c("default", 0.05, 1.1, -0.1, "All", 
                 stat_replace("Default:<br><b>p</b> < 0.05 <br><b>FDR</b> < 1<br><b>|Stat|</b> > 0<br><b>Direction</b>: All"),
                 default_icon, no_txt_color, no_bg_color),
   "No filter" = c("nofilter", 1.1, 1.1, -0.1, "All", 

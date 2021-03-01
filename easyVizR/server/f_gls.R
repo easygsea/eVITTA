@@ -4,7 +4,11 @@
 min_shared_rows <- 1
 min_shared_cols <- 3 # this excludes the name column
 
-
+# default values
+default_p= 0.05
+default_q=1.1
+default_Stat=-0.1
+default_sign= "All"
 
 
 
@@ -400,7 +404,7 @@ output$f_filtering_ui <- renderUI({
                               fluidRow(
                                 column(6, align = "left", 
                                        numericInput(inputId = paste0("f_p_",i), 
-                                                    p_filter_text, value = 0.05, min = 0, max = 1, step=0.001, width="100px")),
+                                                    p_filter_text, value = default_p, min = 0, max = 1, step=0.001, width="100px")),
                                 column(6, align = "left",
                                        numericInput(paste0("f_Stat_",i), 
                                                     stat_replace1(
@@ -409,7 +413,7 @@ output$f_filtering_ui <- renderUI({
                                                         add_help(paste0("f_stat_help",i), style="margin-left: 5px;"))
                                                       )
                                                       , rv$nx_n[[i]]),
-                                                    value = 0, min = 0, max = 5, step=0.1, width="100px")),
+                                                    value = default_Stat, min = 0, max = 5, step=0.1, width="100px")),
                                 
                                 bsTooltip(paste0("f_stat_help",i), 
                                           paste0(stat_replace1("Stat type: <b>", rv$nx_n[[i]]),rv$tt[[rv$nx_i[[i]]]],"</b>"), 
@@ -418,12 +422,12 @@ output$f_filtering_ui <- renderUI({
                               fluidRow(
                                 column(6, align = "left",
                                        numericInput(inputId = paste0("f_q_",i), 
-                                                    q_filter_text, value = 1, min = 0, max = 1, step=0.001, width="100px")),
+                                                    q_filter_text, value = default_q, min = 0, max = 1, step=0.001, width="100px")),
                                 column(6, align = "left",
                                        radioGroupButtons(inputId = paste0("f_sign_",i), 
                                                          label = sign_filter_text,
                                                          choices=c("All"="All", "+"="Positive", "-"="Negative"),
-                                                         selected="All",size="s",direction = "horizontal"),
+                                                         selected=default_sign,size="s",direction = "horizontal"),
                                 ),
                               )
                               ,style = "padding: 15px;margin-top:10px;"),
