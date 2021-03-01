@@ -71,8 +71,9 @@ div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;", id="n1_3
         inputId = "n_hm_ylabs", label = "Show y labels?", status="primary",
         value = rv$n_hm_ylabs
       ),
-      uiOutput("n_hm_ylabs_len")
-      ,
+      "Warning: y labels may not appear properly if there are too many rows.",
+      # uiOutput("n_hm_ylabs_len") # disabled
+      # ,
       size = "xs",
       icon = icon("palette", class = "opt"),
       up = TRUE

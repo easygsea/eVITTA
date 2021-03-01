@@ -459,9 +459,16 @@ draw_heatmap <- function(df,
   # print(head(plotted))
   
   # make matrix for plot
-  dat <- expand.grid(x = rownames(plotted), y = addlinebreaks(names,hovertext_linebreak,"<br>",do_end=F))
-  dat$z <- unlist(plotted)
+  ylabls <- addlinebreaks(names,hovertext_linebreak,"<br>",do_end=F)
   
+  # # if ylabel is shown, abbreviate # disabled as it messes up y order
+  # if (show_ylabs==T){
+  #   ylabls <- abbreviate_vector(ylabls, ylabs_len)
+  # }
+
+  dat <- expand.grid(x = rownames(plotted), y = ylabls)
+  dat$z <- unlist(plotted)
+
   validate(need(length(dat$z)>0, select_ins_empty_msg))
   
   # put all the shared columns in the hovertext (as many as you have).
@@ -488,11 +495,7 @@ draw_heatmap <- function(df,
   # define the hovertext
   textt <- paste(full_y, addlabel)
   
-  # if ylabel is shown, abbreviate
-  if (show_ylabs==T){
-    dat$y <- abbreviate_vector(dat$y, ylabs_len)
-  }
-  # print(dat$y)
+
   
   fig <- plot_ly() %>%
     add_trace(data = dat, x = ~x, y = ~y, z = ~z, type = "heatmap",
