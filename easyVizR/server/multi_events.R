@@ -135,8 +135,8 @@ observeEvent(input$n_use_data,{
     # ---------------  initialize filters
     for (i in 1:length(rv$nx_n)){
       rv[[paste0("nic_p_",i)]] <- 0.05
-      rv[[paste0("nic_q_",i)]] <- 1
-      rv[[paste0("nic_Stat_",i)]] <- 0
+      rv[[paste0("nic_q_",i)]] <- 1.1
+      rv[[paste0("nic_Stat_",i)]] <- -0.1
       rv[[paste0("nic_sign_",i)]] <- "All"
     }
     

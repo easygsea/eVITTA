@@ -110,6 +110,7 @@ observeEvent(input$ins_applytorv, {
   }
   # print(criteria)
   rv$ins_criteria <- criteria
+  refresh_vis_ui()
 })
 
 
