@@ -1161,7 +1161,7 @@
                 genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*,\\s*')))
                 genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*;\\s*')))
                 genelist = unlist(strsplit(genelist," "))
-                genelist = unique(genelist)
+                genelist = unique(genelist) %>% toupper(.)
 
                 if(is.null(genelist)==F){
                     # save original gene lists into RV
@@ -1548,7 +1548,7 @@
 
         # read in parameters
 
-        genelist = toupper(rv$gene_lists_after)
+        genelist = rv$gene_lists_after
 
         # update run parameters in RVs
         if(!is.null(input$mymin)){if(!is.na(input$mymin)){rv$gmin=input$mymin}}
