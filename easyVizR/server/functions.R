@@ -591,6 +591,29 @@ gl_to_table <- function(name, gl, master_df, round=3, keep_stat=F){
   df
 }
 
+# ================================================= #
+#               Dataframe Tidying                ####
+# ================================================= #
+
+# remove NAs in columns of a certain dataset
+#-----------------------------------------
+# df: df to tidy
+# selected_names: a vector of dataset names, e.g. c("data1","data2")
+
+remove_nas_in_cols <- function(df, selected_names){
+  all_cols <- colnames(df)
+  # get all columns to check
+  cols_with_selected_names <- unlist(lapply(selected_names, function(x){
+    grep(paste0(x,"$"),all_cols, value=T)
+  }))
+  # remove nas column by column
+  for (x in cols_with_selected_names){
+    df <- df[!is.na(df[[x]]), ]
+  }
+  df
+}
+
+
 
 # ================================================= #
 #        Convert filters to verbal summary          ####

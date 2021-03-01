@@ -562,7 +562,9 @@ draw_xy_scatter <- function(to_plot_df,
   
   # initialize df
   df[df==0]<-0.00001 # replace 0 with 0.001
-  df <- remove_nas(df)
+  
+  # remove NAs tied to selected datasets
+  df <- remove_nas_in_cols(df, selected)
   
   req(nrow(df)>0)
   
@@ -706,7 +708,8 @@ draw_3d_scatter <- function(to_plot_df,
     df <- rbind(df_n[-which(df_n$Name %in% df_ins),], df) # make sure the ins is plotted first
   }
   
-  df <- remove_nas(df)
+  # remove NAs tied to selected datasets
+  df <- remove_nas_in_cols(df, selected)
   
   
   # get col names
