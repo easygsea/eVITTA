@@ -459,7 +459,7 @@ draw_heatmap <- function(df,
   # print(head(plotted))
   
   # make matrix for plot
-  dat <- expand.grid(x = rownames(plotted), y = addlinebreaks(names,hovertext_linebreak,"<br>"))
+  dat <- expand.grid(x = rownames(plotted), y = addlinebreaks(names,hovertext_linebreak,"<br>",do_end=F))
   dat$z <- unlist(plotted)
   
   validate(need(length(dat$z)>0, select_ins_empty_msg))
@@ -492,6 +492,7 @@ draw_heatmap <- function(df,
   if (show_ylabs==T){
     dat$y <- abbreviate_vector(dat$y, ylabs_len)
   }
+  # print(dat$y)
   
   fig <- plot_ly() %>%
     add_trace(data = dat, x = ~x, y = ~y, z = ~z, type = "heatmap",

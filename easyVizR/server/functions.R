@@ -941,9 +941,15 @@ get_df_by_dflogic <- function(selected, dflogic, gls, user_criteria, starting_df
 
 addlinebreaks <- function(x, max, 
                           lbtype="<br>", 
-                          cut_at="\\s|;|_|\\.|\\|" # this cuts at spaces/ ;/ underscore/ period / vertical bar
+                          cut_at="\\s|;|_|\\.|\\|", # this cuts at spaces/ ;/ underscore/ period / vertical bar
+                          do_end=T
                           ){
-  gsub(paste0('(.{1,',max,'})(',cut_at,'|$)'), paste0('\\1',lbtype), x)
+  if (do_end==T){
+    gsub(paste0('(.{1,',max,'})(',cut_at,'|$)'), paste0('\\1',lbtype), x)
+  } else {
+    gsub(paste0('(.{1,',max,'})(',cut_at,')'), paste0('\\1',lbtype), x)
+  }
+  
 }
 
 
