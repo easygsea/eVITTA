@@ -3,6 +3,7 @@
 rv <- reactiveValues(
                      demo = NULL, # "yes" for a demo session, NULL for regular runs
                      demo_n = 1, # odd for load, even for unload
+                     demo_save = "no", # yes for saving the variables, no for regular run
                      
                      upload_state = NULL, 
                      # ll=ll, gg=gg, tt=tt,

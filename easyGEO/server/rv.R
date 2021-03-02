@@ -1,7 +1,8 @@
 rv <- reactiveValues(
   getgeo_mode = T, # switch to F if can't parse using GSEMatrix = TRUE
   gpl_type = list(), gpl_count = list(), gsmlist = list(),expr_nrow=0,
-  run_mode = "auto", # auto for retrieval by GSE; manual for manual uploads 
+  run_mode = "auto", # auto for retrieval by GSE; manual for manual uploads
+  demo_save = "no", # yes for saving the variables, no for regular run
   
   demo = "", # "yes" for a demo session, NULL for regular runs
   demo_n = 1, # odd for load, even for unload

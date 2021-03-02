@@ -176,8 +176,11 @@ observeEvent(input$run_deg,{
       samples = rownames(p_df)
       
       # titles of filtered samples
-      samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
-      
+      if(rv$run_mode == "auto"){
+        samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
+      } else {
+        samples_title = samples
+      }
       # original count matrix
       m_df = filtered_data_df() %>% as.data.frame(.)
       
@@ -275,8 +278,11 @@ observeEvent(input$run_deg2,{
   overlap = samples_c[samples_c %in% samples_t]
   
   if(length(overlap)>0){
-    overlap_names = translate_sample_names(overlap,rv$pdata[c("title", "geo_accession")],  "title")
-
+    if(rv$run_mode == "auto"){
+      overlap_names = translate_sample_names(overlap,rv$pdata[c("title", "geo_accession")],  "title")
+    } else {
+      overlap_names <- overlap
+    }
     w_msg = paste0("You have selected ",abbreviate_vector(overlap)
                    , " (", abbreviate_vector(overlap_names),")"
                    , "(n = ",length(overlap),")"
@@ -313,7 +319,11 @@ observeEvent(input$run_deg2,{
       samples = rownames(p_df)
       
       # titles of filtered samples
-      samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
+      if(rv$run_mode == "auto"){
+        samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
+      } else {
+        samples_title = samples
+      }
       
       # original count matrix
       m_df = filtered_data_df() %>% as.data.frame(.)

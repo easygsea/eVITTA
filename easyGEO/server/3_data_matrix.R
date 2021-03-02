@@ -837,8 +837,12 @@ observeEvent(input$file, {
 # --------------- show data matrix df ---------------
 
 output$data_matrix_df <- DT::renderDataTable({
-  # saveRDS(rv$samples, file = "rvs/samples.rds")
-  
+  if(rv$demo_save == "yes" ){
+    if(rv$run_mode == "auto")
+      saveRDS(rv$samples, file = "rvs/samples.rds")
+    else
+      saveRDS(rv$samples, file = "rvs2/samples.rds")
+  }
   req(is.null(rv$gse_all)==F || rv$run_mode == "manual")
   req(is.null(rv$plat_id)==F || rv$run_mode == "manual")
   req(is.null(rv$dmdf)==F)

@@ -28,7 +28,7 @@ samples_t <- function(p_df=deg_pdata(),c_var=input$sp_select_var){
 output$select_params_ui <- renderUI({
   
   #initialize the choices for demo session function 1
-  if(rv$demo == "yes"){
+  if(rv$demo == "yes" && rv$run_mode == "auto"){
     init_choices()
   }
   
@@ -127,7 +127,11 @@ output$sp_select_levels <- renderUI({
   
   #initialize the choices for demo session function 2
   if(rv$demo == "yes"){
-    init_choices2()
+    if(rv$run_mode == "manual"){
+      init_choices_manual()
+    } else {
+      init_choices2()
+    }
   }
   
   fddf <- rv$fddf
@@ -191,12 +195,16 @@ output$sp_select_levels_rel_fb <- renderUI({
   
   # fluidRow(
   #   box(title=textx, width = 12, solidHeader=F, status = "primary", collapsible=T, collapsed=F,
-        div(radioGroupButtons(
-          "names_toggle",
-          HTML("Show sample names as",add_help("ss_hp")),
-          choices = list("GEO accession"="accession","Sample name"="title"),
-          selected = "title"
-        )
+  
+        div(
+          if(rv$run_mode == "auto"){
+            radioGroupButtons(
+            "names_toggle",
+            HTML("Show sample names as",add_help("ss_hp")),
+            choices = list("GEO accession"="accession","Sample name"="title"),
+            selected = "title"
+            )
+          }
         ,bsTooltip("ss_hp",HTML("<b>GEO accession</b>: GSM ids in NCBI GEO database<br><br><b>Sample name</b>: names provided by the authors")
                    ,placement = "right")
         
@@ -208,7 +216,7 @@ output$sp_select_levels_rel_fb <- renderUI({
 
 output$ui_samples_fb <- renderUI({
   #initialize the choices for demo session function 3
-  if(rv$demo == "yes"){
+  if(rv$demo == "yes" && rv$run_mode == "auto"){
     init_choices3()
   }
   
@@ -217,6 +225,8 @@ output$ui_samples_fb <- renderUI({
   
   # samples in control group
   t_level = t_level()
+  
+  req(!is.null(rv$fddf)) # Blake add this line to prevent some errors
   samples_c = samples_c()
   print(samples_c)
   
@@ -224,11 +234,18 @@ output$ui_samples_fb <- renderUI({
   samples_t = samples_t()
   print(samples_t)
   
-  # # determine input source GSM or title
-  if(input$names_toggle == "title"){
-    titles_c = translate_sample_names(samples_c,  rv$pdata[c("title", "geo_accession")],  "title")
-    titles_t = translate_sample_names(samples_t,  rv$pdata[c("title", "geo_accession")],  "title")
-    
+  if(rv$run_mode == "auto"){
+    # # determine input source GSM or title
+    if(input$names_toggle == "title"){
+      titles_c = translate_sample_names(samples_c,  rv$pdata[c("title", "geo_accession")],  "title")
+      titles_t = translate_sample_names(samples_t,  rv$pdata[c("title", "geo_accession")],  "title")
+      
+      names(samples_c) = titles_c
+      names(samples_t) = titles_t
+    }
+  } else {
+    titles_c = samples_c
+    titles_t = samples_t
     names(samples_c) = titles_c
     names(samples_t) = titles_t
   }
@@ -296,12 +313,14 @@ output$coerce_ui <- renderUI({
       # wellPanel(style = paste0("background:",rv$bcol1),
       #           HTML("<b>Note:</b> \"Manual selection\" is for any combination of samples. You may manually select samples in the control and the experimental groups.")
       # ),
-      radioGroupButtons(
-        "names_toggle2",
-        HTML("Show sample names as",add_help("ss_hp2")),
-        choices = list("GEO accession"="accession","Sample name"="title"),
-        selected = "title"
-      )
+      if(rv$run_mode == "auto"){
+        radioGroupButtons(
+          "names_toggle2",
+          HTML("Show sample names as",add_help("ss_hp2")),
+          choices = list("GEO accession"="accession","Sample name"="title"),
+          selected = "title"
+        )
+      }
       ,bsTooltip("ss_hp2",HTML("<b>GEO accession</b>: GSM ids in NCBI GEO database<br><br><b>Sample name</b>: names provided by the authors")
                  ,placement = "right")
       
@@ -318,10 +337,18 @@ output$ui_samples_fb2 <- renderUI({
   
   samples_c = samples_t = rownames(fddf)
   
-  if(input$names_toggle2 == "title"){
-    titles_c = translate_sample_names(samples_c,  rv$pdata[c("title", "geo_accession")],  "title")
-    titles_t = translate_sample_names(samples_t,  rv$pdata[c("title", "geo_accession")],  "title")
-    
+  
+  if(rv$run_mode == "auto"){
+    if(input$names_toggle2 == "title"){
+      titles_c = translate_sample_names(samples_c,  rv$pdata[c("title", "geo_accession")],  "title")
+      titles_t = translate_sample_names(samples_t,  rv$pdata[c("title", "geo_accession")],  "title")
+      
+      names(samples_c) = titles_c
+      names(samples_t) = titles_t
+    }
+  } else {
+    titles_c = samples_c
+    titles_t = samples_t
     names(samples_c) = titles_c
     names(samples_t) = titles_t
   }

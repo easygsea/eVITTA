@@ -1,31 +1,39 @@
 # trigger the corresponding intro tour while pressing the help button
 observeEvent(input$help_1_button, {
-  if(rv$demo == "yes"){
-    call_introjs(rbind(intros$E_pre,intros$E_post,intros$E_post_with_summary_ui))
-  }else{
-    if (is.null(rv$geo_accession)==T){
-      call_introjs(intros$E_pre)
-    } else {
-      # check to see if the user have pressed the select to proceed button, 
-      # if yes, then we call the function with highlighting summary ui
-      if(is.null(rv$dmdf)){
-        call_introjs(intros$E_post)
-      } else{
-        call_introjs(intros$E_post_with_summary_ui)
+  if(input$selected_mode == "auto"){
+    if(rv$demo == "yes"){
+      call_introjs(rbind(intros$E_pre,intros$E_post,intros$E_post_with_summary_ui))
+    }else{
+      if (is.null(rv$geo_accession)==T){
+        call_introjs(intros$E_pre)
+      } else {
+        # check to see if the user have pressed the select to proceed button, 
+        # if yes, then we call the function with highlighting summary ui
+        if(is.null(rv$dmdf)){
+          call_introjs(intros$E_post)
+        } else{
+          call_introjs(intros$E_post_with_summary_ui)
+        }
       }
     }
+  } else{
+    call_introjs(intros$E_manual)
   }
-  
 })
 
 
 # trigger the corresponding intro tour on the data matrix tab
 observeEvent(input$help_3_button, {
+  if(rv$run_mode == "auto"){
+    
   # if (is.null(rv$fddf)==T){
   #   call_introjs(intros$D_pre)
   # } else {
     call_introjs(intros$D_post)
   # }
+  } else {
+    call_introjs(intros$D_manual)
+  }
 })
 
 # trigger the corresponding help tour on the filter matrix tab
