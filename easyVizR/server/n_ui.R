@@ -550,6 +550,90 @@ output$rrho_pvalue_panel <- renderUI({
 })
 
 
+output$rrho_level_dropdowns <- renderUI({
+  div(
+  div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;",
+      dropdown(
+        selectInput("rrho_level_palette", 
+                    HTML(paste0(
+                      "<b>Color Scheme:</b>",
+                      add_help("rrho_level_palette_help", style="margin-left: 5px;"))
+                    ),
+                    choices = c("Default" = "default",
+                                "Red Yellow Blue" = "RdYlBu",
+                                "Grey" = "Greys",
+                                "Orange and Red" = "OrRd",
+                                "Blue" = "Blues"
+                    ),
+                    selected =  rv$rrho_level_palette
+        ),
+        
+        
+        bsTooltip("rrho_level_palette_help", 
+                  "Please select the color scheme for the level plot", 
+                  placement = "top"),
+        
+        conditionalPanel("input.rrho_level_palette !='default'",
+        radioButtons(
+          inputId = "rrho_level_palette_reverse",
+          HTML(paste0(
+            "Reverse Ordering (not applicable to default)",
+            add_help("rrho_level_palette_reverse_help", style="margin-left: 5px;"))
+          ),
+          choices = c("No" = F,"Yes"= T),
+          selected = rv$rrho_level_palette_reverse
+        ),
+        
+        bsTooltip("rrho_level_palette_reverse_help", 
+                  "Select Yes if you want to reverse the order of the color scheme",
+                  placement = "top")
+        ),
+        
+        size = "xs",
+        icon = icon("palette", class = "opt"),
+        up = TRUE
+      )
+  )
+  )
+  
+})
+
+
+output$rrho_scatter_dropdowns <- renderUI({
+  div(
+    div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;",
+        dropdown(
+          selectInput("rrho_level_palette", 
+                      HTML(paste0(
+                        "<b>Tertiary color:</b>",
+                        add_help("rrho_level_palette_help", style="margin-left: 5px;"))
+                      ),
+                      choices = c("Default" = "default",
+                                  "Red Yellow Blue" = "RdYlBu",
+                                  "Grey" = "Greys",
+                                  "Orange and Red" = "OrRd",
+                                  "Blue" = "Blues"
+                                  ),
+                      selected =  "Default"
+          ),
+          
+          
+          bsTooltip("rrho_level_palette_help", 
+                    "Please select the color scheme for the level plot", 
+                    placement = "top"),
+          
+
+          
+          
+          size = "xs",
+          icon = icon("palette", class = "opt"),
+          up = TRUE
+        )
+    )
+  )
+})
+
+
 
 
 #======================================================================#
@@ -918,9 +1002,9 @@ output$n_panels <- renderUI({
                                       width = 16,
                                       selected = "Level Plot",
                                       tabPanel("Level Plot", plotOutput("rrho_level",
-                                                                        width = "90%",height = "600px")),
+                                                                        width = "90%",height = "600px"),uiOutput("rrho_level_dropdowns")),
                                       tabPanel("Scatter Plot",plotOutput("rrho_scatter_plot",
-                                                                         width = "90%",height = "600px"))
+                                                                         width = "90%",height = "600px"),div(id = "rrho_scatter_dropdowns_anchor"))
                              ),
                                                      #box(
                                                       # title = span( icon("chart-area"), "Level Plot"), status = "primary", solidHeader = F, width=12,

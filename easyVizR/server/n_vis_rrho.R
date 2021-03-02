@@ -32,8 +32,15 @@ get_rrho_rnk <-function(dataset,DataGeneIdentifier,pvalue,STAT){
 }
 
 rrho_color_handler <- function(palette,reverse = F){
-  jet.colors  <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-  if(palette == "default"){jet.colors <- jet.colors(100)}
+  
+  if(palette == "default"){
+    default_order <- c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")
+    #if(reverse == T){
+    #  default_order <- rev(default_order)
+    #}
+    jet.colors  <- colorRampPalette(default_order)
+    jet.colors <- jet.colors(100)
+    }
   else{
     if(reverse == T){
       jet.colors <-colorRampPalette(rev(brewer.pal(8, palette)))(50)
@@ -63,7 +70,7 @@ run_rrho <- function (rnk1, rnk2,
                   alternative="two.sided",
                   log10.ind = T
   )
-  jet.colors  <- rrho_color_handler(palette = palette)
+  jet.colors  <- rrho_color_handler(palette = palette, reverse = reverse)
   
   rrho_plot <- lattice::levelplot(RRHO.xy$hypermat,col.regions = jet.colors) # shows the graph
   pval.testing <- pvalRRHO(RRHO.xy, 50)
@@ -95,16 +102,21 @@ rrho_level_value <- reactive({
   rnk2 <- data.frame(rnk_merge$GeneIdentifier,rnk_merge$RankingVal.y)
   names(rnk2) <- original_names
   #Remove NA
-  rv$result_plot <-             run_rrho(rnk1, rnk2,
-                                    BY=F,
-                                    to_put_alternative = "two.sided",
-                                    log10.ind=T,
-                                    palette="default",
-                                    reverse = F)
+  withProgress(message = 'Generating plots ...',value = 1, {
+    rv$result_plot <-             run_rrho(rnk1, rnk2,
+                                           BY=F,
+                                           to_put_alternative = "two.sided",
+                                           log10.ind=T,
+                                           palette=rv$rrho_level_palette,
+                                           reverse = rv$rrho_level_palette_reverse)
+    return(rv$result_plot)
+  })
+  
   rv$rnk1 <- rnk1
   rv$rnk2 <- rnk2
-  View(rv$rnk1)
   rrho_level_fig <- rv$result_plot[[1]]
+  
+  #print(rv$result_plot[[2]])
   rrho_level_fig
   
 })
@@ -123,6 +135,12 @@ plot(list1ind,list2ind,xlab=paste(rv$rrho_x,"(Rank)"),
 model  <- lm(list2ind~list1ind)
 lines(predict(model),col="red",lwd=3)
 })
+
+rrho_p_value <- reactive({
+  new_rrho_p_value = rv$result_plot[[2]]
+  new_rrho_p_value
+})
+
 output$rrho_level <- renderPlot(
   rrho_level_value()
 )
@@ -133,11 +151,13 @@ output$rrho_scatter_plot <- renderPlot(
 
 
 output$rrho_p_value <- renderUI({
+  
   box(
     title = NULL, background = "aqua", solidHeader = TRUE, width=12,
     strong("Correlation line:"),br(),
     column( 12,align="center" ,
-            paste0("The pvalue is ",rv$result_plot[[2]])
+            paste0("The pvalue is ",rrho_p_value())
+            #rv$result_plot[[2]]
     )
   )
 })

@@ -26,7 +26,7 @@ observe({
   
   #rrho
   input2rv(c(
-    "rrho_x","rrho_y"
+    "rrho_x","rrho_y","rrho_level_palette","rrho_level_palette_reverse"
              ))
   
   # 2D scatter
@@ -213,6 +213,8 @@ observeEvent(input$n_use_data,{
     # ------------- rrho
     rv$rrho_x <- rv$nx_n[[1]]
     rv$rrho_y <- rv$nx_n[[2]]
+    rv$rrho_level_palette <- "default"
+    rv$rrho_level_palette_reverse <- F
     
     # --------------- single options
     rv$nx_vol_plotmode <- "Focus"
