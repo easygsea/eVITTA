@@ -33,7 +33,7 @@ output$run_deg_ui <- renderUI({
   req(is.null(rv$deg)==F)
   
   box(id="degs",
-    width = 12, title = span(HTML("<b>4.4.</b>"),icon("book-open"),HTML("Review & download DEG analysis results")), status = "primary",
+    width = 12, title = span(HTML("<b>4.4.</b>"),icon("book-open"),HTML("Review & download DE analysis results")), status = "primary",
     
     
       fluidRow(
@@ -42,13 +42,13 @@ output$run_deg_ui <- renderUI({
           wellPanel(
             style = paste0("background:",rv$bcol1),
             column(12, align = "center",
-              downloadBttn("deg_table_download",label = "Download entire DEG table (.csv)"
+              downloadBttn("deg_table_download",label = "Download entire DE table (.csv)"
                            , style = rv$dbtn_style
                            , color = rv$dbtn_color
                            ,size="md")
             )
             ,br(),
-            HTML("<br><br>Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
+            HTML("<br><br>Download entire DE table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
                   and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons."
                  ),
             
@@ -118,7 +118,7 @@ observeEvent(input$run_deg,{
   # counts in at least rv$min_n samples if too many samples as in scRNAseq
   if(min_n > rv$min_n){min_n = rv$min_n}
   
-  msg = paste0("Running DEG analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. Please wait a minute...")
+  msg = paste0("Running DE analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. Please wait a minute...")
   
   if((is.null(samples_c)||length(samples_c)<2) && (is.null(samples_t)||length(samples_t)<2)){
     shinyalert("Select at least 2 control and 2 experimental samples.")
@@ -270,7 +270,7 @@ observeEvent(input$run_deg2,{
   # counts in at least rv$min_n samples if too many samples as in scRNAseq
   if(min_n > rv$min_n){min_n = rv$min_n}
   
-  msg = paste0("Running DEG analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. Please wait a minute...")
+  msg = paste0("Running DE analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. Please wait a minute...")
   
   overlap = samples_c[samples_c %in% samples_t]
   
@@ -479,12 +479,12 @@ observeEvent(rv$runs,{
     div(style="font-size:150%",
       fluidRow(
         column(12,
-           h3("DEG analysis complete!"),
-           HTML("<br>Download entire DEG table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
+           h3("DE analysis complete!"),
+           HTML("<br>Download entire DE table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
                   and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.
                 <br>"
            )
-           # ,downloadBttn("deg_table_download2",label = "Download entire DEG table (.csv)"
+           # ,downloadBttn("deg_table_download2",label = "Download entire DE table (.csv)"
            #              , style = rv$dbtn_style
            #              , color = rv$dbtn_color
            #              ,size="md")
