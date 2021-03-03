@@ -27,7 +27,7 @@ output$ui_bodyNetwork <- renderUI({
                     if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                         div(
                             br(),
-                            p("We support a maximum of 300 data points in Enrichment Network.",
+                            p("We support a maximum of 350 data points in Enrichment Network.",
                               "Please adjust the selected database(s), and/or the P and/or P.adj thresholds by clicking the top-right gear button."
                             ),
                             br()
@@ -308,6 +308,8 @@ observeEvent(input$vis_replot,{
         
         rv$db_name_y <- input$db_name_v_y
         rv$db_id_y <- input$db_id_v_y
+        
+        rv$edge_mode <- input$edge_mode
     }
     
 })
@@ -360,6 +362,14 @@ output$ui_vis_gear <- renderUI({
                               multiple = TRUE
                               )
                ,bsTooltip("db_vis",HTML(db_bs),placement = "top")
+        ),
+        column(12,
+               selectizeInput("edge_mode",
+                              HTML(paste0("Select mode to plot edges ",add_help("edge_q"))),
+                              choices = rv$lg_name,
+                              selected = rv$edge_mode
+               )
+               ,bsTooltip("edge_q",HTML(edge_bs),placement = "top")
         ),
         column(
             width = 6,

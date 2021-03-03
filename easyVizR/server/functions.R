@@ -368,7 +368,7 @@ filter_presets <- list(
   "Down 1.5x" = c("down1_5", NA, NA, 1.5, "Negative", 
                   stat_replace("<b>|Stat|</b> > 1.5 <br><b>Direction</b>: -"),
                   down_icon, down_txt_color, down_bg_color),
-  "Default" = c("default", 0.05, 1, 0, "All", 
+  "Default" = c("default", 0.05, 1.1, -0.1, "All", 
                 stat_replace("Default:<br><b>p</b> < 0.05 <br><b>FDR</b> < 1<br><b>|Stat|</b> > 0<br><b>Direction</b>: All"),
                 default_icon, no_txt_color, no_bg_color),
   "No filter" = c("nofilter", 1.1, 1.1, -0.1, "All", 
@@ -590,6 +590,29 @@ gl_to_table <- function(name, gl, master_df, round=3, keep_stat=F){
   }
   df
 }
+
+# ================================================= #
+#               Dataframe Tidying                ####
+# ================================================= #
+
+# remove NAs in columns of a certain dataset
+#-----------------------------------------
+# df: df to tidy
+# selected_names: a vector of dataset names, e.g. c("data1","data2")
+
+remove_nas_in_cols <- function(df, selected_names){
+  all_cols <- colnames(df)
+  # get all columns to check
+  cols_with_selected_names <- unlist(lapply(selected_names, function(x){
+    grep(paste0(x,"$"),all_cols, value=T)
+  }))
+  # remove nas column by column
+  for (x in cols_with_selected_names){
+    df <- df[!is.na(df[[x]]), ]
+  }
+  df
+}
+
 
 
 # ================================================= #
@@ -918,9 +941,15 @@ get_df_by_dflogic <- function(selected, dflogic, gls, user_criteria, starting_df
 
 addlinebreaks <- function(x, max, 
                           lbtype="<br>", 
-                          cut_at="\\s|;|_|\\.|\\|" # this cuts at spaces/ ;/ underscore/ period / vertical bar
+                          cut_at="\\s|;|_|\\.|\\|", # this cuts at spaces/ ;/ underscore/ period / vertical bar
+                          do_end=T
                           ){
-  gsub(paste0('(.{1,',max,'})(',cut_at,'|$)'), paste0('\\1',lbtype), x)
+  if (do_end==T){
+    gsub(paste0('(.{1,',max,'})(',cut_at,'|$)'), paste0('\\1',lbtype), x)
+  } else {
+    gsub(paste0('(.{1,',max,'})(',cut_at,')'), paste0('\\1',lbtype), x)
+  }
+  
 }
 
 

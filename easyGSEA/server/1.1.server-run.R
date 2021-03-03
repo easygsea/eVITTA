@@ -1161,7 +1161,7 @@
                 genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*,\\s*')))
                 genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*;\\s*')))
                 genelist = unlist(strsplit(genelist," "))
-                genelist = unique(genelist)
+                genelist = unique(genelist) %>% toupper(.)
 
                 if(is.null(genelist)==F){
                     # save original gene lists into RV
@@ -1436,7 +1436,7 @@
         }
 
 
-        withProgress(message = "Running GSEA analysis...",value = 0.2, {
+        withProgress(message = "Running GSEA analysis. Please wait a minute...",value = 1, {
 
             # ------ read GMTs & run fgsea ------ #
             # initialize
@@ -1454,13 +1454,13 @@
                 for(cat_name in inputs){
                   gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
 
-                  run_gsea(cat_name, gmt_path, ranks,errors)
+                  errors <- run_gsea(cat_name, gmt_path, ranks,errors) + errors
                 }
               }
             }else{
               for(i in seq_along(rv$gmt_cs)){
                 gmt_path = rv$gmt_cs_paths[[i]]
-                run_gsea(rv$gmt_cs[[i]], gmt_path, ranks,errors)
+                errors <- run_gsea(rv$gmt_cs[[i]], gmt_path, ranks,errors) + errors
               }
             }
 
@@ -1502,12 +1502,17 @@
 
               # determine if success or warnings
               if(!is.null(rv$fgseagg) && nrow(rv$fgseagg)>0){
+                if(is.null(rv$edge_mode)){rv$edge_mode <- "lg"}
+                rv$lg_name <- list("By similarities between leading-edge genes"="lg"
+                                   ,"By similarities between original gene sets"="gs"
+                )
                 rv$run = "success"
                 rv$run_n = rv$run_n + 1
+                gsea_filter()
               } else {
                 rv$run = "failed"
               }
-              incProgress(0.1)
+              # incProgress(0.1)
             }
         })
         
@@ -1543,7 +1548,7 @@
 
         # read in parameters
 
-        genelist = toupper(rv$gene_lists_after)
+        genelist = rv$gene_lists_after
 
         # update run parameters in RVs
         if(!is.null(input$mymin)){if(!is.na(input$mymin)){rv$gmin=input$mymin}}
@@ -1565,7 +1570,7 @@
         }
 
 
-        withProgress(message = "Running ORA analysis...",value = 0.2, {
+        withProgress(message = "Running ORA analysis. Please wait a minute...",value = 1, {
 
             # ------ read GMTs & run fgsea ------ #
             # initialize
@@ -1582,14 +1587,14 @@
 
                 for(cat_name in inputs){
                   gmt_path = gmt_collections_paths[[species]][[collection]][[cat_name]]
-                  run_ora(cat_name,gmt_path,genelist,errors)
+                  errors <- run_ora(cat_name,gmt_path,genelist,errors) + errors
                 }
 
               }
             }else{
               for(i in seq_along(rv$gmt_cs)){
                 gmt_path = rv$gmt_cs_paths[[i]]
-                run_ora(rv$gmt_cs[[i]], gmt_path, genelist,errors)
+                errors <- run_ora(rv$gmt_cs[[i]], gmt_path, genelist,errors) + errors
               }
             }
 
@@ -1616,13 +1621,19 @@
 
               # determine if success or warnings
               if(is.null(rv$fgseagg)==F && nrow(rv$fgseagg)>0){
+                if(is.null(rv$edge_mode)){rv$edge_mode <- "lg"}
+                rv$lg_name <- list("By similarities between overlapping genes"="lg"
+                                   ,"By similarities between original gene sets"="gs"
+                )
                 rv$run = "success"
                 rv$run_n = rv$run_n + 1
+                
+                ora_filter()
 
               } else {
                 rv$run = "failed"
               }
-              incProgress(0.1)
+              # incProgress(0.1)
             }
 
 

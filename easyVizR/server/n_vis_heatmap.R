@@ -37,7 +37,7 @@ output$n_hm_ylabs_len <- renderUI({
   sliderInput("n_hm_ylabs_len",
               "Max string length for y labels:",
               min = 10,
-              max = 50,
+              max = 100,
               value = rv$n_hm_ylabs_len)
 })
 

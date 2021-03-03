@@ -1147,7 +1147,7 @@
             rv$vis_status = "failed"
             return(NULL)
         # check if it exceeds the maximum data points
-        } else if (nrow(df) > 300) {
+        } else if (nrow(df) > 350) {
           rv$vis_status = "max exceeded"
           return(NULL)
         }
@@ -1155,15 +1155,17 @@
             rv$vis_status = "success"
             
             rv$df_vis = df
-
-            # leading edge genes
-            a = df[[ncol(df)]] #df$leadingEdge
-            # a = sapply(a, function(x) strsplit(x," "))
+            
+            if(rv$edge_mode=="gs"){
+              # GMT genes
+              a = rv$gmts[names(rv$gmts) %in% df$pathway_o]
+            }else{
+              a = df[[ncol(df)]] #df$leadingEdge
+              # a = sapply(a, function(x) strsplit(x," "))
+            }
+            
             names(a) <- df$pathway
-            
-            # GMT genes
-            a_gmt = rv$gmts[names(rv$gmts) %in% df$pathway]
-            
+
             edges_mat = NULL
             if(nrow(df)>1){
                 # pathway combinations
@@ -1171,7 +1173,8 @@
                 
                 # edge pre-matrix
                 # edges_mat = edges(a,a_gmt,b_combn)
-                rv$edges_mat_zero_cutoff = edges(a,b_combn, cutoff = 0)
+                rv$edges_mat_zero_cutoff = edges(a,b_combn, cutoff = 0)# leading edge genes
+
                 edges_mat_zero_cutoff = rv$edges_mat_zero_cutoff
                 edges_mat <- filter(edges_mat_zero_cutoff, percent >= rv$percent_cutoff)
                 # rv$hc_edges = edges_mat[,c("from","to","percent")]
@@ -2284,24 +2287,33 @@
         # write into RV
         rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
         # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
-        rv$no_up_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
-        rv$no_up_05 = sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
-        rv$no_up_01 =sum(fgseaRes$padj<0.01&fgseaRes$ES>0,na.rm=TRUE)
         
-        rv$no_down_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
-        rv$no_down_05 = sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
-        rv$no_down_01 = sum(fgseaRes$padj<0.01&fgseaRes$ES<0,na.rm=TRUE)
         
-        if(rv$q_dynamic == TRUE){
-          sig_no <- rv$no_up_25 + rv$no_down_25
-          if(sig_no >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
-          sig_no <- rv$no_up_05 + rv$no_down_05
-          if(sig_no >= 20){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
-          sig_no <- rv$no_up_01 + rv$no_down_01
-          if(sig_no >= 20){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
-        }
-        
-        incProgress(0.2)
+        # incProgress(0.2)
+      }
+      return(errors)
+    }
+    
+    gsea_filter <- function(fgseaRes = rv$fgseagg, t=50){
+      
+      rv$no_up_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
+      rv$no_up_1 = sum(fgseaRes$padj<0.1&fgseaRes$ES>0,na.rm=TRUE)
+      rv$no_up_075 = sum(fgseaRes$padj<0.075&fgseaRes$ES>0,na.rm=TRUE)
+      rv$no_up_05 = sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
+      rv$no_up_01 =sum(fgseaRes$padj<0.01&fgseaRes$ES>0,na.rm=TRUE)
+      
+      rv$no_down_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
+      rv$no_down_1 = sum(fgseaRes$padj<0.1&fgseaRes$ES<0,na.rm=TRUE)
+      rv$no_down_075 = sum(fgseaRes$padj<0.075&fgseaRes$ES<0,na.rm=TRUE)
+      rv$no_down_05 = sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
+      rv$no_down_01 = sum(fgseaRes$padj<0.01&fgseaRes$ES<0,na.rm=TRUE)
+      
+      if(rv$q_dynamic == TRUE){
+        sig_no <- rv$no_up_25 + rv$no_down_25; if(sig_no >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+        sig_no <- rv$no_up_1 + rv$no_down_1; if(sig_no >= t){rv$bar_q_cutoff <- .1;rv$vis_q <- .1}
+        sig_no <- rv$no_up_075 + rv$no_down_075; if(sig_no >= t){rv$bar_q_cutoff <- .075;rv$vis_q <- .075}
+        sig_no <- rv$no_up_05 + rv$no_down_05; if(sig_no >= t){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
+        sig_no <- rv$no_up_01 + rv$no_down_01; if(sig_no >= t){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
       }
     }
     
@@ -2345,23 +2357,31 @@
         }else{
           fgseaRes <- fgseaRes %>% dplyr::mutate(pathway_o = pathway, .before = pathway)
           rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
-          rv$no_up_25 = sum(fgseaRes$padj<0.25,na.rm=TRUE)
-          rv$no_up_05 = sum(fgseaRes$padj<0.05,na.rm=TRUE)
-          rv$no_up_01 = sum(fgseaRes$padj<0.01,na.rm=TRUE)
           
-          if(rv$q_dynamic == TRUE){
-            if(rv$no_up_25 >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
-            if(rv$no_up_05 >= 20){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
-            if(rv$no_up_01 >= 20){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
-          }
           # if(rv$no_up_01 >= 1){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         }
         
-        incProgress(0.2)
+        # incProgress(0.2)
         
       }
       
+      return(errors)
+    }
+    
+    ora_filter <- function(fgseaRes = rv$fgseagg, t=50){
+      rv$no_up_25 = sum(fgseaRes$padj<0.25,na.rm=TRUE)
+      rv$no_up_1 = sum(fgseaRes$padj<0.1,na.rm=TRUE)
+      rv$no_up_075 = sum(fgseaRes$padj<0.075,na.rm=TRUE)
+      rv$no_up_05 = sum(fgseaRes$padj<0.05,na.rm=TRUE)
+      rv$no_up_01 = sum(fgseaRes$padj<0.01,na.rm=TRUE)
       
+      if(rv$q_dynamic == TRUE){
+        if(rv$no_up_25 >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+        if(rv$no_up_1 >= t){rv$bar_q_cutoff <- .1;rv$vis_q <- .1}
+        if(rv$no_up_075 >= t){rv$bar_q_cutoff <- .075;rv$vis_q <- .075}
+        if(rv$no_up_05 >= t){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
+        if(rv$no_up_01 >= t){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
+      }
     }
     
     
@@ -2374,6 +2394,7 @@
     
     # =========== initialize RVs for a demo run ==================
     init_demo_gsea <- function(){
+      rv$edge_mode <- "lg"
       updateSelectizeInput(session,"selected_species",selected = "hsa")
       #Demo session RVs for GSEA data store in rvs folder.
       rv$data_head_o <- readRDS(paste0(getwd(),"/rvs/data_head_o.rds"))
@@ -2427,6 +2448,7 @@
     }
     
     init_demo_ora <- function(){
+      rv$edge_mode <- "lg"
       updateRadioButtons(session,"selected_mode",selected = "glist")
       updateSelectizeInput(session,"selected_species",selected = "cel")
       updateTextAreaInput(session,
@@ -2470,6 +2492,7 @@
     
     # unload example
     init_demo_gsea_d <- function(){
+      rv$edge_mode <- NULL
       updateSelectizeInput(session,"selected_species",selected = "")
       shinyjs::enable("selected_species")
       #Demo session RVs for GSEA data store in rvs folder.
@@ -2522,6 +2545,7 @@
     }
     
     init_demo_ora_d <- function(){
+      rv$edge_mode <- NULL
       updateSelectizeInput(session,"selected_species",selected = "")
       shinyjs::enable("selected_species")
       updateTextAreaInput(session,
