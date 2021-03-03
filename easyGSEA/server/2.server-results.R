@@ -3,21 +3,29 @@
 #=============================================================#
 # ------------ Overall bodyResults UI ------------------
 output$ui_bodyResults <- renderUI({
-    if(rv$run_mode == "glist" && !is.null(rv$demo_save) && rv$demo_save == "yes"){
-        saveRDS(rv$fgseagg, file = "rvs2/fgseagg.rds")
-        saveRDS(rv$gmts, file = "rvs2/gmts.rds")
-        saveRDS(rv$dbs, file = "rvs2/dbs.rds")
-        saveRDS(rv$gmts_length, file = "rvs2/gmts_length.rds")
-        saveRDS(rv$gmt_cs_paths, file = "rvs2/gmt_cs_paths.rds")
-        saveRDS(rv$db_modal, file = "rvs2/db_modal.rds")
-        saveRDS(rv$gmt_cs, file = "rvs2/gmt_cs.rds")
-        saveRDS(rv$sd_high, file = "rvs2/sd_high.rds")
-        saveRDS(rv$gmin, file = "rvs2/gmin.rds")
-        saveRDS(rv$gmax, file = "rvs2/gmax.rds")
-        saveRDS(rv$gperm, file = "rvs2/gperm.rds")
-        saveRDS(rv$bar_pathway, file = "rvs2/bar_pathway.rds")
-        saveRDS(rv$bubble_pathway, file = "rvs2/bubble_pathway.rds")
-        saveRDS(rv$run_n, file = "rvs2/run_n.rds")
+    if(!is.null(rv$demo_save) && rv$demo_save == "yes"){
+        if(rv$run_mode == "glist"){
+            variable_list <- c("bar_pathway", "bubble_pathway", "data_head_o", "db_modal", "db_status",
+                               "dbs", "fgseagg", "file_upload_status", "gene_lists", "gene_lists_after",
+                               "gene_lists_mat1", "gene_lists_mat2", "glist_check", "gmax", "gmin", "gmt_cs",
+                               "gmt_cs_paths", "gmts", "gmts_length", "gperm", "infile_check", "infile_confirm",
+                               "infile_name", "no_down_01", "no_down_05", "no_up_01", "no_up_05", "rnk_check",
+                               "rnk_or_deg", "rnkgg", "rnkll", "run", "run_mode", "run_n", "sd_high", "volcano_pathway")
+            for(i in seq_along(variable_list)){
+                saveRDS(rv[[variable_list[i]]], file = paste0("rvs2/", variable_list[i], ".rds"))
+            }
+    
+        } else {
+            variable_list <- c("bar_pathway", "bubble_pathway", "data_head_o", "db_modal", "db_status",
+                               "dbs", "fgseagg", "file_upload_status", "gene_lists", "gene_lists_after",
+                               "gene_lists_mat1", "gene_lists_mat2", "glist_check", "gmax", "gmin", "gmt_cs",
+                               "gmt_cs_paths", "gmts", "gmts_length", "gperm", "infile_check", "infile_confirm",
+                               "infile_name", "no_down_01", "no_down_05", "no_up_01", "no_up_05", "rnk_check",
+                               "rnk_or_deg", "rnkgg", "rnkll", "run", "run_mode", "run_n", "sd_high", "volcano_pathway")
+            for(i in seq_along(variable_list)){
+                saveRDS(rv[[variable_list[i]]], file = paste0("rvs/", variable_list[i], ".rds"))
+            }
+        }
     }
 
     if(is.null(rv$run) || rv$run != "success"){
