@@ -7,7 +7,7 @@ output$ui_design <- renderUI({
   }else{
     div(
       column(12,
-             guide_box("guide3", "Navigate to <b>4. Run DEG analysis</b> to proceed"),
+             guide_box("guide3", "Navigate to <b>4. Run DE analysis</b> to proceed"),
              br()
       ),
       fluidRow(
@@ -139,7 +139,7 @@ output$download_fddf <- downloadHandler(
   }
 )
 
-# ----------- guide box to 4. run DEG page ---------
+# ----------- guide box to 4. run DE page ---------
 observeEvent(input$guide3,{
   updateTabItems(session, "menu1", "tab4")
 })

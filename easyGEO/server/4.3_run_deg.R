@@ -1,12 +1,12 @@
 # ------------ UI: DEG run & table -----------
-# RUN DEG button
+# RUN DE button
 
 output$confirm_run <- renderUI({
   if(input$ui_select == "sp"){
     req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
     # req(length(input$samples_c_deg)>0 && length(input$samples_t_deg)>0)
     div(
-      actionBttn("run_deg", "4.3. Run DEG Analysis!",
+      actionBttn("run_deg", "4.3. Run DE Analysis!",
                  icon = icon("play-circle"), 
                  style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
                  block = TRUE)
@@ -18,7 +18,7 @@ output$confirm_run <- renderUI({
     req(rv$matrix_ready==T)
     req(is.null(input$samples_c_deg2)==F & is.null(input$samples_t_deg2)==F)
     div(
-      actionBttn("run_deg2", "4.3. Run DEG Analysis!",
+      actionBttn("run_deg2", "4.3. Run DE Analysis!",
                  icon = icon("play-circle"), 
                  style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
                  block = TRUE)
@@ -488,7 +488,7 @@ observeEvent(rv$runs,{
            #              , style = rv$dbtn_style
            #              , color = rv$dbtn_color
            #              ,size="md")
-           ,br(),br(),p("If you'd like to run DEG analysis for another comparison, re-select samples and re-click \"4.3. Run DEG Analysis!\".")
+           ,br(),br(),p("If you'd like to run DE analysis for another comparison, re-select samples and re-click \"4.3. Run DE Analysis!\".")
         )
       )
     ),
