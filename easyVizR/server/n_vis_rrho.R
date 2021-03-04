@@ -54,11 +54,12 @@ rrho_color_handler <- function(palette,reverse = F){
 
 
 run_rrho <- function (rnk1, rnk2,
-                      BY=F,
+                      BY_correction=T,
                       to_put_alternative = "two.sided",
                       log10.ind=T,
-                      palette="default",
-                      reverse = F
+                      color_scheme
+                      #palette="default",
+                      #reverse = F
 )
 {
   #This step is to only keep the ones in common
@@ -70,9 +71,12 @@ run_rrho <- function (rnk1, rnk2,
                   alternative="two.sided",
                   log10.ind = T
   )
-  jet.colors  <- rrho_color_handler(palette = palette, reverse = reverse)
-  
-  rrho_plot <- lattice::levelplot(RRHO.xy$hypermat,col.regions = jet.colors) # shows the graph
+  jet.colors  <- color_scheme
+  if(BY_correction == T){
+    rrho_plot <- lattice::levelplot(RRHO.xy$hypermat.by,col.regions = jet.colors,xlab = '',ylab = '')
+  }else{
+    rrho_plot <- lattice::levelplot(RRHO.xy$hypermat,col.regions = jet.colors,xlab = '',ylab = '') # shows the graph
+  }
   pval.testing <- pvalRRHO(RRHO.xy, 50)
   p_value <- pval.testing$pval
   
@@ -102,13 +106,17 @@ rrho_level_value <- reactive({
   rnk2 <- data.frame(rnk_merge$GeneIdentifier,rnk_merge$RankingVal.y)
   names(rnk2) <- original_names
   #Remove NA
+  
+  color_scheme <- rrho_color_handler(palette=rv$rrho_level_palette,reverse = rv$rrho_level_palette_reverse)
   withProgress(message = 'Generating plots ...',value = 1, {
     rv$result_plot <-             run_rrho(rnk1, rnk2,
-                                           BY=F,
+                                           BY_correction = rv$rrho_level_setting,
                                            to_put_alternative = "two.sided",
                                            log10.ind=T,
-                                           palette=rv$rrho_level_palette,
-                                           reverse = rv$rrho_level_palette_reverse)
+                                           color_scheme = color_scheme
+                                           )
+                                           #palette=rv$rrho_level_palette,
+                                           #reverse = rv$rrho_level_palette_reverse)
     return(rv$result_plot)
   })
   

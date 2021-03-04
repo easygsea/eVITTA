@@ -593,45 +593,72 @@ output$rrho_level_dropdowns <- renderUI({
         icon = icon("palette", class = "opt"),
         up = TRUE
       )
+  ),
+  
+  div(style = "position: absolute; left: 7em; bottom: 1em; width:300px;",
+      dropdown(
+               radioButtons(
+                           inputId = "rrho_level_setting",
+                           HTML(paste0(
+                             "Benjamini-Yekutieli FDR Correction",
+                             add_help("rrho_level_setting_help", style="margin-left: 5px;"))
+                           ),
+                           choices = c("No" = F,"Yes"= T),
+                           selected = rv$rrho_level_setting
+                         ),
+                         
+                         bsTooltip("rrho_level_setting_help", 
+                                   "Select Yes if you want to use Benjamini-Yekutieli FDR corrected pvalues for plotting",
+                                   placement = "top"),
+        
+        
+        size = "xs",
+        icon = icon("gear", class = "opt"),
+        up = TRUE
+      )
   )
+  
   )
   
 })
 
 
-output$rrho_scatter_dropdowns <- renderUI({
-  div(
-    div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;",
-        dropdown(
-          selectInput("rrho_level_palette", 
-                      HTML(paste0(
-                        "<b>Tertiary color:</b>",
-                        add_help("rrho_level_palette_help", style="margin-left: 5px;"))
-                      ),
-                      choices = c("Default" = "default",
-                                  "Red Yellow Blue" = "RdYlBu",
-                                  "Grey" = "Greys",
-                                  "Orange and Red" = "OrRd",
-                                  "Blue" = "Blues"
-                                  ),
-                      selected =  "Default"
-          ),
-          
-          
-          bsTooltip("rrho_level_palette_help", 
-                    "Please select the color scheme for the level plot", 
-                    placement = "top"),
-          
 
-          
-          
-          size = "xs",
-          icon = icon("palette", class = "opt"),
-          up = TRUE
-        )
-    )
-  )
-})
+
+
+# output$rrho_scatter_dropdowns <- renderUI({
+#   div(
+#     div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;",
+#         dropdown(
+#           selectInput("rrho_level_palette", 
+#                       HTML(paste0(
+#                         "<b>Tertiary color:</b>",
+#                         add_help("rrho_level_palette_help", style="margin-left: 5px;"))
+#                       ),
+#                       choices = c("Default" = "default",
+#                                   "Red Yellow Blue" = "RdYlBu",
+#                                   "Grey" = "Greys",
+#                                   "Orange and Red" = "OrRd",
+#                                   "Blue" = "Blues"
+#                                   ),
+#                       selected =  "Default"
+#           ),
+#           
+#           
+#           bsTooltip("rrho_level_palette_help", 
+#                     "Please select the color scheme for the level plot", 
+#                     placement = "top"),
+#           
+# 
+#           
+#           
+#           size = "xs",
+#           icon = icon("palette", class = "opt"),
+#           up = TRUE
+#         )
+#     )
+#   )
+# })
 
 
 
@@ -994,18 +1021,30 @@ output$n_panels <- renderUI({
                            fluidRow(
                              column(4,
                                     div(id = "rrho_selections_anchor"),
-                                    uiOutput("rrho_pvalue_panel")
+                                    #uiOutput("rrho_pvalue_panel")
+                                    box(
+                                                      title = span( icon("chart-area"), "Rank Scatter Plot"), status = "primary", solidHeader = F, width=12,
+                                                       plotOutput("rrho_scatter_plot",
+                                                       width = "100%",height = "400px")
+                                      ),
                              ),
                              column(8,
-                                    tabBox(
-                                      height = "650px",
-                                      width = 16,
-                                      selected = "Level Plot",
-                                      tabPanel("Level Plot", plotOutput("rrho_level",
-                                                                        width = "90%",height = "600px"),uiOutput("rrho_level_dropdowns")),
-                                      tabPanel("Scatter Plot",plotOutput("rrho_scatter_plot",
-                                                                         width = "90%",height = "600px"),div(id = "rrho_scatter_dropdowns_anchor"))
-                             ),
+                                    box(
+                                     title = span( icon("chart-area"), "Level Plot"), status = "primary", solidHeader = F, width=12,
+
+                                    plotOutput("rrho_level",
+                                                  width = "100%",height = "600px"),
+                                    uiOutput("rrho_level_dropdowns"),
+                                    ),
+                                    # tabBox(
+                                    #   height = "650px",
+                                    #   width = 16,
+                                    #   selected = "Level Plot",
+                                    #   tabPanel("Level Plot", plotOutput("rrho_level",
+                                    #                                     width = "90%",height = "600px"),uiOutput("rrho_level_dropdowns")),
+                                      #tabPanel("Scatter Plot",plotOutput("rrho_scatter_plot",
+                                      #                                   width = "90%",height = "600px"),div(id = "rrho_scatter_dropdowns_anchor"))
+                             #),
                                                      #box(
                                                       # title = span( icon("chart-area"), "Level Plot"), status = "primary", solidHeader = F, width=12,
                                                        
