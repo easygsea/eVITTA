@@ -1,5 +1,12 @@
 col_f = c("01_WormCat (Holdorf et al. 2020)","02_Pathway","03_Gene Ontology")
 
+# databases has prefices
+db_prs <- c("KEGG","RAL","RA","WP","GO","BP","CC","MF","C1","C2","C3","HALLMARK")
+
+# width of shadows
+shadow_width <- ".3em"
+line_width <- ".5px"
+
 # p_min to convert p=0
 p_min = 1e-300
 
@@ -148,6 +155,17 @@ gcols_grey_vis <- c(
 gvalues2 = rescale(c(0,-log10(0.25),1,-log10(0.05),2,3))
 
 
+#===================== GMT collections' names =====================
+gmt_abbr <- read_tsv(paste0(getwd(),"/www/gmt_abbreviations.tsv"),col_names = F)
+gmt_names <- as.list(gmt_abbr$X2)
+names(gmt_names) <- gmt_abbr$X1
+
+# function to retrieve abbreviations
+retrieve_abbr <- function(name){
+  name <- str_split(name, "-(?=[^-]+$)")[[1]][1]
+  gmt_names[grepl(paste0("^",name),gmt_names,ignore.case = T)][1] %>% names(.)
+}
+
 
 #===================== GMT collections =====================
 # initialize three list vectors
@@ -162,19 +180,22 @@ gmt_collections_selected <- vector("list")
 test = read.csv(paste0(getwd(),"/www/gmts/gmts_list.csv"),header=F,stringsAsFactors = F)
 
 # names of databases
-dbs = strsplit(test$V3,";")
-for(i in seq_along(dbs)){
+dbs_o = strsplit(test$V3,";")
+for(i in seq_along(dbs_o)){
   # tidy up database names by removing ".gmt" and the dates it's created; convert _ to spaces
-  names <- gsub(".gmt$","",dbs[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
-  names_abbr = abbreviate_string(names); coll = names_abbr
+  names <- gsub(".gmt$","",dbs_o[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
+  # # 1) the below 2 lines store the databases in abbreviated strings and named them in full in a named vector
+  names_abbr = sapply(names, function(x) retrieve_abbr(x));  coll = names_abbr #names_abbr = abbreviate_string(names); coll = names_abbr
   names(coll) = names
+  # # 2) the below 1 line stores the databases' names in full
+  # coll = names
   
   # store databases names into the list vector that stores collections
   gmt_collections = c(gmt_collections, list(coll))
   
   # paths to GMT files
-  paths = paste0(getwd(),"/www/gmts/",test$V1[[i]],"/",test$V2[[i]],"/",dbs[[i]])
-  names(paths) = names_abbr
+  paths = paste0(getwd(),"/www/gmts/",test$V1[[i]],"/",test$V2[[i]],"/",dbs_o[[i]])
+  names(paths) = names_abbr #names
   
   gmt_collections_paths = c(gmt_collections_paths, list(paths))
   
@@ -195,12 +216,15 @@ gmt_collections_paths = split(gmt_collections_paths,test$V1)
 ## read in GMTs selected as default
 test = read.csv(paste0(getwd(),"/www/gmts/gmts_list_selected.csv"),header=F,stringsAsFactors = F)
 # names of databases
-dbs = strsplit(test$V3,";")
-for(i in seq_along(dbs)){
+dbs_o = strsplit(test$V3,";")
+for(i in seq_along(dbs_o)){
   # tidy up database names by removing ".gmt" and the dates it's created; convert _ to spaces
-  names <- gsub(".gmt$","",dbs[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
-  names_abbr = abbreviate_string(names); coll = names_abbr
+  names <- gsub(".gmt$","",dbs_o[[i]]);names <- gsub("\\d\\d+$","",names);names <- gsub("_"," ",names)
+  # # 1) the below 2 lines store the databases in abbreviated strings and named them in full in a named vector
+  names_abbr = sapply(names, function(x) retrieve_abbr(x)); coll = names_abbr #names_abbr = abbreviate_string(names); coll = names_abbr
   names(coll) = names
+  # # 2) the below 1 line stores the databases' names in full
+  # coll = names
   
   # store databases names into the list vector that stores collections
   gmt_collections_selected = c(gmt_collections_selected, list(coll))
@@ -210,7 +234,8 @@ for(i in seq_along(dbs)){
 names(gmt_collections_selected) = test$V2
 gmt_collections_selected = split(gmt_collections_selected,test$V1)
 
-remove(test); remove(dbs)
+remove(test); remove(dbs_o)
+
 
 #============= numeric namespaces ================
 num_space <- list(
@@ -227,7 +252,7 @@ num_space <- list(
 )
 
 #============ add help annotations ==============
-db_bs <- "Select or de-select the functional database(s) for your run"
+db_bs <- "Select or de-select the gene set library(ies) for your run"
 p_bs <- "Gene sets with a P-value &lt; the selected threshold will be kept. Drag the slider to change the threshold"
 q_bs <- "Gene sets with an adjusted P-value &lt; the selected threshold will be kept. Drag the slider to change the threshold"
 # pq bsToopTip annotation for manhattan or volcano
@@ -242,3 +267,6 @@ manual_bs <- "Manually search, select and plot the gene set(s) of interest"
 bubble_size_bs <- "Drag the slider to adjust the maximum and minimum bubble sizes"
 vol_mode_bs <- "<b>Continuous</b> and <b>Discrete</b> are hoverable, clickable and interactive. <b>Static</b> labels the top regulations with texts."
 col_tone_bs <- "Scroll down and click to select the color tone"
+db_p_bs <- "By default, each gene set is prefixed by its originating database, i.e. the identifier. Unselect to trim the identifier. If repetitive names are found after trimming, only the first will be kept."
+id_bs <- "By defualt, each gene set is annotated with its unique ID (if any) in the original database. Unselect to trim the ID string. If repetitive names are found after trimming, only the first will be kept."
+edge_bs <- "Reference data to calculate gene set similarities"

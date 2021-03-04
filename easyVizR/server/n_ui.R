@@ -54,25 +54,9 @@ sc_coloring_explanation_3 <- "Displays significance value of X and Y as color an
 ####                        Heatmap UI                              ####
 #======================================================================#
 
-# output$n_ui_basic <- renderUI({
-#   req(rv$n_ui_showpanel == "Heatmap")
-#   div(
-#     heatmap_panel(),
-#     # hm_table_panel()
-#     
-#   )
-#   
-# })
 output$heatmap_dropdowns <- renderUI({
 div(div(style = "position: absolute; left: 1em; bottom: 1em",id="n1_3b",
         dropdown(
-          # req(rv$df_n),
-          # radioButtons(
-          #   inputId = "heatmap_sortby",
-          #   label= "Sort heatmap by:",
-          #   choices = rv$nx_n,
-          #   selected = rv$select_sortby_p2
-          # ),
           uiOutput("select_sortby_p2"),
           uiOutput("n_to_plot"),
           
@@ -87,8 +71,9 @@ div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;", id="n1_3
         inputId = "n_hm_ylabs", label = "Show y labels?", status="primary",
         value = rv$n_hm_ylabs
       ),
-      uiOutput("n_hm_ylabs_len")
-      ,
+      "Warning: y labels may not appear properly if there are too many rows.",
+      # uiOutput("n_hm_ylabs_len") # disabled
+      # ,
       size = "xs",
       icon = icon("palette", class = "opt"),
       up = TRUE
@@ -108,6 +93,7 @@ div(style = "position: absolute; left: 7em; bottom: 1em", id="n1_3c",
 
 
 heatmap_panel <- reactive({
+  
   #----------------- heatmap --------------------
   box(
     title = span( icon("chart-area"), "Heatmap"), status = "primary", solidHeader = F, width=8,
@@ -950,14 +936,15 @@ output$n_panels <- renderUI({
       #            )
       #          ))
       # ),
-      fluidRow(
+      fluidRow(style = "position:relative;z-index:9999",
         div(style="height:3.5em",
             column(6,
               div(id = "select_graph_to_display_anchor")
                    
             ),
             column(6, align= "right",
-                   div(id="n_filters_here"),
+                   div(
+                       id="n_filters_here"),
                    # uiOutput("n_filters")
                    
                    
@@ -970,8 +957,7 @@ output$n_panels <- renderUI({
       div(
         conditionalPanel("input.n_ui_showpanel == 'Heatmap'",
                          div(
-                           heatmap_panel(),
-                           # hm_table_panel()
+                           heatmap_panel()
                          )
                          
                          ),

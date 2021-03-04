@@ -7,7 +7,7 @@ output$ui_design <- renderUI({
   }else{
     div(
       column(12,
-             guide_box("guide3", "Navigate to <b>4. Run DEG analysis</b> to proceed"),
+             guide_box("guide3", "Navigate to <b>4. Run DE analysis</b> to proceed"),
              br()
       ),
       fluidRow(
@@ -139,7 +139,7 @@ output$download_fddf <- downloadHandler(
   }
 )
 
-# ----------- guide box to 4. run DEG page ---------
+# ----------- guide box to 4. run DE page ---------
 observeEvent(input$guide3,{
   updateTabItems(session, "menu1", "tab4")
 })
@@ -148,17 +148,18 @@ observeEvent(input$guide3,{
 
 design_df <- reactive({
   if(rv$run_mode == "auto"){
-    req(is.null(rv$gse_all)==F)
-    req(is.null(gse())==F)
-    req(is.null(rv$plat_id)==F)
+    req(!is.null(rv$pdata))
+    # req(is.null(rv$gse_all)==F)
+    # req(is.null(gse())==F)
+    # req(is.null(rv$plat_id)==F)
  
     # detect how many char columns there are; if only 1, try to parse differently
-    detected_var_num <- nrow(data.frame(t(data.frame(pData(phenoData(gse()))) %>% dplyr::select(contains("characteristics")))))
+    detected_var_num <- nrow(data.frame(t(data.frame(rv$pdata) %>% dplyr::select(contains("characteristics"))))) #pData(phenoData(gse()))
     print(paste0("detected characteristics columns: ", detected_var_num))
     if (detected_var_num>1){
-      char_list <- extract_char_list(gse(), oneline_guard=F)
+      char_list <- extract_char_list(oneline_guard=F) #gse(), 
     } else {
-      char_list <- extract_char_list(gse(), oneline_guard=T)
+      char_list <- extract_char_list(oneline_guard=T) #gse(), 
     }
     
     char_mat <- char_mat_from_list(char_list)
@@ -266,7 +267,7 @@ output$design_summary_ui <- renderUI({
     req(is.null(rv$plat_id)==F)
   
   div(
-    strong(paste0("Study design for ", annotation(gse()), ": ")), br(),br(),
+    strong(paste0("Study design for ", rv$platform, ": ")), br(),br(),
     
     
     shiny::HTML(design_summary())

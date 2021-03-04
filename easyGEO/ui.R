@@ -32,7 +32,7 @@ sidebar <- dashboardSidebar(
                 
                 menuItem(text = span(id = "tab2_text", "3. Filter/review design matrix"), tabName="tab2", icon=icon("pencil-ruler")),
                 
-                menuItem(text = span(id = "tab4_text", "4. Run DEG analysis"), tabName="tab4", icon=icon("calculator")),
+                menuItem(text = span(id = "tab4_text", "4. Run DE analysis"), tabName="tab4", icon=icon("calculator")),
                 
                 menuItem(text = span(id = "tab5_text", "5. Visualize results"), tabName="tab5", icon=icon("chart-area")),
                 
@@ -133,6 +133,7 @@ body <- dashboardBody(
                 ,
                 fixedPanel(
                   uiOutput("floating_button_1"),
+                  style = "z-index:9999",
                   right = 30,
                   bottom = 30
                 )
@@ -157,6 +158,7 @@ body <- dashboardBody(
         tabItem(tabName = "tab3",
                 uiOutput("ui_dm"),
                 fixedPanel(
+                  style = "z-index:9999",
                   uiOutput("floating_button_3"),
                   right = 30,
                   bottom = 30
@@ -170,6 +172,7 @@ body <- dashboardBody(
         tabItem(tabName = "tab4",
                 uiOutput("ui_run"),
                 fixedPanel(
+                  style = "z-index:9999",
                   uiOutput("floating_button_4"),
                   right = 30,
                   bottom = 30
@@ -180,6 +183,7 @@ body <- dashboardBody(
         tabItem(tabName = "tab5",
                 uiOutput("ui_vis")
                 ,fixedPanel(
+                  style = "z-index:9999",
                   uiOutput("floating_button_5"),
                   right = 30,
                   bottom = 30

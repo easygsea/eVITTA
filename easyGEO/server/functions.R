@@ -1,3 +1,33 @@
+# summarize gpl info when GSEMatrix = F
+summarize_gpl_F <- function(gse){
+  ids <- c()
+  out <- GPLList(gse) %>%
+    lapply(., function(x) {
+      metadata <- Meta(x)
+      id <- metadata[["geo_accession"]]
+      ids <- c(ids, id)
+      gsmlist <- Filter(function(gsm) {Meta(gsm)$platform_id==id},GSMList(gse))
+      samplen <- length(gsmlist)
+      query <- c("organism", "molecule", "strategy")
+      tempp <- Meta(gsmlist[[1]])
+      for (nn in query){
+        fn <- tempp[grep(nn, names(tempp))]
+        if (length(fn)>0){
+          assign(nn, paste(unique(fn[[1]]), collapse=", ")) # wrap in paste to ensure atomic
+        } else {
+          assign(nn, "")
+        }
+      }
+      type <- paste(Meta(gse)$type, collapse=", ") # wrap in paste to ensure atomic
+      rv$gpl_type <- c(rv$gpl_type, type)
+      rv$gpl_count <- c(rv$gpl_count, Meta(gsmlist[[1]])$channel_count)
+      rv$organism <- organism
+      c(ID=id, Organism=organism, Samples=samplen, Type=type, Molecule=molecule, Strategy=strategy)
+    })
+  
+  out
+}
+
 # -------------------------------------------------------------------- #
 #                       render datatable options                       #
 # -------------------------------------------------------------------- #
@@ -127,7 +157,7 @@ panel_null <- function(text = "Data available upon selection of a platform."){
 # note: this guards against cases where many characteristics dimensions are condensed in one string
 # e.g. "Gender: female, Age: Premenopausal, Tissue: Normal Breast"
 
-extract_char_list <- function(gse,
+extract_char_list <- function(#gse,
                               oneline_guard= T, # to guard against one-line characteristics
                               sep_guard = ", ", # delimiter of one-line characteristics
                               replace_empty=T, # whether or not to replace empty string as NA
@@ -135,13 +165,20 @@ extract_char_list <- function(gse,
 ){
   
   # tidy characteristics
-  char_list <- data.frame(t(data.frame(pData(phenoData(gse))) %>% dplyr::select(contains(keyword))))
+  char_list <- data.frame(t(data.frame(rv$pdata) %>% dplyr::select(contains(keyword)))) #pData(phenoData(gse))
+  colnames(char_list) <- rv$all_samples
+  
   if (replace_empty==T){
     char_list[char_list==""] <- NA
   }
+  
   if (oneline_guard==T){
-    char_list <- lapply(char_list, function(x){paste(x, collapse=sep_guard)}) # squeeze down to one dimension
-    char_list <- lapply(char_list, function(x){strsplit(x, sep_guard)[[1]]}) # restore dimensionality
+    if(rv$getgeo_mode){
+      char_list <- lapply(char_list, function(x){paste(x, collapse=sep_guard)}) # squeeze down to one dimension
+    }else{
+      char_list <- lapply(char_list, function(x){paste(unlist(x), collapse=sep_guard)}) # squeeze down to one dimension
+    }
+      char_list <- lapply(char_list, function(x){strsplit(x, sep_guard)[[1]]}) # restore dimensionality
   }
   
   char_list <- as.list(char_list)
@@ -611,6 +648,7 @@ init_demo <- function(){
   rv$gpl_tooltips <- readRDS(paste0(getwd(),"/rvs/gpl_tooltips.rds"))
   rv$text <- readRDS(paste0(getwd(),"/rvs/text.rds"))
   rv$matrix_ready <- readRDS(paste0(getwd(),"/rvs/matrix_ready.rds")) 
+  rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds")) 
   rv$demo <- "yes"
 }
 
@@ -642,7 +680,7 @@ init_demo_d <- function(){
   rv$gpl_tooltips <- NULL
   rv$text <- NULL
   rv$matrix_ready <- NULL
-  rv$demo <- NULL
+  rv$demo <- ""
 }
 
 init_choices <- function(){
@@ -730,4 +768,37 @@ confirm_and_jump <- function() {
   removeModal()
   updateTabItems(session, inputId = "menu1", selected = "tab1")
   updateRadioButtons(session, inputId = "selected_mode", selected = "manual")
+}
+
+# check the value of numericInput, if it is between minimum and maximum
+# parameters: input_id: input id; default: default value; integer check: would you like it to be integer or not
+check_numericInput <- function(input_id, default, minimum = 1, maximum = NULL, integer_check = TRUE){
+  n <- input[[input_id]]
+  req(!is.na(n))
+  if(is.null(maximum)){
+    if(integer_check == TRUE){
+      n <- floor(input[[input_id]]); if(n<minimum){n <- default}
+    } else {
+      n <- n; if(n<minimum){n <- default}
+    }
+  } else{
+    if(integer_check == TRUE){
+      n <- floor(input[[input_id]]); if(n<minimum || n>maximum){n <- default}
+    } else {
+      n <- n; if(n<minimum || n>maximum){n <- default}
+    }
+  }
+  updateNumericInput(
+    session,
+    input_id,
+    value = n
+  )
+}
+
+check_numericInput_na <- function(input_id, number_of_error, variable_name){
+  if(is.na(input[[input_id]])){
+    shinyalert(paste0("Please enter a valid value for ", variable_name))
+    number_of_error <- number_of_error + 1
+  }
+  return(number_of_error)
 }

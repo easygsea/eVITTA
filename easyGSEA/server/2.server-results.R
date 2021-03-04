@@ -3,25 +3,32 @@
 #=============================================================#
 # ------------ Overall bodyResults UI ------------------
 output$ui_bodyResults <- renderUI({
-    # saveRDS(rv$gene_lists, file = "rvs/gene_lists.rds")
+    if(rv$run_mode == "glist" && !is.null(rv$demo_save) && rv$demo_save == "yes"){
+        saveRDS(rv$fgseagg, file = "rvs2/fgseagg.rds")
+        saveRDS(rv$gmts, file = "rvs2/gmts.rds")
+        saveRDS(rv$dbs, file = "rvs2/dbs.rds")
+        saveRDS(rv$gmts_length, file = "rvs2/gmts_length.rds")
+        saveRDS(rv$gmt_cs_paths, file = "rvs2/gmt_cs_paths.rds")
+        saveRDS(rv$db_modal, file = "rvs2/db_modal.rds")
+        saveRDS(rv$gmt_cs, file = "rvs2/gmt_cs.rds")
+        saveRDS(rv$sd_high, file = "rvs2/sd_high.rds")
+        saveRDS(rv$gmin, file = "rvs2/gmin.rds")
+        saveRDS(rv$gmax, file = "rvs2/gmax.rds")
+        saveRDS(rv$gperm, file = "rvs2/gperm.rds")
+        saveRDS(rv$bar_pathway, file = "rvs2/bar_pathway.rds")
+        saveRDS(rv$bubble_pathway, file = "rvs2/bubble_pathway.rds")
+        saveRDS(rv$run_n, file = "rvs2/run_n.rds")
+    }
 
     if(is.null(rv$run) || rv$run != "success"){
         panel_null()
     }else{
         if(rv$plot_type=="bar" | rv$plot_type=="bubble"){
-            # if(rv$run_mode == "gsea"){
-            #     em_w <- "8em"
-            # }else{
-                em_w <- "11.5em"
-            # }
-        }else if(rv$plot_type=="word"){
-            # if(rv$run_mode == "gsea"){
-            #     em_w <- "4.5em"
-            # }else{
-                em_w <- "8em"
-            # }
-        }else{
+            em_w <- "15em"
+        }else if(rv$plot_type=="manhattan"){
             em_w <- "4.5em"
+        }else{
+            em_w <- "8em"
         }
         fluidRow(
             column(
@@ -86,6 +93,7 @@ output$ui_bodyResults <- renderUI({
                         },
                         # bsTooltip("gs_search_button",HTML(paste0("Click to search, select, and visualize gene set(s) of interest with a ",rv$plot_type," plot"))
                         #           ,placement = "bottom"),
+                        # # dropdown to adjust color tones
                         if(rv$plot_type=="bar" || rv$plot_type=="bubble" || rv$plot_type=="word"){
                             if(rv$plot_type=="bar" || rv$plot_type=="bubble"){
                                 em_w_col <- "8em"
@@ -106,6 +114,25 @@ output$ui_bodyResults <- renderUI({
                                     size = "xs",
                                     icon = icon("palette", class = "opt"),
                                     up = TRUE,width = "200px"
+                                )
+                            )
+                        },
+                        # # dropdown to adjust db name & id display
+                        if(rv$plot_type=="bar" || rv$plot_type=="bubble" || rv$plot_type=="volcano"){
+                            if(rv$plot_type=="bar" || rv$plot_type=="bubble"){
+                                em_w_t <- "11.5em"
+                            }else{
+                                em_w_t <- "4.5em"
+                            }
+                            div(id = "txt_div",
+                                align = "left",
+                                style = sprintf("position: absolute; left: %s; bottom: 1em;",em_w_t),
+                                dropdown(
+                                    tv_div()
+                                    ,
+                                    size = "xs",
+                                    icon = icon("tv", class = "opt"),
+                                    up = TRUE,width = "250px"
                                 )
                             )
                         },
@@ -172,6 +199,15 @@ observeEvent(input$up_color,{
 
 observeEvent(input$down_color,{
     rv$down_color <- input$down_color
+})
+
+# change db name & id displays
+observeEvent(input$db_name_y,{
+    rv$db_name_y <- input$db_name_y
+})
+
+observeEvent(input$db_id_y,{
+    rv$db_id_y <- input$db_id_y
 })
 
 # feedbacks on no significant enrichment
@@ -603,7 +639,11 @@ p_man <- reactive({
     data = rv$fgseagg
     pq = rv$volcano_pq
     cutoff = rv$volcano_cutoff
-
+    
+    # add db column
+    tmp <- str_split(data$pathway, "_", n=2, simplify = T)
+    data <- data %>% tibble::add_column(db = tmp[,1], .before = "pathway")
+    
     # determine colors
     color_n = length(dbs)
     colors = c(addalpha(brewer.pal(n = color_n, name = 'Set2')),brewer.pal(n = color_n, name = 'Set2'))
@@ -743,6 +783,11 @@ observeEvent(input$bar_confirm,{
     if(is.null(input$pathway_to_plot_bar)==T){
         shinyalert("Please select at least 1 database to plot.")
     }else{
+        rv$error_par <- 0
+        rv$error_par <- check_numericInput_na("n_up_bar", rv$error_par, "# of top up")
+        rv$error_par <- check_numericInput_na("n_down_bar", rv$error_par, "# of top down")
+        #print(rv$error_par)
+        req(rv$error_par == 0)
         rv$bar_pathway = input$pathway_to_plot_bar
         rv$bar_pq = input$p_or_q_bar
         rv$bar_p_cutoff = input$cutoff_bar_p
@@ -751,7 +796,12 @@ observeEvent(input$bar_confirm,{
         rv$bar_down = input$n_down_bar
         
         rv$bar_abb = input$abb_bar
-        if(rv$bar_abb == "y"){if(is.null(input$abb_bar_n)){rv$bar_abb_n = 40}else{rv$bar_abb_n = input$abb_bar_n}}
+        if(rv$bar_abb == "y"){if(is.null(input$abb_bar_n)){rv$bar_abb_n = 40}
+            else{
+                rv$error_par <- check_numericInput_na("abb_bar_n", rv$error_par, "String Length")
+                req(rv$error_par == 0)
+                rv$bar_abb_n = input$abb_bar_n}
+            }
         
         rv$bar_mode <- "cutoff"
     }
@@ -798,6 +848,12 @@ observeEvent(input$bubble_confirm,{
     if(is.null(input$pathway_to_plot_bubble)==T){
         shinyalert("Please select at least 1 database to plot.")
     }else{
+        # check the inputs are not NAs
+        rv$error_par <- 0
+        rv$error_par <- check_numericInput_na("n_up_bubble", rv$error_par, "# of top up")
+        rv$error_par <- check_numericInput_na("n_down_bubble", rv$error_par, "# of top down")
+        #print(rv$error_par)
+        req(rv$error_par == 0)
         rv$bar_pathway = input$pathway_to_plot_bubble
         rv$bar_pq = input$p_or_q_bubble
         rv$bar_q_cutoff = input$cutoff_q_bubble
@@ -806,7 +862,11 @@ observeEvent(input$bubble_confirm,{
         rv$bar_down = input$n_down_bubble
         
         rv$bar_abb = input$abb_bubble
-        if(rv$bar_abb == "y"){if(is.null(input$abb_bubble_n)){rv$bar_abb_n = 40}else{rv$bar_abb_n = input$abb_bubble_n}}
+        if(rv$bar_abb == "y"){if(is.null(input$abb_bubble_n)){rv$bar_abb_n = 40}
+            else{
+                rv$error_par <- check_numericInput_na("abb_bubble_n", rv$error_par, "String Length")
+                req(rv$error_par == 0)
+                rv$bar_abb_n = input$abb_bubble_n}}
         
         rv$bubble_zmin = input$bubble_slider[1]
         rv$bubble_zmax = input$bubble_slider[2]
@@ -945,6 +1005,11 @@ observeEvent(input$word_confirm,{
     if(is.null(input$pathway_to_plot_word)==T){
         shinyalert("Please select at least 1 database to plot.")
     }else{
+        # check for input$n_word to confirm it is not NA
+        rv$error_par <- 0
+        rv$error_par <- check_numericInput_na("n_word", rv$error_par, "# of top words")
+        req(rv$error_par == 0)
+        
         rv$bar_pathway = input$pathway_to_plot_word
         rv$bar_p_cutoff = input$cutoff_word_p
         rv$bar_q_cutoff = input$cutoff_word_q
@@ -1109,19 +1174,19 @@ output$ui_volcano_cutoff <- renderUI({
 output$gs_stats_tl <- DT::renderDataTable({
     # req(input$selected_es_term != "")
     req(rv$es_term)
-    df = rv$fgseagg[which((rv$fgseagg)$pathway == rv$es_term)]
+    df = rv$fgseagg[which((rv$fgseagg)$pathway == rv$es_term)][1,]
 
     df = df %>% mutate_if(is.numeric, function(x) round(x, digits=3))
 
     df = t(df)
-    r_names <- names(df[-1,])
-    c_names = df[[2]]
-
-    df = tibble(df)
-    # # remove db cat
-    df = df[-1,]
-    rownames(df) = r_names
-    colnames(df) = c_names
+    # r_names <- names(df[-1,])
+    # c_names = df[[2]]
+    # 
+    # df = tibble(df)
+    # # # remove db cat
+    # df = df[-1,]
+    # rownames(df) = r_names
+    colnames(df) = df[[1]]
 
 
     DT::datatable(df,
@@ -1657,8 +1722,8 @@ observeEvent(input$confirm_kegg_plot,{
 
                     # KEGG gene set name & id
                     term = rv$es_term
-                    kegg_id = unlist(strsplit(term,"%"))[[2]]
-                    # print(str(kegg_id))
+                    kegg_id = unlist(strsplit(term,"%"))
+                    kegg_id = kegg_id[length(kegg_id)]
 
 
 
@@ -2113,3 +2178,26 @@ observeEvent(input$confirm_kegg_plot,{
                
             )
     }
+    
+observeEvent(input$abb_bar_n, {
+    check_numericInput("abb_bar_n", 40)
+})
+observeEvent(input$n_word, {
+    check_numericInput("n_word", 10)
+})
+observeEvent(input$n_up_bar, {
+    check_numericInput("n_up_bar", 10)
+})
+observeEvent(input$n_down_bar, {
+    check_numericInput("n_down_bar", 10)
+})
+observeEvent(input$abb_bubble_n, {
+    check_numericInput("abb_bubble_n", 40)
+})
+observeEvent(input$n_up_bubble, {
+    check_numericInput("n_up_bubble", 10)
+})
+observeEvent(input$n_down_bubble, {
+    check_numericInput("n_down_bubble", 10)
+})
+

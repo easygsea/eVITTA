@@ -110,6 +110,7 @@ observeEvent(input$ins_applytorv, {
   }
   # print(criteria)
   rv$ins_criteria <- criteria
+  refresh_vis_ui()
 })
 
 
@@ -805,14 +806,15 @@ output$ins_main_panels <- renderUI({
     )
   } else {
     div(
-      fluidRow(
+      fluidRow(style = "position:relative;z-index:9999",
         div(style="height: 3.5em;",
             column(6,
                    HTML("<span style='font-size: 160%;margin-left: 0.5em;'>Select Intersection</span>"),
                    
             ),
             column(6,align= "right",
-                   div(id="ins_filters_here"),
+                   div(
+                       id="ins_filters_here"),
                    
             )
         )

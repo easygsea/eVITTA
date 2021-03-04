@@ -603,6 +603,9 @@ observeEvent(input$search_geo, {
   rv$deg <- NULL
   rv$identifiers_df <- NULL
   rv$identifiers <- NULL
+  
+  rv$getgeo_mode <- T; rv$gpl_type = list(); rv$gpl_count = list(); rv$gsmlist = list()
+  rv$expr_nrow <- 0; rv$organism <- NULL
 
   withProgress(message = 'Getting data. Please wait a minute...', value = 1, {
 
@@ -670,36 +673,49 @@ observeEvent(input$search_geo, {
         ))
       }
       else {
-        alink <- paste0("https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=",rv$geo_accession)
-        # DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
-        DisplayText <- paste0("Unable to parse ",rv$geo_accession," data. Error message:<br>"
-                              , ErrorMessage
-                              , "<br><br>GEO sequence submission procedures are designed to encourage provision of <a target='_blank' href='http://fged.org/projects/minseqe/'>MINSEQE</a> elements."
-                              , " This dataset was likely not meeting the standards."
-                              , "<br><br>Please download the study's gene expression data matrix and design matrix from <a target='_blank' href='",alink,"'><b>",alink,"</b></a>, process them into desirable formats ("
-                              ,"<a href='https://tau.cmmt.ubc.ca/bu/data_matrix.png' target='_blank'>data matrix</a> and <a href='https://tau.cmmt.ubc.ca/bu/design_matrix.png' target='_blank'>design matrix</a>"
-                              ,"), and use <b>Manual uploads</b> mode to continue."
-                              )
-        showModal(modalDialog(
-          title = "Data parsing error",
-          HTML(DisplayText),
-          size = "l",
-          easyClose = TRUE
-          ,footer = confirm_and_reset_buttons("parsing_error_confirm","parsing_error_reset")
-        ))
+        # switch to matrix == F
+        rv$gse_all <- try(getGEO(input$geo_accession, GSEMatrix=F))
+        
+        if(inherits(rv$gse_all, "try-error")) {
+          alink <- paste0("https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=",rv$geo_accession)
+          # DisplayText <- paste0("Failed to get data from server. Please double check your query and try again", "<br>", ErrorMessage)
+          DisplayText <- paste0("Unable to parse ",rv$geo_accession," data. Error message:<br>"
+                                , ErrorMessage
+                                , "<br><br>GEO sequence submission procedures are designed to encourage provision of <a target='_blank' href='http://fged.org/projects/minseqe/'>MINSEQE</a> elements."
+                                , " This dataset was likely not meeting the standards."
+                                , "<br><br>Please download the study's gene expression data matrix and design matrix from <a target='_blank' href='",alink,"'><b>",alink,"</b></a>, process them into desirable formats ("
+                                ,"<a href='https://tau.cmmt.ubc.ca/bu/data_matrix.png' target='_blank'>data matrix</a> and <a href='https://tau.cmmt.ubc.ca/bu/design_matrix.png' target='_blank'>design matrix</a>"
+                                ,"), and use <b>Manual uploads</b> mode to continue."
+                                )
+          showModal(modalDialog(
+            title = "Data parsing error",
+            HTML(DisplayText),
+            size = "l",
+            easyClose = TRUE
+            ,footer = confirm_and_reset_buttons("parsing_error_confirm","parsing_error_reset")
+          ))
+        }else{
+          rv$getgeo_mode <- F
+        }
       }
     }
 
     req(!inherits(rv$gse_all, "try-error"))
+    
+    if(rv$getgeo_mode){
+      rv$platforms <- tabulate(rv$gse_all, annotation)
+      rv$gpl_summary <- summarize_gpl(rv$gse_all)
+    }else{
+      rv$platforms <- names(GPLList(rv$gse_all))
+      rv$gpl_summary <- summarize_gpl_F(rv$gse_all)
+    }
 
-    rv$platforms <- tabulate(rv$gse_all, annotation)
-    rv$gpl_summary <- summarize_gpl(rv$gse_all)
     # initialize gpl selection choices
     choices <- lapply(rv$gpl_summary, function(x){
       HTML(paste0(x[["ID"]],": ", x[["Organism"]], " (", x[["Samples"]]," samples)" ))
     })
+    
     rv$gpl_choices <- invert_vector(choices)
-
   })
 
 })
@@ -763,22 +779,28 @@ study_type <- reactive({
   req(is.null(rv$gse_all)==F)
   req(length(rv$platforms)>0)
   req(is.null(input$plat)==F)
+  
+  if(rv$getgeo_mode){
+    gse_temp <- rv$gse_all[[match(input$plat, rv$platforms)]]
+    # print(gse_temp)
+    
+    req(is.null(gse_temp)==F)
+    
+    # get channel count
+    gsm_meta_temp <- find_repeating_values(pData(phenoData(gse_temp)))
+    channel_count <- gsm_meta_temp$channel_count
+    
+    # get study type
+    gse_meta_temp <- notes(experimentData(gse_temp))
+    type <- gse_meta_temp$type
+    return(list("type" = type, "channel_count" = channel_count))
+  }else{
+    return(list("type" = rv$gpl_type[[match(input$plat, rv$platforms)]], "channel_count" = rv$gpl_count[[match(input$plat, rv$platforms)]]))
+  }
 
 
-  gse_temp <- rv$gse_all[[match(input$plat, rv$platforms) ]]
-  # print(gse_temp)
+  
 
-  req(is.null(gse_temp)==F)
-
-  # get channel count
-  gsm_meta_temp <- find_repeating_values(pData(phenoData(gse_temp)))
-  channel_count <- gsm_meta_temp$channel_count
-
-  # get study type
-  gse_meta_temp <- notes(experimentData(gse_temp))
-  type <- gse_meta_temp$type
-
-  return(list("type" = type, "channel_count" = channel_count))
 })
 
 output$study_type_feedback <- renderUI({
@@ -799,6 +821,8 @@ output$study_type_feedback <- renderUI({
     )
     box_color = "yellow"
   }
+  
+  if(study_type == "Expression profiling by array"){rv$microarray <- "yes"}else{rv$microarray <- "no"}
 
   # making sure the channel_count is not null to run the function
   if(is.null(channel_count) == F){
@@ -809,8 +833,6 @@ output$study_type_feedback <- renderUI({
                                   Only data in the first channel will be read.")
       )
       box_color = "yellow"
-    }else{
-      rv$microarray = "yes"
     }
   }
   msg <- paste(msgs, collapse="<br>")
@@ -839,32 +861,75 @@ observeEvent(input$geo_platform, {
 
   plat <- isolate(input$plat)
   rv$plat_id <- match(plat, rv$platforms)
-  
+  rv$platform <- plat
   withProgress(message = 'Loading data...', value = 1, {
-  
-    # initialize the count matrix (even if it's empty) with first row = Name
-    exprs <- exprs(gse())
-    if (nrow(exprs) >0){ # put gene names onto first column
+    if(rv$getgeo_mode){
+      # initialize the count matrix (even if it's empty) with first row = Name
+      exprs <- exprs(gse())
+    }else{
+      rv$gsmlist <- Filter(function(gsm) {Meta(gsm)$platform_id==plat},GSMList(rv$gse_all))
+      # get the probeset ordering
+      gpllist <- GPLList(rv$gse_all)
+      gpl <- gpllist[[names(gpllist)==plat]]
+      probesets <- Table(gpl)$ID
+      # make the data matrix from the VALUE columns from each GSM
+      # being careful to match the order of the probesets in the platform
+      # with those in the GSMs
+      exprs <- do.call('cbind',lapply(rv$gsmlist,function(x) {
+        tab <- Table(x)
+        mymatch <- match(probesets,tab$ID_REF)
+        return(tab$VALUE[mymatch])
+      }))
+      
+      if(!is.null(exprs)){
+        if (nrow(exprs) >0){
+          exprs <- apply(exprs,2,function(x) {as.numeric(as.character(x))})
+          rownames(exprs) <- probesets
+          colnames(exprs) <- names(rv$gsmlist)
+        }
+      }else{
+        gsms <- names(rv$gsmlist)
+        # initiate an empty df
+        exprs <- data.frame(matrix(NA, nrow = 0, ncol = length(gsms),
+                                   dimnames=list(c(), gsms)),
+                              stringsAsFactors=F)
+      }
+    }
+    
+    # nrow of exprs
+    rv$expr_nrow <- nrow(exprs)
+    
+    if (rv$expr_nrow >0){ # put gene names onto first column
       dmdf <- cbind(Name = rownames(exprs), exprs)
     } else {
       dmdf <- cbind(Name = character(0), exprs)
     }
+    
     rownames(dmdf) <- c() # remove rownames
     rv$dmdf <- dmdf
     rv$dmdf_o <- dmdf
-  
+
     incProgress(0.5)
-  
-    # initialize samples list
-    rv$all_samples <- sampleNames(gse()) # this one stays the same
-    rv$samples <- sampleNames(gse()) # this one will change
-  
-    # initialize pdata
-    rv$pdata <- pData(phenoData(gse()))
-  
+    
+    if(rv$getgeo_mode){
+      # initialize samples list
+      rv$all_samples <- sampleNames(gse()) # this one stays the same
+      rv$samples <- sampleNames(gse()) # this one will change
+      
+      # initialize pdata
+      rv$pdata <- pData(phenoData(gse()))
+    }else{
+      rv$all_samples <- rv$samples <- names(rv$gsmlist)
+      rv$pdata <- rbindlist(lapply(rv$gsmlist, function(x) as.data.frame(t(Meta(x)), stringsAsFactors=FALSE)), fill=T) %>%
+        as.data.frame()
+      rownames(rv$pdata) <- names(rv$gsmlist)
+    }
+    
+    
     # initialize fddf
     rv$fddf <- design_df() # initially unfiltered, will update when filter
-    
+
+        
     incProgress(0.2)
     
     # initialize gene identifiers
@@ -872,14 +937,19 @@ observeEvent(input$geo_platform, {
       # GPL probes' info
       # gset <- rv$gse_all[[match(plat, rv$platforms)]]
       
-      df <- pData(featureData(gse())) 
+      # currently only support GSEMatrix == T
+      if(rv$getgeo_mode){
+        df <- pData(featureData(gse()))
+      }else{
+        df <- Table(gpl)
+      }
+
       df <- df %>%
         dplyr::select(any_of(c(matches(accepted_gene_identifiers, ignore.case = T),ends_with("_id", ignore.case = T))))
   
       
       rv$identifiers <- colnames(df)
       rv$identifiers_df <- df
-      
     }
     incProgress(0.3)
   

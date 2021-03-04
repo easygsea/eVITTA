@@ -6,7 +6,7 @@ tabulate <- function(object, FUN){
 
 # find columns that have one value and return named list of those values
 find_repeating_values <- function(df){
-  df <- df[vapply(df, function(x) length(unique(x)) == 1, logical(1L))]
+  df <- df[vapply(df, function(x) length(unique(x)) == 1, logical(1L))] %>% mutate_all(unlist)
   as.list(df[1,])
 }
 
@@ -18,7 +18,7 @@ find_repeating_values <- function(df){
 
 named_list_to_df <- function(list, colnames){
   df <- data.frame(cbind(as.character(names(list)),
-                         as.character(unname(unlist(list)))
+                         as.character(list)
   ))
   colnames(df) <- colnames
   df
@@ -130,12 +130,17 @@ translate_sample_names <- function(original_vector, dict_df, output_type){
   
   # translate according to dict df. if not found, preserve the original value
   output_vector <- unlist(lapply(original_vector, function(x){
-    output_value <- dict_df[dict_df[[input_coln]]==x, output_type]
-    if (identical(output_value, character(0))) {
-      return (x)
-    } else {
-      return (output_value)
+    output_value <- dict_df[which(dict_df[[input_coln]]==x), ] %>% dplyr::select(all_of(output_type))
+    if(nrow(output_value) < 1){
+      return ("Name")
+    }else{
+      if (identical(output_value, character(0))) {
+        return (x)
+      } else {
+        return (output_value)
+      }
     }
+    
   }))
   output_vector
 }
@@ -157,6 +162,7 @@ summarize_gpl <- function(gse){
       fn <- tempp[grep(nn, names(tempp))]
       if (length(fn)>0){
         assign(nn, paste(unique(fn[[1]]), collapse=", ")) # wrap in paste to ensure atomic
+        print(paste(unique(fn[[1]]), collapse=", "))
       } else {
         assign(nn, "")
       }

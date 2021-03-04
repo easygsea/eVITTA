@@ -1,6 +1,178 @@
     #=======================================================================#
+    ####----------------- Functions: filtering and UI -------------------####
+    #=======================================================================#
+    # remove db names and IDs in gsea table
+    remove_db_name <- function(df){
+      df$pathway <- gsub("^.*?_","",df$pathway_o)
+      return(df)
+    }
+    
+    remove_db_id <- function(df){
+      df$pathway <- gsub("%[^%]*$","",df$pathway_o)
+      return(df)
+    }
+    
+    df_tags_op <- function(df){
+      # when prompted, remove db name and id
+      if(!rv$db_name_y & !rv$db_id_y){
+        df <- remove_db_name(df)
+        df$pathway <- gsub("?%.*$","",df$pathway)
+        df <- df %>%
+          dplyr::distinct(pathway,.keep_all=T)
+      }else if(!rv$db_name_y){
+        df <- remove_db_name(df) %>%
+          dplyr::distinct(pathway,.keep_all=T)
+      }else if(!rv$db_id_y){
+        df <- remove_db_id(df) %>%
+          dplyr::distinct(pathway,.keep_all=T)
+      }
+
+      return(df)
+    }
+
+    check_tags <- function(vector){
+      # observe if any entry is empty
+      error_0 <- 0
+      # observe if repetitive name use in the RVs
+      error_d <- 0
+      # observe if underscore use in entries
+      error_u <- 0
+      # check if duplicate names are entered
+      used <- c()
+      # already-used names
+      used_d <- lapply(str_split(names(rv$gmt_cs), ":", n=2), function(x) x[1]) 
+      
+      for(x in vector){
+        i <- match(x,vector) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        
+        if(nchar(input[[id]])==0){
+          error_0 <- error_0 + 1
+        }else{
+          used <- c(used, input[[id]])
+          if(input[[id]] %in% used_d){
+            error_d <- error_d + 1
+          }
+          if(grepl("_", input[[id]])){
+            error_u <- error_u + 1
+          }
+        }
+      }
+      
+      # render an error msg if empty entry
+      if(error_0 > 0){
+        shinyalert("Please enter an abbreviation for each uploaded GMT file.")
+      }
+      # proceed only if a name is assigned to each GMT
+      req(error_0 == 0)
+      
+      # render an error msg if underscore in entry
+      if(error_u > 0){
+        shinyalert("Please avoid using underscores (\"_\").")
+      }
+      # proceed only if no underscore
+      req(error_u == 0)
+      
+      # observe if repetitive name use in the inputs
+      error_f <- 0
+      
+      if(T %in% duplicated(used)){
+        error_f <- error_f + 1
+        shinyalert("Please enter a unique abbreviation for each uploaded GMT file.")
+      }
+      
+      # proceed only if a name is assigned to each GMT
+      req(error_f == 0)
+      
+      
+      # render alert if same names identified
+      if(error_d > 0){
+        shinyalert("Abbreviations(s) highlighted in orange have been used in a previous upload. Please enter a unique abbreviation for each GMT.")
+      }
+      
+      # proceed only if a name is assigned to each GMT
+      req(error_d == 0)
+      
+      ids <- sapply(vector, function(x){
+        i <- match(x,vector) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        return(input[[id]])
+      })
+      
+      return(ids)
+    }
+    
+    highlight_name_boxes <- function(vector){
+      htag <- c()
+      
+      # observe if duplicate names entered
+      used <- sapply(vector, function(x){
+        i <- match(x,vector) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        input[[id]]
+      })
+      
+      # observe if repetitive name use in the RVs
+      used_d <- lapply(str_split(names(rv$gmt_cs), ":", n=2), function(x) x[1]) 
+      
+      # boxes' parameters
+      shadow_w <- paste0("0 0 ",shadow_width)
+      border_w <- line_width
+      cl1 <- ""; cl2 <- ""
+      
+      for(x in vector){
+        i <- match(x,vector) + length(rv$gmt_cs)
+        id <- paste0("GMT",i)
+        
+        req(is.null(input[[id]])==F)
+        
+        if(sum(used %in% input[[id]])>1){
+          cl1 <- cl2 <- "salmon"
+        }else if(input[[id]] %in% used_d){
+          cl1 <- cl2 <- "orange"
+        }else if(nchar(input[[id]])==0){
+          cl1 <- cl2 <-"navy"
+        }else if(grepl("_",input[[id]])){
+          cl1 <- cl2 <- "orchid"
+        }else{
+          cl1 <- "none"; cl2 <- "lightgrey"; shadow_w <- ""
+        }
+        
+        # generate the styles
+        ss <- sprintf("{box-shadow:%s %s; border:%s solid %s;}",shadow_w,cl1,border_w,cl2)
+        htag <- c(htag, paste0("#",id,ss))
+      }
+      
+      tags$head(tags$style(HTML(paste0(htag, collapse = " "))))
+    }
+    
+    #=======================================================================#
     ####----------------------- Functions: Calculation -------------------####
     #=======================================================================#
+    # automatically add an increment onto a new entry if already detected in an vector/list
+    add_increment <- function(entry, vector){
+      if(entry %in% vector){
+        # search and retrieve matched patterns in the vector
+        pattern = paste0("^",entry,"\\(([[:digit:]])+\\)$")
+        entry2 <- grepl(pattern,vector)
+        
+        # if increment(s) added before, extract the last number and +1
+        if(T %in% entry2){
+          entry3 <- vector[entry2]
+          if(length(entry3)>1){entry3 <- entry3[length(entry3)]}
+          
+          n <- gsub(pattern, "\\1", entry3)
+          n <- as.numeric(n) + 1
+          
+          # increment
+          entry <- paste0(entry,"(",n,")")
+        }else{
+          entry <- paste0(entry,"(1)")
+        }
+      }
+      return(entry)
+    }
+    
     # collapse the leadingedge column
     collapse_last_col <- function(df, sep=";"){
       df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = sep))
@@ -48,11 +220,15 @@
     
     combine_df <- function(df=rv$fgseagg,db_selected=unlist(gs_selected())){
         df <- df %>% 
-            dplyr::filter(db %in% db_selected) %>% 
-            dplyr::select(-db) %>% 
-            dplyr::arrange(padj)
+          dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(db_selected, collapse = "|"),")_"))) %>% 
+          dplyr::arrange(padj)
+        
+        # when prompted, remove db name and id
+        df <- df_tags_op(df)
         
         df[[ncol(df)]] = lapply(df[[ncol(df)]], function(x) paste(x,collapse = ";"))
+        
+        df <- df %>% dplyr::select(-pathway_o)
         
         return(df)
     }
@@ -97,20 +273,15 @@
       )
       
     }
-    enrichmentplot <- function() {
-        ranks = rv$rnkgg
-        names(ranks) = toupper(names(ranks))
-        gmt = rv$gmts[[rv$es_term]] %>% toupper(.)
-        plotEnrichment(gmt,ranks) + labs(title = rv$es_term)
-    }
-    
-    filter_plot_df <- function(pathways, up, down, cutoff_p, cutoff_q){
-      df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
+
+    filter_plot_df <- function(pathways, up, down, cutoff_p, cutoff_q, tags_op = T){
+      df <- rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
       
-      df = df %>% 
-        dplyr::filter(db %in% pathways) %>% 
+      df <- df %>% 
+        dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+        dplyr::distinct(.,pathway,.keep_all = TRUE) %>%        
         mutate_if(is.numeric,  ~replace(., . == 0, p_min)) %>%
-        dplyr::arrange(padj)
+        dplyr::arrange(desc(padj))
       
       if(cutoff_p < 1){
         df = df %>% dplyr::filter(pval < cutoff_p)
@@ -147,8 +318,24 @@
               dplyr::slice_min(padj,n=up)
           }
         }
+        
+        # when prompted, remove db name and id
+        if(tags_op){
+          df <- df_tags_op(df)
+        }
+        
         return(df)
       }
+    }
+    
+    # small function to abbreviate y axis labels
+    abbr_y <- function(df,abby,abbn){
+      if(abby == "y"){
+        y_pathway = lapply(df$pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
+      }else{
+        y_pathway <- df$pathway
+      }
+      return(y_pathway)
     }
     
     bar_plot <- function(pathways=rv$bar_pathway,up=rv$bar_up,down=rv$bar_down,pq=rv$bar_pq,cutoff_p=rv$bar_p_cutoff,cutoff_q=rv$bar_q_cutoff,abby=rv$bar_abb,abbn=rv$bar_abb_n){
@@ -172,26 +359,23 @@
             rv$bar_error <- "l"
             return(NULL)
           }else{
+            rv$bar_pathway_list <- df$pathway_o
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
-            rv$bar_pathway_list = df[["pathway"]]
-            
-            # get rid of db id
-            y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
+            # # get rid of db id
+            # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
             
             # abbreviate gene set names on y axis if too long
-            if(abby == "y"){
-              y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
-            }
+            y_pathway <- abbr_y(df,abby,abbn)
             
             fig <- df %>% 
-              ggplot(aes(x=ES, y=factor(pathway, levels=pathway), fill=-log10(df[[pq]])*sign(ES),
+              ggplot(aes(x=ES, y=factor(pathway, levels=pathway), fill=-log10(.data[[pq]])*sign(ES),
                          text=paste0(
-                           "<b>",df[["pathway"]],"</b>\n",
-                           "ES=",signif(df[["ES"]],digits=3),"; ",
-                           "P=",signif(df[["pval"]],digits=3),"; ",
-                           "P.adj=",signif(df[["padj"]],digits=3),"\n",
-                           tail(colnames(df),n=1)," (",size_g,"/",df[["size"]],"): \n",addlinebreaks(df[[ncol(df)]])
+                           "<b>",.data[["pathway"]],"</b>\n",
+                           "ES=",signif(.data[["ES"]],digits=3),"; ",
+                           "P=",signif(.data[["pval"]],digits=3),"; ",
+                           "P.adj=",signif(.data[["padj"]],digits=3),"\n",
+                           tail(colnames(df),n=1)," (",size_g,"/",.data[["size"]],"): \n",addlinebreaks(df[[ncol(df)]])
                            
                          ))) +
               geom_bar(stat="identity", width = 0.8) +
@@ -240,16 +424,15 @@
             rv$bar_error <- "l"
             return(NULL)
           }else{
-              
-                rv$bubble_pathway_list = df[["pathway"]]
-                
-                # get rid of db id
-                y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
-                
-                # abbreviate gene set names on y axis if too long
-                if(abby == "y"){
-                    y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
-                }
+            rv$bubble_pathway_list <- df$pathway_o
+            size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
+            
+            # # get rid of db id
+            # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
+            
+            # abbreviate gene set names on y axis if too long
+            y_pathway <- abbr_y(df,abby,abbn)
+            
                 size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
 
                 # values = size_g
@@ -300,14 +483,14 @@
             return(NULL)
         }else{
             df = rv$fgseagg %>% 
-                dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, p_min))
+              dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+              mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
             # temporarily save pathway order into rv
-            rv$volcano_pathway_list = df$pathway
-            
+            rv$volcano_pathway_list = df$pathway_o
+
             fig <- df %>% 
                 ggplot(aes(x=ES, y=-log10(df[[pq]]), color=-log10(df[[pq]])*sign(ES),
                            text=paste0(
@@ -344,15 +527,15 @@
             return(NULL)
         }else{
             df = rv$fgseagg %>% 
-                dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, p_min))
+              dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+              mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
             df = df[order(df[[pq]]),]
             
             size_g = unlist(lapply(df[[ncol(df)]], function(x) length(x)))
             
             # temporarily save pathway order into rv
-            rv$volcano_pathway_list = df$pathway
+            rv$volcano_pathway_list = df$pathway_o
             
             colors = rep("grey",nrow(df))
             # if(cutoff < 1){
@@ -393,10 +576,12 @@
             return(NULL)
         }else{
             df = rv$fgseagg %>% 
-                dplyr::filter(db %in% pathways) %>% 
-                mutate_if(is.numeric,  ~replace(., . == 0, p_min))
+              dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>%
+              mutate_if(is.numeric,  ~replace(., . == 0, p_min))
             
-            y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
+            # get rid of db id
+            df <- df_tags_op(df)
+            y_pathway = df$pathway
             
             # threshold by p & q cutoffs
             if(cutoff < 1){
@@ -460,10 +645,10 @@
       if(is.null(pathways)==T){
         return(NULL)
       }else{
-        df = rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
+        df <- rv$fgseagg %>% dplyr::filter(!(is.na(pval)))
         
-        df = df %>% 
-          dplyr::filter(db %in% pathways) %>% 
+        df <- df %>% 
+          dplyr::filter(str_detect(pathway_o, paste0("^(",paste0(pathways, collapse = "|"),")_"))) %>% 
           mutate_if(is.numeric,  ~replace(., . == 0, p_min))
         
         if(cutoff_p < 1){
@@ -476,12 +661,10 @@
         if(is.null(df)==T || nrow(df)<1){
           return(NULL)
         }else{
-          # transform df to tibble
+          # transform df to tibble and remove db prefices
           data <- df %>% 
             as_tibble() %>%
-            dplyr::select(-db) %>%
-            dplyr::arrange(padj) %>%
-            mutate_if(is.numeric, function(x) round(x, digits=3))
+            remove_db_name(.)
           
           if(rv$run_mode == "glist"){
             # create data for word freq count plots
@@ -489,11 +672,7 @@
               dplyr::mutate(linenumber = row_number(),text = pathway) %>%
               dplyr::select(text,linenumber)
             
-            data$text <- lapply(data$text,function(x) strsplit(x,"%")[[1]][1]) %>%
-              lapply(.,function(x){
-                if(grepl("_",x))
-                  regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]
-                }) %>%
+            data$text <- lapply(data$text,function(x) strsplit(x, "%(?=[^%]+$)", perl=TRUE)[[1]][1]) %>%
               lapply(., function(x) gsub("_"," ",x)) %>%
               unlist(.)
             
@@ -572,8 +751,7 @@
               if(nrow(i0) < 1){next}
               i = i0
 
-              i$text <- lapply(i$text,function(x) strsplit(x,"%")[[1]][1]) %>%
-                lapply(.,function(x) regmatches(x, regexpr("_", x), invert = TRUE)[[1]][2]) %>%
+              i$text <- lapply(i$text,function(x) strsplit(x, "%(?=[^%]+$)", perl=TRUE)[[1]][1]) %>%
                 lapply(., function(x) gsub("_"," ",x)) %>%
                 unlist(.)
               
@@ -665,8 +843,7 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) %>%
-            dplyr::arrange(desc(.[[pq]]))
+          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) #%>% dplyr::arrange(desc(pval))
           
           rv$bar_tl <- df
           
@@ -676,16 +853,14 @@
                 
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
-                
-                rv$bar_pathway_list = df[["pathway"]]
-                
-                # get rid of db id
-                y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
+
+                rv$bar_pathway_list <- df$pathway_o
+
+                # # get rid of db id
+                # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
                 
                 # abbreviate gene set names on y axis if too long
-                if(abby == "y"){
-                    y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
-                }
+                y_pathway <- abbr_y(df,abby,abbn)
                 
                 fig <- df %>% 
                     ggplot(aes(x=-log10(df[[pq]]), y=factor(pathway, levels=pathway), fill=-log10(df[[pq]]),
@@ -734,16 +909,14 @@
               
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
-                
-                rv$bubble_pathway_list = df[["pathway"]]
-                
-                # get rid of db id
-                y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
-                
-                # abbreviate gene set names on y axis if too long
-                if(abby == "y"){
-                    y_pathway = lapply(y_pathway, function(x){if(nchar(x)<abbn){return(x)}else{return(paste0(substr(x,0,abbn),"..."))}})
-                }
+
+              rv$bubble_pathway_list <- df$pathway_o
+              
+              # # get rid of db id
+              # y_pathway = str_split(df$pathway, "%(?=[^%]+$)", simplify = T)[,1]
+              
+              # abbreviate gene set names on y axis if too long
+              y_pathway <- abbr_y(df,abby,abbn)
                 
 
                 values = df$overlap
@@ -792,13 +965,31 @@
     
     
     # enrichment plots ------------------
+    enrichmentplot <- function() {
+      ranks = rv$rnkgg
+      names(ranks) = toupper(names(ranks))
+      gmt = rv$gmts[[rv$es_term]]
+      # term <- str_split(rv$es_term,"_",n=2)[[1]][2]
+      # when prompted, remove db name and id
+      if(!rv$db_name_y & !rv$db_id_y){
+        term <- gsub("?%.*$","",rv$es_term) %>% gsub("^.*?_","",.)
+      }else if(!rv$db_name_y){
+        term <- gsub("^.*?_","",rv$es_term)
+      }else if(!rv$db_id_y){
+        term <- gsub("?%.*$","",rv$es_term)
+      }else{
+        term <- rv$es_term
+      }
+      plotEnrichment(gmt,ranks) + labs(title = term)
+    }
+    
     density_plot <- function(term=rv$es_term){
         if(is.null(term)){
             return(NULL)
         }else{
             ranks <- rv$rnkgg
             names(ranks) = toupper(names(ranks))
-            x <- toupper(rv$gmts[term][[1]])
+            x <- rv$gmts[[term]]
             ranks2 <- ranks[x]
             ranks2 <- ranks2[!is.na(ranks2)]
             x <- rv$fgseagg[rv$fgseagg$pathway == term]$leadingEdge[[1]]
@@ -944,21 +1135,19 @@
     # plot vis network
     
     vis <- function(){
-        print(Sys.time())
-        
         # req(is.null(rv$vis_status) == T)
         rv$vis = NULL
         rv$vis_status = NULL
         # get df
         # df = dfNEL()
-        df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p,rv$vis_q)
-        
+        df <- filter_plot_df(rv$vis_pathway, NULL, NULL, rv$vis_p, rv$vis_q, tags_op=T)
+
         # print(nrow(df))
         if(is.null(df) || nrow(df)<1){
             rv$vis_status = "failed"
             return(NULL)
         # check if it exceeds the maximum data points
-        } else if (nrow(df) > 500) {
+        } else if (nrow(df) > 350) {
           rv$vis_status = "max exceeded"
           return(NULL)
         }
@@ -966,15 +1155,17 @@
             rv$vis_status = "success"
             
             rv$df_vis = df
-
-            # leading edge genes
-            a = df[[ncol(df)]] #df$leadingEdge
-            # a = sapply(a, function(x) strsplit(x," "))
+            
+            if(rv$edge_mode=="gs"){
+              # GMT genes
+              a = rv$gmts[names(rv$gmts) %in% df$pathway_o]
+            }else{
+              a = df[[ncol(df)]] #df$leadingEdge
+              # a = sapply(a, function(x) strsplit(x," "))
+            }
+            
             names(a) <- df$pathway
-            
-            # GMT genes
-            a_gmt = rv$gmts[names(rv$gmts) %in% df$pathway]
-            
+
             edges_mat = NULL
             if(nrow(df)>1){
                 # pathway combinations
@@ -982,7 +1173,8 @@
                 
                 # edge pre-matrix
                 # edges_mat = edges(a,a_gmt,b_combn)
-                rv$edges_mat_zero_cutoff = edges(a,b_combn, cutoff = 0)
+                rv$edges_mat_zero_cutoff = edges(a,b_combn, cutoff = 0)# leading edge genes
+
                 edges_mat_zero_cutoff = rv$edges_mat_zero_cutoff
                 edges_mat <- filter(edges_mat_zero_cutoff, percent >= rv$percent_cutoff)
                 # rv$hc_edges = edges_mat[,c("from","to","percent")]
@@ -1104,7 +1296,7 @@
             y_pathway = unlist(lapply(df$pathway,function(x){unlist(strsplit(x,"%(?=[^%]+$)",perl=TRUE))[[1]]}))
             
             #get the clusters_id
-            print(head(df))
+            # print(head(df))
             if(nrow(df) == 1){
               df <- df %>%
                 mutate(cluster_name = paste0("1: ", pathway))
@@ -1160,7 +1352,7 @@
             rv$df_further = df_further
             rv$df_download <- df_further %>%
               dplyr::rename(c("cluster_size" = "n", "cluster_id" = "cluster")) %>%
-              dplyr::select(cluster_id, -cluster_size, everything(), -cluster_size, -db) %>%
+              dplyr::select(cluster_id, -cluster_size, everything(), -cluster_size) %>%
               dplyr::arrange(cluster_id)
             # print(head(rv$df_download))
             
@@ -1751,15 +1943,21 @@
             #     lst = NULL
             # }else{
                 # input is not SYMBOL, rename genes
-                genes_mat = distinct(results, input, .keep_all = TRUE)
-                genes_after = genes[tolower(genes) %in% tolower(genes_mat$input)]
-                genes_after = genes_mat$name#[tolower(genes_mat$input) %in% tolower(genes_after)]
-                genes_after = unique(genes_after)
+                genes_mat = distinct(results, input, .keep_all = TRUE) %>%
+                  dplyr::filter(name != "nan" & !(is.null(name)))
+                if(nrow(genes_mat)<1){
+                  lst <- NULL
+                }else{
+                  genes_after = genes[tolower(genes) %in% tolower(genes_mat$input)]
+                  genes_after = genes_mat$name#[tolower(genes_mat$input) %in% tolower(genes_after)]
+                  genes_after = unique(genes_after)
+                  
+                  # percent of genes maintained after conversion
+                  g_perc = length(genes_after)/length(genes)
+                  
+                  lst = list(g_perc,genes_after,genes_mat)
+                }
                 
-                # percent of genes maintained after conversion
-                g_perc = length(genes_after)/length(genes)
-                
-                lst = list(g_perc,genes_after,genes_mat)
             # }
         }
         
@@ -1798,19 +1996,26 @@
             #     lst = NULL
             # }else{
                 # input is not SYMBOL, rename genes
-                genes_mat = distinct(results, input, .keep_all = TRUE)
-                ranks_after = ranks[tolower(genes_o) %in% tolower(genes_mat$input)]
-                names(ranks_after) = genes_mat$name#[tolower(genes_mat$input) %in% tolower(names(ranks_after))]
-                
-                # # rename DEG table
-                df = df %>% dplyr::filter(tolower(.data[[input$gene_column]]) %in% tolower(genes_mat$input))
-                df[[input$gene_column]] = genes_mat$name
-                rv$data_head_o = df
+                genes_mat = distinct(results, input, .keep_all = TRUE) %>%
+                  dplyr::filter(name != "nan" & !(is.null(name)))
 
-                # percent of genes maintained after conversion
-                g_perc = length(ranks_after)/length(ranks)
+                if(nrow(genes_mat)<1){
+                  lst <- NULL
+                }else{
+                  ranks_after = ranks[tolower(genes_o) %in% tolower(genes_mat$input)]
+                  names(ranks_after) = genes_mat$name#[tolower(genes_mat$input) %in% tolower(names(ranks_after))]
+                  
+                  # # rename DEG table
+                  df = df %>% dplyr::filter(tolower(.data[[input$gene_column]]) %in% tolower(genes_mat$input))
+                  df[[input$gene_column]] = genes_mat$name
+                  rv$data_head_o = df
+                  
+                  # percent of genes maintained after conversion
+                  g_perc = length(ranks_after)/length(ranks)
+                  
+                  lst = list(g_perc,ranks_after,genes_mat)
+                }
                 
-                lst = list(g_perc,ranks_after,genes_mat)
             # }
         }
         
@@ -2044,11 +2249,24 @@
     
     run_gsea <- function(cat_name,gmt_path,ranks,errors){
       m_list <- gmtPathways(gmt_path)
+      # if db has a abbreviation prefix, get rid of it
+      if(input$selected_species != "other"){
+        if(cat_name %in% db_prs){
+          if(cat_name %in% c("BP","CC","MF")){
+            names(m_list) <- gsub(paste0("^(GO)_"),"",names(m_list))
+          }else{
+            names(m_list) <- gsub(paste0("^(",cat_name,")_"),"",names(m_list))
+          }
+        }
+      }
+      # add db prefices
+      names(m_list) <- paste0(cat_name,"_",names(m_list))
+
+      # toupper
+      m_list <- lapply(m_list, function(x) toupper(x))
       
       # save GMT into RV
       rv$gmts = c(rv$gmts,m_list)
-      
-      m_list <- lapply(m_list, function(x) toupper(x))
 
       # calculate gene #s in each term
       a_lens = lengths(m_list)
@@ -2064,39 +2282,61 @@
       if(inherits(frun, "try-error")) {        
         errors = errors + 1
       }else{
-        db <- rep(cat_name, nrow(fgseaRes))
-        fgseaRes <- cbind(db,fgseaRes)
-        #print(head(fgseaRes))
+        # add a column to store unique GS names
+        fgseaRes <- fgseaRes %>% dplyr::mutate(pathway_o = pathway, .before = pathway)
+        # write into RV
         rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
         # rv$fgseagg <- c(rv$fgseagg, list(fgseaRes))
-        rv$no_up_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
-        rv$no_up_05 = sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
-        rv$no_up_01 =sum(fgseaRes$padj<0.01&fgseaRes$ES>0,na.rm=TRUE)
         
-        rv$no_down_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
-        rv$no_down_05 = sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
-        rv$no_down_01 = sum(fgseaRes$padj<0.01&fgseaRes$ES<0,na.rm=TRUE)
         
-        if(rv$q_dynamic == TRUE){
-          sig_no <- rv$no_up_25 + rv$no_down_25
-          if(sig_no >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
-          sig_no <- rv$no_up_05 + rv$no_down_05
-          if(sig_no >= 20){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
-          sig_no <- rv$no_up_01 + rv$no_down_01
-          if(sig_no >= 20){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
-        }
-        
-        incProgress(0.2)
+        # incProgress(0.2)
+      }
+      return(errors)
+    }
+    
+    gsea_filter <- function(fgseaRes = rv$fgseagg, t=50){
+      
+      rv$no_up_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
+      rv$no_up_1 = sum(fgseaRes$padj<0.1&fgseaRes$ES>0,na.rm=TRUE)
+      rv$no_up_075 = sum(fgseaRes$padj<0.075&fgseaRes$ES>0,na.rm=TRUE)
+      rv$no_up_05 = sum(fgseaRes$padj<0.05&fgseaRes$ES>0,na.rm=TRUE)
+      rv$no_up_01 =sum(fgseaRes$padj<0.01&fgseaRes$ES>0,na.rm=TRUE)
+      
+      rv$no_down_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES<0,na.rm=TRUE)
+      rv$no_down_1 = sum(fgseaRes$padj<0.1&fgseaRes$ES<0,na.rm=TRUE)
+      rv$no_down_075 = sum(fgseaRes$padj<0.075&fgseaRes$ES<0,na.rm=TRUE)
+      rv$no_down_05 = sum(fgseaRes$padj<0.05&fgseaRes$ES<0,na.rm=TRUE)
+      rv$no_down_01 = sum(fgseaRes$padj<0.01&fgseaRes$ES<0,na.rm=TRUE)
+      
+      if(rv$q_dynamic == TRUE){
+        sig_no <- rv$no_up_25 + rv$no_down_25; if(sig_no >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+        sig_no <- rv$no_up_1 + rv$no_down_1; if(sig_no >= t){rv$bar_q_cutoff <- .1;rv$vis_q <- .1}
+        sig_no <- rv$no_up_075 + rv$no_down_075; if(sig_no >= t){rv$bar_q_cutoff <- .075;rv$vis_q <- .075}
+        sig_no <- rv$no_up_05 + rv$no_down_05; if(sig_no >= t){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
+        sig_no <- rv$no_up_01 + rv$no_down_01; if(sig_no >= t){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
       }
     }
     
     run_ora <- function(cat_name,gmt_path,genelist,errors){
       m_list <- gmtPathways(gmt_path)
+      # if db has a abbreviation prefix, get rid of it
+      if(input$selected_species != "other"){
+        if(cat_name %in% db_prs){
+          if(cat_name %in% c("BP","CC","MF")){
+            names(m_list) <- gsub(paste0("^(GO)_"),"",names(m_list))
+          }else{
+            names(m_list) <- gsub(paste0("^(",cat_name,")_"),"",names(m_list))
+          }
+        }
+      }
+      # add db prefices
+      names(m_list) <- paste0(cat_name,"_",names(m_list))
+      
+      # toupper
+      m_list <- lapply(m_list, function(x) toupper(x))
       
       # save GMT into RV
       rv$gmts = c(rv$gmts,m_list)
-      
-      m_list <- lapply(m_list, function(x) toupper(x))
       
       # get all genes
       a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
@@ -2115,26 +2355,33 @@
         if(inherits(frun, "try-error")) {        
           errors = errors + 1
         }else{
-          db <- rep(cat_name, nrow(fgseaRes))
-          fgseaRes <- cbind(db,fgseaRes)
+          fgseaRes <- fgseaRes %>% dplyr::mutate(pathway_o = pathway, .before = pathway)
           rv$fgseagg <- rbind(rv$fgseagg, fgseaRes)
-          rv$no_up_25 = sum(fgseaRes$padj<0.25,na.rm=TRUE)
-          rv$no_up_05 = sum(fgseaRes$padj<0.05,na.rm=TRUE)
-          rv$no_up_01 = sum(fgseaRes$padj<0.01,na.rm=TRUE)
           
-          if(rv$q_dynamic == TRUE){
-            if(rv$no_up_25 >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
-            if(rv$no_up_05 >= 20){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
-            if(rv$no_up_01 >= 20){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
-          }
           # if(rv$no_up_01 >= 1){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
         }
         
-        incProgress(0.2)
+        # incProgress(0.2)
         
       }
       
+      return(errors)
+    }
+    
+    ora_filter <- function(fgseaRes = rv$fgseagg, t=50){
+      rv$no_up_25 = sum(fgseaRes$padj<0.25,na.rm=TRUE)
+      rv$no_up_1 = sum(fgseaRes$padj<0.1,na.rm=TRUE)
+      rv$no_up_075 = sum(fgseaRes$padj<0.075,na.rm=TRUE)
+      rv$no_up_05 = sum(fgseaRes$padj<0.05,na.rm=TRUE)
+      rv$no_up_01 = sum(fgseaRes$padj<0.01,na.rm=TRUE)
       
+      if(rv$q_dynamic == TRUE){
+        if(rv$no_up_25 >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+        if(rv$no_up_1 >= t){rv$bar_q_cutoff <- .1;rv$vis_q <- .1}
+        if(rv$no_up_075 >= t){rv$bar_q_cutoff <- .075;rv$vis_q <- .075}
+        if(rv$no_up_05 >= t){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
+        if(rv$no_up_01 >= t){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
+      }
     }
     
     
@@ -2147,6 +2394,7 @@
     
     # =========== initialize RVs for a demo run ==================
     init_demo_gsea <- function(){
+      rv$edge_mode <- "lg"
       updateSelectizeInput(session,"selected_species",selected = "hsa")
       #Demo session RVs for GSEA data store in rvs folder.
       rv$data_head_o <- readRDS(paste0(getwd(),"/rvs/data_head_o.rds"))
@@ -2182,8 +2430,8 @@
       rv$infile_check <- readRDS(paste0(getwd(),"/rvs/infile_check.rds"))
       rv$rnk_check <- readRDS(paste0(getwd(),"/rvs/rnk_check.rds"))
       rv$gene_lists_mat1 <- readRDS(paste0(getwd(),"/rvs/gene_lists_mat1.rds"))
-      rv$total_genes_after <- 23710
-      rv$total_genes <- 23710
+      # rv$total_genes_after <- 23710
+      # rv$total_genes <- 23710
       # rv$es_term <- "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"
       # rv$kegg_confirm <- "yes"
       rv$es_term <- "WP_Type_I_Interferon_Induction_and_Signaling_During_SARS-CoV-2_Infection%WP4868"
@@ -2200,6 +2448,7 @@
     }
     
     init_demo_ora <- function(){
+      rv$edge_mode <- "lg"
       updateRadioButtons(session,"selected_mode",selected = "glist")
       updateSelectizeInput(session,"selected_species",selected = "cel")
       updateTextAreaInput(session,
@@ -2243,6 +2492,7 @@
     
     # unload example
     init_demo_gsea_d <- function(){
+      rv$edge_mode <- NULL
       updateSelectizeInput(session,"selected_species",selected = "")
       shinyjs::enable("selected_species")
       #Demo session RVs for GSEA data store in rvs folder.
@@ -2295,6 +2545,7 @@
     }
     
     init_demo_ora_d <- function(){
+      rv$edge_mode <- NULL
       updateSelectizeInput(session,"selected_species",selected = "")
       shinyjs::enable("selected_species")
       updateTextAreaInput(session,
@@ -2385,4 +2636,37 @@
                      }
                      
                    })
+    }
+    
+    # check the value of numericInput, if it is between minimum and maximum
+    # parameters: input_id: input id; default: default value; integer check: would you like it to be integer or not
+    check_numericInput <- function(input_id, default, minimum = 1, maximum = NULL, integer_check = TRUE){
+      n <- input[[input_id]]
+      req(!is.na(n))
+      if(is.null(maximum)){
+        if(integer_check == TRUE){
+          n <- floor(input[[input_id]]); if(n<minimum){n <- default}
+        } else {
+          n <- n; if(n<minimum){n <- default}
+        }
+      } else{
+        if(integer_check == TRUE){
+          n <- floor(input[[input_id]]); if(n<minimum || n>maximum){n <- default}
+        } else {
+          n <- n; if(n<minimum || n>maximum){n <- default}
+        }
+      }
+      updateNumericInput(
+        session,
+        input_id,
+        value = n
+      )
+    }
+
+    check_numericInput_na <- function(input_id, number_of_error, variable_name){
+      if(is.na(input[[input_id]])){
+        shinyalert(paste0("Please enter a valid value for ", variable_name))
+        number_of_error <- number_of_error + 1
+      }
+      return(number_of_error)
     }

@@ -459,9 +459,16 @@ draw_heatmap <- function(df,
   # print(head(plotted))
   
   # make matrix for plot
-  dat <- expand.grid(x = rownames(plotted), y = addlinebreaks(names,hovertext_linebreak,"<br>"))
-  dat$z <- unlist(plotted)
+  ylabls <- addlinebreaks(names,hovertext_linebreak,"<br>",do_end=F)
   
+  # # if ylabel is shown, abbreviate # disabled as it messes up y order
+  # if (show_ylabs==T){
+  #   ylabls <- abbreviate_vector(ylabls, ylabs_len)
+  # }
+
+  dat <- expand.grid(x = rownames(plotted), y = ylabls)
+  dat$z <- unlist(plotted)
+
   validate(need(length(dat$z)>0, select_ins_empty_msg))
   
   # put all the shared columns in the hovertext (as many as you have).
@@ -488,10 +495,7 @@ draw_heatmap <- function(df,
   # define the hovertext
   textt <- paste(full_y, addlabel)
   
-  # if ylabel is shown, abbreviate
-  if (show_ylabs==T){
-    dat$y <- abbreviate_vector(dat$y, ylabs_len)
-  }
+
   
   fig <- plot_ly() %>%
     add_trace(data = dat, x = ~x, y = ~y, z = ~z, type = "heatmap",
@@ -562,7 +566,9 @@ draw_xy_scatter <- function(to_plot_df,
   
   # initialize df
   df[df==0]<-0.00001 # replace 0 with 0.001
-  df <- remove_nas(df)
+  
+  # remove NAs tied to selected datasets
+  df <- remove_nas_in_cols(df, selected)
   
   req(nrow(df)>0)
   
@@ -706,7 +712,8 @@ draw_3d_scatter <- function(to_plot_df,
     df <- rbind(df_n[-which(df_n$Name %in% df_ins),], df) # make sure the ins is plotted first
   }
   
-  df <- remove_nas(df)
+  # remove NAs tied to selected datasets
+  df <- remove_nas_in_cols(df, selected)
   
   
   # get col names

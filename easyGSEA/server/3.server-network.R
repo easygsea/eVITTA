@@ -27,8 +27,9 @@ output$ui_bodyNetwork <- renderUI({
                     if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                         div(
                             br(),
-                            p("We support a maximum of 500 data points in Enrichment Network.",
-                                    "Please adjust the P and/or P.adj thresholds by clicking the top-right gear button"),
+                            p("We support a maximum of 350 data points in Enrichment Network.",
+                              "Please adjust the selected database(s), and/or the P and/or P.adj thresholds by clicking the top-right gear button."
+                            ),
                             br()
                         )
                     } else {
@@ -262,7 +263,7 @@ output$vis_error <- renderUI({
 output$vis_network <- renderVisNetwork({
     req(is.null(rv$fgseagg)==F)
     # N = 10
-    withProgress(message = 'Generating network view of enriched gene sets ...',value = 1, {
+    withProgress(message = 'Generating network view of enriched gene sets. Please wait a minute ...',value = 1, {
         rv$vis = vis()
         return(rv$vis)
     })
@@ -282,6 +283,14 @@ observeEvent(input$vis_replot,{
     if(is.null(input$vis_pathway)){
         shinyalert("Please select at least 1 database to visualize.")
     }else{
+        # confirm the numericInput for visnetwork is not NA
+        rv$error_par <- 0
+        rv$error_par <- check_numericInput_na("vis_percent_cutoff", rv$error_par, "Edge threshold")
+        if(input$vis_percent == "combined"){
+          rv$error_par <- check_numericInput_na("combined_k", rv$error_par, "Combined constant, K")
+        }
+        req(rv$error_par == 0)
+        
         rv$vis_p = input$cutoff_vis_p
         rv$vis_q = input$cutoff_vis_q
         rv$vis_pq = input$p_or_q_vis
@@ -295,6 +304,12 @@ observeEvent(input$vis_replot,{
         rv$ora_color <- input$vis_color
         rv$up_color <- input$vis_color_up
         rv$down_color <- input$vis_color_down
+        
+        
+        rv$db_name_y <- input$db_name_v_y
+        rv$db_id_y <- input$db_id_v_y
+        
+        rv$edge_mode <- input$edge_mode
     }
     
 })
@@ -348,6 +363,14 @@ output$ui_vis_gear <- renderUI({
                               )
                ,bsTooltip("db_vis",HTML(db_bs),placement = "top")
         ),
+        column(12,
+               selectizeInput("edge_mode",
+                              HTML(paste0("Select mode to plot edges ",add_help("edge_q"))),
+                              choices = rv$lg_name,
+                              selected = rv$edge_mode
+               )
+               ,bsTooltip("edge_q",HTML(edge_bs),placement = "top")
+        ),
         column(
             width = 6,
             sliderTextInput("cutoff_vis_p",
@@ -389,7 +412,7 @@ output$ui_vis_gear <- renderUI({
             bsTooltip("q_vis_edge_threshold", "Click to learn more!", placement = "top")
         )
 
-    ),br(),
+    ),
     fluidRow(
         column(
             width = 6,
@@ -403,6 +426,7 @@ output$ui_vis_gear <- renderUI({
             )
         )
     ),
+    tv_vis_div(),
     fluidRow(
         column(
             width = 4,
@@ -506,11 +530,18 @@ output$dendro_option <- renderUI({
 
 # The button to replot the dendrogram
 observeEvent(input$dendro_update,{
+    # confirm that the numericInputs are not NAs
+    rv$error_par <- 0
+    rv$error_par <- check_numericInput_na("dendro_cutoff", rv$error_par, "Similarity threshold")
+    rv$error_par <- check_numericInput_na("dendro_cluster_size", rv$error_par, "Minimum Cluster size for labels")
+    req(rv$error_par == 0)
     # update the corresponding RVs to replot the dendrogram
     if(!(rv$cutoff_point == input$dendro_cutoff) && (input$dendro_cutoff >= 0 && input$dendro_cutoff <= 1)){
        rv$cutoff_point = input$dendro_cutoff
     }
     if(rv$dendro_or_barplot == "dendro"){
+      rv$error_par <- check_numericInput_na("dendro_label_size", rv$error_par, "Label text size")
+      req(rv$error_par == 0)
             if(!(rv$label_size == input$dendro_label_size) && input$dendro_label_size >= 0 && input$dendro_label_size <= 6){
             rv$label_size = input$dendro_label_size
         }
@@ -524,6 +555,8 @@ observeEvent(input$dendro_update,{
         rv$sort_pq = input$sort_pq
         rv$color_check = input$color_check
         if(!is.null(input$abbreviate_length)){
+            rv$error_par <- check_numericInput_na("abbreviate_length", rv$error_par, "String Length")
+            req(rv$error_par == 0)
             rv$abbreviate_length = input$abbreviate_length
         }
     }
@@ -605,3 +638,22 @@ output$download_cluster_df <- downloadHandler(
         fwrite(df, file, row.names = T, quote=T)
     }
 )
+
+observeEvent(input$vis_percent_cutoff, {
+  check_numericInput("vis_percent_cutoff", 0.25, minimum = 0, maximum = 1, integer_check = FALSE)
+})
+observeEvent(input$combined_k, {
+  check_numericInput("combined_k", 0.5, minimum = 0, maximum = 1, integer_check = FALSE)
+})
+observeEvent(input$dendro_cutoff, {
+  check_numericInput("dendro_cutoff", 0.25, minimum = 0, maximum = 1, integer_check = FALSE)
+})
+observeEvent(input$dendro_label_size, {
+  check_numericInput("dendro_label_size", 4, minimum = 0, maximum = 6, integer_check = FALSE)
+})
+observeEvent(input$dendro_cluster_size, {
+  check_numericInput("dendro_cluster_size", 2, minimum = 1, maximum = rv$max_cluster_size)
+})
+observeEvent(input$abbreviate_length, {
+  check_numericInput("abbreviate_length", 45)
+})

@@ -110,14 +110,14 @@ output$download_dmdf <- downloadHandler(
 
 output$data_matrix_ui <- renderUI({
     # check supplementary data in GSE
-  gse_sup <- unlist(gse_meta_df()[grep("supplementary_file", gse_meta_df()$Field),"Value"])
-  print(gse_sup)
+  gse_sup <- unlist(gse_meta()[grep("supplementary_file", names(gse_meta()))])
   gse_sup[gse_sup=="NONE"] <- NA # convert NONE to NA
-  print(gse_sup)
   gse_sup <- gse_sup[is.na(gse_sup)==F] # delete NA
   print(gse_sup)
-  if(!identical(gse_sup, character(0))){
-    gse_sup <- strsplit(gse_sup, "\n")[[1]]
+  if(rv$getgeo_mode){
+    if(!identical(gse_sup, character(0))){
+      gse_sup <- strsplit(gse_sup, "\n")[[1]]
+    }
   }
   print(gse_sup)
   
@@ -129,9 +129,8 @@ output$data_matrix_ui <- renderUI({
   gsm_sup <- unlist(gsm_sup)
   print(gsm_sup)
   
-  
   # detect where the data is
-  if (nrow(exprs(gse()))>0){
+  if (rv$expr_nrow>0){
     source = "table"
     text <- "<strong>Detected data source: <br>as preloaded datatable.</strong> 
                         <br>Datatable will be shown on the right."
@@ -312,7 +311,7 @@ output$example3 <- renderTable({(example_data3 <- read.csv(paste0(getwd(),"/serv
 
 # the function that read the data matrix in the both uploading mode
 read_data_matrix <- function(inFile){
-
+  withProgress(message = 'Reading data matrix. Please wait a minute...', value = 1, {
   # the modal that appears when the file user upload exceeds 50MB, Version1
   if(inFile$size >= 100*1024^2){
     showModal(modalDialog(
@@ -381,12 +380,12 @@ read_data_matrix <- function(inFile){
   req(!inherits(indf, "try-error")) #require to be no error to proceed the following codes
   
   # check the number of columns of the matrix
-  if(ncol(indf) <= 2){
-      shinyalert("You uploaded a file with <= 2 columns, that is not an accepted format. Please click the help button for accepted file formats.")
+  if(ncol(indf) < 2){
+      shinyalert("You uploaded a file with < 2 columns, that is not an accepted format. Please click the help button for accepted file formats.")
       shinyjs::reset("data_matrix_file")
   }
   
-  req(ncol(indf) > 2)
+  req(ncol(indf) > 1)
   # This part removes duplicate rows of indf
   DuplicateCheck <- as.data.frame(indf[,1], drop=FALSE) #extract first column of indf and check if there is 
   DuplicateCheck <- duplicated(DuplicateCheck)
@@ -440,7 +439,7 @@ read_data_matrix <- function(inFile){
       # print(indf_coln[i])
     }
   }
-  print(indf_coln)
+  # print(indf_coln)
   # if(prod(validUTF8(indf_coln))){indf_coln <- translate_sample_names(toupper(indf_coln),  # translating from (upper case)
   #                                     translation_df,  # translation df
   if(rv$run_mode == "auto"){
@@ -449,17 +448,14 @@ read_data_matrix <- function(inFile){
                                      "geo_accession") # translating to
  
   }  
-   #print(indf_coln)
     colnames(indf) <- indf_coln[-1]
-  #print("a small indicator here")
+  # print("a small indicator here")
   # print(head(indf))
   
   if(rv$run_mode == "auto"){
       # then, match each column to rv$dmdf and update the values into it
       rvdf <- rv$dmdf
-      print(rv$dmdf)
-      print(nrow(rv$dmdf) >=  1)
-      
+
       dmdf <- data.frame(matrix(NA, nrow = nrow(indf), ncol = ncol(rvdf))) # initialize empty df
       dmdf <- data.frame(lapply(colnames(rvdf), function(x){ # update values into dmdf (leaves NA if not found)
         if (x %in% colnames(indf)){
@@ -506,9 +502,7 @@ read_data_matrix <- function(inFile){
     ))
     
   }
-  print("break")
-  print(colnames(rvdf))
-  print(head(rvdf))
+
   
   if(rv$run_mode == "auto"){
     matched_cols <- intersect(colnames(rvdf)[-1], colnames(indf)) # a vector of GSM id for matched cols
@@ -540,7 +534,7 @@ read_data_matrix <- function(inFile){
     print("end")
   }
 
-  
+  })
   
   # -------------- potential terms in DEG file, so as to tell users it's already analyzed files -------------
   deg_colnames <- c("logfc","fc","log2_fold_change"
@@ -843,13 +837,15 @@ observeEvent(input$file, {
 # --------------- show data matrix df ---------------
 
 output$data_matrix_df <- DT::renderDataTable({
+  # saveRDS(rv$samples, file = "rvs/samples.rds")
+  
   req(is.null(rv$gse_all)==F || rv$run_mode == "manual")
   req(is.null(rv$plat_id)==F || rv$run_mode == "manual")
   req(is.null(rv$dmdf)==F)
   req(nchar(input$dmdf_filter))
   
   df <- rv$dmdf
-
+  
   # filter according to stored sample list
   if (input$dmdf_filter == "Filtered"){
     if(rv$column_match_error == FALSE){
@@ -863,13 +859,12 @@ output$data_matrix_df <- DT::renderDataTable({
   # translate GSM column names to sample names on display
   if (input$dmdf_show_coln == "Sample name" 
         && rv$run_mode == "auto"){
-    
-    colnames(df) <- translate_sample_names(colnames(df),  # translating from
+
+      colnames(df) <- translate_sample_names(colnames(df),  # translating from
                                            rv$pdata[c("title", "geo_accession")],  # translation df
                                            "title") # translating to
   }
   
-  print('enter or not')
   print(head(df))
   df
   
@@ -905,7 +900,12 @@ output$dmdf_filter_ui <- renderUI({
 
 # filter count matrix by selected samples (DISPLAY ONLY)
 filtered_data_showdf <- reactive({
+  print(is.null(rv$dmdf)==F)
+  print(nrow(rv$dmdf)>0)
+  print(length(rv$samples)>0)
+  
   req(is.null(rv$dmdf)==F)
+  req(nrow(rv$dmdf)>0)
   req(length(rv$samples)>0)
   
   dmdf <- rv$dmdf
@@ -930,6 +930,7 @@ filtered_data_showdf <- reactive({
 # filter count matrix by selected samples (USE FOR ANALYSIS)
 filtered_data_df <- reactive({
   req(is.null(rv$dmdf)==F)
+  req(nrow(rv$dmdf)>0)
   req(length(rv$samples)>0)
 
   dmdf <- rv$dmdf

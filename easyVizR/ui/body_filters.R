@@ -48,6 +48,7 @@ body_filters <- tabItem(tabName = "tab_filters",
                  # )
                  # ,
                  fixedPanel(
+                   style = "z-index:9999",
                    uiOutput("f_floating_buttons"),
                    right = 30,
                    bottom = 30

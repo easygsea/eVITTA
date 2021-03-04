@@ -2,6 +2,7 @@
 
 body1 <- tabItem(tabName = "tab1",
                  fixedPanel(
+                   style = "z-index:9999",
                    div(
                      actionBttn(
                        inputId = "help_organize", label=NULL,

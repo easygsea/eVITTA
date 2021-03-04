@@ -368,7 +368,7 @@ filter_presets <- list(
   "Down 1.5x" = c("down1_5", NA, NA, 1.5, "Negative", 
                   stat_replace("<b>|Stat|</b> > 1.5 <br><b>Direction</b>: -"),
                   down_icon, down_txt_color, down_bg_color),
-  "Default" = c("default", 0.05, 1, 0, "All", 
+  "Default" = c("default", 0.05, 1.1, -0.1, "All", 
                 stat_replace("Default:<br><b>p</b> < 0.05 <br><b>FDR</b> < 1<br><b>|Stat|</b> > 0<br><b>Direction</b>: All"),
                 default_icon, no_txt_color, no_bg_color),
   "No filter" = c("nofilter", 1.1, 1.1, -0.1, "All", 
@@ -590,6 +590,29 @@ gl_to_table <- function(name, gl, master_df, round=3, keep_stat=F){
   }
   df
 }
+
+# ================================================= #
+#               Dataframe Tidying                ####
+# ================================================= #
+
+# remove NAs in columns of a certain dataset
+#-----------------------------------------
+# df: df to tidy
+# selected_names: a vector of dataset names, e.g. c("data1","data2")
+
+remove_nas_in_cols <- function(df, selected_names){
+  all_cols <- colnames(df)
+  # get all columns to check
+  cols_with_selected_names <- unlist(lapply(selected_names, function(x){
+    grep(paste0(x,"$"),all_cols, value=T)
+  }))
+  # remove nas column by column
+  for (x in cols_with_selected_names){
+    df <- df[!is.na(df[[x]]), ]
+  }
+  df
+}
+
 
 
 # ================================================= #
@@ -918,9 +941,15 @@ get_df_by_dflogic <- function(selected, dflogic, gls, user_criteria, starting_df
 
 addlinebreaks <- function(x, max, 
                           lbtype="<br>", 
-                          cut_at="\\s|;|_|\\.|\\|" # this cuts at spaces/ ;/ underscore/ period / vertical bar
+                          cut_at="\\s|;|_|\\.|\\|", # this cuts at spaces/ ;/ underscore/ period / vertical bar
+                          do_end=T
                           ){
-  gsub(paste0('(.{1,',max,'})(',cut_at,'|$)'), paste0('\\1',lbtype), x)
+  if (do_end==T){
+    gsub(paste0('(.{1,',max,'})(',cut_at,'|$)'), paste0('\\1',lbtype), x)
+  } else {
+    gsub(paste0('(.{1,',max,'})(',cut_at,')'), paste0('\\1',lbtype), x)
+  }
+  
 }
 
 
@@ -952,6 +981,105 @@ abbreviate_vector <- function(vec, # vector of strings
     else{return (x)}
   }))
   vec
+}
+
+
+# ================================================= #
+#          Processing easyGSEA datasets          ####
+# ================================================= #
+
+#============= 1. filter by db ===================#
+
+# detect databases from pathway names (for easygsea)
+#-----------------------------------------------
+# outputs a list.
+# freq_df: frequency df with columns Database, Freq, matches
+# choices: named vector for shiny input choices
+get_db_identifier_freqs <- function(vec){
+  
+  # generate df that summarizes identifier frequencies
+  matches = regmatches(vec,regexpr("^.*?_",vec)) # get regex matches as vector
+  freq_df = data.frame(table(matches))
+  freq_df$matches <- as.character(freq_df$matches)
+  freq_df$Database = substr(freq_df$matches,1,nchar(freq_df$matches)-1) # remove final underscore
+  freq_df <- freq_df[,c(3,2,1)]
+  
+  # generate choices to show in shiny input
+  choices_display = paste0(freq_df$Database, " (", freq_df$Freq, ")")
+  choices= freq_df$matches
+  
+  if(length(choices)>0){
+    names(choices) <- choices_display
+    return(list(freq_df=freq_df, choices=choices))
+  } else {
+    return(list(freq_df=NULL, choices=NULL))
+  }
+  
+}
+
+
+# filter df by regex contained in one column
+#----------------------------------------
+# df: input df
+# dbs: a vector of substrings you want to filter
+# coln: column
+filter_df_by_dbs <- function(df, dbs, coln){
+  query=paste0("^", dbs, collapse="|")
+  dplyr::filter(df, grepl(query, !!as.name(coln)))
+}
+
+
+#============= 2. remove identifiers ==================#
+
+# remove identifiers on gsea outputs
+#------------------------------------------
+remove_easygsea_identifiers <- function(vec, 
+                                        remove_mode="trailing" # leading, trailing, etc, see below
+){
+  out <- vec
+  if ("trailing" %in% remove_mode){ # remove trailing (%xxxxxx) first 
+    out <- gsub("%.*$","",vec)
+  }
+  if ("leading" %in% remove_mode){ # remove leading (DB_) next
+    out <- gsub("^.*?_","",out)
+  }
+  out
+}
+
+# deduplicate identifiers generated from another function
+#-----------------------------------------
+dedup_names <- function(vec, 
+                        output_trans_df=F,
+                        FUN=remove_easygsea_identifiers, 
+                        remove_mode=c("trailing"), 
+                        mode="keep_orig"
+){
+  vec=vec
+  processed= FUN(vec, remove_mode=remove_mode)
+  
+  trans_df=data.frame(orig=vec, root=processed)
+  
+  # deduplication function
+  if(any(duplicated(trans_df$root))){ # if any duplicated
+    if (mode=="keep_orig"){
+      # 1. keep original on the duplicated ones
+      dup_names = names(table(trans_df$root)[table(trans_df$root)>1]) # roots that are duplicated
+      trans_df$new <- if_else(trans_df$root %in% dup_names, trans_df$orig, trans_df$root)
+    } else if (mode=="make_unique"){
+      # 2. use the make.unique function
+      trans_df$new <- make.unique(trans_df$root)
+    } else if (mode=="keep_dup"){
+      # 3. keep as duplicated
+      trans_df$new <- trans_df$root
+    }
+  } else { # if no duplicated entries
+    trans_df$new <- trans_df$root
+  }
+  
+  if (output_trans_df==T){
+    trans_df
+  } else (trans_df$new)
+  
 }
 
 
@@ -1050,6 +1178,8 @@ init_demo <- function(){
   rv$n_to_plot <- readRDS(paste0(getwd(), "/rvs/n_to_plot.rds"))
   rv$heatmap_sortby <- readRDS(paste0(getwd(), "/rvs/heatmap_sortby.rds"))
   rv$ins_venn_palette <- readRDS(paste0(getwd(),"/rvs/ins_venn_palette.rds"))
+  rv$detected_dbs <- readRDS(paste0(getwd(),"/rvs/detected_dbs.rds"))
+  rv$opt_easygsea_filter_db <- readRDS(paste0(getwd(),"/rvs/opt_easygsea_filter_db.rds"))
   
   for (i in 1:3){
     rv[[paste0("nic_p_",i)]] <- 0.05

@@ -30,6 +30,9 @@ library(tools) # for finding file (name) extensions
 
 options(repos = BiocManager::repositories())
 
+# fix functions in loaded packages
+source("global/fix.R", local = TRUE)
+
 # --------------- Initialize introjs -------------------
 intropath <- paste0(getwd(), "/intro/")
 # intropath <- paste0(getwd(), "/intro_demo/") # initialize demo introjs
@@ -200,9 +203,10 @@ dt_options <- function(max_char=80, scrollX=T, scrollY=F, paging=T, searching=T,
 #       df_no(df)
 #   })
 
-df_no <- function(df,extensions=c('Scroller'), dom = NULL, buttons = NULL, scrollY = "380px", scroller = TRUE, scrollX=TRUE){
+df_no <- function(df,extensions=c('Scroller'), dom = NULL, buttons = NULL, scrollY = "380px", scroller = TRUE, scrollX=TRUE,other=""){
   DT::datatable(df,
                 extensions=extensions,
+                filter = list(position = "bottom", clear = T, plain = T),
                 options = list(
                   # sDom  = '<"top">lrt<"bottom">ip',
                   dom = dom,
@@ -210,7 +214,9 @@ df_no <- function(df,extensions=c('Scroller'), dom = NULL, buttons = NULL, scrol
                   scrollY = scrollY,
                   scroller = scroller,
                   scrollX = scrollX
-                ))
+                )
+                # ,other
+  )
 }
 
 

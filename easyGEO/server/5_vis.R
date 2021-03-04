@@ -233,7 +233,10 @@ output$v_box <- renderUI({
 # update volcano parameters when "Visualize!" clicked
 observeEvent(input$volcano_confirm,{
   rv$v_success = NULL
-  
+  # confirm that the numericInputs are not NAs
+  rv$error_par <- 0
+  rv$error_par <- check_numericInput_na("v_logfc_cutoff", rv$error_par, "Threshold of |logFC|")
+  req(rv$error_par == 0)
   # update thresholds and volcano mode
   rv$plot_q = input$v_q_cutoff
   rv$plot_logfc = input$v_logfc_cutoff
@@ -248,6 +251,10 @@ observeEvent(input$volcano_confirm,{
     
     # if top
     if(input$v_label_opt == "top"){
+      # check for the NAs first
+      rv$error_par <- check_numericInput_na("n_up_volcano", rv$error_par, "# of top up")
+      rv$error_par <- check_numericInput_na("n_down_volcano", rv$error_par, "# of top down")
+      req(rv$error_par == 0)
       rv$volcano_up = input$n_up_volcano
       rv$volcano_down = input$n_down_volcano
       
@@ -481,7 +488,10 @@ output$h_box <- renderUI({
 # update heatmap parameters when "Visualize!" clicked
 observeEvent(input$h_confirm,{
   rv$h_success = NULL
-  
+  # confirm that the numericInputs are not NAs
+  rv$error_par <- 0
+  rv$error_par <- check_numericInput_na("h_logfc_cutoff", rv$error_par, "Threshold of |logFC|")
+  req(rv$error_par == 0)
   # update thresholds and volcano mode
   rv$plot_q = input$h_q_cutoff
   rv$plot_logfc = input$h_logfc_cutoff
@@ -498,6 +508,11 @@ observeEvent(input$h_confirm,{
   
   # if top
   if(input$h_label_opt == "top"){
+    # check for the NAs first
+    rv$error_par <- check_numericInput_na("n_up_h", rv$error_par, "# of top up")
+    rv$error_par <- check_numericInput_na("n_down_h", rv$error_par, "# of top down")
+    req(rv$error_par == 0)
+    
     rv$volcano_up = input$n_up_h
     rv$volcano_down = input$n_down_h
     
@@ -613,6 +628,10 @@ output$aplot_parameters <- renderUI({
 #---------------one gene: update parameters------------------
 observeEvent(input$agene_confirm,{
   rv$a_success = NULL
+  # check for the NAs first
+  rv$error_par <- 0
+  rv$error_par <- check_numericInput_na("a_sd_n", rv$error_par, " # of s.d.")
+  req(rv$error_par == 0)
   
   rv$a_gene = input$aplot_genes
   rv$a_log = input$a_log
@@ -679,3 +698,26 @@ output$a_download <- downloadHandler(
     }
   }
 )
+
+# adjust the numericInput if there are out of bound
+observeEvent(input$v_logfc_cutoff, {
+  check_numericInput("v_logfc_cutoff", 1, minimum = 0)
+})
+observeEvent(input$n_up_volcano, {
+  check_numericInput("n_up_volcano", 15)
+})
+observeEvent(input$n_down_volcano, {
+  check_numericInput("n_down_volcano", 15)
+})
+observeEvent(input$h_logfc_cutoff, {
+  check_numericInput("h_logfc_cutoff", 1, minimum = 0)
+})
+observeEvent(input$n_up_h, {
+  check_numericInput("n_up_h", 15)
+})
+observeEvent(input$n_down_h, {
+  check_numericInput("n_down_h", 15)
+})
+observeEvent(input$a_sd_n, {
+  check_numericInput("a_sd_n", 1.5, minimum = 0.1, integer_check = FALSE)
+})

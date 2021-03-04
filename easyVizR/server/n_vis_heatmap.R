@@ -37,7 +37,7 @@ output$n_hm_ylabs_len <- renderUI({
   sliderInput("n_hm_ylabs_len",
               "Max string length for y labels:",
               min = 10,
-              max = 50,
+              max = 100,
               value = rv$n_hm_ylabs_len)
 })
 
@@ -76,6 +76,9 @@ n_hm_plt <- reactive({
     req(is.null(rv$n_hm_ylabs_len)==F)
   }
   
+  # prevent duplicates
+  validate(need(any(duplicated(n_ins_full()$Name))==F, 
+                "Heatmap is disabled because there are duplicated names."))
   
   draw_heatmap( df = n_ins_full(),
                 sortby_dataset = rv$n_to_plot,
