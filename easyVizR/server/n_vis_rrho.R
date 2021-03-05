@@ -1,4 +1,22 @@
 
+## Suggest default step size
+#------------------------------
+defaultStepSize <-function(list1, list2){
+  n1<- dim(list1)[1]
+  n2<- dim(list2)[1]
+  
+  max_n <- 500 # max allowed number of rows
+  max_steps <- ceiling(min(sqrt(max_n)))	 # max allowed number of steps
+  
+  if (max(n1, n2)<max_n){
+    result <- ceiling(min(sqrt(c(n1,n2))))	
+  } else {
+    result <- max(n1,n2)/max_steps 
+  }
+  return(result)
+}	
+
+
 
 rrho_data_handler <- function(x_axis,y_axis){
   df <- rv$df_n
@@ -111,12 +129,7 @@ rrho_level_value <- reactive({
   #Remove NA
   
   # specify stepsize; default for n<1000, manually defined when n>1000
-  max_data_length = max(nrow(rnk1), nrow(rnk2))
-  print(max_data_length)
-  if (max_data_length>1000){
-    stepsize <- max_data_length/10
-  } else {stepsize <- max_data_length}
-  print(stepsize)
+  stepsize <- defaultStepSize(rnk1,rnk2)
   
   color_scheme <- rrho_color_handler(palette=rv$rrho_level_palette,reverse = rv$rrho_level_palette_reverse)
   withProgress(message = 'Generating plots ...',value = 1, {
