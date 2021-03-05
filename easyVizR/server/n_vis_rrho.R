@@ -5,7 +5,7 @@ defaultStepSize <-function(list1, list2){
   n1<- dim(list1)[1]
   n2<- dim(list2)[1]
   
-  max_n <- 500 # max allowed number of rows
+  max_n <- 1000 # max allowed number of rows
   max_steps <- ceiling(min(sqrt(max_n)))	 # max allowed number of steps
   
   if (max(n1, n2)<max_n){
@@ -98,18 +98,20 @@ run_rrho <- function (rnk1, rnk2,
   }else{
     rrho_plot <- lattice::levelplot(RRHO.xy$hypermat,col.regions = jet.colors,xlab = '',ylab = '') # shows the graph
   }
-  pval.testing <- pvalRRHO(RRHO.xy, 50)
-  p_value <- pval.testing$pval
+  # pval.testing <- pvalRRHO(RRHO.xy, 50)
+  # p_value <- pval.testing$pval
   
   jet.colors <- NULL
-  pval.testing <- NULL
-  return(list(rrho_plot, p_value)) #SUBJECT TO MORE FEATURES, will do later
+  # pval.testing <- NULL
+  return(list(rrho_plot
+              # , p_value
+              )) #SUBJECT TO MORE FEATURES, will do later
 }
 
 #DataGeneIdentifier,pvalue,STAT
 rrho_level_value <- reactive({
   req(is.null(n_ins_full())==F)
-
+  req(rv$rrho_level_setting == input$rrho_level_setting) # fixes double refresh
   
   datasets <- rrho_data_handler(rv$rrho_x,rv$rrho_y)
   data1 <- data.frame(datasets[[1]],datasets[[2]],datasets[[3]])
@@ -127,6 +129,8 @@ rrho_level_value <- reactive({
   rnk2 <- data.frame(rnk_merge$GeneIdentifier,rnk_merge$RankingVal.y)
   names(rnk2) <- original_names
   #Remove NA
+  rv$rnk1 <- rnk1
+  rv$rnk2 <- rnk2
   
   # specify stepsize; default for n<1000, manually defined when n>1000
   stepsize <- defaultStepSize(rnk1,rnk2)
@@ -142,11 +146,9 @@ rrho_level_value <- reactive({
                                            )
                                            #palette=rv$rrho_level_palette,
                                            #reverse = rv$rrho_level_palette_reverse)
-    return(rv$result_plot)
   })
   
-  rv$rnk1 <- rnk1
-  rv$rnk2 <- rnk2
+  
   rrho_level_fig <- rv$result_plot[[1]]
   
   #print(rv$result_plot[[2]])
@@ -155,6 +157,8 @@ rrho_level_value <- reactive({
 })
 #THIS Reactive is for scatter plot
 rrho_scatter_value <- reactive({
+  req(rv$rrho_level_setting == input$rrho_level_setting) # fixes double refresh
+  
 list1  <- rv$rnk1[order(rv$rnk1[,2],decreasing=TRUE),]
 list2  <- rv$rnk2[order(rv$rnk2[,2],decreasing=TRUE),]
 list2ind  <- match(list1[,1],list2[,1])
@@ -169,10 +173,10 @@ model  <- lm(list2ind~list1ind)
 lines(predict(model),col="red",lwd=3)
 })
 
-rrho_p_value <- reactive({
-  new_rrho_p_value = rv$result_plot[[2]]
-  new_rrho_p_value
-})
+# rrho_p_value <- reactive({
+#   new_rrho_p_value = rv$result_plot[[2]]
+#   new_rrho_p_value
+# })
 
 output$rrho_level <- renderPlot(
   rrho_level_value()
@@ -183,14 +187,14 @@ output$rrho_scatter_plot <- renderPlot(
 )
 
 
-output$rrho_p_value <- renderUI({
-  
-  box(
-    title = NULL, background = "aqua", solidHeader = TRUE, width=12,
-    strong("Correlation line:"),br(),
-    column( 12,align="center" ,
-            paste0("The pvalue is ",rrho_p_value())
-            #rv$result_plot[[2]]
-    )
-  )
-})
+# output$rrho_p_value <- renderUI({
+#   
+#   box(
+#     title = NULL, background = "aqua", solidHeader = TRUE, width=12,
+#     strong("Correlation line:"),br(),
+#     column( 12,align="center" ,
+#             paste0("The pvalue is ",rrho_p_value())
+#             #rv$result_plot[[2]]
+#     )
+#   )
+# })
