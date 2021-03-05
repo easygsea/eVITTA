@@ -252,7 +252,7 @@ num_space <- list(
 )
 
 #============ add help annotations ==============
-db_bs <- "Select or de-select the functional database(s) for your run"
+db_bs <- "Select or de-select the gene set library(ies) for your run"
 p_bs <- "Gene sets with a P-value &lt; the selected threshold will be kept. Drag the slider to change the threshold"
 q_bs <- "Gene sets with an adjusted P-value &lt; the selected threshold will be kept. Drag the slider to change the threshold"
 # pq bsToopTip annotation for manhattan or volcano
@@ -267,6 +267,6 @@ manual_bs <- "Manually search, select and plot the gene set(s) of interest"
 bubble_size_bs <- "Drag the slider to adjust the maximum and minimum bubble sizes"
 vol_mode_bs <- "<b>Continuous</b> and <b>Discrete</b> are hoverable, clickable and interactive. <b>Static</b> labels the top regulations with texts."
 col_tone_bs <- "Scroll down and click to select the color tone"
-db_bs <- "By default, each gene set is prefixed by its originating database, i.e. the identifier. Unselect to trim the identifier. If repetitive names are found after trimming, only the first will be kept."
+db_p_bs <- "By default, each gene set is prefixed by its originating database, i.e. the identifier. Unselect to trim the identifier. If repetitive names are found after trimming, only the first will be kept."
 id_bs <- "By defualt, each gene set is annotated with its unique ID (if any) in the original database. Unselect to trim the ID string. If repetitive names are found after trimming, only the first will be kept."
 edge_bs <- "Reference data to calculate gene set similarities"

@@ -32,7 +32,7 @@ sidebar <- dashboardSidebar(
                 
                 menuItem(text = span(id = "tab2_text", "3. Filter/review design matrix"), tabName="tab2", icon=icon("pencil-ruler")),
                 
-                menuItem(text = span(id = "tab4_text", "4. Run DEG analysis"), tabName="tab4", icon=icon("calculator")),
+                menuItem(text = span(id = "tab4_text", "4. Run DE analysis"), tabName="tab4", icon=icon("calculator")),
                 
                 menuItem(text = span(id = "tab5_text", "5. Visualize results"), tabName="tab5", icon=icon("chart-area")),
                 

@@ -24,6 +24,12 @@ observe({
     "n_upset_show_ins", "n_upset_c1"
     ))
   
+  #rrho
+  input2rv(c(
+    "rrho_x","rrho_y","rrho_level_palette","rrho_level_palette_reverse",
+    "rrho_level_setting"
+             ))
+  
   # 2D scatter
   input2rv(c(
     "nxy_selected_x","nxy_selected_y","nxy_selected_z",
@@ -52,6 +58,8 @@ observe({
   input2rv(c(
     "nx_bar_sig","nx_bar_to_plot"
   ))
+  
+  
   
   
   # network
@@ -205,7 +213,12 @@ observeEvent(input$n_use_data,{
     rv$nxyz_sc_outlinecolor <- "white"
     rv$nxyz_sc_plotmode <- "Focus"
     rv$nxyz_sc_dflogic <- "Ins"
-    
+    # ------------- rrho
+    rv$rrho_x <- rv$nx_n[[1]]
+    rv$rrho_y <- rv$nx_n[[2]]
+    rv$rrho_level_palette <- "default"
+    rv$rrho_level_palette_reverse <- F
+    rv$rrho_level_setting <- F
     
     # --------------- single options
     rv$nx_vol_plotmode <- "Focus"
@@ -274,6 +287,7 @@ observeEvent(input$n_use_data,{
   remove_ui("scatter_selection")
   remove_ui("scatter_3d_dropdowns")
   remove_ui("scatter_2d_dropdowns")
+  remove_ui("rrho_selections")
   remove_ui("single_dropdowns")
   remove_ui("single_selections")
   remove_ui("nx_bar_panel_dropdowns")

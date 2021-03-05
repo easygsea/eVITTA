@@ -217,7 +217,7 @@ tv_div <- reactive({
         ,value = rv$db_id_y
       )
     )
-    ,bsTooltip("db_name_y_q",HTML(db_bs)
+    ,bsTooltip("db_name_y_q",HTML(db_p_bs)
                ,placement = "top")
     ,bsTooltip("db_id_y_q",HTML(id_bs)
                ,placement = "top")
@@ -243,7 +243,7 @@ tv_d_div <- reactive({
         ,value = rv$db_id_y
       )
     )
-    ,bsTooltip("db_name_d_y_q",HTML(db_bs)
+    ,bsTooltip("db_name_d_y_q",HTML(db_p_bs)
                ,placement = "top")
     ,bsTooltip("db_id_d_y_q",HTML(id_bs)
                ,placement = "top")
@@ -272,7 +272,7 @@ tv_vis_div <- reactive({
         ,value = rv$db_id_y
       )
     )
-    ,bsTooltip("db_name_v_y_q",HTML(db_bs)
+    ,bsTooltip("db_name_v_y_q",HTML(db_p_bs)
                ,placement = "top")
     ,bsTooltip("db_id_v_y_q",HTML(id_bs)
                ,placement = "top")
