@@ -54,6 +54,7 @@ rrho_color_handler <- function(palette,reverse = F){
 
 
 run_rrho <- function (rnk1, rnk2,
+                      stepsize = stepsize,
                       BY_correction=T,
                       to_put_alternative = "two.sided",
                       log10.ind=T,
@@ -63,8 +64,10 @@ run_rrho <- function (rnk1, rnk2,
 )
 {
   #This step is to only keep the ones in common
+
   
   RRHO.xy <- RRHO(rnk1, rnk2, 
+                  stepsize,
                   plots = F, 
                   outputdir = paste0(getwd(),"//RRHOtest"),
                   BY=T, 
@@ -73,7 +76,7 @@ run_rrho <- function (rnk1, rnk2,
   )
   jet.colors  <- color_scheme
   if(BY_correction == T){
-    rrho_plot <- lattice::levelplot(RRHO.xy$hypermat.by,col.regions = jet.colors,xlab = '',ylab = '')
+    rrho_plot <- lattice::levelplot(RRHO.xy$hypermat.by,col.regions = jet.colors,xlab = ,ylab = '')
   }else{
     rrho_plot <- lattice::levelplot(RRHO.xy$hypermat,col.regions = jet.colors,xlab = '',ylab = '') # shows the graph
   }
@@ -107,9 +110,18 @@ rrho_level_value <- reactive({
   names(rnk2) <- original_names
   #Remove NA
   
+  # specify stepsize; default for n<1000, manually defined when n>1000
+  max_data_length = max(nrow(rnk1), nrow(rnk2))
+  print(max_data_length)
+  if (max_data_length>1000){
+    stepsize <- max_data_length/10
+  } else {stepsize <- max_data_length}
+  print(stepsize)
+  
   color_scheme <- rrho_color_handler(palette=rv$rrho_level_palette,reverse = rv$rrho_level_palette_reverse)
   withProgress(message = 'Generating plots ...',value = 1, {
     rv$result_plot <-             run_rrho(rnk1, rnk2,
+                                           stepsize = stepsize,
                                            BY_correction = rv$rrho_level_setting,
                                            to_put_alternative = "two.sided",
                                            log10.ind=T,
@@ -136,7 +148,7 @@ list2ind  <- match(list1[,1],list2[,1])
 list1ind  <- 1:length(list1[,1])
 corval  <- cor(list1ind,list2ind,method="spearman")
 plot(list1ind,list2ind,xlab=paste(rv$rrho_x,"(Rank)"), 
-     ylab=paste(rv$rrho_x,"(Rank)"), pch=20, 
+     ylab=paste(rv$rrho_y,"(Rank)"), pch=20, 
      main=paste(
        "Rank-Rank Scatter (rho = ",signif(corval,digits=3),")"
        ,sep=""), cex=0.5)
