@@ -311,7 +311,7 @@ output$example3 <- renderTable({(example_data3 <- read.csv(paste0(getwd(),"/serv
 
 # the function that read the data matrix in the both uploading mode
 read_data_matrix <- function(inFile){
-  withProgress(message = 'Reading data matrix. Please wait a minute...', value = 1, {
+  withProgress(message = 'Reading data matrix. This might take a while ...', value = 1, {
   # the modal that appears when the file user upload exceeds 50MB, Version1
   if(inFile$size >= 100*1024^2){
     showModal(modalDialog(

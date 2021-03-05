@@ -118,7 +118,7 @@ observeEvent(input$run_deg,{
   # counts in at least rv$min_n samples if too many samples as in scRNAseq
   if(min_n > rv$min_n){min_n = rv$min_n}
   
-  msg = paste0("Running DE analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. Please wait a minute...")
+  msg = paste0("Running DE analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. This might take a while ...")
   
   if((is.null(samples_c)||length(samples_c)<2) && (is.null(samples_t)||length(samples_t)<2)){
     shinyalert("Select at least 2 control and 2 experimental samples.")
@@ -270,7 +270,7 @@ observeEvent(input$run_deg2,{
   # counts in at least rv$min_n samples if too many samples as in scRNAseq
   if(min_n > rv$min_n){min_n = rv$min_n}
   
-  msg = paste0("Running DE analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. Please wait a minute...")
+  msg = paste0("Running DE analysis on ",length(samples_c)," vs. ",length(samples_t)," samples. This might take a while ...")
   
   overlap = samples_c[samples_c %in% samples_t]
   
