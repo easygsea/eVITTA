@@ -621,7 +621,7 @@ observeEvent(input$search_geo, {
   rv$getgeo_mode <- T; rv$gpl_type = list(); rv$gpl_count = list(); rv$gsmlist = list()
   rv$expr_nrow <- 0; rv$organism <- NULL
 
-  withProgress(message = 'Getting data. Please wait a minute...', value = 1, {
+  withProgress(message = 'Getting data. This might take a while ...', value = 1, {
 
     rv$geo_accession <- isolate(input$geo_accession) %>% toupper(.)
     
@@ -876,7 +876,7 @@ observeEvent(input$geo_platform, {
   plat <- isolate(input$plat)
   rv$plat_id <- match(plat, rv$platforms)
   rv$platform <- plat
-  withProgress(message = 'Loading data...', value = 1, {
+  withProgress(message = 'Loading data. This might take a while ...', value = 1, {
     if(rv$getgeo_mode){
       # initialize the count matrix (even if it's empty) with first row = Name
       exprs <- exprs(gse())

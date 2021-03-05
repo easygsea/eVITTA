@@ -1184,7 +1184,9 @@ output$gs_stats_tl <- DT::renderDataTable({
     req(rv$es_term)
     df = rv$fgseagg[which((rv$fgseagg)$pathway == rv$es_term)][1,]
 
-    df = df %>% mutate_if(is.numeric, function(x) round(x, digits=3))
+    df = df %>% mutate_if(is.numeric, function(x) round(x, digits=3)) %>%
+        dplyr::select(-pathway) %>%
+        dplyr::rename(pathway = pathway_o)
 
     df = t(df)
     # r_names <- names(df[-1,])

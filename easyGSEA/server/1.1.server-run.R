@@ -1436,7 +1436,7 @@
         }
 
 
-        withProgress(message = "Running GSEA analysis. Please wait a minute...",value = 1, {
+        withProgress(message = "Running GSEA analysis. This might take a while ...",value = 1, {
 
             # ------ read GMTs & run fgsea ------ #
             # initialize
@@ -1570,7 +1570,7 @@
         }
 
 
-        withProgress(message = "Running ORA analysis. Please wait a minute...",value = 1, {
+        withProgress(message = "Running ORA analysis. This might take a while ...",value = 1, {
 
             # ------ read GMTs & run fgsea ------ #
             # initialize
