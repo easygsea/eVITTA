@@ -35,9 +35,9 @@ rrho_color_handler <- function(palette,reverse = F){
   
   if(palette == "default"){
     default_order <- c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")
-    #if(reverse == T){
-    #  default_order <- rev(default_order)
-    #}
+    if(reverse == T){
+      default_order <- rev(default_order)
+    }
     jet.colors  <- colorRampPalette(default_order)
     jet.colors <- jet.colors(100)
     }
@@ -89,7 +89,7 @@ run_rrho <- function (rnk1, rnk2,
 rrho_level_value <- reactive({
   req(is.null(n_ins_full())==F)
 
-  
+  BY_value = rv$rrho_level_setting
   datasets <- rrho_data_handler(rv$rrho_x,rv$rrho_y)
   data1 <- data.frame(datasets[[1]],datasets[[2]],datasets[[3]])
   names(data1) <- c("Name","STAT","PValue")
@@ -110,7 +110,7 @@ rrho_level_value <- reactive({
   color_scheme <- rrho_color_handler(palette=rv$rrho_level_palette,reverse = rv$rrho_level_palette_reverse)
   withProgress(message = 'Generating plots ...',value = 1, {
     rv$result_plot <-             run_rrho(rnk1, rnk2,
-                                           BY_correction = rv$rrho_level_setting,
+                                           BY_correction = BY_value,
                                            to_put_alternative = "two.sided",
                                            log10.ind=T,
                                            color_scheme = color_scheme
