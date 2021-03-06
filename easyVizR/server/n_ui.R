@@ -538,7 +538,7 @@ output$rrho_pvalue_panel <- renderUI({
 
 output$rrho_level_dropdowns <- renderUI({
   div(
-  div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;",
+  div(style = "position: absolute; left: 1em; bottom: 1em; width:300px;",
       dropdown(
         selectInput("rrho_level_palette", 
                     HTML(paste0(
@@ -581,7 +581,7 @@ output$rrho_level_dropdowns <- renderUI({
       )
   ),
   
-  div(style = "position: absolute; left: 7em; bottom: 1em; width:300px;",
+  div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;",
       dropdown(
                radioButtons(
                            inputId = "rrho_level_setting",
