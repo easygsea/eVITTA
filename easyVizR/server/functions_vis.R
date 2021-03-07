@@ -185,21 +185,22 @@ draw_eulerr_with_ins <- function(gls, ins, print_mode="counts", show_ins=T, ins_
   t_sections <- names(ins[ins==T & is.na(ins)==F])
   f_sections <- names(ins[ins==F & is.na(ins)==F])
   na_sections <- names(ins[is.na(ins)==T])
-  
+  print(t_sections)
   selector <- names(fit2[[2]])
   # first get the ins that has all the true sections, if any
   if (length(t_sections)>0){
     temp=vector(mode="list", length=length(t_sections)) # get the sections that contain ALL the T substrings
     for (i in 1:length(t_sections)){
-      temp[[i]] <- selector[grep(t_sections[[i]], selector)]
+      temp[[i]] <- selector[grep(paste0("(^|&)",t_sections[[i]],"($|&)"), selector)] # exact match btw &
     }
     selector <- Reduce(intersect, temp)
     
   }
+  print(selector)
   # second get rid of any ins that contains the false sections, if any
   if (length(f_sections)>0){
     for (f in f_sections){
-      selector <- selector[-grep(f, selector)]
+      selector <- selector[-grep(paste0("(^|&)",f,"($|&)"), selector)] # exact match btw &
     }
   }
   # we don't care about the na sections
