@@ -504,6 +504,7 @@ draw_heatmap <- function(df,
               text = textt)
   
   fig <- fig %>% layout(
+    title= paste0("Heatmap (n=",ncol(plotted),")"),
     xaxis = list(title = "", showticklabels = T),
     yaxis = list(title = "", showticklabels = show_ylabs)
     # ,margin = list(l=200)
