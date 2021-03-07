@@ -568,7 +568,14 @@ draw_xy_scatter <- function(to_plot_df,
   df[df==0]<-0.00001 # replace 0 with 0.001
   
   # remove NAs tied to selected datasets
+  df_before <- df
   df <- remove_nas_in_cols(df, selected)
+  # report on diff
+  diff_report <- report_df_diff(df_before, df, "Name", "XY Scatter",
+                                reason=" because values are missing for either X or Y"
+                                )
+  # print(diff_report$report)
+  rv$nxy_diff_report <- diff_report
   
   req(nrow(df)>0)
   
@@ -713,7 +720,14 @@ draw_3d_scatter <- function(to_plot_df,
   }
   
   # remove NAs tied to selected datasets
+  df_before <- df
   df <- remove_nas_in_cols(df, selected)
+  # report on diff
+  diff_report <- report_df_diff(df_before, df, "Name", "3D Scatter",
+                                reason=" because values are missing for X, Y or Z"
+  )
+  # print(diff_report$report)
+  rv$nxyz_diff_report <- diff_report
   
   
   # get col names
