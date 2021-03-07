@@ -1033,23 +1033,34 @@ abbreviate_vector <- function(vec, # vector of strings
 # freq_df: frequency df with columns Database, Freq, matches
 # choices: named vector for shiny input choices
 get_db_identifier_freqs <- function(vec){
+  # get regex matches as vector
+  matches = regmatches(vec,regexpr("^.*?_",vec)) 
+  
+  # get unmatched terms
+  query=paste0("^", matches, collapse="|")
+  unmatched_terms <- vec[-grep(query, vec)]
+  # print(unmatched_terms)
   
   # generate df that summarizes identifier frequencies
-  matches = regmatches(vec,regexpr("^.*?_",vec)) # get regex matches as vector
   freq_df = data.frame(table(matches))
   freq_df$matches <- as.character(freq_df$matches)
   freq_df$Database = substr(freq_df$matches,1,nchar(freq_df$matches)-1) # remove final underscore
   freq_df <- freq_df[,c(3,2,1)]
   
+  # if has unmatched terms, append that as an additional category
+  if (length(unmatched_terms)>0){
+    freq_df <- rbind(freq_df, c("Others", length(unmatched_terms), "%Others%"))
+  }
+  
   # generate choices to show in shiny input
   choices_display = paste0(freq_df$Database, " (", freq_df$Freq, ")")
   choices= freq_df$matches
   
-  if(length(choices)>0){
+  if(length(choices[choices!="%Others%"])>0){ # if there are actual dbs detected besides "Others" category
     names(choices) <- choices_display
-    return(list(freq_df=freq_df, choices=choices))
+    return(list(freq_df=freq_df, choices=choices, unmatched=unmatched_terms))
   } else {
-    return(list(freq_df=NULL, choices=NULL))
+    return(list(freq_df=NULL, choices=NULL, unmatched=unmatched_terms))
   }
   
 }
@@ -1061,8 +1072,19 @@ get_db_identifier_freqs <- function(vec){
 # dbs: a vector of substrings you want to filter
 # coln: column
 filter_df_by_dbs <- function(df, dbs, coln){
-  query=paste0("^", dbs, collapse="|")
-  dplyr::filter(df, grepl(query, !!as.name(coln)))
+  
+  # get terms matched from dbs
+  matched_query=paste0("^", dbs, collapse="|")
+  matched <- df[[coln]][grep(matched_query, df[[coln]])] # get list of matched names
+  
+  # get unmatched terms too if others category is selected
+  if ("%Others%" %in% dbs){
+    unmatched <- df[[coln]][-grep("^.*?_", df[[coln]])]
+    out_list <- union(matched, unmatched)
+  } else {
+    out_list <- matched
+  }
+  df[df[[coln]] %in% out_list,]
 }
 
 
