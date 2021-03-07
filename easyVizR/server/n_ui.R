@@ -978,7 +978,8 @@ output$n_panels <- renderUI({
                                                    width = "100%",height = "600px"),
                                       div(id = "scatter_3d_dropdowns_anchor")
                                       
-                                    )  
+                                    ),
+                                    uiOutput("nxyz_diff_report")
                                     ),
                                     
                                     #uiOutput("nxy_3ds_panel"),
@@ -991,7 +992,8 @@ output$n_panels <- renderUI({
                                       ,
                                       div(id = "scatter_2d_dropdowns_anchor")
                                       
-                                    )
+                                    ),
+                                    uiOutput("nxy_diff_report")
                                     )
                                     
                                     #uiOutput("nxy_sc_panel")

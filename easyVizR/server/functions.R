@@ -614,6 +614,40 @@ remove_nas_in_cols <- function(df, selected_names){
 }
 
 
+# report on the diff between a df before/ after filtering
+#-------------------------------------------------------
+# use to report on excluded NA terms
+
+report_df_diff <- function(df_before, # df before the filtering
+                           df_after, # df after the filtering
+                           coln,  # the column name you want to report, e.g. "name"
+                           title,  # a string to describe what output this is for e.g. "scatter"
+                           reason = "" # a reason explaining why terms are excluded
+                           ){ 
+  df_before_coln <- df_before[[coln]]
+  df_after_coln <- df_after[[coln]]
+  
+  term_diff <- setdiff(df_before_coln, df_after_coln)
+  if (length(term_diff)>0){
+    omitted_terms_report <- paste0(
+      "<br><b>", length(df_before_coln)-length(df_after_coln), " are omitted", reason, ":</b><br>", 
+      paste0(term_diff,collapse=", ")
+    )
+  } else {omitted_terms_report=""}
+  
+  out_report <- paste0("<b>", title,": ", 
+         length(df_after_coln), " out of ", length(df_before_coln), " are plotted.</b>",
+         omitted_terms_report
+  )
+  out_df_slice <- df_before[df_before[[coln]] %in% term_diff, ]
+  
+  return(list(report = out_report, # text summary
+              n_diff = c(length(df_before_coln), length(df_after_coln)), # a vector of n before and after
+              term_diff = term_diff, # a vector of diff terms in the specified coln
+              diff_slice = out_df_slice # slice of df for excluded terms
+              ))
+}
+
 
 # ================================================= #
 #        Convert filters to verbal summary          ####
@@ -737,7 +771,7 @@ radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hov
 
 
 # ================================================= #
-#                 Req and Validate               ####
+#                 VARIABLE CONTROL               ####
 # ================================================= #
 
 
@@ -752,6 +786,7 @@ req_cols <- function(df, col_list){
 }
 
 # validate multiple cols in a df
+#----------------------------------------------------
 # example: validate_cols(df, c("Name_data1", "Stat_data1", "PValue_data1", "FDR_data1"))
 validate_cols <- function(df, col_list){
   for (i in col_list){
@@ -760,6 +795,7 @@ validate_cols <- function(df, col_list){
 }
 
 # req multiple vars to be not NULL
+#---------------------------------------------------
 # example: req_vars(c(input$a, input$b, input$c), check_len=T, FUN=length)
 # check_len: checks if lengths are >0
 req_vars <- function(var_list, check_len=F, FUN=length){
@@ -772,6 +808,7 @@ req_vars <- function(var_list, check_len=F, FUN=length){
 }
 
 # req a df to exist and contain things
+#-------------------------------------------------
 req_df <- function(df){
   req(is.null(df)==F) # exists
   req(nrow(df)>0) # enough rows
