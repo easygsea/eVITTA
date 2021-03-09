@@ -559,7 +559,7 @@ output$rrho_level_dropdowns <- renderUI({
                   "Please select the color scheme for the level plot", 
                   placement = "top"),
         
-        #conditionalPanel("input.rrho_level_palette !='default'",
+        conditionalPanel("input.rrho_level_palette !='default'",
         radioButtons(
           inputId = "rrho_level_palette_reverse",
           HTML(paste0(
@@ -572,8 +572,8 @@ output$rrho_level_dropdowns <- renderUI({
         
         bsTooltip("rrho_level_palette_reverse_help", 
                   "Select Yes if you want to reverse the order of the color scheme",
-                  placement = "top"),
-        #),
+                  placement = "top")
+        ),
         
         size = "xs",
         icon = icon("palette", class = "opt"),
@@ -978,8 +978,7 @@ output$n_panels <- renderUI({
                                                    width = "100%",height = "600px"),
                                       div(id = "scatter_3d_dropdowns_anchor")
                                       
-                                    ),
-                                    uiOutput("nxyz_diff_report")
+                                    )  
                                     ),
                                     
                                     #uiOutput("nxy_3ds_panel"),
@@ -992,8 +991,7 @@ output$n_panels <- renderUI({
                                       ,
                                       div(id = "scatter_2d_dropdowns_anchor")
                                       
-                                    ),
-                                    uiOutput("nxy_diff_report")
+                                    )
                                     )
                                     
                                     #uiOutput("nxy_sc_panel")
@@ -1022,8 +1020,7 @@ output$n_panels <- renderUI({
 
                                     plotOutput("rrho_level",
                                                   width = "100%",height = "600px"),
-                                    #uiOutput("rrho_level_dropdowns"),
-                                    div(id = "rrho_level_dropdowns_anchor"),
+                                    uiOutput("rrho_level_dropdowns"),
                                     ),
                                     # tabBox(
                                     #   height = "650px",

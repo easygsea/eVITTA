@@ -289,7 +289,6 @@ observeEvent(input$n_use_data,{
   remove_ui("scatter_3d_dropdowns")
   remove_ui("scatter_2d_dropdowns")
   remove_ui("rrho_selections")
-  remove_ui("rrho_level_dropdowns")
   remove_ui("single_dropdowns")
   remove_ui("single_selections")
   remove_ui("nx_bar_panel_dropdowns")
