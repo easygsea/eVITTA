@@ -196,6 +196,24 @@ output$nxy_cor_summary <- renderPrint({
   summary(rv$fit_nxy)
 })
 
+# NA exclusion report
+output$nxy_diff_report <- renderUI({
+  req(is.null(rv$nxy_diff_report)==F)
+  req(is.null(nxy_sc_plt())==F)
+  
+  if (length(rv$nxy_diff_report$term_diff)>0){
+    box(
+      title = span( icon("exclamation"), "Exclusion Report"), status = "warning", solidHeader = F, width=12, collapsible=T,
+      HTML(rv$nxy_diff_report$report)
+    )
+  } else {
+    box(
+      title = span( icon("check"), "Exclusion Report"), status = "success", solidHeader = F, width=12,
+      HTML(rv$nxy_diff_report$report)
+    )
+  }
+})
+
 
 
 #======================================================================#
@@ -301,3 +319,21 @@ output$download_3ds_df <- downloadHandler(
     write.csv(n_3ds_prop_df(), file, 
               row.names = T, quote=TRUE)})
 
+
+# NA exclusion report
+output$nxyz_diff_report <- renderUI({
+  req(is.null(rv$nxyz_diff_report)==F)
+  req(is.null(n_3ds_plt())==F)
+  
+  if (length(rv$nxyz_diff_report$term_diff)>0){
+    box(
+      title = span( icon("exclamation"), "Exclusion Report"), status = "warning", solidHeader = F, width=12, collapsible=T,
+      HTML(rv$nxyz_diff_report$report)
+    )
+  } else {
+    box(
+      title = span( icon("check"), "Exclusion Report"), status = "success", solidHeader = F, width=12,
+      HTML(rv$nxyz_diff_report$report)
+    )
+  }
+})

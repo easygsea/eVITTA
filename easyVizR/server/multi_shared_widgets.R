@@ -28,6 +28,7 @@ update_tab_4 <- function(include_top_widgets=T){
   move_ui("scatter_2d_dropdowns","scatter_2d_dropdowns_anchor","afterEnd")
   #RRHO
   move_ui("rrho_selections","rrho_selections_anchor","afterEnd")
+  move_ui("rrho_level_dropdowns","rrho_level_dropdowns_anchor","afterEnd")
   #Single
   move_ui("single_dropdowns","single_dropdowns_anchor","afterEnd")
   move_ui("single_selections","single_selections_anchor","afterEnd")
