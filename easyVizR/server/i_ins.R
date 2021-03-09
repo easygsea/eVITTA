@@ -486,7 +486,8 @@ output$ins_table_panel <- renderUI({
     dataTableOutput("n_ins_tbl"),
     
     
-    div(style = "position: absolute; left: 1em; bottom: 1em",
+    div(id = "intersection_table_setting_button",
+      style = "position: absolute; left: 1em; bottom: 1em",
         dropdown(
           radioGroupButtons(
             inputId = "n_ins_view",
@@ -510,7 +511,8 @@ output$ins_table_panel <- renderUI({
                      placement = "right"),
         
     ),
-    div(style = "position: absolute; left: 4em; bottom: 1em",
+    div(id = "intersection_table_color_button",
+      style = "position: absolute; left: 4em; bottom: 1em",
         dropdown(
           sliderInput("n_ins_namelen",
                       "Max string length for Name column:",
@@ -555,7 +557,8 @@ output$ins_table_panel <- renderUI({
     ),
     # bsTooltip("n_wc_dropdown", "Text enrichment wordcloud (for gene set-type terms)", placement = "top"),
     
-    div(style = "position: absolute; left: 10em; bottom: 1em",
+    div(id = "intersection_table_download_button",
+      style = "position: absolute; left: 10em; bottom: 1em",
         dropdown(
           downloadButton("download_ins_df", "Download current table"),
           downloadButton("download_ins_gl", "Download gene list"),
@@ -619,7 +622,8 @@ output$n_venn_ins_palette <- renderUI({
 
 output$venn_dropdowns <- renderUI({
   div(
-    div(style = "position: absolute; left: 1em; bottom: 1em",
+    div(id = "venn_diagram_setting_button",
+      style = "position: absolute; left: 1em; bottom: 1em",
         dropdown(
           checkboxGroupInput(
             inputId = "n_venn_label",
@@ -654,7 +658,8 @@ output$venn_dropdowns <- renderUI({
         )
     ),
     #div(id = "venn_gear_dropdowns_anchor"), #,style = "position: absolute; left: 1em; bottom: 1em"),
-    div(style = "position: absolute; left: 4em; bottom: 1em",
+    div(id = "venn_diagram_color_button",
+      style = "position: absolute; left: 4em; bottom: 1em",
         dropdown(
           uiOutput("n_venn_ins_hl_opt"),
           uiOutput("n_venn_ins_palette"),
@@ -665,7 +670,8 @@ output$venn_dropdowns <- renderUI({
         
     ),
     #div(id = "venn_color_dropdowns_anchor"),#,style = "position: absolute; left: 4em; bottom: 1em"),
-    div(style = "position: absolute; left: 7em; bottom: 1em",
+    div(id = "venn_diagram_download_button",
+      style = "position: absolute; left: 7em; bottom: 1em",
         dropdown(
           downloadButton("n_npvenn_dl", "Download basic"),
           downloadButton("n_venn_dl", "Download area-proportional"),
@@ -700,8 +706,9 @@ ins_venn_panel <- reactive({
 
 #----------------- upset --------------------
 output$upset_dropdowns <- renderUI({
-  div(
-  div(style = "position: absolute; left: 1em; bottom: 1em",
+  div(id = "upset_diagram_buttons",
+  div(id = "upset_diagram_setting_button",
+      style = "position: absolute; left: 1em; bottom: 1em",
       dropdown(
         selectInput(
           inputId = "n_upset_sortby",
@@ -731,7 +738,8 @@ output$upset_dropdowns <- renderUI({
       )
       
   ),
-  div(style = "position: absolute; left: 4em; bottom: 1em",
+  div(id = "upset_diagram_color_button",
+    style = "position: absolute; left: 4em; bottom: 1em",
       dropdown(
         selectInput("n_upset_c1", 
                     HTML(paste0(
@@ -752,7 +760,8 @@ output$upset_dropdowns <- renderUI({
       
   ),
   
-  div(style = "position: absolute; left: 7em; bottom: 1em",
+  div(id = "upset_diagram_download_button",
+    style = "position: absolute; left: 7em; bottom: 1em",
       dropdown(
         downloadButton("n_upset_dl", "Download plot"),
         

@@ -1,13 +1,24 @@
 element	intro
 	In the <b>Select Intersection</b> tab, you can see how well your filtered gene lists overlap with each other. 
 n_venn_ui	For a smaller n, the <b>Venn diagram</b> will show you visually how well your gene lists overlap. 
+venn_diagram_setting_button	The settings of Venn diagram.
+venn_diagram_color_button	The color options of Venn diagram.
+venn_diagram_download_button	The download options of Venn diagram.
 df_n_upset	The <b>UpSet plot</b> is a bar-like rendition of the gene list intersections. This is useful when n is large and the <b>Venn diagram</b> is no longer informative.
+upset_diagram_buttons	These buttons have functions similar to those of Venn diagram. Explore them if you like.
+upset_diagram_setting_button	The settings of upset diagram.
+upset_diagram_color_button	The color options of upset diagram.
+upset_diagram_download_button	The download options of upset diagram.
 ins_table_panel	After viewing the charts above, you need to select an <b>intersection of interest</b> to view in detail.<br><br>By default, the overlap shared among all gene lists is selected.
 ui_intersections	Using the <b>Venn</b> or <b>UpSet</b> plot as a guide, combine these options to select the <b>intersection of interest</b>. <br><br>Tip: check if the number of terms match the count value in the above plots.
 ins_applytorv	Click this button to apply your selection. 
 n_ins_tbl	Terms contained in the <b>intersection of interest</b> are shown here; these will be used for plotting visualizations in the next panel. <br><br>Note: You can change the <b>intersection of interest</b> any time during visualization. 
 intersection_summary	If you are unsure how the <b>intersection of interest</b> is filtered, you can view the details in this summary.
+intersection_table_setting_button	The settings of upset diagram. Select the corresponding view of table.
+intersection_table_color_button	Select the max string length for Name column.
 n2_4b	If you are working with <b>gene sets</b> instead of genes, this widget will help you identify the most represented words in your <b>intersection of interest</b>, and generate a <b>wordcloud</b> based on the text enrichment.
+intersection_table_download_button	Download the dataset you are interested in.
+data_options	You could see more data options and functions by clicking this button.
 customize_filters	You can change the <b>active filters</b> any time using the <b>Gene list filters</b> button.
 view_genelists	You can view <b>active gene lists</b> using the <b>Gene lists</b> button.
 enter_genes	You can also manually enter <b>a list of terms</b> to view them in the visualization. <br><br>Note: If terms are missing, remove all active filters and try again.

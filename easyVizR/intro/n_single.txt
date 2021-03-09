@@ -7,6 +7,7 @@ nx_vol_aes	You can adjust the appearance of the visualization here.
 nx_vol_dl	Download this visualization here.
 nx_barp	<b>Bar plot</b> is also available if the <b>intersection of interest</b> contains fewer terms, or if you have selected a small list of terms from the <b>Enter genes of interest</b> dropdown on the top right.
 ins_table_panel	You can change the currently selected <b>intersection of interest</b> here. <br><br>For more details on available intersections, navigate to <b>Select Intersection</b> tab.
+data_options	You could see more data options and functions by clicking this button.
 customize_filters	You can change the <b>active filters</b> any time using the <b>Gene list filters</b> button.
 view_genelists	You can view <b>active gene lists</b> using the <b>Gene lists</b> button.
 enter_genes	You can also manually enter <b>a list of terms</b> to view them in the visualization. <br><br>Note: If terms are missing, remove all active filters and try again.

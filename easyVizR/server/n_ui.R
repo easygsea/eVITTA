@@ -449,7 +449,7 @@ div(
 output$nxy_sc_cor_panel <- renderUI({
   req(rv$nxy_selected_z =="None")
   
-  box(
+  box(id = "correlation_panel",
     title = span( icon("calculator"), "Correlation"), status = "primary", solidHeader = F, width=12,
     
     uiOutput("nxy_corline"),br(),
@@ -509,7 +509,7 @@ sc_table_panel <- reactive({
 
 output$rrho_selections <- renderUI({
   div(
-    box(
+    box(id = "rrho_selections_panel",
       title = NULL, status = "primary", solidHeader = F, width=12,
       div(id="rrho_select",
           selectInput(
@@ -539,6 +539,7 @@ output$rrho_pvalue_panel <- renderUI({
 output$rrho_level_dropdowns <- renderUI({
   div(
   div(style = "position: absolute; left: 1em; bottom: 1em; width:300px;",
+      id = "rrho_plot_color_button",
       dropdown(
         selectInput("rrho_level_palette", 
                     HTML(paste0(
@@ -582,6 +583,7 @@ output$rrho_level_dropdowns <- renderUI({
   ),
   
   div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;",
+      id = "rrho_plot_setting_button",
       dropdown(
                radioButtons(
                            inputId = "rrho_level_setting",
@@ -814,7 +816,8 @@ output$n_ui_network <- renderUI({
 
 })
 output$network_selection <- renderUI({
-  div(selectInput(
+  div(id = "select_leading_edge_panel",
+    selectInput(
     inputId = "nw_selected_col",
     label = "Select leading edge column:",
     choices = rv$nw_char_stats,
@@ -971,6 +974,7 @@ output$n_panels <- renderUI({
                                     
                              ),
                              column(8,
+                                    div(id = "scatter_plot_panel",
                                     conditionalPanel("input.nxy_selected_z !='None'",
                                     box(
                                       title = span( icon("chart-area"), "3D Scatter"), status = "primary", solidHeader = F, width=12,
@@ -992,7 +996,7 @@ output$n_panels <- renderUI({
                                       div(id = "scatter_2d_dropdowns_anchor")
                                       
                                     )
-                                    )
+                                    ))
                                     
                                     #uiOutput("nxy_sc_panel")
                              ),
@@ -1008,14 +1012,14 @@ output$n_panels <- renderUI({
                              column(4,
                                     div(id = "rrho_selections_anchor"),
                                     #uiOutput("rrho_pvalue_panel")
-                                    box(
+                                    box(id = "rrho_scatter_plot_panel",
                                                       title = span( icon("chart-area"), "Rank Scatter Plot"), status = "primary", solidHeader = F, width=12,
                                                        plotOutput("rrho_scatter_plot",
                                                        width = "100%",height = "400px")
                                       ),
                              ),
                              column(8,
-                                    box(
+                                    box(id = "rrho_level_plot_panel_display",
                                      title = span( icon("chart-area"), "Level Plot"), status = "primary", solidHeader = F, width=12,
 
                                     plotOutput("rrho_level",
