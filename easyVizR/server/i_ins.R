@@ -11,39 +11,6 @@ n_wc_ignore_help_txt <- "Common expressions:<br><b>%.*$</b> - removes trailing i
 
 # generates dynamic ui for selection
 observe({
-  # # save RVs in the rvs to restore later for the demo session
-  # saveRDS(rv$folder_upload_state, file = "rvs/folder_upload_state.rds")
-  # saveRDS(rv$upload_batch_colscheme, file = "rvs/upload_batch_colscheme.rds")
-  # saveRDS(rv$upload_batch_sharedcols, file = "rvs/upload_batch_sharedcols.rds")
-  # saveRDS(rv$batch_failed, file = "rvs/batch_failed.rds")
-  # saveRDS(rv$batch_files, file = "rvs/batch_files.rds")
-  # saveRDS(rv$columnCount, file = "rvs/columnCount.rds")
-  # saveRDS(rv$upload_batch_columns, file = "rvs/upload_batch_columns.rds")
-  # saveRDS(rv$FileDF, file = "rvs/FileDf.rds")
-  # saveRDS(rv$ll, file = "rvs/ll.rds")
-  # saveRDS(rv$gg, file = "rvs/gg.rds")
-  # saveRDS(rv$tt, file = "rvs/tt.rds")
-  # saveRDS(rv$upload_columns, file = "rvs/upload_columns.rds")
-  # saveRDS(rv$n_sharedcols, file = "rvs/n_sharedcols.rds")
-  # saveRDS(rv$n_sharedrows, file = "rvs/n_sharedrows.rds")
-  # saveRDS(rv$heatmap_i, file = "rvs/heatmap_i.rds")
-  # saveRDS(rv$nx_n, file = "rvs/nx_n.rds")
-  # saveRDS(rv$df_n, file = "rvs/df_n.rds")
-  # saveRDS(rv$nic, file = "rvs/nic.rds")
-  # saveRDS(rv$gls_ui, file = "rvs/gls_ui.rds")
-  # saveRDS(rv$gls_text, file = "rvs/gls_text.rds")
-  # saveRDS(rv$n_css_highlights, file = "rvs/n_css_highlights.rds")
-  # saveRDS(rv$nx_i, file = "rvs/nx_i.rds")
-  # saveRDS(rv$hm_numeric_stats, file = "rvs/hm_numeric_stats.rds")
-  # saveRDS(rv$all_char_stats, file = "rvs/all_char_stats.rds")
-  # saveRDS(rv$nw_char_stats, file = "rvs/nw_char_stats.rds")
-  # saveRDS(rv$n_ui_showpanel, file = "rvs/n_ui_showpanel.rds")
-  # saveRDS(rv$n_igl, file = "rvs/n_igl.rds")
-  # saveRDS(rv$ins_criteria, file = "rvs/ins_criteria.rds")
-  # saveRDS(rv$n_venn_status, file = "rvs/n_venn_status.rds")
-  # saveRDS(rv$n_3ds_status, file = "rvs/n_3ds_status.rds")
-  # saveRDS(rv$s, file = "rvs/s.rds")
-  # saveRDS(rv$n_ins_view, file = "rvs/n_ins_view.rds")
   
   req(nrow(rv$df_n)>0)
   req_filter_ns("nic",rv)
@@ -122,6 +89,21 @@ output$intersection_summary <- renderUI({
     rv$df_n, n_ins_gls(), rv$ins_criteria, rv$nx_n
   ), check_len=T)
   
+  
+  # save the RVs for demo session
+  if(!is.null(rv$demo_save) && rv$demo_save == "yes"){
+    variable_list <- c("all_char_stats", "batch_failed", "batch_files", "columnCount", "detected_dbs",
+                       "df_n", "FileDf", "folder_upload_state", "gg", "gls_text",
+                       "gls_ui", "heatmap_i", "heatmap_sortby", "hm_numeric_stats",
+                       "ins_criteria", "ins_venn_palette", "ll", "n_3ds_status", "n_css_highlights",
+                       "n_igl", "n_ins_view", "n_sharedcols", "n_sharedrows", "n_to_plot", "n_ui_showpanel",
+                       "n_venn_status", "nic", "nw_char_stats", "nx_i", "nx_n", "opt_easygsea_filter_db",
+                       "s", "tt", "upload_batch_colscheme", "upload_batch_columns", "upload_batch_sharedcols",
+                       "upload_columns", "v")
+    for(i in seq_along(variable_list)){
+      saveRDS(rv[[variable_list[i]]], file = paste0("rvs/", variable_list[i], ".rds"))
+    }
+  }
   
   desc <-list()
   criteria <- rv$ins_criteria
