@@ -54,9 +54,9 @@ rrho_color_handler <- function(palette,reverse = F){
   
   if(palette == "default"){
     default_order <- c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")
-    #if(reverse == T){
-    #  default_order <- rev(default_order)
-    #}
+    if(reverse == T){
+      default_order <- rev(default_order)
+    }
     jet.colors  <- colorRampPalette(default_order)
     jet.colors <- jet.colors(100)
     }
