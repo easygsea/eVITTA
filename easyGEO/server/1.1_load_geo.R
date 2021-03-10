@@ -23,7 +23,7 @@
 #     call_introjs(rbind(intros$E_pre,intros$E_post,intros$E_post_with_summary_ui))
 #   else
 #     call_introjs(intros$E_manual)
-#   print(input$menu1)
+#   #print(input$menu1)
 # 
 # })
 # 
@@ -337,7 +337,7 @@ read_design_matrix <- function(inFile){
     indf <- try(read.table(inFile$datapath, sep="\t",header=T, 
                            colClasses=c("character")))
   }
-  print(head(indf))
+  #print(head(indf))
   # read in space delimited
   if(is.null(ncol(indf)) || ncol(indf)==1){
     indf <- try(read.table(inFile$datapath, sep=" ",header=T, 
@@ -488,7 +488,7 @@ output$sample_comparison <- renderUI({
   different_vector <- setdiff(rv$fddf_samples, rv$dmdf_samples)
   
   number_of_matches = length(overlapped_vector)
-  print(number_of_matches)
+  # print(number_of_matches)
   
   if(length(different_vector) > 0) {
     if(length(different_vector) > 5){
@@ -644,7 +644,7 @@ observeEvent(input$search_geo, {
 
     if(inherits(rv$gse_all, "try-error")) {
       ErrorMessage <- conditionMessage(attr(rv$gse_all, "condition"))  # the error message
-      print(ErrorMessage)
+      # print(ErrorMessage)
       #Depending on what we entered, different types of errors could occur:
 
       if(ErrorMessage == "object 'destfile' not found"){
