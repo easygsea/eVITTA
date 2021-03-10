@@ -2,7 +2,7 @@
 output$ui_run <- renderUI({
   if(is.null(rv$plat_id) && rv$run_mode == "auto"){
     panel_null()
-  }else if(is.null(rv$fddf_o) && rv$run_mode == "manual"){
+  }else if((is.null(rv$fddf_o) || is.null(rv$dmdf)) && rv$run_mode == "manual"){
     panel_null(text = "Data available upon successfully uploading your design matrix.")
   }else{
     fluidRow(
