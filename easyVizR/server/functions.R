@@ -998,11 +998,10 @@ abbreviate_vector <- function(vec, # vector of strings
 get_db_identifier_freqs <- function(vec){
   # get regex matches as vector
   matches = regmatches(vec,regexpr("^.*?_",vec)) 
-  matches <- unique(matches)
   # print(matches)
   
   # get unmatched terms
-  query=paste0("^", matches, collapse="|")
+  query=paste0("^", unique(matches), collapse="|")
   unmatched_terms <- vec[-grep(query, vec)]
   # print(unmatched_terms)
   
