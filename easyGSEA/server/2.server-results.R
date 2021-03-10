@@ -2020,8 +2020,8 @@ observeEvent(input$confirm_kegg_plot,{
             ranks2 = ranks[ranks >= 0]
             ii = cut(ranks1, breaks = c(min(ranks),seq(-rv$sd_high, 0, len = 6)), include.lowest = TRUE)
             jj = cut(ranks2, breaks = c(seq(0, rv$sd_high, len = 6),max(ranks)), include.lowest = TRUE)
-            wp_colors1 = c("navy","steel","blue","lightblue","grey","grey")[ii]
-            wp_colors2 = c("grey","grey","pink","salmon","red","brown")[jj]
+            wp_colors1 = c("navy","steel","blue","lightblue","lightblue","grey")[ii]
+            wp_colors2 = c("grey","pink","pink","salmon","red","brown")[jj]
             wp_colors = paste(c(wp_colors1,wp_colors2),collapse = ",")
 
             # # coloring the nodes

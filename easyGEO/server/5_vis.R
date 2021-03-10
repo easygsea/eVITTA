@@ -328,7 +328,7 @@ output$v_download <- downloadHandler(
   },
   content = function(file) {
     if(rv$v_mode == "static"){
-      ggsave(file,volcano_ggplot(), device = "pdf", width = 10, height = 10, dpi = 300, units = "in")
+      ggsave(file,volcano_ggplot(), device = "pdf", width = 9, height = 9, dpi = 300, units = "in")
     }else if(rv$v_mode == "interactive"){
       saveWidget(as_widget(volcano_plotly()), file, selfcontained = TRUE)
     }

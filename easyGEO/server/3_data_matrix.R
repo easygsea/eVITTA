@@ -17,7 +17,7 @@ output$ui_dm <- renderUI({
                 box(title=span("Data matrix"), width = 12, solidHeader=F, status = "primary", 
                     # id = "view_data_matrix",
                     
-                    HTML("A brief intro about data matrix.")
+                    HTML("Review your uploaded data on the right.")
                     
                 )
               },

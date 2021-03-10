@@ -319,7 +319,7 @@ volcano_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc
 volcano_basic <- function(df,q_cutoff,logfc_cutoff,text="no"){
   fig <- ggplot(df) +
     geom_point(aes(x=logFC,y=-log(.data[["adj.P.Val"]]),colour=threshold)) +
-    scale_colour_manual(values = c("grey","red")) +
+    scale_colour_manual(values = c("blue","grey","red")) +
     xlab("logFC") + ylab(paste0("-log10(adj.P.Val)")) +
     geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype="dotted") +
     geom_hline(yintercept=-log(q_cutoff), linetype="dotted") +
@@ -332,8 +332,8 @@ volcano_basic <- function(df,q_cutoff,logfc_cutoff,text="no"){
   
   if(text=="yes"){
     fig <- fig +
-      geom_text_repel(data = df[which(df$threshold==TRUE),],size=5,
-                      aes(x=logFC,y=-log(df[which(df$threshold==TRUE),][["adj.P.Val"]]),label=genelabels)
+      geom_text_repel(data = df[which(df$threshold!="grey"),],size=5,
+                      aes(x=logFC,y=-log(df[which(df$threshold!="grey"),][["adj.P.Val"]]),label=genelabels)
       )
   }
   
@@ -370,7 +370,7 @@ volcano_ggplot <- function(df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$pl
     # create genelabels
     df_ordered$genelabels = c(labels_up,rep("",no_unlabel),labels_down)
     
-    df_ordered$threshold = df_ordered$genelabels != ""
+    df_ordered$threshold = c(rep("red",length(labels_up)),rep("grey",no_unlabel),rep("blue",length(labels_down))) #df_ordered$genelabels != ""
     
     fig <- volcano_basic(df_ordered,q_cutoff,logfc_cutoff,text="yes")
     
