@@ -366,6 +366,12 @@ volcano_ggplot <- function(df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$pl
     
     # calculate # not labeled
     no_unlabel = nrow(df_ordered) - no_down - no_up
+    # Blake added these two lines to avoid that # of not labeled to be below 0
+    if(no_unlabel <= 0){
+      no_unlabel = nrow(df_ordered)
+      labels_up = NULL
+      labels_down = NULL
+    }
     
     # create genelabels
     df_ordered$genelabels = c(labels_up,rep("",no_unlabel),labels_down)
@@ -456,10 +462,16 @@ hm_count <- function(df = hm_df(),counts = rv$deg_counts){
   genes = rownames(df)
   counts = data.frame(counts[match(genes,rownames(counts)),],stringsAsFactors = F)
   
-  if(rv$h_y_name == "title"){
-    samples = colnames(counts) %>%
-      translate_sample_names(.,  rv$pdata[c("title", "geo_accession")],  "title")
-    
+  # Blake editted these two lines for Manual upload
+  if(rv$run_mode == "auto"){
+    if(rv$h_y_name == "title"){
+      samples = colnames(counts) %>%
+        translate_sample_names(.,  rv$pdata[c("title", "geo_accession")],  "title")
+      
+      colnames(counts) = samples
+    }
+  } else {
+    samples = colnames(counts)
     colnames(counts) = samples
   }
   
@@ -622,34 +634,45 @@ box_plt <- function(y_label){
 
 # ================ initialize demo RVs =================
 init_demo <- function(){
-  # initialize all required rv for a demo run
-  rv$demo_acc = "GSE147507"
-  rv$gse_all = readRDS(paste0(getwd(),"/rvs/gse_all.rds"))
-  rv$geo_accession <- "GSE147507"
-  rv$platforms = readRDS(paste0(getwd(),"/rvs/platforms.rds"))
-  rv$plat_id <- 1
-  rv$gpl_summary <- readRDS(paste0(getwd(),"/rvs/gpl_summary.rds"))
-  rv$gpl_choices <- readRDS(paste0(getwd(),"/rvs/gpl_choices.rds"))
-  rv$dmdf <- readRDS(paste0(getwd(),"/rvs/dmdf.rds"))
-  rv$all_samples <- readRDS(paste0(getwd(),"/rvs/all_samples.rds"))
-  # rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds"))
-  rv$pdata <- readRDS(paste0(getwd(),"/rvs/pdata.rds"))
-  rv$fddf <- readRDS(paste0(getwd(),"/rvs/fddf.rds"))
-  rv$sup_source <- readRDS(paste0(getwd(),"/rvs/sup_source.rds"))
-  rv$suplist <- readRDS(paste0(getwd(),"/rvs/suplist.rds"))
-  rv$deg <- readRDS(paste0(getwd(),"/rvs/deg.rds"))
-  rv$deg_counts <- readRDS(paste0(getwd(),"/rvs/deg_counts.rds"))
-  rv$c_var <- readRDS(paste0(getwd(),"/rvs/c_var.rds"))
-  rv$c_level <- readRDS(paste0(getwd(),"/rvs/c_level.rds"))
-  rv$t_level <- readRDS(paste0(getwd(),"/rvs/t_level.rds"))
-  rv$samples_c <- readRDS(paste0(getwd(),"/rvs/samples_c.rds"))
-  rv$samples_t <- readRDS(paste0(getwd(),"/rvs/samples_t.rds"))
-  rv$deg_pdata <- readRDS(paste0(getwd(),"/rvs/deg_pdata.rds"))
-  rv$gpl_tooltips <- readRDS(paste0(getwd(),"/rvs/gpl_tooltips.rds"))
-  rv$text <- readRDS(paste0(getwd(),"/rvs/text.rds"))
-  rv$matrix_ready <- readRDS(paste0(getwd(),"/rvs/matrix_ready.rds")) 
-  rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds")) 
-  rv$demo <- "yes"
+  if(rv$run_mode == "auto"){
+    # initialize all required rv for a demo run
+    rv$demo_acc = "GSE147507"
+    rv$gse_all = readRDS(paste0(getwd(),"/rvs/gse_all.rds"))
+    rv$geo_accession <- "GSE147507"
+    rv$platforms = readRDS(paste0(getwd(),"/rvs/platforms.rds"))
+    rv$plat_id <- 1
+    rv$gpl_summary <- readRDS(paste0(getwd(),"/rvs/gpl_summary.rds"))
+    rv$gpl_choices <- readRDS(paste0(getwd(),"/rvs/gpl_choices.rds"))
+    rv$dmdf <- readRDS(paste0(getwd(),"/rvs/dmdf.rds"))
+    rv$all_samples <- readRDS(paste0(getwd(),"/rvs/all_samples.rds"))
+    # rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds"))
+    rv$pdata <- readRDS(paste0(getwd(),"/rvs/pdata.rds"))
+    rv$fddf <- readRDS(paste0(getwd(),"/rvs/fddf.rds"))
+    rv$sup_source <- readRDS(paste0(getwd(),"/rvs/sup_source.rds"))
+    rv$suplist <- readRDS(paste0(getwd(),"/rvs/suplist.rds"))
+    rv$deg <- readRDS(paste0(getwd(),"/rvs/deg.rds"))
+    rv$deg_counts <- readRDS(paste0(getwd(),"/rvs/deg_counts.rds"))
+    rv$c_var <- readRDS(paste0(getwd(),"/rvs/c_var.rds"))
+    rv$c_level <- readRDS(paste0(getwd(),"/rvs/c_level.rds"))
+    rv$t_level <- readRDS(paste0(getwd(),"/rvs/t_level.rds"))
+    rv$samples_c <- readRDS(paste0(getwd(),"/rvs/samples_c.rds"))
+    rv$samples_t <- readRDS(paste0(getwd(),"/rvs/samples_t.rds"))
+    rv$deg_pdata <- readRDS(paste0(getwd(),"/rvs/deg_pdata.rds"))
+    rv$gpl_tooltips <- readRDS(paste0(getwd(),"/rvs/gpl_tooltips.rds"))
+    rv$text <- readRDS(paste0(getwd(),"/rvs/text.rds"))
+    rv$matrix_ready <- readRDS(paste0(getwd(),"/rvs/matrix_ready.rds")) 
+    rv$samples <- readRDS(paste0(getwd(),"/rvs/samples.rds")) 
+    rv$demo <- "yes"
+  } else {
+    variable_list <- c("fddf_o", "dmdf", "all_samples", "pdata", "fddf", "sup_source",
+                       "suplist", "deg", "deg_counts", "c_var", "c_level", "t_level", "samples_c",
+                       "samples_t", "deg_pdata", "gpl_tooltips", "text", "matrix_ready", "samples", "dmdf_samples")
+    for(i in seq_along(variable_list)){
+      rv[[variable_list[i]]] <- readRDS(paste0(getwd(), "/rvs2/", variable_list[i], ".rds"))
+    }
+    rv$demo <- "yes"
+  }
+  # rv$fddf_o <- readRDS(paste0(getwd(), "/rvs/fddf_o.rds"))
 }
 
 # unload example
@@ -681,6 +704,10 @@ init_demo_d <- function(){
   rv$text <- NULL
   rv$matrix_ready <- NULL
   rv$demo <- ""
+  
+  # RVs in manual mode
+  rv$fddf_o <- NULL
+  rv$dmdf_samples <- NULL
 }
 
 init_choices <- function(){
@@ -700,6 +727,10 @@ init_choices3 <- function(){
 init_choices4 <- function(){
   updateSelectizeInput(session, inputId = "aplot_genes", selected = "CXCL2")
   rv$a_gene = "CXCL2"
+}
+
+init_choices_manual <- function(){
+  updateCheckboxGroupInput(session, inputId = "sp_select_levels", selected = c("NHBE", "A549"))
 }
 
 # =============== demo toggle button ===============

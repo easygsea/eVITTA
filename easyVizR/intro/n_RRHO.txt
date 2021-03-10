@@ -1,0 +1,11 @@
+element	intro
+rrho_selections_panel	select x and y variable for RRHO plots.
+rrho_scatter_plot_panel	The <b>RRHO scatter plot</b>
+rrho_level_plot_panel_display	The <b>RRHO Level plot </b>Important!!!
+rrho_plot_color_button	The button to adjust color schema.
+rrho_plot_setting_button	You could select if you need the Benjamini-Yekutieli FDR Correction for RRHO Level Plot.
+ins_table_panel	You can change the currently selected <b>intersection of interest</b> here. <br><br>For more details on available intersections, navigate to <b>Select Intersection</b> tab.
+data_options	You could see more data options and functions by clicking this button.
+customize_filters	You can change the <b>active filters</b> any time using the <b>Gene list filters</b> button.
+view_genelists	You can view <b>active gene lists</b> using the <b>Gene lists</b> button.
+enter_genes	You can also manually enter <b>a list of terms</b> to view them in the visualization. <br><br>Note: If terms are missing, remove all active filters and try again.

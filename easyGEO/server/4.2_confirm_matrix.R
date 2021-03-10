@@ -2,6 +2,8 @@
 output$ui_run <- renderUI({
   if(is.null(rv$plat_id) && rv$run_mode == "auto"){
     panel_null()
+  }else if(is.null(rv$fddf_o) && rv$run_mode == "manual"){
+    panel_null(text = "Data available upon successfully uploading your design matrix.")
   }else{
     fluidRow(
       column(5,
@@ -119,7 +121,11 @@ output$confirm_matrix_feedback <- renderUI({
       errors <- errors + 1
       
       # titles of not found samples
-      samples_title = translate_sample_names(notfound,rv$pdata[c("title", "geo_accession")],  "title")
+      if(rv$run_mode == "auto"){
+        samples_title = translate_sample_names(notfound,rv$pdata[c("title", "geo_accession")],  "title")
+      } else {
+        samples_title = notfound
+      }
       
       if(length(notfound)==1){d_msg = "it"}else{d_msg = "them"}
       
@@ -144,16 +150,22 @@ output$confirm_matrix_feedback <- renderUI({
         errors <- errors + 1
         
         # titles of all na samples
-        samples_title = translate_sample_names(all_nas,rv$pdata[c("title", "geo_accession")],  "title")
-
+        if(rv$run_mode == "auto"){
+          samples_title = translate_sample_names(all_nas,rv$pdata[c("title", "geo_accession")],  "title")
+        } else {
+          samples_title = all_nas
+        }
         msg = c(msg, paste0("<strong>Data are missing for selected samples: </strong><br>
                             ", paste(all_nas, collapse=", "), " (", paste(samples_title, collapse=", ") ,")"
                             ,"<br><br><b>Please check if your uploaded data matrix is in correct format and is complete.</b>"))
         
       } else if (length(has_nas)>0){
         # titles of has na samples
-        samples_title = translate_sample_names(has_nas,rv$pdata[c("title", "geo_accession")],  "title")
-        
+        if(rv$run_mode == "auto"){
+          samples_title = translate_sample_names(has_nas,rv$pdata[c("title", "geo_accession")],  "title")
+        } else {
+          samples_title = has_nas
+        }
         if(length(has_nas)==1){d_msg = "it"}else{d_msg = "them"}
         
         msg = c(msg, paste0("<strong>Missing value(s) found in selected samples: </strong><br>

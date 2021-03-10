@@ -1,21 +1,45 @@
 # ------------ overall visualization tab UI ---------------
 output$ui_vis <- renderUI({
-  # saveRDS(rv$pdata, file = "rvs/pdata.rds")
-  # saveRDS(rv$fddf, file = "rvs/fddf.rds")
-  # saveRDS(rv$sup_source, file = "rvs/sup_source.rds")
-  # saveRDS(rv$suplist, file = "rvs/suplist.rds")
-  # saveRDS(rv$deg, file = "rvs/deg.rds")
-  # saveRDS(rv$deg_counts, file = "rvs/deg_counts.rds")
-  # saveRDS(rv$c_var, file = "rvs/c_var.rds")
-  # saveRDS(rv$c_level, file = "rvs/c_level.rds")
-  # saveRDS(rv$t_level, file = "rvs/t_level.rds")
-  # saveRDS(rv$samples_c, file = "rvs/samples_c.rds")
-  # saveRDS(rv$samples_t, file = "rvs/samples_t.rds")
-  # saveRDS(rv$deg_pdata, file = "rvs/deg_pdata.rds")
-  # saveRDS(rv$gpl_tooltips, file = "rvs/gpl_tooltips.rds")
-  # saveRDS(rv$text, file = "rvs/text.rds")
-  # saveRDS(rv$matrix_ready, file = "rvs/matrix_ready.rds")
-  
+  if(!is.null(rv$demo_save) && rv$demo_save == "yes"){
+    if(rv$run_mode == "manual"){
+      saveRDS(rv$fddf_o, file ="rvs2/fddf_o.rds")
+      saveRDS(rv$dmdf, file = "rvs2/dmdf.rds")
+      saveRDS(rv$all_sample, file = "rvs2/all_samples.rds")
+      saveRDS(rv$pdata, file = "rvs2/pdata.rds")
+      saveRDS(rv$fddf, file = "rvs2/fddf.rds")
+      saveRDS(rv$sup_source, file = "rvs2/sup_source.rds")
+      saveRDS(rv$suplist, file = "rvs2/suplist.rds")
+      saveRDS(rv$deg, file = "rvs2/deg.rds")
+      saveRDS(rv$deg_counts, file = "rvs2/deg_counts.rds")
+      saveRDS(rv$c_var, file = "rvs2/c_var.rds")
+      saveRDS(rv$c_level, file = "rvs2/c_level.rds")
+      saveRDS(rv$t_level, file = "rvs2/t_level.rds")
+      saveRDS(rv$samples_c, file = "rvs2/samples_c.rds")
+      saveRDS(rv$samples_t, file = "rvs2/samples_t.rds")
+      saveRDS(rv$deg_pdata, file = "rvs2/deg_pdata.rds")
+      saveRDS(rv$gpl_tooltips, file = "rvs2/gpl_tooltips.rds")
+      saveRDS(rv$text, file = "rvs2/text.rds")
+      saveRDS(rv$matrix_ready, file = "rvs2/matrix_ready.rds")
+      saveRDS(rv$samples, file = "rvs2/samples.rds")
+      saveRDS(rv$dmdf_samples, file = "rvs2/dmdf_samples.rds")
+    } else {
+      saveRDS(rv$pdata, file = "rvs/pdata.rds")
+      saveRDS(rv$fddf, file = "rvs/fddf.rds")
+      saveRDS(rv$sup_source, file = "rvs/sup_source.rds")
+      saveRDS(rv$suplist, file = "rvs/suplist.rds")
+      saveRDS(rv$deg, file = "rvs/deg.rds")
+      saveRDS(rv$deg_counts, file = "rvs/deg_counts.rds")
+      saveRDS(rv$c_var, file = "rvs/c_var.rds")
+      saveRDS(rv$c_level, file = "rvs/c_level.rds")
+      saveRDS(rv$t_level, file = "rvs/t_level.rds")
+      saveRDS(rv$samples_c, file = "rvs/samples_c.rds")
+      saveRDS(rv$samples_t, file = "rvs/samples_t.rds")
+      saveRDS(rv$deg_pdata, file = "rvs/deg_pdata.rds")
+      saveRDS(rv$gpl_tooltips, file = "rvs/gpl_tooltips.rds")
+      saveRDS(rv$text, file = "rvs/text.rds")
+      saveRDS(rv$matrix_ready, file = "rvs/matrix_ready.rds")
+    }
+  }
   if(is.null(rv$deg)){
     msg = "Visualization available upon successful DEG run."
     panel_null(text = msg)
@@ -368,13 +392,16 @@ output$hplot_parameters <- renderUI({
         selected = rv$h_zscore
       )
     ),
-    tags$hr(style="border-color: grey;"),
-    radioGroupButtons(
-      inputId = "h_y_name",
-      label = "Label samples by:", 
-      choices = list("GEO accession"="accession", "Sample name"="title"),
-      selected = rv$h_y_name
-    ),
+    if(rv$run_mode == "auto"){
+    tags$hr(style="border-color: grey;")},
+    if(rv$run_mode == "auto"){
+      radioGroupButtons(
+        inputId = "h_y_name",
+        label = "Label samples by:", 
+        choices = list("GEO accession"="accession", "Sample name"="title"),
+        selected = rv$h_y_name
+      )
+    },
     # tooltips for radioGroupbuttons
     radioTooltip(id = "h_y_name", choice = "accession", 
                  title = "GEO accession method of labelling", placement = "bottom", trigger = "hover"),

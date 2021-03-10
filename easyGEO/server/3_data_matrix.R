@@ -113,13 +113,13 @@ output$data_matrix_ui <- renderUI({
   gse_sup <- unlist(gse_meta()[grep("supplementary_file", names(gse_meta()))])
   gse_sup[gse_sup=="NONE"] <- NA # convert NONE to NA
   gse_sup <- gse_sup[is.na(gse_sup)==F] # delete NA
-  print(gse_sup)
+  # print(gse_sup)
   if(rv$getgeo_mode){
     if(!identical(gse_sup, character(0))){
       gse_sup <- strsplit(gse_sup, "\n")[[1]]
     }
   }
-  print(gse_sup)
+  # print(gse_sup)
   
   # check supplementary data in GSMs
   
@@ -127,7 +127,7 @@ output$data_matrix_ui <- renderUI({
   gsm_sup[gsm_sup=="NONE"] <- NA # convert NONE to NA
   gsm_sup <- gsm_sup[is.na(gsm_sup)==F] # delete NA
   gsm_sup <- unlist(gsm_sup)
-  print(gsm_sup)
+  # print(gsm_sup)
   
   # detect where the data is
   if (rv$expr_nrow>0){
@@ -347,7 +347,7 @@ read_data_matrix <- function(inFile){
     indf <- try(read.table(inFile$datapath, sep="\t",header=F, 
                            colClasses=c("character")))
   }
-  print(head(indf))
+  # print(head(indf))
   # read in space delimited
   if(is.null(ncol(indf)) ||ncol(indf)==1){
     indf <- try(read.table(inFile$datapath, sep=" ",header=F, 
@@ -413,7 +413,7 @@ read_data_matrix <- function(inFile){
   
   indf_coln <- unname(unlist(indf[1,])) # colnames = first row
   indf_rown <- unname(unlist(indf[,1])) # rownames = first col
-  print(head(indf_rown))
+  # print(head(indf_rown))
   indf <- indf[-1,-1]
   # print(head(indf))
   
@@ -510,9 +510,7 @@ read_data_matrix <- function(inFile){
     matched_cols <- intersect(colnames(rvdf), colnames(indf)) # a vector of GSM id for matched cols
   }
   unmatched_cols <- setdiff(colnames(indf), matched_cols) # vector of uploaded colnames that cannot find a match
-  print(matched_cols)
   #print(length(matched_cols))
-  print(unmatched_cols)
   #print(length(unmatched_cols))
   
   
@@ -528,10 +526,9 @@ read_data_matrix <- function(inFile){
     }
     rownames(dmdf) <- c() # clear row names
     
-    print(head(dmdf))
+    # print(head(dmdf))
     
     rv$dmdf <- dmdf
-    print("end")
   }
 
   })
@@ -548,8 +545,8 @@ read_data_matrix <- function(inFile){
     # Check to see if there is some column names matched the potential terms in DEG file
     match_deg_cols <- intersect(tolower(deg_colnames),tolower(unmatched_cols))
     match_deg_cols_one_character <- glue_collapse(match_deg_cols, sep = ", ", last = " and ")
-    print(match_deg_cols)
-    print(length(match_deg_cols))
+    # print(match_deg_cols)
+    # print(length(match_deg_cols))
     
     #the modal that reminds user that there are unmatched columns exist is added, Vesion 1
     #declare some variables
@@ -837,8 +834,12 @@ observeEvent(input$file, {
 # --------------- show data matrix df ---------------
 
 output$data_matrix_df <- DT::renderDataTable({
-  # saveRDS(rv$samples, file = "rvs/samples.rds")
-  
+  if(rv$demo_save == "yes" ){
+    if(rv$run_mode == "auto")
+      saveRDS(rv$samples, file = "rvs/samples.rds")
+    else
+      saveRDS(rv$samples, file = "rvs2/samples.rds")
+  }
   req(is.null(rv$gse_all)==F || rv$run_mode == "manual")
   req(is.null(rv$plat_id)==F || rv$run_mode == "manual")
   req(is.null(rv$dmdf)==F)
@@ -900,17 +901,13 @@ output$dmdf_filter_ui <- renderUI({
 
 # filter count matrix by selected samples (DISPLAY ONLY)
 filtered_data_showdf <- reactive({
-  print(is.null(rv$dmdf)==F)
-  print(nrow(rv$dmdf)>0)
-  print(length(rv$samples)>0)
   
   req(is.null(rv$dmdf)==F)
   req(nrow(rv$dmdf)>0)
   req(length(rv$samples)>0)
   
   dmdf <- rv$dmdf
-  print(head(dmdf))
-  print(rv$samples)
+
   if(rv$run_mode == "auto"){
     dmdf <- dmdf[,c("Name", rv$samples)]
   } else {
@@ -936,8 +933,6 @@ filtered_data_df <- reactive({
   dmdf <- rv$dmdf
   # check if there are samples that exist in design matrix but not in data matrix
   # if yes, there is a column match error while displaying the filter data matrix
-  print("whatever")
-  print(length(setdiff(rv$samples, rv$dmdf_samples)))
   if(rv$run_mode == "auto"){
     dmdf <- dmdf[,c("Name", rv$samples)]
   } else {
@@ -966,8 +961,7 @@ observeEvent(input$identifier,{
       dplyr::mutate(NameN = genes) %>%
       dplyr::filter(complete.cases(.)) %>%
       dplyr::filter(.data[[identifier]] != "")
-    print(head(as_tibble(df)))
-    
+
     df <- df[!duplicated(df[[identifier]]),]
     
     # dmdf <- dmdf[dmdf[,"Name"] %in% df[["NameN"]],]

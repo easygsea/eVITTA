@@ -27,7 +27,11 @@
 # 
 # # start rintrojs when users switch tabs
 # observeEvent(input$tabs,{
-#   if(input$tabs == "tab_filters"){
+#   if(input$tabs == "tab1" && !is.null(rv$demo_yes)){
+#     later(~rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+#                                                      steps = intros$upload)
+#     ), 2)
+#   } else if(input$tabs == "tab_filters"){
 #     later(~rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
 #                                                      steps = intros$f1)
 #     ), 2)

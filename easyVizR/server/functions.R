@@ -996,6 +996,14 @@ abbreviate_vector <- function(vec, # vector of strings
 # freq_df: frequency df with columns Database, Freq, matches
 # choices: named vector for shiny input choices
 get_db_identifier_freqs <- function(vec){
+  # get regex matches as vector
+  matches = regmatches(vec,regexpr("^.*?_",vec)) 
+  # print(matches)
+  
+  # get unmatched terms
+  query=paste0("^", unique(matches), collapse="|")
+  unmatched_terms <- vec[-grep(query, vec)]
+  # print(unmatched_terms)
   
   # generate df that summarizes identifier frequencies
   matches = regmatches(vec,regexpr("^.*?_",vec)) # get regex matches as vector
@@ -1180,7 +1188,8 @@ init_demo <- function(){
   rv$ins_venn_palette <- readRDS(paste0(getwd(),"/rvs/ins_venn_palette.rds"))
   rv$detected_dbs <- readRDS(paste0(getwd(),"/rvs/detected_dbs.rds"))
   rv$opt_easygsea_filter_db <- readRDS(paste0(getwd(),"/rvs/opt_easygsea_filter_db.rds"))
-  
+  rv$rrho_y <- "A549-ACE2_SARS-CoV-2_LowMOI_KEGG-WkPt-RctP-BlgP"
+
   for (i in 1:3){
     rv[[paste0("nic_p_",i)]] <- 0.05
     rv[[paste0("nic_q_",i)]] <- 1
@@ -1195,6 +1204,18 @@ init_demo_d <- function(){
   rv$ll <- NULL
   rv$gg <- NULL
   rv$tt <- NULL
+  
+  variable_list <- c("all_char_stats", "batch_failed", "batch_files", "columnCount", "detected_dbs",
+                     "df_n", "FileDf", "folder_upload_state", "gg", "gls_text",
+                     "gls_ui", "heatmap_i", "heatmap_sortby", "hm_numeric_stats",
+                     "ins_criteria", "ins_venn_palette", "ll", "n_3ds_status", "n_css_highlights",
+                     "n_ins_view", "n_sharedcols", "n_sharedrows", "n_to_plot", "n_ui_showpanel",
+                     "n_venn_status", "nic", "nw_char_stats", "nx_i", "nx_n", "opt_easygsea_filter_db",
+                     "s", "tt", "upload_batch_colscheme", "upload_batch_columns", "upload_batch_sharedcols",
+                     "upload_columns", "v")
+  for(i in seq_along(variable_list)){
+    rv[[variable_list[i]]] <- NULL
+  }
 }
 
 # =============== demo toggle button ===============

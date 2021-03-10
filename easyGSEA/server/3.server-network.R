@@ -24,6 +24,8 @@ output$ui_bodyNetwork <- renderUI({
                     uiOutput("vis_error")
                 ),
                 div(
+                  style="position:relative;z-index:10",
+                  
                     if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                         div(
                             br(),
