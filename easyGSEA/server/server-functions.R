@@ -2430,6 +2430,8 @@
       rv$infile_check <- readRDS(paste0(getwd(),"/rvs/infile_check.rds"))
       rv$rnk_check <- readRDS(paste0(getwd(),"/rvs/rnk_check.rds"))
       rv$gene_lists_mat1 <- readRDS(paste0(getwd(),"/rvs/gene_lists_mat1.rds"))
+      rv$total_genes <- readRDS(paste0(getwd(), "/rvs/total_genes.rds"))
+      rv$total_genes_after <- readRDS(paste0(getwd(), "/rvs/total_genes_after.rds"))
       # rv$total_genes_after <- 23710
       # rv$total_genes <- 23710
       # rv$es_term <- "KEGG_Viral_protein_interaction_with_cytokine_and_cytokine_receptor%hsa04061"

@@ -3,6 +3,7 @@
 #=============================================================#
 # ------------ Overall bodyResults UI ------------------
 output$ui_bodyResults <- renderUI({
+    
     if(!is.null(rv$demo_save) && rv$demo_save == "yes"){
         if(rv$run_mode == "glist"){
             variable_list <- c("bar_pathway", "bubble_pathway", "data_head_o", "db_modal", "db_status",
@@ -21,7 +22,8 @@ output$ui_bodyResults <- renderUI({
                                "gene_lists_mat1", "gene_lists_mat2", "glist_check", "gmax", "gmin", "gmt_cs",
                                "gmt_cs_paths", "gmts", "gmts_length", "gperm", "infile_check", "infile_confirm",
                                "infile_name", "no_down_01", "no_down_05", "no_up_01", "no_up_05", "rnk_check",
-                               "rnk_or_deg", "rnkgg", "rnkll", "run", "run_mode", "run_n", "sd_high", "volcano_pathway")
+                               "rnk_or_deg", "rnkgg", "rnkll", "run", "run_mode", "run_n", "sd_high", "volcano_pathway",
+                               "total_genes", "total_genes_after")
             for(i in seq_along(variable_list)){
                 saveRDS(rv[[variable_list[i]]], file = paste0("rvs/", variable_list[i], ".rds"))
             }
