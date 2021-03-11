@@ -89,7 +89,6 @@ output$intersection_summary <- renderUI({
     rv$df_n, n_ins_gls(), rv$ins_criteria, rv$nx_n
   ), check_len=T)
   
-  
   # save the RVs for demo session
   if(!is.null(rv$demo_save) && rv$demo_save == "yes"){
     variable_list <- c("all_char_stats", "batch_failed", "batch_files", "columnCount", "detected_dbs",
@@ -99,7 +98,7 @@ output$intersection_summary <- renderUI({
                        "n_igl", "n_ins_view", "n_sharedcols", "n_sharedrows", "n_to_plot", "n_ui_showpanel",
                        "n_venn_status", "nic", "nw_char_stats", "nx_i", "nx_n", "opt_easygsea_filter_db",
                        "s", "tt", "upload_batch_colscheme", "upload_batch_columns", "upload_batch_sharedcols",
-                       "upload_columns", "v")
+                       "upload_columns", "v", "n_ins_namelen")
     for(i in seq_along(variable_list)){
       saveRDS(rv[[variable_list[i]]], file = paste0("rvs/", variable_list[i], ".rds"))
     }

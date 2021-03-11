@@ -1189,7 +1189,7 @@ init_demo <- function(){
   rv$detected_dbs <- readRDS(paste0(getwd(),"/rvs/detected_dbs.rds"))
   rv$opt_easygsea_filter_db <- readRDS(paste0(getwd(),"/rvs/opt_easygsea_filter_db.rds"))
   rv$rrho_y <- "A549-ACE2_SARS-CoV-2_LowMOI_KEGG-WkPt-RctP-BlgP"
-
+  rv$n_ins_namelen <- readRDS(paste0(getwd(), "/rvs/n_ins_namelen.rds"))
   for (i in 1:3){
     rv[[paste0("nic_p_",i)]] <- 0.05
     rv[[paste0("nic_q_",i)]] <- 1
