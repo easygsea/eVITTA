@@ -1,7 +1,7 @@
    rv <- reactiveValues(
         demo_mode = "", # "gsea" for a demo session for GSEA mode, "ora" for ORA mode, 
         demo_n = 1, # odd for load, even for unload
-        demo_save = "no", # yes for saving the variables, no for regular run
+        demo_save = "yes", # yes for saving the variables, no for regular run
         
         #NULL for regular runs
            
