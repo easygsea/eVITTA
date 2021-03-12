@@ -1285,16 +1285,16 @@
                                      # "<br>leadingEdge:<br>", addlinebreaks_vis(df$leadingEdge))
                                      "<br>",tail(colnames(df),n=1)," (",sizes,"/",df$size,")",":<br>", addlinebreaks_vis(df[[ncol(df)]]))
                 lnodes <- list(
-                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.05,0.25)"), color="#F30038", title = "something to display"),
-                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.01,0.05)"), color="#E00034"),
-                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.005,0.01)"), color="#CC002F"),
-                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.001,0.005)"), color="#B9002B"),
-                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0,0.001)"), color="#A50026"),
-                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.05,0.25)"), color="#0C78E7"),
-                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.01,0.05)"), color="#0B6ED4"),
-                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.005,0.01)"), color="#0A64C1"),
-                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.001,0.005)"), color="#095BAF"),
-                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0,0.01)"), color="#08519C")
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.05,.25)"), color="#F30038", title = "something to display"),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.01,.05)"), color="#E00034"),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.005,.01)"), color="#CC002F"),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.001,.005)"), color="#B9002B"),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[0,.001)"), color="#A50026"),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.05,.25)"), color="#0C78E7"),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.01,.05)"), color="#0B6ED4"),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.005,.01)"), color="#0A64C1"),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.001,.005)"), color="#095BAF"),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[0,.01)"), color="#08519C")
                 )
                 
             }else if(rv$run_mode == "glist"){
