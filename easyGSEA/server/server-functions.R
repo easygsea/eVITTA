@@ -1284,12 +1284,31 @@
                                      
                                      # "<br>leadingEdge:<br>", addlinebreaks_vis(df$leadingEdge))
                                      "<br>",tail(colnames(df),n=1)," (",sizes,"/",df$size,")",":<br>", addlinebreaks_vis(df[[ncol(df)]]))
+                lnodes <- list(
+                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#F30038"),
+                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.01,0.05)"), color="#E00034"),
+                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#CC002F"),
+                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.01,0.05)"), color="#B9002B"),
+                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#A50026"),
+                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#0C78E7"),
+                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.01,0.05)"), color="#0B6ED4"),
+                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#0A64C1"),
+                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.01,0.05)"), color="#095BAF"),
+                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#08519C")
+                )
                 
             }else if(rv$run_mode == "glist"){
                 hovertexts <- paste0("<b>", df$pathway,"</b><br>
                      P=",round(df$pval,3),
                                      ";P.adj=",round(df$padj,3),
                                      "<br>",tail(colnames(df),n=1)," (",sizes,"/",df$size,")",":<br>", addlinebreaks_vis(df[[ncol(df)]]))
+                lnodes <- list(
+                  list(label = paste0(rv$p_or_q_vis,"=[0.05,0.25)"), color="rgba(254,224,144)"),
+                  list(label = paste0(rv$p_or_q_vis,"=[0.05,0.25)"), color="rgba(253,174,97)"),
+                  list(label = paste0(rv$p_or_q_vis,"=[0.05,0.25)"), color="rgba(244,109,67)"),
+                  list(label = paste0(rv$p_or_q_vis,"=[0.05,0.25)"), color="rgba(215,48,39)"),
+                  list(label = paste0(rv$p_or_q_vis,"=[0.05,0.25)"), color="rgba(165,0,38)")
+                )
             }
             
             # get rid of db id
@@ -1410,7 +1429,8 @@
                                nodesIdSelection = TRUE, selectedBy = list(variable = "cluster")) %>% # , selectedBy = "group"once select a node, see relevant nodes and grey out the rest.
                     # visPhysics(stabilization = FALSE) %>%
                     visPhysics(solver = "barnesHut") %>% # node moving dynamics
-                    visLayout(randomSeed = 12) # to always have the same network
+                    visLayout(randomSeed = 12) %>% # to always have the same network
+                    visLegend(addNodes = lnodes, useGroups = F, main = "Legend title")
                 return(vis)
             }else{
                 # generate edges
@@ -1432,7 +1452,8 @@
                                nodesIdSelection = TRUE, selectedBy = list(variable = "cluster")) %>% # once select a node, see relevant nodes and grey out the rest.
                     # visPhysics(stabilization = FALSE) %>%
                     visPhysics(solver = "barnesHut") %>% # node moving dynamics
-                    visLayout(randomSeed = 12) # to always have the same network
+                    visLayout(randomSeed = 12) %>% # to always have the same network
+                    visLegend(addNodes = lnodes, useGroups = F, main = "Legend title")
                 print(Sys.time())
                 return(vis)
             }
@@ -1519,7 +1540,7 @@
           coord_flip() +
           geom_point(data = hover_points, mapping = aes(x = x, y = y, text = name), size = 0.6)+
           geom_text(data = df_padj_points, mapping = aes(x = x, y = y - 0.01,label = complete_name), size = label_size) +
-          ylab("distance") +
+          ylab("Distance") +
           theme(axis.text.y = element_blank(),
                 axis.title.y = element_blank(),
                 panel.grid.major.y = element_blank()) +
