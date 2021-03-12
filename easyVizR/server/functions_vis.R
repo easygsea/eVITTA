@@ -185,21 +185,22 @@ draw_eulerr_with_ins <- function(gls, ins, print_mode="counts", show_ins=T, ins_
   t_sections <- names(ins[ins==T & is.na(ins)==F])
   f_sections <- names(ins[ins==F & is.na(ins)==F])
   na_sections <- names(ins[is.na(ins)==T])
-  
+  print(t_sections)
   selector <- names(fit2[[2]])
   # first get the ins that has all the true sections, if any
   if (length(t_sections)>0){
     temp=vector(mode="list", length=length(t_sections)) # get the sections that contain ALL the T substrings
     for (i in 1:length(t_sections)){
-      temp[[i]] <- selector[grep(t_sections[[i]], selector)]
+      temp[[i]] <- selector[grep(paste0("(^|&)",t_sections[[i]],"($|&)"), selector)] # exact match btw &
     }
     selector <- Reduce(intersect, temp)
     
   }
+  print(selector)
   # second get rid of any ins that contains the false sections, if any
   if (length(f_sections)>0){
     for (f in f_sections){
-      selector <- selector[-grep(f, selector)]
+      selector <- selector[-grep(paste0("(^|&)",f,"($|&)"), selector)] # exact match btw &
     }
   }
   # we don't care about the na sections
@@ -511,6 +512,7 @@ draw_heatmap <- function(df,
               text = textt)
   
   fig <- fig %>% layout(
+    title= paste0("Heatmap (n=",ncol(plotted),")"),
     xaxis = list(title = "", showticklabels = T),
     yaxis = list(title = "", showticklabels = show_ylabs)
     # ,margin = list(l=200)
@@ -575,7 +577,14 @@ draw_xy_scatter <- function(to_plot_df,
   df[df==0]<-0.00001 # replace 0 with 0.001
   
   # remove NAs tied to selected datasets
+  df_before <- df
   df <- remove_nas_in_cols(df, selected)
+  # report on diff
+  diff_report <- report_df_diff(df_before, df, "Name", "XY Scatter",
+                                reason=" because values are missing for either X or Y"
+                                )
+  # print(diff_report$report)
+  rv$nxy_diff_report <- diff_report
   
   req(nrow(df)>0)
   
@@ -720,7 +729,14 @@ draw_3d_scatter <- function(to_plot_df,
   }
   
   # remove NAs tied to selected datasets
+  df_before <- df
   df <- remove_nas_in_cols(df, selected)
+  # report on diff
+  diff_report <- report_df_diff(df_before, df, "Name", "3D Scatter",
+                                reason=" because values are missing for X, Y or Z"
+  )
+  # print(diff_report$report)
+  rv$nxyz_diff_report <- diff_report
   
   
   # get col names
