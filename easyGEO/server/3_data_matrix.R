@@ -86,13 +86,14 @@ output$download_dmdf_button <- renderUI({
       size = "md", style = "unite",
       outputId = "download_dmdf", label = NULL
     ),
-    bsTooltip("download_dm", "Download the data matrix.")
+    bsTooltip("download_dm", "Download the data matrix."
+              ,placement = "top")
 
   )
 })
 
 output$download_dmdf <- downloadHandler(
-  filename = function(){paste0("data_matrix_for_further_analysis.csv")},
+  filename = function(){paste0(rv$geo_accession,"_data_matrix.csv")},
   content = function(file){
     fwrite(rv$dmdf, file)
   }
@@ -866,7 +867,7 @@ output$data_matrix_df <- DT::renderDataTable({
                                            "title") # translating to
   }
   
-  print(head(df))
+  # print(head(df))
   df
   
 }, plugins="ellipsis",
