@@ -266,6 +266,48 @@
     #=======================================================================#
     ####------------------------ Functions: Plot ------------------------####
     #=======================================================================#
+    # function to fetch predefined color gradients for GSEA network
+    get_col_gradient_gsea <- function(col){
+      if(col == "red"){
+        gcols_red
+      }else if(col == "blue"){
+        gcols_blue
+      }else if(col == "salmon"){
+        gcols_salmon
+      }else if(col == "cyan"){
+        gcols_cyan
+      }else if(col == "orange"){
+        gcols_orange
+      }else if(col == "green"){
+        gcols_green
+      }else if(col == "purple"){
+        gcols_purple
+      }else if(col == "grey"){
+        gcols_grey
+      }
+    }
+    
+    # function to fetch predefined color gradients for ORA network
+    get_col_gradient_ora <- function(){
+      if(rv$ora_color == "red"){
+        gcols_red_vis
+      }else if(rv$ora_color == "blue"){
+        gcols_blue_vis
+      }else if(rv$ora_color == "salmon"){
+        gcols_salmon_vis
+      }else if(rv$ora_color == "cyan"){
+        gcols_cyan_vis
+      }else if(rv$ora_color == "orange"){
+        gcols_orange_vis
+      }else if(rv$ora_color == "green"){
+        gcols_green_vis
+      }else if(rv$ora_color == "purple"){
+        gcols_purple_vis
+      }else if(rv$ora_color == "grey"){
+        gcols_grey_vis
+      }
+    }
+    
     plot_confirm_btn <- function(id,label,style="simple",size="md",color="warning",icon = NULL,block=F){
       actionBttn(
         id,HTML(sprintf("<b>%s</b>",label)),
@@ -1190,30 +1232,9 @@
               
               
               if(rv$run_mode == "gsea"){
-                # function to fetch predefined color gradients
-                get_col_gradient <- function(col){
-                  if(col == "red"){
-                    gcols_red
-                  }else if(col == "blue"){
-                    gcols_blue
-                  }else if(col == "salmon"){
-                    gcols_salmon
-                  }else if(col == "cyan"){
-                    gcols_cyan
-                  }else if(col == "orange"){
-                    gcols_orange
-                  }else if(col == "green"){
-                    gcols_green
-                  }else if(col == "purple"){
-                    gcols_purple
-                  }else if(col == "grey"){
-                    gcols_grey
-                  }
-                }
-                
                 # fetch colors for up and down separately
-                colup <- get_col_gradient(rv$up_color)
-                coldown <- get_col_gradient(rv$down_color)
+                colup <- get_col_gradient_gsea(rv$up_color)
+                coldown <- get_col_gradient_gsea(rv$down_color)
                 
                 # assign colors for up and down separately
                 colors[df[[pq]]<0.25 & df$ES>0] = colup[1] #lightyellow
@@ -1228,29 +1249,9 @@
                 colors[df[[pq]]<0.005 & df$ES<0] = coldown[4] #darker blue
                 colors[df[[pq]]<0.001 & df$ES<0] = coldown[5] #cornflower
               }else if(rv$run_mode == "glist"){
-                # function to fetch predefined color gradients
-                get_col_gradient <- function(){
-                  if(rv$ora_color == "red"){
-                    gcols_red_vis
-                  }else if(rv$ora_color == "blue"){
-                    gcols_blue_vis
-                  }else if(rv$ora_color == "salmon"){
-                    gcols_salmon_vis
-                  }else if(rv$ora_color == "cyan"){
-                    gcols_cyan_vis
-                  }else if(rv$ora_color == "orange"){
-                    gcols_orange_vis
-                  }else if(rv$ora_color == "green"){
-                    gcols_green_vis
-                  }else if(rv$ora_color == "purple"){
-                    gcols_purple_vis
-                  }else if(rv$ora_color == "grey"){
-                    gcols_grey_vis
-                  }
-                }
-                
+               
                 # fetch the color gradient
-                col_gradient <- get_col_gradient()
+                col_gradient <- get_col_gradient_ora()
                 
                 # assign colors to cutoffs
                 colors[df[[pq]]<0.25] = col_gradient[1] #lightest
