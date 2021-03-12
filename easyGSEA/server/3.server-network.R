@@ -24,7 +24,7 @@ output$ui_bodyNetwork <- renderUI({
                     uiOutput("vis_error")
                 ),
                 div(
-                  style="position:relative;z-index:10",
+                  style="position:relative;z-index:2",
                   
                     if(!is.null(rv$vis_status) && rv$vis_status == "max exceeded"){
                         div(
@@ -38,7 +38,7 @@ output$ui_bodyNetwork <- renderUI({
                         visNetworkOutput("vis_network", height = "660px")
                     }
                 )
-                ,absolutePanel(
+                ,absolutePanel( #style = "z-index:4;",
                     fluidRow(
                         # add a id for the gear button in introjs
                         div(id = "gear_box",

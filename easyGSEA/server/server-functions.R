@@ -1285,16 +1285,16 @@
                                      # "<br>leadingEdge:<br>", addlinebreaks_vis(df$leadingEdge))
                                      "<br>",tail(colnames(df),n=1)," (",sizes,"/",df$size,")",":<br>", addlinebreaks_vis(df[[ncol(df)]]))
                 lnodes <- list(
-                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#F30038"),
-                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.01,0.05)"), color="#E00034"),
-                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#CC002F"),
-                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.01,0.05)"), color="#B9002B"),
-                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#A50026"),
-                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#0C78E7"),
-                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.01,0.05)"), color="#0B6ED4"),
-                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#0A64C1"),
-                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.01,0.05)"), color="#095BAF"),
-                  list(label = paste0("ES=(0,1],",rv$p_or_q_vis,"=[0.05,0.25)"), color="#08519C")
+                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.05,0.25)"), color="#F30038", title = "something"),
+                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.01,0.05)"), color="#E00034"),
+                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.005,0.01)"), color="#CC002F"),
+                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.001,0.005)"), color="#B9002B"),
+                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0,0.001)"), color="#A50026"),
+                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.05,0.25)"), color="#0C78E7"),
+                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.01,0.05)"), color="#0B6ED4"),
+                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.005,0.01)"), color="#0A64C1"),
+                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.001,0.005)"), color="#095BAF"),
+                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0,0.01)"), color="#08519C")
                 )
                 
             }else if(rv$run_mode == "glist"){
@@ -1303,11 +1303,11 @@
                                      ";P.adj=",round(df$padj,3),
                                      "<br>",tail(colnames(df),n=1)," (",sizes,"/",df$size,")",":<br>", addlinebreaks_vis(df[[ncol(df)]]))
                 lnodes <- list(
-                  list(label = paste0(rv$p_or_q_vis,"=[0.05,0.25)"), color="rgba(254,224,144)"),
-                  list(label = paste0(rv$p_or_q_vis,"=[0.05,0.25)"), color="rgba(253,174,97)"),
-                  list(label = paste0(rv$p_or_q_vis,"=[0.05,0.25)"), color="rgba(244,109,67)"),
-                  list(label = paste0(rv$p_or_q_vis,"=[0.05,0.25)"), color="rgba(215,48,39)"),
-                  list(label = paste0(rv$p_or_q_vis,"=[0.05,0.25)"), color="rgba(165,0,38)")
+                  list(label = paste0(rv$vis_pq,"=[0.05,0.25)"), color="rgba(254,224,144)"),
+                  list(label = paste0(rv$vis_pq,"=[0.01,0.05)"), color="rgba(253,174,97)"),
+                  list(label = paste0(rv$vis_pq,"=[0.005,0.01)"), color="rgba(244,109,67)"),
+                  list(label = paste0(rv$vis_pq,"=[0.001,0.005)"), color="rgba(215,48,39)"),
+                  list(label = paste0(rv$vis_pq,"=[0,0.001)"), color="rgba(165,0,38)")
                 )
             }
             
