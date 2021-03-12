@@ -1419,6 +1419,11 @@
                 title = hovertexts
             )
             
+            if(rv$run_mode == "gsea"){
+              legend_title <- paste0("-log10(", rv$vis_pq, ")*sign(ES)")
+            } else {
+              legend_title <- paste0("-log10(", rv$vis_pq, ")")
+            }
             if(is.null(edges_mat)==T || nrow(edges_mat)<1){
                 vis <- visNetwork(nodes, height = "1000px", width = "100%") %>%
                     # visEdges(smooth = FALSE) %>% #disable smooth curve for edges
@@ -1430,7 +1435,7 @@
                     # visPhysics(stabilization = FALSE) %>%
                     visPhysics(solver = "barnesHut") %>% # node moving dynamics
                     visLayout(randomSeed = 12) %>% # to always have the same network
-                    visLegend(addNodes = lnodes, useGroups = F, main = "Legend title")
+                    visLegend(addNodes = lnodes, useGroups = F, main = legend_title)
                 return(vis)
             }else{
                 # generate edges
@@ -1453,7 +1458,7 @@
                     # visPhysics(stabilization = FALSE) %>%
                     visPhysics(solver = "barnesHut") %>% # node moving dynamics
                     visLayout(randomSeed = 12) %>% # to always have the same network
-                    visLegend(addNodes = lnodes, useGroups = F, main = "Legend title")
+                    visLegend(addNodes = lnodes, useGroups = F, main = legend_title)
                 print(Sys.time())
                 return(vis)
             }
