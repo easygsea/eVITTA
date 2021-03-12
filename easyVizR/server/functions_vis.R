@@ -253,6 +253,13 @@ draw_eulerr_with_ins <- function(gls, ins, print_mode="counts", show_ins=T, ins_
   #  colors <- palette[1:length(gls)] # assign base circle colors
   #}
   
+  # set global display options
+  eulerr_options(
+    edges = list(col = "black"),
+    labels = list(cex = 1), # label size
+    quantities = list(cex = 1) # size of the number or percentage labels
+    )
+  
   # draw the venn
   venn <- plot(fit2, quantities = list(type = print_mode), fills =colors, adjust_labels=adjust_labels)
   venn
