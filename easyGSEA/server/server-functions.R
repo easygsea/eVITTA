@@ -1285,17 +1285,21 @@
                                      
                                      # "<br>leadingEdge:<br>", addlinebreaks_vis(df$leadingEdge))
                                      "<br>",tail(colnames(df),n=1)," (",sizes,"/",df$size,")",":<br>", addlinebreaks_vis(df[[ncol(df)]]))
+                # fetch colors for up and down separately
+                colup <- get_col_gradient_gsea(rv$up_color)
+                coldown <- get_col_gradient_gsea(rv$down_color)
+                
                 lnodes <- list(
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.05,.25)"), color="#F30038", title = "something to display"),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.01,.05)"), color="#E00034"),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.005,.01)"), color="#CC002F"),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.001,.005)"), color="#B9002B"),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[0,.001)"), color="#A50026"),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.05,.25)"), color="#0C78E7"),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.01,.05)"), color="#0B6ED4"),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.005,.01)"), color="#0A64C1"),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.001,.005)"), color="#095BAF"),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[0,.01)"), color="#08519C")
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[0,.001)"), color=colup[5]),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.001,.005)"), color=colup[4]),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.005,.01)"), color=colup[3]),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.01,.05)"), color=colup[2]),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.05,.25)"), color=colup[1], title = "something to display"),
+                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[0,.001)"), color=coldown[5]),
+                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.001,.005)"), color=coldown[4]),
+                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.005,.01)"), color=coldown[3]),
+                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.01,.05)"), color=coldown[2]),
+                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.05,.25)"), color=coldown[1])
                 )
                 
             }else if(rv$run_mode == "glist"){
@@ -1303,12 +1307,14 @@
                      P=",round(df$pval,3),
                                      ";P.adj=",round(df$padj,3),
                                      "<br>",tail(colnames(df),n=1)," (",sizes,"/",df$size,")",":<br>", addlinebreaks_vis(df[[ncol(df)]]))
+                # fetch the color gradient
+                col_gradient <- get_col_gradient_ora()
                 lnodes <- list(
-                  list(label = paste0(rv$vis_pq,"=[0.05,0.25)"), color="rgba(254,224,144)"),
-                  list(label = paste0(rv$vis_pq,"=[0.01,0.05)"), color="rgba(253,174,97)"),
-                  list(label = paste0(rv$vis_pq,"=[0.005,0.01)"), color="rgba(244,109,67)"),
-                  list(label = paste0(rv$vis_pq,"=[0.001,0.005)"), color="rgba(215,48,39)"),
-                  list(label = paste0(rv$vis_pq,"=[0,0.001)"), color="rgba(165,0,38)")
+                  list(label = paste0(rv$vis_pq,"=[0,0.001)"), color=col_gradient[5]),
+                  list(label = paste0(rv$vis_pq,"=[0.001,0.005)"), color=col_gradient[4]),
+                  list(label = paste0(rv$vis_pq,"=[0.005,0.01)"), color=col_gradient[3]),
+                  list(label = paste0(rv$vis_pq,"=[0.01,0.05)"), color=col_gradient[2]),
+                  list(label = paste0(rv$vis_pq,"=[0.05,0.25)"), color=col_gradient[1])
                 )
             }
             
