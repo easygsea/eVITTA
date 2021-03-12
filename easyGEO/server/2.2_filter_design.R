@@ -170,9 +170,6 @@ filtered_design_df <- reactive({
   
   rv$samples <- rownames(df) # update filtered samples into rv
   rv$fddf <- df # update filtered table into rv
-  print(rv$samples)
-  print("below is df")
-  print(nrow(df))
   df
 })
 

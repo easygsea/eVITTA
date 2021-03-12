@@ -3,6 +3,7 @@
 #=============================================================#
 # ------------ Overall bodyResults UI ------------------
 output$ui_bodyResults <- renderUI({
+    
     if(!is.null(rv$demo_save) && rv$demo_save == "yes"){
         if(rv$run_mode == "glist"){
             variable_list <- c("bar_pathway", "bubble_pathway", "data_head_o", "db_modal", "db_status",
@@ -21,7 +22,8 @@ output$ui_bodyResults <- renderUI({
                                "gene_lists_mat1", "gene_lists_mat2", "glist_check", "gmax", "gmin", "gmt_cs",
                                "gmt_cs_paths", "gmts", "gmts_length", "gperm", "infile_check", "infile_confirm",
                                "infile_name", "no_down_01", "no_down_05", "no_up_01", "no_up_05", "rnk_check",
-                               "rnk_or_deg", "rnkgg", "rnkll", "run", "run_mode", "run_n", "sd_high", "volcano_pathway")
+                               "rnk_or_deg", "rnkgg", "rnkll", "run", "run_mode", "run_n", "sd_high", "volcano_pathway",
+                               "total_genes", "total_genes_after")
             for(i in seq_along(variable_list)){
                 saveRDS(rv[[variable_list[i]]], file = paste0("rvs/", variable_list[i], ".rds"))
             }
@@ -2028,8 +2030,8 @@ observeEvent(input$confirm_kegg_plot,{
             ranks2 = ranks[ranks >= 0]
             ii = cut(ranks1, breaks = c(min(ranks),seq(-rv$sd_high, 0, len = 6)), include.lowest = TRUE)
             jj = cut(ranks2, breaks = c(seq(0, rv$sd_high, len = 6),max(ranks)), include.lowest = TRUE)
-            wp_colors1 = c("navy","steel","blue","lightblue","grey","grey")[ii]
-            wp_colors2 = c("grey","grey","pink","salmon","red","brown")[jj]
+            wp_colors1 = c("navy","steel","blue","lightblue","lightblue","grey")[ii]
+            wp_colors2 = c("grey","pink","pink","salmon","red","brown")[jj]
             wp_colors = paste(c(wp_colors1,wp_colors2),collapse = ",")
 
             # # coloring the nodes

@@ -155,7 +155,7 @@ design_df <- reactive({
  
     # detect how many char columns there are; if only 1, try to parse differently
     detected_var_num <- nrow(data.frame(t(data.frame(rv$pdata) %>% dplyr::select(contains("characteristics"))))) #pData(phenoData(gse()))
-    print(paste0("detected characteristics columns: ", detected_var_num))
+    # print(paste0("detected characteristics columns: ", detected_var_num))
     if (detected_var_num>1){
       char_list <- extract_char_list(oneline_guard=F) #gse(), 
     } else {
@@ -166,8 +166,7 @@ design_df <- reactive({
   } else{
     char_mat <- rv$fddf_o
   }
-  print("char_mat is like")
-  print(head(char_mat))
+  # print(head(char_mat))
   char_mat
   
   # # tidy characteristics
@@ -232,7 +231,6 @@ var_summary <- reactive({
     var_summary[[i]] <- table(char_mat[[colnames(char_mat)[[i]]]])
   }
   names(var_summary) <- colnames(char_mat)
-  print("var_summary_evaluated")
   var_summary
 })
 

@@ -228,11 +228,11 @@ output$ui_samples_fb <- renderUI({
   
   req(!is.null(rv$fddf)) # Blake add this line to prevent some errors
   samples_c = samples_c()
-  print(samples_c)
+  # print(samples_c)
   
   # samples in treatment group
   samples_t = samples_t()
-  print(samples_t)
+  # print(samples_t)
   
   if(rv$run_mode == "auto"){
     # # determine input source GSM or title
