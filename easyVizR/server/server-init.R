@@ -25,6 +25,9 @@ init_demo <- function(){
   rv$nxy_sig <- "PValue"
   rv$nxy_thresh <- 0.01
   rv$nxy_sc_size <- 3
+  rv$nxy_sc_opacity <- 0.7
+  rv$nxy_sc_outlinewidth <- 1
+  rv$nxy_sc_outlinecolor <- "white"
   rv$nxy_p <- 0.05
   rv$nxy_q <- 1
   rv$nxy_stat <- 0.5
@@ -37,8 +40,16 @@ init_demo <- function(){
   rv$n_3ds_q <- 1
   rv$n_3ds_Stat <- 0
   rv$nxyz_sc_size <- 3
+  rv$nxyz_sc_opacity <- 0.7
+  rv$nxyz_sc_outlinewidth <- 0
+  rv$nxyz_sc_outlinecolor <- "white"
   rv$nxyz_sc_plotmode <- "Focus"
   rv$nxyz_sc_dflogic <- "Ins"
+  rv$rrho_x <- rv$nx_n[[1]]
+  rv$rrho_y <- rv$nx_n[[2]]
+  rv$rrho_level_palette <- "default"
+  rv$rrho_level_palette_reverse <- F
+  rv$rrho_level_setting <- F
   rv$nx_vol_plotmode <- "Focus"
   rv$nx_selected <- rv$nx_n[[1]]
   rv$nx_p <- 0.05
@@ -99,7 +110,6 @@ init_demo <- function(){
   rv$ins_venn_palette <- readRDS(paste0(getwd(),"/rvs/ins_venn_palette.rds"))
   rv$detected_dbs <- readRDS(paste0(getwd(),"/rvs/detected_dbs.rds"))
   rv$opt_easygsea_filter_db <- readRDS(paste0(getwd(),"/rvs/opt_easygsea_filter_db.rds"))
-  rv$rrho_y <- "A549-ACE2_SARS-CoV-2_LowMOI_KEGG-WkPt-RctP-BlgP"
   rv$n_ins_namelen <- readRDS(paste0(getwd(), "/rvs/n_ins_namelen.rds"))
   for (i in 1:3){
     rv[[paste0("nic_p_",i)]] <- 0.05
@@ -107,6 +117,8 @@ init_demo <- function(){
     rv[[paste0("nic_Stat_",i)]] <- -0.1
     rv[[paste0("nic_sign_",i)]] <- "All"
   }
+  
+  refresh_vis_ui()
 }
 
 # the function to remove initialized RVs from the demo session
