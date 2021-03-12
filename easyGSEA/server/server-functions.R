@@ -1229,25 +1229,24 @@
             get_colors <- function(pq=rv$vis_pq){
               # colors = vector(mode="character", length=length(a))
               colors = rep("white",nrow(df))
-              
-              
+
               if(rv$run_mode == "gsea"){
                 # fetch colors for up and down separately
                 colup <- get_col_gradient_gsea(rv$up_color)
                 coldown <- get_col_gradient_gsea(rv$down_color)
-                
+
                 # assign colors for up and down separately
-                colors[df[[pq]]<0.25 & df$ES>0] = colup[1] #lightyellow
-                colors[df[[pq]]<0.05 & df$ES>0] = colup[2] #yellow
-                colors[df[[pq]]<0.01 & df$ES>0] = colup[3] #orange
-                colors[df[[pq]]<0.005 & df$ES>0] = colup[4] #red
-                colors[df[[pq]]<0.001 & df$ES>0] = colup[5] #dark red
+                colors[df[[pq]]<0.25 & df$ES>0] = colup[2] #lightyellow
+                colors[df[[pq]]<0.05 & df$ES>0] = colup[3] #yellow
+                colors[df[[pq]]<0.01 & df$ES>0] = colup[4] #orange
+                colors[df[[pq]]<0.005 & df$ES>0] = colup[5] #red
+                colors[df[[pq]]<0.001 & df$ES>0] = colup[6] #dark red
                 
-                colors[df[[pq]]<0.25 & df$ES<0] = coldown[1] #pale blue
-                colors[df[[pq]]<0.05 & df$ES<0] = coldown[2] #light blue
-                colors[df[[pq]]<0.01 & df$ES<0] = coldown[3] #blue
-                colors[df[[pq]]<0.005 & df$ES<0] = coldown[4] #darker blue
-                colors[df[[pq]]<0.001 & df$ES<0] = coldown[5] #cornflower
+                colors[df[[pq]]<0.25 & df$ES<0] = coldown[2] #pale blue
+                colors[df[[pq]]<0.05 & df$ES<0] = coldown[3] #light blue
+                colors[df[[pq]]<0.01 & df$ES<0] = coldown[4] #blue
+                colors[df[[pq]]<0.005 & df$ES<0] = coldown[5] #darker blue
+                colors[df[[pq]]<0.001 & df$ES<0] = coldown[6] #cornflower
               }else if(rv$run_mode == "glist"){
                
                 # fetch the color gradient
@@ -1288,18 +1287,19 @@
                 # fetch colors for up and down separately
                 colup <- get_col_gradient_gsea(rv$up_color)
                 coldown <- get_col_gradient_gsea(rv$down_color)
-                
+
                 lnodes <- list(
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[0,.001)"), color=colup[5]),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.001,.005)"), color=colup[4]),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.005,.01)"), color=colup[3]),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.01,.05)"), color=colup[2]),
-                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.05,.25)"), color=colup[1], title = "something to display"),
-                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[0,.001)"), color=coldown[5]),
-                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.001,.005)"), color=coldown[4]),
-                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.005,.01)"), color=coldown[3]),
-                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.01,.05)"), color=coldown[2]),
-                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.05,.25)"), color=coldown[1])
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[0,.001)"), color=colup[6]),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.001,.005)"), color=colup[5]),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.005,.01)"), color=colup[4]),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.01,.05)"), color=colup[3]),
+                  list(label = paste0("ES(0,1],",rv$vis_pq,"[.05,.25)"), color=colup[2], title = "something to display"),
+                  list(label = paste0(rv$vis_pq,"[0.25,1]"), color=colup[1]),
+                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.05,.25)"), color=coldown[2]),
+                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.01,.05)"), color=coldown[3]),
+                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.005,.01)"), color=coldown[4]),
+                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[.001,.005)"), color=coldown[5]),
+                  list(label = paste0("ES[-1,0),",rv$vis_pq,"[0,.001)"), color=coldown[6])
                 )
                 
             }else if(rv$run_mode == "glist"){
@@ -1444,7 +1444,7 @@
                     # visPhysics(stabilization = FALSE) %>%
                     visPhysics(solver = "barnesHut") %>% # node moving dynamics
                     visLayout(randomSeed = 12) %>% # to always have the same network
-                    visLegend(addNodes = lnodes, useGroups = F, main = legend_title)
+                    visLegend(addNodes = lnodes, useGroups = F, main = legend_title, position = "right")
                 return(vis)
             }else{
                 # generate edges
@@ -1467,7 +1467,7 @@
                     # visPhysics(stabilization = FALSE) %>%
                     visPhysics(solver = "barnesHut") %>% # node moving dynamics
                     visLayout(randomSeed = 12) %>% # to always have the same network
-                    visLegend(addNodes = lnodes, useGroups = F, main = legend_title)
+                    visLegend(addNodes = lnodes, useGroups = F, main = legend_title, position = "right")
                 print(Sys.time())
                 return(vis)
             }
