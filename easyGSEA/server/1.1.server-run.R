@@ -761,21 +761,23 @@
       
       req(ext_check != "no")
       
-        rv$file_upload_status = "uploaded"
-        rv$infile_name = input$rnkfile$name
-        rv$infile_path = input$rnkfile$datapath
-        shinyjs::disable("rnkfile")
         # the modal that appears whent the file user upload exceeds 50MB, Version1
         if(input$rnkfile$size >= 10*1024^2){
+          shinyjs::reset("rnkfile")
           showModal(modalDialog(
             inputId = "size_reminder_modal",
             # title = "The file size exceeds 10MB.",
             div("The file you have uploaded exceeds 10MB. Please delete unneeded columns and
-            only keep gene names, log fold changes (logFC), and p values.
-            Then press \"reset file\" and upload the trimmed file again. Thank you.",style="font-size:200%"),
+            only keep gene names, log-transformed fold changes (logFC), and p values.
+            Then upload the trimmed file again. Thank you.",style="font-size:200%"),
             easyClose = TRUE,size="l"
             , footer = modalButton("OK")
           ))
+        }else{
+          rv$file_upload_status = "uploaded"
+          rv$infile_name = input$rnkfile$name
+          rv$infile_path = input$rnkfile$datapath
+          shinyjs::disable("rnkfile")
         }
     })
 
@@ -1157,9 +1159,9 @@
             if(input$gene_list != ""){
                 genelist = as.character(input$gene_list)
                 genelist = gsub("\"","",genelist)
-                genelist = strsplit(genelist,"\n")
-                genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*,\\s*')))
-                genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*;\\s*')))
+                genelist = strsplit(genelist,"\n") %>% unlist(.)
+                # genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*,\\s*')))
+                genelist = unlist(strsplit(genelist,"\t"))
                 genelist = unlist(strsplit(genelist," "))
                 genelist = unique(genelist) %>% toupper(.)
 
@@ -1169,7 +1171,7 @@
 
                     # autodetect and convert into SYMBOL (if other/mixed identifier) using gprofiler2
                     if(input$gene_identifier == "other" && input$selected_species != "other"){
-                      withProgress(message = "Autodetecting and converting gene IDs...",{
+                      withProgress(message = "Autodetecting and converting gene IDs. This might take a while...",{
                         Sys.sleep(0.1)
                         incProgress(1)
                         lst = convert_gene_id(species,genelist)

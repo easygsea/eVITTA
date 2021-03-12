@@ -334,6 +334,7 @@ volcano_basic <- function(df,q_cutoff,logfc_cutoff,text="no"){
     fig <- fig +
       geom_text_repel(data = df[which(df$threshold!="grey"),],size=5,
                       aes(x=logFC,y=-log(df[which(df$threshold!="grey"),][["adj.P.Val"]]),label=genelabels)
+                      ,max.overlaps = getOption("ggrepel.max.overlaps", default = 15)
       )
   }
   

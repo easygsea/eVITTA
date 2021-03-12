@@ -2116,7 +2116,7 @@
           # autodetect and convert into SYMBOL (if applicable) using gprofiler2
           species = isolate(input$selected_species)
           
-          withProgress(message = "Autodetecting and converting gene IDs. Please wait a minute...",{
+          withProgress(message = "Autodetecting and converting gene IDs. This might take a while...",{
             Sys.sleep(0.1)
             incProgress(1)
             lst = convert_rank_id(species,rv$rnkgg)

@@ -134,9 +134,11 @@ output$vplot_parameters <- renderUI({
     ),
     # tooltips for radioGroupbuttons
     radioTooltip(id = "volcano_mode", choice = "static", 
-                 title = "static mode of the volcano plot", placement = "bottom", trigger = "hover"),
+                 title = "In Static, notable genes can be highlighted with colors and labelled with names"
+                 , placement = "right", trigger = "hover"),
     radioTooltip(id = "volcano_mode", choice = "interactive",
-                 title = "interactive mode of the volcano plot", placement = "bottom", trigger = "hover"),
+                 title = "In Interactive, genes that pass the defined adj.P.Val and |logFC| thresholds are highlighted in red. Hover labels show information on gene names, logFC and adj.P.Val"
+                 , placement = "right", trigger = "hover"),
     # static/interactive UIs
     uiOutput("v_static"),
     uiOutput("v_interactive"),
@@ -171,11 +173,14 @@ output$v_static <- renderUI({
       ),
       # tooltips for radioGroupbuttons
       radioTooltip(id = "v_label_opt", choice = "threshold", 
-                   title = "Use thresholds to label genes", placement = "bottom", trigger = "hover"),
+                   title = "Genes are labeled in blue (downregulation) and red (upregulation) according to the defined logFC and adj.P.Val thresholds"
+                   , placement = "top", trigger = "hover"),
       radioTooltip(id = "v_label_opt", choice = "top",
-                   title = "label the top few genes", placement = "bottom", trigger = "hover"),
+                   title = "Genes within the top # of |logFC|"
+                   , placement = "top", trigger = "hover"),
       radioTooltip(id = "v_label_opt", choice = "manual",
-                   title = "Manually label your genes", placement = "bottom", trigger = "hover"),
+                   title = "Manually label your genes"
+                   , placement = "top", trigger = "hover"),
       
       uiOutput("v_top"),
       uiOutput("v_manual"),
