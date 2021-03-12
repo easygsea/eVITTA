@@ -1159,9 +1159,9 @@
             if(input$gene_list != ""){
                 genelist = as.character(input$gene_list)
                 genelist = gsub("\"","",genelist)
-                genelist = strsplit(genelist,"\n")
-                genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*,\\s*')))
-                genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*;\\s*')))
+                genelist = strsplit(genelist,"\n") %>% unlist(.)
+                # genelist = unlist(lapply(genelist, function(x) strsplit(x,'\\s*,\\s*')))
+                genelist = unlist(strsplit(genelist,"\t"))
                 genelist = unlist(strsplit(genelist," "))
                 genelist = unique(genelist) %>% toupper(.)
 
@@ -1171,7 +1171,7 @@
 
                     # autodetect and convert into SYMBOL (if other/mixed identifier) using gprofiler2
                     if(input$gene_identifier == "other" && input$selected_species != "other"){
-                      withProgress(message = "Autodetecting and converting gene IDs...",{
+                      withProgress(message = "Autodetecting and converting gene IDs. This might take a while...",{
                         Sys.sleep(0.1)
                         incProgress(1)
                         lst = convert_gene_id(species,genelist)
