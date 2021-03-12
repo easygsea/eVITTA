@@ -867,7 +867,7 @@ output$data_matrix_df <- DT::renderDataTable({
                                            "title") # translating to
   }
   
-  print(head(df))
+  # print(head(df))
   df
   
 }, plugins="ellipsis",
