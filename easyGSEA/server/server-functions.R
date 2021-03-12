@@ -1285,7 +1285,7 @@
                                      # "<br>leadingEdge:<br>", addlinebreaks_vis(df$leadingEdge))
                                      "<br>",tail(colnames(df),n=1)," (",sizes,"/",df$size,")",":<br>", addlinebreaks_vis(df[[ncol(df)]]))
                 lnodes <- list(
-                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.05,0.25)"), color="#F30038", title = "something"),
+                  list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.05,0.25)"), color="#F30038", title = "something to display"),
                   list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.01,0.05)"), color="#E00034"),
                   list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.005,0.01)"), color="#CC002F"),
                   list(label = paste0("ES=(0,1],",rv$vis_pq,"=[0.001,0.005)"), color="#B9002B"),

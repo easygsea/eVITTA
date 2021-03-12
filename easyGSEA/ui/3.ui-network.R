@@ -10,7 +10,7 @@ bodyNetwork <- tabItem(tabName = "network",
     uiOutput("ui_bodyNetwork")
     ,
     fixedPanel(
-        style = "z-index:9999",
+        style = "z-index:20",
         uiOutput("floating_button_tab3"),
         right = 30,
         bottom = 30

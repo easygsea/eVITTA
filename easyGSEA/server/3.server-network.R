@@ -38,7 +38,7 @@ output$ui_bodyNetwork <- renderUI({
                         visNetworkOutput("vis_network", height = "660px")
                     }
                 )
-                ,absolutePanel( #style = "z-index:4;",
+                ,absolutePanel( style = "z-index:900;",
                     fluidRow(
                         # add a id for the gear button in introjs
                         div(id = "gear_box",

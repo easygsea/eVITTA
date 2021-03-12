@@ -24,7 +24,7 @@ bodyDownload <- tabItem(tabName = "download",
         )
         ,div( id="btn_download",
 
-            style="position:relative;z-index:1000",
+            style="position:relative;z-index:21",
             absolutePanel(
                 uiOutput("download_b_btn"),
                 right = 35,
@@ -33,7 +33,7 @@ bodyDownload <- tabItem(tabName = "download",
         )
     ),
     fixedPanel(
-        style = "z-index:9999",
+        style = "z-index:20",
         uiOutput("floating_button_tab4"),
         right = 30,
         bottom = 30

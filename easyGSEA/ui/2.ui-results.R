@@ -11,7 +11,7 @@ bodyResults <- tabItem(tabName = "kegg",
     # uiOutput("ui_manhattan_table"),
     ,div(
         fixedPanel(
-            style = "z-index:9999",
+            style = "z-index:20",
             uiOutput("floating_button_tab2"),
             right = 30,
             bottom = 30
