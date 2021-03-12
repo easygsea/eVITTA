@@ -128,12 +128,13 @@ output$download_fddf_button <- renderUI({
       size = "md", style = "unite",
       outputId = "download_fddf", label = NULL
     ),
-    bsTooltip("download_fd", "Download the design matrix")
+    bsTooltip("download_fd", "Download the design matrix"
+              ,placement = "top")
   )
 })
 
 output$download_fddf <- downloadHandler(
-  filename = function(){paste0("design_matrix_for_further_analysis.csv")},
+  filename = function(){paste0(rv$geo_accession,"_design_matrix.csv")},
   content = function(file){
     fwrite(rv$fddf, file, row.names = T)
   }
