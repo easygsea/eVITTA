@@ -81,6 +81,9 @@ server <- function(input, output, session) {
     source("server/functions.R", local = TRUE)
     source("server/functions_vis.R", local = TRUE)
     
+    # initialize demo
+    source("server/server-init.R", local = TRUE)
+    
     
     #======================================================================#
     ####                        INTRO TOUR                              ####

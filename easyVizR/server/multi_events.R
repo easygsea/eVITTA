@@ -148,13 +148,9 @@ observeEvent(input$n_use_data,{
       rv[[paste0("nic_sign_",i)]] <- "All"
     }
     
-    
-    #heatmap_sortby_initializer = rv$nx_n[[1]]
-    #isolate({ heatmap_sortby_initializer<-rv$nx_n[[1]] })
     # ---------------  heatmap options
     rv$n_to_plot <- "Stat"
     rv$heatmap_sortby <- rv$nx_n[[1]]
-    #rv$heatmap_sortby <- heatmap_sortby_initializer
     rv$n_hm_ylabs <- F
     rv$n_hm_ylabs_len <- 15
 

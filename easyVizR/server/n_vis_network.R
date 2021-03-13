@@ -244,6 +244,7 @@ vis <- function(){
   pqcol <- paste0(rv$p_or_q_vis, "_", nn)
   statcol <- paste0("Stat", "_", nn)
   df = n_ins_full()
+  req_vars(c(nn,le_coln,pcol,qcol,pqcol,statcol,df))
   
   # print(df)
   
@@ -274,7 +275,7 @@ vis <- function(){
       # edges_mat = edges_mat[edges_mat$percent>rv$vis_percent_cutoff,]
     }
     rv$nw_edges_mat <- edges_mat
-    print(edges_mat)
+    print(paste0("Drawing ", nrow(edges_mat), " edges..."))
     
     # nodes matrix
     # colors
