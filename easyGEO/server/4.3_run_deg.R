@@ -428,8 +428,10 @@ output$ui_deg_table <- renderUI({
 output$deg_table <- DT::renderDataTable({
   req(is.null(rv$deg)==F)
   
-  mutate_df(df=rv$deg)
-}, options = list(pageLength = 5))
+  df <- mutate_df(df=rv$deg)
+  df_no(df,scrollY = "185px")
+})  
+#}, options = list(pageLength = 5))
 
 # download DEG table
 output$deg_table_download <- downloadHandler(
