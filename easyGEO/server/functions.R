@@ -45,6 +45,7 @@ summarize_gpl_F <- function(gse){
 df_no <- function(df,extensions=c('Scroller'), dom = NULL, buttons = NULL, scrollY = "380px", scroller = TRUE, scrollX=TRUE){
   DT::datatable(df,
                 extensions=extensions,
+                filter = list(position = "bottom", clear = T, plain = T),
                 options = list(
                   # sDom  = '<"top">lrt<"bottom">ip',
                   dom = dom,
