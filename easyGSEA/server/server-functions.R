@@ -2204,8 +2204,7 @@
       rv$gene_lists_mat1 = NULL; rv$gene_lists_mat2 = NULL
       
       rv$es_term <- NULL
-      # rv$wp_yes <- "yes"
-      # rv$wp_confirm <- "yes"
+      rv$wp_yes <- NULL;rv$wp_confirm <- NULL;rv$kegg_yes <- NULL;rv$kegg_confirm <- NULL;rv$reactome_yes <- NULL;rv$reactome_confirm <- NULL;
       
       
       shinyjs::reset("rnkfile")
