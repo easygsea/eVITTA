@@ -2203,6 +2203,11 @@
       rv$rnk_or_deg = NULL
       rv$gene_lists_mat1 = NULL; rv$gene_lists_mat2 = NULL
       
+      rv$es_term <- NULL
+      # rv$wp_yes <- "yes"
+      # rv$wp_confirm <- "yes"
+      
+      
       shinyjs::reset("rnkfile")
       shinyjs::enable("rnkfile")
     }
