@@ -41,7 +41,7 @@ output$ui_vis <- renderUI({
     }
   }
   if(is.null(rv$deg)){
-    msg = "Visualization available upon successful DEG run."
+    msg = "Visualization available upon successful DE run."
     panel_null(text = msg)
   }else{
     tabBox(
