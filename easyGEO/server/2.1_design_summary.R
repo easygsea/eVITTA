@@ -90,7 +90,7 @@ output$ui_design <- renderUI({
                                      box(title=NULL, width = 6, solidHeader=T, status="primary",
                                          radioGroupButtons(
                                            inputId = "fddf_show_rown",
-                                           label = "Show column names as:", 
+                                           label = "Show row names as:", 
                                            choices = c("GEO accession", "Sample name"),
                                            selected = "Sample name"
                                          )
