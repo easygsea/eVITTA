@@ -91,3 +91,5 @@ easyGSEA/www/gmts/hsa/08_BioGrid/BIOGRID-PROJECT-fanconi_anemia_project-INTERACT
 easyGSEA/www/gmts/hsa/08_BioGrid/BIOGRID-PROJECT-glioblastoma_project-INTERACTIONS.gmt
 easyGSEA/www/gmts/hsa/08_BioGrid/BIOGRID-PROJECT-kinome_project_sc-INTERACTIONS.gmt
 *.gmt
+.DS_Store
+easyGEO/.DS_Store
