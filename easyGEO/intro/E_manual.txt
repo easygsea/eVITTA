@@ -1,5 +1,5 @@
 element	intro
-selected_mode	Choose your mode to proceed. Please use <strong>Retrieval by GSE number</strong> first, if there is anything wrong, switch to <strong>manual uploads</strong>.
+selected_mode	Choose the analysis mode to proceed. Please use <strong>Retrieval by GSE number</strong> first, if there is anything wrong, switch to <strong>manual uploads</strong>.
 manual_data_matrix	Please upload your data matrix here. You could upload your design matrix on the right hand side first as well.
 manual_design_matrix	Please upload your design matrix here. You could upload your data matrix on the left hand side first as well.
 guide1_manual	After you upload both matrices, click the navigate button to go to the next tab.

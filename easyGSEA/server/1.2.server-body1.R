@@ -586,10 +586,10 @@ output$ui_deg_download <- renderUI({
     
     div(id="deg_download_btn",
         downloadBttn("deg_download",
-                     label = "Download converted DEG table (.csv)", style = rv$dbtn_style,
+                     label = "Download converted DE table (.csv)", style = rv$dbtn_style,
                      color = rv$dbtn_color, size=rv$dbtn_size, block = F
         ),
-        bsTooltip("deg_download_btn",HTML("Download converted DEG table and proceed to <b>easyVizR</b> for multiple comparisons")
+        bsTooltip("deg_download_btn",HTML("Download converted DE table and proceed to <b>easyVizR</b> for multiple comparisons")
                   ,placement = "top")
     )
     

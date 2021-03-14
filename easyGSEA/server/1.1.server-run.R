@@ -767,7 +767,7 @@
           showModal(modalDialog(
             inputId = "size_reminder_modal",
             # title = "The file size exceeds 10MB.",
-            div("The file you have uploaded exceeds 10MB. Please delete unneeded columns and
+            div("The file you have uploaded exceeds 10MB. Please double check if you have selected the right file, Or, delete unneeded columns and
             only keep gene names, log-transformed fold changes (logFC), and p values.
             Then upload the trimmed file again. Thank you.",style="font-size:200%"),
             easyClose = TRUE,size="l"
