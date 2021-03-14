@@ -1310,11 +1310,11 @@
                 # fetch the color gradient
                 col_gradient <- get_col_gradient_ora()
                 lnodes <- list(
-                  list(label = paste0(rv$vis_pq,"=[0,0.001)"), color=col_gradient[5]),
-                  list(label = paste0(rv$vis_pq,"=[0.001,0.005)"), color=col_gradient[4]),
-                  list(label = paste0(rv$vis_pq,"=[0.005,0.01)"), color=col_gradient[3]),
-                  list(label = paste0(rv$vis_pq,"=[0.01,0.05)"), color=col_gradient[2]),
-                  list(label = paste0(rv$vis_pq,"=[0.05,0.25)"), color=col_gradient[1])
+                  list(label = paste0(rv$vis_pq,"=[0,.001)"), color=col_gradient[5]),
+                  list(label = paste0(rv$vis_pq,"=[.001,.005)"), color=col_gradient[4]),
+                  list(label = paste0(rv$vis_pq,"=[.005,.01)"), color=col_gradient[3]),
+                  list(label = paste0(rv$vis_pq,"=[.01,.05)"), color=col_gradient[2]),
+                  list(label = paste0(rv$vis_pq,"=[.05,.25)"), color=col_gradient[1])
                 )
             }
             
