@@ -1,4 +1,4 @@
 element	intro
-selected_mode	Choose your mode to proceed. Please use <strong>Retrieval by GSE number</strong> first, if there is anything wrong, switch to <strong>manual uploads</strong>.
+selected_mode	Choose a mode to start. Use <strong>Retrieval by GSE number</strong> if you have a GEO accession number in hand. Alternatively, use <strong>manual uploads</strong> for custom analysis.
 geo_accession	To begin with, enter a valid GEO accession. Click the gear button to load an example GEO accession number.
 search_geo	Click <b>Search</b> to retrieve the study's data.

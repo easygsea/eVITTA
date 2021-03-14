@@ -1,5 +1,5 @@
 element	intro
-	In this tab, you'll be able to perform differential gene expression analysis on selected samples of interest and download the DEG table.
+	In this tab, you'll be able to perform differential gene expression analysis on selected samples of interest and download the DE table.
 sp	First, select the type of gene expression data provided by the authors. If <b>microarray</b>, select Normalized counts. If <b>RNA-seq</b>, select according to the data provided by the authors. You will also see if there're any missing data in the samples that you have selected. 
 ui_select_box	Next, filter and select the samples for comparisons. If the authors have uploaded their design matrix in full, you may use <b>By design matrix</b> to select samples. Use <b>Manual selection</b> for any combination of samples. Select at least 2 samples in both the control and the experimental group.
-run_deg	Click <b>4.3. Run DEG Analysis!</b> button to run the analysis.
+run_deg	Click <b>4.3. Run DE Analysis!</b> button to run the analysis.
