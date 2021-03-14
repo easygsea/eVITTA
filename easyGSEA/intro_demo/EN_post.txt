@@ -1,12 +1,12 @@
 element	intro
-	This page provides a network view of the enriched categories. Categories denoting similar biological processes or functions, assessed by gene overlaps, are grouped together to facilitate interpretation of your results. 
-enrichment_network_box2	Enriched gene sets are visualized in a network. Gene sets describing similar biology are connected together with edges. The similarity is defined using Jaccard, Overlap or Combined coefficient. Click the gear button to learn more and adjust parameters. Hover over each node for details about the enrichment statistics. Hover over each edge for details about the gene overlaps.
+	This page provides a network view of the enriched gene sets (GSs). GSs describing similar or related biological processes or functions, assessed by gene overlaps, are grouped together to facilitate interpretation of your results. 
+enrichment_network_box2	Enriched gene sets (GSs) are visualized in a network. GSs describing similar biology are connected together with edges. The similarity is defined using Jaccard, Overlap or Combined coefficient. Click the gear button to learn more and adjust parameters. Hover over each node for details about the enrichment statistics. Hover over each edge for details about the gene overlaps.
 nodeSelectvis_network	You can select the gene set you are interested in and explore its location in the network.
-selectedByvis_network	Functional categories are hierarchically clustered. Select the cluster you are interested in and explore it within the network diagram. The most significant pathway is chosen to denote the cluster it's in.
+selectedByvis_network	Gene sets (GSs) are hierarchically clustered. Select the cluster you are interested in and explore it within the network diagram. The most significant GS is chosen to denote the cluster it's in.
 gear_box	Click this button to adjust the parameters for creating the network.
 d_vis	Click this button to download the network diagram.
-dendrogram_box	Functional categories are visualized in a dendrogram based on their similarities between each other. Categories with similarity score &#8805 to a defined cutoff are sorted into the same group. The similarity cutoff can be adjusted by clicking the gear button on top right corner. In the dendrogram, height represents the dissimilarity between categories. The most significant pathway is displayed to denote the cluster it's in. Hover over each node for details.
-select_your_plot	Click and switch to a bar- or bubble-plot view of the clusters. Functional categories annotated with cluster IDs is also available.
+dendrogram_box	Gene sets (GSs) are visualized in a dendrogram based on their similarities between each other. GSs with similarity score &#8805 to a defined cutoff are sorted into the same group. The similarity cutoff can be adjusted by clicking the gear button on top right corner. In the dendrogram, height represents the dissimilarity between GSs. The most significant GS is displayed to denote the cluster it's in. Hover over each node for details.
+select_your_plot	Click and switch to a bar- or bubble-plot view of the clusters. Statistics table of gene sets (GSs) annotated with cluster IDs is also available.
 dendro_dropdown	Click this button to adjust the parameters for creating the dendrogram, bar, or bubble plot.
 d_dendro	Click this button to download the corresponding plot or table.
 tab4_text	<h4>Click <b>4. Downloads</b> for detailed enrichment statistics and the gene set libraries for your species of interest</h4>
