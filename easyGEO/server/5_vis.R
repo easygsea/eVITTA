@@ -581,8 +581,14 @@ output$hm_area <- renderUI({
   
   if(dfmi > 180000){
     HTML(
-      "We support a maximum of <i>180,000</i> data points in heatmaps",
+      "<br>We support a maximum of <i>180,000</i> data points in heatmaps",
       ". Please reduce the number of data points by adjusting <b>thresholds</b> and/or <b>Options to extract genes</b> in the right panel."
+    )
+  }else if(dfmi == 0){
+    HTML(
+      "<br>No gene found to be differentially expressed at thresholds of adj.P.Val < ",rv$plot_q
+      ," and |logFC| &GreaterEqual; ",rv$plot_logfc
+      ,". Adjust adj.P.Val and |logFC| on the right panel."
     )
   }else{
     plotlyOutput("heatmap_plot",width = "100%", height = "650px")
