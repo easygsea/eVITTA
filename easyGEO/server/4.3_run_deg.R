@@ -129,18 +129,10 @@ observeEvent(input$run_deg,{
   }else{
     withProgress(message = msg, value = 1, {
       ## 1) create design matrix
-      # 1.1) batch effects
-      batch_var = input$sp_batch_col
-      batch = NULL
-      
       # original design matrix
       p_df = rv$fddf
-      
-      if(batch_var!="na"){
-        batch = factor(p_df[[batch_var]])
-      }
-      
-      # 1.2) filter design matrix according to the selected two levels in selected variable
+
+      # 1.1) filter design matrix according to the selected two levels in selected variable
       # selected variable
       c_var = input$sp_select_var
       
@@ -158,6 +150,13 @@ observeEvent(input$run_deg,{
       p_df2 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_t)
       p_df = rbind(p_df1,p_df2)
       
+      # 1.2) batch effects
+      batch_var = input$sp_batch_col
+      batch = NULL
+
+      if(batch_var!="na"){
+        batch = factor(p_df[[batch_var]])
+      }
       
       # 1.3) create treatment factor
       # treatment effects
