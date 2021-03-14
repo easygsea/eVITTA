@@ -119,6 +119,12 @@ init_demo <- function(){
   }
   
   refresh_vis_ui()
+  js$collapse("select_n_panel")
+  if(is.null(input$f_global_iscollapsed)==T){ # uncollapse this box
+    js$collapse("f_global")
+  } else if (input$f_global_iscollapsed==T){
+    js$collapse("f_global")
+  }
 }
 
 # the function to remove initialized RVs from the demo session
