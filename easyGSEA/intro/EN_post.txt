@@ -5,6 +5,8 @@ nodeSelectvis_network	You can select the gene set (GS) you are interested in and
 selectedByvis_network	Gene sets (GSs) are hierarchically clustered. Select the cluster you are interested in and explore it within the network diagram. The most significant GS is chosen to denote the cluster it's in.
 gear_box	Click this button to adjust the parameters for creating the network.
 d_vis	Click this button to download the network diagram.
-dendrogram_box	Gene sets (GSs) are visualized in a dendrogram based on their similarities between each other. GSs with similarity score &#8805 to a defined cutoff are sorted into the same group. The similarity cutoff can be adjusted by clicking the gear button on top right corner. In the dendrogram, height represents the dissimilarity between GSs. The most significant GS is displayed to denote the cluster it's in. Hover over each node for details.
+dendrogram_box	Gene sets (GSs) are visualized in a dendrogram based on their similarities between each other. GSs with similarity score &#8805 a defined cutoff are sorted into the same group. The similarity cutoff can be adjusted by clicking the gear button on top right corner. In the dendrogram, height represents the dissimilarity between GSs. The most significant GS is displayed to denote the cluster it occurs in. Hover over each node for details.
 select_your_plot	Click and switch to a bar- or bubble-plot view of the clusters. Statistics table of gene sets (GSs) annotated with cluster IDs is also available.
+dendro_dropdown	Click this button to adjust the parameters for creating the dendrogram, and its corresponding bar and bubble plots.
 d_dendro	Click this button to download the corresponding plot or table.
+tab4_text	<h4>Click <b>4. Downloads</b> for detailed enrichment statistics and the gene set libraries for your species of interest</h4>

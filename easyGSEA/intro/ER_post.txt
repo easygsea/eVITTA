@@ -5,5 +5,6 @@ plot_area	Plots are interactive. Hover over each gene set for its detailed enric
 setting_button	Click the gear button to customize the plot by re-selecting database(s), adjusting P/P.adj threshold, and customizing the display options.
 gs_search_button	Click the search button to search for gene set(s) of interest for a bar/bubble plot.
 ora_color_div	Click the palette button to customize the colors for your plots
+txt_div	Click the TV button to trim database identifier(s) and/or gene set IDs (if any)
 plot_download_button	Click the download button to download the plot and its corresponding enrichment statistics.
 explore_geneset_box	Visualizations and statistics for individual gene sets are displayed here. Navigate the gene set's distributions in the genomic background using different visualizations.
