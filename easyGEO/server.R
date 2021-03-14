@@ -4,6 +4,8 @@ options(shiny.maxRequestSize=100*1024^2) # sets max upload size to 100 mb
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
     
+    source("server/demo.R", local = TRUE)
+    
     waiter_hide() # will hide *on_load waiter
     
     # ram check on initialization
