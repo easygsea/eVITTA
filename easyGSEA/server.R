@@ -27,6 +27,7 @@ server <- function(input, output, session) {
         btn_demo_e()
     })
     
+    source("server/demo.R", local = TRUE)
     source("server/server-variables.R", local = TRUE)
     source("server/server-reactives.R", local = TRUE)
     source("server/server-rv.R", local = TRUE)
