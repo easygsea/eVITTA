@@ -15,7 +15,7 @@ upload_mode <- conditionalPanel(
              selected = "auto"
              # selected = "manual"
            )
-           ,bsTooltip("mode_q",HTML("Select the method to analyze NCBI GEO expression data")
+           ,bsTooltip("mode_q",HTML("Select the method to analyze NCBI GEO transcriptome data")
                       ,placement = "right")
            ,tags$hr(style="border-color: #48617b;margin: 8px;")
     )

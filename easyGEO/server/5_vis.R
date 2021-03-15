@@ -738,17 +738,11 @@ output$a_download <- downloadHandler(
 )
 
 # adjust the numericInput if there are out of bound
-observeEvent(input$v_logfc_cutoff, {
-  check_numericInput("v_logfc_cutoff", 1, minimum = 0)
-})
 observeEvent(input$n_up_volcano, {
   check_numericInput("n_up_volcano", 15)
 })
 observeEvent(input$n_down_volcano, {
   check_numericInput("n_down_volcano", 15)
-})
-observeEvent(input$h_logfc_cutoff, {
-  check_numericInput("h_logfc_cutoff", 1, minimum = 0)
 })
 observeEvent(input$n_up_h, {
   check_numericInput("n_up_h", 15)
@@ -756,6 +750,6 @@ observeEvent(input$n_up_h, {
 observeEvent(input$n_down_h, {
   check_numericInput("n_down_h", 15)
 })
-observeEvent(input$a_sd_n, {
-  check_numericInput("a_sd_n", 1.5, minimum = 0.1, integer_check = FALSE)
-})
+# observeEvent(input$a_sd_n, {
+#   check_numericInput("a_sd_n", 1.5, minimum = 0.1, integer_check = FALSE)
+# })

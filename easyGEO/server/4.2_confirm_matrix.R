@@ -200,7 +200,7 @@ output$confirm_matrix_feedback <- renderUI({
   } else {
     box_color = "green"
     msg <- "<strong>Data matrix ok!</strong><br>
-            Count data is complete for selected samples."
+            Gene expression data are complete for the selected samples."
     rv$matrix_ready = T
   }
   

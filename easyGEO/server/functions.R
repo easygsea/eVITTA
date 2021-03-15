@@ -318,12 +318,21 @@ volcano_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc
 
 # basic function to plot static volcano
 volcano_basic <- function(df,q_cutoff,logfc_cutoff,text="no"){
+  # pre-set volcano dot colors
+  if(rv$plot_label == "threshold"){
+    v_col <- c("grey","red")
+  }else if(rv$plot_label == "top"){
+    v_col <- c("blue","grey","red")
+  }else if(rv$plot_label == "manual"){
+    v_col <- c("grey","red")
+  }
+  
   fig <- ggplot(df) +
     geom_point(aes(x=logFC,y=-log(.data[["adj.P.Val"]]),colour=threshold)) +
-    scale_colour_manual(values = c("blue","grey","red")) +
+    scale_colour_manual(values = v_col) +
     xlab("logFC") + ylab(paste0("-log10(adj.P.Val)")) +
-    geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype="dotted") +
-    geom_hline(yintercept=-log(q_cutoff), linetype="dotted") +
+    geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype="dashed", size=1, color="darkgrey") +
+    geom_hline(yintercept=-log(q_cutoff), linetype="dashed", size=1, color="darkgrey") +
     theme_minimal() +
     theme(legend.position="none",
           plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -392,12 +401,15 @@ volcano_ggplot <- function(df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$pl
     if(is.null(in_genes)==F && length(in_genes)>0){
       # re-threshold
       threshold_OE = rownames(df) %in% in_genes
+      threshold_OE <- sapply(threshold_OE, function(x){
+        ifelse(x, "red", "grey")
+      })
       df$threshold <- threshold_OE
-      
+
       # add gene labels
       df$genelabels = ""
-      df$genelabels[which(df$threshold==TRUE)] = rownames(df)[which(df$threshold==TRUE)]
-      
+      df$genelabels[which(df$threshold=="red")] = rownames(df)[which(df$threshold=="red")]
+
       fig <- volcano_basic(df,q_cutoff,logfc_cutoff,text="yes")
       
       rv$v_success = "yes"
