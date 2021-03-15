@@ -1007,7 +1007,7 @@ output$download_volcano <- downloadHandler(
 # no volcano for glist
 output$ui_volcano_glist <- renderUI({
     req(rv$run_mode == "glist")
-    p("No volcano plot available for gene list overrepresentation analysis.")
+    p("Volcano plot unavailable for overrepresentation (ORA) analysis",style="color:grey;")
 })
 
 # keyword plot --------------
@@ -1913,7 +1913,7 @@ observeEvent(input$confirm_kegg_plot,{
                 "View!",
                 style = "simple", color="primary", size = "sm",
                 block = TRUE),
-            bsTooltip("plot_db_es_confirm", HTML("Select term, then click <b>View!</b> Or, click interactive plots on the left"))
+            bsTooltip("plot_db_es_confirm", HTML("Select a gene set (GS), then click <b>View!</b> Or, click interactive plots on the left"))
         )
     })
 
