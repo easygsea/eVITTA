@@ -89,7 +89,7 @@ output$n_filters <- renderUI({
     div(id="n_filter_cuts", style="display: inline-block;margin-right: 5px;", customize_filters()),
     bsTooltip("customize_filters", "Apply Filters"),
     div(id="n_filter_gls", style="display: inline-block;margin-right: 5px;", view_genelists()),
-    bsTooltip("view_genelists", "View filtered gene lists"),
+    bsTooltip("view_genelists", "View filtered lists"),
     div(id="n_filter_names", style="display: inline-block;margin-right: 5px;", enter_genes()),
     bsTooltip("enter_genes", "Enter genes of interest"),
   )

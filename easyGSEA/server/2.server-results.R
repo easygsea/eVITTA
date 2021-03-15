@@ -1862,13 +1862,13 @@ observeEvent(input$confirm_kegg_plot,{
 
                     rv$kegg_status_g = "plotted"
 
-
+                    tags$iframe(style="height:450px; width:100%", src=rv$kegg_file_pdf) #,rv$kegg_file_pdf
+                    
                 }else{
-                    return(paste0("KEGG graphviz view unavailable for ",rv$es_term))
+                    HTML(paste0("<p style='color:grey;'>KEGG graphviz view unavailable for <b>",rv$es_term,"</b></p>"))
                 }
             })
         }
-        tags$iframe(style="height:450px; width:100%", src=rv$kegg_file_pdf) #,rv$kegg_file_pdf
     })
 
 

@@ -179,7 +179,7 @@ output$v_static <- renderUI({
                    title = "Genes within the top # of |logFC|"
                    , placement = "top", trigger = "hover"),
       radioTooltip(id = "v_label_opt", choice = "manual",
-                   title = "Manually label your genes"
+                   title = "Manually label your genes of interest"
                    , placement = "top", trigger = "hover"),
       
       uiOutput("v_top"),
@@ -409,9 +409,9 @@ output$hplot_parameters <- renderUI({
     },
     # tooltips for radioGroupbuttons
     radioTooltip(id = "h_y_name", choice = "accession", 
-                 title = "GEO accession method of labelling", placement = "bottom", trigger = "hover"),
+                 title = "Label samples with GEO GSM accession numbers", placement = "bottom", trigger = "hover"),
     radioTooltip(id = "h_y_name", choice = "title",
-                 title = "Sample name method of labelling", placement = "bottom", trigger = "hover"),
+                 title = "Label samples with author-supplied descriptive words", placement = "bottom", trigger = "hover"),
     
     tags$hr(style="border-color: grey;"),
     # options to extract matrix
@@ -423,11 +423,11 @@ output$hplot_parameters <- renderUI({
     ),
     # tooltips for radioGroupbuttons
     radioTooltip(id = "h_label_opt", choice = "threshold", 
-                 title = "Use thresholds to extract genes", placement = "bottom", trigger = "hover"),
+                 title = "Extract genes using adj.P.Val and |logFC| thresholds as defined above", placement = "top", trigger = "hover"),
     radioTooltip(id = "h_label_opt", choice = "top",
-                 title = "Extract the top few genes", placement = "bottom", trigger = "hover"),
+                 title = "Extract genes within the top # of |logFC|", placement = "top", trigger = "hover"),
     radioTooltip(id = "h_label_opt", choice = "manual",
-                 title = "Manually extract your genes", placement = "bottom", trigger = "hover"),
+                 title = "Manually enter and extract your genes of interest", placement = "top", trigger = "hover"),
     
     uiOutput("h_top"),
     uiOutput("h_manual"),
