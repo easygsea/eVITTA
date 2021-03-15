@@ -188,7 +188,7 @@ observeEvent(input$run_deg,{
       
       # as numeric matrix
       m_df = m_df %>% dplyr::select(one_of(samples))
-      setcolorder(m_df, as.character(samples))
+      m_df <- setcolorder(m_df, as.character(samples))
       m_df = m_df %>% 
         apply(., 2, as.numeric) %>%
         as.matrix(.)
@@ -333,7 +333,7 @@ observeEvent(input$run_deg2,{
       # as numeric matrix
       m_df = m_df %>% dplyr::select(one_of(samples))
 
-      setcolorder(m_df, as.character(samples))
+      m_df <- setcolorder(m_df, as.character(samples))
       
       m_df = m_df %>% 
         apply(., 2, as.numeric) %>%

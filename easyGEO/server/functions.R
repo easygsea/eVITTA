@@ -328,11 +328,11 @@ volcano_basic <- function(df,q_cutoff,logfc_cutoff,text="no"){
   }
   
   fig <- ggplot(df) +
-    geom_point(aes(x=logFC,y=-log(.data[["adj.P.Val"]]),colour=threshold)) +
+    geom_point(aes(x=logFC,y=-log10(.data[["adj.P.Val"]]),colour=threshold)) +
     scale_colour_manual(values = v_col) +
     xlab("logFC") + ylab(paste0("-log10(adj.P.Val)")) +
-    geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype="dashed", size=1, color="darkgrey") +
-    geom_hline(yintercept=-log(q_cutoff), linetype="dashed", size=1, color="darkgrey") +
+    geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype="dotted", color="darkgrey") +
+    geom_hline(yintercept=-log10(q_cutoff), linetype="dotted", color="darkgrey") +
     theme_minimal() +
     theme(legend.position="none",
           plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -343,8 +343,8 @@ volcano_basic <- function(df,q_cutoff,logfc_cutoff,text="no"){
   if(text=="yes"){
     fig <- fig +
       geom_text_repel(data = df[which(df$threshold!="grey"),],size=5,
-                      aes(x=logFC,y=-log(df[which(df$threshold!="grey"),][["adj.P.Val"]]),label=genelabels)
-                      ,max.overlaps = getOption("ggrepel.max.overlaps", default = 15)
+                      aes(x=logFC,y=-log10(df[which(df$threshold!="grey"),][["adj.P.Val"]]),label=genelabels)
+                      ,max.overlaps = getOption("ggrepel.max.overlaps", default = 10)
       )
   }
   
