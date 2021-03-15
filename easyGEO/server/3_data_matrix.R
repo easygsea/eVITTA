@@ -3,7 +3,7 @@ output$ui_dm <- renderUI({
   if(is.null(rv$plat_id) && rv$run_mode == "auto"){
     panel_null()
   } else if(rv$run_mode == "manual" && is.null(rv$dmdf)){
-    panel_null(text = "Data available upon sucessfully uploading your data matrix (count matrix).")
+    panel_null(text = "Data available upon sucessfully uploading your gene expression (data) matrix.")
   } else {
     fluidRow(
       column(4,
