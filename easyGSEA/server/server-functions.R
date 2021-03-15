@@ -2213,10 +2213,11 @@
     
     # Displays when the run is not initiated
     # ------------------ Panell Null -------------------
-    panel_null <- function(){
+    panel_null <- function(text){
+      text <- "Visualizations available upon successful run. Please analyze your data in <b>1. Run Analysis</b> first."
       box(
         title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
-        "Visualization available upon successful run."
+        HTML(text)
       )
     }
     

@@ -1,11 +1,7 @@
 # Overall bodyNetwork UI ------------------
 output$ui_bodyNetwork <- renderUI({
     if(is.null(rv$run) || rv$run != "success"){
-        # add an id for introjs
-        box(id = "enrichment_network_box",
-            title = span( icon("exclamation"), "Notification"), status = "warning", width=6,
-            "Visualization available upon successful run."
-        )
+        panel_null()
     }else{
     if(input$sidebarCollapsed == TRUE){
         nav_left <- 35
