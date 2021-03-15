@@ -1860,15 +1860,19 @@ observeEvent(input$confirm_kegg_plot,{
                     # print(str(cm))
                     system(cm)
 
-                    rv$kegg_status_g = "plotted"
-
-                    tags$iframe(style="height:450px; width:100%", src=rv$kegg_file_pdf) #,rv$kegg_file_pdf
-                    
+                    rv$kegg_status_g <- "plotted"
                 }else{
-                    HTML(paste0("<p style='color:grey;'>KEGG graphviz view unavailable for <b>",rv$es_term,"</b></p>"))
+                    rv$kegg_status_g <- "failed"
                 }
             })
         }
+        
+        if(rv$kegg_status_g == "plotted"){
+            tags$iframe(style="height:450px; width:100%", src=rv$kegg_file_pdf) #,rv$kegg_file_pdf
+        }else if(rv$kegg_status_g == "failed"){
+            HTML(paste0("<p style='color:grey;'>KEGG graphviz view unavailable for <b>",rv$es_term,"</b>. Try KEGG native view instead.</p>"))
+        }
+        
     })
 
 
