@@ -1,9 +1,7 @@
-# eVITTA
+# eVITTA update log
 
-Tool for visualization and interpretation of RNA-seq datasets.
-
-This bundle consists of:
-
-- easyGEO - for extracting and processing GEO data
-- easyGSEA - for GSEA analysis
-- easyVizR - for multiple dataset comparisons
+## V1.0.1
+### Mar 16, 2021
+- easyGEO
+- easyGSEA
+- easyVizR
