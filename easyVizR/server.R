@@ -74,6 +74,9 @@ server <- function(input, output, session) {
     # ram check on initialization
     source("server/server-ramCheck.R", local = TRUE)
     
+    # demo session
+    source("server/demo.R", local = TRUE)
+    
     # initialize reactive values
     source("server/rv.R", local = TRUE)
     
