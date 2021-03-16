@@ -44,7 +44,7 @@
 #   } else if(input$menu1 == "tab4"){
 #     later(~call_introjs(rbind(intros$R_post,intros$R_post_deg)),2)
 #   } else if(input$menu1 == "tab5"){
-#     later(~call_introjs(intros$V_volcano), 0.1)
+#     later(~call_introjs(intros$V_volcano), 1)
 #   } else {
 # 
 #   }
