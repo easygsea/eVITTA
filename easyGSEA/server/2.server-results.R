@@ -195,6 +195,9 @@ output$ui_bodyResults <- renderUI({
 # change default plot type
 observeEvent(input$plot_type,{
     rv$plot_type = input$plot_type
+    if(!is.null(rv$es_term)){
+        rv$es_term_n <- 1
+    }
 })
 
 # change color tone in ORA's bar/bubble
@@ -1327,12 +1330,22 @@ output$ui_gsea_plots <- renderUI({
     req(rv$run_mode=="gsea")
     req(rv$es_term)
 
-    div(
+    div(id="gs_anchor",
         style = "position: relative",
-        uiOutput("gs_enrichment_plot"),
+        uiOutput("gs_enrichment_plot_demo"),
+        # uiOutput("gs_enrichment_plot"),
         uiOutput("density_plot"),
         uiOutput("box_plot"),
         uiOutput("violin_plot")
+    )
+})
+
+# insert gsea plot UI
+observeEvent(rv$es_term,{
+    rv$es_term_n <- rv$es_term_n + 1
+    insertUI(
+        selector = "#gs_anchor",
+        ui =  uiOutput("gs_enrichment_plot")
     )
 })
 
@@ -1458,6 +1471,23 @@ output$gs_enrichment_plot <- renderUI({
         # status="primary",solidHeader = TRUE,
         # width = NULL, height = "300px",
         # title = "Enrichment Plot",
+        plotOutput("plot_db_es", height = "246px"),
+        div(
+            style = "position: absolute; left: 0.5em; bottom: 0.5em",
+            dropdown(
+                downloadButton(outputId = "download_gs_es", label="Download plot"),
+                size = "xs",
+                icon = icon("download",class="opt"),
+                up = TRUE
+            )
+        )
+    )
+})
+
+output$gs_enrichment_plot_demo <- renderUI({
+    req(rv$es_term_n == 1)
+    req(input$plot_type_2=="enrichment")
+    div(id="gs_plot_demo",
         plotOutput("plot_db_es", height = "246px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",

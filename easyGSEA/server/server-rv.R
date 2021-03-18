@@ -120,7 +120,7 @@
         
         k=1.5,
         
-        es_term=NULL,rr=NULL,
+        es_term=NULL,rr=NULL,es_term_n=0,
         
         kegg_yes=NULL,kegg_confirm=NULL, #"yes"
         kegg_status=NULL,kegg_status_g=NULL,kegg_file_png=NULL,kegg_file_pdf=NULL,kegg_pos="topright", #cel04144.pathview.pdf
