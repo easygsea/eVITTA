@@ -195,6 +195,9 @@ output$ui_bodyResults <- renderUI({
 # change default plot type
 observeEvent(input$plot_type,{
     rv$plot_type = input$plot_type
+    if(!is.null(rv$es_term)){
+        rv$es_term_n <- 1
+    }
 })
 
 # change color tone in ORA's bar/bubble
