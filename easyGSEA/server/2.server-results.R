@@ -1482,7 +1482,6 @@ output$gs_enrichment_plot <- renderUI({
 })
 
 output$gs_enrichment_plot_demo <- renderUI({
-    req(rv$demo_mode != "")
     req(rv$es_term_n == 1)
     req(input$plot_type_2=="enrichment")
     div(id="gs_plot_demo",
