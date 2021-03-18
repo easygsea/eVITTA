@@ -2178,7 +2178,7 @@
       rv$no_up_01 = 0;rv$no_up_05 = 0;rv$no_down_01 = 0;rv$no_down_05 = 0
       rv$no_up_025 = 0; rv$no_down_025 = 0
       rv$bar_q_cutoff <- 1;rv$vis_q <- 1
-      rv$es_term = NULL
+      rv$es_term = NULL; rv$es_term_n <- 0
       
       rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
       rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
@@ -2203,7 +2203,7 @@
       rv$rnk_or_deg = NULL
       rv$gene_lists_mat1 = NULL; rv$gene_lists_mat2 = NULL
       
-      rv$es_term <- NULL
+      rv$es_term <- NULL; rv$es_term_n <- 0
       rv$wp_yes <- NULL;rv$wp_confirm <- NULL;rv$kegg_yes <- NULL;rv$kegg_confirm <- NULL;rv$reactome_yes <- NULL;rv$reactome_confirm <- NULL;
       
       
@@ -2574,7 +2574,7 @@
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs/run_n.rds"))
       rv$total_genes_after <- NULL
       rv$total_genes <- NULL
-      rv$es_term <- NULL
+      rv$es_term <- NULL; rv$es_term_n <- 0
       rv$kegg_confirm <- NULL
       rv$wp_yes <- NULL
       rv$wp_confirm <- NULL
@@ -2618,7 +2618,7 @@
       rv$gene_lists_mat2 <- NULL
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs2/run_n.rds"))
       rv$gene_lists <- NULL
-      rv$es_term <- NULL
+      rv$es_term <- NULL; rv$es_term_n <- 0
       rv$kegg_confirm <- NULL
       rv$wp_yes <- NULL
       rv$wp_confirm <- NULL
