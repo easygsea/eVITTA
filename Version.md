@@ -31,5 +31,9 @@ Mar 23, 2021 UI update and bug fix (Jean)
 March 24, 2021 workflow improvement
 - easyGSEA GSEA run padj automatic filtering adjusted to assess for min of up/down
 
-## V1.0.5
+## V1.1.0
 
+March 24, 2021 easyGEO visualization update
+- easyGEO volcano plot updated with options to toggle line plotting
+
+## V1.1.1
