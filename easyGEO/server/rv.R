@@ -36,7 +36,7 @@ rv <- reactiveValues(
   plot_q=0.05, # adj.P.Val threshold for visualizations
   plot_logfc=1, # logfc threshold for visualization
   
-  show_padj=T, show_logfc=T,
+  show_padj=T, show_logfc=T,show_padj_logfc=c("padj","fc"),
   v_threshold_line="dotted",
 
   v_mode = "static", # or "interactive"

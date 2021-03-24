@@ -124,34 +124,29 @@ output$vplot_parameters <- renderUI({
     )
     
     ,tags$hr(style="border-color: grey;border-top: dotted .5px;")
-    ,splitLayout(
-      prettyToggle(
-        inputId = "show_padj",
-        label_on = "Plot adj.P.Val line",
-        icon_on = icon("check"),
-        status_on = "info",
-        status_off = "warning",
-        label_off = "Unplot adj.P.Val line",
-        icon_off = icon("remove")
-        ,value = rv$show_padj
-        ,bigger = T
+    ,fluidRow(
+      column(
+        7,
+        checkboxGroupButtons(
+          inputId = "show_padj_logfc",
+          label = "Plot line(s)",
+          choices = c("adj.P.Val"="padj", 
+                      "|logFC|"="fc"),
+          selected = rv$show_padj_logfc, 
+          size="s",
+          checkIcon = list(
+            no = tags$i(class = "fa fa-times", 
+                        style = "color: crimson"),
+            yes = tags$i(class = "fa fa-check", 
+                         style = "color: green"))
+        )
       )
-      ,prettyToggle(
-        inputId = "show_logfc",
-        label_on = "Plot |logFC| line",
-        icon_on = icon("check"),
-        status_on = "info",
-        status_off = "warning",
-        label_off = "Unplot |logFC| line",
-        icon_off = icon("remove")
-        ,value = rv$show_logfc
-        ,bigger = T
+      ,column(
+        5,
+        uiOutput("ui_v_line_type")
       )
-      
     )
-    
-    ,uiOutput("ui_v_line_type")
-    
+
     ,tags$hr(style="border-color: grey;border-top: dotted .5px;")
     
     # mode of volcano
@@ -188,22 +183,15 @@ output$vplot_parameters <- renderUI({
 
 # UI, line type for |logFC| and adj.P.Val
 output$ui_v_line_type <- renderUI({
-  req(input$show_logfc | input$show_padj)
-  
-  if(input$show_logfc & input$show_padj){
-    txt <- "adj.P.Val and |logFC|"
-  }else if(input$show_logfc){
-    txt <- "|logFC|"
-  }else if(input$show_padj){
-    txt <- "adj.P.Val"
-  }
+  req(!is.null(input$show_padj_logfc))
   
   radioGroupButtons(
     inputId = "v_threshold_line",
-    label = paste0("Line type for ",txt),
-    choices = c("Dotted"="dotted"
-                ,"Dashed"="dashed")
+    label = "Line type",
+    choices = c("Dot"="dotted"
+                ,"Dash"="dashed")
     ,selected = rv$v_threshold_line
+    ,size="sm"
     # ,checkIcon = list(
     #   yes = tags$i(class = "fa fa-check-square", 
     #                style = "color: steelblue"),
@@ -325,8 +313,10 @@ observeEvent(input$volcano_confirm,{
   rv$plot_q = input$v_q_cutoff
   rv$plot_logfc = input$v_logfc_cutoff
   rv$v_mode = input$volcano_mode
-  rv$show_padj <- input$show_padj
-  rv$show_logfc <- input$show_logfc
+  rv$show_padj_logfc <- input$show_padj_logfc
+  if("padj" %in% rv$show_padj_logfc){rv$show_padj <- T}else{rv$show_padj <- F}
+  if("fc" %in% rv$show_padj_logfc){rv$show_logfc <- T}else{rv$show_logfc <- F}
+  
   rv$v_threshold_line <- input$v_threshold_line
   
   # if interactive
