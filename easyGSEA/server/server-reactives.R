@@ -23,6 +23,16 @@ dbs <- reactive({
   }
 })
 
+# gene.idtype for KEGG plot, special case handling for Sc
+# ------ KEGG gene.idtype --------
+gidtype <- reactive({
+  if(input$selected_species != "sce"){
+    return("SYMBOL")
+  }else{
+    return("GENENAME")
+  }
+})
+
 # display colors for selection
 # ------ color tones for selection: options --------
 col_opts <- c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey")
