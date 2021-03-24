@@ -123,7 +123,7 @@ output$vplot_parameters <- renderUI({
       rv$plot_logfc,min=0
     )
     
-    ,tags$hr(style="border-color: grey;border-top: dotted .5px;")
+    ,tags$hr(style="border-color: grey;")
     ,fluidRow(
       column(
         7,
@@ -147,7 +147,7 @@ output$vplot_parameters <- renderUI({
       )
     )
 
-    ,tags$hr(style="border-color: grey;border-top: dotted .5px;")
+    ,tags$hr(style="border-color: grey;")
     
     # mode of volcano
     ,radioGroupButtons(
