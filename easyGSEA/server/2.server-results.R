@@ -325,12 +325,19 @@ output$plot_gear <- renderUI({
                 tags$h4(tags$strong(tags$em(paste0("Advanced parameters for creating the ",rv$plot_type," plot"))))
             ),
             column(12,
-                   selectizeInput("pathway_to_plot_bar",
-                                  HTML(paste0("Select database(s) to plot ",add_help("db_bar"))),
-                                  choices = dbs,
-                                  selected = rv$bar_pathway,
-                                  multiple = TRUE),
-                   bsTooltip("db_bar",HTML(db_bs),placement = "top"),
+                   pickerInput("pathway_to_plot_bar",
+                               HTML(paste0("Select database(s) to plot ",add_help("db_bar"))),
+                               choices = dbs,
+                               selected = rv$bar_pathway,
+                               options = list(
+                                   `actions-box` = TRUE,
+                                   size = 10,
+                                   style = "btn-default",
+                                   `selected-text-format` = "count > 4"
+                                   # ,`live-search` = TRUE
+                               ),
+                               multiple = TRUE)
+                   ,bsTooltip("db_bar",HTML(db_bs),placement = "top"),
                    uiOutput("bar_top"),
 
                    splitLayout(
@@ -394,12 +401,19 @@ output$plot_gear <- renderUI({
                 tags$h4(tags$strong(tags$em(paste0("Advanced parameters for creating the ",rv$plot_type," plot"))))
             ),
             column(12,
-                   selectizeInput("pathway_to_plot_bubble",
-                                  HTML(paste0("Select database(s) to plot ",add_help("db_bubble"))),
-                                  choices = dbs,
-                                  selected = rv$bar_pathway,
-                                  multiple = TRUE),
-                   bsTooltip("db_bubble",HTML(db_bs),placement = "top"),
+                   pickerInput("pathway_to_plot_bubble",
+                               HTML(paste0("Select database(s) to plot ",add_help("db_bubble"))),
+                               choices = dbs,
+                               selected = rv$bar_pathway,
+                               options = list(
+                                   `actions-box` = TRUE,
+                                   size = 10,
+                                   style = "btn-default",
+                                   `selected-text-format` = "count > 4"
+                                   # ,`live-search` = TRUE
+                               ),
+                               multiple = TRUE)
+                   ,bsTooltip("db_bubble",HTML(db_bs),placement = "top"),
                    uiOutput("bubble_top"),
                    splitLayout(
                        sliderTextInput("cutoff_p_bubble",
@@ -469,12 +483,19 @@ output$plot_gear <- renderUI({
             ),
             column(
                 width = 12,
-                selectizeInput("pathway_to_plot_volcano",
-                               HTML(paste0("Select database(s) to plot ",add_help("db_vol"))),
-                               choices = dbs,
-                               selected = rv$volcano_pathway,
-                               multiple = TRUE),
-                bsTooltip("db_vol",HTML(db_bs),placement = "top")
+                pickerInput("pathway_to_plot_volcano",
+                            HTML(paste0("Select database(s) to plot ",add_help("db_vol"))),
+                            choices = dbs,
+                            selected = rv$volcano_pathway,
+                            options = list(
+                                `actions-box` = TRUE,
+                                size = 10,
+                                style = "btn-default",
+                                `selected-text-format` = "count > 4"
+                                # ,`live-search` = TRUE
+                            ),
+                            multiple = TRUE)
+                ,bsTooltip("db_vol",HTML(db_bs),placement = "top")
             ),
             column(
                 width = 12,
@@ -514,11 +535,18 @@ output$plot_gear <- renderUI({
                 tags$h4(tags$strong(tags$em(paste0("Advanced parameters for creating the ",rv$plot_type," plot"))))
             ),
             column(12,
-                   selectizeInput("pathway_to_plot_word",
-                                  HTML(paste0("Select database(s) to plot ",add_help("db_word"))),
-                                  choices = dbs,
-                                  selected = rv$bar_pathway,
-                                  multiple = TRUE)
+                   pickerInput("pathway_to_plot_word",
+                               HTML(paste0("Select database(s) to plot ",add_help("db_word"))),
+                               choices = dbs,
+                               selected = rv$bar_pathway,
+                               options = list(
+                                   `actions-box` = TRUE,
+                                   size = 10,
+                                   style = "btn-default",
+                                   `selected-text-format` = "count > 4"
+                                   # ,`live-search` = TRUE
+                               ),
+                               multiple = TRUE)
                    , bsTooltip("db_word",HTML(db_bs),placement = "top")
             ),
             column(12,

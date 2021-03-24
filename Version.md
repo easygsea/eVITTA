@@ -18,3 +18,8 @@ Mar 23, 2021 Bug fix
 - easyGSEA ORA module check_numericInput_na bug fixed (Jean)
 
 ## V1.0.3
+
+Mar 23, 2021 UI update
+- easyGSEA database selection changed from selectizeInput to pickerInput (Jean)
+
+## V1.0.4
