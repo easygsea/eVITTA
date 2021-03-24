@@ -331,14 +331,19 @@ volcano_basic <- function(df,q_cutoff,logfc_cutoff,text="no"){
     geom_point(aes(x=logFC,y=-log10(.data[["adj.P.Val"]]),colour=threshold)) +
     scale_colour_manual(values = v_col) +
     xlab("logFC") + ylab(paste0("-log10(adj.P.Val)")) +
-    geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype="dotted", color="darkgrey") +
-    geom_hline(yintercept=-log10(q_cutoff), linetype="dotted", color="darkgrey") +
     theme_minimal() +
     theme(legend.position="none",
           plot.title = element_text(size = rel(1.5), hjust = 0.5),
           axis.title = element_text(size = rel(1.5)),
           axis.text = element_text(size = rel(1.25))
     )
+  
+  if(rv$show_padj){
+    fig <- fig + geom_hline(yintercept=-log10(q_cutoff), linetype=rv$v_threshold_line, color="darkgrey")
+  }
+  if(rv$show_logfc){
+    fig <- fig + geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype=rv$v_threshold_line, color="darkgrey") 
+  }
   
   if(text=="yes"){
     fig <- fig +
@@ -430,12 +435,17 @@ volcano_plotly <- function(df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$pl
                    ))) +
     scale_colour_manual(values = c("grey","red")) +
     xlab("logFC") + ylab(paste0("-log10(adj.P.Val)")) +
-    geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype="dotted") +
-    geom_hline(yintercept=-log(q_cutoff), linetype="dotted") +
     theme_minimal() +
     theme(legend.position = "none",
           plot.title = element_text(size = rel(1.5), hjust = 0.5),
           axis.title = element_text(size = rel(1.25)))
+  
+  if(rv$show_padj){
+    fig <- fig + geom_hline(yintercept=-log(q_cutoff), linetype=rv$v_threshold_line)
+  }
+  if(rv$show_logfc){
+    fig <- fig + geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype=rv$v_threshold_line)
+  }
   
   fig <- ggplotly(fig,tooltip = "text")
   

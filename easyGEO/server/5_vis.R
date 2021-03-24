@@ -150,19 +150,9 @@ output$vplot_parameters <- renderUI({
       
     )
     
-    ,radioGroupButtons(
-      inputId = "v_threshold_line",
-      label = "Line type for adj.P.Val and |logFC|",
-      choices = c("Dotted"="dotted"
-                  ,"Dashed"="dashed"),
-      checkIcon = list(
-        yes = tags$i(class = "fa fa-check-square", 
-                     style = "color: steelblue"),
-        no = tags$i(class = "fa fa-square-o", 
-                    style = "color: steelblue"))
-    )
+    ,uiOutput("ui_v_line_type")
     
-    ,tags$hr(style="border-color: grey;")
+    ,tags$hr(style="border-color: grey;border-top: dotted .5px;")
     
     # mode of volcano
     ,radioGroupButtons(
@@ -194,6 +184,32 @@ output$vplot_parameters <- renderUI({
     
   )
   
+})
+
+# UI, line type for |logFC| and adj.P.Val
+output$ui_v_line_type <- renderUI({
+  req(input$show_logfc | input$show_padj)
+  
+  if(input$show_logfc & input$show_padj){
+    txt <- "adj.P.Val and |logFC|"
+  }else if(input$show_logfc){
+    txt <- "|logFC|"
+  }else if(input$show_padj){
+    txt <- "adj.P.Val"
+  }
+  
+  radioGroupButtons(
+    inputId = "v_threshold_line",
+    label = paste0("Line type for ",txt),
+    choices = c("Dotted"="dotted"
+                ,"Dashed"="dashed")
+    ,selected = rv$v_threshold_line
+    # ,checkIcon = list(
+    #   yes = tags$i(class = "fa fa-check-square", 
+    #                style = "color: steelblue"),
+    #   no = tags$i(class = "fa fa-square-o", 
+    #               style = "color: steelblue"))
+  )
 })
 
 # UI, static volcano
@@ -309,6 +325,9 @@ observeEvent(input$volcano_confirm,{
   rv$plot_q = input$v_q_cutoff
   rv$plot_logfc = input$v_logfc_cutoff
   rv$v_mode = input$volcano_mode
+  rv$show_padj <- input$show_padj
+  rv$show_logfc <- input$show_logfc
+  rv$v_threshold_line <- input$v_threshold_line
   
   # if interactive
   if(input$volcano_mode == "interactive"){
