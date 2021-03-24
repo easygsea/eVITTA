@@ -28,12 +28,18 @@ Mar 23, 2021 UI update and bug fix (Jean)
 
 ## V1.0.4
 
-March 24, 2021 workflow improvement
+March 24, 2021 workflow improvement (Jean)
 - easyGSEA GSEA run padj automatic filtering adjusted to assess for min of up/down
 
 ## V1.1.0
 
-March 24, 2021 easyGEO visualization update
+March 24, 2021 easyGEO visualization update (Jean)
 - easyGEO volcano plot updated with options to toggle line plotting
 
 ## V1.1.1
+
+March 24, 2021 easyGSEA bug fix (Jean)
+- KEGG plot gene.idtype parameter assigned with a new reactive variable gidtype (to handle issues with yeast SGD database)
+- Added rno.rnk and rno.csv
+
+## V1.1.2
