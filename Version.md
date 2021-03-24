@@ -27,3 +27,9 @@ Mar 23, 2021 UI update and bug fix (Jean)
 - easyGSEA ORA bar & bubble arranged from low-to-high pval
 
 ## V1.0.4
+
+March 24, 2021 workflow improvement
+- easyGSEA GSEA run padj automatic filtering adjusted to assess for min of up/down
+
+## V1.0.5
+
