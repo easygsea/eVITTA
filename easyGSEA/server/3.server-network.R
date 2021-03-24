@@ -279,7 +279,7 @@ output$download_vis <- downloadHandler(
 # -------- update and replot visnetwork ----------
 observeEvent(input$vis_replot,{
     if(is.null(input$vis_pathway)){
-        shinyalert("Please select at least 1 database to visualize.")
+        shinyalert("Please select at least 1 database to plot.")
     }else{
         # confirm the numericInput for visnetwork is not NA
         rv$error_par <- 0
@@ -353,12 +353,18 @@ output$ui_vis_gear <- renderUI({
     ),
     fluidRow(
         column(12,
-               selectizeInput("vis_pathway",
-                              HTML(paste0("Select database(s) to plot ",add_help("db_vis"))),
-                              choices = dbs(),
-                              selected = rv$vis_pathway,
-                              multiple = TRUE
-                              )
+               pickerInput("vis_pathway",
+                           HTML(paste0("Select database(s) to plot ",add_help("db_vis"))),
+                           choices = dbs(),
+                           selected = rv$vis_pathway,
+                           options = list(
+                             `actions-box` = TRUE,
+                             size = 10,
+                             style = "btn-default",
+                             `selected-text-format` = "count > 4"
+                             # ,`live-search` = TRUE
+                           ),
+                           multiple = TRUE)
                ,bsTooltip("db_vis",HTML(db_bs),placement = "top")
         ),
         column(12,

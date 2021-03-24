@@ -701,6 +701,7 @@
         }
 
         if(is.null(df)==T || nrow(df)<1){
+          rv$bar_error <- "0"
           return(NULL)
         }else{
           # transform df to tibble and remove db prefices
@@ -885,13 +886,22 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) #%>% dplyr::arrange(desc(pval))
+          if(rv$bar_mode == "cutoff"){
+            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) #%>% dplyr::arrange(desc(pval))
+          }else if(rv$bar_mode == "gs"){
+            df <- rv$fgseagg %>%
+              dplyr::filter(pathway %in% rv$gss_selected) #%>% dplyr::arrange(desc(pval))
+          }
           
           rv$bar_tl <- df
           
-            if(is.null(df)==T || nrow(df)<1){
-                return(NULL)
-            }else{
+          if(is.null(df)==T || nrow(df)<1){
+            rv$bar_error <- "0"
+            return(NULL)
+          }else if(nrow(df)>200){
+            rv$bar_error <- "l"
+            return(NULL)
+          }else{
                 
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
@@ -942,12 +952,21 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+          if(rv$bar_mode == "cutoff"){
+            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) #%>% dplyr::arrange(desc(pval))
+          }else if(rv$bar_mode == "gs"){
+            df <- rv$fgseagg %>%
+              dplyr::filter(pathway %in% rv$gss_selected) #%>% dplyr::arrange(desc(pval))
+          }
           rv$bar_tl <- df
           
-            if(is.null(df)==T || nrow(df)<1){
-                return(NULL)
-            }else{
+          if(is.null(df)==T || nrow(df)<1){
+            rv$bar_error <- "0"
+            return(NULL)
+          }else if(nrow(df)>200){
+            rv$bar_error <- "l"
+            return(NULL)
+          }else{
               
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)

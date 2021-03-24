@@ -13,3 +13,16 @@ Mar 18, 2021 Homepage update and bug fix (Jean)
 - easyGSEA tab 2 enrichment plot download dropdown bug fix
 
 ## V1.0.2
+
+Mar 23, 2021 Bug fix (Jean)
+- easyGSEA ORA module check_numericInput_na bug fixed
+
+## V1.0.3
+
+Mar 23, 2021 UI update and bug fix (Jean)
+- easyGSEA database selection changed from selectizeInput to pickerInput
+- easyGSEA ORA module sig_none reactive bug fix
+- easyGSEA ORA bubble check_numericInput_na bug fix
+- easyGSEA ORA bar & bubble manual GS selection bug fix
+
+## V1.0.4
