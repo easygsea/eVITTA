@@ -887,10 +887,10 @@
             return(NULL)
         }else{
           if(rv$bar_mode == "cutoff"){
-            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) #%>% dplyr::arrange(desc(pval))
+            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) %>% dplyr::arrange(desc(pval))
           }else if(rv$bar_mode == "gs"){
             df <- rv$fgseagg %>%
-              dplyr::filter(pathway %in% rv$gss_selected) #%>% dplyr::arrange(desc(pval))
+              dplyr::filter(pathway %in% rv$gss_selected) %>% dplyr::arrange(desc(pval))
           }
           
           rv$bar_tl <- df
@@ -953,10 +953,10 @@
             return(NULL)
         }else{
           if(rv$bar_mode == "cutoff"){
-            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) #%>% dplyr::arrange(desc(pval))
+            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) %>% dplyr::arrange(desc(pval))
           }else if(rv$bar_mode == "gs"){
             df <- rv$fgseagg %>%
-              dplyr::filter(pathway %in% rv$gss_selected) #%>% dplyr::arrange(desc(pval))
+              dplyr::filter(pathway %in% rv$gss_selected) %>% dplyr::arrange(desc(pval))
           }
           rv$bar_tl <- df
           
