@@ -121,12 +121,51 @@ output$vplot_parameters <- renderUI({
       "v_logfc_cutoff",
       "Threshold of |logFC|",
       rv$plot_logfc,min=0
-    ),
+    )
     
-    tags$hr(style="border-color: grey;"),
+    ,tags$hr(style="border-color: grey;border-top: dotted .5px;")
+    ,splitLayout(
+      prettyToggle(
+        inputId = "show_padj",
+        label_on = "Plot adj.P.Val line",
+        icon_on = icon("check"),
+        status_on = "info",
+        status_off = "warning",
+        label_off = "Unplot adj.P.Val line",
+        icon_off = icon("remove")
+        ,value = rv$show_padj
+        ,bigger = T
+      )
+      ,prettyToggle(
+        inputId = "show_logfc",
+        label_on = "Plot |logFC| line",
+        icon_on = icon("check"),
+        status_on = "info",
+        status_off = "warning",
+        label_off = "Unplot |logFC| line",
+        icon_off = icon("remove")
+        ,value = rv$show_logfc
+        ,bigger = T
+      )
+      
+    )
+    
+    ,radioGroupButtons(
+      inputId = "v_threshold_line",
+      label = "Line type for adj.P.Val and |logFC|",
+      choices = c("Dotted"="dotted"
+                  ,"Dashed"="dashed"),
+      checkIcon = list(
+        yes = tags$i(class = "fa fa-check-square", 
+                     style = "color: steelblue"),
+        no = tags$i(class = "fa fa-square-o", 
+                    style = "color: steelblue"))
+    )
+    
+    ,tags$hr(style="border-color: grey;")
     
     # mode of volcano
-    radioGroupButtons(
+    ,radioGroupButtons(
       "volcano_mode",
       "Mode of volcano plot",
       choices = list("Static"="static","Interactive"="interactive"),
