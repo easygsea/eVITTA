@@ -795,7 +795,7 @@ observeEvent(input$bar_confirm,{
     }else{
         rv$error_par <- 0
         rv$error_par <- check_numericInput_na("n_up_bar", rv$error_par, "# of top up")
-        rv$error_par <- check_numericInput_na("n_down_bar", rv$error_par, "# of top down")
+        if(rv$run_mode == "gsea"){rv$error_par <- check_numericInput_na("n_down_bar", rv$error_par, "# of top down")}
         #print(rv$error_par)
         req(rv$error_par == 0)
         rv$bar_pathway = input$pathway_to_plot_bar
