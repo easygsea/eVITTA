@@ -11,3 +11,5 @@ Mar 16, 2021 Bug fixed (Blake)
 Mar 18, 2021 Homepage update and bug fix (Jean)
 - Updated easyGEO & easyGSEA help pages
 - easyGSEA tab 2 enrichment plot download dropdown bug fix
+
+## V1.0.2

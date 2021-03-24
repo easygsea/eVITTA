@@ -195,6 +195,9 @@ output$ui_bodyResults <- renderUI({
 # change default plot type
 observeEvent(input$plot_type,{
     rv$plot_type = input$plot_type
+    if(!is.null(rv$es_term)){
+        rv$es_term_n <- 1
+    }
 })
 
 # change color tone in ORA's bar/bubble
@@ -1482,7 +1485,6 @@ output$gs_enrichment_plot <- renderUI({
 })
 
 output$gs_enrichment_plot_demo <- renderUI({
-    req(rv$demo_mode != "")
     req(rv$es_term_n == 1)
     req(input$plot_type_2=="enrichment")
     div(id="gs_plot_demo",
