@@ -13,3 +13,8 @@ Mar 18, 2021 Homepage update and bug fix (Jean)
 - easyGSEA tab 2 enrichment plot download dropdown bug fix
 
 ## V1.0.2
+
+Mar 23, 2021 Bug fix
+- easyGSEA ORA module check_numericInput_na bug fixed (Jean)
+
+## V1.0.3
