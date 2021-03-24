@@ -231,16 +231,17 @@ sig_none <- reactive({
     if(rv$bar_error == "l" && (rv$plot_type == "bar" || rv$plot_type == "bubble")){
         HTML(
             "We support plotting up to 200 data points."
-            ,"Please click the bottom-left gear button to adjust thresholds, "
-            ,"or click the search button to re-select the gene sets of interest."
+            ,"<br><br>Please click the bottom-left <b>gear button</b> to adjust selected database(s), P threshold, and/or P.adj threshold. "
+            ,"<br><br>Or, click the <b>search button</b> to manually select gene set(s) of interest."
         )
     }else{
         HTML(
-            "No significant term found at pval < ",
+            "<p style='color:grey;'>No significant result found at pval < ",
             rv$bar_p_cutoff,
             "& padj < ",
-            rv$bar_q_cutoff,
-            ". Please adjust thresholds by clicking the bottom-left gear button."
+            rv$bar_q_cutoff, "</p>"
+            ,"<br>Please click the bottom-left <b>gear button</b> to adjust selected database(s), P threshold, and/or P.adj threshold. "
+            ,"<br><br>Or, click the <b>search button</b> to manually select gene set(s) of interest."
         )
     }
     
