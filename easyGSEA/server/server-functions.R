@@ -1,4 +1,14 @@
-    #=======================================================================#
+#=======================================================================#
+####----------------- Functions: read in data -------------------####
+#=======================================================================#
+read_genome_background <- function(species){
+  ora_dir <- paste0(getwd(),"/www/gmts/ORA/")
+  ora_file <- paste0(ora_dir,species,".csv")
+  rv$ora_genome_background <- read.csv(ora_file) %>% .[,3]
+}
+
+
+#=======================================================================#
     ####----------------- Functions: filtering and UI -------------------####
     #=======================================================================#
     # remove db names and IDs in gsea table
@@ -2397,12 +2407,16 @@
       # save GMT into RV
       rv$gmts = c(rv$gmts,m_list)
       
-      # get all genes
-      a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
+      # get all genes and background genes
+      if(rv$ora_option == "genome"){
+        a_genes <- toupper(rv$ora_genome_background)
+        in_genes <- genelist
+      }else if(rv$ora_option == "gs"){
+        a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
+        # genes present in the database
+        in_genes = genelist[genelist %in% a_genes]
+      }
 
-      # genes present in the database
-      in_genes = genelist[genelist %in% a_genes]
-      
       if(! identical(in_genes,character(0))){
         frun <- try(fgseaRes <- fora(pathways = m_list,
                                      genes    = in_genes,
