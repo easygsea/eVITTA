@@ -4,7 +4,7 @@
         demo_save = "no", # yes for saving the variables, no for regular run
         
         ora_genome_background = NULL, #NULL for initialization
-        ora_option = "genome",
+        ora_option = "genome", selected_species_m="",
            
         run_mode=NULL, #gsea glist
         edge_mode=NULL, # edges of visnetwork: gs=gene set, lg=leadingedge

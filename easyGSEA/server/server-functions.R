@@ -2408,7 +2408,7 @@ read_genome_background <- function(species){
       rv$gmts = c(rv$gmts,m_list)
       
       # get all genes and background genes
-      if(rv$ora_option == "genome"){
+      if(rv$ora_option == "genome" | rv$ora_option == "genome1"){
         a_genes <- toupper(rv$ora_genome_background)
         in_genes <- genelist
       }else if(rv$ora_option == "gs"){

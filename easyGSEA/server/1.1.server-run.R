@@ -539,6 +539,8 @@
           if(length(rv$gmt_cs)<1){
             shinyalert("Please upload a GMT file to proceed")
           }else{
+            # update default ora reference background to gs
+            rv$ora_option <- "gs"
             rv$db_status <- "selected"
           }
         }else{
@@ -1220,7 +1222,11 @@
                     }
                 }
             }else{
-              shinyalert("Please input your query. Click example data for a trial run.")
+              if(species != "other"){
+                shinyalert("Please input your query. Click example data for a trial run.")
+              }else{
+                shinyalert("Please input your query.")
+              }
             }
         }else{
           shinyalert("Please select species that matches your query.")
@@ -1375,8 +1381,34 @@
         )
         ,bsTooltip("ora_option_q",HTML("The reference background genes for ORA")
                   ,placement = "top")
+        ,uiOutput("ui_gmt_species")
       )
        
+    })
+    
+    # UI, species selection for custom GMT run
+    output$ui_gmt_species <- renderUI({
+      req(input$ora_option == "genome1")
+      div(
+        selectizeInput(
+          "selected_species_m",
+          HTML(paste0(
+            "Select a built-in species that matches your uploaded GMTs:",
+            add_help("selected_species_m_q")
+          )),
+          
+          choices = species_names,
+          #the default value of selected for demo session
+          selected = "",
+          options = list(
+            placeholder = 'Type to search ...'
+            ,onInitialize = I(sprintf('function() { this.setValue("%s"); }',rv$selected_species_m))
+          )
+        )
+        ,bsTooltip("selected_species_m_q",HTML("The reference background genes for ORA will be the whole genome of the selected species")
+                   ,placement = "top")
+      )
+        
     })
     
     # UI, number of permutation for GSEA run
@@ -1504,6 +1536,7 @@
 
                   size = "l",
                   easyClose = TRUE
+                  ,footer = modalButton("OK")
                 ))
               }else{
                 db_selected = paste(rv$gmt_cs,collapse = "; ")
@@ -1517,6 +1550,7 @@
 
                   size = "l",
                   easyClose = TRUE
+                  ,footer = modalButton("OK")
                 ))
               }
 
@@ -1565,6 +1599,30 @@
     #===============================================#
 
     observeEvent(input$confirm2, {
+      # check if species is selected for custom GMT run
+      ora_error = 0
+      if(!is.null(input$ora_option)){
+        if(input$ora_option == "genome1"){
+          species <- input$selected_species_m
+          if(species == ""){
+            ora_error <- 1
+            showModal(modalDialog(
+              title = h3(HTML("Please click the gear button to adjust <b>run parameters</b>")),
+              tags$li(h4(paste0("You have indicated to use the whole genome of a built-in species as the reference background, but the species hasn't been selected"))),
+              tags$li(h4(paste0("Please select a built-in species to proceed"))),
+              
+              size = "l",
+              easyClose = TRUE
+              ,footer = modalButton("OK")
+            ))
+          }else{
+            rv$selected_species_m <- input$selected_species_m
+            read_genome_background(species)
+          }
+        }
+      }
+      req(ora_error == 0)
+      
         rv$run_mode = "glist"
         species <- isolate(input$selected_species)
 
@@ -1626,20 +1684,39 @@
 
 
             if(errors > 0 && is.null(rv$fgseagg)){
-              db_selected = names(rv$dbs)
-              db_selected = paste(db_selected,collapse = "; ")
-              # ErrorMessage <- conditionMessage(attr(frun, "condition"))  # the error message
-              #show a modal dialog if there is an error reading files causing crash
-              showModal(modalDialog(
-                title = h3(HTML("Please click the gear button to adjust <b>run parameters</b>")),
-                tags$li(h4(paste0("Database(s): ",db_selected))),
-                tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
-                                  ," and max=",rv$gmax))),
-
-                size = "l",
-                easyClose = TRUE
-                ,footer = modalButton("OK")
-              ))
+              if(species != "other"){
+                db_selected = names(rv$dbs)
+                db_selected = paste(db_selected,collapse = "; ")
+                # ErrorMessage <- conditionMessage(attr(frun, "condition"))  # the error message
+                #show a modal dialog if there is an error reading files causing crash
+                showModal(modalDialog(
+                  title = h3(HTML("Please click the gear button to adjust <b>run parameters</b>")),
+                  tags$li(h4(paste0("Database(s): ",db_selected))),
+                  tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
+                                    ," and max=",rv$gmax))),
+                  
+                  size = "l",
+                  easyClose = TRUE
+                  ,footer = modalButton("OK")
+                ))
+              }else{
+                db_selected = paste(rv$gmt_cs,collapse = "; ")
+                
+                showModal(modalDialog(
+                  title = h3(HTML("Analysis failed")),
+                  h4(HTML("Please check if the uploaded GMTs are in correct format. If yes, click the <b>gear button</b> on top right of RUN ORA! and adjust <b>Advanced run parameters</b>")),
+                  tags$li(h4(paste0("Uploaded GMT(s): ",db_selected))),
+                  tags$li(h4(paste0("Selected built-in species: ",species_translate(input$selected_species_m)))),
+                  tags$li(h4(paste0("Please check if the selected species matches your uploaded GMT(s)"))),
+                  tags$li(h4(paste0("No gene sets available after filtering by min=",rv$gmin
+                                    ," and max=",rv$gmax))),
+                  
+                  size = "l",
+                  easyClose = TRUE
+                  ,footer = modalButton("OK")
+                ))
+              }
+              
             }else{
               # count number of filtered GSs in GMTs
               l = unlist(lapply(rv$gmts, function(x){return(length(x)>=rv$gmin && length(x)<=rv$gmax)}))

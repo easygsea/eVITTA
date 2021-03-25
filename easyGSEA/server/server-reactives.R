@@ -34,6 +34,7 @@ ora_options <- reactive({
   }else{
     return(list(
       "Genes in gene set library" = "gs"
+      ,"Whole genome of a built-in species" = "genome1"
     ))
   }
 })
