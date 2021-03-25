@@ -553,6 +553,9 @@
               rv$dbs = c(rv$dbs,gmt_collections[[species]][[collection]][which(gmt_collections[[species]][[collection]] %in% input[[db_id]])])
             }
           }
+          # read in ORA genome background
+          read_genome_background(species)
+          # indicate dbs have been selected
           rv$db_status <- "selected"
         }
         
@@ -592,6 +595,7 @@
       rv$gene_lists_mat1 = NULL; rv$gene_lists_mat2 = NULL
       rv$db_modal = NULL
       rv$gmt_cs = NULL
+      rv$ora_genome_background <- NULL
 
       # rest glist UIs
       shinyjs::reset("gene_list")
