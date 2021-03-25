@@ -73,6 +73,7 @@ body <- dashboardBody(
   
     # link to stylesheet
     tags$head(
+      includeHTML(("google-analytics.html")),
       #Added get IP here!
       tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
       ######Added get IP here!

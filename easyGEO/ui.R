@@ -61,6 +61,7 @@ body <- dashboardBody(
 
     # apply CSS theme
     tags$head(
+      includeHTML(("google-analytics.html")),
       tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
     ),
 

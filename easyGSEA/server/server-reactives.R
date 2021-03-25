@@ -38,6 +38,16 @@ ora_options <- reactive({
   }
 })
 
+# gene.idtype for KEGG plot, special case handling for Sc
+# ------ KEGG gene.idtype --------
+gidtype <- reactive({
+  if(input$selected_species != "sce"){
+    return("SYMBOL")
+  }else{
+    return("GENENAME")
+  }
+})
+
 # display colors for selection
 # ------ color tones for selection: options --------
 col_opts <- c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey")
@@ -66,13 +76,13 @@ color_tone_div <- reactive({
                     ,choicesOpt = col_choicesopt
                     # ,justified = TRUE,
                     # checkIcon = list(
-                    #     yes = icon("ok", 
+                    #     yes = icon("ok",
                     #                lib = "glyphicon"))
         )
         ,bsTooltip("bar_col",HTML(col_tone_bs),placement = "top")
       )
     )
-    
+
   }else{
     fluidRow(
       column(
@@ -102,7 +112,7 @@ color_tone_div <- reactive({
 # ------ color tones for selection: Enrichment vis tab --------
 vis_col_div <- reactive({
   req(rv$run_mode)
-  
+
   if(rv$run_mode == "glist"){
     column(
       width = 4, offset = 2,
@@ -113,7 +123,7 @@ vis_col_div <- reactive({
                   ,choicesOpt = col_choicesopt
                   # ,justified = TRUE,
                   # checkIcon = list(
-                  #     yes = icon("ok", 
+                  #     yes = icon("ok",
                   #                lib = "glyphicon"))
       )
       ,bsTooltip("vis_col_q",HTML(col_tone_bs),placement = "top")
@@ -140,9 +150,9 @@ vis_col_div <- reactive({
       )
       ,bsTooltip("vis_col_up_q",HTML(paste0(col_tone_bs," for upregulation")),placement = "top")
       ,bsTooltip("vis_col_down_q",HTML(paste0(col_tone_bs," for downregulation")),placement = "top")
-      
+
     )
-    
+
   }
 })
 
@@ -186,12 +196,12 @@ word_color_basic <- function(col){
   }else if(col == "salmon"){
     "#f8766d"
   }
-  
+
 }
 
 word_color <- reactive({
   req(rv$ora_color)
-  
+
   word_color_basic(rv$ora_color)
 })
 
@@ -203,7 +213,7 @@ word_color_div <- function(col1 = rv$up_color, col2 = rv$down_color){
 gcols_div <- function(col1 = rv$up_color, col2 = rv$down_color){
   col_up <- g_color(col = col1)
   col_down <- g_color(col = col2)
-  
+
   if(col1 == col2){
     c(rev(col_down),col_up)[-6]
   }else{
@@ -293,4 +303,3 @@ tv_vis_div <- reactive({
                ,placement = "top")
   )
 })
-
