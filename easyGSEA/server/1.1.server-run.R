@@ -934,10 +934,10 @@
         rv$input_symbol = NULL
         rv$gene_lists_mat1 = NULL
         rv$run = NULL
-        print(rv$infile_name)
+        # print(rv$infile_name)
 
         rv$rnkll <- strsplit(isolate(rv$infile_name),"\\.(?=[^\\.]+$)", perl=TRUE)[[1]][1] # add value to rv
-        print(rv$rnkll)
+        # print(rv$rnkll)
         ranks <- read_delim(isolate(rv$infile_path), ",", locale = locale(encoding = 'ISO-8859-1'))# , escape_double = FALSE, trim_ws = TRUE)
 
         if(ncol(ranks)==1){
@@ -1260,7 +1260,7 @@
 
     #----------- 3.2.4 Example GList --------------
     observeEvent(input$load_example_glist,{
-      print(gsub(";","\n",glist_example[input$selected_species][[1]]))
+      # print(gsub(";","\n",glist_example[input$selected_species][[1]]))
         if(input$selected_species == ""){
           shinyalert("Please select your species of interest.")
         }else if(input$selected_species == "other"){
@@ -1578,8 +1578,8 @@
         # update run parameters in RVs
         if(!is.null(input$mymin)){if(!is.na(input$mymin)){rv$gmin=input$mymin}}
         if(!is.null(input$mymax)){if(!is.na(input$mymax)){rv$gmax=input$mymax}}
-        rv$ora_option <- input$ora_option
-        
+        if(!is.null(input$ora_option)){if(!is.na(input$ora_option)){rv$ora_option=input$ora_option}}
+
         # save dbs for plots
         if(species != "other"){
           rv$bar_pathway = rv$dbs
