@@ -43,3 +43,8 @@ March 24, 2021 easyGSEA bug fix (Jean)
 - Added rno.rnk and rno.csv
 
 ## V1.1.2
+
+March 24, 2021 Google Analytics added (Jean)
+
+## V1.1.3
+
