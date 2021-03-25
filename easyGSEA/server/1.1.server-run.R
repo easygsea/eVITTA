@@ -596,6 +596,7 @@
       rv$db_modal = NULL
       rv$gmt_cs = NULL
       rv$ora_genome_background <- NULL
+      rv$ora_option <- "genome"
 
       # rest glist UIs
       shinyjs::reset("gene_list")
@@ -1330,6 +1331,7 @@
           #   width = 12, title = "Advanced run parameters", status = "warning", collapsible = T, collapsed = T,
             wellPanel(
               h4("Advanced run parameters"),
+              uiOutput("ui_ora_option"),
               splitLayout(
                 numericInput("mymin",
                              HTML(paste0("Min:",
@@ -1360,7 +1362,24 @@
 
     })
     
-    # number of permutation for GSEA run
+    # UI, reference background genes for ORA run
+    output$ui_ora_option <- renderUI({
+      req(input$selected_mode == "glist")
+      
+      div(
+        selectInput(
+          "ora_option"
+          ,HTML(paste0("Select background genes:", add_help("ora_option_q")))
+          ,choices = ora_options()
+          ,selected = rv$ora_option
+        )
+        ,bsTooltip("ora_option_q",HTML("The reference background genes for ORA")
+                  ,placement = "top")
+      )
+       
+    })
+    
+    # UI, number of permutation for GSEA run
     output$ui_nperm <- renderUI({
       req(input$selected_mode == "gsea")
       div(
@@ -1559,7 +1578,8 @@
         # update run parameters in RVs
         if(!is.null(input$mymin)){if(!is.na(input$mymin)){rv$gmin=input$mymin}}
         if(!is.null(input$mymax)){if(!is.na(input$mymax)){rv$gmax=input$mymax}}
-
+        rv$ora_option <- input$ora_option
+        
         # save dbs for plots
         if(species != "other"){
           rv$bar_pathway = rv$dbs

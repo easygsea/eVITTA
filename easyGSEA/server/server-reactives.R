@@ -23,6 +23,21 @@ dbs <- reactive({
   }
 })
 
+# display options for ORA genome background
+# ------- databases for selection ----------
+ora_options <- reactive({
+  if(input$selected_species != "other"){
+    return(list(
+      "Whole genome" = "genome"
+      ,"Genes in gene set library" = "gs"
+    ))
+  }else{
+    return(list(
+      "Genes in gene set library" = "gs"
+    ))
+  }
+})
+
 # display colors for selection
 # ------ color tones for selection: options --------
 col_opts <- c("Red"="red","Salmon"="salmon","Blue"="blue","Cyan"="cyan","Orange"="orange","Green"="green","Purple"="purple","Grey"="grey")
