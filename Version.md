@@ -1,6 +1,6 @@
 # eVITTA update log
 
-## V1.0.1
+### V1.0.1
 
 Mar 16, 2021 Bug fixed (Blake)
 - pictures of our apps on our homepage changed
@@ -12,12 +12,12 @@ Mar 18, 2021 Homepage update and bug fix (Jean)
 - Updated easyGEO & easyGSEA help pages
 - easyGSEA tab 2 enrichment plot download dropdown bug fix
 
-## V1.0.2
+### V1.0.2
 
 Mar 23, 2021 Bug fix (Jean)
 - easyGSEA ORA module check_numericInput_na bug fixed
 
-## V1.0.3
+### V1.0.3
 
 Mar 23, 2021 UI update and bug fix (Jean)
 - easyGSEA database selection changed from selectizeInput to pickerInput
@@ -26,7 +26,7 @@ Mar 23, 2021 UI update and bug fix (Jean)
 - easyGSEA ORA bar & bubble manual GS selection bug fix
 - easyGSEA ORA bar & bubble arranged from low-to-high pval
 
-## V1.0.4
+### V1.0.4
 
 March 24, 2021 workflow improvement (Jean)
 - easyGSEA GSEA run padj automatic filtering adjusted to assess for min of up/down
@@ -36,15 +36,19 @@ March 24, 2021 workflow improvement (Jean)
 March 24, 2021 easyGEO visualization update (Jean)
 - easyGEO volcano plot updated with options to toggle line plotting
 
-## V1.1.1
+### V1.1.1
 
 March 24, 2021 easyGSEA bug fix (Jean)
 - KEGG plot gene.idtype parameter assigned with a new reactive variable gidtype (to handle issues with yeast SGD database)
 - Added rno.rnk and rno.csv
 
-## V1.1.2
+### V1.1.2
 
 March 24, 2021 Google Analytics added (Jean)
 
-## V1.1.3
+## V1.2.0
+
+March 25, 2021 easyGSEA ORA reference added with genome background option (Jean)
+
+### V1.2.1
 

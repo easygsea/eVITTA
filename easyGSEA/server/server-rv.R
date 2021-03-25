@@ -3,7 +3,8 @@
         demo_n = 1, # odd for load, even for unload
         demo_save = "no", # yes for saving the variables, no for regular run
         
-        #NULL for regular runs
+        ora_genome_background = NULL, #NULL for initialization
+        ora_option = "genome",
            
         run_mode=NULL, #gsea glist
         edge_mode=NULL, # edges of visnetwork: gs=gene set, lg=leadingedge
