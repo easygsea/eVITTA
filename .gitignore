@@ -93,3 +93,13 @@ easyGSEA/www/gmts/hsa/08_BioGrid/BIOGRID-PROJECT-kinome_project_sc-INTERACTIONS.
 *.gmt
 .DS_Store
 easyGEO/.DS_Store
+easyGSEA/www/gmts/ORA/bta.csv
+easyGSEA/www/gmts/ORA/cfa.csv
+easyGSEA/www/gmts/ORA/dme.csv
+easyGSEA/www/gmts/ORA/dre.csv
+easyGSEA/www/gmts/ORA/gga.csv
+easyGSEA/www/gmts/ORA/hsa.csv
+easyGSEA/www/gmts/ORA/mmu.csv
+easyGSEA/www/gmts/ORA/rno.csv
+easyGSEA/www/gmts/ORA/sce.csv
+easyGSEA/www/gmts/ORA/ssc.csv
