@@ -53,3 +53,9 @@ March 25, 2021 easyGSEA ORA reference added with genome background option (Jean)
 ### V1.2.1
 March 30, 2021 Homepage updated with easyGEO tutorial video (Blake)
 
+March 30, 2021 VizR text fixes (Judith):
+
+- changed "gene list" to "filtered list"
+- added "BP" to ignored strings in wordcloud
+- added dataset names to RRHO level plot X and Y axes
+
