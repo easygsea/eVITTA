@@ -95,7 +95,7 @@ run_rrho <- function (rnk1, rnk2,
   )
   jet.colors  <- color_scheme
   if(BY_correction == T){
-    rrho_plot <- lattice::levelplot(RRHO.xy$hypermat.by,col.regions = jet.colors,xlab = ,ylab = '')
+    rrho_plot <- lattice::levelplot(RRHO.xy$hypermat.by,col.regions = jet.colors,xlab = '',ylab = '')
   }else{
     rrho_plot <- lattice::levelplot(RRHO.xy$hypermat,col.regions = jet.colors,xlab = '',ylab = '') # shows the graph
   }
