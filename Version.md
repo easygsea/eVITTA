@@ -51,4 +51,5 @@ March 24, 2021 Google Analytics added (Jean)
 March 25, 2021 easyGSEA ORA reference added with genome background option (Jean)
 
 ### V1.2.1
+March 30, 2021 Homepage updated with easyGEO tutorial video (Blake)
 
