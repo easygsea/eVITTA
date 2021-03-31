@@ -8,6 +8,13 @@ shinyServer(function(input, output, session) {
     
     waiter_hide() # will hide *on_load waiter
     
+    ####---------------------- REACTIVE VALUES---------------------------####
+    
+    # initialize reactive values
+    source("server/rv.R", local = TRUE)
+    
+    ####---------------------- RAM usage check ---------------------------####
+    
     # ram check on initialization
     source("server/server-ramCheck.R", local = TRUE)
     
@@ -21,12 +28,6 @@ shinyServer(function(input, output, session) {
         btn_demo_e()
     })
 
-    ####---------------------- REACTIVE VALUES---------------------------####
-    
-    # initialize reactive values
-    source("server/rv.R", local = TRUE)
-    
-    
     ####---------------------- HEADER DROPDOWN: SAMPLES SELECTED  ---------------------------####
     # this is the top right notification button on header
     # that shows your currently selected samples
