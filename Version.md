@@ -61,3 +61,5 @@ March 30, 2021 VizR text fixes (Judith):
 - added "BP" to ignored strings in wordcloud
 - added dataset names to RRHO level plot X and Y axes
 
+March 31, 2021 GEO & VizR free RAM check bug fix (Jean)
+
