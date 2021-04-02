@@ -71,16 +71,16 @@ server <- function(input, output, session) {
     
     waiter_hide() # will hide *on_load waiter
     
+    
+    # initialize reactive values
+    source("server/rv.R", local = TRUE)
+    
     # ram check on initialization
     source("server/server-ramCheck.R", local = TRUE)
     
     # demo session
     source("server/demo.R", local = TRUE)
-    
-    # initialize reactive values
-    source("server/rv.R", local = TRUE)
-    
-    # server side functions
+        # server side functions
     source("server/functions.R", local = TRUE)
     source("server/functions_vis.R", local = TRUE)
     

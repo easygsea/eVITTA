@@ -5,7 +5,7 @@
 # --------------- plot validation --------------------
 # to use in validate need():
 df_n_empty_msg = "Plot unavailable: No genes in the table." # min(lengths(n_ins_gls()))>0
-gls_has_empty_msg = "Plot unavailable: At least one of your gene lists is empty." # nrow(rv$df_n)>0
+gls_has_empty_msg = "Plot unavailable: At least one of your filtered lists is empty." # nrow(rv$df_n)>0
 select_ins_empty_msg="Selected intersection is empty; please double check your selection in Intersection of Interest"
 
 

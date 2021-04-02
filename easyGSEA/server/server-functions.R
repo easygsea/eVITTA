@@ -897,10 +897,10 @@ read_genome_background <- function(species){
             return(NULL)
         }else{
           if(rv$bar_mode == "cutoff"){
-            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) %>% dplyr::arrange(desc(pval))
+            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
           }else if(rv$bar_mode == "gs"){
             df <- rv$fgseagg %>%
-              dplyr::filter(pathway %in% rv$gss_selected) %>% dplyr::arrange(desc(pval))
+              dplyr::filter(pathway %in% rv$gss_selected)
           }
           
           rv$bar_tl <- df
@@ -912,7 +912,7 @@ read_genome_background <- function(species){
             rv$bar_error <- "l"
             return(NULL)
           }else{
-                
+                df <- df %>% dplyr::arrange(desc(pval))
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
 
@@ -963,10 +963,10 @@ read_genome_background <- function(species){
             return(NULL)
         }else{
           if(rv$bar_mode == "cutoff"){
-            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) %>% dplyr::arrange(desc(pval))
+            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
           }else if(rv$bar_mode == "gs"){
             df <- rv$fgseagg %>%
-              dplyr::filter(pathway %in% rv$gss_selected) %>% dplyr::arrange(desc(pval))
+              dplyr::filter(pathway %in% rv$gss_selected)
           }
           rv$bar_tl <- df
           
@@ -977,7 +977,8 @@ read_genome_background <- function(species){
             rv$bar_error <- "l"
             return(NULL)
           }else{
-              
+            df <- df %>% dplyr::arrange(desc(pval))
+            
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
 
