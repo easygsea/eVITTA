@@ -66,3 +66,9 @@ March 31, 2021 GEO & VizR free RAM check bug fix (Jean)
 April 2, 2021 (Jean)
 - GSEA ORA gene list input comma clean up and limit set to 5000 genes at maximum
 - Cleaned up shinyapps.io folders
+
+April 3, 2021 (Jean)
+- Deleted basic_scripts folder
+- Tidies easyGEO server.R scripts
+- Deleted desktop.ini
+- Deleted intro_demo folder and its corresponding script in global.R
