@@ -68,7 +68,7 @@ April 2, 2021 (Jean)
 - Cleaned up shinyapps.io folders
 
 April 3, 2021 (Jean)
-- Deleted basic_scripts folder
+- Deleted basic_scripts and profvis_tests folders
 - Tidies easyGEO server.R scripts
 - Deleted desktop.ini
 - Deleted intro_demo folder and its corresponding script in global.R
