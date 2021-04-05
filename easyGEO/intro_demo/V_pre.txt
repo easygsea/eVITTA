@@ -1,3 +1,0 @@
-element	intro
-sidebarCollapsed	Please use the <b>Run DEG analysis </b> tab first. It is important to follow the order of the tabs to go through the analysis.
-visDEG	After running DEG analysis successfully, you will see plots and different parameters here.
