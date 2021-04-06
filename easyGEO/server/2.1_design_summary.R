@@ -136,7 +136,17 @@ output$download_fddf_button <- renderUI({
 output$download_fddf <- downloadHandler(
   filename = function(){paste0(rv$geo_accession,"_design_matrix.csv")},
   content = function(file){
-    fwrite(rv$fddf, file, row.names = T)
+    if (input$fddf_show_rown == "Sample name" 
+        && rv$run_mode == "auto"){
+      # the downloaded df that with sample names
+      df_download <- rv$fddf
+      rownames(df_download) <- translate_sample_names(rownames(df_download),  # translating from
+                                                      rv$pdata[c("title", "geo_accession")],  # translation df
+                                                      "title") # translating to
+      fwrite(df_download, file, row.names = T)
+    } else {
+      fwrite(rv$fddf, file, row.names = T)
+    }
   }
 )
 

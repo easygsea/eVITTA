@@ -95,7 +95,18 @@ output$download_dmdf_button <- renderUI({
 output$download_dmdf <- downloadHandler(
   filename = function(){paste0(rv$geo_accession,"_data_matrix.csv")},
   content = function(file){
-    fwrite(rv$dmdf, file)
+    # translate GSM column names to sample names on display
+    if (input$dmdf_show_coln == "Sample name" 
+        && rv$run_mode == "auto"){
+      # the downloaded df that with sample names
+      df_download <- rv$dmdf
+      colnames(df_download) <- translate_sample_names(colnames(df_download),  # translating from
+                                             rv$pdata[c("title", "geo_accession")],  # translation df
+                                             "title") # translating to
+      fwrite(df_download, file)
+    } else {
+        fwrite(rv$dmdf, file)
+      }
   }
 )
 

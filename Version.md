@@ -80,3 +80,6 @@ April 3, 2021 (Jean)
 April 6, 2021 (Blake)
 - Deleted easyGEO files that are unused
 - clean up some files and move some files into inc folder
+
+- Deleted some ununsed images and html pages in the homepage folder
+- updated the download data button in easyGEO, optimized it to download files with sample names that are easy to read
