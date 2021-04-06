@@ -1,2 +1,0 @@
-element	intro
-geo_platform_ui	Each study may include data generated using different platforms. Select the platform you're interested in, then click <b>Select to proceed</b>.

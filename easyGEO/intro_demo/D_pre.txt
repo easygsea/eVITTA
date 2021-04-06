@@ -1,2 +1,0 @@
-element	intro
-sidebarCollapsed	Please run <b>Extract GEO data</b> first. It is important to follow the order of the tabs to go through the analysis.
