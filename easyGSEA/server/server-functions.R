@@ -1,4 +1,14 @@
-    #=======================================================================#
+#=======================================================================#
+####----------------- Functions: read in data -------------------####
+#=======================================================================#
+read_genome_background <- function(species){
+  ora_dir <- paste0(getwd(),"/www/gmts/ORA/")
+  ora_file <- paste0(ora_dir,species,".csv")
+  rv$ora_genome_background <- read.csv(ora_file) %>% .[,3]
+}
+
+
+#=======================================================================#
     ####----------------- Functions: filtering and UI -------------------####
     #=======================================================================#
     # remove db names and IDs in gsea table
@@ -701,6 +711,7 @@
         }
 
         if(is.null(df)==T || nrow(df)<1){
+          rv$bar_error <- "0"
           return(NULL)
         }else{
           # transform df to tibble and remove db prefices
@@ -885,14 +896,23 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q) #%>% dplyr::arrange(desc(pval))
+          if(rv$bar_mode == "cutoff"){
+            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+          }else if(rv$bar_mode == "gs"){
+            df <- rv$fgseagg %>%
+              dplyr::filter(pathway %in% rv$gss_selected)
+          }
           
           rv$bar_tl <- df
           
-            if(is.null(df)==T || nrow(df)<1){
-                return(NULL)
-            }else{
-                
+          if(is.null(df)==T || nrow(df)<1){
+            rv$bar_error <- "0"
+            return(NULL)
+          }else if(nrow(df)>200){
+            rv$bar_error <- "l"
+            return(NULL)
+          }else{
+                df <- df %>% dplyr::arrange(desc(pval))
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
 
@@ -942,13 +962,23 @@
         if(is.null(pathways)==T){
             return(NULL)
         }else{
-          df = filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+          if(rv$bar_mode == "cutoff"){
+            df <- filter_plot_df(pathways, up, down, cutoff_p, cutoff_q)
+          }else if(rv$bar_mode == "gs"){
+            df <- rv$fgseagg %>%
+              dplyr::filter(pathway %in% rv$gss_selected)
+          }
           rv$bar_tl <- df
           
-            if(is.null(df)==T || nrow(df)<1){
-                return(NULL)
-            }else{
-              
+          if(is.null(df)==T || nrow(df)<1){
+            rv$bar_error <- "0"
+            return(NULL)
+          }else if(nrow(df)>200){
+            rv$bar_error <- "l"
+            return(NULL)
+          }else{
+            df <- df %>% dplyr::arrange(desc(pval))
+            
                 # df <- df %>%
                 #   dplyr::slice_min(padj,n=up)
 
@@ -2178,7 +2208,7 @@
       rv$no_up_01 = 0;rv$no_up_05 = 0;rv$no_down_01 = 0;rv$no_down_05 = 0
       rv$no_up_025 = 0; rv$no_down_025 = 0
       rv$bar_q_cutoff <- 1;rv$vis_q <- 1
-      rv$es_term = NULL
+      rv$es_term = NULL; rv$es_term_n <- 0
       
       rv$kegg_yes=NULL;rv$kegg_confirm=NULL;rv$reactome_yes=NULL;rv$reactome_confirm=NULL
       rv$wp_yes = NULL;rv$wp_confirm=NULL;rv$vis=NULL
@@ -2203,7 +2233,7 @@
       rv$rnk_or_deg = NULL
       rv$gene_lists_mat1 = NULL; rv$gene_lists_mat2 = NULL
       
-      rv$es_term <- NULL
+      rv$es_term <- NULL; rv$es_term_n <- 0
       rv$wp_yes <- NULL;rv$wp_confirm <- NULL;rv$kegg_yes <- NULL;rv$kegg_confirm <- NULL;rv$reactome_yes <- NULL;rv$reactome_confirm <- NULL;
       
       
@@ -2334,7 +2364,7 @@
       return(errors)
     }
     
-    gsea_filter <- function(fgseaRes = rv$fgseagg, t=50){
+    gsea_filter <- function(fgseaRes = rv$fgseagg, t=25){
       
       rv$no_up_25 = sum(fgseaRes$padj<0.25&fgseaRes$ES>0,na.rm=TRUE)
       rv$no_up_1 = sum(fgseaRes$padj<0.1&fgseaRes$ES>0,na.rm=TRUE)
@@ -2349,11 +2379,11 @@
       rv$no_down_01 = sum(fgseaRes$padj<0.01&fgseaRes$ES<0,na.rm=TRUE)
       
       if(rv$q_dynamic == TRUE){
-        sig_no <- rv$no_up_25 + rv$no_down_25; if(sig_no >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
-        sig_no <- rv$no_up_1 + rv$no_down_1; if(sig_no >= t){rv$bar_q_cutoff <- .1;rv$vis_q <- .1}
-        sig_no <- rv$no_up_075 + rv$no_down_075; if(sig_no >= t){rv$bar_q_cutoff <- .075;rv$vis_q <- .075}
-        sig_no <- rv$no_up_05 + rv$no_down_05; if(sig_no >= t){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
-        sig_no <- rv$no_up_01 + rv$no_down_01; if(sig_no >= t){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
+        sig_no <- min(rv$no_up_25,rv$no_down_25); if(sig_no >= 5){rv$bar_q_cutoff <- .25;rv$vis_q <- .25}
+        sig_no <- min(rv$no_up_1,rv$no_down_1); if(sig_no >= t){rv$bar_q_cutoff <- .1;rv$vis_q <- .1}
+        sig_no <- min(rv$no_up_075,rv$no_down_075); if(sig_no >= t){rv$bar_q_cutoff <- .075;rv$vis_q <- .075}
+        sig_no <- min(rv$no_up_05,rv$no_down_05); if(sig_no >= t){rv$bar_q_cutoff <- .05;rv$vis_q <- .05}
+        sig_no <- min(rv$no_up_01,rv$no_down_01); if(sig_no >= t){rv$bar_q_cutoff <- .01;rv$vis_q <- .01}
       }
     }
     
@@ -2378,12 +2408,16 @@
       # save GMT into RV
       rv$gmts = c(rv$gmts,m_list)
       
-      # get all genes
-      a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
+      # get all genes and background genes
+      if(rv$ora_option == "genome" | rv$ora_option == "genome1"){
+        a_genes <- toupper(rv$ora_genome_background)
+        in_genes <- genelist
+      }else if(rv$ora_option == "gs"){
+        a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
+        # genes present in the database
+        in_genes = genelist[genelist %in% a_genes]
+      }
 
-      # genes present in the database
-      in_genes = genelist[genelist %in% a_genes]
-      
       if(! identical(in_genes,character(0))){
         frun <- try(fgseaRes <- fora(pathways = m_list,
                                      genes    = in_genes,
@@ -2574,7 +2608,7 @@
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs/run_n.rds"))
       rv$total_genes_after <- NULL
       rv$total_genes <- NULL
-      rv$es_term <- NULL
+      rv$es_term <- NULL; rv$es_term_n <- 0
       rv$kegg_confirm <- NULL
       rv$wp_yes <- NULL
       rv$wp_confirm <- NULL
@@ -2618,7 +2652,7 @@
       rv$gene_lists_mat2 <- NULL
       # rv$run_n <- readRDS(paste0(getwd(),"/rvs2/run_n.rds"))
       rv$gene_lists <- NULL
-      rv$es_term <- NULL
+      rv$es_term <- NULL; rv$es_term_n <- 0
       rv$kegg_confirm <- NULL
       rv$wp_yes <- NULL
       rv$wp_confirm <- NULL

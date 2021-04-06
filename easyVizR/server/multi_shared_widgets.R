@@ -316,7 +316,7 @@ customize_filters <- reactive({
 view_genelists <- reactive({
   dropdown(inputId="view_genelists", align="right",
            
-           tags$h3("Saved gene lists"),
+           tags$h3("Saved filtered lists"),
            # downloadButton("gls_dl", "Download"),
            uiOutput("n_gls_ui"),
            
@@ -561,7 +561,7 @@ output$ui_n_gls_opt <- renderUI({
 
 ####================= GENELISTS DROPDOWN =====================####
 
-# format gene lists text
+# format filtered lists text
 output$n_genelist <- renderText({
   req(length(n_ins_gls())>1)
   paste(n_ins_gls()[[1]], collapse="<br>")
@@ -572,7 +572,7 @@ output$n_genelist <- renderText({
 observe({
   req(nrow(rv$df_n)>0)
   
-  # prepare gene lists to render
+  # prepare filtered lists to render
   for (i in 1:length(rv$nx_n)){
     # apply textbox style to every text output
     rv$gls_text[[i]] <- div(style="
@@ -599,7 +599,7 @@ observe({
                             })
   }
   
-  # render the gene lists in block format
+  # render the filtered lists in block format
   for (i in 1:length(rv$nx_n)){
     rv$gls_ui[[i]] <- div(style="display: inline-block;vertical-align:top; width: 225px;word-break: break-all;text-align:left;",
                           
@@ -609,7 +609,7 @@ observe({
                           HTML(paste0("<i>", length(n_ins_gls()[[i]]), 
                                       " out of ", nrow(rv$df_n), " total</i>")),
                           br(),
-                          # display gene list in box
+                          # display filtered list in box
                           rv$gls_text[[i]]
     )
   }
@@ -628,9 +628,9 @@ output$n_gls_ui <- renderUI({
 # report genes that are not found
 df_n_basic_nm <- reactive({
   if (nchar(rv$n_igl)>0){
-    igl <- isolate(as.list(strsplit(toupper(rv$n_igl), '\\n+')))[[1]] # this is the gene list
+    igl <- isolate(as.list(strsplit(toupper(rv$n_igl), '\\n+')))[[1]] # this is the filtered list
     df <- rv$df_n
-    df <- df[df$Name %in% igl,] # this is the  dataframe filtered by that gene list
+    df <- df[df$Name %in% igl,] # this is the  dataframe filtered by that filtered list
     
     # if anything is found
     if (nrow(df)>0){

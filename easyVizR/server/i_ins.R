@@ -518,7 +518,7 @@ output$ins_table_panel <- renderUI({
                                                "Ignore strings: (separated by spaces)",
                                                add_help("n_wc_ignore_help", style="margin-left: 5px;"))
                                              ), 
-                                             value="and or of GO KEGG WP RA C2"),
+                                             value="and or of GO KEGG WP RA C2 BP"),
                                bsTooltip("n_wc_ignore_help", 
                                          n_wc_ignore_help_txt, 
                                          placement = "top"),
@@ -542,7 +542,7 @@ output$ins_table_panel <- renderUI({
       style = "position: absolute; left: 10em; bottom: 1em",
         dropdown(
           downloadButton("download_ins_df", "Download current table"),
-          downloadButton("download_ins_gl", "Download gene list"),
+          downloadButton("download_ins_gl", "Download filtered list"),
           
           size = "xs",
           icon = icon("download", class = "opt"),

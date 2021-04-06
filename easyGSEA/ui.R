@@ -45,6 +45,7 @@ shinyUI(
             waiter_show_on_load(tagList(spin_three_bounce(),h4(loadMsg)), color = "#1976D2"), # shows before anything else
 
             tags$head(
+                includeHTML(("google-analytics.html")),
                 tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
                 HTML("<script type='text/javascript' language='javascript' src='https://reactome.org/DiagramJs/diagram/diagram.nocache.js'></script>"),
                 tags$script(src = "reactome.js")

@@ -45,7 +45,7 @@ output$ui_vis <- renderUI({
     panel_null(text = msg)
   }else{
     tabBox(
-      title = "DEG Visualization", width = 12,
+      title = "DE Visualization", width = 12,
       id = "visDEG", height = "720px",
       
       tabPanel(
@@ -121,12 +121,36 @@ output$vplot_parameters <- renderUI({
       "v_logfc_cutoff",
       "Threshold of |logFC|",
       rv$plot_logfc,min=0
-    ),
+    )
     
-    tags$hr(style="border-color: grey;"),
+    ,tags$hr(style="border-color: grey;")
+    ,fluidRow(
+      column(
+        7,
+        checkboxGroupButtons(
+          inputId = "show_padj_logfc",
+          label = "Plot line(s)",
+          choices = c("adj.P.Val"="padj", 
+                      "|logFC|"="fc"),
+          selected = rv$show_padj_logfc, 
+          size="s",
+          checkIcon = list(
+            no = tags$i(class = "fa fa-times", 
+                        style = "color: crimson"),
+            yes = tags$i(class = "fa fa-check", 
+                         style = "color: green"))
+        )
+      )
+      ,column(
+        5,
+        uiOutput("ui_v_line_type")
+      )
+    )
+
+    ,tags$hr(style="border-color: grey;")
     
     # mode of volcano
-    radioGroupButtons(
+    ,radioGroupButtons(
       "volcano_mode",
       "Mode of volcano plot",
       choices = list("Static"="static","Interactive"="interactive"),
@@ -155,6 +179,25 @@ output$vplot_parameters <- renderUI({
     
   )
   
+})
+
+# UI, line type for |logFC| and adj.P.Val
+output$ui_v_line_type <- renderUI({
+  req(!is.null(input$show_padj_logfc))
+  
+  radioGroupButtons(
+    inputId = "v_threshold_line",
+    label = "Line type",
+    choices = c("Dot"="dotted"
+                ,"Dash"="dashed")
+    ,selected = rv$v_threshold_line
+    ,size="sm"
+    # ,checkIcon = list(
+    #   yes = tags$i(class = "fa fa-check-square", 
+    #                style = "color: steelblue"),
+    #   no = tags$i(class = "fa fa-square-o", 
+    #               style = "color: steelblue"))
+  )
 })
 
 # UI, static volcano
@@ -234,7 +277,7 @@ output$v_box <- renderUI({
     if(is.null(rv$gene_lists_v) || length(rv$gene_lists_v)<1){
       box_color = "red"
       msg = paste0(input_genes,
-                   "No gene found in DEG table. Please check your input."
+                   "No gene found in DE table. Please check your input."
       )
     }else{
       output_genes = paste0(
@@ -270,6 +313,11 @@ observeEvent(input$volcano_confirm,{
   rv$plot_q = input$v_q_cutoff
   rv$plot_logfc = input$v_logfc_cutoff
   rv$v_mode = input$volcano_mode
+  rv$show_padj_logfc <- input$show_padj_logfc
+  if("padj" %in% rv$show_padj_logfc){rv$show_padj <- T}else{rv$show_padj <- F}
+  if("fc" %in% rv$show_padj_logfc){rv$show_logfc <- T}else{rv$show_logfc <- F}
+  
+  rv$v_threshold_line <- input$v_threshold_line
   
   # if interactive
   if(input$volcano_mode == "interactive"){
@@ -303,7 +351,7 @@ observeEvent(input$volcano_confirm,{
           # save original gene lists into RV
           rv$gene_lists = genelist
           
-          # save genes found in DEG table into RV
+          # save genes found in DE table into RV
           rv$gene_lists_v = genelist[genelist %in% rownames(rv$deg)]
         }
       }
@@ -492,7 +540,7 @@ output$h_box <- renderUI({
     if(is.null(rv$gene_lists_v) || length(rv$gene_lists_v)<1){
       box_color = "red"
       msg = paste0(input_genes,
-                   "No gene found in DEG table. Please check your input."
+                   "No gene found in DE table. Please check your input."
       )
     }else{
       output_genes = paste0(
@@ -564,7 +612,7 @@ observeEvent(input$h_confirm,{
         # save original gene lists into RV
         rv$gene_lists = genelist
         
-        # save genes found in DEG table into RV
+        # save genes found in DE table into RV
         rv$gene_lists_v = genelist[genelist %in% rownames(rv$deg)]
       }
     }

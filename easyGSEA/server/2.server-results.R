@@ -195,6 +195,9 @@ output$ui_bodyResults <- renderUI({
 # change default plot type
 observeEvent(input$plot_type,{
     rv$plot_type = input$plot_type
+    if(!is.null(rv$es_term)){
+        rv$es_term_n <- 1
+    }
 })
 
 # change color tone in ORA's bar/bubble
@@ -228,16 +231,17 @@ sig_none <- reactive({
     if(rv$bar_error == "l" && (rv$plot_type == "bar" || rv$plot_type == "bubble")){
         HTML(
             "We support plotting up to 200 data points."
-            ,"Please click the bottom-left gear button to adjust thresholds, "
-            ,"or click the search button to re-select the gene sets of interest."
+            ,"<br><br>Please click the bottom-left <b>gear button</b> to adjust selected database(s), P threshold, and/or P.adj threshold. "
+            ,"<br><br>Or, click the <b>search button</b> to manually select gene set(s) of interest."
         )
     }else{
         HTML(
-            "No significant term found at pval < ",
+            "<p style='color:grey;'>No significant result found at pval < ",
             rv$bar_p_cutoff,
             "& padj < ",
-            rv$bar_q_cutoff,
-            ". Please adjust thresholds by clicking the bottom-left gear button."
+            rv$bar_q_cutoff, "</p>"
+            ,"<br>Please click the bottom-left <b>gear button</b> to adjust selected database(s), P threshold, and/or P.adj threshold. "
+            ,"<br><br>Or, click the <b>search button</b> to manually select gene set(s) of interest."
         )
     }
     
@@ -322,12 +326,19 @@ output$plot_gear <- renderUI({
                 tags$h4(tags$strong(tags$em(paste0("Advanced parameters for creating the ",rv$plot_type," plot"))))
             ),
             column(12,
-                   selectizeInput("pathway_to_plot_bar",
-                                  HTML(paste0("Select database(s) to plot ",add_help("db_bar"))),
-                                  choices = dbs,
-                                  selected = rv$bar_pathway,
-                                  multiple = TRUE),
-                   bsTooltip("db_bar",HTML(db_bs),placement = "top"),
+                   pickerInput("pathway_to_plot_bar",
+                               HTML(paste0("Select database(s) to plot ",add_help("db_bar"))),
+                               choices = dbs,
+                               selected = rv$bar_pathway,
+                               options = list(
+                                   `actions-box` = TRUE,
+                                   size = 10,
+                                   style = "btn-default",
+                                   `selected-text-format` = "count > 4"
+                                   # ,`live-search` = TRUE
+                               ),
+                               multiple = TRUE)
+                   ,bsTooltip("db_bar",HTML(db_bs),placement = "top"),
                    uiOutput("bar_top"),
 
                    splitLayout(
@@ -391,12 +402,19 @@ output$plot_gear <- renderUI({
                 tags$h4(tags$strong(tags$em(paste0("Advanced parameters for creating the ",rv$plot_type," plot"))))
             ),
             column(12,
-                   selectizeInput("pathway_to_plot_bubble",
-                                  HTML(paste0("Select database(s) to plot ",add_help("db_bubble"))),
-                                  choices = dbs,
-                                  selected = rv$bar_pathway,
-                                  multiple = TRUE),
-                   bsTooltip("db_bubble",HTML(db_bs),placement = "top"),
+                   pickerInput("pathway_to_plot_bubble",
+                               HTML(paste0("Select database(s) to plot ",add_help("db_bubble"))),
+                               choices = dbs,
+                               selected = rv$bar_pathway,
+                               options = list(
+                                   `actions-box` = TRUE,
+                                   size = 10,
+                                   style = "btn-default",
+                                   `selected-text-format` = "count > 4"
+                                   # ,`live-search` = TRUE
+                               ),
+                               multiple = TRUE)
+                   ,bsTooltip("db_bubble",HTML(db_bs),placement = "top"),
                    uiOutput("bubble_top"),
                    splitLayout(
                        sliderTextInput("cutoff_p_bubble",
@@ -466,12 +484,19 @@ output$plot_gear <- renderUI({
             ),
             column(
                 width = 12,
-                selectizeInput("pathway_to_plot_volcano",
-                               HTML(paste0("Select database(s) to plot ",add_help("db_vol"))),
-                               choices = dbs,
-                               selected = rv$volcano_pathway,
-                               multiple = TRUE),
-                bsTooltip("db_vol",HTML(db_bs),placement = "top")
+                pickerInput("pathway_to_plot_volcano",
+                            HTML(paste0("Select database(s) to plot ",add_help("db_vol"))),
+                            choices = dbs,
+                            selected = rv$volcano_pathway,
+                            options = list(
+                                `actions-box` = TRUE,
+                                size = 10,
+                                style = "btn-default",
+                                `selected-text-format` = "count > 4"
+                                # ,`live-search` = TRUE
+                            ),
+                            multiple = TRUE)
+                ,bsTooltip("db_vol",HTML(db_bs),placement = "top")
             ),
             column(
                 width = 12,
@@ -511,11 +536,18 @@ output$plot_gear <- renderUI({
                 tags$h4(tags$strong(tags$em(paste0("Advanced parameters for creating the ",rv$plot_type," plot"))))
             ),
             column(12,
-                   selectizeInput("pathway_to_plot_word",
-                                  HTML(paste0("Select database(s) to plot ",add_help("db_word"))),
-                                  choices = dbs,
-                                  selected = rv$bar_pathway,
-                                  multiple = TRUE)
+                   pickerInput("pathway_to_plot_word",
+                               HTML(paste0("Select database(s) to plot ",add_help("db_word"))),
+                               choices = dbs,
+                               selected = rv$bar_pathway,
+                               options = list(
+                                   `actions-box` = TRUE,
+                                   size = 10,
+                                   style = "btn-default",
+                                   `selected-text-format` = "count > 4"
+                                   # ,`live-search` = TRUE
+                               ),
+                               multiple = TRUE)
                    , bsTooltip("db_word",HTML(db_bs),placement = "top")
             ),
             column(12,
@@ -795,7 +827,7 @@ observeEvent(input$bar_confirm,{
     }else{
         rv$error_par <- 0
         rv$error_par <- check_numericInput_na("n_up_bar", rv$error_par, "# of top up")
-        rv$error_par <- check_numericInput_na("n_down_bar", rv$error_par, "# of top down")
+        if(rv$run_mode == "gsea"){rv$error_par <- check_numericInput_na("n_down_bar", rv$error_par, "# of top down")}
         #print(rv$error_par)
         req(rv$error_par == 0)
         rv$bar_pathway = input$pathway_to_plot_bar
@@ -861,7 +893,7 @@ observeEvent(input$bubble_confirm,{
         # check the inputs are not NAs
         rv$error_par <- 0
         rv$error_par <- check_numericInput_na("n_up_bubble", rv$error_par, "# of top up")
-        rv$error_par <- check_numericInput_na("n_down_bubble", rv$error_par, "# of top down")
+        if(rv$run_mode == "gsea"){rv$error_par <- check_numericInput_na("n_down_bubble", rv$error_par, "# of top down")}
         #print(rv$error_par)
         req(rv$error_par == 0)
         rv$bar_pathway = input$pathway_to_plot_bubble
@@ -1327,12 +1359,22 @@ output$ui_gsea_plots <- renderUI({
     req(rv$run_mode=="gsea")
     req(rv$es_term)
 
-    div(
+    div(id="gs_anchor",
         style = "position: relative",
-        uiOutput("gs_enrichment_plot"),
+        uiOutput("gs_enrichment_plot_demo"),
+        # uiOutput("gs_enrichment_plot"),
         uiOutput("density_plot"),
         uiOutput("box_plot"),
         uiOutput("violin_plot")
+    )
+})
+
+# insert gsea plot UI
+observeEvent(rv$es_term,{
+    rv$es_term_n <- rv$es_term_n + 1
+    insertUI(
+        selector = "#gs_anchor",
+        ui =  uiOutput("gs_enrichment_plot")
     )
 })
 
@@ -1458,6 +1500,23 @@ output$gs_enrichment_plot <- renderUI({
         # status="primary",solidHeader = TRUE,
         # width = NULL, height = "300px",
         # title = "Enrichment Plot",
+        plotOutput("plot_db_es", height = "246px"),
+        div(
+            style = "position: absolute; left: 0.5em; bottom: 0.5em",
+            dropdown(
+                downloadButton(outputId = "download_gs_es", label="Download plot"),
+                size = "xs",
+                icon = icon("download",class="opt"),
+                up = TRUE
+            )
+        )
+    )
+})
+
+output$gs_enrichment_plot_demo <- renderUI({
+    req(rv$es_term_n == 1)
+    req(input$plot_type_2=="enrichment")
+    div(id="gs_plot_demo",
         plotOutput("plot_db_es", height = "246px"),
         div(
             style = "position: absolute; left: 0.5em; bottom: 0.5em",
@@ -1743,7 +1802,7 @@ observeEvent(input$confirm_kegg_plot,{
                         kegg_output <- pathview(gene.data  = ranks,
                                                 pathway.id = kegg_id,
                                                 species    = species,
-                                                gene.idtype= "SYMBOL",
+                                                gene.idtype= gidtype(),
                                                 kegg.dir = paste0(getwd(),"/www/"),
                                                 # limit      = list(gene=max(abs(ranks))), # list(gene=c(min(ranks),max(ranks))),
                                                 key.pos    = rv$kegg_pos,
@@ -1754,7 +1813,7 @@ observeEvent(input$confirm_kegg_plot,{
                         kegg_output <- pathview(gene.data  = ranks,
                                                 pathway.id = kegg_id,
                                                 species    = species,
-                                                gene.idtype= "SYMBOL",
+                                                gene.idtype= gidtype(),
                                                 kegg.dir = paste0(getwd(),"/www/"),
                                                 # limit      = list(gene=max(abs(ranks))), # list(gene=c(min(ranks),max(ranks))),
                                                 plot.col.key = FALSE,
@@ -1834,7 +1893,7 @@ observeEvent(input$confirm_kegg_plot,{
                     kegg_output <- pathview(gene.data  = ranks,
                                             pathway.id = kegg_id,
                                             species    = species,
-                                            gene.idtype= "SYMBOL",
+                                            gene.idtype= gidtype(),
                                             kegg.dir = paste0(getwd(),"/www/"),
                                             # limit      = list(gene=max(abs(ranks))), #list(gene=c(min(ranks),max(ranks))),
                                             key.pos    = rv$kegg_pos,
@@ -1844,7 +1903,7 @@ observeEvent(input$confirm_kegg_plot,{
                     kegg_output <- pathview(gene.data  = ranks,
                                             pathway.id = kegg_id,
                                             species    = species,
-                                            gene.idtype= "SYMBOL",
+                                            gene.idtype= gidtype(),
                                             kegg.dir = paste0(getwd(),"/www/"),
                                             # limit      = list(gene=max(abs(ranks))), #list(gene=c(min(ranks),max(ranks))),
                                             plot.col.key = FALSE,

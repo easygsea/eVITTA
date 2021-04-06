@@ -3,14 +3,20 @@ options(shiny.maxRequestSize=100*1024^2) # sets max upload size to 100 mb
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
+    # initialize reactive values
+    source("server/rv.R", local = TRUE)
     
-    source("server/demo.R", local = TRUE)
-    
-    waiter_hide() # will hide *on_load waiter
-    
-    # ram check on initialization
+    # RAM usage check on initialization
     source("server/server-ramCheck.R", local = TRUE)
     
+    # codes to initiate a demo run. Open the demo.R file, uncomment all rows of scripts to enter the demo mode
+    source("server/demo.R", local = TRUE)
+    
+    # Intro Tour
+    source("server/help.R", local = TRUE)
+
+    waiter_hide() # will hide *on_load waiter
+
     # toggle button for a demo run
     output$btn_demo <- renderUI({
         req(is.null(rv$demo_yes))
@@ -21,12 +27,6 @@ shinyServer(function(input, output, session) {
         btn_demo_e()
     })
 
-    ####---------------------- REACTIVE VALUES---------------------------####
-    
-    # initialize reactive values
-    source("server/rv.R", local = TRUE)
-    
-    
     ####---------------------- HEADER DROPDOWN: SAMPLES SELECTED  ---------------------------####
     # this is the top right notification button on header
     # that shows your currently selected samples
@@ -74,15 +74,7 @@ shinyServer(function(input, output, session) {
                            customSentence = dropdown_report()
         )
     })
-    
-    #======================================================================#
-    ####                        INTRO TOUR                              ####
-    #======================================================================#
-    
-    
-    source("server/help.R", local = TRUE)
-    
-    
+
     ####---------------------- 1. LOAD FROM GEO  ---------------------------####
     
     
@@ -124,8 +116,7 @@ shinyServer(function(input, output, session) {
     # filtered_design_df()
     # updates rv$samples
     # updates rv$fddf
-    
-    
+
     
     ####---------------------- 3. DATA MATRIX  ---------------------------####
     
@@ -154,14 +145,10 @@ shinyServer(function(input, output, session) {
     
     # rv$matrix_ready
     
-    
-    
+
     ####---------------------- 4.3. RUN DEG ANALYSIS  ---------------------------####
     
     source("server/4.3_run_deg.R", local = TRUE)
-    
-    
-    
     
 
     
@@ -169,10 +156,6 @@ shinyServer(function(input, output, session) {
     
     
     source("server/5_vis.R", local = TRUE)
-    
-    
-    
-    
     
 
     
@@ -183,11 +166,7 @@ shinyServer(function(input, output, session) {
     source("server/server-variables.R", local = TRUE)
     
     
-    
-    
-    
-    
-    ###### ---------------- NOTES FOR JEAN ---------------- ######
+    ###### ---------------- NOTES ---------------- ######
     
     # Conditions for running limma: (button only shows when all fulfilled)
     # - 2 or more levels selected for comparison
