@@ -145,7 +145,6 @@ panel_null <- function(text = "Data available upon selection of a platform."){
 
 # parse characteristics columns from GSE 
 # and gather into named list of named vectors (char_list)
-# --------------------------------------------------------------------------------
 # sample output:
 # $GSM245051
 #          Gender             Age          Tissue 
@@ -200,7 +199,6 @@ extract_char_list <- function(#gse,
 
 
 # construct a dataframe from a char_list output
-# --------------------------------------------------------------------------------
 # outputs a dataframe (the design matrix,  rv$dmdf)
 # rows are GSM numbers; columns are variables; entries are levels
 
@@ -254,7 +252,6 @@ char_mat_from_list <- function(char_list,
 # ---------- convenience df functions: ---------------
 
 # convert rownames to first column
-#--------------------------------------
 rown_to_firstcol <- function(df, colname="Name"){
   ot <- cbind("Name"=rownames(df), df)
   colnames(ot)[[1]] <- colname
@@ -264,7 +261,6 @@ rown_to_firstcol <- function(df, colname="Name"){
 
 
 # convert first column to rownames
-#--------------------------------------
 firstcol_to_rown <- function(df){
   ot <- df[-1]
   rownames(ot) <- df[[1]]
@@ -278,13 +274,15 @@ firstcol_to_rown <- function(df){
 # -------------------------------------------------------------------- #
 
 # ------------- basic function to filter DEG table -------------------
-filter_df <- function(df = rv$deg,q_cutoff=input$tl_q,logfc_cutoff=input$tl_logfc){
+filter_df <- function(
+  df = rv$deg,q_cutoff=input$tl_q,logfc_cutoff=input$tl_logfc
+){
   # filter table according to q & logFC
   df %>%
     dplyr::filter(adj.P.Val < q_cutoff, abs(logFC)>=logfc_cutoff)
 }
 
-# mutate digits to 2 decimals
+# mutate digits to 2 decimals in DE table
 mutate_df <- function(df = filter_df()){
   genes = rownames(df)
   
@@ -297,8 +295,12 @@ mutate_df <- function(df = filter_df()){
   return(df)
 }
 
+# ------------- visualization: volcano -------------------
+
 # input table for volcano plots
-volcano_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
+volcano_df <- function(
+  df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc
+){
   # genes
   genes = rownames(df)
   
@@ -317,7 +319,9 @@ volcano_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc
 }
 
 # basic function to plot static volcano
-volcano_basic <- function(df,q_cutoff,logfc_cutoff,text="no"){
+volcano_basic <- function(
+  df,q_cutoff,logfc_cutoff,text="no"
+){
   # pre-set volcano dot colors
   if(rv$plot_label == "threshold"){
     v_col <- c("grey","red")
@@ -357,7 +361,9 @@ volcano_basic <- function(df,q_cutoff,logfc_cutoff,text="no"){
 }
 
 # basic function to plot different modes of volcano
-volcano_ggplot <- function(df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
+volcano_ggplot <- function(
+  df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc
+){
   # plot by threshold
   if(rv$plot_label == "threshold"){
     fig <- volcano_basic(df,q_cutoff,logfc_cutoff,text="no")
@@ -424,7 +430,9 @@ volcano_ggplot <- function(df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$pl
   
 }
 
-volcano_plotly <- function(df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
+volcano_plotly <- function(
+  df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc
+){
   
   fig <- ggplot(df) +
     geom_point(aes(x=logFC,y=-log(.data[["adj.P.Val"]]),colour=threshold,
@@ -453,8 +461,11 @@ volcano_plotly <- function(df=volcano_df(),q_cutoff=rv$plot_q,logfc_cutoff=rv$pl
   return(fig)
 }
 
+# ------------- visualization: heatmap -------------------
 # filtered DEG table for heatmaps
-hm_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
+hm_df <- function(
+  df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc
+){
   # filter table according to q & logFC
   df = df %>%
     dplyr::filter(adj.P.Val < q_cutoff, abs(logFC)>=logfc_cutoff)
@@ -482,7 +493,9 @@ hm_df <- function(df = rv$deg,q_cutoff=rv$plot_q,logfc_cutoff=rv$plot_logfc){
 }
 
 # filtered count table for heatmaps
-hm_count <- function(df = hm_df(),counts = rv$deg_counts){
+hm_count <- function(
+  df = hm_df(),counts = rv$deg_counts
+){
   genes = rownames(df)
   counts = data.frame(counts[match(genes,rownames(counts)),],stringsAsFactors = F)
   
@@ -525,7 +538,9 @@ hm_count <- function(df = hm_df(),counts = rv$deg_counts){
 }
 
 # function to plot heatmaps
-hm_plot <- function(counts=hm_count(),df = hm_df()){
+hm_plot <- function(
+  counts=hm_count(),df = hm_df()
+){
   if(is.null(counts) | nrow(counts)<1){
     return(NULL)
   }else{
@@ -586,8 +601,11 @@ hm_plot <- function(counts=hm_count(),df = hm_df()){
   }
 }
 
+# ------------- visualization: violin/box -------------------
 # data for violin/box plot
-vb_data <- function(gene=rv$a_gene,counts = rv$deg_counts){
+vb_data <- function(
+  gene=rv$a_gene,counts = rv$deg_counts
+){
   counts = as.data.frame(counts) %>% dplyr::filter(rownames(counts)==rv$a_gene)
   
   # if applicable, log2 transform counts

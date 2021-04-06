@@ -45,7 +45,7 @@ output$ui_vis <- renderUI({
     panel_null(text = msg)
   }else{
     tabBox(
-      title = "DEG Visualization", width = 12,
+      title = "DE Visualization", width = 12,
       id = "visDEG", height = "720px",
       
       tabPanel(
@@ -277,7 +277,7 @@ output$v_box <- renderUI({
     if(is.null(rv$gene_lists_v) || length(rv$gene_lists_v)<1){
       box_color = "red"
       msg = paste0(input_genes,
-                   "No gene found in DEG table. Please check your input."
+                   "No gene found in DE table. Please check your input."
       )
     }else{
       output_genes = paste0(
@@ -351,7 +351,7 @@ observeEvent(input$volcano_confirm,{
           # save original gene lists into RV
           rv$gene_lists = genelist
           
-          # save genes found in DEG table into RV
+          # save genes found in DE table into RV
           rv$gene_lists_v = genelist[genelist %in% rownames(rv$deg)]
         }
       }
@@ -540,7 +540,7 @@ output$h_box <- renderUI({
     if(is.null(rv$gene_lists_v) || length(rv$gene_lists_v)<1){
       box_color = "red"
       msg = paste0(input_genes,
-                   "No gene found in DEG table. Please check your input."
+                   "No gene found in DE table. Please check your input."
       )
     }else{
       output_genes = paste0(
@@ -612,7 +612,7 @@ observeEvent(input$h_confirm,{
         # save original gene lists into RV
         rv$gene_lists = genelist
         
-        # save genes found in DEG table into RV
+        # save genes found in DE table into RV
         rv$gene_lists_v = genelist[genelist %in% rownames(rv$deg)]
       }
     }
