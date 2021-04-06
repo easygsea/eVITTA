@@ -74,3 +74,9 @@ April 3, 2021 (Jean)
 - Tidies easyGEO server.R, functions.R scripts
 - Deleted desktop.ini
 - Deleted intro_demo folder and its corresponding script in global.R
+
+### V1.2.4
+
+April 6, 2021 (Blake)
+- Deleted easyGEO files that are unused
+- clean up some files and move some files into inc folder

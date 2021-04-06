@@ -299,7 +299,7 @@ observeEvent(input$file_help,{
   showModal(modalDialog(
     inputId = "file_help_html",
     #title = "Ranked list file format (*.rnk)",
-     includeHTML(paste0(getwd(),"/server/help_button_page.html")),
+     includeHTML(paste0(getwd(),"/inc/help_button_page.html")),
     # dataTableOutput('example_data1'),
     # includeMarkdown(paste0(getwd(),"/inc/rnk_explaination.md")),
     # includeMarkdown(knitr::knit(paste0(getwd(),"/inc/rnk_explaination.Rmd"),quiet=T)),
@@ -308,7 +308,7 @@ observeEvent(input$file_help,{
   ))
 })
 # the data matrix example table
-output$example3 <- renderTable({(example_data3 <- read.csv(paste0(getwd(),"/server/easyGEO_example1.rnk"),header = TRUE, sep = "\t"))},escape = FALSE)
+output$example3 <- renderTable({(example_data3 <- read.csv(paste0(getwd(),"/inc/easyGEO_example1.rnk"),header = TRUE, sep = "\t"))},escape = FALSE)
 
 # the function that read the data matrix in the both uploading mode
 read_data_matrix <- function(inFile){

@@ -176,13 +176,13 @@ output$ui_manual <- renderUI({
   )
 })
 output$data_matrix_example = DT::renderDataTable(
-  df <- read_tsv(paste0(getwd(), "/server/data_matrix.tsv")) %>%
+  df <- read_tsv(paste0(getwd(), "/inc/data_matrix.tsv")) %>%
     remove_rownames() %>%
     column_to_rownames("X1")
 )
 
 output$design_matrix_example = DT::renderDataTable(
-  df <- read_csv(paste0(getwd(), "/server/design_matrix.csv")) %>%
+  df <- read_csv(paste0(getwd(), "/inc/design_matrix.csv")) %>%
     remove_rownames() %>%
     column_to_rownames("X1")
 )
@@ -546,13 +546,13 @@ output$design_matrix_sample_comparison <- renderUI({
 output$data_matrix_sample <- downloadHandler(
   filename = "data_matrix_sample.tsv",
   content = function(file){
-    file.copy("data_matrix_sample.tsv", file)
+    file.copy("inc/data_matrix_sample.tsv", file)
   }
 )
 output$design_matrix_sample <- downloadHandler(
   filename = "design_matrix_sample.csv",
   content = function(file){
-    file.copy("design_matrix_sample.csv", file)
+    file.copy("inc/design_matrix_sample.csv", file)
   }
 )
 
