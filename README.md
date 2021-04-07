@@ -6,4 +6,7 @@ This bundle consists of:
 
 - easyGEO - for extracting and processing GEO data
 - easyGSEA - for GSEA analysis
-- easyVizR - for multiple dataset comparisons
+- easyVizR - for multiple dataset comparisons  
+&nbsp;
+
+#### [Download all .gmt files as a zip file ](https://tau.cmmt.ubc.ca/eVITTA/easyGSEA/gmts/gene_sets_databases.zip)
