@@ -213,7 +213,7 @@ output$sup_links <- renderUI({
         o_file = paste0(getwd(),"/www/tmp/",basename(path))
         if(! file.exists(o_file)){
           # curl::curl_fetch_disk(path, o_file)
-          download.file(path, o_file, method="libcurl")
+          download.file(path, o_file, method="wget")
         }
         file.copy(o_file, file)
       }
