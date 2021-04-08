@@ -1,4 +1,0 @@
-element	intro
-DataTables_Table_0_wrapper	Input genes are automatically converted to HUGO symbols. <b>input</b> are what you've uploaded, <b>target</b> are Entrez IDs, <b>name</b> are HUGO symbols (the identifier in easyGSEA's databases), and <b>description</b> describes about the gene.
-ui_deg_download	Download the converted DE table here. You may use it for multiple comparisons in <a href='https://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'>easyVizR</a>.
-ui_mat_download	Download the entire Gene ID conversion table here.

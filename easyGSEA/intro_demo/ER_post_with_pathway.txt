@@ -1,5 +1,0 @@
-element	intro
-feedback_btn_wrap	Click this button to zoom into the regulatory circuits of the selected pathway.
-kegg_reactome_wp	Here's the pathway diagram. In <b>WikiPathways</b> and <b>KEGG</b>, genes are colored according to their ranks in the genome. Red means higher rank towards upregulation, blue means lower rank towards downregulation. The darker the color, the stronger the regulation. In <b>Reactome</b>, leading edge genes are highlighted in red. Both <b>WikiPathways</b> and <b>Reactome</b> are interactive. Click on individual nodes to learn more about the genes and/or regulatory nodes.
-plot_choice_box	Click other visualization options to explore your data.
-tab3_text	<h4>Click <b>3. Enrichment Network</b> to proceed</h4>

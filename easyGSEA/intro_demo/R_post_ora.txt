@@ -1,3 +1,0 @@
-element	intro
-confirm2	Click this button to run the analysis. If necessary, click the gear button to adjust run parameters.
-tab2_text	<h4>Click the next tab to explore it.</h4>

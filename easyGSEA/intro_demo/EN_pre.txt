@@ -1,3 +1,0 @@
-element	intro
-sidebarCollapsed	Please use the <b>Run Analysis </b> tab first. It is important to follow the order of the tabs to go through the analysis.
-enrichment_network_box	After running analysis successfully, you will Gene set Network diagram. This is helpful when gene sets are redundant in wordings. You could see the groupings and relationship between different gene set clearly throught this diagram.
