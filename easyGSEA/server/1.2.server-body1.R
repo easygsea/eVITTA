@@ -219,6 +219,7 @@ output$feedback_converted_rnk <- renderUI({
                     tags$ul(
                         tags$li("The selected species matches your query, and/or")
                         ,tags$li("You have selected the right gene identifier, and/or")
+                        ,tags$li("You have selected the right identifier for pure numeric gene IDs (e.g. Affymetrix ID, Entrez ID), and/or")
                         ,tags$li("The uploaded file is correct")
                     )
                 )
@@ -423,6 +424,7 @@ output$run_error <- renderUI({
             ,tags$ul(
                 tags$li("The selected species matches your query, and/or")
                 ,tags$li("You have selected the right gene identifier as well as its column, and/or")
+                ,tags$li("You have selected the right identifier for pure numeric gene IDs (e.g. Affymetrix ID, Entrez ID), and/or")
                 ,tags$li("Your input file/gene list is correct.")
                 ,tags$li("Adjust the maximum and minimum gene set sizes according to the gene set library(ies) you've chosen.")
             )
