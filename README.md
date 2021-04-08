@@ -12,3 +12,7 @@ This bundle consists of:
 # Quick start
 #### Prior to using easyGSEA, download its gene set databases by clicking the link below. Decompress the zip file, and move all files and folders into easyGSEA/www/gmts/
 #### [Download all .gmt files as a zip file ](https://tau.cmmt.ubc.ca/eVITTA/easyGSEA/gmts/gene_sets_databases.zip)
+
+&nbsp;
+
+![](https://tau.cmmt.ubc.ca/eVITTA/easyGSEA/markdown_picture.jpg)
