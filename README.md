@@ -9,4 +9,8 @@ This bundle consists of:
 - easyVizR - for multiple dataset comparisons  
 &nbsp;
 
-#### [Download all .gmt files as a zip file ](https://tau.cmmt.ubc.ca/eVITTA/easyGSEA/gmts/gene_sets_databases.zip)
+### [Download all .gmt files as a zip file ](https://tau.cmmt.ubc.ca/eVITTA/easyGSEA/gmts/gene_sets_databases.zip)
+
+&nbsp;
+
+![](https://tau.cmmt.ubc.ca/eVITTA/easyGSEA/markdown_picture.jpg)
