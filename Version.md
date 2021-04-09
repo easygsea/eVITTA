@@ -85,3 +85,7 @@ April 6, 2021 (Blake)
 
 April 8, 2021 (Jean)
 - Editted README.md
+
+April 8, 2021 (Judith)
+
+- Cleaned up easyVizR unused files and commented out print lines
