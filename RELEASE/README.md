@@ -15,6 +15,7 @@ This bundle consists of:
 
 &nbsp;
 
+
 ![](https://tau.cmmt.ubc.ca/eVITTA/easyGSEA/markdown_picture.jpg)
 
 #### To start an eVITTA application, open its global.R file in RStudio, and click Run App on top right
