@@ -136,6 +136,8 @@ rrho_level_value <- reactive({
   # specify stepsize; default for n<1000, manually defined when n>1000
   stepsize <- defaultStepSize(rnk1,rnk2)
   
+  # print(head(rnk1))
+  
   color_scheme <- rrho_color_handler(palette=rv$rrho_level_palette,reverse = rv$rrho_level_palette_reverse)
   withProgress(message = 'Generating plots ...',value = 1, {
     rv$result_plot <-             run_rrho(rnk1, rnk2,
@@ -164,11 +166,17 @@ list1  <- rv$rnk1[order(rv$rnk1[,2],decreasing=TRUE),]
 list2  <- rv$rnk2[order(rv$rnk2[,2],decreasing=TRUE),]
 list2ind  <- match(list1[,1],list2[,1])
 list1ind  <- 1:length(list1[,1])
-corval  <- cor(list1ind,list2ind,method="spearman")
+cor=cor.test(list1ind,list2ind,alternative="two.sided",method="spearman")
+corval  <- cor[[4]]
+corPVal <- cor[[3]]
+print(cor)
+
 plot(list1ind,list2ind,xlab=paste(rv$rrho_x,"(Rank)"), 
      ylab=paste(rv$rrho_y,"(Rank)"), pch=20, 
      main=paste(
-       "Rank-Rank Scatter (rho = ",signif(corval,digits=3),")"
+       "Rank-Rank Scatter (rho = ",signif(corval,digits=3),
+       "; p = ",corPVal,
+       ")"
        ,sep=""), cex=0.5)
 model  <- lm(list2ind~list1ind)
 lines(predict(model),col="red",lwd=3)

@@ -90,4 +90,5 @@ April 8, 2021 (Judith)
 
 - Cleaned up easyVizR unused files and commented out print lines
 - Suppress warning msgs while initializing intro tour text for easyVizR
+- VizR rank scatter add p val testing and display
 
