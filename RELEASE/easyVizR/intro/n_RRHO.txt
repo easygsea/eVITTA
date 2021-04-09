@@ -1,0 +1,11 @@
+element	intro
+rrho_selections_panel	Select two datasets (X and Y) to draw rank-rank hypergeometric overlap (RRHO) plot. <br><br>Different from other modules, entire expression tables (without cutoffs) will be used to generate ranked lists. <br><br>The two rank lists are used to generate both the <b>RRHO level plot</b> and the <b>rank-rank scatter plot</b>.
+rrho_level_plot_panel_display	The <b>Rank-rank hypergeometric overlap (RRHO)</b> plot represents correspondence between two differential expression profiles using a ranked-list approach <a href="https://academic.oup.com/nar/article/38/17/e169/1033168">(Plaisier et al, 2010)</a><br><br>From the p-value and differential expression metric (e.g. logFC, ES), rank scores are automatically computed with log10 transformation, and the results are ordered into ranked lists. The algorithm then steps through the two ranked lists, and statistical significance of the number of overlapping genes above the sliding threshold are computed in succession. The resulting p-values are assembled into a hypergeometric matrix, which is used to plot the <b>RRHO level plot</b>. <br><br>By default, for rank lists of length n, the number of steps is set as sqrt(n); for n>1000, step number caps at sqrt(1000).
+rrho_scatter_plot_panel	The <b>rank-rank scatter plot</b> plots the correlation between the ranked lists X and Y. <br><br><b>The Spearman correlation coefficient (rho) is also provided.
+rrho_plot_color_button	This dropdown contains coloring options for the RRHO level plot.
+rrho_plot_setting_button	This dropdown contains plot settings for the RRHO level plot.
+ins_table_panel	You can change the currently selected <b>intersection of interest</b> here. <br><br>For more details on available intersections, navigate to <b>Select Intersection</b> tab.
+data_options	You can change display options for easyGSEA outputs.
+customize_filters	You can change the <b>active filters</b> any time using the <b>Apply filters</b> button.
+view_genelists	You can view <b>active filtered lists</b> using the <b>View filtered lists</b> button.
+enter_genes	You can also manually enter <b>a list of terms</b> to view them in the visualization. <br><br>Note: If terms are missing, remove all active filters and try again.

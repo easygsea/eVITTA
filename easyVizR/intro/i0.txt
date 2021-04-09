@@ -1,2 +1,0 @@
-element	intro
-	To use this tab, you must first select two or more datasets in the <b>Apply Filters</b> tab.

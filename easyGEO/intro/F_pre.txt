@@ -1,3 +1,0 @@
-element	intro
-sidebarCollapsed	Please run previous tabs first. It is better to follow the order of the tabs to go through the analysis.
-

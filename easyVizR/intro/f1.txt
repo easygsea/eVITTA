@@ -1,7 +1,0 @@
-element	intro
-	Once you have selected your datasets, <b>filters</b> are applied to each dataset to generate <b>filtered lists</b>. These are used for intersection analysis and visualizations.
-f_panel_1	Select filters for each dataset here.
-T1	This table lets you temporarily preview the effects of your new filters on the gene list. Adjust the filters until you reach the ideal result.
-TT1	This table shows the gene list filtered by the currently saved <b>active filters</b>.
-f_presets_panel	These are shortcuts to the most common <b>filter strategies</b>. Click one or more buttons to apply them to all datasets. Click <b>No Filter</b> to remove all filters. 
-f_applytorv	After you are done, click this to save your new filters into the <b>active filters</b>. <br><br>You can change the <b>active filters</b> any time in the visualization panels using the <b>Apply filters</b> button on the top right corner.

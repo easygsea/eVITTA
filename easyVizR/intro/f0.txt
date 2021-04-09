@@ -1,5 +1,0 @@
-element	intro
-	To begin, you must select <b>2 or more datasets</b> to compare.
-select_n_panel	Select two or more datasets to compare.
-n0_2	To proceed, <b>at least one term</b> must be shared among your datasets. <br><br>If you encounter problems, please ensure that all your <b>Name</b> columns are using the same idenfier type in the same format.
-n0_3	Click this button to confirm selection.

@@ -1,0 +1,10 @@
+element	intro
+	The <b>network</b> visualization is only applicable if the <b>leading edge</b> column is loaded (i.e. for data involving <b>gene sets</b>). <br><br>For an <b>intersection of interest</b> made of <b>gene sets</b>, the network is helpful to visualize the similarities between the <b>leading edges</b> of those <b>gene sets</b>.
+n_nw_select	Select a dataset with an applicable character column (e.g. <b>leadingEdge</b>), and specify the <b>separator</b>. 
+select_leading_edge_panel	Select the leading edge column and the separator you would like to use.
+n_nw_p	An interactive <b>network</b> will be shown here for the current <b>intersection of interest</b> in the selected dataset. <br><br>Each node represents a <b>gene set</b>; edges are drawn for <b>gene sets</b> sharing a fixed percentage of the <b>leading edge</b>.
+ins_table_panel	You can change the currently selected <b>intersection of interest</b> here. <br><br>For more details on available intersections, navigate to <b>Select Intersection</b> tab.
+data_options	You can change display options for easyGSEA outputs.
+customize_filters	You can change the <b>active filters</b> any time using the <b>Apply filters</b> button.
+view_genelists	You can view <b>active filtered lists</b> using the <b>View filtered lists</b> button.
+enter_genes	You can also manually enter <b>a list of terms</b> to view them in the visualization. <br><br>Note: If terms are missing, remove all active filters and try again.

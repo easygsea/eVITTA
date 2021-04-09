@@ -1,0 +1,3 @@
+element	intro
+sidebarCollapsed	Please use the <b>Run analysis </b> tab first. It is important to follow the order of the tabs to go through the analysis.
+	After running analysis successfully, you will see plots and different parameters here.

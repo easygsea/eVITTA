@@ -1,0 +1,3 @@
+element	intro
+summary	This panel summarizes about the study, such as the title, experiment type, organism, summary and authors' information.
+tab3_text	<h4>Click <b>2. Data matrix</b> to proceed.</h4>

@@ -1,9 +1,0 @@
-element	intro
-n3_3	<b>Scatter plot</b> of the <b>intersection of interest</b> can be drawn using two or three datasets. Select two datasets to plot a <b>2D scatter</b>, and three for <b>3D scatter</b>. 
-scatter_plot_panel	For the two or three selected lists, an interactive 2- or 3-dimensional <b>scatter plot</b> is provided.<br><br>By default, the differential expression metric "Value" (e.g. logFC, ES) is plotted.<br><br>Terms missing values on one of the dimensions will be excluded from plotting. An <b>exclusion report</b> is shown below.
-correlation_panel	For X and Y, the <b>correlation</b> panel shows the correlation of all points in the scatter plot. <br><br>Correlation is not available for 3D scatter.
-ins_table_panel	You can change the currently selected <b>intersection of interest</b> here. <br><br>For more details on available intersections, navigate to <b>Select Intersection</b> tab.
-data_options	You can change display options for easyGSEA outputs.
-customize_filters	You can change the <b>active filters</b> any time using the <b>Apply filters</b> button.
-view_genelists	You can view <b>active filtered lists</b> using the <b>View filtered lists</b> button.
-enter_genes	You can also manually enter <b>a list of terms</b> to view them in the visualization. <br><br>Note: If terms are missing, remove all active filters and try again.

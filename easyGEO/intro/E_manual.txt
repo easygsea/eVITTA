@@ -1,5 +1,0 @@
-element	intro
-selected_mode	Choose a mode to start. Use <strong>Retrieval by GSE number</strong> if you have a GEO accession number in hand. Alternatively, use <strong>manual uploads</strong> for custom analysis.
-manual_data_matrix	Upload your gene expression data matrix here. Click the help button to learn about its required format. You may also upload your design matrix first on the right hand side.
-manual_design_matrix	Upload your experimental design matrix here. Click the help button to learn about its required format. You may also upload your data matrix first on the left hand side.
-guide1_manual	After you have uploaded both matrices, click the navigating button to proceed.
