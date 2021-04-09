@@ -109,7 +109,9 @@ intropath <- paste0(getwd(), "/intro/")
 # intropath <- paste0(getwd(), "/intro_demo/")
 filepaths <- list.files(intropath, full.names=T)
 intros <- lapply(filepaths, function(x){
-  df <- data.frame(read.csv(x, header=T, sep="\t"))
+  df <- data.frame(
+    suppressWarnings(read.csv(x, header=T, sep="\t"))
+    )
   df$element <- sub("^", "#", df$element)
   df[df=="#"] <- NA
   df

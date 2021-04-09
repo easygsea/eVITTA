@@ -89,3 +89,5 @@ April 8, 2021 (Jean)
 April 8, 2021 (Judith)
 
 - Cleaned up easyVizR unused files and commented out print lines
+- Suppress warning msgs while initializing intro tour text for easyVizR
+
