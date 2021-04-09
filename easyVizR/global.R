@@ -1,6 +1,39 @@
 # ==== global.R START ===========================================================
 
 # --------------- Load and configure libraries -------------------
+if (!require('shiny')){install.packages('shiny')}
+if (!require('ggplot2')){install.packages('ggplot2')}
+if (!require('DT')){install.packages('DT')}
+if (!require('UpSetR')){install.packages('UpSetR')}
+if (!require('eulerr')){install.packages('eulerr')}
+if (!require('VennDiagram')){install.packages('VennDiagram')}
+if (!require('wordcloud')){install.packages('wordcloud')}
+if (!require('plyr')){install.packages('plyr')}
+if (!require('dplyr')){install.packages('dplyr')}
+if (!require('shinydashboard')){install.packages('shinydashboard')}
+if (!require('plotly')){install.packages('plotly')}
+if (!require('shinyWidgets')){install.packages('shinyWidgets')}
+if (!require('shinycssloaders')){install.packages('shinycssloaders')}
+if (!require('rvest')){install.packages('rvest')}
+if (!require('htmlwidgets')){install.packages('htmlwidgets')}
+if (!require('data.table')){install.packages('data.table')}
+if (!require('waiter')){install.packages('waiter')}
+if (!require('shinythemes')){install.packages('shinythemes')}
+if (!require('shinyBS')){install.packages('shinyBS')}
+if (!require('BiocManager')){install.packages('BiocManager')}
+if (!require('shinyjs')){install.packages('shinyjs')}
+if (!require('rintrojs')){install.packages('rintrojs')}
+if (!require('visNetwork')){install.packages('visNetwork')}
+if (!require('markdown')){install.packages('markdown')}
+if (!require('V8')){install.packages('V8')}
+if (!require('lobstr')){install.packages('lobstr')}
+if (!require('shinydisconnect')){install.packages('shinydisconnect')}
+if (!require('rjson')){install.packages('rjson')}
+if (!require('rgeos')){install.packages('rgeos')}
+if (!require('polyclip')){install.packages('polyclip')}
+if (!require('colorspace')){install.packages('colorspace')}
+if (!require('RColorBrewer')){install.packages('RColorBrewer')}
+if (!require('RRHO')){install.packages('RRHO')}
 
 library(shiny)
 library(ggplot2)

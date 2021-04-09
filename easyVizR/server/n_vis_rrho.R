@@ -17,6 +17,14 @@ defaultStepSize <-function(list1, list2){
   return(result)
 }	
 
+#Calculate the max value for slider
+maximumStepSize <-function(list1, list2){
+  n1<- dim(list1)[1]
+  n2<- dim(list2)[1]
+  result <- ceiling(min(sqrt(c(n1,n2))))
+  return(result)
+}
+
 
 
 rrho_data_handler <- function(x_axis,y_axis){
@@ -132,7 +140,12 @@ rrho_level_value <- reactive({
   #Remove NA
   rv$rnk1 <- rnk1
   rv$rnk2 <- rnk2
-  
+  rv$max_step_size <- maximumStepSize(rnk1,rnk2)
+  print('max step size is: ')
+  print(rv$max_step_size)
+  rv$stepsize <- defaultStepSize(rnk1,rnk2)
+  print('current step size is: ')
+  print(rv$stepsize)
   # specify stepsize; default for n<1000, manually defined when n>1000
   stepsize <- defaultStepSize(rnk1,rnk2)
   

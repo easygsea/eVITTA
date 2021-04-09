@@ -1,3 +1,37 @@
+if (!require('shiny')) {install.packages('shiny')}
+if (!require('shinydashboard')) {install.packages('shinydashboard')}
+if (!require('shinythemes')) {install.packages('shinythemes')}
+if (!require('shinyWidgets')) install.packages('shinyWidgets')
+if (!require('shinyBS')) install.packages('shinyBS')
+if (!require('shinyjs')) install.packages('shinyjs')
+if (!require('visNetwork')) install.packages('visNetwork')
+if (!require('DT')) install.packages('DT')
+if (!require('tidyverse')) install.packages('tidyverse')
+if (!require('tidytext')) install.packages('tidytext')
+if (!require('stringr')) install.packages('stringr')
+if (!require('gprofiler2')) install.packages('gprofiler2')
+if (!require('pathview')) install.packages('pathview')
+if (!require('ggrepel')) install.packages('ggrepel')
+if (!require('scales')) install.packages('scales')
+if (!require('fgsea')) install.packages('fgsea')
+if (!require('data.table')) install.packages('data.table')
+if (!require('RColorBrewer')) install.packages('RColorBrewer')
+if (!require('plotly')) install.packages('plotly')
+if (!require('htmltools')) install.packages('htmltools')
+if (!require('AnnotationDbi')) install.packages('AnnotationDbi')
+if (!require('waiter')) install.packages('waiter')
+if (!require('shinyalert')) install.packages('shinyalert')
+if (!require('shinydisconnect')) install.packages('shinydisconnect')
+if (!require('lobstr')) install.packages('lobstr')
+if (!require('rintrojs')) install.packages('rintrojs')
+if (!require('dendextend')) {install.packages('dendextend')}
+if (!require('ggdendro')) {install.packages('ggdendro')}
+if (!require('tools')) install.packages('tools')
+
+
+
+
+
 library(shiny)
 library(shinydashboard)
 library(shinythemes)

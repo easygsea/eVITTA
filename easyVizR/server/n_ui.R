@@ -524,6 +524,7 @@ output$rrho_selections <- renderUI({
             choices = rv$nx_n,
             selected = rv$rrho_y
           )
+          
       ))
   )
 })
@@ -598,6 +599,23 @@ output$rrho_level_dropdowns <- renderUI({
                          bsTooltip("rrho_level_setting_help", 
                                    "Select Yes if you want to use Benjamini-Yekutieli FDR corrected pvalues for plotting",
                                    placement = "top"),
+               # SLIDER INPUT FOR STEPSIZE
+               # sliderInput(
+               #   inputId = 'rrho_step_size',
+               #   label = HTML(paste0(
+               #     "Selected Step Size",
+               #     add_help("rrho_stepsize_setting_help", style="margin-left: 5px;"))
+               #   ),
+               #   
+               #   min = 0,
+               #   max = 100,
+               #   value = 50
+               #   #max = rv$max_step_size,
+               #   #value = rv$stepsize
+               # ),
+               bsTooltip("rrho_stepsize_setting_help", 
+                         "Select the step size to determine how detailed the level plot is",
+                         placement = "top"),
         
         
         size = "xs",

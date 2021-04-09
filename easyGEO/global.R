@@ -1,3 +1,30 @@
+if (!require('shiny')) {install.packages('shiny')}
+if (!require('shinydashboard')) {install.packages('shinydashboard')}
+if (!require('shinyWidgets')) {install.packages('shinyWidgets')}
+if (!require('shinyBS')) {install.packages('shinyBS')}
+if (!require('shinyjs')) {install.packages('shinyjs')}
+if (!require('GEOquery')) {install.packages('GEOquery')}
+if (!require('tidyverse')) {install.packages('tidyverse')}
+if (!require('data.table')) {install.packages('data.table')}
+if (!require('shinyjs')) {install.packages('shinyjs')}
+if (!require('DT')) {install.packages('DT')}
+if (!require('limma')) {install.packages('limma')}
+if (!require('edgeR')) {install.packages('edgeR')}
+if (!require('ggrepel')) {install.packages('ggrepel')}
+if (!require('plotly')) {install.packages('plotly')}
+if (!require('BiocManager')) {install.packages('BiocManager')}
+if (!require('waiter')) {install.packages('waiter')}
+if (!require('statmod')) {install.packages('statmod')}
+if (!require('scales')) {install.packages('scales')}
+if (!require('glue')) {install.packages('glue')}
+if (!require('shinyalert')) {install.packages('shinyalert')}
+if (!require('lobstr')) {install.packages('lobstr')}
+if (!require('shinydisconnect')) {install.packages('shinydisconnect')}
+if (!require('rintrojs')) {install.packages('rintrojs')}
+if (!require('knitr')) {install.packages('knitr')}
+
+
+
 library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
