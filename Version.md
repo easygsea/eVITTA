@@ -74,3 +74,21 @@ April 3, 2021 (Jean)
 - Tidies easyGEO server.R, functions.R scripts
 - Deleted desktop.ini
 - Deleted intro_demo folder and its corresponding script in global.R
+
+### V1.2.4
+
+April 6, 2021 (Blake)
+- Deleted easyGEO files that are unused
+- clean up some files and move some files into inc folder
+- Deleted some ununsed images and html pages in the homepage folder
+- updated the download data button in easyGEO, optimized it to download files with sample names that are easy to read
+
+April 8, 2021 (Jean)
+- Editted README.md
+
+April 8, 2021 (Judith)
+
+- Cleaned up easyVizR unused files and commented out print lines
+- Suppress warning msgs while initializing intro tour text for easyVizR
+- VizR rank scatter add p val testing and display
+
