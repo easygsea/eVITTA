@@ -20,7 +20,7 @@ observe({
   criteria[is.na(criteria)] <- "Ignore"
   criteria <- gsub("FALSE","False", criteria)
   criteria <- gsub("TRUE", "True",criteria)
-  print(criteria)
+  # print(criteria)
   for (i in 1:length(rv$nx_n)){
     rv$s[[i]] <- div(style="display: inline-block;vertical-align:top; width: 280px;",
                      radioGroupButtons(inputId = paste0("ins_",i),

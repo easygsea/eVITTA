@@ -96,36 +96,10 @@ default_colors = c(
 
 # --------------- Initialize -------------------
 
-# list filenames
-ll <- c("Sample_Hibshman_lite.csv"
-        # , "up_hif-1hypoxia_vs_normoxia.csv", "up_N2hypoxia_vs_normoxia.csv", "up_nhr-49hypoxia_vs_normoxia.csv"
-        # , "t_efk1starved_vs_fed_vsN2_KEGG.csv", "t_N2starved_vs_fed_KEGG.csv"
-        # , "z_efk1starved_vs_fed.csv", "z_N2starved_vs_fed.csv","z_zip2starved_vs_fed.csv"
-)
-# list paths
-pl=list()
-pl1 <- paste0(getwd(),"//inc//", ll[[1]], sep = '')
-if (length(ll)>1){
-  pl <- paste(getwd(),"//add//", ll[-1], sep = '')
-  pl <- c(pl1, pl)
-} else {
-  pl <- pl1
-}
-
-# list dfs
-gg <- lapply(pl, read.csv)
-# remove any row with na anywhere
-gg <- lapply(gg, remove_nas)
-
-
-ll <- lapply(ll, tidy_filename, list())
-
-
-tt <- list("logFC"
-           # , "logFC", "logFC", "logFC"
-           # , "ES", "ES"
-           # , "logFC", "logFC"
-)
+# initialize internal list
+ll <- list()
+gg <- list()
+tt <- list()
 
 
 

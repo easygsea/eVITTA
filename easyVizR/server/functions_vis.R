@@ -185,7 +185,7 @@ draw_eulerr_with_ins <- function(gls, ins, print_mode="counts", show_ins=T, ins_
   t_sections <- names(ins[ins==T & is.na(ins)==F])
   f_sections <- names(ins[ins==F & is.na(ins)==F])
   na_sections <- names(ins[is.na(ins)==T])
-  print(t_sections)
+  # print(t_sections)
   selector <- names(fit2[[2]])
   # first get the ins that has all the true sections, if any
   if (length(t_sections)>0){
@@ -196,7 +196,7 @@ draw_eulerr_with_ins <- function(gls, ins, print_mode="counts", show_ins=T, ins_
     selector <- Reduce(intersect, temp)
     
   }
-  print(selector)
+  # print(selector)
   # second get rid of any ins that contains the false sections, if any
   if (length(f_sections)>0){
     for (f in f_sections){
@@ -566,7 +566,7 @@ draw_xy_scatter <- function(to_plot_df,
   yp <- paste("PValue", selected[[2]], sep="_")
   xq <- paste("FDR", selected[[1]], sep="_")
   yq <- paste("FDR", selected[[2]], sep="_")
-  print(c(nxy_p, nxy_q, nxy_stat))
+  # print(c(nxy_p, nxy_q, nxy_stat))
   pthresh <- nxy_p
   qthresh <- nxy_q
   statthresh <- nxy_stat

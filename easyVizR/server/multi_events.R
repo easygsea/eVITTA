@@ -359,7 +359,7 @@ df_n_basic <- reactive({
   
   
   # ------------- for easygsea results only
-  print(rv$detected_dbs)
+  # print(rv$detected_dbs)
   if(is.null(rv$detected_dbs$choices)==F & max(rv$detected_dbs$freq_df$Freq)>1){ # detect if is easygsea output
     
     # 1. filter by selected dbs
@@ -391,12 +391,12 @@ df_n_basic <- reactive({
   
   if (nchar(rv$n_igl)>0){
     igl <- isolate(as.list(strsplit(toupper(rv$n_igl), '\\n+')))[[1]]
-    print(igl)
+    # print(igl)
     df <- df[df$Name %in% igl,]
     df <- df[order(match(df$Name, igl)), ]
   }
   return(df)
-  print(df)
+  # print(df)
 })
 
 

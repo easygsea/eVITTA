@@ -932,12 +932,12 @@ get_df_by_dflogic <- function(selected, dflogic, gls, user_criteria, starting_df
   # replace all the values in user criteria to get a dummy, all-true criteria
   all_true_criteria <- replace(user_criteria, names(user_criteria), TRUE)
   
-  print("selected true criteria:")
-  print(selected)
+  # print("selected true criteria:")
+  # print(selected)
   # define a criteria where only the selected datasets are true, the rest are NA
   selected_true_criteria <- replace(user_criteria, names(user_criteria), NA) # initialize all to NA/ignore
   selected_true_criteria <- replace(selected_true_criteria, selected, TRUE) # only replace the selected as TRUE
-  print(selected_true_criteria)
+  # print(selected_true_criteria)
   
   if (dflogic=="Ins"){
     to_plot_df <- extract_intersection(gls = gls, 

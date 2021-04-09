@@ -76,7 +76,7 @@ nx_bar_plt <- reactive({
   df[df==0]<-0.00001 # replace 0 with 0.001
   
   df$color <- -log10(as.numeric(df[[sigcol]]))
-  print(head(df))
+  # print(head(df))
   fig <- plot_ly(
     x = df$Name,
     y = df[[plotcol]],
