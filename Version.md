@@ -8,22 +8,22 @@ Mar 16, 2021 Bug fixed (Blake)
 - easyGEO the time that the introjs appear is adjusted to 1 second later
 - gsea help page list item position adjusted
 
-Mar 18, 2021 Homepage update and bug fix (Jean)
+Mar 18, 2021 Homepage update and download button optimization (Jean)
 - Updated easyGEO & easyGSEA help pages
 - easyGSEA tab 2 enrichment plot download dropdown bug fix
 
 ### V1.0.2
 
-Mar 23, 2021 Bug fix (Jean)
-- easyGSEA ORA module check_numericInput_na bug fixed
+Mar 23, 2021 Function improvement (Jean)
+- easyGSEA ORA module check_numericInput_na improved
 
 ### V1.0.3
 
-Mar 23, 2021 UI update and bug fix (Jean)
+Mar 23, 2021 UI update and ORA module optimization (Jean)
 - easyGSEA database selection changed from selectizeInput to pickerInput
-- easyGSEA ORA module sig_none reactive bug fix
-- easyGSEA ORA bubble check_numericInput_na bug fix
-- easyGSEA ORA bar & bubble manual GS selection bug fix
+- easyGSEA ORA module sig_none reactive updated
+- easyGSEA ORA bubble check_numericInput_na to catch none input
+- easyGSEA ORA bar & bubble manual GS selection UI optimization
 - easyGSEA ORA bar & bubble arranged from low-to-high pval
 
 ### V1.0.4
@@ -38,7 +38,7 @@ March 24, 2021 easyGEO visualization update (Jean)
 
 ### V1.1.1
 
-March 24, 2021 easyGSEA bug fix (Jean)
+March 24, 2021 easyGSEA visualization update (Jean)
 - KEGG plot gene.idtype parameter assigned with a new reactive variable gidtype (to handle issues with yeast SGD database)
 - Added rno.rnk and rno.csv
 
@@ -84,11 +84,16 @@ April 6, 2021 (Blake)
 - updated the download data button in easyGEO, optimized it to download files with sample names that are easy to read
 
 April 8, 2021 (Jean)
-- Editted README.md
+- Revised README.md: Introduction of eVITTA modules; gene set database download intruction guide; quick start guide 
 
 April 8, 2021 (Judith)
 
 - Cleaned up easyVizR unused files and commented out print lines
 - Suppress warning msgs while initializing intro tour text for easyVizR
 - VizR rank scatter add p val testing and display
+
+### V1.2.5
+
+April 9, 2021 (Jean)
+- Gathered essential files and scripts for code release 
 
