@@ -13,7 +13,7 @@ eVITTA provides three modules for transcriptome analysis and interpretation:
 
 # Quick start
 ### Gene set databases
-Prior to using easyGSEA, download its gene set databases and genomice background for ORA by clicking the link below. Decompress the zip file, and move all files and folders into easyGSEA/www/gmts/
+Prior to using easyGSEA, download its gene set databases and genome backgrounds for ORA by clicking the link below. Decompress the zip file, and move all files and folders into easyGSEA/www/gmts/
 <br><br>
 [Download all .gmt files as a zip file](https://tau.cmmt.ubc.ca/eVITTA/easyGSEA/gmts/gene_sets_databases.zip)
 
