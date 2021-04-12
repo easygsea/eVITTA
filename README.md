@@ -2,6 +2,8 @@
 
 An easy Visualization and Inference Toolbox for Transcriptome Analysis
 
+Access our webserver at https://tau.cmmt.ubc.ca/eVITTA/
+
 eVITTA provides three modules for transcriptome analysis and interpretation:
 
 - easyGEO - NCBI GEO data extraction and differential expression (DE) analysis
