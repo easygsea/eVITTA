@@ -1,5 +1,10 @@
 # eVITTA update log
 
+### V1.2.6
+
+
+***
+
 ### V1.0.1
 
 Mar 16, 2021 Bug fixed (Blake)
