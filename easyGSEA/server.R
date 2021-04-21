@@ -12,12 +12,11 @@ server <- function(input, output, session) {
     #                                               ,footer = modalButton("OK")))
     waiter_hide() # will hide *on_load waiter
 
-    # addClass(selector = "body", class = "sidebar-collapse")
     runjs("$('#rnkfile').parent().removeClass('btn-default').addClass('btn-danger');")
     
-    # js$hidehead('none')
-    
-    # toggle button for a demo run
+    #=====================================================#
+    ####           toggle button for a demo runs       ####
+    #=====================================================#
     output$btn_demo <- renderUI({
         req(is.null(rv$demo_yes))
         btn_demo("ee")
@@ -27,22 +26,44 @@ server <- function(input, output, session) {
         btn_demo_e()
     })
     
+    #=====================================================#
+    ####        sourced data processing R scripts      ####
+    #=====================================================#
+    # codes for the demo session. uncomment for a demo run
     source("server/demo.R", local = TRUE)
+    
+    # essential static variables
     source("server/server-variables.R", local = TRUE)
+    
+    # essential reactive variables
     source("server/server-reactives.R", local = TRUE)
+    
+    # essential reactive values
     source("server/server-rv.R", local = TRUE)
+    
+    # RAM check on session start
     source("server/server-ramCheck.R", local = TRUE)
+    
+    # functions: visualizations, UI, data processing
     source("server/server-functions.R", local = TRUE)
+    
+    # intro tour
     source("server/help.R", local = TRUE) #intro tour#
+    
+    # GSEA/ORA data processing
     source("server/1.1.server-run.R", local = TRUE)
     source("server/1.2.server-body1.R", local = TRUE)
     
+    # Visualizations
     source("server/2.server-results.R", local = TRUE)
-    # source("server/server-summary.R", local = TRUE)
     source("server/3.server-network.R", local = TRUE)
+    
+    # Data download
     source("server/4.server-download.R", local = TRUE)
     
-    # the ui to download the files
+    #=====================================================#
+    ####            UI to download example files       ####
+    #=====================================================#
     output$sample_data_download <- renderUI({
         req(is.null(rv$demo_yes))
         fixedPanel(
