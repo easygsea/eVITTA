@@ -2423,11 +2423,11 @@
       # get all genes and background genes
       if(rv$ora_option == "genome" | rv$ora_option == "genome1"){
         a_genes <- toupper(rv$ora_genome_background)
-        in_genes <- genelist
+        in_genes <- genelist %>% toupper()
       }else if(rv$ora_option == "gs"){
         a_genes = toupper(unname(unlist(m_list,recursive = T))) %>% unique(.)
         # genes present in the database
-        in_genes = genelist[genelist %in% a_genes]
+        in_genes = genelist[genelist %in% a_genes] %>% toupper()
       }
 
       if(! identical(in_genes,character(0))){

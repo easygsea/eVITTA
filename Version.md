@@ -7,6 +7,7 @@
 Apr 22, 2021 Workflow optimization (Jean)
 - Added set.seed to create simulated values that are reproducible before running fgsea
 - Wrapped waiting messages into wait_msg function if data processing takes to long
+- ORA gene name toupper conversion for gconvert results
 
 ***
 
