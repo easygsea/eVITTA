@@ -1,14 +1,24 @@
-#=======================================================================#
-####----------------- Functions: read in data -------------------####
-#=======================================================================#
-read_genome_background <- function(species){
-  ora_dir <- paste0(getwd(),"/www/gmts/ORA/")
-  ora_file <- paste0(ora_dir,species,".csv")
-  rv$ora_genome_background <- read.csv(ora_file) %>% .[,3]
-}
+    #=======================================================================#
+    ####-----------------       Functions: general    -------------------####
+    #=======================================================================#
+    # ORA: read in genome background data
+    read_genome_background <- function(species){
+      ora_dir <- paste0(getwd(),"/www/gmts/ORA/")
+      ora_file <- paste0(ora_dir,species,".csv")
+      rv$ora_genome_background <- read.csv(ora_file) %>% .[,3]
+    }
+    
+    # waiting message for withProgress if data processing takes too long
+    # Example use: withProgress(message = wait_msg("Autodetecting and converting gene IDs..."),{})
+    wait_msg <- function(msg, msg_base=" This might take a while. Please wait a minute. Thank you."){
+      paste0(
+        msg,
+        msg_base
+      )
+    }
 
 
-#=======================================================================#
+    #=======================================================================#
     ####----------------- Functions: filtering and UI -------------------####
     #=======================================================================#
     # remove db names and IDs in gsea table
@@ -2343,11 +2353,13 @@ read_genome_background <- function(species){
       
       if(max(a_lens)<rv$gmin || min(a_lens)>rv$gmax){errors = errors + 1}
       
+      set.seed(42)
       frun <- try(fgseaRes <- fgsea(pathways = m_list,
                                     stats    = ranks,
                                     minSize  = rv$gmin,
                                     maxSize  = rv$gmax,
-                                    nperm = rv$gperm))
+                                    nperm = rv$gperm
+                                    ,nproc = 1))
       
       if(inherits(frun, "try-error")) {        
         errors = errors + 1

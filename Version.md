@@ -1,7 +1,12 @@
 # eVITTA update log
 
+### V1.2.7
+
 ### V1.2.6
 
+Apr 22, 2021 Workflow optimization (Jean)
+- Added set.seed to create simulated values that are reproducible before running fgsea
+- Wrapped waiting messages into wait_msg function if data processing takes to long
 
 ***
 

@@ -1137,7 +1137,7 @@
                     
                     # autodetect and convert into SYMBOL (if other/mixed identifier) using gprofiler2
                     if(input$gene_identifier == "other" && input$selected_species != "other"){
-                      withProgress(message = "Autodetecting and converting gene IDs. This might take a while...",{
+                      withProgress(message = wait_msg("Autodetecting and converting gene IDs..."),{
                         Sys.sleep(0.1)
                         incProgress(1)
                         lst = convert_gene_id(species,genelist)
@@ -1453,7 +1453,7 @@
         }
 
 
-        withProgress(message = "Running GSEA analysis. This might take a while ...",value = 1, {
+        withProgress(message = wait_msg("Running GSEA analysis..."),value = 1, {
 
             # ------ read GMTs & run fgsea ------ #
             # initialize
@@ -1614,7 +1614,7 @@
         }
 
 
-        withProgress(message = "Running ORA analysis. This might take a while ...",value = 1, {
+        withProgress(message = wait_msg("Running ORA analysis..."),value = 1, {
 
             # ------ read GMTs & run fgsea ------ #
             # initialize

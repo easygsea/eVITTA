@@ -261,7 +261,7 @@ output$vis_error <- renderUI({
 output$vis_network <- renderVisNetwork({
     req(is.null(rv$fgseagg)==F)
     # N = 10
-    withProgress(message = 'Generating network view of enriched gene sets. This might take a while ...',value = 1, {
+    withProgress(message = wait_msg('Generating network view of enriched gene sets...'),value = 1, {
         rv$vis = vis()
         return(rv$vis)
     })

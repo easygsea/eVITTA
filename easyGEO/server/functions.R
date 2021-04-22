@@ -1,37 +1,15 @@
-# summarize gpl info when GSEMatrix = F
-summarize_gpl_F <- function(gse){
-  ids <- c()
-  out <- GPLList(gse) %>%
-    lapply(., function(x) {
-      metadata <- Meta(x)
-      id <- metadata[["geo_accession"]]
-      ids <- c(ids, id)
-      gsmlist <- Filter(function(gsm) {Meta(gsm)$platform_id==id},GSMList(gse))
-      samplen <- length(gsmlist)
-      query <- c("organism", "molecule", "strategy")
-      tempp <- Meta(gsmlist[[1]])
-      for (nn in query){
-        fn <- tempp[grep(nn, names(tempp))]
-        if (length(fn)>0){
-          assign(nn, paste(unique(fn[[1]]), collapse=", ")) # wrap in paste to ensure atomic
-        } else {
-          assign(nn, "")
-        }
-      }
-      type <- paste(Meta(gse)$type, collapse=", ") # wrap in paste to ensure atomic
-      rv$gpl_type <- c(rv$gpl_type, type)
-      rv$gpl_count <- c(rv$gpl_count, Meta(gsmlist[[1]])$channel_count)
-      rv$organism <- organism
-      c(ID=id, Organism=organism, Samples=samplen, Type=type, Molecule=molecule, Strategy=strategy)
-    })
-  
-  out
+# -------------------------------------------------------------------- #
+####                      General data processing                   ####
+# -------------------------------------------------------------------- #
+# waiting message for withProgress if data processing takes too long
+# Example use: withProgress(message = wait_msg("Autodetecting and converting gene IDs..."),{})
+wait_msg <- function(msg, msg_base=" This might take a while. Please wait a minute. Thank you."){
+  paste0(
+    msg,
+    msg_base
+  )
 }
 
-# -------------------------------------------------------------------- #
-#                       render datatable options                       #
-# -------------------------------------------------------------------- #
-# ======================= renderDataTable options #2 ===========================
 # enable extensions, scrolling X and Y, and customizing Y scren height
 #   df_no(df,extensions=c('Scroller'), scrollY = "380px", scroller = TRUE, scrollX=TRUE)
 # example:
@@ -57,11 +35,11 @@ df_no <- function(df,extensions=c('Scroller'), dom = NULL, buttons = NULL, scrol
 }
 
 # -------------------------------------------------------------------- #
-#                             UI elements                              #
+####                             UI elements                        ####
 # -------------------------------------------------------------------- #
 
 
-# ------- Function to draw an info box to guide the user along the pipeline ---------
+# # Function to draw an info box to guide the user along the pipeline
 # You can pass html string into msg, e.g. : guide_box("<strong>This is a bold message</strong>")
 # default color is blue
 # default width is 12 (maximum), must be is an integer value
@@ -80,7 +58,7 @@ guide_box <- function(id,msg, color="warning", size="sm"){
 }
 
 
-# ------------- enhanced page progress infobox ------------------
+# # enhanced page progress infobox
 # call in renderUI on the server side. you need to wrap this in a box
 # 
 # id: id of the list display (<ul>)
@@ -138,11 +116,40 @@ panel_null <- function(text = "Data available upon selection of a platform."){
 }
 
 # -------------------------------------------------------------------- #
-#                   Design matrix parsing                              #
+####                          Data parsing                          ####
 # -------------------------------------------------------------------- #
+# summarize gpl info when GSEMatrix = F
+summarize_gpl_F <- function(gse){
+  ids <- c()
+  out <- GPLList(gse) %>%
+    lapply(., function(x) {
+      metadata <- Meta(x)
+      id <- metadata[["geo_accession"]]
+      ids <- c(ids, id)
+      gsmlist <- Filter(function(gsm) {Meta(gsm)$platform_id==id},GSMList(gse))
+      samplen <- length(gsmlist)
+      query <- c("organism", "molecule", "strategy")
+      tempp <- Meta(gsmlist[[1]])
+      for (nn in query){
+        fn <- tempp[grep(nn, names(tempp))]
+        if (length(fn)>0){
+          assign(nn, paste(unique(fn[[1]]), collapse=", ")) # wrap in paste to ensure atomic
+        } else {
+          assign(nn, "")
+        }
+      }
+      type <- paste(Meta(gse)$type, collapse=", ") # wrap in paste to ensure atomic
+      rv$gpl_type <- c(rv$gpl_type, type)
+      rv$gpl_count <- c(rv$gpl_count, Meta(gsmlist[[1]])$channel_count)
+      rv$organism <- organism
+      c(ID=id, Organism=organism, Samples=samplen, Type=type, Molecule=molecule, Strategy=strategy)
+    })
+  
+  out
+}
+
 
 # requires the transform_vector() function in global
-
 # parse characteristics columns from GSE 
 # and gather into named list of named vectors (char_list)
 # sample output:
@@ -270,10 +277,10 @@ firstcol_to_rown <- function(df){
 
 
 # -------------------------------------------------------------------- #
-#                        DEG and visualization                         #
+####                   DE and visualization                         ####
 # -------------------------------------------------------------------- #
 
-# ------------- basic function to filter DEG table -------------------
+# basic function to filter DEG table
 filter_df <- function(
   df = rv$deg,q_cutoff=input$tl_q,logfc_cutoff=input$tl_logfc
 ){
