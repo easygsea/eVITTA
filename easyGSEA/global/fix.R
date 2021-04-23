@@ -1,4 +1,4 @@
-# bug in ID conversion in pathview
+# This fixes a bug on this package
 mol.sum <-
   function(mol.data, id.map, gene.annotpkg="org.Hs.eg.db", sum.method=c("sum","mean", "median", "max", "max.abs", "random")[1]){
     if(is.character(mol.data)){
