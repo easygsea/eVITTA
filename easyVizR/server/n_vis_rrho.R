@@ -1,3 +1,8 @@
+###-----------------------------------------------------------------###
+###   Part of the code adapted from RRHO package:                   ###
+###   https://rdrr.io/bioc/RRHO/src/R/ExpressionAnalysis.R          ###
+###   (Author: Jonathan Rosenblatt and Jason Stein)                 ###
+###-----------------------------------------------------------------###
 
 ## Suggest default step size
 #------------------------------
