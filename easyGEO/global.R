@@ -50,9 +50,6 @@ library(shinydisconnect)
 library(rintrojs)
 library(knitr) #might need for transforming rmd to html
 
-
-
-# library(curl)
 options(repos = BiocManager::repositories())
 
 source("global/functions.R")
