@@ -1,4 +1,6 @@
-# This fixes a bug on this package
+# Code below fixes a bug in pathview
+# https://bioconductor.org/packages/release/bioc/html/pathview.html
+
 mol.sum <-
   function(mol.data, id.map, gene.annotpkg="org.Hs.eg.db", sum.method=c("sum","mean", "median", "max", "max.abs", "random")[1]){
     if(is.character(mol.data)){
