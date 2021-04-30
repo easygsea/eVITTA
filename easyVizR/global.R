@@ -1,6 +1,8 @@
 # ==== global.R START ===========================================================
 
 # --------------- Load and configure libraries -------------------
+if(!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
 if (!require('shiny')){install.packages('shiny')}
 if (!require('ggplot2')){install.packages('ggplot2')}
 if (!require('DT')){install.packages('DT')}

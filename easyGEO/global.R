@@ -1,3 +1,5 @@
+if(!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
 if (!require('shiny')) {install.packages('shiny')}
 if (!require('shinydashboard')) {install.packages('shinydashboard')}
 if (!require('shinyWidgets')) {install.packages('shinyWidgets')}

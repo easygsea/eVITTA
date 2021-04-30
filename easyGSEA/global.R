@@ -1,3 +1,5 @@
+if(!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
 if (!require('shiny')) {install.packages('shiny')}
 if (!require('shinydashboard')) {install.packages('shinydashboard')}
 if (!require('shinythemes')) {install.packages('shinythemes')}
@@ -10,7 +12,7 @@ if (!require('tidyverse')) install.packages('tidyverse')
 if (!require('tidytext')) install.packages('tidytext')
 if (!require('stringr')) install.packages('stringr')
 if (!require('gprofiler2')) install.packages('gprofiler2')
-if (!require('pathview')) install.packages('pathview')
+if (!require('pathview')) BiocManager::install("pathview")
 if (!require('ggrepel')) install.packages('ggrepel')
 if (!require('scales')) install.packages('scales')
 if (!require('fgsea')) install.packages('fgsea')
@@ -63,9 +65,6 @@ library(ggdendro) # for dendrogram
 library(tools) # for finding file (name) extensions
 
 options(repos = BiocManager::repositories())
-
-# fix functions in loaded packages
-source("global/fix.R", local = TRUE)
 
 # --------------- Initialize introjs -------------------
 intropath <- paste0(getwd(), "/intro/")

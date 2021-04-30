@@ -1817,6 +1817,7 @@ observeEvent(input$confirm_kegg_plot,{
                                                 kegg.dir = paste0(getwd(),"/www/"),
                                                 # limit      = list(gene=max(abs(ranks))), # list(gene=c(min(ranks),max(ranks))),
                                                 plot.col.key = FALSE,
+                                                discrete = c(T,T),
                                                 low = "green", mid = "green", high = "green", bins = 1,
                                                 kegg.native=TRUE)
 
