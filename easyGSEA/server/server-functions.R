@@ -3,7 +3,7 @@
     #=======================================================================#
     # ORA: read in genome background data
     read_genome_background <- function(species){
-      ora_dir <- paste0(getwd(),"/www/gmts/ORA/")
+      ora_dir <- paste0(gmt_sdir,"gmts/ORA/")
       ora_file <- paste0(ora_dir,species,".csv")
       rv$ora_genome_background <- read.csv(ora_file) %>% .[,3]
     }

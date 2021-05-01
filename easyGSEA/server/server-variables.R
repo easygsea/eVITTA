@@ -156,7 +156,8 @@ gvalues2 = rescale(c(0,-log10(0.25),1,-log10(0.05),2,3))
 
 
 #===================== GMT collections' names =====================
-gmt_abbr <- read_tsv(paste0(getwd(),"/www/gmt_abbreviations.tsv"),col_names = F)
+gmt_sdir <- "https://tau.cmmt.ubc.ca/eVITTA/easyGSEA/"
+gmt_abbr <- read_tsv(paste0(gmt_sdir,"gmt_abbreviations.tsv"),col_names = F)
 gmt_names <- as.list(gmt_abbr$X2)
 names(gmt_names) <- gmt_abbr$X1
 
@@ -177,7 +178,7 @@ gmt_collections <- vector("list")
 gmt_collections_selected <- vector("list")
 
 # read in the file which stores GMTs to load
-test = read.csv(paste0(getwd(),"/www/gmts/gmts_list.csv"),header=F,stringsAsFactors = F)
+test = read.csv(paste0(gmt_sdir,"gmts/gmts_list.csv"),header=F,stringsAsFactors = F)
 
 # names of databases
 dbs_o = strsplit(test$V3,";")
@@ -194,7 +195,7 @@ for(i in seq_along(dbs_o)){
   gmt_collections = c(gmt_collections, list(coll))
   
   # paths to GMT files
-  paths = paste0(getwd(),"/www/gmts/",test$V1[[i]],"/",test$V2[[i]],"/",dbs_o[[i]])
+  paths = paste0(gmt_sdir,"gmts/",test$V1[[i]],"/",test$V2[[i]],"/",dbs_o[[i]]) %>% gsub(" ","%20",.)
   names(paths) = names_abbr #names
   
   gmt_collections_paths = c(gmt_collections_paths, list(paths))
@@ -214,7 +215,7 @@ gmt_collections_paths = split(gmt_collections_paths,test$V1)
 
 
 ## read in GMTs selected as default
-test = read.csv(paste0(getwd(),"/www/gmts/gmts_list_selected.csv"),header=F,stringsAsFactors = F)
+test = read.csv(paste0(gmt_sdir,"gmts/gmts_list_selected.csv"),header=F,stringsAsFactors = F)
 # names of databases
 dbs_o = strsplit(test$V3,";")
 for(i in seq_along(dbs_o)){
