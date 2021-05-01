@@ -13,22 +13,13 @@ server <- function(input, output, session) {
     waiter_hide() # will hide *on_load waiter
 
     runjs("$('#rnkfile').parent().removeClass('btn-default').addClass('btn-danger');")
-    
-    #=====================================================#
-    ####           toggle button for a demo runs       ####
-    #=====================================================#
-    output$btn_demo <- renderUI({
-        req(is.null(rv$demo_yes))
-        btn_demo("ee")
-    })
-    
-    observeEvent(input$ee,{
-        btn_demo_e()
-    })
-    
+
     #=====================================================#
     ####        sourced data processing R scripts      ####
     #=====================================================#
+    # essential reactive values
+    source("server/server-rv.R", local = TRUE)
+    
     # codes for the demo session. uncomment for a demo run
     source("server/demo.R", local = TRUE)
     
@@ -37,10 +28,7 @@ server <- function(input, output, session) {
     
     # essential reactive variables
     source("server/server-reactives.R", local = TRUE)
-    
-    # essential reactive values
-    source("server/server-rv.R", local = TRUE)
-    
+
     # RAM check on session start
     source("server/server-ramCheck.R", local = TRUE)
     
@@ -60,6 +48,18 @@ server <- function(input, output, session) {
     
     # Data download
     source("server/4.server-download.R", local = TRUE)
+    
+    #=====================================================#
+    ####           toggle button for a demo runs       ####
+    #=====================================================#
+    output$btn_demo <- renderUI({
+        req(is.null(rv$demo_yes))
+        btn_demo("ee")
+    })
+    
+    observeEvent(input$ee,{
+        btn_demo_e()
+    })
     
     #=====================================================#
     ####            UI to download example files       ####
