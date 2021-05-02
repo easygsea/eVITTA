@@ -1,6 +1,11 @@
 # eVITTA update log
 
+### V1.2.8
+
 ### V1.2.7
+
+May 1, 2021 Database extraction from https (Jean)
+- GMT libraries and ORA genomic backgrounds accessed via https directly in easyGSEA
 
 ### V1.2.6
 
