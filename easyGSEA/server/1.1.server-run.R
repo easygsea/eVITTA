@@ -534,7 +534,8 @@
       rv$db_status <- "modify"
       shinyjs::enable("selected_species")
 
-      # clear RVs
+      # clear RVs if not transferred from easyGEO
+      req(rv$geo_mode == "")
       # rv$run = NULL
       rv$glist_check = NULL
       rv$rnk_check = NULL
