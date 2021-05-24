@@ -105,7 +105,19 @@ output$run_deg_ui <- renderUI({
 })
 
 # -------------- 4.3.1 observe run_deg (fine-tune mode), perform DEG analysis ---------
+check_neg_counts <- function(){
+  # check if any negative value in data matrix
+  error <- 0
+  if(any(filtered_data_df() < 0)){
+    shinyalert("Error: Negative counts are not allowed.")
+    error <- 1
+  }
+  # proceed only if right data matrix type is selected
+  req(error == 0)
+}
+
 observeEvent(input$run_deg,{
+  check_neg_counts()
   rv$gene_lists = NULL
   rv$deg = NULL
 
@@ -261,6 +273,8 @@ observeEvent(input$run_deg,{
 
 # -------------- 4.3.2 observe run_deg (coerce mode), perform DEG analysis ---------
 observeEvent(input$run_deg2,{
+  check_neg_counts()
+
   rv$gene_lists = NULL
   rv$deg = NULL
 

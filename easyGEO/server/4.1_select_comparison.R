@@ -221,6 +221,7 @@ output$ui_samples_fb <- renderUI({
   }
   
   # control level name
+  req(length(input$sp_select_levels_base) > 0)
   c_level = input$sp_select_levels_base
   
   # samples in control group
