@@ -203,6 +203,9 @@ server <- function(input, output, session) {
     # })
     # outputOptions(output, "n_len", suspendWhenHidden = F)
 
-    
+    # CLEAR MEMORY UPON SESSION CLOSE
+    onStop(fun = function(){
+        gc()
+    })
 }
 # ===================================================== server.R END ============

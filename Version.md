@@ -1,5 +1,8 @@
 # eVITTA update log
 
+### V1.2.9
+Jun 27, 2021 Garbage collection on session close
+
 ### V1.2.8
 May 23, 2021 easyGEO microarray negative counts error (Jean)
 - If negative values detected in gene expression table, error reminder message rendered to user
