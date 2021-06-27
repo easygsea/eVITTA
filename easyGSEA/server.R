@@ -87,4 +87,8 @@ server <- function(input, output, session) {
         
     )
     
+    # CLEAR MEMORY UPON SESSION CLOSE
+    onStop(fun = function(){
+        gc()
+    })
 }
