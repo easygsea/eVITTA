@@ -9,6 +9,10 @@ init_demo <- function(){
   rv$n_to_plot <- "Stat"
   rv$heatmap_sortby <- rv$nx_n[[1]]
   rv$n_hm_ylabs <- F
+  rv$n_hm_ylabs_len <- 15
+  rv$n_hm_cscale <- "redBlueDiv"
+  rv$n_hm_cscale_rev <- F
+  rv$n_hm_cscale_center <- T
   rv$n_ins_view == "Full"
   rv$n_venn_label <- "counts"
   rv$n_venn_type <- "Basic"

@@ -87,6 +87,9 @@ server <- function(input, output, session) {
     # initialize demo
     source("server/server-init.R", local = TRUE)
     
+    # load parameters
+    source("server/server-palettes.R", local = TRUE)
+    
     
     #======================================================================#
     ####                        INTRO TOUR                              ####

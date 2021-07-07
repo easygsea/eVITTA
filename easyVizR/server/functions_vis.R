@@ -446,12 +446,19 @@ draw_heatmap <- function(df,
                          show_ylabs=F, # whether or not to show Y labels
                          ylabs_len, # max length of y labels
                          hovertext_linebreak = 30, # max line length for hovertexts
+                         cscale=rv$n_hm_cscale,
+                         cscale_rev=rv$n_hm_cscale_rev,
                          sharedcols = rv$n_sharedcols,
                          nx_n=rv$nx_n
 ){
 
   
   rownames(df) <- df$Name # put genename as index
+  
+  # prepare colorscale. 
+  useColorscale <- suppressWarnings(makePlotlyColorscale(get(cscale), "even", rev=cscale_rev))
+  # if divergent colorscale, center at 0; if sequential, no centering
+  if (cscale %in% divScalesList){centerVal=0} else {centerVal=NULL}
   
   # order by selected column
   sortby_coln <- paste0(sortby_dataset,"_", sortby_statistic)
@@ -502,12 +509,10 @@ draw_heatmap <- function(df,
   
   # define the hovertext
   textt <- paste(full_y, addlabel)
-  
 
-  
   fig <- plot_ly() %>%
     add_trace(data = dat, x = ~x, y = ~y, z = ~z, type = "heatmap",
-              colorscale  = cscale_simple,zauto = T, zmid= 0, colorbar = list(title = stat_replace1(sortby_dataset, nx_n)),
+              colorscale  = useColorscale, zauto = T, zmid= centerVal, colorbar = list(title = stat_replace1(sortby_dataset, nx_n)),
               hoverinfo = 'text',
               text = textt)
   
