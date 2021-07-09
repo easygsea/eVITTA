@@ -67,13 +67,49 @@ div(div(style = "position: absolute; left: 1em; bottom: 1em",id="n1_3b",
 ),
 div(style = "position: absolute; left: 4em; bottom: 1em; width:300px;", id="n1_3d",
     dropdown(
+      
+      
+      selectInput(
+        inputId = "n_hm_cscale",
+        label= HTML(paste0(
+          "<b>Select colorscale:</b>",
+          add_help("n_hm_cscale_help", style="margin-left: 5px;"))
+        ),
+        choices = div_seq_ora_colorChoices,
+        selected = rv$n_hm_cscale
+      ),
+      bsTooltip("n_hm_cscale_help", 
+                "<b>Divergent</b> colorscales are automatically centered at 0; <br><b>Sequential</b> colorscales are adjusted to the max/min of the data.", 
+                placement = "top"),
       materialSwitch(
-        inputId = "n_hm_ylabs", label = "Show y labels?", status="primary",
+        inputId = "n_hm_cscale_rev", 
+        label = HTML(paste0(
+          "<b>Reverse colorscale?</b>",
+          add_help("n_hm_cscale_rev_help", style="margin-left: 5px;"))
+        ),
+        status="primary",
+        value = rv$n_hm_cscale_rev
+      ),
+      bsTooltip("n_hm_cscale_rev_help", 
+                "Display a reversed version of the selected colorscale.", 
+                placement = "top"),
+      
+      
+      materialSwitch(
+        inputId = "n_hm_ylabs", 
+        label = HTML(paste0(
+          "<b>Show Y labels?:</b>",
+          add_help("n_hm_ylabs_help", style="margin-left: 5px;"))
+        ),
+        status="primary",
         value = rv$n_hm_ylabs
       ),
-      "Warning: y labels may not appear properly if there are too many rows.",
+      bsTooltip("n_hm_ylabs_help", 
+                "Warning: y labels may not appear properly if there are too many rows.", 
+                placement = "top"),
       # uiOutput("n_hm_ylabs_len") # disabled
       # ,
+      
       size = "xs",
       icon = icon("palette", class = "opt"),
       up = TRUE

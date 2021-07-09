@@ -1,6 +1,14 @@
 # eVITTA update log
 
+### V1.2.10
+
+July 6, 2021 Improved customization for easyVizR heatmap (Judith)
+
+- Added a variety of divergent and sequential colorscales, including colorblind-friendly options
+- Fixed bug causing heatmap not to render in example run when user chooses to show Y axis labels
+
 ### V1.2.9
+
 Jun 27, 2021 Garbage collection on session close
 
 ### V1.2.8

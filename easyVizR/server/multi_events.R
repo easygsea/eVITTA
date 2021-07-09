@@ -14,7 +14,8 @@ observe({
   # heatmap
   input2rv(c(
     "n_to_plot",
-    "heatmap_sortby", "n_hm_ylabs","n_hm_ylabs_len"
+    "heatmap_sortby", "n_hm_ylabs","n_hm_ylabs_len",
+    "n_hm_cscale", "n_hm_cscale_rev"
     ))
   
   # venn and upset
@@ -153,6 +154,8 @@ observeEvent(input$n_use_data,{
     rv$heatmap_sortby <- rv$nx_n[[1]]
     rv$n_hm_ylabs <- F
     rv$n_hm_ylabs_len <- 15
+    rv$n_hm_cscale <- "redBlueDiv"
+    rv$n_hm_cscale_rev <- F
 
     
     # ---------------  intersection options
