@@ -1,5 +1,12 @@
 # eVITTA update log
 
+### V1.2.11
+
+July 20, 2021 Non-numeric data check in data matrix (Jean)
+
+- Added a function to check non-numeric data in data matrix
+- Rendered a warning and a reminder to users
+
 ### V1.2.10
 
 July 6, 2021 Improved customization for easyVizR heatmap (Judith)
@@ -9,7 +16,9 @@ July 6, 2021 Improved customization for easyVizR heatmap (Judith)
 
 ### V1.2.9
 
-Jun 27, 2021 Garbage collection on session close
+Jun 27, 2021 Garbage collection on session close (Jean)
+
+- Added a function to clean memory use upon session close for better user experience
 
 ### V1.2.8
 May 23, 2021 easyGEO microarray negative counts error (Jean)
@@ -113,7 +122,7 @@ April 6, 2021 (Blake)
 - updated the download data button in easyGEO, optimized it to download files with sample names that are easy to read
 
 April 8, 2021 (Jean)
-- Revised README.md: Introduction of eVITTA modules; gene set database download intruction guide; quick start guide 
+- Revised README.md: Introduction of eVITTA modules; gene set database download intruction guide; quick start guide
 
 April 8, 2021 (Judith)
 
@@ -124,5 +133,4 @@ April 8, 2021 (Judith)
 ### V1.2.5
 
 April 9, 2021 (Jean)
-- Gathered essential files and scripts for code release 
-
+- Gathered essential files and scripts for code release

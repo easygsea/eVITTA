@@ -201,9 +201,14 @@ observeEvent(input$run_deg,{
       # as numeric matrix
       m_df = m_df %>% dplyr::select(one_of(samples))
       m_df <- setcolorder(m_df, as.character(samples))
-      m_df = m_df %>% 
-        apply(., 2, as.numeric) %>%
-        as.matrix(.)
+      m_df <- suppressWarnings(apply(m_df, 2, as.numeric))
+      complete_cases <- complete.cases(m_df)
+      rv$incomplete_cases_y <- !all(complete_cases)
+      rv$incomplete_cases <- genes[which(!complete_cases)]
+      complete_cases <- which(complete_cases)
+      m_df <- m_df[complete_cases,]
+      genes <- genes[complete_cases]
+      m_df <- as.matrix(m_df)
 
       # rename rownames
       rownames(m_df) = genes
@@ -349,9 +354,14 @@ observeEvent(input$run_deg2,{
 
       m_df <- setcolorder(m_df, as.character(samples))
       
-      m_df = m_df %>% 
-        apply(., 2, as.numeric) %>%
-        as.matrix(.)
+      m_df <- suppressWarnings(apply(m_df, 2, as.numeric))
+      complete_cases <- complete.cases(m_df)
+      rv$incomplete_cases_y <- !all(complete_cases)
+      rv$incomplete_cases <- genes[which(!complete_cases)]
+      complete_cases <- which(complete_cases)
+      m_df <- m_df[complete_cases,]
+      genes <- genes[complete_cases]
+      m_df <- as.matrix(m_df)
 
       # rename rownames
       rownames(m_df) = genes
@@ -503,8 +513,18 @@ observeEvent(rv$runs,{
     title = NULL,
     div(style="font-size:150%",
       fluidRow(
+        column(
+          12, h3("DE analysis complete!")
+        ),
+        if(rv$incomplete_cases_y){
+          box(
+            title = NULL, background = "red", solidHeader = TRUE, width=12,
+            HTML(paste0("Non-numeric data were found for: ",paste0(rv$incomplete_cases, collapse = ", ")
+                        ,". Please double check your input data matrix file, revise it, re-upload and re-run the analysis for complete accuracy."
+                        ," Or proceed by omitting genes with non-numeric data."))
+          )
+        },
         column(12,
-           h3("DE analysis complete!"),
            HTML("<br>Download entire DE table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
                   and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.
                 <br>"
