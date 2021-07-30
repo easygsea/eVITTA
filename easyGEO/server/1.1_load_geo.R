@@ -716,6 +716,7 @@ observeEvent(input$search_geo, {
 
     req(!inherits(rv$gse_all, "try-error"))
     
+    
     if(rv$getgeo_mode){
       rv$platforms <- tabulate(rv$gse_all, annotation)
       rv$gpl_summary <- summarize_gpl(rv$gse_all)
@@ -809,7 +810,12 @@ study_type <- reactive({
     type <- gse_meta_temp$type
     return(list("type" = type, "channel_count" = channel_count))
   }else{
-    return(list("type" = rv$gpl_type[[match(input$plat, rv$platforms)]], "channel_count" = rv$gpl_count[[match(input$plat, rv$platforms)]]))
+    return(list(
+      # "type" = rv$gpl_type[[match(input$plat, rv$platforms)]],
+      # "channel_count" = rv$gpl_count[[match(input$plat, rv$platforms)]]
+      "type" = Meta(rv$gse_all)$type,
+      "channel_count" = length(GSMList(rv$gse_all))
+      ))
   }
 
 
@@ -843,8 +849,9 @@ output$study_type_feedback <- renderUI({
     if (channel_count != 1) {
       errors = errors +1
       msgs <- c(msgs,
-                paste0("<strong>CAUTION: </strong>Dataset has <strong>",channel_count, "</strong> channels, which is not currently supported.<br>
-                                  Only data in the first channel will be read.")
+                # paste0("<strong>CAUTION: </strong>Dataset has <strong>",channel_count, "</strong> channels, which is not currently supported.<br>
+                #                   Only data in the first channel will be read.")
+                paste0("<strong>CAUTION: </strong>Dataset has <strong>",channel_count, "</strong> channels. This function is in development.")
       )
       box_color = "yellow"
     }
@@ -872,7 +879,13 @@ output$select_geo_platform <- renderUI({
 
 
 observeEvent(input$geo_platform, {
-
+  
+  # if detected channel >1, reload GSE with GSEmatrix=F!
+  if (study_type()$channel_count>1){
+    rv$getgeo_mode <- F
+    rv$gse_all <- try(getGEO(input$geo_accession, GSEMatrix=F))
+  }
+  
   plat <- isolate(input$plat)
   rv$plat_id <- match(plat, rv$platforms)
   rv$platform <- plat
@@ -880,6 +893,7 @@ observeEvent(input$geo_platform, {
     if(rv$getgeo_mode){
       # initialize the count matrix (even if it's empty) with first row = Name
       exprs <- exprs(gse())
+      print(exprs)
     }else{
       rv$gsmlist <- Filter(function(gsm) {Meta(gsm)$platform_id==plat},GSMList(rv$gse_all))
       # get the probeset ordering
