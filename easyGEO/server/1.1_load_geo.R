@@ -814,7 +814,7 @@ study_type <- reactive({
       # "type" = rv$gpl_type[[match(input$plat, rv$platforms)]],
       # "channel_count" = rv$gpl_count[[match(input$plat, rv$platforms)]]
       "type" = Meta(rv$gse_all)$type,
-      "channel_count" = length(GSMList(rv$gse_all))
+      "channel_count" = Meta(GSMList(rv$gse_all)[[1]])$channel_count
       ))
   }
 
@@ -851,7 +851,8 @@ output$study_type_feedback <- renderUI({
       msgs <- c(msgs,
                 # paste0("<strong>CAUTION: </strong>Dataset has <strong>",channel_count, "</strong> channels, which is not currently supported.<br>
                 #                   Only data in the first channel will be read.")
-                paste0("<strong>CAUTION: </strong>Dataset has <strong>",channel_count, "</strong> channels. This function is in development.")
+                paste0("<strong>CAUTION: </strong>Dataset has <strong>",channel_count, "</strong> channels. This function is in development. <br>
+                       Data available for viewing only.")
       )
       box_color = "yellow"
     }
