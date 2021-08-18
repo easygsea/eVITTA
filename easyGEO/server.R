@@ -164,6 +164,7 @@ shinyServer(function(input, output, session) {
     
     source("server/functions.R", local = TRUE)
     source("server/server-variables.R", local = TRUE)
+    source("server/server-palettes.R", local = TRUE)
     
     
     ###### ---------------- NOTES ---------------- ######

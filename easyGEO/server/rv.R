@@ -49,6 +49,8 @@ rv <- reactiveValues(
 
   h_log="yes",h_zscore="yes",a_log="yes", # transformation of count data, yes or no
   h_y_name = "title", # heatmap's samples label by accession or title
+  h_cscale = "redBlueDiv", # default color scale
+  h_cscale_rev = F, # reverse colorscale
 
   gene_lists=NULL, # user input gene list
   gene_lists_v=NULL, # gene list for volcano and heatmap

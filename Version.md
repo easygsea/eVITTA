@@ -1,5 +1,12 @@
 # eVITTA update log
 
+### V1.2.13
+
+Aug 18, 2021 Added color scales to easyGEO's heatmap (Judith)
+
+- Added a variety of divergent and sequential colorscales, including colorblind-friendly options
+- Add auto install of scales package to easyVizR
+
 ### V1.2.12
 
 July 30, 2021 Added support for parsing two-channel microarray data in easyGEO (Judith)

@@ -36,6 +36,7 @@ if (!require('polyclip')){install.packages('polyclip')}
 if (!require('colorspace')){install.packages('colorspace')}
 if (!require('RColorBrewer')){install.packages('RColorBrewer')}
 if (!require('RRHO')){install.packages('RRHO')}
+if (!require('scales')){install.packages('scales')}
 
 library(shiny)
 library(ggplot2)
@@ -71,6 +72,7 @@ library(polyclip)
 library(colorspace)
 library(RColorBrewer)
 library(RRHO)
+library(scales)
 
 options(repos = BiocManager::repositories())
 futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger") # to suppress creation of log file
