@@ -894,7 +894,7 @@ observeEvent(input$geo_platform, {
     if(rv$getgeo_mode){
       # initialize the count matrix (even if it's empty) with first row = Name
       exprs <- exprs(gse())
-      print(exprs)
+      #print(exprs)
     }else{
       rv$gsmlist <- Filter(function(gsm) {Meta(gsm)$platform_id==plat},GSMList(rv$gse_all))
       # get the probeset ordering

@@ -1,5 +1,12 @@
 # eVITTA update log
 
+### V1.2.12
+
+July 30, 2021 Added support for parsing two-channel microarray data in easyGEO (Judith)
+
+- Changed parsing method for two-channel microarray data 
+- Data matrix and design matrix for two-channel microarrays can now be displayed in easyGEO
+
 ### V1.2.11
 
 July 20, 2021 Non-numeric data check in data matrix (Jean)
