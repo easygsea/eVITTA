@@ -554,6 +554,12 @@ hm_plot <- function(
     samples = colnames(counts)
     titlex = "Expression"
     
+    # prepare colorscale
+    # req(is.null(rv$h_cscale)==F)
+    useColorscale <- suppressWarnings(makePlotlyColorscale(get(rv$h_cscale), "even", rev=rv$h_cscale_rev))
+    # if divergent colorscale, center at 0; if sequential, no centering
+    if (rv$h_cscale %in% divScalesList){centerVal=0} else {centerVal=NULL}
+    
     # if applicable, log2 transform count matrix
     if(rv$h_log == "yes"){
       counts = log2(counts+1)
@@ -587,7 +593,10 @@ hm_plot <- function(
     
     fig <- plot_ly() %>%
       add_trace(data = dat, x = ~x, y = ~y, z = ~z, type = "heatmap",
-                colorscale  = cscale_zscore,zauto = T, zmid= 0, colorbar = list(title = list(text=titlex, side = "right")),
+                # colorscale  = cscale_zscore,
+                colorscale = useColorscale,
+                zauto = T, zmid= centerVal, 
+                colorbar = list(title = list(text=titlex, side = "right")),
                 text = textx,
                 hovertemplate = paste('Gene: <b>%{y}</b><br><br>',
                                       'Sample: %{x}<br>',

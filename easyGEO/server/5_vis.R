@@ -462,6 +462,42 @@ output$hplot_parameters <- renderUI({
                  title = "Label samples with author-supplied descriptive words", placement = "bottom", trigger = "hover"),
     
     tags$hr(style="border-color: grey;"),
+    
+    # options to change colorscale
+    fluidRow(
+      column(6,
+        selectInput(
+          inputId = "h_cscale",
+          label= HTML(paste0(
+            "<b>Select colorscale:</b>",
+            add_help("h_cscale_help", style="margin-left: 5px;"))
+          ),
+          choices = div_seq_ora_colorChoices,
+          selected = rv$h_cscale
+        )
+      ),
+      column(6,
+        radioGroupButtons(
+          inputId = "h_cscale_rev", 
+          label = HTML(paste0(
+            "<b>Reverse colorscale?</b>",
+            add_help("h_cscale_rev_help", style="margin-left: 5px;"))
+          ),
+          choices = list("Yes"=T,"No"=F),
+          selected = rv$h_cscale_rev
+        )
+      )
+    ),
+    bsTooltip("h_cscale_help", 
+              "<b>Divergent</b> colorscales are automatically centered at 0; <br><b>Sequential</b> colorscales are adjusted to the max/min of the data.", 
+              placement = "top"),
+    bsTooltip("h_cscale_rev_help", 
+              "Display a reversed version of the selected colorscale.", 
+              placement = "top"),
+
+    
+    tags$hr(style="border-color: grey;margin-top: 0px;"),
+    
     # options to extract matrix
     radioGroupButtons(
       "h_label_opt",
@@ -579,6 +615,10 @@ observeEvent(input$h_confirm,{
   # count data transformation
   rv$h_log = input$h_log
   rv$h_zscore = input$h_zscore
+  
+  # colorscale
+  rv$h_cscale = input$h_cscale
+  rv$h_cscale_rev = input$h_cscale_rev
   
   # genes label by
   rv$h_y_name = input$h_y_name

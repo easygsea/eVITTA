@@ -186,9 +186,10 @@ output$filtered_design_df <- DT::renderDataTable({
   
   # translate GSM column names to sample names on display
   if (input$fddf_show_rown == "Sample name" && rv$run_mode == "auto"){
-    rownames(df) <- translate_sample_names(rownames(df),  # translating from
+    rownames(df) <- make.unique(as.character(translate_sample_names(rownames(df),  # translating from
                                            rv$pdata[c("title", "geo_accession")],  # translation df
-                                           "title") # translating to
+                                           "title")), # translating to
+                                sep = "_")
   }
   df_no(df)
   # fwrite(df, file = "design_matrix.csv", row.names = TRUE)

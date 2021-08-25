@@ -964,16 +964,21 @@ filtered_data_df <- reactive({
 # --------- change identifiers according to GPL info --------------
 observeEvent(input$identifier,{
   dmdf <- rv$dmdf_o
-  
+  # print(dmdf)
+  # print(rv$identifiers_df)
   # rename dmdf gene identifiers according to selection
   identifier = isolate(input$identifier)
   if(identifier != "Default"){
-    genes <- rownames(rv$identifiers_df)
+    if (study_type()$channel_count==1){
+      genes <- rownames(rv$identifiers_df)
+    } else {
+      genes <- rv$identifiers_df$ID
+    }
     df <- rv$identifiers_df[,identifier,drop=F] %>%
       dplyr::mutate(NameN = genes) %>%
       dplyr::filter(complete.cases(.)) %>%
       dplyr::filter(.data[[identifier]] != "")
-
+    
     df <- df[!duplicated(df[[identifier]]),]
     
     # dmdf <- dmdf[dmdf[,"Name"] %in% df[["NameN"]],]

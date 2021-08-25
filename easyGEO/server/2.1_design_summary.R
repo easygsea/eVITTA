@@ -163,17 +163,34 @@ design_df <- reactive({
     # req(is.null(rv$gse_all)==F)
     # req(is.null(gse())==F)
     # req(is.null(rv$plat_id)==F)
- 
-    # detect how many char columns there are; if only 1, try to parse differently
-    detected_var_num <- nrow(data.frame(t(data.frame(rv$pdata) %>% dplyr::select(contains("characteristics"))))) #pData(phenoData(gse()))
-    # print(paste0("detected characteristics columns: ", detected_var_num))
-    if (detected_var_num>1){
-      char_list <- extract_char_list(oneline_guard=F) #gse(), 
-    } else {
-      char_list <- extract_char_list(oneline_guard=T) #gse(), 
-    }
     
-    char_mat <- char_mat_from_list(char_list)
+    if (study_type()$channel_count == 1){ 
+      charKeywords = c("characteristics")
+      
+      # detect how many char columns there are; if only 1, try to parse differently
+      gse_chars <- data.frame(t(data.frame(rv$pdata) %>% dplyr::select(contains(charKeywords))))
+      detected_var_num <- nrow(gse_chars) #pData(phenoData(gse()))
+      # print(paste0("detected characteristics columns: ", detected_var_num))
+      if (detected_var_num>1){
+        char_list <- extract_char_list(oneline_guard=F, keyword=charKeywords) #gse(), 
+      } else {
+        char_list <- extract_char_list(oneline_guard=T, keyword=charKeywords) #gse(), 
+      }
+      
+      char_mat <- char_mat_from_list(char_list)
+    } else { 
+      # retrieve design df directly for multi-channel datasets
+      charKeywords = c("characteristics","source_name","label_ch", "growth_protocol")
+      gse_chars <- data.frame(rv$pdata) %>% dplyr::select(contains(charKeywords))
+      rowNa <- rownames(gse_chars)
+      gse_chars <- as.data.frame(lapply(gse_chars, function(x){
+        x <- as.factor(unlist(x))
+        x
+      }))
+      rownames(gse_chars) <- rowNa
+      char_mat <- gse_chars
+    }
+
   } else{
     char_mat <- rv$fddf_o
   }
