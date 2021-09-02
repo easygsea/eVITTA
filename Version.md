@@ -1,5 +1,9 @@
 # eVITTA update log
 
+### V1.2.14
+
+Sep 2, 2021 Revised auto-installation of Bioconductor packages in all global files (Jean)
+
 ### V1.2.13
 
 Aug 18, 2021 Added color scales to easyGEO's heatmap (Judith)
@@ -11,7 +15,7 @@ Aug 18, 2021 Added color scales to easyGEO's heatmap (Judith)
 
 July 30, 2021 Added support for parsing two-channel microarray data in easyGEO (Judith)
 
-- Changed parsing method for two-channel microarray data 
+- Changed parsing method for two-channel microarray data
 - Data matrix and design matrix for two-channel microarrays can now be displayed in easyGEO
 
 ### V1.2.11

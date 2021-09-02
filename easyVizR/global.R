@@ -22,7 +22,6 @@ if (!require('data.table')){install.packages('data.table')}
 if (!require('waiter')){install.packages('waiter')}
 if (!require('shinythemes')){install.packages('shinythemes')}
 if (!require('shinyBS')){install.packages('shinyBS')}
-if (!require('BiocManager')){install.packages('BiocManager')}
 if (!require('shinyjs')){install.packages('shinyjs')}
 if (!require('rintrojs')){install.packages('rintrojs')}
 if (!require('visNetwork')){install.packages('visNetwork')}
@@ -35,7 +34,7 @@ if (!require('rgeos')){install.packages('rgeos')}
 if (!require('polyclip')){install.packages('polyclip')}
 if (!require('colorspace')){install.packages('colorspace')}
 if (!require('RColorBrewer')){install.packages('RColorBrewer')}
-if (!require('RRHO')){install.packages('RRHO')}
+if (!require('RRHO')){BiocManager::install('RRHO')}
 if (!require('scales')){install.packages('scales')}
 
 library(shiny)
