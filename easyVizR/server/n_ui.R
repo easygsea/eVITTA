@@ -5,7 +5,8 @@
 # ------------- display excluded data points (plot mode)
 plotmode_label <- "Show excluded datapoints in the background?"
 plotmode_explanation <- "Whether or not to plot excluded datapoints in the background."
-
+allowColorExcludedPoints_label <- "Apply color to excluded datapoints?"
+allowColorExcludedPoints_explanation <- "If YES, excluded datapoints that fulfill the threshold will be colored; if NO, all excluded datapoints will be rendered using the background color."
 
 # ------------- which data to display (logic)
 dflogic_explanation <- "Determine which data to show in this plot."

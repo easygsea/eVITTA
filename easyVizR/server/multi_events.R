@@ -45,7 +45,8 @@ observe({
     "nxyz_colormode","nxyz_sc_logic",
     "n_3ds_p","n_3ds_q","n_3ds_Stat",
     "nxyz_sc_size", "nxyz_sc_opacity", "nxyz_sc_outlinewidth", "nxyz_sc_outlinecolor",
-    "nxyz_sc_plotmode","nxyz_sc_dflogic"
+    "nxyz_sc_plotmode","nxyz_sc_dflogic",
+    "nxyz_sc_allowColorExcludedPoints"
   ))
   
   # single volcano
@@ -212,6 +213,8 @@ observeEvent(input$n_use_data,{
     rv$nxyz_sc_outlinecolor <- "white"
     rv$nxyz_sc_plotmode <- "Focus"
     rv$nxyz_sc_dflogic <- "Ins"
+    rv$nxyz_sc_allowColorExcludedPoints <- "no"
+    
     # ------------- rrho
     rv$rrho_x <- rv$nx_n[[1]]
     rv$rrho_y <- rv$nx_n[[2]]
