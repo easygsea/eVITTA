@@ -144,7 +144,7 @@ add_help <- function(id, color="#00c0ef", style=""){
   HTML(out)
 }
 
-# LABELS WITH CLICKABLE BS BUTTON 
+# LABELS WITH CLICKABLE BS BUTTON
 # construct a label with a clickable help bs button
 label_with_help_bttn <- function(label_text, bttn_id, bttn_status="info", bttn_style=""){
   p(style="margin-block-end: 2px;",
