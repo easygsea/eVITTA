@@ -1,4 +1,10 @@
 rv <- reactiveValues(
+  # by default, if the count matrix contains more than 500,000 data points, edgeR/DESeq2 pipeline is disabled
+  # if running easyGEO locally,
+  # set DE_sizeFilter as FALSE, or increase the maxSize to enable analysis with larger data sets
+  DE_sizeFilter = TRUE, maxSize = 200000,
+  
+  # ========= general RVs ======== #
   getgeo_mode = T, # switch to F if can't parse using GSEMatrix = TRUE
   gpl_type = list(), gpl_count = list(), gsmlist = list(),expr_nrow=0,
   run_mode = "auto", # auto for retrieval by GSE; manual for manual uploads
@@ -18,12 +24,23 @@ rv <- reactiveValues(
 
   fpta_ids = list(),
 
-  bcol1 = "#e6f4fc", runs = 0,
+  bcol1 = "#e6f4fc", bcol2 = "#ffffe6", runs = 0,
 
   run_btn_color="warning", run_btn_style="simple",
   dbtn_color="warning", dbtn_style="unite",
+  
+  # ========= DE customization ======== #
+  count_filter = "default", exp_unit = "cpm", exp_threshold = 1, exp_n = 3,
+  fbe_min_count = 10, fbe_min_total_count = 15, fbe_large_n = 10, fbe_min_prop = 0.7,
+  de_method = "default",
+  edger_norm_method = "TMM",
+  limma_norm_method = "quantile", limma_fit = "ls", limma_norm_method = "none",
+  limma_trend = TRUE, limma_robust = TRUE,
+  edger_trend_method = "locfit", edger_test = "glmQLFit", glmQLFit_robust = F,
+  deseq2_test = "Wald", deseq2_fit = "parametric", deseq2_sf = "ratio", deseq2_bp = F,
+  deseq2_shrink = "none",
 
-  # ========= filtered data from DEG run ======== #
+  # ========= filtered data from DE run ======== #
   min_n = 5, # maximum no of min samples for filtering
   samples_null = NULL, # missed samples
 
@@ -32,7 +49,7 @@ rv <- reactiveValues(
   deg_pdata = NULL, # pData for DEG run
   c_var = NULL, c_level = NULL, t_level = NULL, samples_c = NULL, samples_t = NULL,
 
-  # ========= parameters for DEG visualizations ======== #
+  # ========= parameters for DE visualizations ======== #
   plot_q=0.05, # adj.P.Val threshold for visualizations
   plot_logfc=1, # logfc threshold for visualization
   

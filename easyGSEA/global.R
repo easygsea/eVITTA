@@ -15,12 +15,12 @@ if (!require('gprofiler2')) install.packages('gprofiler2')
 if (!require('pathview')) BiocManager::install("pathview")
 if (!require('ggrepel')) install.packages('ggrepel')
 if (!require('scales')) install.packages('scales')
-if (!require('fgsea')) BiocManager::install('fgsea')
+if (!require('fgsea')) BiocManager::install("fgsea")
 if (!require('data.table')) install.packages('data.table')
 if (!require('RColorBrewer')) install.packages('RColorBrewer')
 if (!require('plotly')) install.packages('plotly')
 if (!require('htmltools')) install.packages('htmltools')
-if (!require('AnnotationDbi')) install.packages('AnnotationDbi')
+if (!require('AnnotationDbi')) BiocManager::install('AnnotationDbi')
 if (!require('waiter')) install.packages('waiter')
 if (!require('shinyalert')) install.packages('shinyalert')
 if (!require('shinydisconnect')) install.packages('shinydisconnect')
@@ -144,7 +144,7 @@ add_help <- function(id, color="#00c0ef", style=""){
   HTML(out)
 }
 
-# LABELS WITH CLICKABLE BS BUTTON 
+# LABELS WITH CLICKABLE BS BUTTON
 # construct a label with a clickable help bs button
 label_with_help_bttn <- function(label_text, bttn_id, bttn_status="info", bttn_style=""){
   p(style="margin-block-end: 2px;",

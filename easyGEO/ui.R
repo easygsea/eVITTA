@@ -55,6 +55,7 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   rintrojs::introjsUI(), # introjs
   shinyjs::useShinyjs(),# dependencies
+  shinyjs::extendShinyjs(text = jscode, functions = c("winprint", "collapse")),
   #shinyjs::extendShinyjs(text = "shinyjs.refresh = function() { location.reload(); }"),# extend by adding a refresh function
   use_waiter(), # dependencies
   waiter_show_on_load(tagList(spin_three_bounce(),h4(loadMsg)), color = "#1976D2"), # shows before anything else

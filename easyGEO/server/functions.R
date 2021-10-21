@@ -1,6 +1,50 @@
 # -------------------------------------------------------------------- #
 ####                      General data processing                   ####
 # -------------------------------------------------------------------- #
+# find overlapping terms between two vectors
+find_overlap <- function(x,db,tolower=T){
+  if(tolower){
+    return(x[tolower(x) %in% tolower(db)])
+  }else{
+    return(x[x %in% db])
+  }
+}
+
+# update RV value according to the input
+input2rv <- function(id){
+  if(!is.null(input[[id]])){
+    rv[[id]] <- input[[id]]
+  }
+}
+
+# pass value rv if input is.null
+ifelse_rv <- function(id){
+  if(is.null(input[[id]])){
+    rv[[id]]
+  }else{
+    input[[id]]
+  }
+}
+
+# pass value rv if input is.na
+ifelse_rv_na <- function(id){
+  if(is.na(input[[id]])){
+    rv[[id]]
+  }else{
+    input[[id]]
+  }
+}
+
+# update numeric RV only if min-max range
+update_numericRV <- function(
+  id, min = 0, max = Inf
+){
+  value <- ifelse_rv_na(id)
+  if(value < min){value <- rv[[id]]}else{rv[[id]] <- value}
+  if(value > max){value <- rv[[id]]}else{rv[[id]] <- value}
+  return(value)
+}
+
 # waiting message for withProgress if data processing takes too long
 # Example use: withProgress(message = wait_msg("Autodetecting and converting gene IDs..."),{})
 wait_msg <- function(msg, msg_base=" This might take a while. Please wait a minute. Thank you."){
@@ -106,6 +150,13 @@ progress_box <- function(id, prompt, msg, condition, bttn_id, bttn_text="Continu
   )
 }
 
+# a link icon, need to wrap in HTML
+# example: HTML(paste0("Visit eVITTA at ",link_icon("evitta_link","https://tau.cmmt.ubc.ca/eVITTA/")))
+link_icon <- function(id, link, title="Click to visit", icon="fas fa-external-link-alt", color="#00c0ef", style=""){
+  sprintf(
+    '<a href="%s" target="_blank"><i class="%s" id="%s" style = "color:%s"></i></a>'
+    ,link,icon,id,color)
+}
 
 # ------------- notification panel ------------------
 panel_null <- function(text = "Data available upon selection of a platform."){
@@ -280,23 +331,29 @@ firstcol_to_rown <- function(df){
 ####                   DE and visualization                         ####
 # -------------------------------------------------------------------- #
 
-# basic function to filter DEG table
+# basic function to filter DE table
 filter_df <- function(
   df = rv$deg,q_cutoff=input$tl_q,logfc_cutoff=input$tl_logfc
 ){
   # filter table according to q & logFC
   df %>%
-    dplyr::filter(adj.P.Val < q_cutoff, abs(logFC)>=logfc_cutoff)
+    dplyr::filter(get(fdr_column()) < q_cutoff, abs(get(fc_column()))>=logfc_cutoff)
 }
 
 # mutate digits to 2 decimals in DE table
-mutate_df <- function(df = filter_df()){
+mutate_df <- function(
+  df = filter_df()
+){
   genes = rownames(df)
   
-  df = df %>% 
-    dplyr::mutate_at(c("logFC","AveExpr","t","B"),function(x) round(x, digits = 1)) %>%
-    dplyr::mutate_at(c("P.Value","adj.P.Val"),function(x) scientific(x, digits = 2))
+  col_names <- colnames(df)
+  string1 <- find_overlap(col_names,string1_db)
+  string2 <- find_overlap(col_names,string2_db)
   
+  df <- df %>% 
+    dplyr::mutate_at(string1,function(x) round(x, digits = 1)) %>%
+    dplyr::mutate_at(string2,function(x) scientific(x, digits = 2))
+
   rownames(df) = genes
   
   return(df)
@@ -316,7 +373,7 @@ volcano_df <- function(
     mutate_if(is.numeric,  ~replace(., . == 0, 0.0000000001))
   
   # threshold by q & logfc cutoffs
-  threshold_OE <- df[["adj.P.Val"]] < q_cutoff & abs(df$logFC)>=logfc_cutoff
+  threshold_OE <- df[[fdr_column()]] < q_cutoff & abs(df[[fc_column()]])>=logfc_cutoff
   df$threshold <- threshold_OE
   
   # add rownames
@@ -339,9 +396,9 @@ volcano_basic <- function(
   }
   
   fig <- ggplot(df) +
-    geom_point(aes(x=logFC,y=-log10(.data[["adj.P.Val"]]),colour=threshold)) +
+    geom_point(aes(x=.data[[fc_column()]],y=-log10(.data[[fdr_column()]]),colour=threshold)) +
     scale_colour_manual(values = v_col) +
-    xlab("logFC") + ylab(paste0("-log10(adj.P.Val)")) +
+    xlab(fc_column()) + ylab(paste0("-log10(",fdr_column(),")")) +
     theme_minimal() +
     theme(legend.position="none",
           plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -359,7 +416,7 @@ volcano_basic <- function(
   if(text=="yes"){
     fig <- fig +
       geom_text_repel(data = df[which(df$threshold!="grey"),],size=5,
-                      aes(x=logFC,y=-log10(df[which(df$threshold!="grey"),][["adj.P.Val"]]),label=genelabels)
+                      aes(x=.data[[fc_column()]],y=-log10(df[which(df$threshold!="grey"),][[fdr_column()]]),label=genelabels)
                       ,max.overlaps = getOption("ggrepel.max.overlaps", default = 10)
       )
   }
@@ -384,12 +441,12 @@ volcano_ggplot <- function(
     no_up = rv$volcano_up
     
     # order df by top down regulations
-    df_ordered = df[order(df[["logFC"]],df[["adj.P.Val"]]),]
+    df_ordered = df[order(df[[fc_column()]],df[[fdr_column()]]),]
     y_genes = rownames(df_ordered)
     labels_down = rev(y_genes[1:no_down])
     
     # order df by top up regulations
-    df_ordered = df[order(-df[["logFC"]],df[["adj.P.Val"]]),]
+    df_ordered = df[order(-df[[fc_column()]],df[[fdr_column()]]),]
     y_genes = rownames(df_ordered)
     labels_up = y_genes[1:no_up]
     
@@ -442,14 +499,14 @@ volcano_plotly <- function(
 ){
   
   fig <- ggplot(df) +
-    geom_point(aes(x=logFC,y=-log(.data[["adj.P.Val"]]),colour=threshold,
+    geom_point(aes(x=.data[[fc_column()]],y=-log(.data[[fdr_column()]]),colour=threshold,
                    text=paste0(
                      "<b>",rownames(df),"</b>\n",
-                     "logFC=",signif(.data[["logFC"]],digits=3),"\n",
-                     "adj.P.Val=",signif(.data[["adj.P.Val"]],digits=3)
+                     fc_column(),"=",signif(.data[[fc_column()]],digits=3),"\n",
+                     fdr_column(),"=",signif(.data[[fdr_column()]],digits=3)
                    ))) +
     scale_colour_manual(values = c("grey","red")) +
-    xlab("logFC") + ylab(paste0("-log10(adj.P.Val)")) +
+    xlab(fc_column()) + ylab(paste0("-log10(",fdr_column(),")")) +
     theme_minimal() +
     theme(legend.position = "none",
           plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -475,7 +532,7 @@ hm_df <- function(
 ){
   # filter table according to q & logFC
   df = df %>%
-    dplyr::filter(adj.P.Val < q_cutoff, abs(logFC)>=logfc_cutoff)
+    dplyr::filter(get(fdr_column()) < q_cutoff, abs(get(fc_column()))>=logfc_cutoff)
   
   # genes
   genes = rownames(df)
@@ -488,12 +545,12 @@ hm_df <- function(
   rownames(df) = genes
   
   # order df according to logFC & FDR
-  # df = df[order(-df[["logFC"]],df[["adj.P.Val"]]),] 
-  df = df %>% dplyr::arrange(logFC)
+  # df = df[order(-df[[fc_column()]],df[[fdr_column()]]),] 
+  df = df %>% dplyr::arrange(across(matches(fc_column())))
   
   # original table if manual selection of genes
   if(rv$plot_label == "manual"){
-    df = rv$deg %>% dplyr::arrange(logFC)
+    df = rv$deg %>% dplyr::arrange(across(matches(fc_column())))
   }
   
   return(df)
@@ -521,12 +578,12 @@ hm_count <- function(
   
   if(rv$plot_label_hm == "top"){
     # top up regulated genes
-    genes_up = df %>% dplyr::arrange(desc(logFC)) %>% #df[order(-df[["logFC"]],df[["adj.P.Val"]]),]
+    genes_up = df %>% dplyr::arrange(desc(across(matches(fc_column())))) %>% #df[order(-df[[fc_column()]],df[[fdr_column()]]),]
       head(.,n=rv$volcano_up) %>%
       rownames(.)
     
     # top down regulated genes
-    genes_down = df %>% dplyr::arrange(logFC) %>% #df[order(df[["logFC"]],df[["adj.P.Val"]]),]
+    genes_down = df %>% dplyr::arrange(across(matches(fc_column()))) %>% #df[order(df[[fc_column()]],df[[fdr_column()]]),]
       head(.,n=rv$volcano_down) %>%
       rownames(.)
     
@@ -584,11 +641,11 @@ hm_plot <- function(
     # genes and their logFC & FDR info
     genes = rownames(counts)
     df = df[match(genes,rownames(df)),]
-    logFCs = rep(signif(df[["logFC"]],digits = 3),ncol(counts))
-    FDRs = rep(signif(df[["adj.P.Val"]],digits = 3),ncol(counts))
+    logFCs = rep(signif(df[[fc_column()]],digits = 3),ncol(counts))
+    FDRs = rep(signif(df[[fdr_column()]],digits = 3),ncol(counts))
     
     # combine into text
-    textx = paste0("logFC: ",logFCs,"<br>adj.P.Val: ",FDRs)
+    textx = paste0(fc_column(),": ",logFCs,"<br>",fdr_column(),": ",FDRs)
     
     
     fig <- plot_ly() %>%

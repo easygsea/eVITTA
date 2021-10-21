@@ -5,16 +5,17 @@ if (!require('shinydashboard')) {install.packages('shinydashboard')}
 if (!require('shinyWidgets')) {install.packages('shinyWidgets')}
 if (!require('shinyBS')) {install.packages('shinyBS')}
 if (!require('shinyjs')) {install.packages('shinyjs')}
-if (!require('GEOquery')) {install.packages('GEOquery')}
+if (!require('GEOquery')) {BiocManager::install('GEOquery')}
 if (!require('tidyverse')) {install.packages('tidyverse')}
 if (!require('data.table')) {install.packages('data.table')}
 if (!require('shinyjs')) {install.packages('shinyjs')}
 if (!require('DT')) {install.packages('DT')}
-if (!require('limma')) {install.packages('limma')}
-if (!require('edgeR')) {install.packages('edgeR')}
+if (!require('limma')) {BiocManager::install('limma')}
+if (!require('edgeR')) {BiocManager::install('edgeR')}
+if (!require('DESeq2')) {BiocManager::install('DESeq2')}
+if (!require('apeglm')) {BiocManager::install('apeglm')}
 if (!require('ggrepel')) {install.packages('ggrepel')}
 if (!require('plotly')) {install.packages('plotly')}
-if (!require('BiocManager')) {install.packages('BiocManager')}
 if (!require('waiter')) {install.packages('waiter')}
 if (!require('statmod')) {install.packages('statmod')}
 if (!require('scales')) {install.packages('scales')}
@@ -35,10 +36,11 @@ library(shinyjs)
 library(GEOquery)
 library(tidyverse)
 library(data.table)
-library(shinyjs)
 library(DT)
 library(limma)
 library(edgeR)
+library(DESeq2)
+library(apeglm)
 library(ggrepel)
 library(plotly)
 library(BiocManager)
@@ -56,6 +58,12 @@ library(RColorBrewer)
 options(repos = BiocManager::repositories())
 
 source("global/functions.R")
+
+# js expansion to collapse box if not collapsed
+jscode <- "shinyjs.collapse = function(boxid) {
+if (!document.getElementById(boxid).parentElement.className.includes('collapsed-box')) {
+$('#' + boxid).closest('.box').find('[data-widget=collapse]').click();
+}}"
 
 # --------------- Initialize introjs -------------------
 intropath <- paste0(getwd(), "/intro/")
