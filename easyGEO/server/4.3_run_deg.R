@@ -4,7 +4,7 @@
 output$confirm_run <- renderUI({
   if(input$ui_select == "sp"){
     req(length(input$sp_select_levels)==2 & rv$matrix_ready==T & input$sp_select_var != input$sp_batch_col)
-    # req(length(input$samples_c_deg)>0 && length(input$samples_t_deg)>0)
+    req(length(input$samples_c_deg)>0 && length(input$samples_t_deg)>0)
     btn_ui <- actionBttn("run_deg", "4.3. Run DE Analysis!",
                          icon = icon("play-circle"), 
                          style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",

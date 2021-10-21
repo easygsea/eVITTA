@@ -1,5 +1,9 @@
 # eVITTA update log
 
+### V1.3.1
+
+Oct 21, 2021 easyGEO run button req fix (Jean)
+
 ### V1.3.0
 
 Oct 21, 2021 Constructed customizable gene filtering, and adjustable DE analysis pipelines with limma, edgeR, and DESeq2 (Jean)
