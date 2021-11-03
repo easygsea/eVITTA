@@ -417,7 +417,7 @@ volcano_basic <- function(
     fig <- fig +
       geom_text_repel(data = df[which(df$threshold!="grey"),],size=5,
                       aes(x=.data[[fc_column()]],y=-log10(df[which(df$threshold!="grey"),][[fdr_column()]]),label=genelabels)
-                      ,max.overlaps = getOption("ggrepel.max.overlaps", default = 10)
+                      ,max.overlaps = getOption("ggrepel.max.overlaps", default = 20)
       )
   }
   
@@ -499,7 +499,7 @@ volcano_plotly <- function(
 ){
   
   fig <- ggplot(df) +
-    geom_point(aes(x=.data[[fc_column()]],y=-log(.data[[fdr_column()]]),colour=threshold,
+    geom_point(aes(x=.data[[fc_column()]],y=-log10(.data[[fdr_column()]]),colour=threshold,
                    text=paste0(
                      "<b>",rownames(df),"</b>\n",
                      fc_column(),"=",signif(.data[[fc_column()]],digits=3),"\n",
@@ -513,7 +513,7 @@ volcano_plotly <- function(
           axis.title = element_text(size = rel(1.25)))
   
   if(rv$show_padj){
-    fig <- fig + geom_hline(yintercept=-log(q_cutoff), linetype=rv$v_threshold_line)
+    fig <- fig + geom_hline(yintercept=-log10(q_cutoff), linetype=rv$v_threshold_line)
   }
   if(rv$show_logfc){
     fig <- fig + geom_vline(xintercept=c(-logfc_cutoff,logfc_cutoff), linetype=rv$v_threshold_line)
