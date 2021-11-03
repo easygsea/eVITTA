@@ -13,11 +13,11 @@ output$confirm_run <- renderUI({
     req(rv$matrix_ready==T)
     req(is.null(input$samples_c_deg2)==F & is.null(input$samples_t_deg2)==F)
     btn_ui <- actionBttn("run_deg2", "4.3. Run DE Analysis!",
-                         icon = icon("play-circle"), 
+                         icon = icon("play-circle"),
                          style=rv$run_btn_style, color=rv$run_btn_color, size = "lg",
                          block = TRUE)
   }
-  
+
   div(
     btn_ui
     ,fluidRow(box(
@@ -40,7 +40,7 @@ output$de_par <- renderUI({
     n_samples <- length(input$samples_c_deg2) + length(input$samples_t_deg2)
   }
   n_total <- nrow(filtered_data_df()) * n_samples
-  
+
   # method options
   if(input$data_type == "raw" & (rv$DE_sizeFilter & n_total <= rv$maxSize)){
     de_methods <- c(
@@ -51,7 +51,7 @@ output$de_par <- renderUI({
   }else{
     de_methods <- c("limma (default)" = "default")
   }
-  
+
   fluidRow(
     conditionalPanel(
       'input.data_type == "normalized"',
@@ -420,11 +420,11 @@ observeEvent(input$deseq2_shrink,{input2rv("deseq2_shrink")})
 # ------------ UI: DE table -----------
 output$run_deg_ui <- renderUI({
   req(is.null(rv$deg)==F)
-  
+
   box(id="degs",
     width = 12, title = span(HTML("<b>4.4.</b>"),icon("book-open"),HTML("Review & download DE analysis results")), status = "primary",
-    
-    
+
+
       fluidRow(
         column(
           width = 12,
@@ -437,13 +437,13 @@ output$run_deg_ui <- renderUI({
                            ,size="md")
             )
             ,br(),
-            HTML("<br><br>Download entire DE table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
+            HTML("<br><br>Download entire DE table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis
                   and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons."
                  ),
-            
-            
+
+
             # tags$hr(style="border-color:grey;"),
-            # 
+            #
             # fluidRow(
             #   column(5,
             #     h4("Filtered DEG table")
@@ -452,7 +452,7 @@ output$run_deg_ui <- renderUI({
             #     uiOutput("tl_summary")
             #   )
             # ),
-            # 
+            #
             # fluidRow(
             #   column(5,
             #     # adj.P.Val cutoff
@@ -471,7 +471,7 @@ output$run_deg_ui <- renderUI({
             #       rv$plot_logfc,min=0
             #     )
             #   ),
-            #   column(4, 
+            #   column(4,
             #          # download table
             #          downloadButton("tl_table","Download filtered table"),
             #          # download list
@@ -510,14 +510,14 @@ observeEvent(input$run_deg,{
   rv$gene_lists = NULL
   rv$deg = NULL
 
-    
+
   # selected samples
   samples_c = input$samples_c_deg
   samples_t = input$samples_t_deg
   min_n <- find_min_n(samples_c,samples_t)
-  
+
   msg = wait_msg(paste0("Running DE analysis on ",length(samples_c)," vs. ",length(samples_t)," samples..."))
-  
+
   if((is.null(samples_c)||length(samples_c)<2) && (is.null(samples_t)||length(samples_t)<2)){
     shinyalert("Select at least 2 control and 2 experimental samples.")
   }else if(is.null(samples_c)||length(samples_c)<2){
@@ -533,21 +533,21 @@ observeEvent(input$run_deg,{
       # 1.1) filter design matrix according to the selected two levels in selected variable
       # selected variable
       c_var = input$sp_select_var
-      
+
       # selected two levels
       c_var_levels = input$sp_select_levels
-      
+
       # selected variable - control level
       c_level = input$sp_select_levels_base
-      
+
       # selected variable - experimental level
       t_level = c_var_levels[!c_var_levels %in% c_level]
-      
+
       # filter design matrix according to selections
       p_df1 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_c)
       p_df2 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_t)
       p_df = rbind(p_df1,p_df2)
-      
+
       # 1.2) batch effects
       batch_var = input$sp_batch_col
       batch = NULL
@@ -555,23 +555,23 @@ observeEvent(input$run_deg,{
       if(batch_var!="na"){
         batch = factor(p_df[[batch_var]])
       }
-      
+
       # 1.3) create treatment factor
       # treatment effects
       treatment = factor(p_df[[c_var]])
       treatment = relevel(treatment, ref = c_level)
-      
+
       # 1.4) design matrix
       if(is.null(batch)){
         design1 <- model.matrix(~treatment)
       }else{
         design1 <- model.matrix(~batch+treatment)
       }
-      
+
       ## 2) filter count matrix according to variable selection
       # filtered samples
       samples = rownames(p_df)
-      
+
       # titles of filtered samples
       if(rv$run_mode == "auto"){
         samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
@@ -580,10 +580,10 @@ observeEvent(input$run_deg,{
       }
       # original count matrix
       m_df = filtered_data_df() %>% as.data.frame(.)
-      
+
       # genes
       genes = m_df$Name %>% toupper(.)
-      
+
       # as numeric matrix
       m_df = m_df %>% dplyr::select(one_of(samples))
       m_df <- setcolorder(m_df, as.character(samples))
@@ -598,7 +598,7 @@ observeEvent(input$run_deg,{
 
       # rename rownames
       rownames(m_df) = genes
-      
+
       # remove duplicates
       duplicates = duplicated(genes)
       m_df = m_df[!duplicates, ]
@@ -606,25 +606,25 @@ observeEvent(input$run_deg,{
       ## 3) run edgeR and/or limma
       # 3.1) determine if raw or normalized counts
       raw_or_norm = input$data_type
-      
+
       y <- run_DE(m_df,design1,min_n,raw_or_norm,p_df, batch_var, c_var, c_level)
-      
+
       # export count table
       if(raw_or_norm == "raw"){
         rv$deg_counts = cpm(y)
       }else{
         rv$deg_counts = y$counts
       }
-      
+
       # export other data
       rv$c_var = c_var
       rv$c_level = c_level
       rv$t_level = t_level
       rv$samples_c = samples_c
       rv$samples_t = samples_t
-      
+
       rv$deg_pdata = p_df
-      
+
       rv$runs = rv$runs + 1
     })
   }
@@ -643,9 +643,9 @@ observeEvent(input$run_deg2,{
   min_n <- find_min_n(samples_c,samples_t)
 
   msg = wait_msg(paste0("Running DE analysis on ",length(samples_c)," vs. ",length(samples_t)," samples..."))
-  
+
   overlap = samples_c[samples_c %in% samples_t]
-  
+
   if(length(overlap)>0){
     if(rv$run_mode == "auto"){
       overlap_names = translate_sample_names(overlap,rv$pdata[c("title", "geo_accession")],  "title")
@@ -669,42 +669,42 @@ observeEvent(input$run_deg2,{
       ## 1) create design matrix
       # original design matrix
       p_df = rv$fddf
-      
+
       # 1.1) filter design matrix according to selections
       p_df1 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_c)
       p_df2 = p_df %>% dplyr::filter(rownames(p_df) %in% samples_t)
       p_df = rbind(p_df1,p_df2)
-      
+
       # 1.2) create treatment factor
       # treatment effects
       treatment = factor(c(rep("c",nrow(p_df1)),rep("t",nrow(p_df2))))
       treatment = relevel(treatment, ref = "c")
-      
+
       # 1.3) design matrix
       design1 <- model.matrix(~treatment)
-      
+
       ## 2) filter count matrix according to variable selection
       # filtered samples
       samples = rownames(p_df)
-      
+
       # titles of filtered samples
       if(rv$run_mode == "auto"){
         samples_title = translate_sample_names(samples,rv$pdata[c("title", "geo_accession")],  "title")
       } else {
         samples_title = samples
       }
-      
+
       # original count matrix
       m_df = filtered_data_df() %>% as.data.frame(.)
 
       # genes
       genes = m_df$Name %>% toupper(.)
-      
+
       # as numeric matrix
       m_df = m_df %>% dplyr::select(one_of(samples))
 
       m_df <- setcolorder(m_df, as.character(samples))
-      
+
       m_df <- suppressWarnings(apply(m_df, 2, as.numeric))
       complete_cases <- complete.cases(m_df)
       rv$incomplete_cases_y <- !all(complete_cases)
@@ -716,7 +716,7 @@ observeEvent(input$run_deg2,{
 
       # rename rownames
       rownames(m_df) = genes
-      
+
       # remove duplicates
       duplicates = duplicated(genes)
       m_df = m_df[!duplicates, ]
@@ -724,26 +724,26 @@ observeEvent(input$run_deg2,{
       ## 3) run edgeR and/or limma
       # 3.1) determine if raw or normalized counts
       raw_or_norm = input$data_type
-      
+
       p_dff <- data.frame(treatment = treatment, row.names = rownames(p_df))
       batch_var <- "na"; c_var <- "treatment"; c_level <- "c"
       y <- run_DE(m_df,design1,min_n,raw_or_norm,p_dff, batch_var, c_var, c_level)
-      
+
       # export count table
       if(raw_or_norm == "raw"){
         rv$deg_counts = cpm(y)
       }else{
         rv$deg_counts = y$counts
       }
-      
+
       # export other data
       rv$c_level = "Control"
       rv$t_level = "Experimental"
       rv$samples_c = samples_c
       rv$samples_t = samples_t
-      
+
       rv$deg_pdata = p_df
-      
+
       rv$runs = rv$runs + 1
     })
   }
@@ -752,9 +752,9 @@ observeEvent(input$run_deg2,{
 # -------------render DEG Table, download------------
 output$ui_deg_table <- renderUI({
   req(is.null(rv$deg)==F)
-  
+
   # df = filter_df()
-  # 
+  #
   # if(nrow(df)<1){
   #   msg = paste0("No significant results found at <b>adj.P.Val < ",input$tl_q,"</b> and <b>logFC >= ", input$tl_logfc
   #                ,"</b>. <br><br> Please adjust the filtering criteria above.")
@@ -772,10 +772,10 @@ output$ui_deg_table <- renderUI({
 # render DEG table if filtered row >= 1
 output$deg_table <- DT::renderDataTable({
   req(is.null(rv$deg)==F)
-  
+
   df <- mutate_df(df=rv$deg)
   df_no(df,scrollY = "185px")
-})  
+})
 #}, options = list(pageLength = 5))
 
 # download DEG table
@@ -799,7 +799,7 @@ output$tl_summary <- renderUI({
   df = filter_df()
   n_after = nrow(df)
   n_total = nrow(rv$deg)
-  
+
   fluidRow(
     box(
       background = "teal", width = 12, align = "center",
@@ -809,7 +809,7 @@ output$tl_summary <- renderUI({
       )
     )
   )
-  
+
 })
 
 # download DEG table
@@ -848,7 +848,7 @@ observeEvent(rv$runs,{
           )
         },
         column(12,
-           HTML("<br>Download entire DE table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis 
+           HTML("<br>Download entire DE table and proceed to <a href='http://tau.cmmt.ubc.ca/eVITTA/easyGSEA/' target='_blank'><u><b>easyGSEA</b></u></a> for gene set enrichment analysis
                   and/or <a href='http://tau.cmmt.ubc.ca/eVITTA/easyVizR/' target='_blank'><u><b>easyVizR</b></u></a> for multiple comparisons.
                 <br>"
            )

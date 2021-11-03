@@ -1,5 +1,12 @@
 # eVITTA update log
 
+### V1.3.2
+
+Nov 03, 2021 easyGEO & easyGSEA function improvement (Jean)
+
+* Volcano log transformation specified as log10 & geom_text_repel max.overlaps set to 20
+* easyGSEA added "...1" as a default gene column due to update in read_delim
+
 ### V1.3.1
 
 Oct 21, 2021 easyGEO run button req fix (Jean)
