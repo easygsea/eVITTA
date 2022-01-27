@@ -12,6 +12,8 @@ if (!require('shinyjs')) {install.packages('shinyjs')}
 if (!require('DT')) {install.packages('DT')}
 if (!require('limma')) {BiocManager::install('limma')}
 if (!require('edgeR')) {BiocManager::install('edgeR')}
+if (!require('DESeq2')) {BiocManager::install('DESeq2')}
+if (!require('apeglm')) {BiocManager::install('apeglm')}
 if (!require('ggrepel')) {install.packages('ggrepel')}
 if (!require('plotly')) {install.packages('plotly')}
 if (!require('waiter')) {install.packages('waiter')}
@@ -34,10 +36,11 @@ library(shinyjs)
 library(GEOquery)
 library(tidyverse)
 library(data.table)
-library(shinyjs)
 library(DT)
 library(limma)
 library(edgeR)
+library(DESeq2)
+library(apeglm)
 library(ggrepel)
 library(plotly)
 library(BiocManager)
@@ -55,6 +58,12 @@ library(RColorBrewer)
 options(repos = BiocManager::repositories())
 
 source("global/functions.R")
+
+# js expansion to collapse box if not collapsed
+jscode <- "shinyjs.collapse = function(boxid) {
+if (!document.getElementById(boxid).parentElement.className.includes('collapsed-box')) {
+$('#' + boxid).closest('.box').find('[data-widget=collapse]').click();
+}}"
 
 # --------------- Initialize introjs -------------------
 intropath <- paste0(getwd(), "/intro/")

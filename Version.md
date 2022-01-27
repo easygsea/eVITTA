@@ -1,5 +1,25 @@
 # eVITTA update log
 
+### V1.3.2
+
+Nov 03, 2021 easyGEO & easyGSEA function improvement (Jean)
+
+* Volcano log transformation specified as log10 & geom_text_repel max.overlaps set to 20
+* easyGSEA added "...1" as a default gene column due to update in read_delim
+
+### V1.3.1
+
+Oct 21, 2021 easyGEO run button req fix (Jean)
+
+### V1.3.0
+
+Oct 21, 2021 Constructed customizable gene filtering, and adjustable DE analysis pipelines with limma, edgeR, and DESeq2 (Jean)
+
+- Three methods to filter lowly expressed genes: default, as described in the manuscript; filterByExpr by edgeR; and custom, where the user defines the expression unit, the number of expression units, and the number of samples that pass the expression threshold criteria.
+- limma (default): applies to both raw and normalized counts, as well as array data. Allows normalization on both raw counts (edgeR TMM (default), TMMwsp, RLE, upperquantile) and normalized/array data (limma quantile (default), scale, cyclicloess). Adjustable fitting methods (ls, robust) and fitting parameter refinement (fitting-trend, robosified against outlier sample variances).
+- edgeR: applies to raw counts only. Allows raw count normalization (TMM (default), TMMwsp, RLE, upperquantile); dispersion trend estimation (locfit (default), movingage, loess, locfit.mixed); DE test with both glmQLFit (w/ or w/o robust prior QL estimation) and exactTest.
+- DESeq2: applies to raw counts only. Allows DE test with both Wald (default) and LRT methods; adjustable fit types (parametric, local, mean, glmGamPoi); size factor estimation (ratio, poscounts, iterate); zero-mean normal prior application (betaPrior); and log2 fold change shrinkage (apeglm, ashr, normal).
+
 ### V1.2.14
 
 Sep 2, 2021 Revised auto-installation of Bioconductor packages in all global files (Jean)

@@ -144,7 +144,7 @@ add_help <- function(id, color="#00c0ef", style=""){
   HTML(out)
 }
 
-# LABELS WITH CLICKABLE BS BUTTON 
+# LABELS WITH CLICKABLE BS BUTTON
 # construct a label with a clickable help bs button
 label_with_help_bttn <- function(label_text, bttn_id, bttn_status="info", bttn_style=""){
   p(style="margin-block-end: 2px;",
@@ -187,7 +187,7 @@ species_names_go <- list(
 )
 
 # ===================== Column names & match for DEG/RNK =====================
-col_gene_names <- c("id","gene","symbol","genesymbol","gene_id","geneid","genename","name","x1","x")
+col_gene_names <- c("id","gene","symbol","genesymbol","gene_id","geneid","genename","name","x1","x","...1")
 col_fc_names <- c("logfc","fc","log2_fold_change","log2foldchange")
 col_p_names <- c("p","pval","pvalue","p.value","p_value")
 col_fdr_names <- c("fdr","padj","adj.p.val","q_value")

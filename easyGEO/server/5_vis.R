@@ -107,11 +107,13 @@ output$ui_vis <- renderUI({
 #---------------volcano: parameters------------------
 # volcano parameters UI
 output$vplot_parameters <- renderUI({
+  fdrs <- c("padj","fc")
+  names(fdrs) <- c(fdr_column(),fc_column())
   wellPanel(
     # adj.P.Val cutoff
     sliderTextInput(
       inputId = "v_q_cutoff",
-      label = "Threshold of adj.P.Val",
+      label = paste0("Threshold of ",fdr_column()),
       choices = cutoff_slider,
       selected = rv$plot_q, grid=T, force_edges=T,
       width = "90%"
@@ -119,7 +121,7 @@ output$vplot_parameters <- renderUI({
     # |logFC| cutoff
     numericInput(
       "v_logfc_cutoff",
-      "Threshold of |logFC|",
+      paste0("Threshold of |",fc_column(),"|"),
       rv$plot_logfc,min=0
     )
     
@@ -130,8 +132,7 @@ output$vplot_parameters <- renderUI({
         checkboxGroupButtons(
           inputId = "show_padj_logfc",
           label = "Plot line(s)",
-          choices = c("adj.P.Val"="padj", 
-                      "|logFC|"="fc"),
+          choices = fdrs,
           selected = rv$show_padj_logfc, 
           size="s",
           checkIcon = list(
@@ -161,7 +162,7 @@ output$vplot_parameters <- renderUI({
                  title = "In Static, notable genes can be highlighted with colors and labelled with names"
                  , placement = "right", trigger = "hover"),
     radioTooltip(id = "volcano_mode", choice = "interactive",
-                 title = "In Interactive, genes that pass the defined adj.P.Val and |logFC| thresholds are highlighted in red. Hover labels show information on gene names, logFC and adj.P.Val"
+                 title = paste0("In Interactive, genes that pass the defined ",fdr_column()," and |",fc_column(),"| thresholds are highlighted in red. Hover labels show information on gene names, ",fc_column()," and ",fdr_column(),".")
                  , placement = "right", trigger = "hover"),
     # static/interactive UIs
     uiOutput("v_static"),
@@ -216,10 +217,10 @@ output$v_static <- renderUI({
       ),
       # tooltips for radioGroupbuttons
       radioTooltip(id = "v_label_opt", choice = "threshold", 
-                   title = "Genes are labeled in blue (downregulation) and red (upregulation) according to the defined logFC and adj.P.Val thresholds"
+                   title = paste0("Genes are labeled in blue (downregulation) and red (upregulation) according to the defined ",fc_column()," and ",fdr_column()," thresholds")
                    , placement = "top", trigger = "hover"),
       radioTooltip(id = "v_label_opt", choice = "top",
-                   title = "Genes within the top # of |logFC|"
+                   title = paste0("Genes within the top # of |",fc_column(),"|")
                    , placement = "top", trigger = "hover"),
       radioTooltip(id = "v_label_opt", choice = "manual",
                    title = "Manually label your genes of interest"
@@ -307,7 +308,7 @@ observeEvent(input$volcano_confirm,{
   rv$v_success = NULL
   # confirm that the numericInputs are not NAs
   rv$error_par <- 0
-  rv$error_par <- check_numericInput_na("v_logfc_cutoff", rv$error_par, "Threshold of |logFC|")
+  rv$error_par <- check_numericInput_na("v_logfc_cutoff", rv$error_par, paste0("Threshold of |",fc_column(),"|"))
   req(rv$error_par == 0)
   # update thresholds and volcano mode
   rv$plot_q = input$v_q_cutoff
@@ -419,7 +420,7 @@ output$hplot_parameters <- renderUI({
     # adj.P.Val cutoff
     sliderTextInput(
       inputId = "h_q_cutoff",
-      label = "Threshold of adj.P.Val",
+      label = paste0("Threshold of ",fdr_column()),
       choices = cutoff_slider,
       selected = rv$plot_q, grid=T, force_edges=T,
       width = "90%"
@@ -427,7 +428,7 @@ output$hplot_parameters <- renderUI({
     # |logFC| cutoff
     numericInput(
       "h_logfc_cutoff",
-      "Threshold of |logFC|",
+      paste0("Threshold of |",fc_column(),"|"),
       rv$plot_logfc,min=0
     ),
     # transform count data
@@ -507,9 +508,9 @@ output$hplot_parameters <- renderUI({
     ),
     # tooltips for radioGroupbuttons
     radioTooltip(id = "h_label_opt", choice = "threshold", 
-                 title = "Extract genes using adj.P.Val and |logFC| thresholds as defined above", placement = "top", trigger = "hover"),
+                 title = paste0("Extract genes using ",fdr_column()," and |",fc_column(),"| thresholds as defined above"), placement = "top", trigger = "hover"),
     radioTooltip(id = "h_label_opt", choice = "top",
-                 title = "Extract genes within the top # of |logFC|", placement = "top", trigger = "hover"),
+                 title = paste0("Extract genes within the top # of |",fc_column(),"|"), placement = "top", trigger = "hover"),
     radioTooltip(id = "h_label_opt", choice = "manual",
                  title = "Manually enter and extract your genes of interest", placement = "top", trigger = "hover"),
     
@@ -606,7 +607,7 @@ observeEvent(input$h_confirm,{
   rv$h_success = NULL
   # confirm that the numericInputs are not NAs
   rv$error_par <- 0
-  rv$error_par <- check_numericInput_na("h_logfc_cutoff", rv$error_par, "Threshold of |logFC|")
+  rv$error_par <- check_numericInput_na("h_logfc_cutoff", rv$error_par, paste0("Threshold of |",fc_column(),"|"))
   req(rv$error_par == 0)
   # update thresholds and volcano mode
   rv$plot_q = input$h_q_cutoff
@@ -673,11 +674,11 @@ output$hm_area <- renderUI({
       ". Please reduce the number of data points by adjusting <b>thresholds</b> and/or <b>Options to extract genes</b> in the right panel."
     )
   }else if(dfmi == 0){
-    HTML(
-      "<br>No gene found to be differentially expressed at thresholds of adj.P.Val < ",rv$plot_q
-      ," and |logFC| &GreaterEqual; ",rv$plot_logfc
-      ,". Adjust adj.P.Val and |logFC| on the right panel."
-    )
+    HTML(paste0(
+      "<br>No gene found to be differentially expressed at thresholds of ",fdr_column()," < ",rv$plot_q
+      ," and |",fc_column(),"| &GreaterEqual; ",rv$plot_logfc
+      ,". Adjust ",fdr_column()," and |",fc_column(),"| on the right panel."
+    ))
   }else{
     plotlyOutput("heatmap_plot",width = "100%", height = "650px")
   }
@@ -773,12 +774,13 @@ output$a_stats <- renderTable({
   }
   
   req(rv$a_gene)
-  
-  cols = c("logFC","P.Value","adj.P.Val")
+  col_names <- colnames(rv$deg)
+  string2 <- find_overlap(col_names,string2_db)
+  cols = c(fc_column(),string2)
   
   rv$deg %>% dplyr::filter(rownames(.) == rv$a_gene) %>%
     dplyr::select(one_of(cols)) %>%
-    dplyr::mutate_at(c("P.Value","adj.P.Val"), function(x) scientific(x, digits=3))
+    dplyr::mutate_at(string2, function(x) scientific(x, digits=3))
 })
 
 # violin/box plot
