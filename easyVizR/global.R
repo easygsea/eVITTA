@@ -72,6 +72,7 @@ library(colorspace)
 library(RColorBrewer)
 library(RRHO)
 library(scales)
+library(GGally)
 
 options(repos = BiocManager::repositories())
 futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger") # to suppress creation of log file

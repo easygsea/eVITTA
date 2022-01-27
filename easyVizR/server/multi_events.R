@@ -69,6 +69,7 @@ observe({
     "p_or_q_vis","vis_percent","vis_percent_cutoff","combined_k"
   ))
   
+  
 })
 
 
@@ -100,6 +101,40 @@ observe({
     rv$n_sharedcols <- NULL
     rv$n_sharedrows <- NULL
   }
+})
+
+
+
+# Parsa's stuff:
+# reactive({
+#   corrExcelStyleLetters <- c(LETTERS, unlist(sapply(seq_along(LETTERS), function(i){paste0(LETTERS[i], LETTERS)})))
+#   corrDataSetN <- paste("DataSet", corrExcelStyleLetters[1:length(rv$nx_n)], sep="")
+#   corrDatasetRepresentation <- data.frame(datasetName = rv$nx_n, abbreviaton = corrDataSetN, displayName = paste(corrDataSetN, rv$nx_n, sep=" = "))
+#   rownames(corrDatasetRepresentation) <- rv$nx_n
+# })
+
+
+observeEvent(input$corrReplot, {
+  rv$corrVarSelected <- input$corrVarSelected
+  rv$corrDataOptions <- input$corrDataOptions
+  rv$corrPlotType <- input$corrPlotType
+  rv$corrColorBy <- input$corrColorBy
+  rv$corrShowStats <- input$corrShowStats
+  rv$corrUpper <- input$corrUpper
+  rv$corrDiag <- input$corrDiag
+  rv$corrLower <- input$corrLower
+})
+
+observeEvent(input$corrUpper, {
+  rv$corrUpperV <- input$corrUpper
+})
+
+observeEvent(input$corrDiag, {
+  rv$corrDiagV <- input$corrDiag
+})
+
+observeEvent(input$corrLower, {
+  rv$corrLowerV <- input$corrLower
 })
 
 
@@ -242,6 +277,32 @@ observeEvent(input$n_use_data,{
     rv$vis_percent <- "jaccard"
     rv$vis_percent_cutoff <- 0.25
     rv$combined_k <- 0.5
+    
+    
+    
+    # ---------------  correlogram options
+    rv$corrExcelStyleLetters <- c(LETTERS, unlist(sapply(seq_along(LETTERS), function(i){paste0(LETTERS[i], LETTERS)})))
+    rv$corrDataSetN <- paste("DataSet", rv$corrExcelStyleLetters[1:length(rv$nx_n)], sep="")
+    rv$corrDatasetRepresentation <- data.frame(datasetName = rv$nx_n, abbreviaton = rv$corrDataSetN, displayName = paste(rv$corrDataSetN, rv$nx_n, sep=" = "))
+    # rownames(rv$corrDatasetRepresentation) <- rv$nx_n
+
+    rv$corrVarSelected <- rv$corrDatasetRepresentation$datasetName[1:3]
+    rv$corrDataOptions <- "All data"
+    rv$corrPlotType <- "Heatmap"
+    rv$corrColorBy <- "rValue"
+    rv$corrShowStats <- FALSE
+    rv$corrUpper <- "cor"
+    rv$corrDiag <- "densityDiag"
+    rv$corrLower <- "points"
+    rv$corrUpperV <- "cor"
+    rv$corrDiagV <- "densityDiag"
+    rv$corrLowerV <- "points"
+  
+    
+    
+    
+    
+    
     
     
     #  --------------- initialize intersection
