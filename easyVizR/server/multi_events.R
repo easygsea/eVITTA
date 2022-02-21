@@ -109,7 +109,7 @@ observe({
 # reactive({
 #   corrExcelStyleLetters <- c(LETTERS, unlist(sapply(seq_along(LETTERS), function(i){paste0(LETTERS[i], LETTERS)})))
 #   corrDataSetN <- paste("DataSet", corrExcelStyleLetters[1:length(rv$nx_n)], sep="")
-#   corrDatasetRepresentation <- data.frame(datasetName = rv$nx_n, abbreviaton = corrDataSetN, displayName = paste(corrDataSetN, rv$nx_n, sep=" = "))
+#   corrDatasetRepresentation <- data.frame(datasetName = rv$nx_n, abbreviation = corrDataSetN, displayName = paste(corrDataSetN, rv$nx_n, sep=" = "))
 #   rownames(corrDatasetRepresentation) <- rv$nx_n
 # })
 
@@ -283,7 +283,7 @@ observeEvent(input$n_use_data,{
     # ---------------  correlogram options
     rv$corrExcelStyleLetters <- c(LETTERS, unlist(sapply(seq_along(LETTERS), function(i){paste0(LETTERS[i], LETTERS)})))
     rv$corrDataSetN <- paste("DataSet", rv$corrExcelStyleLetters[1:length(rv$nx_n)], sep="")
-    rv$corrDatasetRepresentation <- data.frame(datasetName = rv$nx_n, abbreviaton = rv$corrDataSetN, displayName = paste(rv$corrDataSetN, rv$nx_n, sep=" = "))
+    rv$corrDatasetRepresentation <- data.frame(datasetName = rv$nx_n, abbreviation = rv$corrDataSetN, displayName = paste(rv$corrDataSetN, rv$nx_n, sep=" = "))
     # rownames(rv$corrDatasetRepresentation) <- rv$nx_n
 
     rv$corrVarSelected <- rv$corrDatasetRepresentation$datasetName[1:3]

@@ -190,7 +190,7 @@ output$replotButton <- renderUI({
   
   rownames(rv$corrDatasetRepresentation) <- rv$corrDatasetRepresentation$datasetName
   corrDatasetRepresentation <- rv$corrDatasetRepresentation
-  namedListOfDatasets <- corrDatasetRepresentation$abbreviaton
+  namedListOfDatasets <- corrDatasetRepresentation$abbreviation
   names(namedListOfDatasets) <- corrDatasetRepresentation$datasetName
   selected <- input$corrVarSelected
   names(selected) <- namedListOfDatasets[selected]
@@ -211,7 +211,7 @@ output$replotButton <- renderUI({
     colsWanted <- to_plot_df[grepl("\\<Stat", names(to_plot_df))]
   }
   
-  colnames(colsWanted) <- corrDatasetRepresentation$abbreviaton
+  colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
   
   print(nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum)
   
@@ -260,7 +260,7 @@ draw_correlogram <- function(selected,
   
   
   # Function starts here
-  namedListOfDatasets <- corrDatasetRepresentation$abbreviaton
+  namedListOfDatasets <- corrDatasetRepresentation$abbreviation
   names(namedListOfDatasets) <- corrDatasetRepresentation$datasetName
   names(selected) <- namedListOfDatasets[selected]
   
@@ -279,7 +279,7 @@ draw_correlogram <- function(selected,
     colsWanted <- to_plot_df[grepl("\\<Stat", names(to_plot_df))]
   }
   
-  colnames(colsWanted) <- corrDatasetRepresentation$abbreviaton
+  colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
   
   if (plotType == "Heatmap") {
     if (colorBy == "rValue") {

@@ -75,7 +75,7 @@ init_demo <- function(){
   # Parsa's stuff
   rv$corrExcelStyleLetters <- c(LETTERS, unlist(sapply(seq_along(LETTERS), function(i){paste0(LETTERS[i], LETTERS)})))
   rv$corrDataSetN <- paste("DataSet", rv$corrExcelStyleLetters[1:length(rv$nx_n)], sep="")
-  rv$corrDatasetRepresentation <- data.frame(datasetName = rv$nx_n, abbreviaton = rv$corrDataSetN, displayName = paste(rv$corrDataSetN, rv$nx_n, sep=" = "))
+  rv$corrDatasetRepresentation <- data.frame(datasetName = rv$nx_n, abbreviation = rv$corrDataSetN, displayName = paste(rv$corrDataSetN, rv$nx_n, sep=" = "))
   # rownames(rv$corrDatasetRepresentation) <- rv$nx_n
 
   rv$corrVarSelected <- rv$corrDatasetRepresentation$datasetName[1:3]
