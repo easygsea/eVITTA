@@ -74,7 +74,16 @@ output$correlogram <- renderUI({
              # 
              #   
              # ),
-             actionButton(inputId = "corrReplot", label = "Replot!")
+             
+             # conditionalPanel(
+             #   condition = "input.corrPlotType == 'Heatmap'",
+             
+             uiOutput("replotButton")
+             
+             # actionButton(inputId = "corrReplot", label = "Replot!")
+               # disabled(
+               #   
+               # )
            )
     ),
     column(8,
@@ -119,12 +128,12 @@ output$selectPlotMode <- renderUI({
                  pickerInput(
                    "corrUpper",
                    NULL,
-                   choices = c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+                   choices = c('points', 'smooth', 'density', 'cor', 'blank'),
                    selected = rv$corrUpperV,
                    # selected = 'cor',
                    multiple = FALSE,
                    choicesOpt = list(
-                     disabled = c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank') %in% c(rv$corrLowerV)
+                     disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(rv$corrLowerV)
                      # disabled = c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank') %in% c(input$lower)
                    )
                  )
@@ -152,19 +161,87 @@ output$selectPlotMode <- renderUI({
                  pickerInput(
                    "corrLower",
                    NULL,
-                   choices = c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+                   choices = c('points', 'smooth', 'density', 'cor', 'blank'),
                    selected = rv$corrLowerV,
                    # selected = 'points',
                    multiple = FALSE,
                    choicesOpt = list(
-                     disabled = c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank') %in% c(rv$corrUpperV)
-                     # disabled = c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank') %in% c(input$upper)
+                     disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(rv$corrUpperV)
+                     # disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(input$upper)
                    )
                  )
              )
       )
     )
   )
+})
+
+output$replotButton <- renderUI({
+  hardLimit = 3000000; # deactivate replotButton
+  softLimit = 1500000; # warn the user of the runtime of the correlation
+  # hardLimit = 35000; # deactivate replotButton
+  # softLimit = 20000; # warn the user of the runtime of the correlation
+  
+  correlogramModesRuntimeFactor <- list(blank = 0,
+                                        cor = 2, 
+                                        points = 3,
+                                        smooth = 3,
+                                        density = 5)
+  
+  rownames(rv$corrDatasetRepresentation) <- rv$corrDatasetRepresentation$datasetName
+  corrDatasetRepresentation <- rv$corrDatasetRepresentation
+  namedListOfDatasets <- corrDatasetRepresentation$abbreviaton
+  names(namedListOfDatasets) <- corrDatasetRepresentation$datasetName
+  selected <- input$corrVarSelected
+  names(selected) <- namedListOfDatasets[selected]
+  
+  runTimeFactorSum = as.numeric(correlogramModesRuntimeFactor[input$corrUpper]) + as.numeric(correlogramModesRuntimeFactor[input$corrLower])
+  
+  df_n <- rv$df_n
+  
+  
+  to_plot_df <- get_df_by_dflogic(selected, dflogic = rv$nxy_sc_dflogic,
+                                  gls = n_ins_gls(),
+                                  user_criteria = rv$ins_criteria,
+                                  starting_df = df_n_basic())
+                                  
+  if (input$corrDataOptions == "All data") {
+    colsWanted <- df_n[grepl("\\<Stat", names(df_n))]
+  } else if (input$corrDataOptions == "Intersection only") {
+    colsWanted <- to_plot_df[grepl("\\<Stat", names(to_plot_df))]
+  }
+  
+  colnames(colsWanted) <- corrDatasetRepresentation$abbreviaton
+  
+  print(nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum)
+  
+  if (input$corrPlotType == "Heatmap") {
+    actionButton(inputId = "corrReplot", label = "Replot!")
+  } else {
+    if (nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum > hardLimit) {
+      # Hard limit
+      div(
+        disabled(
+          actionButton(inputId = "corrReplot", label = "Replot!")
+        ),
+        HTML(paste("<br><text style='color:Red'>Correlation too large! Either deselect datasets or change the settings of 'upper' and 'lower'.<br>
+                   Settings in order from simplest to most complex: blank, cor, points, smooth, density."))
+      )
+    } else if (nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum > softLimit){
+      # Soft limit
+      div(
+        actionButton(inputId = "corrReplot", label = "Replot!"),
+        HTML(paste("<br><text style='color:Orange'>Warning: Correlation may take too long"))
+      )
+    } else {
+      actionButton(inputId = "corrReplot", label = "Replot!")
+    }
+  }
+  
+  
+  
+  
+  
 })
 
 
