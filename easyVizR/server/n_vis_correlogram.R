@@ -37,7 +37,7 @@ output$correlogram <- renderUI({
                  "<b>Plot Type:</b>",
                  add_help("corrPlotType_help", style="margin-left: 5px;"))
                ),
-               choices = c("Heatmap", "Correllogram"),
+               choices = c("Heatmap", "correlogram"),
                selected = rv$corrPlotType,
                inline = FALSE,
                width = NULL,
@@ -98,7 +98,7 @@ output$correlogram <- renderUI({
                        "&#34;Intersection only&#34; draws a correlogram/heatmap of the datasets excluding the filtered-out rows",  
                        placement = "top"),
              bsTooltip("corrPlotType_help", 
-                       "Choose between heatmap and correllogram", 
+                       "Choose between heatmap and correlogram", 
                        placement = "top"),
              bsTooltip("corrShowStats_help", 
                        "Display the correlation value on each heatmap tile", 
@@ -142,7 +142,7 @@ output$correlogramDisplay <- renderUI({
 })
 
 output$selectPlotMode <- renderUI({
-  req(input$corrPlotType == 'Correllogram')
+  req(input$corrPlotType == 'correlogram')
   div(
     fluidRow(
       column(12,
@@ -328,7 +328,7 @@ draw_correlogram <- function(selected,
       # To Do
       # ggcorr(colsWanted[names(selected)], label = showStats, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
     }
-  } else if (plotType == "Correllogram") {
+  } else if (plotType == "correlogram") {
     ggpairs(colsWanted[names(selected)], title=NULL,
             upper = list(continuous = upper),
             lower = list(continuous = lower),
