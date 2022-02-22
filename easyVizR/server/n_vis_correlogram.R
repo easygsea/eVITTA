@@ -18,7 +18,11 @@ output$correlogram <- renderUI({
              ),
              radioButtons(
                "corrDataOptions",
-               "Data Options:",
+               # "Data Options:",
+               label = HTML(paste0(
+                 "<b>Data Options:</b>",
+                 add_help("corrDataOptions_help", style="margin-left: 5px;"))
+               ),
                choices = c("All data", "Intersection only"),
                selected = rv$corrDataOptions,
                inline = FALSE,
@@ -28,7 +32,11 @@ output$correlogram <- renderUI({
              ),
              radioButtons(
                "corrPlotType",
-               "Plot Type:",
+               # "Plot Type:",
+               label= HTML(paste0(
+                 "<b>Plot Type:</b>",
+                 add_help("corrPlotType_help", style="margin-left: 5px;"))
+               ),
                choices = c("Heatmap", "Correllogram"),
                selected = rv$corrPlotType,
                inline = FALSE,
@@ -37,22 +45,36 @@ output$correlogram <- renderUI({
                choiceValues = NULL
              ),
              
+             
              conditionalPanel(
                condition = "input.corrPlotType == 'Heatmap'",
                
-               materialSwitch(
-                 "corrShowStats",
-                 label = HTML(paste("<strong>Show Stats:</strong>")),
-                 value = rv$corrShowStats,
-                 status = "default",
-                 right = FALSE,
-                 inline = FALSE,
-                 width = NULL
+               fluidRow(
+                 column(12,
+                    div(
+                       style="display: inline-block;",
+                       materialSwitch(
+                         "corrShowStats",
+                         label = HTML(paste("<b>Show Stats:</b>")),
+                         # label= HTML(paste0(
+                         #   "<b>Show Stats:</b>",
+                         #   add_help("corrShowStats_help", style="margin-left: 5px;"))
+                         # ),
+                         value = rv$corrShowStats,
+                         status = "default",
+                         right = FALSE,
+                         inline = FALSE,
+                         width = NULL
+                       )
+                    ),
+                   # add_help("corrDataOptions_help", style="margin-left: 5px;"),
+                   div(style="display: inline-block;", add_help("corrShowStats_help", style="margin-left: 5px;")),
+                 )
                ),
                
                fluidRow(
                  column(12,
-                        div(style="display: inline-block; vertical-align:middle; width: 5em",HTML(paste("<strong>Color By:</strong>"))),
+                        div(style="display: inline-block; vertical-align:middle; width: 5em",HTML(paste("<b>Color By:</b>"))),
                         div(style="display: inline-block;",
                             pickerInput(
                               "corrColorBy",
@@ -61,29 +83,30 @@ output$correlogram <- renderUI({
                               selected = rv$corrColorBy,
                               multiple = FALSE,
                             )
-                        )
+                        ),
+                        div(style="display: inline-block;", add_help("corrColorBy_help", style="margin-left: 5px;")),
                  )
                )
                
              ),
              uiOutput("selectPlotMode"),
-             # conditionalPanel(
-             #   condition = "input.corrPlotType == 'Correllogram'",
-             #   
-             #   
-             # 
-             #   
-             # ),
              
-             # conditionalPanel(
-             #   condition = "input.corrPlotType == 'Heatmap'",
+             uiOutput("replotButton"),
              
-             uiOutput("replotButton")
+             # You can move these elsewhere in this scope
+             bsTooltip("corrDataOptions_help", 
+                       "&#34;Intersection only&#34; draws a correlogram/heatmap of the datasets excluding the filtered-out rows",  
+                       placement = "top"),
+             bsTooltip("corrPlotType_help", 
+                       "Choose between heatmap and correllogram", 
+                       placement = "top"),
+             bsTooltip("corrShowStats_help", 
+                       "Display the correlation value on each heatmap tile", 
+                       placement = "top"),
+             bsTooltip("corrColorBy_help", 
+                       "Correlate with rValue (Pearson) or rhoValue (Spearman)", 
+                       placement = "top"),
              
-             # actionButton(inputId = "corrReplot", label = "Replot!")
-               # disabled(
-               #   
-               # )
            )
     ),
     column(8,
@@ -137,7 +160,8 @@ output$selectPlotMode <- renderUI({
                      # disabled = c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank') %in% c(input$lower)
                    )
                  )
-             )
+             ),
+             div(style="display: inline-block;", add_help("corrUpper_help", style="margin-left: 5px;"))
       )
     ),
     fluidRow(
@@ -151,7 +175,8 @@ output$selectPlotMode <- renderUI({
                    selected = rv$corrDiagV,
                    multiple = FALSE
                  )
-             )
+             ),
+             div(style="display: inline-block;", add_help("corrDiag_help", style="margin-left: 5px;"))
       )
     ),
     fluidRow(
@@ -170,9 +195,19 @@ output$selectPlotMode <- renderUI({
                      # disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(input$upper)
                    )
                  )
-             )
+             ),
+             div(style="display: inline-block;", add_help("corrLower_help", style="margin-left: 5px;"))
       )
-    )
+    ),
+    bsTooltip("corrUpper_help", 
+              "Select the plot type of the upper-right section of the correlogram", 
+              placement = "top"),
+    bsTooltip("corrDiag_help", 
+              "Select the plot type of the diagonal line in the centre of the correlogram",
+              placement = "top"),
+    bsTooltip("corrLower_help", 
+              "Select the plot type of the lower-left section of the correlogram", 
+              placement = "top"),
   )
 })
 
@@ -195,7 +230,11 @@ output$replotButton <- renderUI({
   selected <- input$corrVarSelected
   names(selected) <- namedListOfDatasets[selected]
   
-  runTimeFactorSum = as.numeric(correlogramModesRuntimeFactor[input$corrUpper]) + as.numeric(correlogramModesRuntimeFactor[input$corrLower])
+  if (is.null(input$corrUpper) | is.null(input$corrLower)) {
+    runTimeFactorSum = 0
+  } else {
+    runTimeFactorSum = as.numeric(correlogramModesRuntimeFactor[input$corrUpper]) + as.numeric(correlogramModesRuntimeFactor[input$corrLower])
+  }
   
   df_n <- rv$df_n
   
@@ -212,9 +251,7 @@ output$replotButton <- renderUI({
   }
   
   colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
-  
-  print(nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum)
-  
+
   if (input$corrPlotType == "Heatmap") {
     actionButton(inputId = "corrReplot", label = "Replot!")
   } else {
