@@ -212,10 +212,10 @@ output$selectPlotMode <- renderUI({
 })
 
 output$replotButton <- renderUI({
-  hardLimit = 3000000; # deactivate replotButton
-  softLimit = 1500000; # warn the user of the runtime of the correlation
-  # hardLimit = 35000; # deactivate replotButton
-  # softLimit = 20000; # warn the user of the runtime of the correlation
+  # hardLimit = 3000000; # deactivate replotButton
+  # softLimit = 1500000; # warn the user of the runtime of the correlation
+  hardLimit = 35000; # deactivate replotButton
+  softLimit = 20000; # warn the user of the runtime of the correlation
   
   correlogramModesRuntimeFactor <- list(blank = 0,
                                         cor = 2, 
@@ -258,17 +258,27 @@ output$replotButton <- renderUI({
     if (nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum > hardLimit) {
       # Hard limit
       div(
-        disabled(
-          actionButton(inputId = "corrReplot", label = "Replot!")
-        ),
-        HTML(paste("<br><text style='color:Red'>Correlation too large! Either deselect datasets or change the settings of 'upper' and 'lower'.<br>
-                   Settings in order from simplest to most complex: blank, cor, points, smooth, density."))
+        actionButton(inputId = "corrReplot", label = "Replot!"),
+        div(
+          style="display: inline-block; margin-top: 1.5rem",
+          box(
+            title = NULL, background = "red", solidHeader = TRUE, width=12,
+            HTML("<text style='color:white'>Correlation too large! Either deselect datasets or change the settings of 'upper' and 'lower'.<br>
+                         Settings in order from simplest to most complex: blank, cor, points, smooth, density.")
+          )
+        )
       )
     } else if (nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum > softLimit){
       # Soft limit
       div(
         actionButton(inputId = "corrReplot", label = "Replot!"),
-        HTML(paste("<br><text style='color:Orange'>Warning: Correlation may take too long"))
+        div(
+          style="display: inline-block; margin-top: 1.5rem",
+          box(
+            title = NULL, background = "orange", solidHeader = TRUE, width=12,
+            HTML("<text style='color:white'>Warning: Correlation may take too long")
+          )
+        )
       )
     } else {
       actionButton(inputId = "corrReplot", label = "Replot!")
@@ -404,7 +414,10 @@ output$corrDownloadPlot <- downloadHandler(
   filename = "plot.png" ,
   content = function(file) {
     #ggsave(p(), filename = file)
+    selected <- rv$corrVarSelected
+    
     png(file)
+    print(draw_correlogram(selected, rv$corrDatasetRepresentation, df_n))
     dev.off()
   }
 )
