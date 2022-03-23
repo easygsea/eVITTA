@@ -118,7 +118,7 @@ observeEvent(input$corrReplot, {
   rv$corrVarSelected <- input$corrVarSelected
   rv$corrDataOptions <- input$corrDataOptions
   rv$corrPlotType <- input$corrPlotType
-  rv$corrColorBy <- input$corrColorBy
+  rv$corrCorrelateBy <- input$corrCorrelateBy
   rv$corrShowStats <- input$corrShowStats
   rv$corrUpper <- input$corrUpper
   rv$corrDiag <- input$corrDiag
@@ -289,7 +289,7 @@ observeEvent(input$n_use_data,{
     rv$corrVarSelected <- rv$corrDatasetRepresentation$datasetName[1:3]
     rv$corrDataOptions <- "All data"
     rv$corrPlotType <- "Heatmap"
-    rv$corrColorBy <- "rValue"
+    rv$corrCorellateBy <- "rValue"
     rv$corrShowStats <- FALSE
     rv$corrUpper <- "cor"
     rv$corrDiag <- "densityDiag"

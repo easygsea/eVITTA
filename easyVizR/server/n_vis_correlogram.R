@@ -51,17 +51,17 @@ output$correlogram <- renderUI({
                
                fluidRow(
                  column(12,
-                        div(style="display: inline-block; vertical-align:middle; width: 7em",HTML(paste("<b>Color By:</b>", add_help("corrColorBy_help", style="margin-left: 5px;")))),
+                        div(style="display: inline-block; vertical-align:middle; width: 8em",HTML(paste("<b>Correlate By:</b>", add_help("corrCorrelateBy_help", style="margin-left: 5px;")))),
                         div(style="display: inline-block;",
                             pickerInput(
-                              "corrColorBy",
+                              "corrCorrelateBy",
                               NULL,
                               choices = c('rValue', 'rhoValue'),
-                              selected = rv$corrColorBy,
+                              selected = rv$corrCorrelateBy,
                               multiple = FALSE,
                             )
                         ),
-                        # div(style="display: inline-block;", add_help("corrColorBy_help", style="margin-left: 5px;")),
+                        # div(style="display: inline-block;", add_help("corrCorrelateBy_help", style="margin-left: 5px;")),
                  )
                ),
                fluidRow(
@@ -102,7 +102,7 @@ output$correlogram <- renderUI({
              bsTooltip("corrShowStats_help", 
                        "Display the correlation value on each heatmap tile", 
                        placement = "top"),
-             bsTooltip("corrColorBy_help", 
+             bsTooltip("corrCorrelateBy_help", 
                        "Correlate with rValue (Pearson) or rhoValue (Spearman)", 
                        placement = "top"),
              
@@ -316,7 +316,7 @@ draw_correlogram <- function(selected,
                              varSelected = rv$corrVarSelected,
                              dataOptions = rv$corrDataOptions,
                              plotType = rv$corrPlotType,
-                             colorBy = rv$corrColorBy,
+                             correlateBy = rv$corrCorrelateBy,
                              showStats = rv$corrShowStats,
                              upper = rv$corrUpper,
                              lower = rv$corrLower,
@@ -346,12 +346,12 @@ draw_correlogram <- function(selected,
   colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
   
   if (plotType == "Heatmap") {
-    if (colorBy == "rValue") {
+    if (correlateBy == "rValue") {
       # Defaults to pearson correlation
       ggcorr(colsWanted[names(selected)], label = showStats, label_round = 3)
-    } else if (colorBy == "rhoValue") {
+    } else if (correlateBy == "rhoValue") {
       ggcorr(colsWanted[names(selected)], label = showStats, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
-    } else if (colorBy == "logPValue") {
+    } else if (correlateBy == "logPValue") {
       # To Do
       # ggcorr(colsWanted[names(selected)], label = showStats, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
     }
