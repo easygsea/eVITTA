@@ -55,7 +55,7 @@ output$correlogram <- renderUI({
                        style="display: inline-block;",
                        materialSwitch(
                          "corrShowStats",
-                         label = HTML(paste("<b>Show Stats:</b>")),
+                         label = HTML(paste("<b>Show Stats:</b> ", add_help("corrShowStats_help", style="margin-left: 5px;"))),
                          # label= HTML(paste0(
                          #   "<b>Show Stats:</b>",
                          #   add_help("corrShowStats_help", style="margin-left: 5px;"))
@@ -68,13 +68,13 @@ output$correlogram <- renderUI({
                        )
                     ),
                    # add_help("corrDataOptions_help", style="margin-left: 5px;"),
-                   div(style="display: inline-block;", add_help("corrShowStats_help", style="margin-left: 5px;")),
+                   # div(style="display: inline-block;", add_help("corrShowStats_help", style="margin-left: 5px;")),
                  )
                ),
                
                fluidRow(
                  column(12,
-                        div(style="display: inline-block; vertical-align:middle; width: 5em",HTML(paste("<b>Color By:</b>"))),
+                        div(style="display: inline-block; vertical-align:middle; width: 7em",HTML(paste("<b>Color By:</b>", add_help("corrColorBy_help", style="margin-left: 5px;")))),
                         div(style="display: inline-block;",
                             pickerInput(
                               "corrColorBy",
@@ -84,7 +84,7 @@ output$correlogram <- renderUI({
                               multiple = FALSE,
                             )
                         ),
-                        div(style="display: inline-block;", add_help("corrColorBy_help", style="margin-left: 5px;")),
+                        # div(style="display: inline-block;", add_help("corrColorBy_help", style="margin-left: 5px;")),
                  )
                )
                
@@ -146,7 +146,7 @@ output$selectPlotMode <- renderUI({
   div(
     fluidRow(
       column(12,
-             div(style="display: inline-block;vertical-align:middle; width: 5em;",HTML(paste("<strong>Upper:</strong>"))),
+             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Upper:</strong>", add_help("corrUpper_help", style="margin-left: 5px;")))),
              div(style="display: inline-block; width: 8em;",
                  pickerInput(
                    "corrUpper",
@@ -160,13 +160,13 @@ output$selectPlotMode <- renderUI({
                      # disabled = c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank') %in% c(input$lower)
                    )
                  )
-             ),
-             div(style="display: inline-block;", add_help("corrUpper_help", style="margin-left: 5px;"))
+             )
+             # div(style="display: inline-block;", add_help("corrUpper_help", style="margin-left: 5px;"))
       )
     ),
     fluidRow(
       column(12,
-             div(style="display: inline-block;vertical-align:middle; width: 5em;",HTML(paste("<strong>Diagonal:</strong>"))),
+             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Diagonal:</strong>", add_help("corrDiag_help", style="margin-left: 5px;")))),
              div(style="display: inline-block; width: 8em;",
                  pickerInput(
                    "corrDiag",
@@ -175,13 +175,13 @@ output$selectPlotMode <- renderUI({
                    selected = rv$corrDiagV,
                    multiple = FALSE
                  )
-             ),
-             div(style="display: inline-block;", add_help("corrDiag_help", style="margin-left: 5px;"))
+             )
+             # div(style="display: inline-block;", add_help("corrDiag_help", style="margin-left: 5px;"))
       )
     ),
     fluidRow(
       column(12,
-             div(style="display: inline-block;vertical-align:middle; width: 5em;",HTML(paste("<strong>Lower:</strong>"))),
+             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Lower:</strong>", add_help("corrLower_help", style="margin-left: 5px;")))),
              div(style="display: inline-block; width: 8em;",
                  pickerInput(
                    "corrLower",
@@ -195,8 +195,8 @@ output$selectPlotMode <- renderUI({
                      # disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(input$upper)
                    )
                  )
-             ),
-             div(style="display: inline-block;", add_help("corrLower_help", style="margin-left: 5px;"))
+             )
+             # div(style="display: inline-block;", add_help("corrLower_help", style="margin-left: 5px;"))
       )
     ),
     bsTooltip("corrUpper_help", 
@@ -258,25 +258,43 @@ output$replotButton <- renderUI({
     if (nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum > hardLimit) {
       # Hard limit
       div(
-        actionButton(inputId = "corrReplot", label = "Replot!"),
-        div(
-          style="display: inline-block; margin-top: 1.5rem",
-          box(
-            title = NULL, background = "red", solidHeader = TRUE, width=12,
-            HTML("<text style='color:white'>Correlation too large! Either deselect datasets or change the settings of 'upper' and 'lower'.<br>
-                         Settings in order from simplest to most complex: blank, cor, points, smooth, density.")
+        fluidRow(
+          column(12,
+             disabled(
+               actionButton(inputId = "corrReplot", label = "Replot!")
+             )
+          )
+        ),
+        fluidRow(
+          column(12,
+             div(
+               style="display: inline-block; margin-top: 1.5rem",
+               box(
+                 title = NULL, background = "red", solidHeader = TRUE, width=12,
+                 HTML("<text style='color:white'>Correlation too large! Either deselect datasets or change the settings of 'upper' and 'lower'.<br>
+                     Settings in order from simplest to most complex: blank, cor, points, smooth, density.")
+               )
+             )
           )
         )
       )
     } else if (nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum > softLimit){
       # Soft limit
       div(
-        actionButton(inputId = "corrReplot", label = "Replot!"),
-        div(
-          style="display: inline-block; margin-top: 1.5rem",
-          box(
-            title = NULL, background = "orange", solidHeader = TRUE, width=12,
-            HTML("<text style='color:white'>Warning: Correlation may take too long")
+        fluidRow(
+          column(12,
+               actionButton(inputId = "corrReplot", label = "Replot!")
+          )
+        ),
+        fluidRow(
+          column(12,
+             div(
+               style="display: inline-block; margin-top: 1.5rem",
+               box(
+                 title = NULL, background = "orange", solidHeader = TRUE, width=12,
+                 HTML("<text style='color:white'>Warning: Correlation may take too long")
+               )
+             )
           )
         )
       )
