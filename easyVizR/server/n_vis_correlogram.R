@@ -51,6 +51,21 @@ output$correlogram <- renderUI({
                
                fluidRow(
                  column(12,
+                        div(style="display: inline-block; vertical-align:middle; width: 7em",HTML(paste("<b>Color By:</b>", add_help("corrColorBy_help", style="margin-left: 5px;")))),
+                        div(style="display: inline-block;",
+                            pickerInput(
+                              "corrColorBy",
+                              NULL,
+                              choices = c('rValue', 'rhoValue'),
+                              selected = rv$corrColorBy,
+                              multiple = FALSE,
+                            )
+                        ),
+                        # div(style="display: inline-block;", add_help("corrColorBy_help", style="margin-left: 5px;")),
+                 )
+               ),
+               fluidRow(
+                 column(12,
                     div(
                        style="display: inline-block;",
                        materialSwitch(
@@ -69,22 +84,6 @@ output$correlogram <- renderUI({
                     ),
                    # add_help("corrDataOptions_help", style="margin-left: 5px;"),
                    # div(style="display: inline-block;", add_help("corrShowStats_help", style="margin-left: 5px;")),
-                 )
-               ),
-               
-               fluidRow(
-                 column(12,
-                        div(style="display: inline-block; vertical-align:middle; width: 7em",HTML(paste("<b>Color By:</b>", add_help("corrColorBy_help", style="margin-left: 5px;")))),
-                        div(style="display: inline-block;",
-                            pickerInput(
-                              "corrColorBy",
-                              NULL,
-                              choices = c('rValue', 'rhoValue'),
-                              selected = rv$corrColorBy,
-                              multiple = FALSE,
-                            )
-                        ),
-                        # div(style="display: inline-block;", add_help("corrColorBy_help", style="margin-left: 5px;")),
                  )
                )
                
