@@ -69,13 +69,13 @@ output$correlogram <- renderUI({
                     div(
                        style="display: inline-block;",
                        materialSwitch(
-                         "corrShowStats",
-                         label = HTML(paste("<b>Show Stats:</b> ", add_help("corrShowStats_help", style="margin-left: 5px;"))),
+                         "corrShowCorrelationValue",
+                         label = HTML(paste("<b>Show Correlation value:</b> ", add_help("corrShowCorrelationValue_help", style="margin-left: 5px;"))),
                          # label= HTML(paste0(
                          #   "<b>Show Stats:</b>",
-                         #   add_help("corrShowStats_help", style="margin-left: 5px;"))
+                         #   add_help("corrShowCorrelationValue_help", style="margin-left: 5px;"))
                          # ),
-                         value = rv$corrShowStats,
+                         value = rv$corrShowCorrelationValue,
                          status = "default",
                          right = FALSE,
                          inline = FALSE,
@@ -83,7 +83,7 @@ output$correlogram <- renderUI({
                        )
                     ),
                    # add_help("corrDataOptions_help", style="margin-left: 5px;"),
-                   # div(style="display: inline-block;", add_help("corrShowStats_help", style="margin-left: 5px;")),
+                   # div(style="display: inline-block;", add_help("corrShowCorrelationValue_help", style="margin-left: 5px;")),
                  )
                )
                
@@ -99,7 +99,7 @@ output$correlogram <- renderUI({
              bsTooltip("corrPlotType_help", 
                        "Choose between heatmap and correlogram", 
                        placement = "top"),
-             bsTooltip("corrShowStats_help", 
+             bsTooltip("corrShowCorrelationValue_help", 
                        "Display the correlation value on each heatmap tile", 
                        placement = "top"),
              bsTooltip("corrCorrelateBy_help", 
@@ -317,7 +317,7 @@ draw_correlogram <- function(selected,
                              dataOptions = rv$corrDataOptions,
                              plotType = rv$corrPlotType,
                              correlateBy = rv$corrCorrelateBy,
-                             showStats = rv$corrShowStats,
+                             showCorrelationValue = rv$corrShowCorrelationValue,
                              upper = rv$corrUpper,
                              lower = rv$corrLower,
                              diag = rv$corrDiag) {
@@ -348,12 +348,12 @@ draw_correlogram <- function(selected,
   if (plotType == "Heatmap") {
     if (correlateBy == "rValue") {
       # Defaults to pearson correlation
-      ggcorr(colsWanted[names(selected)], label = showStats, label_round = 3)
+      ggcorr(colsWanted[names(selected)], label = showCorrelationValue, label_round = 3)
     } else if (correlateBy == "rhoValue") {
-      ggcorr(colsWanted[names(selected)], label = showStats, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
+      ggcorr(colsWanted[names(selected)], label = showCorrelationValue, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
     } else if (correlateBy == "logPValue") {
       # To Do
-      # ggcorr(colsWanted[names(selected)], label = showStats, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
+      # ggcorr(colsWanted[names(selected)], label = showCorrelationValue, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
     }
   } else if (plotType == "correlogram") {
     ggpairs(colsWanted[names(selected)], title=NULL,

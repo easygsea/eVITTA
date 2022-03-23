@@ -82,7 +82,7 @@ init_demo <- function(){
   rv$corrDataOptions <- "All data"
   rv$corrPlotType <- "Heatmap"
   rv$corrCorrelateBy <- "rValue"
-  rv$corrShowStats <- FALSE
+  rv$corrShowCorrelationValue <- FALSE
   rv$corrUpper <- "cor"
   rv$corrDiag <- "densityDiag"
   rv$corrLower <- "points"
