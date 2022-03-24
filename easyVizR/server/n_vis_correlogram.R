@@ -146,11 +146,16 @@ output$selectPlotMode <- renderUI({
     fluidRow(
       column(12,
              div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Upper:</strong>", add_help("corrUpper_help", style="margin-left: 5px;")))),
-             div(style="display: inline-block; width: 8em;",
+             div(style="display: inline-block; width: 13em;",
                  pickerInput(
                    "corrUpper",
                    NULL,
-                   choices = c('points', 'smooth', 'density', 'cor', 'blank'),
+                   # choices = c('points', 'smooth', 'density', 'cor', 'blank'),
+                   choices = c("Scatter plot" = 'points',
+                               "Scatter plot with a smoothed line" = 'smooth',
+                               "Bivariate density plot" = 'density',
+                               "Correlation value plot" = 'cor',
+                               "Blank plot" = 'blank'),
                    selected = rv$corrUpperV,
                    # selected = 'cor',
                    multiple = FALSE,
@@ -166,11 +171,14 @@ output$selectPlotMode <- renderUI({
     fluidRow(
       column(12,
              div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Diagonal:</strong>", add_help("corrDiag_help", style="margin-left: 5px;")))),
-             div(style="display: inline-block; width: 8em;",
+             div(style="display: inline-block; width: 13em;",
                  pickerInput(
                    "corrDiag",
                    NULL,
-                   choices = c('densityDiag', 'barDiag', 'blankDiag'),
+                   # choices = c('densityDiag', 'barDiag', 'blankDiag'),
+                   choices = c("Univariate density plot" = 'densityDiag',
+                               "Bar plot" = 'barDiag',
+                               "Blank plot" = 'blankDiag'),
                    selected = rv$corrDiagV,
                    multiple = FALSE
                  )
@@ -181,11 +189,16 @@ output$selectPlotMode <- renderUI({
     fluidRow(
       column(12,
              div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Lower:</strong>", add_help("corrLower_help", style="margin-left: 5px;")))),
-             div(style="display: inline-block; width: 8em;",
+             div(style="display: inline-block; width: 13em;",
                  pickerInput(
                    "corrLower",
                    NULL,
-                   choices = c('points', 'smooth', 'density', 'cor', 'blank'),
+                   # choices = c('points', 'smooth', 'density', 'cor', 'blank'),
+                   choices = c("Scatter plot" = 'points',
+                               "Scatter plot with a smoothed line" = 'smooth',
+                               "Bivariate density plot" = 'density',
+                               "Correlation value plot" = 'cor',
+                               "Blank plot" = 'blank'),
                    selected = rv$corrLowerV,
                    # selected = 'points',
                    multiple = FALSE,
@@ -211,10 +224,10 @@ output$selectPlotMode <- renderUI({
 })
 
 output$replotButton <- renderUI({
-  # hardLimit = 3000000; # deactivate replotButton
-  # softLimit = 1500000; # warn the user of the runtime of the correlation
-  hardLimit = 35000; # deactivate replotButton
-  softLimit = 20000; # warn the user of the runtime of the correlation
+  hardLimit = 3000000; # deactivate replotButton
+  softLimit = 1500000; # warn the user of the runtime of the correlation
+  # hardLimit = 35000; # deactivate replotButton
+  # softLimit = 20000; # warn the user of the runtime of the correlation
   
   correlogramModesRuntimeFactor <- list(blank = 0,
                                         cor = 2, 
