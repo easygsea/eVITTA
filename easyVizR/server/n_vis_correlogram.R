@@ -446,14 +446,10 @@ output$corrDroppedRows <- renderUI({
   
 })
 
+
 output$corrDownloadPlot <- downloadHandler(
   filename = "plot.png" ,
   content = function(file) {
-    #ggsave(p(), filename = file)
-    selected <- rv$corrVarSelected
-    
-    png(file)
-    print(draw_correlogram(selected, rv$corrDatasetRepresentation, df_n))
-    dev.off()
+    ggsave(file, device = png,dpi = 600)
   }
 )
