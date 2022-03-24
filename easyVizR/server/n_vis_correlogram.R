@@ -145,7 +145,9 @@ output$selectPlotMode <- renderUI({
   div(
     fluidRow(
       column(12,
-             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Upper:</strong>", add_help("corrUpper_help", style="margin-left: 5px;")))),
+             # div(style="display: inline-block;vertical-align:middle; width: 9em;",HTML(paste("<strong>Upper Triangle:</strong>", add_help("corrUpper_help", style="margin-left: 5px;")))),
+             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Upper Triangle:</strong>"))),
+             div(style="display: inline-block;vertical-align:middle",HTML(paste(add_help("corrUpper_help", style="margin-left: 5px;")))),
              div(style="display: inline-block; width: 13em;",
                  pickerInput(
                    "corrUpper",
@@ -170,7 +172,9 @@ output$selectPlotMode <- renderUI({
     ),
     fluidRow(
       column(12,
-             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Diagonal:</strong>", add_help("corrDiag_help", style="margin-left: 5px;")))),
+             # div(style="display: inline-block;vertical-align:middle; width: 9em;",HTML(paste("<strong>Diagonal:</strong>", add_help("corrDiag_help", style="margin-left: 5px;")))),
+             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Diagonal:</strong>"))),
+             div(style="display: inline-block;vertical-align:middle",HTML(paste(add_help("corrDiag_help", style="margin-left: 5px;")))),
              div(style="display: inline-block; width: 13em;",
                  pickerInput(
                    "corrDiag",
@@ -188,7 +192,9 @@ output$selectPlotMode <- renderUI({
     ),
     fluidRow(
       column(12,
-             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Lower:</strong>", add_help("corrLower_help", style="margin-left: 5px;")))),
+             # div(style="display: inline-block;vertical-align:middle; width: 9em;",HTML(paste("<strong>Lower Triangle:</strong>", add_help("corrLower_help", style="margin-left: 5px;")))),
+             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Lower Triangle:</strong>"))),
+             div(style="display: inline-block;vertical-align:middle",HTML(paste(add_help("corrLower_help", style="margin-left: 5px;")))),
              div(style="display: inline-block; width: 13em;",
                  pickerInput(
                    "corrLower",
