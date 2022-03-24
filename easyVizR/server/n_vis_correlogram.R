@@ -4,128 +4,81 @@ output$correlogram <- renderUI({
   
   fluidRow(
     column(4,
-           box(
-             title = NULL, status = "primary", solidHeader = FALSE, width = 12,
-             checkboxGroupInput(
-               "corrVarSelected",
-               "Show correlogram for:",
-               choices = NULL,
-               selected = rv$corrVarSelected,
-               inline = FALSE,
-               width = NULL,
-               choiceNames = rv$corrDatasetRepresentation$displayName,
-               choiceValues = rv$corrDatasetRepresentation$datasetName
-             ),
-             radioButtons(
-               "corrDataOptions",
-               # "Data Options:",
-               label = HTML(paste0(
-                 "<b>Data Options:</b>",
-                 add_help("corrDataOptions_help", style="margin-left: 5px;"))
-               ),
-               choices = c("All data", "Intersection only"),
-               selected = rv$corrDataOptions,
-               inline = FALSE,
-               width = NULL,
-               choiceNames = NULL,
-               choiceValues = NULL
-             ),
-             radioButtons(
-               "corrPlotType",
-               # "Plot Type:",
-               label= HTML(paste0(
-                 "<b>Plot Type:</b>",
-                 add_help("corrPlotType_help", style="margin-left: 5px;"))
-               ),
-               choices = c("Heatmap", "correlogram"),
-               selected = rv$corrPlotType,
-               inline = FALSE,
-               width = NULL,
-               choiceNames = NULL,
-               choiceValues = NULL
-             ),
+       box(
+         title = NULL, status = "primary", solidHeader = FALSE, width = 12,
+         checkboxGroupInput(
+           "corrVarSelected",
+           "Show correlogram for:",
+           choices = NULL,
+           selected = rv$corrVarSelected,
+           inline = FALSE,
+           width = NULL,
+           choiceNames = rv$corrDatasetRepresentation$displayName,
+           choiceValues = rv$corrDatasetRepresentation$datasetName
+         ),
+         radioButtons(
+           "corrDataOptions",
+           # "Data Options:",
+           label = HTML(paste0(
+             "<b>Data Options:</b>",
+             add_help("corrDataOptions_help", style="margin-left: 5px;"))
+           ),
+           choices = c("All data", "Intersection only"),
+           selected = rv$corrDataOptions,
+           inline = FALSE,
+           width = NULL,
+           choiceNames = NULL,
+           choiceValues = NULL
+         ),
+         radioButtons(
+           "corrPlotType",
+           # "Plot Type:",
+           label= HTML(paste0(
+             "<b>Plot Type:</b>",
+             add_help("corrPlotType_help", style="margin-left: 5px;"))
+           ),
+           choices = c("Heatmap", "Correlogram"),
+           selected = rv$corrPlotType,
+           inline = FALSE,
+           width = NULL,
+           choiceNames = NULL,
+           choiceValues = NULL
+         ),
+         
+         uiOutput("heatmapCorrelogramOptions"),
+         
+         uiOutput("replotButton"),
+           
+       ),
+       
+       
+       # You can move these elsewhere in this scope
+       bsTooltip("corrDataOptions_help", 
+                 "&#34;Intersection only&#34; draws a correlogram/heatmap of the datasets excluding the filtered-out rows",  
+                 placement = "top"),
+       bsTooltip("corrPlotType_help", 
+                 "Choose between heatmap and correlogram", 
+                 placement = "top")
              
-             
-             conditionalPanel(
-               condition = "input.corrPlotType == 'Heatmap'",
-               
-               fluidRow(
-                 column(12,
-                        div(style="display: inline-block; vertical-align:middle; width: 8em",HTML(paste("<b>Correlate By:</b>", add_help("corrCorrelateBy_help", style="margin-left: 5px;")))),
-                        div(style="display: inline-block;",
-                            pickerInput(
-                              "corrCorrelateBy",
-                              NULL,
-                              choices = c('rValue', 'rhoValue'),
-                              selected = rv$corrCorrelateBy,
-                              multiple = FALSE,
-                            )
-                        ),
-                        # div(style="display: inline-block;", add_help("corrCorrelateBy_help", style="margin-left: 5px;")),
-                 )
-               ),
-               fluidRow(
-                 column(12,
-                    div(
-                       style="display: inline-block;",
-                       materialSwitch(
-                         "corrShowCorrelationValue",
-                         label = HTML(paste("<b>Show Correlation value:</b> ", add_help("corrShowCorrelationValue_help", style="margin-left: 5px;"))),
-                         # label= HTML(paste0(
-                         #   "<b>Show Stats:</b>",
-                         #   add_help("corrShowCorrelationValue_help", style="margin-left: 5px;"))
-                         # ),
-                         value = rv$corrShowCorrelationValue,
-                         status = "default",
-                         right = FALSE,
-                         inline = FALSE,
-                         width = NULL
-                       )
-                    ),
-                   # add_help("corrDataOptions_help", style="margin-left: 5px;"),
-                   # div(style="display: inline-block;", add_help("corrShowCorrelationValue_help", style="margin-left: 5px;")),
-                 )
-               )
-               
-             ),
-             uiOutput("selectPlotMode"),
-             
-             uiOutput("replotButton"),
-             
-             # You can move these elsewhere in this scope
-             bsTooltip("corrDataOptions_help", 
-                       "&#34;Intersection only&#34; draws a correlogram/heatmap of the datasets excluding the filtered-out rows",  
-                       placement = "top"),
-             bsTooltip("corrPlotType_help", 
-                       "Choose between heatmap and correlogram", 
-                       placement = "top"),
-             bsTooltip("corrShowCorrelationValue_help", 
-                       "Display the correlation value on each heatmap tile", 
-                       placement = "top"),
-             bsTooltip("corrCorrelateBy_help", 
-                       "Correlate with rValue (Pearson) or rhoValue (Spearman)", 
-                       placement = "top"),
-             
-           )
     ),
     column(8,
-           # Main correlogram
-           # box(
-           #   title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
-           #   plotOutput("correlogramPlot", height = "40em"),
-           #   div(style="text-align: center", uiOutput("Legend")),
-           #   downloadButton('corrDownloadPlot', 'Download Plot')
-           # ),
-           uiOutput("correlogramDisplay"),
-           
-           
-           # Exclusion report
-           box(
-             title = span( icon("exclamation"), "Exclusion Report"), status = "warning", solidHeader = FALSE, width = 12, collapsible = TRUE, collapsed = TRUE,
-             wellPanel(id = "tPanel", style = "overflow-y:scroll; max-height: 30em;",
-                       uiOutput("corrDroppedRows"))
-           )
-           # shinydashboard::box() could be useful if box() didn't work
+       # Main correlogram
+       # box(
+       #   title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
+       #   plotOutput("correlogramPlot", height = "40em"),
+       #   div(style="text-align: center", uiOutput("Legend")),
+       #   downloadButton('corrDownloadPlot', 'Download Plot')
+       # ),
+       uiOutput("correlogramDisplay"),
+       
+       
+       # Exclusion report
+       box(
+         title = span( icon("exclamation"), "Exclusion Report"), status = "warning", solidHeader = FALSE, width = 12, collapsible = TRUE, collapsed = TRUE,
+         wellPanel(id = "tPanel", style = "overflow-y:scroll; max-height: 30em;",
+                   uiOutput("corrDroppedRows"))
+       )
+       # shinydashboard::box() could be useful if box() didn't work
     )
   )
   
@@ -140,93 +93,143 @@ output$correlogramDisplay <- renderUI({
   )
 })
 
-output$selectPlotMode <- renderUI({
-  req(input$corrPlotType == 'correlogram')
-  div(
-    fluidRow(
-      column(12,
-             # div(style="display: inline-block;vertical-align:middle; width: 9em;",HTML(paste("<strong>Upper Triangle:</strong>", add_help("corrUpper_help", style="margin-left: 5px;")))),
-             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Upper Triangle:</strong>"))),
-             div(style="display: inline-block;vertical-align:middle",HTML(paste(add_help("corrUpper_help", style="margin-left: 5px;")))),
-             div(style="display: inline-block; width: 13em;",
-                 pickerInput(
-                   "corrUpper",
-                   NULL,
-                   # choices = c('points', 'smooth', 'density', 'cor', 'blank'),
-                   choices = c("Scatter plot" = 'points',
-                               "Scatter plot with a smoothed line" = 'smooth',
-                               "Bivariate density plot" = 'density',
-                               "Correlation value plot" = 'cor',
-                               "Blank plot" = 'blank'),
-                   selected = rv$corrUpperV,
-                   # selected = 'cor',
-                   multiple = FALSE,
-                   choicesOpt = list(
-                     disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(rv$corrLowerV)
-                     # disabled = c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank') %in% c(input$lower)
+output$heatmapCorrelogramOptions <- renderUI({
+  if (input$corrPlotType == 'Heatmap') {
+    div(
+      fluidRow(
+        column(12,
+               div(style="display: inline-block; vertical-align:middle; width: 8em",HTML(paste("<b>Correlate By:</b>", add_help("corrCorrelateBy_help", style="margin-left: 5px;")))),
+               div(style="display: inline-block;",
+                   pickerInput(
+                     "corrCorrelateBy",
+                     NULL,
+                     choices = c('rValue', 'rhoValue'),
+                     selected = rv$corrCorrelateBy,
+                     multiple = FALSE,
                    )
-                 )
+               ),
+               # div(style="display: inline-block;", add_help("corrCorrelateBy_help", style="margin-left: 5px;")),
+        )
+      ),
+      fluidRow(
+        column(12,
+           div(
+             style="display: inline-block;",
+             materialSwitch(
+               "corrShowCorrelationValue",
+               label = HTML(paste("<b>Show Correlation value:</b> ", add_help("corrShowCorrelationValue_help", style="margin-left: 5px;"))),
+               # label= HTML(paste0(
+               #   "<b>Show Stats:</b>",
+               #   add_help("corrShowCorrelationValue_help", style="margin-left: 5px;"))
+               # ),
+               value = rv$corrShowCorrelationValue,
+               status = "default",
+               right = FALSE,
+               inline = FALSE,
+               width = NULL
              )
-             # div(style="display: inline-block;", add_help("corrUpper_help", style="margin-left: 5px;"))
+           ),
+           # add_help("corrDataOptions_help", style="margin-left: 5px;"),
+           # div(style="display: inline-block;", add_help("corrShowCorrelationValue_help", style="margin-left: 5px;")),
+           
+           bsTooltip("corrShowCorrelationValue_help", 
+                     "Display the correlation value on each heatmap tile", 
+                     placement = "top"),
+           bsTooltip("corrCorrelateBy_help", 
+                     "Correlate with rValue (Pearson) or rhoValue (Spearman)", 
+                     placement = "top")
+      
+        )
       )
-    ),
-    fluidRow(
-      column(12,
-             # div(style="display: inline-block;vertical-align:middle; width: 9em;",HTML(paste("<strong>Diagonal:</strong>", add_help("corrDiag_help", style="margin-left: 5px;")))),
-             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Diagonal:</strong>"))),
-             div(style="display: inline-block;vertical-align:middle",HTML(paste(add_help("corrDiag_help", style="margin-left: 5px;")))),
-             div(style="display: inline-block; width: 13em;",
-                 pickerInput(
-                   "corrDiag",
-                   NULL,
-                   # choices = c('densityDiag', 'barDiag', 'blankDiag'),
-                   choices = c("Univariate density plot" = 'densityDiag',
-                               "Bar plot" = 'barDiag',
-                               "Blank plot" = 'blankDiag'),
-                   selected = rv$corrDiagV,
-                   multiple = FALSE
-                 )
-             )
-             # div(style="display: inline-block;", add_help("corrDiag_help", style="margin-left: 5px;"))
-      )
-    ),
-    fluidRow(
-      column(12,
-             # div(style="display: inline-block;vertical-align:middle; width: 9em;",HTML(paste("<strong>Lower Triangle:</strong>", add_help("corrLower_help", style="margin-left: 5px;")))),
-             div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Lower Triangle:</strong>"))),
-             div(style="display: inline-block;vertical-align:middle",HTML(paste(add_help("corrLower_help", style="margin-left: 5px;")))),
-             div(style="display: inline-block; width: 13em;",
-                 pickerInput(
-                   "corrLower",
-                   NULL,
-                   # choices = c('points', 'smooth', 'density', 'cor', 'blank'),
-                   choices = c("Scatter plot" = 'points',
-                               "Scatter plot with a smoothed line" = 'smooth',
-                               "Bivariate density plot" = 'density',
-                               "Correlation value plot" = 'cor',
-                               "Blank plot" = 'blank'),
-                   selected = rv$corrLowerV,
-                   # selected = 'points',
-                   multiple = FALSE,
-                   choicesOpt = list(
-                     disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(rv$corrUpperV)
-                     # disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(input$upper)
+    )
+  } else if (input$corrPlotType == 'Correlogram') {
+    div(
+      fluidRow(
+        column(12,
+               # div(style="display: inline-block;vertical-align:middle; width: 9em;",HTML(paste("<strong>Upper Triangle:</strong>", add_help("corrUpper_help", style="margin-left: 5px;")))),
+               div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Upper Triangle:</strong>"))),
+               div(style="display: inline-block;vertical-align:middle",HTML(paste(add_help("corrUpper_help", style="margin-left: 5px;")))),
+               div(style="display: inline-block; width: 13em;",
+                   pickerInput(
+                     "corrUpper",
+                     NULL,
+                     # choices = c('points', 'smooth', 'density', 'cor', 'blank'),
+                     choices = c("Scatter plot" = 'points',
+                                 "Scatter plot with a smoothed line" = 'smooth',
+                                 "Bivariate density plot" = 'density',
+                                 "Correlation value plot" = 'cor',
+                                 "Blank plot" = 'blank'),
+                     selected = rv$corrUpperV,
+                     # selected = 'cor',
+                     multiple = FALSE,
+                     choicesOpt = list(
+                       disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(rv$corrLowerV)
+                       # disabled = c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank') %in% c(input$lower)
+                     )
                    )
-                 )
-             )
-             # div(style="display: inline-block;", add_help("corrLower_help", style="margin-left: 5px;"))
-      )
-    ),
-    bsTooltip("corrUpper_help", 
-              "Select the plot type of the upper-right section of the correlogram", 
-              placement = "top"),
-    bsTooltip("corrDiag_help", 
-              "Select the plot type of the diagonal line in the centre of the correlogram",
-              placement = "top"),
-    bsTooltip("corrLower_help", 
-              "Select the plot type of the lower-left section of the correlogram", 
-              placement = "top"),
-  )
+               )
+               # div(style="display: inline-block;", add_help("corrUpper_help", style="margin-left: 5px;"))
+        )
+      ),
+      fluidRow(
+        column(12,
+               # div(style="display: inline-block;vertical-align:middle; width: 9em;",HTML(paste("<strong>Diagonal:</strong>", add_help("corrDiag_help", style="margin-left: 5px;")))),
+               div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Diagonal:</strong>"))),
+               div(style="display: inline-block;vertical-align:middle",HTML(paste(add_help("corrDiag_help", style="margin-left: 5px;")))),
+               div(style="display: inline-block; width: 13em;",
+                   pickerInput(
+                     "corrDiag",
+                     NULL,
+                     # choices = c('densityDiag', 'barDiag', 'blankDiag'),
+                     choices = c("Univariate density plot" = 'densityDiag',
+                                 "Bar plot" = 'barDiag',
+                                 "Blank plot" = 'blankDiag'),
+                     selected = rv$corrDiagV,
+                     multiple = FALSE
+                   )
+               )
+               # div(style="display: inline-block;", add_help("corrDiag_help", style="margin-left: 5px;"))
+        )
+      ),
+      fluidRow(
+        column(12,
+               # div(style="display: inline-block;vertical-align:middle; width: 9em;",HTML(paste("<strong>Lower Triangle:</strong>", add_help("corrLower_help", style="margin-left: 5px;")))),
+               div(style="display: inline-block;vertical-align:middle; width: 7em;",HTML(paste("<strong>Lower Triangle:</strong>"))),
+               div(style="display: inline-block;vertical-align:middle",HTML(paste(add_help("corrLower_help", style="margin-left: 5px;")))),
+               div(style="display: inline-block; width: 13em;",
+                   pickerInput(
+                     "corrLower",
+                     NULL,
+                     # choices = c('points', 'smooth', 'density', 'cor', 'blank'),
+                     choices = c("Scatter plot" = 'points',
+                                 "Scatter plot with a smoothed line" = 'smooth',
+                                 "Bivariate density plot" = 'density',
+                                 "Correlation value plot" = 'cor',
+                                 "Blank plot" = 'blank'),
+                     selected = rv$corrLowerV,
+                     # selected = 'points',
+                     multiple = FALSE,
+                     choicesOpt = list(
+                       disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(rv$corrUpperV)
+                       # disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(input$upper)
+                     )
+                   )
+               )
+               # div(style="display: inline-block;", add_help("corrLower_help", style="margin-left: 5px;"))
+        )
+      ),
+      bsTooltip("corrUpper_help", 
+                "Select the plot type of the upper-right section of the correlogram", 
+                placement = "top"),
+      bsTooltip("corrDiag_help", 
+                "Select the plot type of the diagonal line in the centre of the correlogram",
+                placement = "top"),
+      bsTooltip("corrLower_help", 
+                "Select the plot type of the lower-left section of the correlogram", 
+                placement = "top"),
+    )
+    
+  }
 })
 
 output$replotButton <- renderUI({
@@ -321,10 +324,6 @@ output$replotButton <- renderUI({
     }
   }
   
-  
-  
-  
-  
 })
 
 
@@ -374,7 +373,7 @@ draw_correlogram <- function(selected,
       # To Do
       # ggcorr(colsWanted[names(selected)], label = showCorrelationValue, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
     }
-  } else if (plotType == "correlogram") {
+  } else if (plotType == "Correlogram") {
     ggpairs(colsWanted[names(selected)], title=NULL,
             upper = list(continuous = upper),
             lower = list(continuous = lower),
