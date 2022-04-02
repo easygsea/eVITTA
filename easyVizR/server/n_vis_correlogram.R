@@ -103,7 +103,7 @@ output$heatmapCorrelogramOptions <- renderUI({
                    pickerInput(
                      "corrCorrelateBy",
                      NULL,
-                     choices = c('rValue', 'rhoValue'),
+                     choices = c('R Value' = 'pearson', 'RHO Value' = 'spearman'),
                      selected = rv$corrCorrelateBy,
                      multiple = FALSE,
                    )
@@ -366,18 +366,8 @@ draw_correlogram <- function(selected,
   colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
   
   if (plotType == "Heatmap") {
-    if (correlateBy == "rValue") {
-      corrMatrix <- round(cor(colsWanted[names(selected)], method = "pearson"), 3)[ ,length(selected):1]
-      ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, digits = 3)
-      # ggcorr(colsWanted[names(selected)], label = showCorrelationValue, label_round = 3)
-    } else if (correlateBy == "rhoValue") {
-      corrMatrix <- round(cor(colsWanted[names(selected)], method = "spearman"), 3)[ ,length(selected):1]
-      ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, digits = 3)
-      # ggcorr(colsWanted[names(selected)], label = showCorrelationValue, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
-    } else if (correlateBy == "logPValue") {
-      # To Do
-      # ggcorr(colsWanted[names(selected)], label = showCorrelationValue, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
-    }
+    corrMatrix <- round(cor(colsWanted[names(selected)], method = correlateBy), 3)[ ,length(selected):1]
+    ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, digits = 3)
   } else if (plotType == "Correlogram") {
     ggpairs(colsWanted[names(selected)], title=NULL,
             upper = list(continuous = upper),

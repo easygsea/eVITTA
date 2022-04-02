@@ -81,7 +81,7 @@ init_demo <- function(){
   rv$corrVarSelected <- rv$corrDatasetRepresentation$datasetName[1:3]
   rv$corrDataOptions <- "All data"
   rv$corrPlotType <- "Heatmap"
-  rv$corrCorrelateBy <- "rValue"
+  rv$corrCorrelateBy <- "pearson"
   rv$corrShowCorrelationValue <- FALSE
   rv$corrUpper <- "cor"
   rv$corrDiag <- "densityDiag"
