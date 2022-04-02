@@ -355,7 +355,9 @@ draw_correlogram <- function(selected,
   
   if (dataOptions == "All data") {
     # colsWanted <- df_n[grepl("\\<Value", names(df_n))]
+    
     colsWanted <- df_n[grepl("\\<Stat", names(df_n))]
+    colsWanted <- colsWanted[complete.cases(colsWanted),]
   } else if (dataOptions == "Intersection only") {
     # colsWanted <- to_plot_df[grepl("\\<Value", names(to_plot_df))]
     colsWanted <- to_plot_df[grepl("\\<Stat", names(to_plot_df))]
@@ -365,10 +367,13 @@ draw_correlogram <- function(selected,
   
   if (plotType == "Heatmap") {
     if (correlateBy == "rValue") {
-      # Defaults to pearson correlation
-      ggcorr(colsWanted[names(selected)], label = showCorrelationValue, label_round = 3)
+      corrMatrix <- round(cor(colsWanted[names(selected)], method = "pearson"), 3)[ ,length(selected):1]
+      ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, digits = 3)
+      # ggcorr(colsWanted[names(selected)], label = showCorrelationValue, label_round = 3)
     } else if (correlateBy == "rhoValue") {
-      ggcorr(colsWanted[names(selected)], label = showCorrelationValue, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
+      corrMatrix <- round(cor(colsWanted[names(selected)], method = "spearman"), 3)[ ,length(selected):1]
+      ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, digits = 3)
+      # ggcorr(colsWanted[names(selected)], label = showCorrelationValue, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
     } else if (correlateBy == "logPValue") {
       # To Do
       # ggcorr(colsWanted[names(selected)], label = showCorrelationValue, method = c("pairwise.complete.obs", "spearman"), label_round = 3)
@@ -449,6 +454,6 @@ output$corrDroppedRows <- renderUI({
 output$corrDownloadPlot <- downloadHandler(
   filename = "plot.png" ,
   content = function(file) {
-    ggsave(file, device = png,dpi = 600)
+    ggsave(file, device = png, dpi = 600)
   }
 )
