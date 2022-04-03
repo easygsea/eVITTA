@@ -31,7 +31,6 @@ output$correlogram <- renderUI({
          ),
          radioButtons(
            "corrPlotType",
-           # "Plot Type:",
            label= HTML(paste0(
              "<b>Plot Type:</b>",
              add_help("corrPlotType_help", style="margin-left: 5px;"))
@@ -74,7 +73,7 @@ output$correlogramDisplay <- renderUI({
   box(
     title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
     plotOutput("correlogramPlot", height = "40em"),
-    div(style="text-align: center", uiOutput("Legend")),
+    div(style="text-align: center; margin-top: 1.5em", uiOutput("Legend")),
     downloadButton('corrDownloadPlot', 'Download Plot')
   )
 })
