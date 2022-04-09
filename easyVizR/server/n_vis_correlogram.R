@@ -6,41 +6,73 @@ output$correlogram <- renderUI({
     column(4,
        box(
          title = NULL, status = "primary", solidHeader = FALSE, width = 12,
-         checkboxGroupInput(
-           "corrVarSelected",
-           "Show correlogram for:",
-           choices = NULL,
-           selected = rv$corrVarSelected,
-           inline = FALSE,
-           width = NULL,
-           choiceNames = rv$corrDatasetRepresentation$displayName,
-           choiceValues = rv$corrDatasetRepresentation$datasetName
+         fluidRow(
+           column(12,
+                  checkboxGroupInput(
+                    "corrVarSelected",
+                    "Show correlogram for:",
+                    choices = NULL,
+                    selected = rv$corrVarSelected,
+                    inline = FALSE,
+                    width = NULL,
+                    choiceNames = rv$corrDatasetRepresentation$displayName,
+                    choiceValues = rv$corrDatasetRepresentation$datasetName
+                  )
+           )
          ),
-         radioButtons(
-           "corrDataOptions",
-           label = HTML(paste0(
-             "<b>Data Options:</b>",
-             add_help("corrDataOptions_help", style="margin-left: 5px;"))
-           ),
-           choices = c("All data", "Intersection only"),
-           selected = rv$corrDataOptions,
-           inline = FALSE,
-           width = NULL,
-           choiceNames = NULL,
-           choiceValues = NULL
+         fluidRow(
+           column(12,
+                  radioButtons(
+                    "corrDataOptions",
+                    label = HTML(paste0(
+                      "<b>Data Options:</b>",
+                      add_help("corrDataOptions_help", style="margin-left: 5px;"))
+                    ),
+                    choices = c("All data", "Intersection only"),
+                    selected = rv$corrDataOptions,
+                    inline = FALSE,
+                    width = NULL,
+                    choiceNames = NULL,
+                    choiceValues = NULL
+                  )
+           )
          ),
-         radioButtons(
-           "corrPlotType",
-           label= HTML(paste0(
-             "<b>Plot Type:</b>",
-             add_help("corrPlotType_help", style="margin-left: 5px;"))
-           ),
-           choices = c("Heatmap", "Correlogram"),
-           selected = rv$corrPlotType,
-           inline = FALSE,
-           width = NULL,
-           choiceNames = NULL,
-           choiceValues = NULL
+         fluidRow(
+           column(12,
+                  div(
+                    style="display: inline-block;",
+                    div(style="display: inline-block;vertical-align:middle; width: 10em;",HTML(paste("<b>Use Abbreviation:</b> ", add_help("corrUseAbbreviation_help", style="margin-left: 5px;")))),
+                    div(style="display: inline-block; width: 5em; margin-left: 0.5em",
+                        materialSwitch(
+                          "corrUseAbbreviation",
+                          # label = HTML(paste("<b>Use Abbreviation:</b> ", add_help("corrUseAbbreviation_help", style="margin-left: 5px;"))),
+                          label = NULL,
+                          value = rv$corrUseAbbreviation,
+                          status = "default",
+                          right = TRUE,
+                          inline = FALSE,
+                          width = NULL
+                        )
+                    )
+                  )
+           )
+         ),
+         fluidRow(
+           column(12,
+                  radioButtons(
+                    "corrPlotType",
+                    label= HTML(paste0(
+                      "<b>Plot Type:</b>",
+                      add_help("corrPlotType_help", style="margin-left: 5px;"))
+                    ),
+                    choices = c("Heatmap", "Correlogram"),
+                    selected = rv$corrPlotType,
+                    inline = FALSE,
+                    width = NULL,
+                    choiceNames = NULL,
+                    choiceValues = NULL
+                  )
+           )
          ),
          
          uiOutput("heatmapCorrelogramOptions"),
@@ -50,6 +82,9 @@ output$correlogram <- renderUI({
        
        bsTooltip("corrDataOptions_help", 
                  "&#34;Intersection only&#34; draws a correlogram/heatmap of the datasets excluding the filtered-out rows",  
+                 placement = "top"),
+       bsTooltip("corrUseAbbreviation_help", 
+                 "Abbreviates dataset names to DataSetA, DataSetB, DataSetC, etc. Useful if dataset names are too long.",  
                  placement = "top"),
        bsTooltip("corrPlotType_help", 
                  "Choose between heatmap and correlogram", 
@@ -70,12 +105,20 @@ output$correlogram <- renderUI({
 })
 
 output$correlogramDisplay <- renderUI({
-  box(
-    title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
-    plotOutput("correlogramPlot", height = "40em"),
-    div(style="text-align: center; margin-top: 1.5em", uiOutput("Legend")),
-    downloadButton('corrDownloadPlot', 'Download Plot')
-  )
+  if (rv$corrUseAbbreviation == TRUE) {
+    box(
+      title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
+      plotOutput("correlogramPlot", height = "40em"),
+      div(style="text-align: center; margin-top: 1.5em", uiOutput("Legend")),
+      downloadButton('corrDownloadPlot', 'Download Plot')
+    )
+  } else {
+    box(
+      title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
+      plotOutput("correlogramPlot", height = "40em"),
+      downloadButton('corrDownloadPlot', 'Download Plot')
+    )
+  }
 })
 
 output$heatmapCorrelogramOptions <- renderUI({
@@ -290,7 +333,12 @@ draw_correlogram <- function(selected,
                              lower = rv$corrLower,
                              diag = rv$corrDiag) {
   
-  namedListOfDatasets <- corrDatasetRepresentation$abbreviation
+  if (rv$corrUseAbbreviation == TRUE) {
+    namedListOfDatasets <- corrDatasetRepresentation$abbreviation
+  } else {
+    namedListOfDatasets <- corrDatasetRepresentation$datasetName
+  }
+  
   names(namedListOfDatasets) <- corrDatasetRepresentation$datasetName
   names(selected) <- namedListOfDatasets[selected]
   to_plot_df <- get_df_by_dflogic(selected, dflogic = rv$nxy_sc_dflogic,
@@ -305,11 +353,19 @@ draw_correlogram <- function(selected,
     colsWanted <- to_plot_df[grepl("\\<Stat", names(to_plot_df))]
   }
   
-  colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
-  
+  if (rv$corrUseAbbreviation == TRUE) {
+    colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
+  } else {
+    colnames(colsWanted) <- corrDatasetRepresentation$datasetName
+  }
+
   if (plotType == "Heatmap") {
     corrMatrix <- round(cor(colsWanted[names(selected)], method = correlateBy), 3)[ ,length(selected):1]
-    ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, digits = 3)
+    if (rv$corrUseAbbreviation == TRUE) {
+      ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, digits = 3, tl.srt = 45)
+    } else {
+      ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, digits = 3, tl.srt = 25)
+    }
   } else if (plotType == "Correlogram") {
     ggpairs(colsWanted[names(selected)], title=NULL,
             upper = list(continuous = upper),

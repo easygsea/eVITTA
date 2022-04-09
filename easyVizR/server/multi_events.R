@@ -117,6 +117,7 @@ observe({
 observeEvent(input$corrReplot, {
   rv$corrVarSelected <- input$corrVarSelected
   rv$corrDataOptions <- input$corrDataOptions
+  rv$corrUseAbbreviation <- input$corrUseAbbreviation
   rv$corrPlotType <- input$corrPlotType
   rv$corrCorrelateBy <- input$corrCorrelateBy
   rv$corrShowCorrelationValue <- input$corrShowCorrelationValue
@@ -288,6 +289,7 @@ observeEvent(input$n_use_data,{
 
     rv$corrVarSelected <- rv$corrDatasetRepresentation$datasetName[1:3]
     rv$corrDataOptions <- "All data"
+    rv$corrUseAbbreviation <- FALSE
     rv$corrPlotType <- "Heatmap"
     rv$corrCorellateBy <- "rValue"
     rv$corrShowCorrelationValue <- FALSE

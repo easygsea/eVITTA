@@ -80,6 +80,7 @@ init_demo <- function(){
 
   rv$corrVarSelected <- rv$corrDatasetRepresentation$datasetName[1:3]
   rv$corrDataOptions <- "All data"
+  rv$corrUseAbbreviation <- FALSE
   rv$corrPlotType <- "Heatmap"
   rv$corrCorrelateBy <- "pearson"
   rv$corrShowCorrelationValue <- FALSE
