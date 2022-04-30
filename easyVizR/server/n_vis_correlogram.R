@@ -136,13 +136,13 @@ output$correlogramDisplay <- renderUI({
         title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
         plotlyOutput("correlogramPlotly", height = "40em"),
         div(style="text-align: center; margin-top: 1.5em", uiOutput("Legend")),
-        downloadButton('corrDownloadPlot', 'Download Plot')
+        downloadButton('corrDownloadPlotly', 'Download Plot')
       )
     } else {
       box(
         title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
         plotlyOutput("correlogramPlotly", height = "40em"),
-        downloadButton('corrDownloadPlot', 'Download Plot')
+        downloadButton('corrDownloadPlotly', 'Download Plot')
       )
     }
     
@@ -469,6 +469,11 @@ output$correlogramPlotly <- renderPlotly({
   draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n)
 })
 
+correlogramPlotlyReactive <- reactive({
+  selected <- rv$corrVarSelected
+  draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n)
+})
+
 
 
 # Legend
@@ -512,8 +517,19 @@ output$corrDroppedRows <- renderUI({
 })
 
 output$corrDownloadPlot <- downloadHandler(
-  filename = "plot.png" ,
+  filename = function() {
+    paste("correlogram-", Sys.Date(), ".png", sep = "")
+  },
   content = function(file) {
     ggsave(file, device = png, dpi = 600)
   }
 )
+
+output$corrDownloadPlotly <- downloadHandler(
+  filename = function() {
+      paste("correlogram-", Sys.Date(), ".html", sep = "")
+    },  
+  content = function(file) {
+    saveWidget(as_widget(correlogramPlotlyReactive()), file, selfcontained = TRUE)
+    }
+  )
