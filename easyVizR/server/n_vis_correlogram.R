@@ -22,19 +22,22 @@ output$correlogram <- renderUI({
          ),
          fluidRow(
            column(12,
-                  radioButtons(
-                    "corrDataOptions",
-                    label = HTML(paste0(
-                      "<b>Data Options:</b>",
-                      add_help("corrDataOptions_help", style="margin-left: 5px;"))
-                    ),
-                    choices = c("All data", "Intersection only"),
-                    selected = rv$corrDataOptions,
-                    inline = FALSE,
-                    width = NULL,
-                    choiceNames = NULL,
-                    choiceValues = NULL
-                  )
+                  radioGroupButtons("corrDataOptions",
+                                    label = HTML(paste0(
+                                      "<b>Data Options:</b>",
+                                      add_help("corrDataOptions_help", style="margin-left: 5px;"))
+                                    ),
+                                    choices = c("All data", "Intersection only"),
+                                    selected=rv$corrDataOptions,size="s", direction="horizontal"), 
+                  bsTooltip("nxy_sc_dflogic_help",
+                            dflogic_explanation,
+                            placement = "right"),
+                  radioTooltip(id = "corrDataOptions", choice = "All data", 
+                               title = dflogic_explanation_5, 
+                               placement = "right"),
+                  radioTooltip(id = "corrDataOptions", choice = "Intersection only", 
+                               title = dflogic_explanation_1, 
+                               placement = "right"),
            )
          ),
          fluidRow(
@@ -48,6 +51,25 @@ output$correlogram <- renderUI({
                           # label = HTML(paste("<b>Use Abbreviation:</b> ", add_help("corrUseAbbreviation_help", style="margin-left: 5px;"))),
                           label = NULL,
                           value = rv$corrUseAbbreviation,
+                          status = "default",
+                          right = TRUE,
+                          inline = FALSE,
+                          width = NULL
+                        )
+                    )
+                  )
+           )
+         ),
+         fluidRow(
+           column(12,
+                  div(
+                    style="display: inline-block;",
+                    div(style="display: inline-block;vertical-align:middle; width: 10em;",HTML(paste("<b>Interactive Plot:</b> ", add_help("corrInteractivePLot_help", style="margin-left: 5px;")))),
+                    div(style="display: inline-block; width: 5em; margin-left: 0.5em",
+                        materialSwitch(
+                          "corrInteractivePlot",
+                          label = NULL,
+                          value = rv$corrInteractivePlot,
                           status = "default",
                           right = TRUE,
                           inline = FALSE,
@@ -86,6 +108,9 @@ output$correlogram <- renderUI({
        bsTooltip("corrUseAbbreviation_help", 
                  "Abbreviates dataset names to DataSetA, DataSetB, DataSetC, etc. Useful if dataset names are too long.",  
                  placement = "top"),
+       bsTooltip("corrInteractivePLot_help", 
+                 "If toggled on, the plot will be interactive. You can hover over the plot to see specific values.",  
+                 placement = "top"),
        bsTooltip("corrPlotType_help", 
                  "Choose between heatmap and correlogram", 
                  placement = "top")
@@ -105,23 +130,61 @@ output$correlogram <- renderUI({
 })
 
 output$correlogramDisplay <- renderUI({
-  if (rv$corrUseAbbreviation == TRUE) {
-    box(
-      title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
-      plotOutput("correlogramPlot", height = "40em"),
-      div(style="text-align: center; margin-top: 1.5em", uiOutput("Legend")),
-      downloadButton('corrDownloadPlot', 'Download Plot')
-    )
+  if (rv$corrInteractivePlot == TRUE) {
+    if (rv$corrUseAbbreviation == TRUE) {
+      box(
+        title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
+        plotlyOutput("correlogramPlotly", height = "40em"),
+        div(style="text-align: center; margin-top: 1.5em", uiOutput("Legend")),
+        downloadButton('corrDownloadPlot', 'Download Plot')
+      )
+    } else {
+      box(
+        title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
+        plotlyOutput("correlogramPlotly", height = "40em"),
+        downloadButton('corrDownloadPlot', 'Download Plot')
+      )
+    }
+    
   } else {
-    box(
-      title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
-      plotOutput("correlogramPlot", height = "40em"),
-      downloadButton('corrDownloadPlot', 'Download Plot')
-    )
+    
+    if (rv$corrUseAbbreviation == TRUE) {
+      box(
+        title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
+        plotOutput("correlogramPlot", height = "40em"),
+        div(style="text-align: center; margin-top: 1.5em", uiOutput("Legend")),
+        downloadButton('corrDownloadPlot', 'Download Plot')
+      )
+    } else {
+      box(
+        title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
+        plotOutput("correlogramPlot", height = "40em"),
+        downloadButton('corrDownloadPlot', 'Download Plot')
+      )
+    }
+    
   }
 })
 
 output$heatmapCorrelogramOptions <- renderUI({
+  
+  # All this because Bivariate density plot doesn't work in plotly. I want to keep it for static plots.
+  if (input$corrInteractivePlot == TRUE) {
+    corrUpperLowerOptions = c('points', 'smooth', 'cor', 'blank')
+    corrUpperLowerNamedOptions = c("Scatter plot" = 'points',
+                                   "Scatter plot with a smoothed line" = 'smooth',
+                                   "Correlation value plot" = 'cor',
+                                   "Blank plot" = 'blank')
+    
+  } else {
+    corrUpperLowerOptions = c('points', 'smooth', 'density', 'cor', 'blank')
+    corrUpperLowerNamedOptions = c("Scatter plot" = 'points',
+                                   "Scatter plot with a smoothed line" = 'smooth',
+                                   "Bivariate density plot" = 'density',
+                                   "Correlation value plot" = 'cor',
+                                   "Blank plot" = 'blank')
+  }
+  
   if (input$corrPlotType == 'Heatmap') {
     div(
       fluidRow(
@@ -172,15 +235,11 @@ output$heatmapCorrelogramOptions <- renderUI({
                    pickerInput(
                      "corrUpper",
                      NULL,
-                     choices = c("Scatter plot" = 'points',
-                                 "Scatter plot with a smoothed line" = 'smooth',
-                                 "Bivariate density plot" = 'density',
-                                 "Correlation value plot" = 'cor',
-                                 "Blank plot" = 'blank'),
+                     choices = corrUpperLowerNamedOptions,
                      selected = rv$corrUpperV,
                      multiple = FALSE,
                      choicesOpt = list(
-                       disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(rv$corrLowerV)
+                       disabled = corrUpperLowerOptions %in% c(rv$corrLowerV)
                      )
                    )
                )
@@ -211,15 +270,11 @@ output$heatmapCorrelogramOptions <- renderUI({
                    pickerInput(
                      "corrLower",
                      NULL,
-                     choices = c("Scatter plot" = 'points',
-                                 "Scatter plot with a smoothed line" = 'smooth',
-                                 "Bivariate density plot" = 'density',
-                                 "Correlation value plot" = 'cor',
-                                 "Blank plot" = 'blank'),
+                     choices = corrUpperLowerNamedOptions,
                      selected = rv$corrLowerV,
                      multiple = FALSE,
                      choicesOpt = list(
-                       disabled = c('points', 'smooth', 'density', 'cor', 'blank') %in% c(rv$corrUpperV)
+                       disabled = corrUpperLowerOptions %in% c(rv$corrUpperV)
                      )
                    )
                )
@@ -240,10 +295,15 @@ output$heatmapCorrelogramOptions <- renderUI({
 })
 
 output$replotButton <- renderUI({
-  hardLimit = 3000000; # deactivate replotButton
-  softLimit = 1500000; # warn the user of the runtime of the correlation
-  # hardLimit = 35000; # deactivate replotButton
-  # softLimit = 20000; # warn the user of the runtime of the correlation
+  if (input$corrInteractivePlot == TRUE) {
+    hardLimit = 1000000; # deactivate replotButton
+    softLimit = 500000; # warn the user of the runtime of the correlation
+  } else {
+    hardLimit = 3000000; # deactivate replotButton
+    softLimit = 1500000; # warn the user of the runtime of the correlation
+    # hardLimit = 35000; # deactivate replotButton
+    # softLimit = 20000; # warn the user of the runtime of the correlation
+  }
   
   correlogramModesRuntimeFactor <- list(blank = 0,
                                         cor = 2, 
@@ -292,6 +352,7 @@ output$replotButton <- renderUI({
                box(
                  title = NULL, background = "red", solidHeader = TRUE, width=12,
                  HTML("<text style='color:white'>Correlation too large! Either deselect datasets or change the settings of 'upper' and 'lower'.<br>
+                     You can also turn interactive plot off. <br>
                      Settings in order from simplest to most complex: blank, cor, points, smooth, density.")
                )
              )
@@ -338,6 +399,7 @@ draw_correlogram <- function(selected,
   } else {
     namedListOfDatasets <- corrDatasetRepresentation$datasetName
   }
+
   
   names(namedListOfDatasets) <- corrDatasetRepresentation$datasetName
   names(selected) <- namedListOfDatasets[selected]
@@ -359,27 +421,55 @@ draw_correlogram <- function(selected,
     colnames(colsWanted) <- corrDatasetRepresentation$datasetName
   }
 
+  
   if (plotType == "Heatmap") {
     corrMatrix <- round(cor(colsWanted[names(selected)], method = correlateBy), 3)[ ,length(selected):1]
     if (rv$corrUseAbbreviation == TRUE) {
-      ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, digits = 3, tl.srt = 45)
+      corrLabelsSize = 12
+      corrLabelsAngle = 45
     } else {
-      ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, digits = 3, tl.srt = 25)
+      corrLabelsSize = 8
+      corrLabelsAngle = 25
+    }
+    
+    if (rv$corrInteractivePlot == TRUE) {
+        ggplotly(
+          ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, tl.cex = corrLabelsSize, digits = 3, tl.srt = corrLabelsAngle)
+        )
+    } else {
+        ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, tl.cex = corrLabelsSize, digits = 3, tl.srt = corrLabelsAngle)
     }
   } else if (plotType == "Correlogram") {
-    ggpairs(colsWanted[names(selected)], title=NULL,
-            upper = list(continuous = upper),
-            lower = list(continuous = lower),
-            diag = list(continuous = diag))
-    # + ggplot2::theme(aspect.ratio = 1)
+    if (rv$corrInteractivePlot == TRUE) {
+      ggplotly(
+        ggpairs(colsWanted[names(selected)], title=NULL,
+                upper = list(continuous = upper),
+                lower = list(continuous = lower),
+                diag = list(continuous = diag))
+      )
+    } else {
+      ggpairs(colsWanted[names(selected)], title=NULL,
+              upper = list(continuous = upper),
+              lower = list(continuous = lower),
+              diag = list(continuous = diag))
+    }
   }
 }
 
-# Correlogram    
+
+# Static correlogram   
 output$correlogramPlot <- renderPlot({
   selected <- rv$corrVarSelected
   draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n)
 })
+
+# Interactive correlogram
+output$correlogramPlotly <- renderPlotly({
+  selected <- rv$corrVarSelected
+  draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n)
+})
+
+
 
 # Legend
 output$Legend <- renderUI({
