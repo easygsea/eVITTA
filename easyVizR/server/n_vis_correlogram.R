@@ -194,7 +194,7 @@ output$heatmapCorrelogramOptions <- renderUI({
                    pickerInput(
                      "corrCorrelateBy",
                      NULL,
-                     choices = c('R Value' = 'pearson', 'RHO Value' = 'spearman'),
+                     choices = c('R Value' = 'pearson', 'RHO Value' = 'spearman', 'P Value Pearson' = 'pValPearson', 'P Value Spearman' = 'pValSpearman'),
                      selected = rv$corrCorrelateBy,
                      multiple = FALSE,
                    )
@@ -423,7 +423,14 @@ draw_correlogram <- function(selected,
 
   
   if (plotType == "Heatmap") {
-    corrMatrix <- round(cor(colsWanted[names(selected)], method = correlateBy), 3)[ ,length(selected):1]
+    if (correlateBy == "pearson" || correlateBy == "spearman") {
+      corrMatrix <- round(cor(colsWanted[names(selected)], method = correlateBy), 3)[ ,length(selected):1]
+    } else if (correlateBy == "pValPearson") {
+      corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="pearson")$P[ ,length(selected):1]
+    } else if (correlateBy == "pValSpearman") {
+      corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="spearman")$P[ ,length(selected):1]
+    }
+
     if (rv$corrUseAbbreviation == TRUE) {
       corrLabelsSize = 12
       corrLabelsAngle = 45
@@ -434,10 +441,10 @@ draw_correlogram <- function(selected,
     
     if (rv$corrInteractivePlot == TRUE) {
         ggplotly(
-          ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, tl.cex = corrLabelsSize, digits = 3, tl.srt = corrLabelsAngle)
+          ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", colors = c("blue", "WhiteSmoke", "red"), outline.col = "white", lab = showCorrelationValue, tl.cex = corrLabelsSize, digits = 10, tl.srt = corrLabelsAngle)
         )
     } else {
-        ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", outline.col = "white", lab = showCorrelationValue, tl.cex = corrLabelsSize, digits = 3, tl.srt = corrLabelsAngle)
+        ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", colors = c("blue", "WhiteSmoke", "red"), outline.col = "white", lab = showCorrelationValue, tl.cex = corrLabelsSize, digits = 10, tl.srt = corrLabelsAngle)
     }
   } else if (plotType == "Correlogram") {
     if (rv$corrInteractivePlot == TRUE) {

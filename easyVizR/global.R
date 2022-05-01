@@ -38,6 +38,7 @@ if (!require('RRHO')){BiocManager::install('RRHO')}
 if (!require('scales')){install.packages('scales')}
 if (!require('ggcorrplot')){install.packages('ggcorrplot')}
 if (!require('corrplot')){install.packages('corrplot')}
+if (!require('Hmisc')){install.packages('Hmisc')}
 
 library(shiny)
 library(ggplot2)
@@ -77,6 +78,7 @@ library(scales)
 library(GGally)
 library(ggcorrplot)
 library(plotly)
+library(Hmisc)
 
 
 options(repos = BiocManager::repositories())
