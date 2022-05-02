@@ -382,6 +382,12 @@ output$replotButton <- renderUI({
   
 })
 
+
+# ------------------------------------------------------------------------
+#                             UI ENDS
+# ------------------------------------------------------------------------
+
+
 draw_correlogram <- function(selected,
                              corrDatasetRepresentation,
                              df_n = rv$df_n,
@@ -413,6 +419,7 @@ draw_correlogram <- function(selected,
     colsWanted <- colsWanted[complete.cases(colsWanted),]
   } else if (dataOptions == "Intersection only") {
     colsWanted <- to_plot_df[grepl("\\<Stat", names(to_plot_df))]
+    colsWanted <- colsWanted[complete.cases(colsWanted),]
   }
   
   if (rv$corrUseAbbreviation == TRUE) {
@@ -420,15 +427,16 @@ draw_correlogram <- function(selected,
   } else {
     colnames(colsWanted) <- corrDatasetRepresentation$datasetName
   }
-
   
   if (plotType == "Heatmap") {
     if (correlateBy == "pearson" || correlateBy == "spearman") {
       corrMatrix <- round(cor(colsWanted[names(selected)], method = correlateBy), 3)[ ,length(selected):1]
     } else if (correlateBy == "pValPearson") {
       corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="pearson")$P[ ,length(selected):1]
+      # apply -log(pValue) to the whole matrix
     } else if (correlateBy == "pValSpearman") {
       corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="spearman")$P[ ,length(selected):1]
+      # apply -log(pValue) to the whole matrix
     }
 
     if (rv$corrUseAbbreviation == TRUE) {
@@ -439,28 +447,16 @@ draw_correlogram <- function(selected,
       corrLabelsAngle = 25
     }
     
-    if (rv$corrInteractivePlot == TRUE) {
-        ggplotly(
-          ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", colors = c("blue", "WhiteSmoke", "red"), outline.col = "white", lab = showCorrelationValue, tl.cex = corrLabelsSize, digits = 10, tl.srt = corrLabelsAngle)
-        )
-    } else {
-        ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", colors = c("blue", "WhiteSmoke", "red"), outline.col = "white", lab = showCorrelationValue, tl.cex = corrLabelsSize, digits = 10, tl.srt = corrLabelsAngle)
-    }
+    out <- ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", colors = c("blue", "WhiteSmoke", "red"), outline.col = "white", lab = showCorrelationValue, tl.cex = corrLabelsSize, digits = 10, tl.srt = corrLabelsAngle)
+    
   } else if (plotType == "Correlogram") {
-    if (rv$corrInteractivePlot == TRUE) {
-      ggplotly(
-        ggpairs(colsWanted[names(selected)], title=NULL,
-                upper = list(continuous = upper),
-                lower = list(continuous = lower),
-                diag = list(continuous = diag))
-      )
-    } else {
-      ggpairs(colsWanted[names(selected)], title=NULL,
-              upper = list(continuous = upper),
-              lower = list(continuous = lower),
-              diag = list(continuous = diag))
-    }
+    
+    out <- ggpairs(colsWanted[names(selected)], title=NULL,
+                   upper = list(continuous = upper),
+                   lower = list(continuous = lower),
+                   diag = list(continuous = diag))
   }
+  out
 }
 
 
@@ -478,7 +474,7 @@ output$correlogramPlotly <- renderPlotly({
 
 correlogramPlotlyReactive <- reactive({
   selected <- rv$corrVarSelected
-  draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n)
+  ggplotly(draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n))
 })
 
 

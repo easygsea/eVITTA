@@ -106,14 +106,6 @@ observe({
 
 
 # Parsa's stuff:
-# reactive({
-#   corrExcelStyleLetters <- c(LETTERS, unlist(sapply(seq_along(LETTERS), function(i){paste0(LETTERS[i], LETTERS)})))
-#   corrDataSetN <- paste("DataSet", corrExcelStyleLetters[1:length(rv$nx_n)], sep="")
-#   corrDatasetRepresentation <- data.frame(datasetName = rv$nx_n, abbreviation = corrDataSetN, displayName = paste(corrDataSetN, rv$nx_n, sep=" = "))
-#   rownames(corrDatasetRepresentation) <- rv$nx_n
-# })
-
-
 observeEvent(input$corrReplot, {
   rv$corrVarSelected <- input$corrVarSelected
   rv$corrDataOptions <- input$corrDataOptions

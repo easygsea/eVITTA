@@ -77,7 +77,6 @@ library(RRHO)
 library(scales)
 library(GGally)
 library(ggcorrplot)
-library(plotly)
 library(Hmisc)
 
 
