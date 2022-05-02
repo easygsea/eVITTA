@@ -433,9 +433,11 @@ draw_correlogram <- function(selected,
       corrMatrix <- round(cor(colsWanted[names(selected)], method = correlateBy), 3)[ ,length(selected):1]
     } else if (correlateBy == "pValPearson") {
       corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="pearson")$P[ ,length(selected):1]
+      corrMatrix[] <- vapply(corrMatrix, negativeLog, numeric(1))
       # apply -log(pValue) to the whole matrix
     } else if (correlateBy == "pValSpearman") {
       corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="spearman")$P[ ,length(selected):1]
+      corrMatrix[] <- vapply(corrMatrix, negativeLog, numeric(1))
       # apply -log(pValue) to the whole matrix
     }
 
@@ -447,7 +449,29 @@ draw_correlogram <- function(selected,
       corrLabelsAngle = 25
     }
     
-    out <- ggcorrplot(corrMatrix, hc.order = FALSE, type = "full", colors = c("blue", "WhiteSmoke", "red"), outline.col = "white", lab = showCorrelationValue, tl.cex = corrLabelsSize, digits = 10, tl.srt = corrLabelsAngle)
+    if (correlateBy == "pValPearson" || correlateBy == "pValSpearman") {
+      out <- ggcorrplot(
+        corrMatrix,
+        hc.order = FALSE,
+        type = "full",
+        outline.col = "white",
+        lab = showCorrelationValue,
+        tl.cex = corrLabelsSize,
+        digits = 10,
+        tl.srt = corrLabelsAngle) + scale_fill_gradient2(low = "WhiteSmoke", high = "red", breaks=c(0, 10), limit=c(0, 10)) + labs(fill = "-log10(PValue)")
+    } else {
+      out <- ggcorrplot(
+        corrMatrix,
+        hc.order = FALSE,
+        type = "full",
+        colors = c("blue", "WhiteSmoke", "red"),
+        outline.col = "white",
+        lab = showCorrelationValue,
+        tl.cex = corrLabelsSize,
+        digits = 10,
+        tl.srt = corrLabelsAngle)
+    }
+    
     
   } else if (plotType == "Correlogram") {
     
@@ -457,6 +481,10 @@ draw_correlogram <- function(selected,
                    diag = list(continuous = diag))
   }
   out
+}
+
+negativeLog <- function(value) {
+  value <- -log10(value)
 }
 
 
