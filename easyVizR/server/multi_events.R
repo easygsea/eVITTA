@@ -286,7 +286,7 @@ observeEvent(input$n_use_data,{
     rv$corrInteractivePlot <- FALSE
     rv$corrPlotType <- "Heatmap"
     rv$corrCorellateBy <- "rValue"
-    rv$corrShowCorrelationValue <- FALSE
+    rv$corrShowCorrelationValue <- TRUE
     rv$corrUpper <- "cor"
     rv$corrDiag <- "densityDiag"
     rv$corrLower <- "points"
