@@ -439,13 +439,15 @@ draw_correlogram <- function(selected,
   if (plotType == "Heatmap") {
     if (correlateBy == "pearson" || correlateBy == "spearman") {
       corrMatrix <- round(cor(colsWanted[names(selected)], method = correlateBy), 3)[ ,length(selected):1]
-    } else if (correlateBy == "pValPearson") {
-      corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="pearson")$P[ ,length(selected):1]
-      corrMatrix[] <- vapply(corrMatrix, negativeLog, numeric(1))
-      # apply -log(pValue) to the whole matrix
-    } else if (correlateBy == "pValSpearman") {
-      corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="spearman")$P[ ,length(selected):1]
-      corrMatrix[] <- vapply(corrMatrix, negativeLog, numeric(1))
+    } else {
+      if (correlateBy == "pValPearson") {
+        corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="pearson")$P[ ,length(selected):1]
+      } else if (correlateBy == "pValSpearman") {
+        corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="spearman")$P[ ,length(selected):1]
+      }
+      corrMatrix[corrMatrix <= 1E-10] <- 1E-10 # set min p-value for log transform
+      corrMatrix <- -log10(corrMatrix)
+      # corrMatrix[] <- vapply(corrMatrix, negativeLog, numeric(1))
       # apply -log(pValue) to the whole matrix
     }
 
@@ -467,7 +469,14 @@ draw_correlogram <- function(selected,
         lab = showCorrelationValue,
         tl.cex = corrLabelsSize,
         digits = 10,
-        tl.srt = corrLabelsAngle) + scale_fill_gradient(low = "WhiteSmoke", high = "red", limit=c(0, 10)) + labs(fill = "-log10(PValue)")
+        tl.srt = corrLabelsAngle) + scale_fill_gradient2(
+          low = "WhiteSmoke", 
+          high = "red",
+          limit=c(0, NA)
+          ) + labs(
+            fill = "-log10(PValue)"
+            )
+
     } else {
       out <- ggcorrplot(
         corrMatrix,
@@ -492,9 +501,9 @@ draw_correlogram <- function(selected,
   out
 }
 
-negativeLog <- function(value) {
-  value <- -log10(value)
-}
+# negativeLog <- function(value) {
+#   value <- -log10(value)
+# }
 
 
 # Static correlogram   
