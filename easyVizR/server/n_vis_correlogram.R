@@ -459,37 +459,44 @@ draw_correlogram <- function(selected,
       corrLabelsAngle = 25
     }
     
+    if (correlateBy == "pearson"){ corrColorbarTitle = "R" } 
+    else if (correlateBy == "spearman"){ corrColorbarTitle = "Rho" } 
+    else if (correlateBy == "pValPearson"){ corrColorbarTitle = "-log10(PValue)" } 
+    else if (correlateBy == "pValSpearman"){ corrColorbarTitle = "-log10(PValue)" } 
+    
     if (correlateBy == "pValPearson" || correlateBy == "pValSpearman") {
       out <- ggcorrplot(
         corrMatrix,
         hc.order = FALSE,
         type = "full",
-        colors = c("WhiteSmoke", "WhiteSmoke", "red"),
         outline.col = "white",
         lab = showCorrelationValue,
         tl.cex = corrLabelsSize,
         digits = 10,
-        tl.srt = corrLabelsAngle) + scale_fill_gradient2(
+        tl.srt = corrLabelsAngle) + scale_fill_gradient(
+          name = corrColorbarTitle,
           low = "WhiteSmoke", 
           high = "red",
           limit=c(0, NA)
-          ) + labs(
-            fill = "-log10(PValue)"
-            )
+          ) 
 
     } else {
       out <- ggcorrplot(
         corrMatrix,
         hc.order = FALSE,
         type = "full",
-        colors = c("blue", "WhiteSmoke", "red"),
         outline.col = "white",
         lab = showCorrelationValue,
         tl.cex = corrLabelsSize,
         digits = 10,
-        tl.srt = corrLabelsAngle)
+        tl.srt = corrLabelsAngle) + scale_fill_gradient2(
+          name = corrColorbarTitle,
+          low = "blue",
+          mid = "WhiteSmoke",
+          high = "red",
+          limit=c(-1, 1)
+          ) 
     }
-    
     
   } else if (plotType == "Correlogram") {
     
@@ -509,18 +516,25 @@ draw_correlogram <- function(selected,
 # Static correlogram   
 output$correlogramPlot <- renderPlot({
   selected <- rv$corrVarSelected
-  draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n)
+  suppressMessages(
+    draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n)
+  )
 })
 
 # Interactive correlogram
 output$correlogramPlotly <- renderPlotly({
   selected <- rv$corrVarSelected
-  draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n)
+  suppressMessages(
+    draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n)
+  )
+  
 })
 
 correlogramPlotlyReactive <- reactive({
   selected <- rv$corrVarSelected
-  ggplotly(draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n))
+  suppressMessages(
+    ggplotly(draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n))
+  )
 })
 
 
