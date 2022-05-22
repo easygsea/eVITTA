@@ -279,13 +279,19 @@ observeEvent(input$n_use_data,{
     rv$corrDataSetN <- paste("DataSet", rv$corrExcelStyleLetters[1:length(rv$nx_n)], sep="")
     rv$corrDatasetRepresentation <- data.frame(datasetName = rv$nx_n, abbreviation = rv$corrDataSetN, displayName = paste(rv$corrDataSetN, rv$nx_n, sep=" = "))
     # rownames(rv$corrDatasetRepresentation) <- rv$nx_n
-
-    rv$corrVarSelected <- rv$corrDatasetRepresentation$datasetName[1:3]
+    
+    if (length(rv$nx_n) < 3) {
+      rv$corrVarSelected <- rv$corrDatasetRepresentation$datasetName
+    } else {
+      rv$corrVarSelected <- rv$corrDatasetRepresentation$datasetName[1:3]
+    }
+    
     rv$corrDataOptions <- "All data"
     rv$corrUseAbbreviation <- FALSE
     rv$corrInteractivePlot <- FALSE
     rv$corrPlotType <- "Heatmap"
-    rv$corrCorellateBy <- "rValue"
+    # rv$corrCorellateBy <- "rValue"
+    rv$corrCorrelateBy <- "pearson"
     rv$corrShowCorrelationValue <- TRUE
     rv$corrUpper <- "cor"
     rv$corrDiag <- "densityDiag"
@@ -293,9 +299,6 @@ observeEvent(input$n_use_data,{
     rv$corrUpperV <- "cor"
     rv$corrDiagV <- "densityDiag"
     rv$corrLowerV <- "points"
-  
-    
-    
     
     
     
