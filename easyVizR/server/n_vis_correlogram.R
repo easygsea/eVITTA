@@ -1,3 +1,28 @@
+# --------- correlogram limits --------- #
+# A limit is placed on correlogram but not the heatmap, 
+# this is deduced by plot runtime factor and data size
+
+# runtime factor
+# See: runTimeFactorSum = as.numeric(correlogramModesRuntimeFactor[input$corrUpper]) + as.numeric(correlogramModesRuntimeFactor[input$corrLower])
+
+correlogramModesRuntimeFactor <- list(blank = 0,
+                                      cor = 2, 
+                                      points = 3,
+                                      smooth = 3,
+                                      density = 5)
+
+# data size 
+# see: nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum > hardLimit
+corrHardLimitInteractive <- 1000000; # deactivate replotButton
+corrSoftLimitInteractive <- 500000; # warn the user of the runtime of the correlation
+corrHardLimitStatic <- 3000000; # deactivate replotButton
+corrSoftLimitStatic <- 1500000; # warn the user of the runtime of the correlation
+# corrHardLimitStatic = 35000; # deactivate replotButton
+# corrSoftLimitStatic = 20000; # warn the user of the runtime of the correlation
+
+
+
+
 output$correlogram <- renderUI({
   
   rownames(rv$corrDatasetRepresentation) <- rv$corrDatasetRepresentation$datasetName
@@ -117,7 +142,12 @@ output$correlogram <- renderUI({
     ),
     column(8,
        # Main correlogram
-       uiOutput("correlogramDisplay"),
+       box(
+         title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
+         uiOutput("correlogramDisplay"),
+         uiOutput("correlogramLegends"),
+         uiOutput("correlogramDownloadButton")
+       ),
        
        # Exclusion report
        box(
@@ -128,41 +158,22 @@ output$correlogram <- renderUI({
     )
   )
 })
-
+output$correlogramLegends <- renderUI({
+  req(rv$corrUseAbbreviation == TRUE)
+  div(style="text-align: center; margin-top: 1.5em", uiOutput("Legend"))
+})
+output$correlogramDownloadButton <- renderUI({
+  if (rv$corrInteractivePlot == TRUE) {
+    downloadButton('corrDownloadPlotly', 'Download Plot')
+  } else {
+    downloadButton('corrDownloadPlot', 'Download Plot')
+  }
+})
 output$correlogramDisplay <- renderUI({
   if (rv$corrInteractivePlot == TRUE) {
-    if (rv$corrUseAbbreviation == TRUE) {
-      box(
-        title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
-        plotlyOutput("correlogramPlotly", height = "40em"),
-        div(style="text-align: center; margin-top: 1.5em", uiOutput("Legend")),
-        downloadButton('corrDownloadPlotly', 'Download Plot')
-      )
-    } else {
-      box(
-        title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
-        plotlyOutput("correlogramPlotly", height = "40em"),
-        downloadButton('corrDownloadPlotly', 'Download Plot')
-      )
-    }
-    
+      plotlyOutput("correlogramPlotly", height = "40em")
   } else {
-    
-    if (rv$corrUseAbbreviation == TRUE) {
-      box(
-        title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
-        plotOutput("correlogramPlot", height = "40em"),
-        div(style="text-align: center; margin-top: 1.5em", uiOutput("Legend")),
-        downloadButton('corrDownloadPlot', 'Download Plot')
-      )
-    } else {
-      box(
-        title = span( icon("chart-area"), "Correlogram"), status = "primary", solidHeader = FALSE, width = 12,
-        plotOutput("correlogramPlot", height = "40em"),
-        downloadButton('corrDownloadPlot', 'Download Plot')
-      )
-    }
-    
+      plotOutput("correlogramPlot", height = "40em")
   }
 })
 
@@ -304,20 +315,12 @@ output$correlogramOptions <- renderUI({
 
 output$replotButton <- renderUI({
   if (input$corrInteractivePlot == TRUE) {
-    hardLimit = 1000000; # deactivate replotButton
-    softLimit = 500000; # warn the user of the runtime of the correlation
+    hardLimit = corrHardLimitInteractive; # deactivate replotButton
+    softLimit = corrSoftLimitInteractive; # warn the user of the runtime of the correlation
   } else {
-    hardLimit = 3000000; # deactivate replotButton
-    softLimit = 1500000; # warn the user of the runtime of the correlation
-    # hardLimit = 35000; # deactivate replotButton
-    # softLimit = 20000; # warn the user of the runtime of the correlation
+    hardLimit = corrHardLimitStatic; # deactivate replotButton
+    softLimit = corrSoftLimitStatic; # warn the user of the runtime of the correlation
   }
-  
-  correlogramModesRuntimeFactor <- list(blank = 0,
-                                        cor = 2, 
-                                        points = 3,
-                                        smooth = 3,
-                                        density = 5)
   
   rownames(rv$corrDatasetRepresentation) <- rv$corrDatasetRepresentation$datasetName
   corrDatasetRepresentation <- rv$corrDatasetRepresentation
@@ -345,11 +348,13 @@ output$replotButton <- renderUI({
   }
   
   colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
+  
+  dataFactor <- nrow(colsWanted[names(selected)]) * length(selected)
 
   if (input$corrPlotType == "Heatmap") {
     actionButton(inputId = "corrReplot", label = "Replot!")
   } else {
-    if (nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum > hardLimit) {
+    if (dataFactor * runTimeFactorSum > hardLimit) {
       # Hard limit
       div(
         fluidRow(column(12,disabled(actionButton(inputId = "corrReplot", label = "Replot!")))),
@@ -367,7 +372,7 @@ output$replotButton <- renderUI({
           )
         )
       )
-    } else if (nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum > softLimit){
+    } else if (dataFactor * runTimeFactorSum > softLimit){
       # Soft limit
       div(
         fluidRow(column(12, actionButton(inputId = "corrReplot", label = "Replot!"))),
@@ -413,99 +418,107 @@ draw_correlogram <- function(selected,
   } else {
     namedListOfDatasets <- corrDatasetRepresentation$datasetName
   }
-
   
-  names(namedListOfDatasets) <- corrDatasetRepresentation$datasetName
-  names(selected) <- namedListOfDatasets[selected]
-  to_plot_df <- get_df_by_dflogic(selected, dflogic = rv$nxy_sc_dflogic,
-                                 gls = n_ins_gls(),
-                                 user_criteria = rv$ins_criteria,
-                                 starting_df = df_n_basic())
-  
-  if (dataOptions == "All data") {
-    colsWanted <- df_n[grepl("\\<Stat", names(df_n))]
-    colsWanted <- colsWanted[complete.cases(colsWanted),]
-  } else if (dataOptions == "Intersection only") {
-    colsWanted <- to_plot_df[grepl("\\<Stat", names(to_plot_df))]
-    colsWanted <- colsWanted[complete.cases(colsWanted),]
-  }
-  
-  if (rv$corrUseAbbreviation == TRUE) {
-    colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
-  } else {
-    colnames(colsWanted) <- corrDatasetRepresentation$datasetName
-  }
-  
-  if (plotType == "Heatmap") {
-    if (correlateBy == "pearson" || correlateBy == "spearman") {
-      corrMatrix <- round(cor(colsWanted[names(selected)], method = correlateBy), 3)[ ,length(selected):1]
-    } else {
-      if (correlateBy == "pValPearson") {
-        corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="pearson")$P[ ,length(selected):1]
-      } else if (correlateBy == "pValSpearman") {
-        corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="spearman")$P[ ,length(selected):1]
-      }
-      corrMatrix[corrMatrix <= 1E-10] <- 1E-10 # set min p-value for log transform
-      corrMatrix <- -log10(corrMatrix)
-      # corrMatrix[] <- vapply(corrMatrix, negativeLog, numeric(1))
-      # apply -log(pValue) to the whole matrix
+  withProgress(message = "Drawing Plot ...",value = 0,{
+    
+    names(namedListOfDatasets) <- corrDatasetRepresentation$datasetName
+    names(selected) <- namedListOfDatasets[selected]
+    to_plot_df <- get_df_by_dflogic(selected, dflogic = rv$nxy_sc_dflogic,
+                                    gls = n_ins_gls(),
+                                    user_criteria = rv$ins_criteria,
+                                    starting_df = df_n_basic())
+    
+    if (dataOptions == "All data") {
+      colsWanted <- df_n[grepl("\\<Stat", names(df_n))]
+      colsWanted <- colsWanted[complete.cases(colsWanted),]
+    } else if (dataOptions == "Intersection only") {
+      colsWanted <- to_plot_df[grepl("\\<Stat", names(to_plot_df))]
+      colsWanted <- colsWanted[complete.cases(colsWanted),]
     }
-
+    
     if (rv$corrUseAbbreviation == TRUE) {
-      corrLabelsSize = 12
-      corrLabelsAngle = 45
+      colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
     } else {
-      corrLabelsSize = 8
-      corrLabelsAngle = 25
+      colnames(colsWanted) <- corrDatasetRepresentation$datasetName
     }
     
-    if (correlateBy == "pearson"){ corrColorbarTitle = "R" } 
-    else if (correlateBy == "spearman"){ corrColorbarTitle = "Rho" } 
-    else if (correlateBy == "pValPearson"){ corrColorbarTitle = "-log10(PValue)" } 
-    else if (correlateBy == "pValSpearman"){ corrColorbarTitle = "-log10(PValue)" } 
+    incProgress(0.2)
     
-    if (correlateBy == "pValPearson" || correlateBy == "pValSpearman") {
-      out <- ggcorrplot(
-        corrMatrix,
-        hc.order = FALSE,
-        type = "full",
-        outline.col = "white",
-        lab = showCorrelationValue,
-        tl.cex = corrLabelsSize,
-        digits = 10,
-        tl.srt = corrLabelsAngle) + scale_fill_gradient(
-          name = corrColorbarTitle,
-          low = "WhiteSmoke", 
-          high = "red",
-          limit=c(0, NA)
+    if (plotType == "Heatmap") {
+      if (correlateBy == "pearson" || correlateBy == "spearman") {
+        corrMatrix <- round(cor(colsWanted[names(selected)], method = correlateBy), 3)[ ,length(selected):1]
+      } else {
+        if (correlateBy == "pValPearson") {
+          corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="pearson")$P[ ,length(selected):1]
+        } else if (correlateBy == "pValSpearman") {
+          corrMatrix <- rcorr(as.matrix(colsWanted[names(selected)]),type="spearman")$P[ ,length(selected):1]
+        }
+        corrMatrix[corrMatrix <= 1E-10] <- 1E-10 # set min p-value for log transform
+        corrMatrix <- -log10(corrMatrix)
+        # corrMatrix[] <- vapply(corrMatrix, negativeLog, numeric(1))
+        # apply -log(pValue) to the whole matrix
+      }
+      
+      if (rv$corrUseAbbreviation == TRUE) {
+        corrLabelsSize = 12
+        corrLabelsAngle = 45
+      } else {
+        corrLabelsSize = 8
+        corrLabelsAngle = 25
+      }
+      
+      if (correlateBy == "pearson"){ corrColorbarTitle = "R" } 
+      else if (correlateBy == "spearman"){ corrColorbarTitle = "Rho" } 
+      else if (correlateBy == "pValPearson"){ corrColorbarTitle = "-log10(PValue)" } 
+      else if (correlateBy == "pValSpearman"){ corrColorbarTitle = "-log10(PValue)" } 
+      
+      if (correlateBy == "pValPearson" || correlateBy == "pValSpearman") {
+        out <- ggcorrplot(
+          corrMatrix,
+          hc.order = FALSE,
+          type = "full",
+          outline.col = "white",
+          lab = showCorrelationValue,
+          tl.cex = corrLabelsSize,
+          digits = 10,
+          tl.srt = corrLabelsAngle) + scale_fill_gradient(
+            name = corrColorbarTitle,
+            low = "WhiteSmoke", 
+            high = "red",
+            limit=c(0, NA)
           ) 
-
-    } else {
-      out <- ggcorrplot(
-        corrMatrix,
-        hc.order = FALSE,
-        type = "full",
-        outline.col = "white",
-        lab = showCorrelationValue,
-        tl.cex = corrLabelsSize,
-        digits = 10,
-        tl.srt = corrLabelsAngle) + scale_fill_gradient2(
-          name = corrColorbarTitle,
-          low = "blue",
-          mid = "WhiteSmoke",
-          high = "red",
-          limit=c(-1, 1)
+        
+      } else {
+        out <- ggcorrplot(
+          corrMatrix,
+          hc.order = FALSE,
+          type = "full",
+          outline.col = "white",
+          lab = showCorrelationValue,
+          tl.cex = corrLabelsSize,
+          digits = 10,
+          tl.srt = corrLabelsAngle) + scale_fill_gradient2(
+            name = corrColorbarTitle,
+            low = "blue",
+            mid = "WhiteSmoke",
+            high = "red",
+            limit=c(-1, 1)
           ) 
+      }
+      
+    } else if (plotType == "Correlogram") {
+      
+      out <- ggpairs(colsWanted[names(selected)], title=NULL,
+                     upper = list(continuous = upper),
+                     lower = list(continuous = lower),
+                     diag = list(continuous = diag))
     }
     
-  } else if (plotType == "Correlogram") {
+    incProgress(0.6)
+    out
     
-    out <- ggpairs(colsWanted[names(selected)], title=NULL,
-                   upper = list(continuous = upper),
-                   lower = list(continuous = lower),
-                   diag = list(continuous = diag))
-  }
-  out
+    
+  })
 }
 
 # negativeLog <- function(value) {
