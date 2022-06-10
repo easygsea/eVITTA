@@ -172,9 +172,9 @@ output$correlogramLegends <- renderUI({
 })
 output$correlogramDownloadButton <- renderUI({
   if (rv$corrInteractivePlot == TRUE) {
-    downloadButton('corrDownloadPlotly', 'Download Current Plot')
+    downloadButton('corrDownloadPlotly', 'Download Plot')
   } else {
-    downloadButton('corrDownloadPlot', 'Download Current Plot')
+    downloadButton('corrDownloadPlot', 'Download Plot')
   }
 })
 output$correlogramDisplay <- renderUI({
@@ -369,8 +369,8 @@ output$replotButton <- renderUI({
     lowerRuntimeFactor <- dataFactor * plotsFactor * lowerPlotTypeFactor
     
     runTimeFactorSum = upperRuntimeFactor + lowerRuntimeFactor
-    reportVariables(list(dataFactor, plotsFactor, upperPlotTypeFactor, lowerPlotTypeFactor, 
-                    upperRuntimeFactor, lowerRuntimeFactor, runTimeFactorSum))
+    # reportVariables(list(dataFactor, plotsFactor, upperPlotTypeFactor, lowerPlotTypeFactor, 
+    #                 upperRuntimeFactor, lowerRuntimeFactor, runTimeFactorSum))
   }
   
   
@@ -381,17 +381,27 @@ output$replotButton <- renderUI({
     if (runTimeFactorSum > hardLimit) {
       # Hard limit
       div(
-        fluidRow(column(12,disabled(actionButton(inputId = "corrReplot", label = "Replot!")))),
+        fluidRow(column(12,
+                        disabled(actionButton(inputId = "corrReplot", label = "Replot!"))
+                        )),
         fluidRow(
           column(12,
              div(
                style="display: inline-block; margin-top: 1.5rem",
                box(
                  title = NULL, background = "red", solidHeader = TRUE, width=12,
-                 HTML("<text style='color:white'>Correlation too large! Either deselect datasets or change the settings of 'upper' and 'lower'.<br>
-                     You can also turn interactive plot off. <br>
-                     Settings in order from simplest to most complex: blank, cor, points, smooth, density.")
+                 HTML("<text style='color:white'>Correlogram is disabled for overly large datasets. <br>
+                 The following are recommended: <br>
+                 1. Deselect some datasets; <br>
+                 2. Change the settings of 'upper' and 'lower'; <br>
+                 3. Turn off interactive plot;<br>
+                 4. Directly download plots without rendering.")
                )
+             ),
+             div(
+               HTML("<b>Download Plot without Rendering:<b/>"),br(),
+               downloadButton('corrDownloadPlotPreview', 'Static'),
+               downloadButton('corrDownloadPlotlyPreview', 'Interactive')
              )
           )
         )
@@ -399,21 +409,31 @@ output$replotButton <- renderUI({
     } else if (runTimeFactorSum > softLimit){
       # Soft limit
       div(
-        fluidRow(column(12, actionButton(inputId = "corrReplot", label = "Replot!"))),
+        fluidRow(column(12, 
+                        actionButton(inputId = "corrReplot", label = "Replot!"),
+                        )),
         fluidRow(
           column(12,
              div(
                style="display: inline-block; margin-top: 1.5rem",
                box(
                  title = NULL, background = "orange", solidHeader = TRUE, width=12,
-                 HTML("<text style='color:white'>Warning: Correlogram under the specified settings will take a long time to render. Please be patient.")
+                 HTML("<text style='color:white'>Warning: Plot will take a while to render. Please be patient.")
                )
+             ),
+             div(
+               HTML("<b>Download Plot without Rendering:<b/>"),br(),
+               downloadButton('corrDownloadPlotPreview', 'Static'),
+               downloadButton('corrDownloadPlotlyPreview', 'Interactive')
              )
           )
         )
       )
     } else {
-      actionButton(inputId = "corrReplot", label = "Replot!")
+      div(
+        actionButton(inputId = "corrReplot", label = "Replot!")
+      )
+      
     }
   }
   
@@ -573,9 +593,45 @@ output$correlogramPlotly <- renderPlotly({
 
 correlogramPlotlyReactive <- reactive({
   selected <- rv$corrVarSelected
-  suppressMessages(
+  suppressWarnings(
     ggplotly(draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n))
   )
+})
+
+correlogramPlotReactivePreview <- reactive({
+  suppressWarnings(draw_correlogram(rv$corrVarSelected, 
+                                    rv$corrDatasetRepresentation, 
+                                    rv$df_n,
+                                    varSelected = input$corrVarSelected,
+                                    dataOptions = input$corrDataOptions,
+                                    plotType = input$corrPlotType,
+                                    correlateBy = input$corrCorrelateBy,
+                                    showCorrelationValue = input$corrShowCorrelationValue,
+                                    corrUseAbbreviation = input$corrUseAbbreviation,
+                                    upper = input$corrUpper,
+                                    lower = input$corrLower,
+                                    diag = input$corrDiag
+
+  ))
+})
+
+correlogramPlotlyReactivePreview <- reactive({
+  suppressWarnings(ggplotly(draw_correlogram(rv$corrVarSelected, 
+                                             rv$corrDatasetRepresentation, 
+                                             rv$df_n,
+                                             varSelected = input$corrVarSelected,
+                                             dataOptions = input$corrDataOptions,
+                                             plotType = input$corrPlotType,
+                                             correlateBy = input$corrCorrelateBy,
+                                             showCorrelationValue = input$corrShowCorrelationValue,
+                                             corrUseAbbreviation = input$corrUseAbbreviation,
+                                             upper = input$corrUpper,
+                                             lower = input$corrLower,
+                                             diag = input$corrDiag
+                                               
+    ))
+    )
+
 })
 
 
@@ -625,7 +681,8 @@ output$corrDownloadPlot <- downloadHandler(
     paste("correlogram-", Sys.Date(), ".png", sep = "")
   },
   content = function(file) {
-    ggsave(file, device = png, dpi = 600)
+    ggsave(file, device = png, dpi = 600,
+           width= 7, height= 7)
   }
 )
 
@@ -637,3 +694,23 @@ output$corrDownloadPlotly <- downloadHandler(
     saveWidget(as_widget(correlogramPlotlyReactive()), file, selfcontained = TRUE)
     }
   )
+
+output$corrDownloadPlotPreview <- downloadHandler(
+  filename = function() { paste("correlogram-", Sys.Date(), ".png", sep = "") },
+  content = function(file) {
+    req(is.null(n_venn_plt())==F)
+    ggsave(file, plot = correlogramPlotReactivePreview(), device = "png", dpi = 600,
+           width= 7, height= 7)
+  }
+)
+
+
+
+output$corrDownloadPlotlyPreview <- downloadHandler(
+  filename = function() {
+    paste("correlogram-", Sys.Date(), ".html", sep = "")
+  },  
+  content = function(file) {
+    saveWidget(as_widget(suppressMessages(correlogramPlotlyReactivePreview())), file, selfcontained = TRUE)
+  }
+)
