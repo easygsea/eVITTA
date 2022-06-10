@@ -967,7 +967,7 @@ output$network_dropdowns <- renderUI({
 output$select_graph_to_display <- renderUI({
 div(div(id="n1_1",
     radioGroupButtons("n_ui_showpanel",
-                      choices=c("Heatmap", "Scatter","RRHO", "Single", "Network", "Correlogram"),
+                      choices=c("Heatmap", "Scatter","RRHO", "Correlogram", "Single", "Network"),
                       selected=rv$n_ui_showpanel, status="primary",
                       checkIcon = list(
                         yes = tags$i(class = "fa fa-check-square", 
