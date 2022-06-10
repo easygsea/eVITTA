@@ -507,11 +507,17 @@ draw_correlogram <- function(selected,
       }
       
     } else if (plotType == "Correlogram") {
+      if(diag=="barDiag"){
+        diagSettings <- list(continuous = wrap(diag, binwidth=0.1))
+      } else {
+        diagSettings <- list(continuous = wrap(diag))
+      }
       
-      out <- ggpairs(colsWanted[names(selected)], title=NULL,
+      out <- suppressWarnings(ggpairs(colsWanted[names(selected)], title=NULL,
                      upper = list(continuous = upper),
                      lower = list(continuous = lower),
-                     diag = list(continuous = diag))
+                     diag = diagSettings
+                     ))
     }
     
     incProgress(0.6)
