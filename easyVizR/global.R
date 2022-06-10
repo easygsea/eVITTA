@@ -37,7 +37,7 @@ if (!require('RColorBrewer')){install.packages('RColorBrewer')}
 if (!require('RRHO')){BiocManager::install('RRHO')}
 if (!require('scales')){install.packages('scales')}
 if (!require('ggcorrplot')){install.packages('ggcorrplot')}
-if (!require('corrplot')){install.packages('corrplot')}
+if (!require('GGally')){install.packages('GGally')}
 if (!require('Hmisc')){install.packages('Hmisc')}
 
 library(shiny)
