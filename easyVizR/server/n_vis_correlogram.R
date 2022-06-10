@@ -41,7 +41,7 @@ output$correlogram <- renderUI({
          title = NULL, status = "primary", solidHeader = FALSE, width = 12,
          fluidRow(
            column(12,
-                  checkboxGroupInput(
+                  div(id="n_cor1",checkboxGroupInput(
                     "corrVarSelected",
                     "Show correlogram for:",
                     choices = NULL,
@@ -50,18 +50,18 @@ output$correlogram <- renderUI({
                     width = NULL,
                     choiceNames = rv$corrDatasetRepresentation$displayName,
                     choiceValues = rv$corrDatasetRepresentation$datasetName
-                  )
+                  ))
            )
          ),
          fluidRow(
            column(12,
-                  radioGroupButtons("corrDataOptions",
+                  div(id="n_cor2",radioGroupButtons("corrDataOptions",
                                     label = HTML(paste0(
                                       "<b>Data Options:</b>",
                                       add_help("corrDataOptions_help", style="margin-left: 5px;"))
                                     ),
                                     choices = c("All data", "Intersection only"),
-                                    selected=rv$corrDataOptions,size="s", direction="horizontal"), 
+                                    selected=rv$corrDataOptions,size="s", direction="horizontal")), 
                   bsTooltip("nxy_sc_dflogic_help",
                             dflogic_explanation,
                             placement = "right"),
@@ -114,7 +114,7 @@ output$correlogram <- renderUI({
          ),
          fluidRow(
            column(12,
-                  radioButtons(
+                  div(id="n_cor3",radioButtons(
                     "corrPlotType",
                     label= HTML(paste0(
                       "<b>Plot Type:</b>",
@@ -126,7 +126,7 @@ output$correlogram <- renderUI({
                     width = NULL,
                     choiceNames = NULL,
                     choiceValues = NULL
-                  )
+                  ))
            )
          ),
          
@@ -322,6 +322,8 @@ output$correlogramOptions <- renderUI({
 
 
 output$replotButton <- renderUI({
+  req(length(input$corrVarSelected)>=2)
+  
   if (input$corrInteractivePlot == TRUE) {
     hardLimit = corrHardLimitInteractive; # deactivate replotButton
     softLimit = corrSoftLimitInteractive; # warn the user of the runtime of the correlation
