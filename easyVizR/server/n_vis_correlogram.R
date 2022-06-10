@@ -6,7 +6,7 @@
 # See: runTimeFactorSum = as.numeric(correlogramModesRuntimeFactor[input$corrUpper]) + as.numeric(correlogramModesRuntimeFactor[input$corrLower])
 
 correlogramModesRuntimeFactor <- list(blank = 0,
-                                      cor = 2, 
+                                      cor = 0.2, 
                                       points = 3,
                                       smooth = 3,
                                       density = 5)
@@ -14,12 +14,20 @@ correlogramModesRuntimeFactor <- list(blank = 0,
 # data size 
 # see: nrow(colsWanted[names(selected)]) * length(selected) * runTimeFactorSum > hardLimit
 corrHardLimitInteractive <- 1000000; # deactivate replotButton
-corrSoftLimitInteractive <- 500000; # warn the user of the runtime of the correlation
-corrHardLimitStatic <- 3000000; # deactivate replotButton
-corrSoftLimitStatic <- 1500000; # warn the user of the runtime of the correlation
-# corrHardLimitStatic = 35000; # deactivate replotButton
-# corrSoftLimitStatic = 20000; # warn the user of the runtime of the correlation
+corrSoftLimitInteractive <- 200000; # warn the user of the runtime of the correlation
+corrHardLimitStatic <- corrHardLimitInteractive*5; # deactivate replotButton
+corrSoftLimitStatic <- corrSoftLimitInteractive*5; # warn the user of the runtime of the correlation
 
+
+reportVariables <- function(varList){
+  printList <- unlist(lapply(varList, function(x){
+    varName = deparse(substitute(x))
+    varVal = toString(x)
+    paste0(varName, ": ", varVal)
+  }))
+  print("Reporting variables:")
+  for(x in printList){ print(x) }
+}
 
 
 
@@ -164,9 +172,9 @@ output$correlogramLegends <- renderUI({
 })
 output$correlogramDownloadButton <- renderUI({
   if (rv$corrInteractivePlot == TRUE) {
-    downloadButton('corrDownloadPlotly', 'Download Plot')
+    downloadButton('corrDownloadPlotly', 'Download Current Plot')
   } else {
-    downloadButton('corrDownloadPlot', 'Download Plot')
+    downloadButton('corrDownloadPlot', 'Download Current Plot')
   }
 })
 output$correlogramDisplay <- renderUI({
@@ -329,11 +337,7 @@ output$replotButton <- renderUI({
   selected <- input$corrVarSelected
   names(selected) <- namedListOfDatasets[selected]
   
-  if (is.null(input$corrUpper) | is.null(input$corrLower)) {
-    runTimeFactorSum = 0
-  } else {
-    runTimeFactorSum = as.numeric(correlogramModesRuntimeFactor[input$corrUpper]) + as.numeric(correlogramModesRuntimeFactor[input$corrLower])
-  }
+
   
   df_n <- rv$df_n
   to_plot_df <- get_df_by_dflogic(selected, dflogic = rv$nxy_sc_dflogic,
@@ -349,12 +353,32 @@ output$replotButton <- renderUI({
   
   colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
   
-  dataFactor <- nrow(colsWanted[names(selected)]) * length(selected)
+  # compute runtime factor
+  if (is.null(input$corrUpper) | is.null(input$corrLower)) {
+    runTimeFactorSum = 0
+  } else {
+    # data factor = data points in each pairwise plot
+    dataFactor <- nrow(colsWanted[names(selected)]) * 2
+    # number of plots factor = number of plots on each diagonal
+    plotsFactor <- sum(1:length(selected)-1)
+    # plot type factor
+    upperPlotTypeFactor <- as.numeric(correlogramModesRuntimeFactor[input$corrUpper])
+    lowerPlotTypeFactor <- as.numeric(correlogramModesRuntimeFactor[input$corrLower])
+    # compute total factor based on 3 values above
+    upperRuntimeFactor <- dataFactor * plotsFactor * upperPlotTypeFactor
+    lowerRuntimeFactor <- dataFactor * plotsFactor * lowerPlotTypeFactor
+    
+    runTimeFactorSum = upperRuntimeFactor + lowerRuntimeFactor
+    reportVariables(list(dataFactor, plotsFactor, upperPlotTypeFactor, lowerPlotTypeFactor, 
+                    upperRuntimeFactor, lowerRuntimeFactor, runTimeFactorSum))
+  }
+  
+  
 
   if (input$corrPlotType == "Heatmap") {
     actionButton(inputId = "corrReplot", label = "Replot!")
   } else {
-    if (dataFactor * runTimeFactorSum > hardLimit) {
+    if (runTimeFactorSum > hardLimit) {
       # Hard limit
       div(
         fluidRow(column(12,disabled(actionButton(inputId = "corrReplot", label = "Replot!")))),
@@ -372,7 +396,7 @@ output$replotButton <- renderUI({
           )
         )
       )
-    } else if (dataFactor * runTimeFactorSum > softLimit){
+    } else if (runTimeFactorSum > softLimit){
       # Soft limit
       div(
         fluidRow(column(12, actionButton(inputId = "corrReplot", label = "Replot!"))),
@@ -382,7 +406,7 @@ output$replotButton <- renderUI({
                style="display: inline-block; margin-top: 1.5rem",
                box(
                  title = NULL, background = "orange", solidHeader = TRUE, width=12,
-                 HTML("<text style='color:white'>Warning: Correlation may take too long")
+                 HTML("<text style='color:white'>Warning: Correlogram under the specified settings will take a long time to render. Please be patient.")
                )
              )
           )
@@ -409,11 +433,12 @@ draw_correlogram <- function(selected,
                              plotType = rv$corrPlotType,
                              correlateBy = rv$corrCorrelateBy,
                              showCorrelationValue = rv$corrShowCorrelationValue,
+                             corrUseAbbreviation = rv$corrUseAbbreviation,
                              upper = rv$corrUpper,
                              lower = rv$corrLower,
                              diag = rv$corrDiag) {
   
-  if (rv$corrUseAbbreviation == TRUE) {
+  if (corrUseAbbreviation == TRUE) {
     namedListOfDatasets <- corrDatasetRepresentation$abbreviation
   } else {
     namedListOfDatasets <- corrDatasetRepresentation$datasetName
@@ -436,7 +461,7 @@ draw_correlogram <- function(selected,
       colsWanted <- colsWanted[complete.cases(colsWanted),]
     }
     
-    if (rv$corrUseAbbreviation == TRUE) {
+    if (corrUseAbbreviation == TRUE) {
       colnames(colsWanted) <- corrDatasetRepresentation$abbreviation
     } else {
       colnames(colsWanted) <- corrDatasetRepresentation$datasetName
@@ -459,7 +484,7 @@ draw_correlogram <- function(selected,
         # apply -log(pValue) to the whole matrix
       }
       
-      if (rv$corrUseAbbreviation == TRUE) {
+      if (corrUseAbbreviation == TRUE) {
         corrLabelsSize = 12
         corrLabelsAngle = 45
       } else {
