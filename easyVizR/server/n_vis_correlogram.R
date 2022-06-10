@@ -542,10 +542,7 @@ output$correlogramPlot <- renderPlot({
 
 # Interactive correlogram
 output$correlogramPlotly <- renderPlotly({
-  selected <- rv$corrVarSelected
-  suppressMessages(
-    draw_correlogram(selected, rv$corrDatasetRepresentation, rv$df_n)
-  )
+  suppressWarnings(correlogramPlotlyReactive())
   
 })
 
