@@ -1,5 +1,18 @@
 # eVITTA update log
 
+### V1.4.1
+
+June 20, 2022 added easyGEO GSE size gater (Jean)
+- auto-detect if a GSE file to download exceeds the maximum allowance (default: 10GB)
+- render a modal UI with a link to direct the user to download from NCBI official website
+
+### V1.4.0
+
+June 10, 2022 added easyVizR correlogram module (Parsa/ Judith)
+
+- static and interactive versions of correlation heatmap and correlogram
+- soft and hard limits for rendering correlogram based on data size and plot type
+
 ### V1.3.2
 
 Nov 03, 2021 easyGEO & easyGSEA function improvement (Jean)

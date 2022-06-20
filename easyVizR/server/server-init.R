@@ -70,6 +70,28 @@ init_demo <- function(){
   rv$vis_percent <- "jaccard"
   rv$vis_percent_cutoff <- 0.25
   rv$combined_k <- 0.5
+  
+  #Correlogram
+  # Parsa's stuff
+  rv$corrExcelStyleLetters <- c(LETTERS, unlist(sapply(seq_along(LETTERS), function(i){paste0(LETTERS[i], LETTERS)})))
+  rv$corrDataSetN <- paste("DataSet", rv$corrExcelStyleLetters[1:length(rv$nx_n)], sep="")
+  rv$corrDatasetRepresentation <- data.frame(datasetName = rv$nx_n, abbreviation = rv$corrDataSetN, displayName = paste(rv$corrDataSetN, rv$nx_n, sep=" = "))
+  # rownames(rv$corrDatasetRepresentation) <- rv$nx_n
+
+  rv$corrVarSelected <- rv$corrDatasetRepresentation$datasetName[1:3]
+  rv$corrDataOptions <- "All data"
+  rv$corrUseAbbreviation <- FALSE
+  rv$corrInteractivePlot <- FALSE
+  rv$corrPlotType <- "Heatmap"
+  rv$corrCorrelateBy <- "pearson"
+  rv$corrShowCorrelationValue <- TRUE
+  rv$corrUpper <- "cor"
+  rv$corrDiag <- "densityDiag"
+  rv$corrLower <- "points"
+  rv$corrUpperV <- "cor"
+  rv$corrDiagV <- "densityDiag"
+  rv$corrLowerV <- "points"
+  
   rv$folder_upload_state <- "uploaded"
   #readRDS(paste0(getwd(), "/rvs/folder_upload_state.rds"))
   rv$upload_batch_colscheme <- readRDS(paste0(getwd(), "/rvs/upload_batch_colscheme.rds"))

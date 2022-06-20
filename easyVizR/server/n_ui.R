@@ -954,12 +954,20 @@ output$network_dropdowns <- renderUI({
 
 
 #======================================================================#
+####                     CORRELOGRAM UI                              ####
+#======================================================================#
+
+
+
+
+
+#======================================================================#
 ####                     ASSEMBLE INTO MAIN BODY UI                 ####
 #======================================================================#
 output$select_graph_to_display <- renderUI({
 div(div(id="n1_1",
     radioGroupButtons("n_ui_showpanel",
-                      choices=c("Heatmap", "Scatter","RRHO", "Single", "Network"),
+                      choices=c("Heatmap", "Scatter","RRHO", "Correlogram", "Single", "Network"),
                       selected=rv$n_ui_showpanel, status="primary",
                       checkIcon = list(
                         yes = tags$i(class = "fa fa-check-square", 
@@ -1190,11 +1198,14 @@ output$n_panels <- renderUI({
                              )
                            )
                          )
-        )
-        
         ),
+        conditionalPanel("input.n_ui_showpanel == 'Correlogram'",
+                         div(
+                           uiOutput("correlogram")
+                         )
+        )
+      ),
       
-
 
       #uiOutput("n_ui_basic"),
       #uiOutput("n_ui_scatter"),

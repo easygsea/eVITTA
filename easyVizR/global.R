@@ -36,6 +36,9 @@ if (!require('colorspace')){install.packages('colorspace')}
 if (!require('RColorBrewer')){install.packages('RColorBrewer')}
 if (!require('RRHO')){BiocManager::install('RRHO')}
 if (!require('scales')){install.packages('scales')}
+if (!require('ggcorrplot')){install.packages('ggcorrplot')}
+if (!require('GGally')){install.packages('GGally')}
+if (!require('Hmisc')){install.packages('Hmisc')}
 
 library(shiny)
 library(ggplot2)
@@ -72,6 +75,10 @@ library(colorspace)
 library(RColorBrewer)
 library(RRHO)
 library(scales)
+library(GGally)
+library(ggcorrplot)
+library(Hmisc)
+
 
 options(repos = BiocManager::repositories())
 futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger") # to suppress creation of log file
