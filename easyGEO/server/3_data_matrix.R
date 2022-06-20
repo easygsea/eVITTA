@@ -200,6 +200,7 @@ output$sup_links <- renderUI({
   
   o_list <- lapply(1:length(rv$suplist), function(i){
     path = rv$suplist[[i]]
+    # the ftp directory
     ftp = dirname(path)
     # ftp_id = paste0("ftp",i)
     ftpa_id = paste0("ftpa",i)
@@ -209,15 +210,39 @@ output$sup_links <- renderUI({
         basename(path)
       },
       content <- function(file) {
-        rv$ftpy = basename(path)
-        o_file = paste0(getwd(),"/www/tmp/",basename(path))
-        if(! file.exists(o_file)){
-          # curl::curl_fetch_disk(path, o_file)
-          download.file(path, o_file, method="wget")
-        }
-        file.copy(o_file, file)
+        withProgress(message = wait_msg(paste0("Downloading ",basename(path),"...")), value = 1, {
+          # checking if size exceeds rv$path_size
+          path_size <- getURL(path, nobody=1L, header=1L)
+          path_size <- strsplit(path_size, "\r\n")[[1]]
+          path_size <- path_size[grepl("^Content-Length", path_size)] %>% sub("^Content-Length: ","",.)
+          path_size <- as.numeric(path_size)
+          # if size ok, directly downloading the file for the user
+          if(path_size <= rv$path_size){
+            rv$ftpy = basename(path)
+            o_file = paste0(getwd(),"/www/tmp/",basename(path))
+            if(! file.exists(o_file)){
+              # curl::curl_fetch_disk(path, o_file)
+              download.file(path, o_file, method="wget")
+            }
+            file.copy(o_file, file)
+          }else{
+            # if size too large, render an error UI
+            url_link <- paste0("https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=",rv$geo_accession)
+            showModal(modalDialog(
+              div(
+                p("The file you are downloading exceeds our maximum limit of ",round(rv$path_size/1e9)," GB.")
+                ,p(" Please go to NCBI official website to download the file: ")
+                ,HTML(paste0("<a href='",url_link,"' target='_blank'>",url_link,"</a>"))
+                ,style="font-size:150%"
+              )
+              ,easyClose = TRUE,size="l"
+              ,footer = modalButton("OK")
+            ))
+          }
+        })
       }
     )
+    
     
     div(style="display: inline-block;vertical-align:top; width: 100%;word-break: break-word;",
                      wellPanel(basename(path), br(),

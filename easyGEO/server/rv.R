@@ -29,6 +29,8 @@ rv <- reactiveValues(
   run_btn_color="warning", run_btn_style="simple",
   dbtn_color="warning", dbtn_style="unite",
   
+  path_size=1e10, # maximum allowed GSE file size, default 10GB
+  
   # ========= DE customization ======== #
   count_filter = "default", exp_unit = "cpm", exp_threshold = 1, exp_n = 3,
   fbe_min_count = 10, fbe_min_total_count = 15, fbe_large_n = 10, fbe_min_prop = 0.7,

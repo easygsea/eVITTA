@@ -26,7 +26,7 @@ if (!require('shinydisconnect')) {install.packages('shinydisconnect')}
 if (!require('rintrojs')) {install.packages('rintrojs')}
 if (!require('knitr')) {install.packages('knitr')}
 if (!require('RColorBrewer')) {install.packages('RColorBrewer')}
-
+if (!require('RCurl')) {install.packages('RCurl')}
 
 library(shiny)
 library(shinydashboard)
@@ -54,6 +54,7 @@ library(shinydisconnect)
 library(rintrojs)
 library(knitr) #might need for transforming rmd to html
 library(RColorBrewer)
+library(RCurl)
 
 options(repos = BiocManager::repositories())
 
