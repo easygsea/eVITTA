@@ -19,6 +19,25 @@ allowed_chars <- "[^(a-z0-9A-Z+><%\\s)|[:punct:]]"
 var_allowed_chars <- "[^a-z0-9A-Z+><_\\-.]"
 
 
+tidyInDF <- function(in_df){
+  in_df$Name <- as.character(in_df$Name) # convert name column to character
+  in_df$Stat <- as.numeric(in_df$Stat) # convert name column to character
+  in_df$PValue <- as.numeric(in_df$PValue) # convert name column to character
+  in_df$FDR <- as.numeric(in_df$FDR) # convert name column to character
+  
+  if (any(duplicated(in_df$Name))){
+    in_df$Name <- make.unique(in_df$Name)
+    }
+  
+  in_df$Name <- toupper(in_df$Name)
+  in_df <- in_df[nchar(in_df$Name) != 0,] # delete rows with empty Name
+  in_df <- in_df %>% mutate_all(function(x) ifelse(is.nan(x) | is.infinite(x), NA, x)) # convert +-Inf to NA
+  in_df <- in_df[rowSums(is.na(in_df)) != ncol(in_df),] # delete rows that are entirely NA
+  
+  in_df <- remove_nas(in_df)
+  in_df
+}
+
 
 # 
 # 
@@ -554,6 +573,7 @@ observeEvent(input$g_reset, {
 })
 
 
+
 # upon submitting, add file to list of dataframes to select from
 observeEvent(input$batch_submit, {
   
@@ -598,23 +618,21 @@ observeEvent(input$batch_submit, {
     
     # tidy duplicate names
     if (any(duplicated(in_df$Name))){
-      in_df$Name <- make.unique(in_df$Name)
       show_reminder_dup2 <- TRUE 
     } else {show_reminder_dup2 <- F}
     
-    
     # load only the essential columns (is it worth it to enable them to load more?)
     load_cols_list <- c(c("Name", "Stat", "PValue", "FDR"), unlist(input$batch_load_other_cols))
-    # print(load_cols_list)
+
     # #rv$upload_columns <- colnames(read.csv(inFile$datapath, fileEncoding = "Latin1", check.names = F, nrows=1))
     # for(i in seq_along(load_cols_list)){
     #   #delete the unrecognized character
     #   load_cols_list[i] <- stringr::str_replace_all(load_cols_list[i],"[^(a-z0-9A-Z)|[:punct:]]", "")
     # }
-    # print(load_cols_list)
+
     
     in_df <- in_df[,load_cols_list]
-    in_df$Name <- toupper(in_df$Name)
+    in_df <- tidyInDF(in_df)
     
     newname <- tidy_filename(inFiles$name[[i]], rv$ll)
     
@@ -965,21 +983,15 @@ observeEvent(input$submit, {
   load_cols_list <- c(c("Name", "Stat", "PValue", "FDR"),input$load_other_cols)
   # print(load_cols_list)
   # print(in_df)
+  
+  
   # tidy duplicate names
   if (any(duplicated(in_df$Name))){
-    in_df$Name <- make.unique(in_df$Name)
     show_reminder_dup1 <- TRUE 
   } else {show_reminder_dup1 <- F}
 
   in_df <- in_df[,load_cols_list]
-  in_df <- remove_nas(in_df)
-  
-  # print(head(in_df))
-  
-  # set data type
-  in_df$Name <- as.character(in_df$Name) # convert name column to character
-  in_df$Name <- toupper(in_df$Name)
-  # in_df[load_cols_list[-1]] <- sapply(in_df[load_cols_list[-1]],as.numeric) # convert all but name to numeric
+  in_df <- tidyInDF(in_df)
   
   newname <- input$uploaded_file_name
   
