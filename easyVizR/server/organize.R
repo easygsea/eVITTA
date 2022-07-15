@@ -20,21 +20,27 @@ var_allowed_chars <- "[^a-z0-9A-Z+><_\\-.]"
 
 
 tidyInDF <- function(in_df){
-  in_df$Name <- as.character(in_df$Name) # convert name column to character
-  in_df$Stat <- as.numeric(in_df$Stat) # convert name column to character
-  in_df$PValue <- as.numeric(in_df$PValue) # convert name column to character
-  in_df$FDR <- as.numeric(in_df$FDR) # convert name column to character
+  # convert columns to appropriate classes
+  in_df$Name <- as.character(in_df$Name) 
+  in_df$Stat <- as.numeric(in_df$Stat) 
+  in_df$PValue <- as.numeric(in_df$PValue) 
+  in_df$FDR <- as.numeric(in_df$FDR) 
   
-  if (any(duplicated(in_df$Name))){
-    in_df$Name <- make.unique(in_df$Name)
-    }
-  
-  in_df$Name <- toupper(in_df$Name)
+  # pre-filter rows
   in_df <- in_df[nchar(in_df$Name) != 0,] # delete rows with empty Name
-  in_df <- in_df %>% mutate_all(function(x) ifelse(is.nan(x) | is.infinite(x), NA, x)) # convert +-Inf to NA
-  in_df <- in_df[rowSums(is.na(in_df)) != ncol(in_df),] # delete rows that are entirely NA
   
-  in_df <- remove_nas(in_df)
+  # process name column
+  in_df$Name <- toupper(in_df$Name) # convert name to upper case
+  if (any(duplicated(in_df$Name))){in_df$Name <- make.unique(in_df$Name)} # make names unique
+  
+  # process other columns
+  in_df <- in_df %>% mutate_all(function(x) ifelse(is.nan(x) | is.infinite(x), NA, x)) # convert +-Inf to NA
+  
+  # post-filter columns
+  in_df <- in_df[rowSums(is.na(in_df)) != ncol(in_df),] # delete rows that are entirely NA
+  in_df <- in_df[complete.cases(in_df[,c("Name","Stat","PValue","FDR")]),] # remove rows containing any NA in essential cols
+  # in_df <- remove_nas(in_df) # remove rows containing any NA
+  
   in_df
 }
 
