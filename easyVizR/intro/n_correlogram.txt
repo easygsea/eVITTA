@@ -1,0 +1,5 @@
+element	intro
+n_cor0	The <b>Correlogram</b> module is useful for exploring the similarities and/or differences among multiple (n>=3) datasets. 
+n_cor1	Select two or more datasets from currently loaded datasets. (Recommended n >= 3)
+n_cor2	Select the subset of data you want to correlate. <br><b>All data</b> is selected by default: this consists of all entries that are present across all datasets regardless of filter. <br><b>Intersection only</b> correlates the filtered entries from <b>Intersection of Interest</b>.
+n_cor3	Two plot types are available: <b>Heatmap</b>, which plots a simple heatmap based on correlation values, and <b>Correlogram</b>, which consists of up to 3 plot types (e.g. scatter, bar, correlation value) nested in individual panels. <br>Static and Interactive modes are supported for both Heatmap and Correlogram, but Interactive plots take significantly longer to render.

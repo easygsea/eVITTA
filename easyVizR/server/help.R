@@ -87,6 +87,11 @@ observeEvent(input$help_n_post, {
     rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
                                               steps = intros$n_RRHO)
     )
+  } else if (input$n_ui_showpanel == "Correlogram"){
+    # updateRadioGroupButtons(session, inputId = "n_ui_showpanel", selected="Intersection")
+    rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
+                                              steps = intros$n_correlogram)
+    )
   } else if (input$n_ui_showpanel == "Single"){
     # updateRadioGroupButtons(session, inputId = "n_ui_showpanel", selected="Intersection")
     rintrojs::introjs(session, options = list(showStepNumbers=FALSE,
