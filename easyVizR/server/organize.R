@@ -297,8 +297,7 @@ output$batch_additional_cols <- renderUI({
   req(length(rv$upload_batch_colscheme)>=4)
   
   j <- c(input$batch_gene_column, input$batch_Stat_column, input$batch_p_column, input$batch_q_column)
-  # print(j)
-  # print(rv$upload_batch_sharedcols)
+  
   additional_cols <- setdiff(rv$upload_batch_sharedcols,j)
   
   for(f in seq_along(additional_cols)){
@@ -354,12 +353,6 @@ output$batch_confirm_button <- renderUI({
   req(length(rv$upload_batch_colscheme)>=4)
   req(length(unique(c(input$batch_gene_column, input$batch_Stat_column, input$batch_p_column, input$batch_q_column)))>=4) # ensure columns input are unique
   req(length(rv$batch_failed)!=nrow(rv$batch_files)) # make sure not all files fail
-  
-  # print(rv$folder_upload_state)
-  # print(rv$upload_batch_colscheme)
-  # print(length(unique(c(input$batch_gene_column, input$batch_Stat_column, input$batch_p_column, input$batch_q_column))))
-  # print(rv$batch_failed)
-  # print(rv$batch_files)
   
   actionButton('batch_submit', 'Confirm and add', class = "btn-primary")
 })
@@ -897,7 +890,7 @@ output$upload_feedback <- renderUI({
   req(length(rv$upload_columns)>=4)
   
   cols <- c(input$gene_column, input$Stat_column, input$p_column, input$q_column)
-  # print(cols)
+  
   if (length(unique(cols))<4){
     box(
       title = NULL, background = "yellow", solidHeader = TRUE, width=12,
@@ -953,13 +946,11 @@ observeEvent(input$file, {
                                          fileEncoding = csvFileEncoding, 
                                          check.names = csvCheckNames, 
                                          nrows=1))
-  print(rv$upload_columns)
   
   for(i in seq_along(rv$upload_columns)){
     #delete the unrecognized character
     rv$upload_columns[i] <- stringr::str_replace_all(rv$upload_columns[i],"[^(a-z0-9A-Z%)|[:punct:]]", "")
   }
-  #print(rv$upload_columns)
   
   rv$upload_state <- 'uploaded'
   
@@ -1068,11 +1059,10 @@ observeEvent(input$submit, {
 #---------------------- events ---------------------------#
 
 observeEvent(input$delete_deg_confirm, {
-  #print(input$delete_deg)
+
   to_delete_i <- which(rv$ll %in% input$delete_deg)
-  #print(to_delete_i)
+
   # delete the items
-  
   rv$ll <- rv$ll[-to_delete_i]
   rv$gg <- rv$gg[-to_delete_i]
   rv$tt <- rv$tt[-to_delete_i]
