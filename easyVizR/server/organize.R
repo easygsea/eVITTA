@@ -18,6 +18,10 @@ total_upload_limit <- total_mb_limit*1024^2
 allowed_chars <- "[^(a-z0-9A-Z+><%\\s)|[:punct:]]"
 var_allowed_chars <- "[^a-z0-9A-Z+><_\\-.]"
 
+# file reading options
+csvFileEncoding <- "UTF-8" # default encoding for reading csv
+csvCheckNames <- T
+
 
 tidyInDF <- function(in_df){
   # convert columns to appropriate classes
@@ -198,9 +202,13 @@ tidyInDF <- function(in_df){
 # select columns
 output$batch_opt <- renderUI({
   
-
   req(rv$folder_upload_state == 'uploaded')
   req(length(rv$upload_batch_colscheme)>=4)
+  
+  # render default stat name
+  statDefaultName <- firstmatch(stat_alias,rv$upload_batch_colscheme)
+  if (is.null(statDefaultName)){ statDefaultName <- "Value" }
+  
   div(
     HTML("<strong>Select columns corresponding to each element:</strong><br><br>"),
     fluidRow(
@@ -263,7 +271,7 @@ output$batch_opt <- renderUI({
                  stat_replace("Name the Stat column:"),
                  add_help("u_namestat_help", style="margin-left: 5px;"))
                ),
-               value = firstmatch(stat_alias,rv$upload_batch_colscheme),
+               value = statDefaultName,
              ),
              bsTooltip("u_namestat_help", 
                        stat_replace("Tell us what kind of value is \"Stat\", e.g. logFC"), 
@@ -505,7 +513,10 @@ observeEvent(input$fileIn, {
   rv$columnCount <-vector(mode="list")
   # list columns for each file
   for (i in seq_along(inFiles$name)) {
-    cols <- colnames(read.csv(inFiles$datapath[[i]],nrows=1))
+    cols <- colnames(read.csv(inFiles$datapath[[i]],
+                              fileEncoding = csvFileEncoding, 
+                              check.names = csvCheckNames, 
+                              nrows=1))
     allcols <- c(allcols, list(cols))
     
     
@@ -545,6 +556,7 @@ observeEvent(input$fileIn, {
     #delete the unrecognized character
     rv$upload_batch_sharedcols[i2] <- stringr::str_replace_all(rv$upload_batch_sharedcols[i2],"[^(a-z0-9A-Z%)|[:punct:]]", "")
   }
+  
   
   countList <- NULL
   rv$columnCount <- NULL
@@ -596,7 +608,10 @@ observeEvent(input$batch_submit, {
     # print(inFiles$name[[i]]) # name of file
     # print(inFiles$datapath[[i]]) # path of of file
     
-    in_df <- read.csv(inFiles$datapath[[i]])
+    in_df <- read.csv(inFiles$datapath[[i]],
+                      fileEncoding = csvFileEncoding, 
+                      check.names = csvCheckNames
+                      )
     
     
     #Remove the invalid characters from the content
@@ -721,6 +736,11 @@ observeEvent(input$upload_batch_q,{
 output$upload_opt <- renderUI({
   req(rv$upload_state == 'uploaded')
   req(length(rv$upload_columns)>=4)
+  
+  # render default stat name
+  statDefaultName <- firstmatch(stat_alias,rv$upload_columns)
+  if (is.null(statDefaultName)){ statDefaultName <- "Value" }
+  
   div(
     HTML("<strong>Select columns corresponding to each element:</strong><br><br>"),
     fluidRow(
@@ -791,7 +811,7 @@ output$upload_opt <- renderUI({
                  add_help("us_namestat_help", style="margin-left: 5px;"))
                ),
                #value = itemmatched(stat_alias,rv$upload_columns))
-               value = firstmatch(stat_alias,rv$upload_columns)
+               value = statDefaultName
              ),
              bsTooltip("us_namestat_help", 
                        stat_replace("Tell us what kind of value is \"Stat\", i.e. logFC"), 
@@ -929,8 +949,11 @@ observeEvent(input$file, {
   # rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1, encoding = 'UTF-8', stringsAsFactors=FALSE))
   
   # rv$upload_columns <- colnames(read.csv(inFile$datapath, nrows=1,local = locale(encoding = "latin1")))
-  rv$upload_columns <- colnames(read.csv(inFile$datapath, fileEncoding = "Latin1", check.names = T, nrows=1))
-  
+  rv$upload_columns <- colnames(read.csv(inFile$datapath, 
+                                         fileEncoding = csvFileEncoding, 
+                                         check.names = csvCheckNames, 
+                                         nrows=1))
+  print(rv$upload_columns)
   
   for(i in seq_along(rv$upload_columns)){
     #delete the unrecognized character
@@ -962,7 +985,10 @@ observeEvent(input$reset, {
 # upon submitting, add file to list of dataframes to select from
 observeEvent(input$submit, {
   inFile <- input$file
-  in_df <- read.csv(inFile$datapath)
+  in_df <- read.csv(inFile$datapath,
+                    fileEncoding = csvFileEncoding, 
+                    check.names = csvCheckNames
+                    )
 
   # the for loop that loop through the file and remove invalid characters
   show_reminder <- FALSE
@@ -980,22 +1006,18 @@ observeEvent(input$submit, {
     }
   }
   
-
   # replace the important column names to prevent error later on
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$gene_column, "Name")
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$Stat_column, "Stat")
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$p_column, "PValue")
   colnames(in_df) <- replace(colnames(in_df), colnames(in_df)==input$q_column, "FDR")
   load_cols_list <- c(c("Name", "Stat", "PValue", "FDR"),input$load_other_cols)
-  # print(load_cols_list)
-  # print(in_df)
-  
   
   # tidy duplicate names
   if (any(duplicated(in_df$Name))){
     show_reminder_dup1 <- TRUE 
   } else {show_reminder_dup1 <- F}
-
+  
   in_df <- in_df[,load_cols_list]
   in_df <- tidyInDF(in_df)
   
