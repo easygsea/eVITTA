@@ -223,43 +223,71 @@ output$nxy_diff_report <- renderUI({
 # colormode options (shows different panels conditionally)
 output$nxyz_colormode_options <- renderUI({
   req(is.null(n_ins_full())==F)
-  req(rv$nxyz_colormode !="None")
-  if(rv$nxyz_colormode =="Two colors"){
+  req_vars(c(rv$nxyz_sc_plotmode, rv$nxyz_colormode))
+  if(rv$nxyz_colormode =="Two colors" & rv$nxyz_sc_plotmode=="Context"){
+      div(
+        uiOutput("nxyz_discreteByCutoffsPanel"),
+        uiOutput("nxyz_allowColorExcludedPoints_ui")
+      )
+  } else if (rv$nxyz_colormode =="Two colors" & rv$nxyz_sc_plotmode=="Focus"){
     div(
-      "Color threshold options:",
-      fluidRow(
-        column(6,
-               numericInput("n_3ds_p", 
-                            "P <:", value = rv$n_3ds_p, min = 0, max = 1, step=0.001, width="100px"),
-        ),
-        column(6,
-               numericInput("n_3ds_q", 
-                            "FDR <:", value = rv$n_3ds_q, min = 0, max = 1, step=0.001, width="100px"),
-        ),
-      ),
-      fluidRow(
-        column(6,
-               numericInput("n_3ds_Stat", 
-                            stat_replace1("|Stat| >:",c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z)),
-                            value = rv$n_3ds_Stat, min = 0, max = 10, step=0.1, width="100px"),
-               ),
-        column(6,
-               radioGroupButtons("nxyz_sc_logic",
-                                 label = HTML(paste0(
-                                   "Color logic:",
-                                   add_help("nxyz_sc_logic_help", style="margin-left: 5px;"))
-                                 ),
-                                 choices=c("OR" ="Either", "AND" = "Both"),
-                                 selected=rv$nxyz_sc_logic,size="s"), 
-               bsTooltip("nxyz_sc_logic_help", 
-                         "<b>AND</b>: highlights if conditions are met for <b>ALL</b> datasets.<br><b>OR</b>: highlights if conditions are met for <b>ANY</b> dataset.", 
-                         placement = "right"),
-        )
-      ),
-
-      # uiOutput("nxyz_logic_caption"),
+      uiOutput("nxyz_discreteByCutoffsPanel")
     )
-  } 
+  }
+})
+
+output$nxyz_allowColorExcludedPoints_ui <- renderUI({
+
+  div(
+    radioGroupButtons("nxyz_sc_allowColorExcludedPoints",
+                      label = HTML(paste0(
+                        allowColorExcludedPoints_label,
+                        add_help("nxyz_sc_allowColorExcludedPoints_help", style="margin-left: 5px;"))
+                      ),
+                      choices=c("No"= "no", "Yes"= "yes"),
+                      selected=rv$nxyz_sc_allowColorExcludedPoints,size="s"), 
+    bsTooltip("nxyz_sc_allowColorExcludedPoints_help", 
+              allowColorExcludedPoints_explanation, 
+              placement = "right")
+  )
+})
+
+output$nxyz_discreteByCutoffsPanel <- renderUI({
+  div(
+    "Color threshold options:",
+    fluidRow(
+      column(6,
+             numericInput("n_3ds_p", 
+                          "P <:", value = rv$n_3ds_p, min = 0, max = 1, step=0.001, width="100px"),
+      ),
+      column(6,
+             numericInput("n_3ds_q", 
+                          "FDR <:", value = rv$n_3ds_q, min = 0, max = 1, step=0.001, width="100px"),
+      ),
+    ),
+    fluidRow(
+      column(6,
+             numericInput("n_3ds_Stat", 
+                          stat_replace1("|Stat| >:",c(rv$nxy_selected_x, rv$nxy_selected_y, rv$nxy_selected_z)),
+                          value = rv$n_3ds_Stat, min = 0, max = 10, step=0.1, width="100px"),
+      ),
+      column(6,
+             radioGroupButtons("nxyz_sc_logic",
+                               label = HTML(paste0(
+                                 "Color logic:",
+                                 add_help("nxyz_sc_logic_help", style="margin-left: 5px;"))
+                               ),
+                               choices=c("OR" ="Either", "AND" = "Both"),
+                               selected=rv$nxyz_sc_logic,size="s"), 
+             bsTooltip("nxyz_sc_logic_help", 
+                       "<b>AND</b>: highlights if conditions are met for <b>ALL</b> datasets.<br><b>OR</b>: highlights if conditions are met for <b>ANY</b> dataset.", 
+                       placement = "right"),
+      )
+    ),
+    
+    # uiOutput("nxyz_logic_caption"),
+  )
+  
 })
 
 

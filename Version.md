@@ -1,5 +1,11 @@
 # eVITTA update log
 
+### V1.4.2
+
+July 14, 2022 easyVizR upload dataframe filtering for blank/ Inf values
+
+- Filters rows with blank or Inf values in the required columns
+
 ### V1.4.1
 
 June 20, 2022 added easyGEO GSE size gater (Jean)

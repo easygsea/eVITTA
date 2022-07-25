@@ -49,6 +49,7 @@ init_demo <- function(){
   rv$nxyz_sc_outlinecolor <- "white"
   rv$nxyz_sc_plotmode <- "Focus"
   rv$nxyz_sc_dflogic <- "Ins"
+  rv$nxyz_sc_allowColorExcludedPoints <- "no"
   rv$rrho_x <- rv$nx_n[[1]]
   rv$rrho_y <- rv$nx_n[[2]]
   rv$rrho_level_palette <- "default"

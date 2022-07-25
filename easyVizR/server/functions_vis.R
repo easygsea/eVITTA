@@ -720,6 +720,7 @@ draw_3d_scatter <- function(to_plot_df,
                             opacity=rv$nxyz_sc_opacity,
                             colormode = rv$nxyz_colormode,
                             logic = rv$nxyz_sc_logic,
+                            allowColorExcludedPoints = rv$nxyz_sc_allowColorExcludedPoints,
                             df_n = rv$df_n
 ){
   
@@ -793,8 +794,16 @@ draw_3d_scatter <- function(to_plot_df,
           (df[[pcols[[3]]]] < pp & df[[qcols[[3]]]] < qq & df[[statcols[[3]]]] < -ss), 
         discrete_c1b, df$color)
     }
+    
+    # optionally force color of excluded points
+    if(allowColorExcludedPoints == "no"){
+      df$color[-which(df$Name %in% df_ins)] <- discrete_c3
+    }
+    
     df$color <- as.factor(df$color)
   }
+  
+  
   
   incProgress(0.2)
   
