@@ -67,6 +67,10 @@
 # })
 # # END-----------------------------------------------------------------------------
 
+# default connection size = 131072, increase conditionally
+defaultConnectionSize <- 131072
+maxConnectionSize <- defaultConnectionSize*100
+Sys.setenv(VROOM_CONNECTION_SIZE=defaultConnectionSize) # 
 
 # get the current run_mode ------------------------------------------------
 observeEvent(input$selected_mode, {
@@ -677,7 +681,7 @@ observeEvent(input$search_geo, {
       }
       else if(ErrorMessage == "HTTP error 400."){
         DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
-                              "You probably entered some upexpected character(s) such as a space.<br><br>Please double check your input and try again.")
+                              "You probably entered some unexpected character(s) such as a space.<br><br>Please double check your input and try again.")
         showModal(modalDialog(
           title = "Data fetching error",
           HTML(DisplayText),
@@ -685,6 +689,48 @@ observeEvent(input$search_geo, {
           easyClose = TRUE
           ,footer = modalButton("OK")
         ))
+      }
+      # if data is too large, try increasing limit
+      else if(grep("^The size of the connection buffer (.*) was not large enough.*$",ErrorMessage)){
+        
+        Sys.setenv(VROOM_CONNECTION_SIZE=maxConnectionSize)
+        rv$gse_all <- try(getGEO(input$geo_accession, GSEMatrix=T))
+        
+        # if fails again, prevent loading
+        if(inherits(rv$gse_all, "try-error")) {
+          ErrorMessage <- conditionMessage(attr(rv$gse_all, "condition"))  # the error message
+          
+          if(grep("^The size of the connection buffer (.*) was not large enough.*$",ErrorMessage)){
+            DisplayText <- paste0("Your input: \"",rv$geo_accession,"\"<br><br>",
+                                  "The requested dataset exceeds maximum connection size (",
+                                  utils:::format.object_size(maxConnectionSize, "auto"),
+                                  "). <br><br>Please use the local instance of the app instead: https://github.com/easygsea/eVITTA.git"
+                                  )
+            showModal(modalDialog(
+              title = "Data fetching error",
+              HTML(DisplayText),
+              size = "l",
+              easyClose = TRUE
+              ,footer = modalButton("OK")
+            ))
+          }
+        } else {
+          DisplayText <- paste0(
+                                "The requested dataset ",rv$geo_accession," exceeds the default connection size (",
+                                utils:::format.object_size(defaultConnectionSize, "auto"),
+                                ").<br><br>Loading with increased connection size (",
+                                utils:::format.object_size(maxConnectionSize, "auto"),
+                                ")."
+                                )
+          showModal(modalDialog(
+            title = "Message",
+            HTML(DisplayText),
+            size = "l",
+            easyClose = TRUE
+            ,footer = modalButton("OK")
+          ))
+        }
+        
       }
       else {
         # switch to matrix == F
