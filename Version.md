@@ -1,8 +1,14 @@
 # eVITTA update log
 
+### V1.4.3
+
+July 26, 2022 easyGEO fixed connection size error for larger GSE datasets (Judith)
+
+- If default connection size doesn't work, try to load with a larger connection size
+
 ### V1.4.2
 
-July 14, 2022 easyVizR upload dataframe filtering for blank/ Inf values
+July 14, 2022 easyVizR upload dataframe filtering for blank/ Inf values (Judith)
 
 - Filters rows with blank or Inf values in the required columns
 
