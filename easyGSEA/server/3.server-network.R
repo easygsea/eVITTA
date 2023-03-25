@@ -53,15 +53,17 @@ output$ui_bodyNetwork <- renderUI({
                                 #         ),
                             uiOutput("ui_vis_gear"))
                         ),
-                        div(id="d_vis", style="display: inline-block;vertical-align:top;margin-right:5px;",
-
-                            # style = "position: absolute; right: 1em; top: 1em;",
-                            downloadBttn(
-                                size = "md", style="unite",
-                                outputId = "download_vis", label = NULL
-                            )
+                        div(id="d_vis",
+                            style="display: inline-block;vertical-align:top;margin-right:5px;",
+                            dropdown(
+                              up = FALSE,right = TRUE,icon = icon("download"),width = "250px",
+                              style = "unite",#status = "primary",#size = "sm",
+                              circle = TRUE,
+                              tooltip = tooltipOptions(
+                                title = "Click to download network and relevant data"
+                                ,placement = "bottom"),
+                              uiOutput("ui_vis_download"))
                         ),
-                        bsTooltip("d_vis","Click to download the network view", placement = "bottom"),
 
                     ),
 
@@ -268,12 +270,28 @@ output$vis_network <- renderVisNetwork({
 })
 
 
-# download visnetwork
+# Download visnetwork
 output$download_vis <- downloadHandler(
     filename = function() {paste0("network_",paste0("q",rv$vis_q,"p",rv$vis_p,"_",rv$vis_pq,"_"),rv$rnkll,".html")},
     content = function(file) {saveWidget(as_widget(rv$vis), file, selfcontained = TRUE)}
 
     # content = function(file) {saveWidget(as_widget(vis()), file, selfcontained = TRUE)}
+)
+
+# Download visnetwork's nodes data
+output$download_vis_nodes <- downloadHandler(
+  filename = function() {paste0("network_nodes_",paste0("q",rv$vis_q,"p",rv$vis_p,"_",rv$vis_pq,"_"),rv$rnkll,".csv")},
+  content = function(file) {
+      fwrite(rv$vis_nodes, file, row.names = F, quote=T)
+  }
+)
+
+# Download visnetwork's edges data
+output$download_vis_edges <- downloadHandler(
+  filename = function() {paste0("network_edges_",paste0("q",rv$vis_q,"p",rv$vis_p,"_",rv$vis_pq,"_"),rv$rnkll,".csv")},
+  content = function(file) {
+    fwrite(rv$vis_edges, file, row.names = F, quote=T)
+  }
 )
 
 # -------- update and replot visnetwork ----------
@@ -458,6 +476,19 @@ output$ui_vis_gear <- renderUI({
     )
     # )
 
+})
+
+#  ============UI vis download =============
+
+output$ui_vis_download <- renderUI({
+  div(
+    # style = "position: absolute; right: 1em; top: 1em;",
+    downloadButton("download_vis", "Download network"),
+    downloadButton("download_vis_nodes", "Download nodes data"),
+    if(!is.null(rv$vis_edges)){
+      downloadButton("download_vis_edges", "Download edges data")
+    }
+  )
 })
 
 # ------------ render Plotly Dendrogram, bar, bubbl --------------

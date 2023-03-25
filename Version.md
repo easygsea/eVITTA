@@ -1,5 +1,11 @@
 # eVITTA update log
 
+### V1.4.4
+
+March 24, 2023 easyGSEA added widgets to download visNetwork input data (Jean)
+
+- Download buttons added to export nodes and edges (if applicable) tables used to plot the visNetwork in Enrichment Network
+
 ### V1.4.3
 
 July 26, 2022 easyGEO fixed connection size error for larger GSE datasets (Judith)

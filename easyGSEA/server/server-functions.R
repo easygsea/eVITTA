@@ -1466,6 +1466,9 @@
                 title = hovertexts
             )
             
+            # Save nodes table to RV
+            rv$vis_nodes <- subset(nodes, select = -c(title) )
+            
             # visnetwork legend title generated here
             if(rv$run_mode == "gsea"){
               legend_title <- paste0("-log10(", rv$vis_pq, ")*sign(ES)")
@@ -1474,6 +1477,7 @@
             }
             
             if(is.null(edges_mat)==T || nrow(edges_mat)<1){
+                rv$vis_edges <- NULL
                 vis <- visNetwork(nodes, height = "1000px", width = "100%") %>%
                     # visEdges(smooth = FALSE) %>% #disable smooth curve for edges
                     # visIgraphLayout() %>% # decrease plotting time
@@ -1496,6 +1500,8 @@
                     # length = 1 - edgelist$percent, 
                     title = edgehovertexts
                 )
+                # Save edges table to RV
+                rv$vis_edges <- edges
                 
                 vis <- visNetwork(nodes, edges, height = "1000px", width = "100%") %>%
                     visEdges(smooth = FALSE) %>% #disable smooth curve for edges
