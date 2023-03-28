@@ -1,5 +1,11 @@
 # eVITTA update log
 
+### V1.4.5
+
+March 28, 2023 easyVizR organize.R merge conflicts resolve (Jean)
+
+- Corrected mistakenly merged conflicts by updating organize.R to match UPDATE branch
+
 ### V1.4.4
 
 March 24, 2023 easyGSEA added widgets to download visNetwork input data (Jean)
