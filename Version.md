@@ -1,5 +1,11 @@
 # eVITTA update log
 
+### V1.4.6
+
+March 23, 2024 easyGSEA render raw uploaded data (Jean)
+
+- Comment out lines to allow the display of raw data, facilitating user review at the expense of visual appeal.
+
 ### V1.4.5
 
 March 28, 2023 easyVizR organize.R merge conflicts resolve (Jean)
