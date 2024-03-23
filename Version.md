@@ -1,5 +1,11 @@
 # eVITTA update log
 
+### V1.4.5
+
+March 23, 2024 easyGSEA render raw uploaded data (Jean)
+
+- Comment out lines to allow the display of raw data, facilitating user review at the expense of visual appeal.
+
 ### V1.4.4
 
 March 24, 2023 easyGSEA added widgets to download visNetwork input data (Jean)
